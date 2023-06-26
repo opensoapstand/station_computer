@@ -99,12 +99,12 @@ void page_qr_payment::showEvent(QShowEvent *event)
     ui->label_processing->setStyleSheet(styleSheet);
 
     state_payment = s_init;
-    double originalPrice = p_page_idle->selectedProduct->getPrice();
+    double originalPrice = p_page_idle->selectedProduct->getBasePrice();
     if (p_page_idle->selectedProduct->getSizeAsChar() == 'c')
     {
         originalPrice = p_page_idle->selectedProduct->getPriceCustom();
     }
-    QString price = QString::number(p_page_idle->getPriceCorrectedAfterDiscount(originalPrice), 'f', 2);
+    QString price = QString::number(p_page_idle->thisMachine.getPriceWithDiscount(originalPrice), 'f', 2);
 
     if (p_page_idle->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
     {
@@ -201,7 +201,7 @@ bool page_qr_payment::createOrderIdAndSendToBackend()
         originalPrice = p_page_idle->selectedProduct->getPriceCustom();
     }
 
-    QString price = QString::number(p_page_idle->getPriceCorrectedAfterDiscount(originalPrice), 'f', 2);
+    QString price = QString::number(p_page_idle->thisMachine.getPriceWithDiscount(originalPrice), 'f', 2);
 
     // create a unique order id locally
     orderId = QUuid::createUuid().QUuid::toString();

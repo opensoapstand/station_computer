@@ -213,7 +213,7 @@ void page_tap_payment::startPaymentProcess()
         {
             price = p_page_idle->selectedProduct->getPriceCustom();
         }
-        price = p_page_idle->getPriceCorrectedAfterDiscount(price);
+        price = p_page_idle->thisMachine.getPriceWithDiscount(price);
         std::ostringstream stream;
         stream << std::fixed << std::setprecision(2) << price;
         std::string authCommand = authorizationCommand(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, stream.str());

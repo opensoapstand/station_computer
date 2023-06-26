@@ -14,10 +14,13 @@ typedef enum UserRole
 
 typedef enum StateCoupon
 {
+    no_state,
     disabled,
     enabled_not_set,
     enabled_invalid_input,
-    enabled_set_valid_input
+    enabled_set_valid_input,
+    network_error,
+    enabled_show_keyboard
 } StateCoupon;
 
 class machine : public QObject
@@ -68,8 +71,16 @@ public:
     void printerStatus(bool *isOnline, bool *hasPaper);
 
     StateCoupon getCouponState();
-    void setCouponValid(StateCoupon state);
-    void setCouponStateFromDb();
+    void setCouponState(StateCoupon state);
+    void initCouponState();
+
+    void setPromoCode(QString promoCode);
+    QString getPromoCode();
+
+    void setDiscountPercentageFraction(double percentageFraction);
+    double getDiscountPercentageFraction();
+    double getDiscountAmount(double price);
+    double getPriceWithDiscount(double price);
 
 public slots:
 
@@ -77,6 +88,8 @@ signals:
 
 private:
     StateCoupon m_stateCoupon;
+    double m_discount_percentage_fraction = 0.0;
+    QString m_promoCode;
 
     DbManager *m_db;
     UserRole active_role;

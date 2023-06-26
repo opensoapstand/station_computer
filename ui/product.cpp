@@ -175,16 +175,16 @@ bool product::is_valid_size_selected()
     return true;
 }
 
-double product::getDiscount()
-{
-    // the discount is the original price minus the discounted price
-    return getPrice(getSize()) - getPriceCorrected();
-}
+// double product::getDiscountAmount()
+// {
+//     // the discount is the original price minus the discounted price
+//     return getBasePrice(getSize()) - getPriceCorrected();
+// }
 
-double product::getDiscountPercentageFraction()
-{
-    return m_discount_percentage_fraction;
-}
+// double product::getDiscountPercentageFraction()
+// {
+//     return m_discount_percentage_fraction;
+// }
 
 QString product::getLastRestockDate()
 {
@@ -192,22 +192,22 @@ QString product::getLastRestockDate()
     return m_lastRestockDate;
 }
 
-QString product::getPromoCode()
-{
-    return m_promoCode;
-}
+// QString product::getPromoCode()
+// {
+//     return m_promoCode;
+// }
 
-void product::setDiscountPercentageFraction(double percentageFraction)
-{
-    qDebug() << "Set discount percentage fraction: " << QString::number(percentageFraction, 'f', 3);
-    m_discount_percentage_fraction = percentageFraction;
-}
+// void product::setDiscountPercentageFraction(double percentageFraction)
+// {
+//     qDebug() << "Set discount percentage fraction: " << QString::number(percentageFraction, 'f', 3);
+//     m_discount_percentage_fraction = percentageFraction;
+// }
 
-void product::setPromoCode(QString promoCode)
-{
-    qDebug() << "Set Promo Code: " << promoCode;
-    m_promoCode = promoCode;
-}
+// void product::setPromoCode(QString promoCode)
+// {
+//     qDebug() << "Set Promo Code: " << promoCode;
+//     m_promoCode = promoCode;
+// }
 
 void product::setPrice(int size, double price)
 {
@@ -219,14 +219,14 @@ void product::setPrice(int size, double price)
     m_db->updateTableProductsWithDouble(getSlot(), column_name, price, 2);
 }
 
-double product::getPrice(int sizeIndex)
+double product::getBasePrice(int sizeIndex)
 {
     return m_sizeIndexPrices[sizeIndex];
 }
 
-double product::getPrice()
+double product::getBasePrice()
 {
-    return getPrice(getSize());
+    return getBasePrice(getSize());
 }
 
 double product::getPriceCorrected()
@@ -234,7 +234,7 @@ double product::getPriceCorrected()
     double price;
     if (is_valid_size_selected())
     {
-        price = getPrice(getSize()) * (1.0 - m_discount_percentage_fraction);
+        price = getBasePrice(getSize()) * (1.0 - thisMachine->getDiscountPercentageFraction());
     }
     else
     {
@@ -250,7 +250,7 @@ double product::getPriceCustom()
     double price;
     if (is_valid_size_selected())
     {
-        price = getPrice(getSize()) * (1.0 - m_discount_percentage_fraction) * getVolumeOfSelectedSize();
+        price = getBasePrice(getSize()) * (1.0 - m_discount_percentage_fraction) * getVolumeOfSelectedSize();
     }
     else
     {

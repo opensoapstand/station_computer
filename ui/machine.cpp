@@ -7,6 +7,7 @@
 machine::machine()
 {
     setRole(UserRole::user);
+    setCouponState(no_state);
 }
 
 // Dtor
@@ -19,19 +20,81 @@ void machine::setDb(DbManager *db)
     m_db = db;
 }
 
-StateCoupon machine::getCouponState(){
+StateCoupon machine::getCouponState()
+{
     return m_stateCoupon;
 }
-void machine::setCouponValid(StateCoupon state){
+
+void machine::setCouponState(StateCoupon state)
+{
     m_stateCoupon = state;
 }
 
-bool machine::setCouponStateFromDb(){
-    if (getCouponsEnabled){
+void machine::initCouponState()
+{
+
+    if (getCouponsEnabled())
+    {
         m_stateCoupon = enabled_not_set;
-    }else{
+    }
+    else
+    {
         m_stateCoupon = disabled;
     }
+
+    setDiscountPercentageFraction(0.0);
+    setPromoCode("");
+}
+
+void machine::setDiscountPercentageFraction(double percentageFraction)
+{
+    // ratio = percentage / 100;
+    qDebug() << "Set discount percentage fraction in idle page: " << QString::number(percentageFraction, 'f', 3);
+    m_discount_percentage_fraction = percentageFraction;
+}
+
+// double page_idle::getDiscountPercentage()
+// {
+//     qDebug() << "Get Discount percentange" << m_discount_percentage_fraction;
+//     return m_discount_percentage_fraction;
+// }
+
+double machine::getDiscountPercentageFraction()
+{
+    return m_discount_percentage_fraction;
+}
+
+double machine::getDiscountAmount(double price)
+{
+    // the discount is the original price minus the discounted price
+    return price - getPriceWithDiscount(price);
+}
+
+double machine::getPriceWithDiscount(double price)
+{
+    return price * (1 - m_discount_percentage_fraction);
+}
+
+// bool machine::isPromoApplied()
+// {
+//     if (m_discount_percentage_fraction != 0.0)
+//     {
+//         qDebug() << "promo applied: true";
+//         return true;
+//     }
+//     return false;
+// }
+
+QString machine::getPromoCode()
+{
+    return m_promoCode;
+}
+
+void machine::setPromoCode(QString promoCode)
+{
+    // ratio = percentage / 100;
+    qDebug() << "Set Promo Code: " << promoCode;
+    m_promoCode = promoCode;
 }
 
 QString machine::getTemplateFolder()
@@ -40,12 +103,14 @@ QString machine::getTemplateFolder()
     if (template_name == "")
     {
         template_name = "default";
-    }else{
+    }
+    else
+    {
     }
     return TEMPLATES_ROOT_PATH + template_name + "/";
 }
 
-void machine::loadProductPropertiesFromProductsFile(QString soapstand_product_number, QString* name, QString* name_ui, QString* product_type, QString* description_ui, QString* features_ui, QString* ingredients_ui)
+void machine::loadProductPropertiesFromProductsFile(QString soapstand_product_number, QString *name, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui)
 {
     QFile file(PRODUCT_DETAILS_TSV_PATH);
     if (!file.open(QIODevice::ReadOnly))
@@ -72,16 +137,16 @@ void machine::loadProductPropertiesFromProductsFile(QString soapstand_product_nu
             *features_ui = fields[CSV_PRODUCT_COL_FEATURES_UI];
             *ingredients_ui = fields[CSV_PRODUCT_COL_INGREDIENTS_UI];
             break;
-        // int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], m_soapstand_product_serial, Qt::CaseSensitive);
-        // if (compareResult == 0)
-        // {
-        //     // qDebug() << "compare result is 0";
-        //     m_name_ui = fields[CSV_PRODUCT_COL_NAME_UI];
-        //     m_product_type = fields[CSV_PRODUCT_COL_TYPE];
-        //     m_description_ui = fields[CSV_PRODUCT_COL_DESCRIPTION_UI];
-        //     m_features_ui = fields[CSV_PRODUCT_COL_FEATURES_UI];
-        //     m_ingredients_ui = fields[CSV_PRODUCT_COL_INGREDIENTS_UI];
-        //     break;
+            // int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], m_soapstand_product_serial, Qt::CaseSensitive);
+            // if (compareResult == 0)
+            // {
+            //     // qDebug() << "compare result is 0";
+            //     m_name_ui = fields[CSV_PRODUCT_COL_NAME_UI];
+            //     m_product_type = fields[CSV_PRODUCT_COL_TYPE];
+            //     m_description_ui = fields[CSV_PRODUCT_COL_DESCRIPTION_UI];
+            //     m_features_ui = fields[CSV_PRODUCT_COL_FEATURES_UI];
+            //     m_ingredients_ui = fields[CSV_PRODUCT_COL_INGREDIENTS_UI];
+            //     break;
         }
     }
     file.close();
@@ -112,9 +177,8 @@ QString machine::getDefaultTemplatePathFromName(QString fileName)
 void machine::printerStatus(bool *isOnline, bool *hasPaper)
 {
     qDebug() << "DB call: Check printer status. ";
-    
+
     m_db->printerStatus(isOnline, hasPaper);
-   
 
     // This needs to be checked frequently, so caching is useless.
     // *isOnline = m_receipt_printer_is_online==1;
@@ -133,16 +197,14 @@ bool machine::getPumpRampingEnabled()
 
 void machine::setPumpRampingEnabled(bool isEnabled)
 {
-    
+
     m_db->updateTableMachineWithInt("enable_pump_ramping", isEnabled);
-   
 }
 
 void machine::setEmptyContainerDetectionEnabled(bool isEnabled)
 {
-    
+
     m_db->updateTableMachineWithInt("has_empty_detection", isEnabled);
-   
 }
 
 bool machine::getEmptyContainerDetectionEnabled()
@@ -224,11 +286,9 @@ void machine::setStatusText(int slot, bool isSlotEnabled, QString status)
 
     QString column = QString("status_text_slot_%1").arg(slot);
     // UPDATE machine SET status_text_slot_1='SLOT_STATE_AVAILABLE'
-    
+
     m_db->updateTableMachineWithText(column, status);
     // bool success = db.updateSlotAvailability(slot, isSlotEnabled, status);
-
-   
 }
 
 QString machine::getStatusText(int slot)
@@ -267,9 +327,8 @@ void machine::setSlotEnabled(int slot, bool isEnabled)
 {
     // do this through product.cpp, as this should have been a part of products table
     QString column_name = QString("is_enabled_slot_%1").arg(slot);
-    
+
     m_db->updateTableMachineWithInt(column_name, isEnabled);
-   
 }
 
 bool machine::getSlotEnabled(int slot)
@@ -292,8 +351,6 @@ QString machine::getIdlePageType()
 void machine::loadParametersFromDb()
 {
     qDebug() << "DB call: Load all machine parameters";
-
-    
 
     m_db->getAllMachineProperties(
         &m_machine_id,
@@ -324,7 +381,6 @@ void machine::loadParametersFromDb()
         m_pump_id_slots,
         m_is_enabled_slots,
         m_status_text_slots);
-   
 
     qDebug() << "Machine ID as loaded from db: " << getMachineId();
     qDebug() << "Template found : " << getTemplateFolder();

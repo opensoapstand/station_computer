@@ -123,8 +123,8 @@ void page_idle_products::showEvent(QShowEvent *event)
             break;
         }
 
-        p_page_idle->products[slot_index].setDiscountPercentageFraction(0.0);
-        p_page_idle->products[slot_index].setPromoCode("");
+        // p_page_idle->products[slot_index].setDiscountPercentageFraction(0.0);
+        // p_page_idle->products[slot_index].setPromoCode("");
     }
     maintenanceCounter = 0;
 

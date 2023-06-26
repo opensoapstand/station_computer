@@ -127,10 +127,10 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
 
     ui->label_product_name->setText(p_page_idle->selectedProduct->getProductName());
 
-    ui->pushButton_price_small->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_SMALL_INDEX)));
-    ui->pushButton_price_medium->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_MEDIUM_INDEX)));
-    ui->pushButton_price_large->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_LARGE_INDEX)));
-    ui->pushButton_price_custom->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_CUSTOM_INDEX)));
+    ui->pushButton_price_small->setText("$" + QString::number(p_page_idle->selectedProduct->getBasePrice(SIZE_SMALL_INDEX)));
+    ui->pushButton_price_medium->setText("$" + QString::number(p_page_idle->selectedProduct->getBasePrice(SIZE_MEDIUM_INDEX)));
+    ui->pushButton_price_large->setText("$" + QString::number(p_page_idle->selectedProduct->getBasePrice(SIZE_LARGE_INDEX)));
+    ui->pushButton_price_custom->setText("$" + QString::number(p_page_idle->selectedProduct->getBasePrice(SIZE_CUSTOM_INDEX)));
 
     ui->pushButton_target_volume_small->setText(p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(SIZE_SMALL_INDEX, false, true));
     ui->pushButton_target_volume_medium->setText(p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(SIZE_MEDIUM_INDEX, false, true));
@@ -642,24 +642,24 @@ void page_maintenance_dispenser::on_pushButton_done_clicked()
         if (activeEditField == "pushButton_price_small")
         {
             p_page_idle->selectedProduct->setPrice(SIZE_SMALL_INDEX, text_entered.toDouble());
-            ui->pushButton_price_small->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_SMALL_INDEX)));
+            ui->pushButton_price_small->setText("$" + QString::number(p_page_idle->selectedProduct->getBasePrice(SIZE_SMALL_INDEX)));
             p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_title, "small");
         }
         else if (activeEditField == "pushButton_price_medium")
         {
             p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_title, "medium");
             p_page_idle->selectedProduct->setPrice(SIZE_MEDIUM_INDEX, text_entered.toDouble());
-            ui->pushButton_price_medium->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_MEDIUM_INDEX)));
+            ui->pushButton_price_medium->setText("$" + QString::number(p_page_idle->selectedProduct->getBasePrice(SIZE_MEDIUM_INDEX)));
         }
         else if (activeEditField == "pushButton_price_large")
         {
             p_page_idle->selectedProduct->setPrice(SIZE_LARGE_INDEX, text_entered.toDouble());
-            ui->pushButton_price_large->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_LARGE_INDEX)));
+            ui->pushButton_price_large->setText("$" + QString::number(p_page_idle->selectedProduct->getBasePrice(SIZE_LARGE_INDEX)));
         }
         else if (activeEditField == "pushButton_price_custom")
         {
             p_page_idle->selectedProduct->setPrice(SIZE_CUSTOM_INDEX, text_entered.toDouble());
-            ui->pushButton_price_custom->setText("$" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_CUSTOM_INDEX)));
+            ui->pushButton_price_custom->setText("$" + QString::number(p_page_idle->selectedProduct->getBasePrice(SIZE_CUSTOM_INDEX)));
         }
         else if (activeEditField == "pushButton_target_volume_small")
         {
@@ -769,22 +769,22 @@ void page_maintenance_dispenser::on_pushButton_to_previous_page_clicked()
 
 void page_maintenance_dispenser::on_pushButton_price_small_clicked()
 {
-    ui->textEntry->setText(QString::number(p_page_idle->selectedProduct->getPrice(SIZE_SMALL_INDEX)));
+    ui->textEntry->setText(QString::number(p_page_idle->selectedProduct->getBasePrice(SIZE_SMALL_INDEX)));
 }
 
 void page_maintenance_dispenser::on_pushButton_price_medium_clicked()
 {
-    ui->textEntry->setText(QString::number(p_page_idle->selectedProduct->getPrice(SIZE_MEDIUM_INDEX)));
+    ui->textEntry->setText(QString::number(p_page_idle->selectedProduct->getBasePrice(SIZE_MEDIUM_INDEX)));
 }
 
 void page_maintenance_dispenser::on_pushButton_price_large_clicked()
 {
-    ui->textEntry->setText(QString::number(p_page_idle->selectedProduct->getPrice(SIZE_LARGE_INDEX)));
+    ui->textEntry->setText(QString::number(p_page_idle->selectedProduct->getBasePrice(SIZE_LARGE_INDEX)));
 }
 
 void page_maintenance_dispenser::on_pushButton_price_custom_clicked()
 {
-    ui->textEntry->setText(QString::number(p_page_idle->selectedProduct->getPrice(SIZE_CUSTOM_INDEX)));
+    ui->textEntry->setText(QString::number(p_page_idle->selectedProduct->getBasePrice(SIZE_CUSTOM_INDEX)));
 }
 
 void page_maintenance_dispenser::on_pushButton_target_volume_small_clicked()
@@ -921,10 +921,10 @@ void page_maintenance_dispenser::update_changes_to_portal()
 {
     qDebug() << "update portal clicked ";
     QString curl_params = "productId=" + p_page_idle->selectedProduct->getAwsProductId() + "&source=soapstandStation" +
-                          "&price_small=" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_SMALL_INDEX)) +
-                          "&price_medium=" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_MEDIUM_INDEX)) +
-                          "&price_large=" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_LARGE_INDEX)) +
-                          "&price_custom=" + QString::number(p_page_idle->selectedProduct->getPrice(SIZE_CUSTOM_INDEX)) +
+                          "&price_small=" + QString::number(p_page_idle->selectedProduct->getBasePrice(SIZE_SMALL_INDEX)) +
+                          "&price_medium=" + QString::number(p_page_idle->selectedProduct->getBasePrice(SIZE_MEDIUM_INDEX)) +
+                          "&price_large=" + QString::number(p_page_idle->selectedProduct->getBasePrice(SIZE_LARGE_INDEX)) +
+                          "&price_custom=" + QString::number(p_page_idle->selectedProduct->getBasePrice(SIZE_CUSTOM_INDEX)) +
                           "&size_small=" + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(SIZE_SMALL_INDEX, false, false) +
                           "&size_medium=" + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(SIZE_MEDIUM_INDEX, false, false) +
                           "&size_large=" + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(SIZE_LARGE_INDEX, false, false);

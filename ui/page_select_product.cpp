@@ -339,13 +339,13 @@ void page_select_product::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 void page_select_product::on_pushButton_to_idle_clicked()
 {
     qDebug() << "Back to Idle Page Button pressed";
-    p_page_idle->setDiscountPercentage(0.0);
+    // p_page_idle->setDiscountPercentage(0.0);
     hideCurrentPageAndShowProvided(p_page_idle);
 }
 
 void page_select_product::on_pushButton_help_page_clicked()
 {
     qDebug() << "Help_Button pressed";
-    p_page_idle->setDiscountPercentage(0.0);
+    // p_page_idle->setDiscountPercentage(0.0);
     hideCurrentPageAndShowProvided(p_page_help);
 }

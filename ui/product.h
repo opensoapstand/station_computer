@@ -88,13 +88,13 @@ public:
     QString getSizeToVolumeWithCorrectUnits(bool round, bool addUnits);
     QString getSizeToVolumeWithCorrectUnits(int size, bool roundValue, bool addUnits);
 
-    double getPrice(int sizeIndex);
-    double getDiscount();
+    double getBasePrice(int sizeIndex);
+
     void setPrice(int size, double price);
     double getPriceCorrected();
     double getPriceCustom();
 
-    double getPrice();
+    double getBasePrice();
 
     int getDispenseSpeedPercentage();
     void setDispenseSpeedPercentage(int percentage);
@@ -102,11 +102,11 @@ public:
     QString getPaymentMethod();
     void setPaymentMethod(QString paymentMethod);
 
-    double getDiscountPercentageFraction();
-    QString getPromoCode();
+    // double getDiscountPercentageFraction();
+    // QString getPromoCode();
 
 public slots:
-    void setDiscountPercentageFraction(double percentageFraction);
+    // void setDiscountPercentageFraction(double percentageFraction);
 
 signals:
     void orderSlotChange(int newOpt);

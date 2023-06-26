@@ -185,7 +185,7 @@ void page_dispenser::updatelabel_volume_dispensed_ml(double dispensed)
     if (p_page_idle->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
     {
 
-        double unitprice = p_page_idle->getPriceCorrectedAfterDiscount(p_page_idle->selectedProduct->getPrice());
+        double unitprice = p_page_idle->thisMachine.getPriceWithDiscount(p_page_idle->selectedProduct->getBasePrice());
         current_price = dispensed * unitprice;
         ui->label_volume_dispensed_ml->setText(dispensedVolumeUnitsCorrected + " " + units + " ( $" + QString::number(current_price, 'f', 2) + " )");
     }
@@ -193,7 +193,7 @@ void page_dispenser::updatelabel_volume_dispensed_ml(double dispensed)
     {
         QString totalVolume = p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(p_page_idle->selectedProduct->getSize(), true, true);
         ui->label_volume_dispensed_ml->setText(dispensedVolumeUnitsCorrected + " " + units + "/ " + totalVolume);
-        current_price = p_page_idle->selectedProduct->getPrice();
+        current_price = p_page_idle->selectedProduct->getBasePrice();
     }
 }
 
@@ -283,8 +283,8 @@ QString page_dispenser::getStartDispensingCommand()
 void page_dispenser::fsmSendStartDispensing()
 {
     QString dispenseCommand = getStartDispensingCommand();
-    QString priceCommand = QString::number(p_page_idle->getPriceCorrectedAfterDiscount(p_page_idle->selectedProduct->getPrice()));
-    QString promoCommand = p_page_idle->getPromoCode();
+    QString priceCommand = QString::number(p_page_idle->thisMachine.getPriceWithDiscount(p_page_idle->selectedProduct->getBasePrice()));
+    QString promoCommand = p_page_idle->thisMachine.getPromoCode();
 
     QString delimiter = QString("|");
     QString preamble = "Order";
@@ -349,12 +349,12 @@ void page_dispenser::resetDispenseTimeout(void)
 //     return df_util::getConvertedStringVolumeFromMl(volumeDispensed, units, false, false);
 // }
 
-QString page_dispenser::getPromoCodeUsed()
-{
-    QString promoCode = p_page_idle->getPromoCode();
+// QString page_dispenser::getPromoCodeUsed()
+// {
+//     QString promoCode = p_page_idle->getPromoCode();
 
-    return promoCode;
-}
+//     return promoCode;
+// }
 
 void page_dispenser::fsmReceiveDispenseRate(double flowrate)
 {

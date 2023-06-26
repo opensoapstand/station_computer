@@ -349,7 +349,7 @@ void page_product::reset_and_show_page_elements()
             p_page_idle->addCssClassToObject(orderSizeButtons[i], "orderSizeButtons", PAGE_PRODUCT_CSS);
             p_page_idle->addCssClassToObject(orderSizeLabelsPrice[i], "orderSizeLabelsPrice", PAGE_PRODUCT_CSS);
 
-            double price = p_page_idle->selectedProduct->getPrice(product_sizes[i]);
+            double price = p_page_idle->selectedProduct->getBasePrice(product_sizes[i]);
 
             // if there is only one product size available, the continue button will show, it will then load this default size
             default_size = product_sizes[i];

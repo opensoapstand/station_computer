@@ -27,7 +27,7 @@ page_idle->label_printer_status->nopaper,Assistance needed<br>Receipt Printer em
 #page_idle_products
 
 #tap here to refill your soap
-page_idle_products->label_pick_soap,Quick and easy soap refill,<br>just a tap away.
+page_idle_products->label_title,Quick and easy soap refill,<br>just a tap away.
 page_idle_products->label_printer_status->assistance_printer_offline,Assistance needed<br>Receipt Printer offline.
 page_idle_products->label_printer_status->empty_improperly_loaded,Assistance needed<br>Receipt printer empty or improperly loaded.
 

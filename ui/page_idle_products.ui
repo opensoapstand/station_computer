@@ -434,7 +434,7 @@
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_pick_soap">
+  <widget class="QLabel" name="label_title">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -511,7 +511,7 @@
   <zorder>label_product_2_overlay</zorder>
   <zorder>label_product_4_overlay</zorder>
   <zorder>label_product_3_overlay</zorder>
-  <zorder>label_pick_soap</zorder>
+  <zorder>label_title</zorder>
   <zorder>logo_label</zorder>
   <zorder>label_printer_status</zorder>
  </widget>

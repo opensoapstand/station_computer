@@ -17,12 +17,12 @@
 #define IDLE_PRODUCTS_H
 
 #include "df_util.h"
-#include "page_select_product.h"
-#include "dfuicommthread.h"
+// #include "page_select_product.h"
+// #include "dfuicommthread.h"
 #include "page_idle.h"
-#include "dbmanager.h"
-#include "page_maintenance.h"
-#include "page_maintenance_general.h"
+// #include "dbmanager.h"
+// #include "page_maintenance.h"
+// #include "page_maintenance_general.h"
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
 
@@ -30,13 +30,13 @@
 // #define DB_PATH_CLICKS "/release/db/sqlite/clicks.db"
 // #define DB_PATH_TEMPERATURE "/release/db/sqlite/temperature.db"
 
-class page_maintenance;
+// class page_maintenance;
 class page_select_product;
 class page_idle;
-class page_maintenance_general;
-class page_product;
-class page_maintenance;
-class page_help;
+// class page_maintenance_general;
+// class page_product;
+// class page_maintenance;
+// class page_help;
 
 namespace Ui
 {
@@ -49,12 +49,12 @@ class page_idle_products : public QWidget
 
 public:
     explicit page_idle_products(QWidget *parent = nullptr);
-    void setPage(page_idle *pageIdle);
-    
+    void setPage(page_idle *pageIdle, page_select_product *page_select_product);
+
     // function body
     ~page_idle_products();
 
-    void select_product(int slot);
+    // void select_product(int slot);
     void displayProducts();
     void addCompanyLogoToLabel(QLabel *label);
     void setBackgroundPictureFromTemplateToPage(QWidget *page, QString imageName);
@@ -72,10 +72,9 @@ public:
 private slots:
     // **** Navigation ****
 
-    // void on_pushButton_to_select_product_page_clicked();
+    void on_pushButton_to_select_product_page_clicked();
     // void onBackgroundChangeTimerTimeout();
     void onBackgroundChangeTimerTick();
-         
 
 private:
     void showEvent(QShowEvent *event);
@@ -83,28 +82,24 @@ private:
     void hideAllLabelAndButtons();
     void showAllLabelsAndButtons();
     void changeBackground();
+    void displayPrinterStatus();
 
     void resizeEvent(QResizeEvent *event);
 
-    Ui::page_idle_products *ui;
-    page_product *p_page_product;
-    page_idle *p_page_idle;
-
     QResizeEvent *productResize;
-
-    page_select_product *p_pageSelectProduct;
-    page_maintenance *p_page_maintenance;
-    page_maintenance_general *p_page_maintenance_general;
+    Ui::page_idle_products *ui;
+    page_idle *p_page_idle;
+    page_select_product *p_page_select_product;
     page_idle_products *p_page_idle_products;
 
-    page_help *p_page_help;
-
     int _backgroundChangeTimeLeftTenthsOfSec;
-
     int active_background_index;
-
     int maintenanceCounter;
     QTimer *backgroundChangeTimer;
+
+    bool m_printer_isOnline = true;
+    bool m_printer_hasPaper = true;
+    // bool m_printer_status_visible;
 };
 
 #endif // page_idle_products_H

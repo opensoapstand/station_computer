@@ -147,6 +147,7 @@ void page_idle_products::displayProducts()
 
         labels_selectProductOverlay[slot_index]->setText("");
         labels_product_overlay_text[slot_index]->setText("");
+        labels_product_type[slot_index]->setText(product_type);
     }
 
     // overlay product status

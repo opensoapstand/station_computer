@@ -174,7 +174,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QTableWidget" name="wifiTable">
+  <widget class="QTableWidget" name="table_wifi_networks">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -1502,7 +1502,7 @@
   <zorder>checkBox_enable_empty_container</zorder>
   <zorder>label_wifi_internet</zorder>
   <zorder>pushButton_wifi_networks</zorder>
-  <zorder>wifiTable</zorder>
+  <zorder>table_wifi_networks</zorder>
   <zorder>label_wifi_name</zorder>
   <zorder>label_wifi_status</zorder>
   <zorder>label_wifi_ip_address</zorder>

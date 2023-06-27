@@ -1178,7 +1178,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QTextBrowser" name="html_textBrowser">
+  <widget class="QTextBrowser" name="html_help_text">
    <property name="geometry">
     <rect>
      <x>100</x>
@@ -1215,7 +1215,7 @@
   <zorder>pushButton_to_transactions</zorder>
   <zorder>pushButton_to_maintenance</zorder>
   <zorder>pushButton_to_feedback</zorder>
-  <zorder>html_textBrowser</zorder>
+  <zorder>html_help_text</zorder>
   <zorder>pushButton_to_idle</zorder>
   <zorder>keyboard_3</zorder>
  </widget>

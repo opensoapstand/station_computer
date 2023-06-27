@@ -19,35 +19,6 @@
   <property name="styleSheet">
    <string notr="true"/>
   </property>
-  <widget class="QPushButton" name="wifi_ack_Button">
-   <property name="geometry">
-    <rect>
-     <x>420</x>
-     <y>1450</y>
-     <width>251</width>
-     <height>91</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="error_message_label">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1081</width>
-     <height>1921</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true"/>
-   </property>
-   <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="pushButton_mainPage">
    <property name="geometry">
     <rect>
@@ -126,14 +97,6 @@
     <string>TextLabel</string>
    </property>
   </widget>
-  <zorder>pushButton_mainPage</zorder>
-  <zorder>error_message_label</zorder>
-  <zorder>wifi_ack_Button</zorder>
-  <zorder>label_error_message</zorder>
-  <zorder>label_logo_drinkfill</zorder>
-  <zorder>label_oops</zorder>
-  <zorder>label_error_occured</zorder>
-  <zorder>label_check_back</zorder>
  </widget>
  <resources/>
  <connections/>

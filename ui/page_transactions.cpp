@@ -54,7 +54,7 @@ void page_transactions::showEvent(QShowEvent *event)
         ui->pushButton_back->setStyleSheet(styleSheet);
         ui->pushButton_print->setStyleSheet(styleSheet);
         ui->label_title->setStyleSheet(styleSheet);
-        ui->transactions_List->setStyleSheet(styleSheet);
+        ui->list_transactions->setStyleSheet(styleSheet);
 
         p_page_idle->setTemplateTextToObject(ui->label_title);
         p_page_idle->setTemplateTextToObject(ui->pushButton_back);
@@ -100,7 +100,7 @@ void page_transactions::populateTransactionsTable()
 
 void page_transactions::deleteAllListItems()
 {
-        ui->transactions_List->clear();
+        ui->list_transactions->clear();
 }
 
 void page_transactions::populateList()
@@ -108,7 +108,7 @@ void page_transactions::populateList()
         deleteAllListItems();
 
         // header is the first row. (caution: It messes up the indexing a little bit)
-        ui->transactions_List->addItem("Dispense time     \t Volume [ml]     Price[$]\t  Name");
+        ui->list_transactions->addItem("Dispense time     \t Volume [ml]     Price[$]\t  Name");
 
         // populate the items of the list
         for (int i = 0; i < transaction_count; i++)
@@ -137,7 +137,7 @@ void page_transactions::populateList()
                 int pos = rowItem.lastIndexOf(QChar('\t'));
                 // qDebug() << rowItem.left(pos);
 
-                ui->transactions_List->addItem(rowItem);
+                ui->list_transactions->addItem(rowItem);
         }
 }
 
@@ -150,16 +150,16 @@ void page_transactions::on_pushButton_print_clicked(bool checked)
 {
 
         // Get the pointer to the currently selected item.
-        if (ui->transactions_List->selectedItems().size() != 0)
+        if (ui->list_transactions->selectedItems().size() != 0)
         {
 
-                QListWidgetItem *item = ui->transactions_List->currentItem();
+                QListWidgetItem *item = ui->list_transactions->currentItem();
 
                 // Set the text color and its background color using the pointer to the item.
                 // item->setTextColor(Qt::white);
                 item->setBackgroundColor(Qt::green);
                 _idleTimeoutSec = 60;
-                QModelIndex selectedRow = ui->transactions_List->selectionModel()->selectedIndexes()[0];
+                QModelIndex selectedRow = ui->list_transactions->selectionModel()->selectedIndexes()[0];
                 int rowIndex = selectedRow.row();
 
                 if (rowIndex != 0)

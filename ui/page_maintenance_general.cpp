@@ -62,7 +62,7 @@ void page_maintenance_general::showEvent(QShowEvent *event)
     stdout = process.readAllStandardOutput();
     ui->label_wifi_internet->setText("Wifi Connectivity: " + stdout);
 
-    ui->wifiTable->setRowCount(0);
+    ui->table_wifi_networks->setRowCount(0);
 
     ui->keyboard_2->hide();
 
@@ -378,7 +378,7 @@ void page_maintenance_general::on_pushButton_wifi_networks_clicked()
 {
     //    qDebug() << "WiFi button clicked" << endl;
     // _page_maintenanceTimeoutSec = PAGE_MAINTENANCE_TIMEOUT_SECONDS;
-    ui->wifiTable->setRowCount(0);
+    ui->table_wifi_networks->setRowCount(0);
 
     // OPEN LIST OF WIFI CONNECTIONS AVAILABLE, AS BUTTONS, WHEN YOU CLICK ON A BUTTON, OPEN PASSWORD ENTRY
 
@@ -421,8 +421,8 @@ void page_maintenance_general::on_pushButton_wifi_networks_clicked()
             if (ap_interface.property("Ssid").toString() != "")
             {
                 //                qDebug() << " SSID: " << ap_interface.property("Ssid").toString();
-                ui->wifiTable->insertRow(ui->wifiTable->rowCount());
-                ui->wifiTable->setRowHeight(ui->wifiTable->rowCount() - 1, 60);
+                ui->table_wifi_networks->insertRow(ui->table_wifi_networks->rowCount());
+                ui->table_wifi_networks->setRowHeight(ui->table_wifi_networks->rowCount() - 1, 60);
                 QWidget *pWidget = new QWidget();
                 QPushButton *btn = new QPushButton();
                 btn->setText(ap_interface.property("Ssid").toString());
@@ -433,7 +433,7 @@ void page_maintenance_general::on_pushButton_wifi_networks_clicked()
                 // pLayout->setAlignment(Qt::AlignLeft);
                 pLayout->setContentsMargins(0, 0, 0, 0);
                 pWidget->setLayout(pLayout);
-                ui->wifiTable->setCellWidget(ui->wifiTable->rowCount() - 1, 0, pWidget);
+                ui->table_wifi_networks->setCellWidget(ui->table_wifi_networks->rowCount() - 1, 0, pWidget);
                 connect(btn, SIGNAL(clicked()), this, SLOT(btn_clicked()));
             }
         }

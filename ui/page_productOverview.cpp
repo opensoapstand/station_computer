@@ -342,7 +342,8 @@ void page_product_overview::updatePriceLabel()
 
 void page_product_overview::apply_promo_code(QString promocode)
 {
-    QMovie *movie = new QMovie("soapstandspinner.gif");
+    QString image_path = p_page_idle->thisMachine.getTemplatePathFromName("soapstandspinner.gif");
+    QMovie *movie = new QMovie(image_path);
     ui->label_gif->setMovie(movie);
     movie->start();
     CURL *curl;

@@ -50,7 +50,7 @@ public slots:
 private slots:
     void on_pushButton_to_idle_clicked();
     void onThankyouTimeoutTick();
-    void on_notifyUs_Button_clicked();
+    void on_pushButton_contact_clicked();
 private:
     void showEvent(QShowEvent *event);
 

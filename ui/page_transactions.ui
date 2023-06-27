@@ -26,7 +26,7 @@
     <string>Back</string>
    </property>
   </widget>
-  <widget class="QListWidget" name="transactions_List">
+  <widget class="QListWidget" name="list_transactions">
    <property name="geometry">
     <rect>
      <x>40</x>

@@ -32,42 +32,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="extra_message_label">
-   <property name="geometry">
-    <rect>
-     <x>150</x>
-     <y>330</y>
-     <width>791</width>
-     <height>481</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Proxima Nova</family>
-     <pointsize>-1</pointsize>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: white;
-border:  1px solid #CBA580;
-border-radius: 5px;
-font-family: Proxima Nova;
-font-weight: Bold;
-font-size: 40px;
-line-height: 60px;
-text-transform: uppercase;
-</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QLabel" name="thank_you_message_label">
+  <widget class="QLabel" name="label_message">
    <property name="geometry">
     <rect>
      <x>110</x>
@@ -96,7 +61,7 @@ text-transform: uppercase;
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="thank_you_subtitle_message_label">
+  <widget class="QLabel" name="label_message_2">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -122,7 +87,7 @@ text-transform: uppercase;
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="notifyUs_Button">
+  <widget class="QPushButton" name="pushButton_contact">
    <property name="geometry">
     <rect>
      <x>350</x>
@@ -146,34 +111,6 @@ text-transform: uppercase;
    <property name="icon">
     <iconset>
      <normaloff>../../production/references/helpButton.png</normaloff>../../production/references/helpButton.png</iconset>
-   </property>
-  </widget>
-  <widget class="QDialogButtonBox" name="popup">
-   <property name="geometry">
-    <rect>
-     <x>260</x>
-     <y>580</y>
-     <width>600</width>
-     <height>1000</height>
-    </rect>
-   </property>
-   <property name="minimumSize">
-    <size>
-     <width>500</width>
-     <height>1000</height>
-    </size>
-   </property>
-   <property name="baseSize">
-    <size>
-     <width>500</width>
-     <height>1000</height>
-    </size>
-   </property>
-   <property name="contextMenuPolicy">
-    <enum>Qt::ActionsContextMenu</enum>
-   </property>
-   <property name="centerButtons">
-    <bool>true</bool>
    </property>
   </widget>
   <widget class="QLabel" name="label_volume_dispensed">

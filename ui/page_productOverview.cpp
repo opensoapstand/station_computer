@@ -113,7 +113,7 @@ void page_product_overview::showEvent(QShowEvent *event)
     ui->label_invoice_discount_name->setStyleSheet(styleSheet);
     ui->label_total->setStyleSheet(styleSheet);
     ui->label_gif->setStyleSheet(styleSheet);
-    ui->invoice_line->setStyleSheet(styleSheet);
+    ui->line_invoice->setStyleSheet(styleSheet);
     ui->pushButton_select_product_page->setStyleSheet(styleSheet);
 
     ui->label_product_photo->setStyleSheet(styleSheet);

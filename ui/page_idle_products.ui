@@ -245,27 +245,6 @@
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QLabel" name="product_photo_label_text_2">
-   <property name="geometry">
-    <rect>
-     <x>850</x>
-     <y>300</y>
-     <width>450</width>
-     <height>450</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>46</pointsize>
-    </font>
-   </property>
-   <property name="autoFillBackground">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_product_1_overlay_text">
    <property name="geometry">
     <rect>
@@ -447,7 +426,7 @@
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QLabel" name="logo_label">
+  <widget class="QLabel" name="label_customer_logo">
    <property name="geometry">
     <rect>
      <x>446</x>
@@ -504,7 +483,6 @@
   <zorder>label_product_3_type</zorder>
   <zorder>label_product_2_type</zorder>
   <zorder>label_product_4_type</zorder>
-  <zorder>product_photo_label_text_2</zorder>
   <zorder>label_product_4_overlay_text</zorder>
   <zorder>label_product_3_overlay_text</zorder>
   <zorder>label_product_1_overlay</zorder>
@@ -512,7 +490,7 @@
   <zorder>label_product_4_overlay</zorder>
   <zorder>label_product_3_overlay</zorder>
   <zorder>label_title</zorder>
-  <zorder>logo_label</zorder>
+  <zorder>label_customer_logo</zorder>
   <zorder>label_printer_status</zorder>
  </widget>
  <resources/>

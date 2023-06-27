@@ -43,6 +43,6 @@ QLabel {
     border: 0px;
 }
 
-#drinkfill_logo_label {
+#label_manufacturer_logo {
     qproperty-alignment: AlignCenter;
 }

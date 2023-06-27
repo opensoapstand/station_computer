@@ -55,7 +55,7 @@ public:
 
     void addPictureToLabel(QLabel *label, QString picturePath);
     void addPictureToButton(QPushButton *button, QString picturePath);
-    void addCompanyLogoToLabel(QLabel *label);
+    void addCustomerLogoToLabel(QLabel *label);
     void changeToIdleProductsIfSet();
     void setBackgroundPictureFromTemplateToPage(QWidget *page, QString imageName);
     void setBackgroundPictureToQWidget(QWidget *page, QString imageName);

@@ -83,7 +83,7 @@ text-transform: uppercase;
     <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
    </property>
   </widget>
-  <widget class="QLabel" name="thank_you_logo_label">
+  <widget class="QLabel" name="label_customer_logo">
    <property name="geometry">
     <rect>
      <x>370</x>
@@ -109,7 +109,7 @@ text-transform: uppercase;
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="drinkfill_logo_label2">
+  <widget class="QLabel" name="label_manufacturer_logo">
    <property name="geometry">
     <rect>
      <x>300</x>

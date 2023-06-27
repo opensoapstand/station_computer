@@ -140,7 +140,7 @@ void page_dispenser::showEvent(QShowEvent *event)
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH);
     }
 
-    p_page_idle->addCompanyLogoToLabel(ui->label_logo);
+    p_page_idle->addCustomerLogoToLabel(ui->label_logo);
     ui->label_logo->hide();
 
     p_page_idle->addPictureToLabel(ui->dispense_bottle_label, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));

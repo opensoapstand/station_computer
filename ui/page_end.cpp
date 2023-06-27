@@ -74,9 +74,9 @@ void page_end::showEvent(QShowEvent *event)
     ui->pushButton_to_idle->setEnabled(true);
     ui->pushButton_to_idle->raise();
     ui->notifyUs_Button->raise();
-    ui->thank_you_logo_label->hide();
+    ui->label_customer_logo->hide();
 
-    p_page_idle->addCompanyLogoToLabel(ui->thank_you_logo_label);
+    p_page_idle->addCustomerLogoToLabel(ui->label_customer_logo);
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_END_BACKGROUND_PATH);
 
     QString paymentMethod = p_page_idle->selectedProduct->getPaymentMethod();
@@ -115,8 +115,8 @@ void page_end::showEvent(QShowEvent *event)
     thankYouEndTimer->start();
 
     QString machine_logo_full_path = p_page_idle->thisMachine.getTemplatePathFromName(MACHINE_LOGO_PATH);
-    p_page_idle->addPictureToLabel(ui->drinkfill_logo_label2, machine_logo_full_path);
-    ui->drinkfill_logo_label2->setStyleSheet(styleSheet);
+    p_page_idle->addPictureToLabel(ui->label_manufacturer_logo, machine_logo_full_path);
+    ui->label_manufacturer_logo->setStyleSheet(styleSheet);
 
     QString units = p_page_idle->selectedProduct->getUnitsForSlot();
     QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->selectedProduct->getVolumeDispensedMl(), units, false, true);

@@ -63,12 +63,6 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
     labels_product_type[3] = ui->label_product_4_type;
 
     ui->pushButton_to_select_product_page->raise();
-
-    QFont font;
-    font.setFamily(QStringLiteral("Brevia"));
-    font.setPointSize(20);
-    font.setBold(true);
-    font.setWeight(75);
 }
 
 /*
@@ -118,7 +112,7 @@ void page_idle_products::showEvent(QShowEvent *event)
         p_page_idle->checkReceiptPrinterStatus();
     }
 
-    p_page_idle->addCompanyLogoToLabel(ui->logo_label);
+    p_page_idle->addCustomerLogoToLabel(ui->label_customer_logo);
     ui->pushButton_to_select_product_page->raise();
 
     changeBackground();
@@ -170,7 +164,7 @@ void page_idle_products::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 void page_idle_products::showAllLabelsAndButtons()
 {
     ui->label_title->show();
-    ui->logo_label->show();
+    ui->label_customer_logo->show();
 
     displayPrinterStatus();
     ui->pushButton_to_select_product_page->show();
@@ -186,7 +180,7 @@ void page_idle_products::showAllLabelsAndButtons()
 void page_idle_products::hideAllLabelAndButtons()
 {
     ui->label_title->hide();
-    ui->logo_label->hide();
+    ui->label_customer_logo->hide();
     ui->label_printer_status->hide();
 
     for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)

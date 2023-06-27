@@ -118,7 +118,7 @@ void page_idle::showEvent(QShowEvent *event)
     // QString base_text = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_welcome_message, "testargument" );
     // ui->label_welcome_message->setText(base_text.arg("SoAp")); // will replace %1 character in string by the provide text
     setTemplateTextToObject(ui->label_welcome_message);
-    addCompanyLogoToLabel(ui->logo_label);
+    addCustomerLogoToLabel(ui->label_customer_logo);
 
     ui->label_printer_status->hide(); // always hide here, will show if enabled and has problems.
 
@@ -128,8 +128,8 @@ void page_idle::showEvent(QShowEvent *event)
     }
 
     QString machine_logo_full_path = thisMachine.getTemplatePathFromName(MACHINE_LOGO_PATH);
-    addPictureToLabel(ui->drinkfill_logo_label, machine_logo_full_path);
-    ui->drinkfill_logo_label->setStyleSheet(styleSheet);
+    addPictureToLabel(ui->label_manufacturer_logo, machine_logo_full_path);
+    ui->label_manufacturer_logo->setStyleSheet(styleSheet);
 
     idlePageTypeSelectorTimer->start(100);
     _idlePageTypeSelectorTimerTimeoutSec = 2;
@@ -289,7 +289,7 @@ void page_idle::on_pushButton_test_clicked()
     qDebug() << "test buttonproceeed clicked.. ";
 }
 
-void page_idle::addCompanyLogoToLabel(QLabel *label)
+void page_idle::addCustomerLogoToLabel(QLabel *label)
 {
     QString id = thisMachine.getCustomerId();
     QString logo_path = QString(CLIENT_LOGO_PATH).arg(id);

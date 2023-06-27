@@ -2067,7 +2067,7 @@ text-align: center;</string>
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="Line" name="invoice_line">
+  <widget class="Line" name="line_invoice">
    <property name="geometry">
     <rect>
      <x>137</x>
@@ -2101,7 +2101,7 @@ text-align: center;</string>
   <zorder>label_product_photo</zorder>
   <zorder>label_gif</zorder>
   <zorder>pushButton_to_help</zorder>
-  <zorder>invoice_line</zorder>
+  <zorder>line_invoice</zorder>
  </widget>
  <resources/>
  <connections/>

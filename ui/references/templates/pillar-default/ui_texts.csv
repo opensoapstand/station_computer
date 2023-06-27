@@ -20,15 +20,15 @@ page_idle->label_printer_status->nopaper,Assistance needed<br>Receipt Printer em
 
 #page_select_product
 page_select_product->label_pick_soap,Discover our Beverages
-page_select_product->pushButton_to_idle,↞back
+page_select_product->pushButton_to_idle,←back
 page_select_product->no_text,
 
 
 # Page_product 
-page_product->pushButton_back,↞back
+page_product->pushButton_back,←back
 
 # page_product_overview
-page_product_overview->pushButton_select_product_page,↞back
+page_product_overview->pushButton_select_product_page,←back
 page_product_overview->label_pay,Proceed to Pay
 page_product_overview->label_total,Total Amount
 
@@ -40,10 +40,10 @@ page_dispenser->label_press,press and hold the<br>button
 
 
 # page_help
-page_help->pushButton_to_idle,↞back
+page_help->pushButton_to_idle,←back
 
 # page_sendFeedback
-page_sendFeedback->pushButton_previous_page,↞back
+page_sendFeedback->pushButton_previous_page,←back
 page_sendFeedback->checkBox_1_Label,I love this, keep me in the loop.
 page_sendFeedback->checkBox_2_Label,User interface problem
 page_sendFeedback->checkBox_3_Label,Drink dispensing problem
@@ -54,11 +54,11 @@ page_sendFeedback->label_thanks_for_feedback,Thank you for <br> your feedback
 page_sendFeedback->pushButton_send,Send
 
 # page_qr_payment
-page_qr_payment->pushButton_previous_page,↞back
+page_qr_payment->pushButton_previous_page,←back
 page_qr_payment->label_title->pay_by_phone,Pay by phone
 
 # page_tap_payment
-page_tap_payment->pushButton_previous_page,↞back
+page_tap_payment->pushButton_previous_page,←back
 
 # page_tap_payment_serial
-page_tap_payment_serial->pushButton_previous_page,↞back
+page_tap_payment_serial->pushButton_previous_page,←back

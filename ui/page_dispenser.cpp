@@ -124,7 +124,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     this->isDispensing = false;
     askForFeedbackAtEnd = false;
 
-    ui->fill_animation_label->move(380, 889);
+    ui->label_moving_bottle_fill_effect->move(380, 889);
     ui->pushButton_problems->move(120, 40);
 
     previousDispenseStatus = "NO STATE";
@@ -140,12 +140,12 @@ void page_dispenser::showEvent(QShowEvent *event)
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH);
     }
 
-    p_page_idle->addCompanyLogoToLabel(ui->label_logo);
+    p_page_idle->addCustomerLogoToLabel(ui->label_logo);
     ui->label_logo->hide();
 
-    p_page_idle->addPictureToLabel(ui->dispense_bottle_label, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));
+    p_page_idle->addPictureToLabel(ui->label_background_during_dispense_animation, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));
 
-    p_page_idle->addPictureToLabel(ui->fill_animation_label, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_FILL_ANIMATION));
+    p_page_idle->addPictureToLabel(ui->label_moving_bottle_fill_effect, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_FILL_ANIMATION));
     
 
     ui->pushButton_abort->show();
@@ -153,8 +153,8 @@ void page_dispenser::showEvent(QShowEvent *event)
     ui->label_to_refill->show();
     ui->label_instructions_container->show();
     ui->label_finishTransactionMessage->hide();
-    ui->dispense_bottle_label->hide();
-    ui->fill_animation_label->hide();
+    ui->label_background_during_dispense_animation->hide();
+    ui->label_moving_bottle_fill_effect->hide();
 
     ui->label_dispense_message->hide();
     ui->pushButton_problems->show();
@@ -204,8 +204,8 @@ void page_dispenser::dispensing_end_admin()
 {
     qDebug() << "Dispense end admin start";
     this->isDispensing = false;
-    ui->dispense_bottle_label->hide();
-    ui->fill_animation_label->hide();
+    ui->label_background_during_dispense_animation->hide();
+    ui->label_moving_bottle_fill_effect->hide();
     ui->pushButton_abort->hide();
     ui->label_finishTransactionMessage->show();
     ui->label_finishTransactionMessage->raise();
@@ -430,16 +430,16 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
             percentage = 100;
         }
 
-        this->ui->fill_animation_label->move(380, 900 - 3 * percentage);
+        this->ui->label_moving_bottle_fill_effect->move(380, 900 - 3 * percentage);
         // ui->pushButton_problems->move(120, 450);
         // transition from instructions to dispensing at first receival of volume.
-        ui->dispense_bottle_label->show();
+        ui->label_background_during_dispense_animation->show();
         ui->label_press->hide();
         ui->label_to_refill->hide();
         ui->label_instructions_container->hide();
 
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_abort, "complete");
-        ui->fill_animation_label->show();
+        ui->label_moving_bottle_fill_effect->show();
         ui->pushButton_abort->raise();
         ui->pushButton_problems->raise();
     }

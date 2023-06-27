@@ -91,7 +91,7 @@ void page_select_product::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
 
     QString styleSheet = p_page_idle->getCSS(PAGE_SELECT_PRODUCT_CSS);
-    ui->p_page_maintenanceButton->setStyleSheet(styleSheet);
+    ui->pushButton_to_maintenance->setStyleSheet(styleSheet);
     ui->pushButton_help_page->setStyleSheet(styleSheet);
     ui->pushButton_to_idle->setStyleSheet(styleSheet);
     ui->label_pick_soap->setStyleSheet(styleSheet);
@@ -319,7 +319,7 @@ void page_select_product::onProductPageTimeoutTick()
     }
 }
 
-void page_select_product::on_p_page_maintenanceButton_pressed()
+void page_select_product::on_pushButton_to_maintenance_pressed()
 {
     maintenanceCounter++;
     if (maintenanceCounter > 50)

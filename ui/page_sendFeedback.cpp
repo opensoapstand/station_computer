@@ -399,10 +399,6 @@ void page_sendFeedback::on_pushButton_start_input_clicked()
     }
 }
 
-void page_sendFeedback::on_feedbackText_cursorPositionChanged(int arg1, int arg2)
-{
-}
-
 void page_sendFeedback::on_pushButton_help_page_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_help);

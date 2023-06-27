@@ -17,10 +17,11 @@ typedef enum StateCoupon
     no_state,
     disabled,
     enabled_not_set,
+    enabled_show_keyboard,
+    enabled_processing_input,
     enabled_invalid_input,
-    enabled_set_valid_input,
-    network_error,
-    enabled_show_keyboard
+    enabled_valid_active,
+    network_error
 } StateCoupon;
 
 class machine : public QObject
@@ -55,6 +56,7 @@ public:
     QString getTemplateFolder();
     QString getTemplatePathFromName(QString fileName);
     QString getDefaultTemplatePathFromName(QString fileName);
+
     bool getEmptyContainerDetectionEnabled();
     void setEmptyContainerDetectionEnabled(bool isEnabled);
     void setPumpRampingEnabled(bool isEnabled);

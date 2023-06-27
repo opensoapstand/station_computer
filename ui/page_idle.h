@@ -52,21 +52,17 @@ public:
     void setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products, page_error_wifi *p_page_error_wifi);
     ~page_idle();
     void showEvent(QShowEvent *event);
+
     void addPictureToLabel(QLabel *label, QString picturePath);
     void addPictureToButton(QPushButton *button, QString picturePath);
-    void addCompanyLogoToLabel(QLabel *label);
-    // QString getTemplateFolder();
+    void addCustomerLogoToLabel(QLabel *label);
     void changeToIdleProductsIfSet();
-    // void setTemplateFolder(QString rootPath, QString templateFolder);
-    // QString getTemplatePathFromName(QString fileName);
-    // QString getDefaultTemplatePathFromName(QString fileName);
     void setBackgroundPictureFromTemplateToPage(QWidget *page, QString imageName);
     void setBackgroundPictureToQWidget(QWidget *page, QString imageName);
-    QString getCSS(QString cssName);
-    void pageTransition(QWidget *pageToHide, QWidget *pageToShow);
+
     void loadDynamicContent();
 
-
+    void pageTransition(QWidget *pageToHide, QWidget *pageToShow);
 
     void setSelectedProduct(uint8_t slot);
     product *getSelectedProduct();
@@ -75,7 +71,7 @@ public:
     product *selectedProduct;
 
     machine thisMachine;
-    DbManager* g_database;
+    DbManager *g_database;
 
     df_util *dfUtility;
     DfUiCommThread *dfComm;
@@ -89,6 +85,7 @@ public:
     QVideoWidget *videoWidget;
     QMediaPlayer *player;
 
+    QString getCSS(QString cssName);
     void addCssClassToObject(QWidget *element, QString classname, QString css_file_name);
     void setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier);
     void setTemplateTextToObject(QWidget *p_element);
@@ -106,11 +103,11 @@ public:
     QTimer *idlePageTypeSelectorTimer;
     int _idlePageTypeSelectorTimerTimeoutSec;
 
+    void checkReceiptPrinterStatus();
+
 private slots:
     void on_pushButton_to_select_product_page_clicked();
-    //  void on_pushButton_to_select_product_page_clicked();
     void onIdlePageTypeSelectorTimerTick();
-    //    void on_savedBottles_label_clicked();
 
     void on_pushButton_test_clicked();
 
@@ -119,7 +116,7 @@ private:
     std::map<QString, QString> textNameToTextMap_default;
 
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
-    void checkReceiptPrinterStatus();
+
     QString m_templatePath;
     Ui::page_idle *ui;
     page_select_product *p_pageSelectProduct;
@@ -127,9 +124,8 @@ private:
     page_maintenance_general *p_page_maintenance_general;
     page_idle_products *p_page_idle_products;
     page_error_wifi *p_page_error_wifi;
-    bool p1, p2, p3, p4;
+    // bool p1, p2, p3, p4;
     QString idle_page_type;
-
 };
 
 #endif // IDLE_H

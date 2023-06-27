@@ -73,18 +73,6 @@ page_idle::~page_idle()
     delete ui;
 }
 
-void page_idle::loadDynamicContent()
-{
-    // load global machine data
-    thisMachine.loadParametersFromDb();
-    // load slot data
-    for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
-    {
-        products[slot_index].loadProductProperties();
-    }
-    loadTextsFromTemplateCsv(); // dynamic content (text by template)
-    loadTextsFromDefaultCsv();  // dynamic styling (css by template)
-}
 
 void page_idle::showEvent(QShowEvent *event)
 {
@@ -94,7 +82,7 @@ void page_idle::showEvent(QShowEvent *event)
     thisMachine.setRole(UserRole::user);
 
     // everything coupon is reset when idle page is reached.
-    thisMachine.initCouponState(); 
+    thisMachine.initCouponState();
 
     setSelectedProduct(1); // default selected product is necessary to deal with things if no product is chosen yet e.g. show transaction history
 
@@ -108,40 +96,40 @@ void page_idle::showEvent(QShowEvent *event)
     ui->pushButton_test->setStyleSheet(styleSheet);
     ui->label_printer_status->setStyleSheet(styleSheet);
 
+    // bool needsReceiptPrinter = false;
+    // for (int slot = 1; slot <= SLOT_COUNT; slot++)
+    // {
+    // QString paymentMethod = products[slot - 1].getPaymentMethod();
+    // products[slot - 1].setDiscountPercentageFraction(0.0);
+    // products[slot - 1].setPromoCode("");
+    // if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
+    // {
+    //     // needsReceiptPrinter = true;
+    //     qDebug() << "Needs receipt printer: " << paymentMethod;
+    //     break;
+    // }
 
-    bool needsReceiptPrinter = false;
-    for (int slot = 1; slot <= SLOT_COUNT; slot++)
-    {
-        QString paymentMethod = products[slot - 1].getPaymentMethod();
-        // products[slot - 1].setDiscountPercentageFraction(0.0);
-        // products[slot - 1].setPromoCode("");
-        if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
-        {
-            needsReceiptPrinter = true;
-            qDebug() << "Needs receipt printer: " << paymentMethod;
-            break;
-        }
-
-        // reset promovalue
-        // currentProductOrder->setDiscountPercentageFraction(0.0);
-        // currentProductOrder->setPromoCode("");
-    }
+    // reset promovalue
+    // currentProductOrder->setDiscountPercentageFraction(0.0);
+    // currentProductOrder->setPromoCode("");
+    // }
 
     // template text with argument demo
     // QString base_text = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_welcome_message, "testargument" );
     // ui->label_welcome_message->setText(base_text.arg("SoAp")); // will replace %1 character in string by the provide text
     setTemplateTextToObject(ui->label_welcome_message);
-    addCompanyLogoToLabel(ui->logo_label);
+    addCustomerLogoToLabel(ui->label_customer_logo);
 
     ui->label_printer_status->hide(); // always hide here, will show if enabled and has problems.
-    if (needsReceiptPrinter)
+
+    if (thisMachine.hasReceiptPrinter())
     {
         checkReceiptPrinterStatus();
     }
 
     QString machine_logo_full_path = thisMachine.getTemplatePathFromName(MACHINE_LOGO_PATH);
-    addPictureToLabel(ui->drinkfill_logo_label, machine_logo_full_path);
-    ui->drinkfill_logo_label->setStyleSheet(styleSheet);
+    addPictureToLabel(ui->label_manufacturer_logo, machine_logo_full_path);
+    ui->label_manufacturer_logo->setStyleSheet(styleSheet);
 
     idlePageTypeSelectorTimer->start(100);
     _idlePageTypeSelectorTimerTimeoutSec = 2;
@@ -201,6 +189,19 @@ void page_idle::showEvent(QShowEvent *event)
 #endif
 }
 
+void page_idle::loadDynamicContent()
+{
+    // load global machine data
+    thisMachine.loadParametersFromDb();
+    // load slot data
+    for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+    {
+        products[slot_index].loadProductProperties();
+    }
+    loadTextsFromTemplateCsv(); // dynamic content (text by template)
+    loadTextsFromDefaultCsv();  // dynamic styling (css by template)
+}
+
 void page_idle::changeToIdleProductsIfSet()
 {
     if (thisMachine.getIdlePageType() == "static_products")
@@ -220,28 +221,12 @@ void page_idle::setSelectedProduct(uint8_t slot)
     selectedProduct = &products[slot - 1];
 }
 
-
 void page_idle::registerUserInteraction(QWidget *page)
 {
     QString page_name = page->objectName();
     qDebug() << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< User entered: " + page_name + " >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
 
     g_database->addUserInteraction(page_name);
-}
-
-
-void page_idle::checkReceiptPrinterStatus()
-{
-    if (thisMachine.hasReceiptPrinter())
-    {
-        qDebug() << "Check receipt printer functionality.";
-        this->p_page_maintenance_general->send_check_printer_status_command();
-        ui->pushButton_to_select_product_page->hide(); // when printer needs to be restarted, it can take some time. Make sure nobody presses the button in that interval (to prevent crashes)
-    }
-    else
-    {
-        qDebug() << "Receipt printer not enabled in db->machine table";
-    }
 }
 
 void page_idle::hideCurrentPageAndShowProvided(QWidget *pageToShow)
@@ -263,6 +248,14 @@ void page_idle::onIdlePageTypeSelectorTimerTick()
         idlePageTypeSelectorTimer->stop();
     }
 }
+
+void page_idle::checkReceiptPrinterStatus()
+{
+    qDebug() << "Check receipt printer functionality.";
+    this->p_page_maintenance_general->send_check_printer_status_command();
+    ui->pushButton_to_select_product_page->hide(); // when printer needs to be restarted, it can take some time. Make sure nobody presses the button in that interval (to prevent crashes)
+}
+
 void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
 {
     qDebug() << "Printer feedback received from fsm";
@@ -296,7 +289,7 @@ void page_idle::on_pushButton_test_clicked()
     qDebug() << "test buttonproceeed clicked.. ";
 }
 
-void page_idle::addCompanyLogoToLabel(QLabel *label)
+void page_idle::addCustomerLogoToLabel(QLabel *label)
 {
     QString id = thisMachine.getCustomerId();
     QString logo_path = QString(CLIENT_LOGO_PATH).arg(id);

@@ -16,11 +16,11 @@ QLabel {
    qproperty-alignment: AlignCenter;
 }
 
-#drinkfill_logo_label2{
+#label_manufacturer_logo{
    qproperty-alignment: AlignCenter;
 }
 
-#thank_you_subtitle_message_label {
+#label_message_2 {
    font-family: 'EuropaNuova-Regular';
    font-style: normal;
    font-weight: 400;
@@ -48,7 +48,7 @@ QLabel {
    border: none;
 }
 
-#notifyUs_Button {
+#pushButton_contact {
    color: #FFFFFF;
    background-color: transparent;
    border: 5px solid #FFFFFF;

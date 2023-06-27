@@ -8,7 +8,7 @@
 
 }
 
-#label_pick_soap {
+#label_title {
 
    font-family: 'Brevia';
    font-style: normal;
@@ -22,7 +22,7 @@
    border: none;
 }
 
-#printer_status_label {
+#label_printer_status {
 
    font-family: 'Brevia';
    font-style: normal;

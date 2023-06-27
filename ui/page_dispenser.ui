@@ -19,7 +19,7 @@
   <property name="styleSheet">
    <string notr="true"/>
   </property>
-  <widget class="QLabel" name="dispense_bottle_label">
+  <widget class="QLabel" name="label_background_during_dispense_animation">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -32,7 +32,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="fill_animation_label">
+  <widget class="QLabel" name="label_moving_bottle_fill_effect">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -246,8 +246,8 @@
    </property>
   </widget>
   <zorder>pushButton_abort</zorder>
-  <zorder>fill_animation_label</zorder>
-  <zorder>dispense_bottle_label</zorder>
+  <zorder>label_moving_bottle_fill_effect</zorder>
+  <zorder>label_background_during_dispense_animation</zorder>
   <zorder>label_volume_dispensed</zorder>
   <zorder>label_volume_dispensed_ml</zorder>
   <zorder>label_to_refill</zorder>

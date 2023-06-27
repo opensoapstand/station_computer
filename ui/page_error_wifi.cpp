@@ -29,8 +29,6 @@ page_error_wifi::page_error_wifi(QWidget *parent) : QWidget(parent),
     timeoutTimer = new QTimer(this);
     timeoutTimer->setInterval(20);
     connect(timeoutTimer, SIGNAL(timeout()), this, SLOT(onTimeOutTick()));
-
-    ui->wifi_ack_Button->setEnabled(true);
 }
 
 /*
@@ -72,18 +70,8 @@ void page_error_wifi::showEvent(QShowEvent *event)
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_ERROR_BACKGROUND_PATH);
 
-    ui->wifi_ack_Button->setEnabled(false);
-    ui->wifi_ack_Button->hide();
-
     timeoutTimer->start(1000);
     _goTop_page_idleTimeoutSec = 10;
-}
-
-/*
- * Page Tracking reference to Payment page and completed payment
- */
-void page_error_wifi::on_wifi_ack_Button_clicked()
-{
 }
 
 void page_error_wifi::on_pushButton_mainPage_clicked()

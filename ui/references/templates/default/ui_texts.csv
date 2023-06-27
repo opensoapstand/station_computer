@@ -27,9 +27,9 @@ page_idle->label_printer_status->nopaper,Assistance needed<br>Receipt Printer em
 #page_idle_products
 
 #tap here to refill your soap
-page_idle_products->label_pick_soap,Quick and easy soap refill,<br>just a tap away.
-page_idle_products->printer_status_label->assistance_printer_offline,Assistance needed<br>Receipt Printer offline.
-page_idle_products->printer_status_label->empty_improperly_loaded,Assistance needed<br>Receipt printer empty or improperly loaded.
+page_idle_products->label_title,Quick and easy soap refill,<br>just a tap away.
+page_idle_products->label_printer_status->assistance_printer_offline,Assistance needed<br>Receipt Printer offline.
+page_idle_products->label_printer_status->empty_improperly_loaded,Assistance needed<br>Receipt printer empty or improperly loaded.
 
 #page_select_product
 page_select_product->label_pick_soap,Pick your soap
@@ -80,14 +80,14 @@ page_dispenser->msgBox_abort->qr_tap,<p align=center><br><br>Are you sure, you w
 page_dispenser->msgBox_abort->default,<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine.<br></p>
 
 # page_end
-page_end->notifyUs_Button,Provide Feedback
-page_end->thank_you_message_label->hasReceiptPrinter,Please take <br>your receipt!
-page_end->thank_you_subtitle_message_label->hasReceiptPrinter2,By refilling you've helped keep a<br>plastic bottle out of our landfills.<br><br>Thank you!
-page_end->thank_you_message_label->qr,Please take <br>your receipt!
-page_end->thank_you_subtitle_message_label->qr2,By refilling you've helped keep a<br>plastic bottle out of our landfills.<br><br>Thank you!
-page_end->thank_you_message_label->any_pay,Please take <br>your receipt!
-page_end->thank_you_subtitle_message_label->any_pay2,By refilling you've helped keep a<br>plastic bottle out of our landfills.<br><br>Thank you!
-page_end->thank_you_message_label->finish_transaction,Finishing<br>transaction
+page_end->pushButton_contact,Provide Feedback
+page_end->label_message->hasReceiptPrinter,Please take <br>your receipt!
+page_end->label_message_2->hasReceiptPrinter2,By refilling you've helped keep a<br>plastic bottle out of our landfills.<br><br>Thank you!
+page_end->label_message->qr,Please take <br>your receipt!
+page_end->label_message_2->qr2,By refilling you've helped keep a<br>plastic bottle out of our landfills.<br><br>Thank you!
+page_end->label_message->any_pay,Please take <br>your receipt!
+page_end->label_message_2->any_pay2,By refilling you've helped keep a<br>plastic bottle out of our landfills.<br><br>Thank you!
+page_end->label_message->finish_transaction,Finishing<br>transaction
 
 # page_help
 page_help->pushButton_to_transactions,Transaction History ->

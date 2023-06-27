@@ -49,7 +49,6 @@ public slots:
 
 private slots:
     // **** Navigation ****
-    void on_wifi_ack_Button_clicked();
     void onTimeOutTick();
     void on_pushButton_mainPage_clicked();
 

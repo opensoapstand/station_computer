@@ -108,7 +108,7 @@ void page_qr_payment::showEvent(QShowEvent *event)
 
     if (p_page_idle->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
     {
-        ui->label_product_information->setText(p_page_idle->selectedProduct->getProductName() + p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_information, "volume_upto") + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
+        ui->label_product_information->setText(p_page_idle->selectedProduct->getProductName() + p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_information, "volume_up_to") + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
         QString base_text = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_price, "custom_size");
         QString label_product_price_text = base_text.arg(price);
         ui->label_product_price->setText(label_product_price_text);

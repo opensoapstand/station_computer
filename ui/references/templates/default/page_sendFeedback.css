@@ -105,12 +105,14 @@
    color: #FFFFFF;
    text-align: left;
    border-radius: none;
+   qproperty-alignment: AlignLeft;
 }
 
 QLabel {
    color: #555555;
    text-align: center;
    border: 1px;
+   qproperty-alignment: AlignCenter;
 }
 
 QPushButton {

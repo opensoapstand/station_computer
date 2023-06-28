@@ -104,15 +104,16 @@ QLabel {
     font-family: 'EuropaNuova-Regular';
     font-style: normal;
     font-weight: 400;
-    font-size: 37px;
+    font-size: 34px;
     line-height: 20px;
     color: #221F20;
 }
+
 #label_invoice_price{
     font-family: 'EuropaNuova-Regular';
     font-style: normal;
     font-weight: 700;
-    font-size: 37px;
+    font-size: 34px;
     line-height: 40px;
     color: #221F20;
 }
@@ -131,8 +132,8 @@ QLabel {
     font-size: 47px;
     text-align: center;
     line-height: auto;
-    /* qproperty-alignment: AlignCenter; */
-    /* border-radius: 25px; */
+    qproperty-alignment: AlignCenter;
+    border-radius: 25px;
     color: #FFFFFF;
     border: 1px solid #221F20;
 }
@@ -158,14 +159,14 @@ QLabel {
     font-family: 'EuropaNuova-Regular';
     font-style: normal;
     font-weight: 400;
-    font-size: 37px;
+    font-size: 34px;
     line-height: 29px;
     color: #221F20;
 }
 #label_invoice_price_total{
     font-family: "EuropaNuova-Regular";
     font-weight: 700;
-    font-size: 37px;
+    font-size: 34px;
     color: #221F20;
 }
 #label_gif{

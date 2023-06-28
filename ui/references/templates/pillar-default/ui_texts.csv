@@ -14,7 +14,7 @@
 # empty lines are also permitted
 
 # page_idle
-page_idle->label_welcome_message,Fancy a beverage?
+page_idle->label_welcome_message,Fancy a Beverage?
 page_idle->label_printer_status->offline,Assistance needed<br>Receipt Printer offline.
 page_idle->label_printer_status->nopaper,Assistance needed<br>Receipt Printer empty or improperly loaded.
 
@@ -38,6 +38,8 @@ page_dispenser->label_to_refill,To Refill
 page_dispenser->label_instructions_container,bring container to nozzle
 page_dispenser->label_press,press and hold the<br>button
 
+# page_end
+page_end->pushButton_contact,Feedback
 
 # page_help
 page_help->pushButton_to_idle,←back
@@ -55,7 +57,8 @@ page_sendFeedback->pushButton_send,Send
 
 # page_qr_payment
 page_qr_payment->pushButton_previous_page,←back
-page_qr_payment->label_title->pay_by_phone,Pay by phone
+page_qr_payment->label_title->pay_by_phone,Pay by Phone
+page_qr_payment->label_steps,<style>        li:{margin-top:10px; margin-left: 5px;}        </style>        <ol>        <li><span class='tab'></span>Scan QR code with phone camera<br></li>        <li><span class='tab'></span>Click to open the link that appears<br></li>        <li><span class='tab'></span>Follow payment instructions on phone<br></li>        <li><span class='tab'></span>The station will proceed after payment<br></li>        <li><span class='tab'></span>Refill your beverage!</li>        </ol>        <style>        li:{margin-top:10px;}        </style>        <ol>       
 
 # page_tap_payment
 page_tap_payment->pushButton_previous_page,←back

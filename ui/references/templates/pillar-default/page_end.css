@@ -54,9 +54,10 @@ QLabel {
    background-color: transparent;
    border: 5px solid #FFFFFF;
    text-align: center;
-   border-radius: 20px;
+   border-radius: 25px;
    font-family: 'EuropaNuova-ExtraBold';
-   font-size: 20px;
+   font-size: 45px;
    font-weight: 400;
    font-style: normal;
+   qproperty-alignment: AlignCenter;
 }

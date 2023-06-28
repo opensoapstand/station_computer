@@ -84,17 +84,6 @@ public:
     double getDiscountAmount(double price);
     double getPriceWithDiscount(double price);
 
-public slots:
-
-signals:
-
-private:
-    StateCoupon m_stateCoupon;
-    double m_discount_percentage_fraction = 0.0;
-    QString m_promoCode;
-
-    DbManager *m_db;
-    UserRole active_role;
     QString m_machine_id;
     QString m_soapstand_customer_id;
     QString m_template;
@@ -120,6 +109,20 @@ private:
     QString m_help_text_html;
     QString m_idle_page_type;
     QString m_admin_pwd;
+
+
+public slots:
+
+signals:
+
+private:
+    StateCoupon m_stateCoupon;
+    double m_discount_percentage_fraction = 0.0;
+    QString m_promoCode;
+
+    DbManager *m_db;
+    UserRole active_role;
+
 
     QString m_pump_id_slots[SLOT_COUNT];
     int m_is_enabled_slots[SLOT_COUNT];

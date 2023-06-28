@@ -230,11 +230,11 @@ int page_idle_products::setStepTimerFromFileName(QString fileName, int defaultTi
     {
         int time_millis = timePart.replace(timeIdentifier, "").toInt();
         _backgroundChangeTimeLeftTenthsOfSec = time_millis / 100;
-        qDebug() << "The string contains the sequence.";
+        // qDebug() << "The string contains the sequence.";
     }
     else
     {
-        qDebug() << "The string does not contain the sequence.";
+        // qDebug() << "The string does not contain the sequence.";
         _backgroundChangeTimeLeftTenthsOfSec = defaultTimeMillis / 100; // PAGE_IDLE_PRODUCTS_STEP_DISPLAY_TIME_SECONDS;
     }
 }
@@ -263,7 +263,7 @@ void page_idle_products::changeBackground()
     }
     else if (filteredList.count() >= 1)
     {
-        qDebug() << "background  " << filterPattern << "found.";
+        // qDebug() << "background  " << filterPattern << "found.";
         QString background_name = filteredList[0];
         if (active_background_index == 0)
         {

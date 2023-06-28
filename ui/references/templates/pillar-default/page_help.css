@@ -14,7 +14,7 @@
    color: white;
    text-align: center;
    background: transparent;
-   qproperty-alignment: AlignCenter;
+   /* qproperty-alignment: AlignCenter; */
 }
 
 #pushButton_to_idle{
@@ -25,7 +25,8 @@
    font-weight: 700;
    font-size: 35px;
    color: #221F20;
-   qproperty-alignment: AlignCenter;
+   /* qproperty-alignment: AlignCenter; */
+   text-align: center;
    border: none;
 }
 

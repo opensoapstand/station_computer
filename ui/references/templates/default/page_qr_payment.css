@@ -92,7 +92,7 @@ QPushButton {
    line-height: 99px;
    color: #003840;
    text-align: left;
-   qproperty-alignment: AlignLeft;
+   /* qproperty-alignment: AlignLeft; */
    border: none;
 }
 

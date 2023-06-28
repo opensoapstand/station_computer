@@ -11,7 +11,7 @@ QLabel {
     line-height: 99px;
     color: #003840;
     text-align: center;
-    qproperty-alignment: AlignCenter;
+    /* qproperty-alignment: AlignCenter; */
     border: none;
 }
 
@@ -22,7 +22,7 @@ QLabel {
     color: #221F20;
     /* color: #AB7B57; */
     text-align: left;
-    qproperty-alignment: AlignCenter;
+    /* qproperty-alignment: AlignCenter; */
     font-family: 'EuropaNuova-ExtraBold';
     /* font-family: 'Lora'; */
     /* font-family: 'Vollkorn'; */
@@ -36,7 +36,7 @@ QLabel {
     font-size: 35px;
     color: #221F20;
     text-align: left;
-    qproperty-alignment: AlignCenter;
+    /* qproperty-alignment: AlignCenter; */
     border: none;
 }
 
@@ -63,7 +63,7 @@ QLabel {
     font-size: 37px;
     line-height: 49px;
     text-align: center;
-    qproperty-alignment: AlignCenter;
+    /* qproperty-alignment: AlignCenter; */
     /* color: #5E826A; */
     color: #221F20;
     /* color: #AB7B57; */
@@ -72,7 +72,7 @@ QLabel {
 .label_product_name {
     line-height: 36px;
     text-align: center;
-    qproperty-alignment: AlignCenter;
+    /* qproperty-alignment: AlignCenter; */
     /* font-family: 'Lora'; */
     /* font-family: 'Vollkorn'; */
     font-family: 'EuropaNuova-Regular';

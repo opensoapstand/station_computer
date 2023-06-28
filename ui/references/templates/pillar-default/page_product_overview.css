@@ -131,7 +131,7 @@ QLabel {
     font-size: 47px;
     text-align: center;
     line-height: auto;
-    qproperty-alignment: AlignCenter;
+    /* qproperty-alignment: AlignCenter; */
     /* border-radius: 25px; */
     color: #FFFFFF;
     border: 1px solid #221F20;
@@ -190,7 +190,7 @@ QLabel {
     line-height: 79px;
     color: #221F20;
     text-align: center;
-    qproperty-alignment: AlignCenter;
+    /* qproperty-alignment: AlignCenter; */
     /* border: 3px solid #221F20; */
     border-radius: 20px;
     margin-left: 5px;

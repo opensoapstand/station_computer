@@ -264,6 +264,15 @@ void page_product_overview::reset_and_show_page_elements()
 
 void page_product_overview::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
+
+    if (p_page_idle->thisMachine.getCouponState() == enabled_show_keyboard ||
+        p_page_idle->thisMachine.getCouponState() == enabled_invalid_input ||
+        p_page_idle->thisMachine.getCouponState() == enabled_processing_input ||
+        p_page_idle->thisMachine.getCouponState() == network_error)
+    {
+        p_page_idle->thisMachine.setCouponState( enabled_not_set);
+    }
+
     selectIdleTimer->stop();
     p_page_idle->pageTransition(this, pageToShow);
 }
@@ -431,14 +440,14 @@ void page_product_overview::keyboardButtonPressed(int buttonID)
             m_readyToSendCoupon = false;
             qDebug() << "Done clicked, initiated apply promo.";
 
-            // hack, sometimes it appears like the 'done' button code is called twice. 
+            // hack, sometimes it appears like the 'done' button code is called twice.
             p_page_idle->thisMachine.setCouponState(enabled_processing_input);
             reset_and_show_page_elements();
             apply_promo_code(ui->lineEdit_promo_code->text());
         }
         else
         {
-            qDebug() << "ASSERT ERROR: Illegal press. Still processing other call.  ";
+            qDebug() << "ASSERT ERROR: Illegal press. Still processing other call.";
         }
     }
     else if (buttonText.mid(0, 3) == "num")

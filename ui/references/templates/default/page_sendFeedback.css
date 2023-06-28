@@ -1,9 +1,9 @@
-.buttonTransparent{
+.buttonTransparent {
    background-color: transparent;
    border: 0px;
 }
 
-.buttonPreviousPage{
+.buttonPreviousPage {
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 75;
@@ -15,18 +15,20 @@
    background: transparent;
 }
 
-.labelMailFeedback, .labelThankyouFeedback{
+.labelMailFeedback,
+.labelThankyouFeedback {
    font-family: 'Brevia';
-      font-style: normal;
-      font-weight: 75;
-      font-size: 43px;
-      line-height: 99px;
-      color: #438080;
-      text-align: center;
-      qproperty-alignment: AlignCenter;
-      border: none;
+   font-style: normal;
+   font-weight: 75;
+   font-size: 43px;
+   line-height: 99px;
+   color: #438080;
+   text-align: center;
+   /* qproperty-alignment: AlignCenter; */
+   border: none;
 }
-.checkBoxLabelStyling{
+
+.checkBoxLabelStyling {
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 75;
@@ -34,29 +36,30 @@
    line-height: 99px;
    color: #FFFFFF;
    text-align: left;
-   qproperty-alignment: AlignCenter;
+   /* qproperty-alignment: AlignCenter; */
    border: none;
-   wordWrap:true;
+   wordWrap: true;
    background-color: #5E8680;
    padding: 10px;
 }
 
-#textEdit_custom_message{
+#textEdit_custom_message {
    font-family: Montserrat;
    font-style: normal;
    font-weight: bold;
    font-size: 28px;
    line-height: 44px;
    color: #5E8580;
-   border-color:#5E8580;
+   border-color: #5E8580;
 }
 
-#pushButton_help_page{
-   background-color: transparent; 
-   border: 0px ;
+#pushButton_help_page {
+   background-color: transparent;
+   border: 0px;
 }
 
-#label_select_problem{      /*selector not to make a class*/
+#label_select_problem {
+   /*selector not to make a class*/
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 75;
@@ -65,33 +68,34 @@
    color: #003840;
    text-align: center;
    border: none;
-   qproperty-alignment: AlignCenter;  /* Works despite not being CSS*/
+   /* qproperty-alignment: AlignCenter; */
+   /* Works despite not being CSS*/
 }
 
-#pushButton_to_idle{
-   background-color: transparent; 
+#pushButton_to_idle {
+   background-color: transparent;
    border: 0px;
 }
 
-#label_problem_options{
+#label_problem_options {
    background-color: #5E8680;
    border-radius: 30px;
 }
 
-#label_still_cant_find{
-   
-      font-family: 'Brevia';
-      font-style: normal;
-      font-weight: 75;
-      font-size: 43px;
-      line-height: 99px;
-      color: #438080;
-      text-align: center;
-      qproperty-alignment: AlignCenter;
-      border: none
+#label_still_cant_find {
+
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 43px;
+   line-height: 99px;
+   color: #438080;
+   text-align: center;
+   /* qproperty-alignment: AlignCenter; */
+   border: none
 }
 
-#label_enter_feedback{
+#label_enter_feedback {
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 75;
@@ -103,10 +107,10 @@
    border-radius: none;
 }
 
-QLabel { 
-   color:#555555; 
+QLabel {
+   color: #555555;
    text-align: center;
-   border: 1px; 
+   border: 1px;
 }
 
 QPushButton {

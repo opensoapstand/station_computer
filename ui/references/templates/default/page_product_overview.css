@@ -11,7 +11,7 @@ QPushButton {
     font-size: 48px;
     text-align: center;
     line-height: auto;
-    qproperty-alignment: AlignCenter;
+    /* qproperty-alignment: AlignCenter; */
     border-radius: 20px;
     color: white;
     border: none;
@@ -75,7 +75,7 @@ QPushButton {
     line-height: 99px;
     color: #003840;
     text-align: left;
-    qproperty-alignment: AlignLeft;
+    /* qproperty-alignment: AlignLeft; */
     border: none;
 }
 .buttonPromo {
@@ -88,7 +88,7 @@ QPushButton {
     border: 1px solid #3D6675;
     color: #FFFFFF;
     text-align: center;
-    qproperty-alignment: AlignCenter;
+    /* qproperty-alignment: AlignCenter; */
 }
 .buttonBGTransparent{ 
     background-color: transparent; 
@@ -118,7 +118,7 @@ QLabel {
     line-height: 99px;
     color: #003840;
     text-align: center;
-    qproperty-alignment: AlignCenter;
+    /* qproperty-alignment: AlignCenter; */
     border: 2px solid #5E8580;
 }
 .labelOrderOverview{
@@ -141,7 +141,7 @@ QLabel {
     font-size: 48px;
     text-align: center;
     line-height: auto;
-    qproperty-alignment: AlignCenter;
+    /* qproperty-alignment: AlignCenter; */
     border-radius: 20px;
     color: white;
     border: none;

@@ -51,7 +51,7 @@
    line-height: 44px;
    color: #221F20;
    text-align: center;
-   qproperty-alignment: AlignCenter;
+   /* qproperty-alignment: AlignCenter; */
 }
 
 .orderSizeLabelsPrice {
@@ -87,7 +87,7 @@
    font-size: 35px;
    color: #221F20;
    text-align: left;
-   qproperty-alignment: AlignCenter;
+   /* qproperty-alignment: AlignCenter; */
    border: none;
 }
 
@@ -138,7 +138,7 @@
    font-size: 48px;
    text-align: center;
    line-height: auto;
-   qproperty-alignment: AlignCenter;
+   /* qproperty-alignment: AlignCenter; */
    border-radius: 20px;
    color: white;
    border: none;

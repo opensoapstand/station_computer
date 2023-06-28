@@ -68,7 +68,7 @@ private slots:
 
     void on_test_lineEdit_textChanged(const QString &arg1);
 
-    void btn_clicked();
+    void button_connect_to_specifiic_wifi_network();
     void keyboardButtonPressed(int);
     // void on_wifiButton_clicked();
     // void onPage_maintenanceTimeoutTick();

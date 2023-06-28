@@ -83,10 +83,10 @@ page_dispenser->msgBox_abort->default,<p align=center><br><br>Are you sure, you 
 page_end->pushButton_contact,Provide Feedback
 page_end->label_message->hasReceiptPrinter,Please take <br>your receipt!
 page_end->label_message_2->hasReceiptPrinter2,By refilling you've helped keep a<br>plastic bottle out of our landfills.<br><br>Thank you!
-page_end->label_message->qr,Please take <br>your receipt!
-page_end->label_message_2->qr2,By refilling you've helped keep a<br>plastic bottle out of our landfills.<br><br>Thank you!
-page_end->label_message->any_pay,Please take <br>your receipt!
-page_end->label_message_2->any_pay2,By refilling you've helped keep a<br>plastic bottle out of our landfills.<br><br>Thank you!
+page_end->label_message->qr,Thank you for your purchase!
+page_end->label_message_2->qr2,By refilling you've helped keep a<br>plastic bottle out of our landfills.
+page_end->label_message->any_pay,Thank you for your purchase!
+page_end->label_message_2->any_pay2,By refilling you've helped keep a<br>plastic bottle out of our landfills.
 page_end->label_message->finish_transaction,Finishing<br>transaction
 
 # page_help

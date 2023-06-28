@@ -39,7 +39,6 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
     backgroundChangeTimer = new QTimer(this);
     backgroundChangeTimer->setInterval(100); // interval 10th's of seconds.
 
-    // connect(backgroundChangeTimer, SIGNAL(timeout()), this, SLOT(onBackgroundChangeTimerTimeout()));
     connect(backgroundChangeTimer, SIGNAL(timeout()), this, SLOT(onBackgroundChangeTimerTick()));
 
     labels_product_picture[0] = ui->label_product_1_photo;
@@ -61,8 +60,6 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
     labels_product_type[1] = ui->label_product_2_type;
     labels_product_type[2] = ui->label_product_3_type;
     labels_product_type[3] = ui->label_product_4_type;
-
-    ui->pushButton_to_select_product_page->raise();
 }
 
 /*
@@ -113,10 +110,10 @@ void page_idle_products::showEvent(QShowEvent *event)
     }
 
     p_page_idle->addCustomerLogoToLabel(ui->label_customer_logo);
-    ui->pushButton_to_select_product_page->raise();
 
     changeBackground();
     displayProducts();
+    ui->pushButton_to_select_product_page->raise();
 }
 
 void page_idle_products::resizeEvent(QResizeEvent *event)
@@ -233,11 +230,11 @@ int page_idle_products::setStepTimerFromFileName(QString fileName, int defaultTi
     {
         int time_millis = timePart.replace(timeIdentifier, "").toInt();
         _backgroundChangeTimeLeftTenthsOfSec = time_millis / 100;
-        qDebug() << "The string contains the sequence.";
+        // qDebug() << "The string contains the sequence.";
     }
     else
     {
-        qDebug() << "The string does not contain the sequence.";
+        // qDebug() << "The string does not contain the sequence.";
         _backgroundChangeTimeLeftTenthsOfSec = defaultTimeMillis / 100; // PAGE_IDLE_PRODUCTS_STEP_DISPLAY_TIME_SECONDS;
     }
 }
@@ -266,7 +263,7 @@ void page_idle_products::changeBackground()
     }
     else if (filteredList.count() >= 1)
     {
-        qDebug() << "background  " << filterPattern << "found.";
+        // qDebug() << "background  " << filterPattern << "found.";
         QString background_name = filteredList[0];
         if (active_background_index == 0)
         {
@@ -301,5 +298,6 @@ void page_idle_products::onBackgroundChangeTimerTick()
 }
 void page_idle_products::on_pushButton_to_select_product_page_clicked()
 {
+    qDebug() << "To idle page press";
     this->hideCurrentPageAndShowProvided(p_page_select_product);
 }

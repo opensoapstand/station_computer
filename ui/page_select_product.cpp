@@ -269,7 +269,6 @@ void page_select_product::displayProducts()
         }
 
         labels_product_type[slot_index]->setText(type_text);
-        // labels_product_type[slot_index]->setStyleSheet("QLabel{font-family: 'Brevia';font-style: normal;font-weight: 700;font-size: 30px;line-height: 41px;qproperty-alignment: AlignCenter;text-transform: uppercase;color: #5E8580;}");
     }
 }
 

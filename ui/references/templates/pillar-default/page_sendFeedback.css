@@ -11,10 +11,10 @@
    font-weight: 75;
    font-size: 43px;
    line-height: 99px;
-   letter-spacing: 1.5px;
+   /* letter-spacing: 1.5px; */
    color: #58595B;
    text-align: center;
-   qproperty-alignment: AlignCenter;
+   /* qproperty-alignment: AlignCenter; */
    border: none;
 }
 .labelThankyouFeedback{
@@ -26,10 +26,10 @@
    font-weight: 400;
    font-size: 32px;
    line-height: 99px;
-   letter-spacing: 1.5px;
+   /* letter-spacing: 1.5px; */
    color: #FFFFFF;
    text-align: left;
-   qproperty-alignment: AlignCenter;
+   /* qproperty-alignment: AlignCenter; */
    border: none;
    wordWrap:true;
    background-color: #221F20;
@@ -57,11 +57,11 @@
    font-weight: 400;
    font-size: 58px;
    line-height: 99px;
-   letter-spacing: 1.5px;
+   /* letter-spacing: 1.5px; */
    color: #221F20;
    text-align: center;
    border: none;
-   qproperty-alignment: AlignCenter;  /* Works despite not being CSS*/
+   /* qproperty-alignment: AlignCenter;  Works despite not being CSS */
 }
 
 #pushButton_to_idle{
@@ -80,10 +80,10 @@
    font-weight: 400;
    font-size: 43px;
    line-height: 99px;
-   letter-spacing: 1.5px;
+   /* letter-spacing: 1.5px; */
    color: #58595B;
    text-align: center;
-   qproperty-alignment: AlignCenter;
+   /* qproperty-alignment: AlignCenter; */
    border: none
 }
 
@@ -93,7 +93,7 @@
    font-weight: 400;
    font-size: 20px;
    line-height: 99px;
-   letter-spacing: 1.5px;
+   /* letter-spacing: 1.5px; */
    background-color: #221F20;
    color: #FFFFFF;
    text-align: left;
@@ -112,7 +112,7 @@ QPushButton {
    font-weight: 400;
    font-size: 35px;
    line-height: 99px;
-   letter-spacing: 1.5px;
+   /* letter-spacing: 1.5px; */
    background-color: #221F20;
    color: #FFFFFF;
    text-align: center;
@@ -127,7 +127,7 @@ QString {
    font-weight: 400;
    font-size: 35px;
    line-height: 99px;
-   letter-spacing: 1.5px;
+   /* letter-spacing: 1.5px; */
    background-color: #221F20;
    color: #FFFFFF;
    text-align: center;
@@ -142,7 +142,7 @@ QLineEdit {
    font-weight: 400;
    font-size: 32px;
    line-height: 99px;
-   letter-spacing: 1.5px;
+   /* letter-spacing: 1.5px; */
    color: #221F20;
    border: none;
 }
@@ -154,7 +154,7 @@ QLineEdit {
    font-size: 35px;
    color: #221F20;
    text-align: left;
-   qproperty-alignment: AlignCenter; 
+   /* qproperty-alignment: AlignCenter;  */
    border: none;
    background: transparent;
    padding: 0px !important;

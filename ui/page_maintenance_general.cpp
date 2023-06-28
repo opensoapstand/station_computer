@@ -66,6 +66,9 @@ void page_maintenance_general::showEvent(QShowEvent *event)
 
     ui->keyboard_2->hide();
 
+    ui->label_aws_port->setText("AWS backend port: " + QString::number(p_page_idle->thisMachine.m_aws_port));
+    ui->label_machine_id->setText("Station id: " + p_page_idle->thisMachine.getMachineId());
+
 
     p_page_idle->setTemplateTextToObject(ui->pushButton_back);
     p_page_idle->setTemplateTextToObject(ui->label_connectivity);
@@ -241,7 +244,7 @@ void page_maintenance_general::on_test_lineEdit_textChanged(const QString &arg1)
 {
 }
 
-void page_maintenance_general::btn_clicked()
+void page_maintenance_general::button_connect_to_specifiic_wifi_network()
 {
     QObject *button = QObject::sender();
     //    qDebug() << "btn clicked -> " << button->objectName();
@@ -434,7 +437,7 @@ void page_maintenance_general::on_pushButton_wifi_networks_clicked()
                 pLayout->setContentsMargins(0, 0, 0, 0);
                 pWidget->setLayout(pLayout);
                 ui->table_wifi_networks->setCellWidget(ui->table_wifi_networks->rowCount() - 1, 0, pWidget);
-                connect(btn, SIGNAL(clicked()), this, SLOT(btn_clicked()));
+                connect(btn, SIGNAL(clicked()), this, SLOT(button_connect_to_specifiic_wifi_network()));
             }
         }
     }

@@ -11,7 +11,7 @@ QLabel {
     line-height: 99px;
     text-align: center;
     color: #FFFFFF;
-    qproperty-alignment: AlignCenter;
+    /* qproperty-alignment: AlignCenter; */
 }
 
 #label_welcome_message {
@@ -31,7 +31,7 @@ QLabel {
     font-size: 42px;
     text-align: center;
     line-height: auto;
-    qproperty-alignment: AlignCenter;
+    /* qproperty-alignment: AlignCenter; */
     border-radius: 20px;
     color: white;
     border: none;
@@ -44,5 +44,6 @@ QLabel {
 }
 
 #label_manufacturer_logo {
-    qproperty-alignment: AlignCenter;
+    /* qproperty-alignment: AlignCenter; */
+    text-align: center;
 }

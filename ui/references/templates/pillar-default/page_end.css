@@ -11,13 +11,14 @@ QLabel {
    font-size: 85px;
    line-height: 95px;
    text-align: center;
-   letter-spacing: 1.5px;
+   /* letter-spacing: 1.5px; */
    color: #FFFFFF;
-   qproperty-alignment: AlignCenter;
+   /* qproperty-alignment: AlignCenter; */
 }
 
 #label_manufacturer_logo{
-   qproperty-alignment: AlignCenter;
+   /* qproperty-alignment: AlignCenter; */
+   text-align: center;
 }
 
 #label_message_2 {
@@ -27,9 +28,9 @@ QLabel {
    font-size: 36px;
    line-height: 44px;
    text-align: center;
-   letter-spacing: 1.5px;
+   /* letter-spacing: 1.5px; */
    color: #FFFFFF;
-   qproperty-alignment: AlignCenter;
+   /* qproperty-alignment: AlignCenter; */
 }
 
 
@@ -41,8 +42,8 @@ QLabel {
    font-size: 30px;
    text-align: center;
    line-height: auto;
-   letter-spacing: 0px;
-   qproperty-alignment: AlignCenter;
+   /* letter-spacing: 0px; */
+   /* qproperty-alignment: AlignCenter; */
    border-radius: 20px;
    color: #5E826A;
    border: none;

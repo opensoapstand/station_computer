@@ -83,10 +83,10 @@ page_dispenser->msgBox_abort->default,<p align=center><br><br>Are you sure, you 
 page_end->pushButton_contact,Provide Feedback
 page_end->label_message->hasReceiptPrinter,Please take <br>your receipt!
 page_end->label_message_2->hasReceiptPrinter2,By refilling you've helped keep a<br>plastic bottle out of our landfills.<br><br>Thank you!
-page_end->label_message->qr,Please take <br>your receipt!
-page_end->label_message_2->qr2,By refilling you've helped keep a<br>plastic bottle out of our landfills.<br><br>Thank you!
-page_end->label_message->any_pay,Please take <br>your receipt!
-page_end->label_message_2->any_pay2,By refilling you've helped keep a<br>plastic bottle out of our landfills.<br><br>Thank you!
+page_end->label_message->qr,Thank you!
+page_end->label_message_2->qr2,By refilling you've helped keep a<br>plastic bottle out of our landfills.
+page_end->label_message->any_pay,Thank you!
+page_end->label_message_2->any_pay2,By refilling you've helped keep a<br>plastic bottle out of our landfills.
 page_end->label_message->finish_transaction,Finishing<br>transaction
 
 # page_help
@@ -104,7 +104,7 @@ page_transactions->label_title,Most Recent Transactions
 # page_sendFeedback
 page_sendFeedback->pushButton_previous_page,<- back
 page_sendFeedback->label_select_problem,Please provide feedback
-page_sendFeedback->label_still_cant_find,Still can't find it?
+page_sendFeedback->label_still_cant_find,
 page_sendFeedback->label_email,Email us at: sales@soapstand.com
 page_sendFeedback->checkBox_1_Label,I love this, keep me in the loop.
 page_sendFeedback->checkBox_2_Label,User interface problem

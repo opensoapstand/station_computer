@@ -134,7 +134,7 @@ void page_select_product::resizeEvent(QResizeEvent *event)
 
 void page_select_product::displayProducts()
 {
-    QString product_type_icons[9] = {ICON_TYPE_CONCENTRATE_PATH, ICON_TYPE_ALL_PURPOSE_PATH, ICON_TYPE_DISH_PATH, ICON_TYPE_HAND_PATH, ICON_TYPE_LAUNDRY_PATH, ICON_TYPE_MOCKTAIL_PATH, ICON_TYPE_KOMBUCHA_PATH, ICON_TYPE_JUICE_PATH, ICON_TYPE_TEA_PATH};
+    QString product_type_icons[9] = {ICON_TYPE_CONCENTRATE_PATH, ICON_TYPE_ALL_PURPOSE_PATH, ICON_TYPE_DISH_PATH, ICON_TYPE_HAND_PATH, ICON_TYPE_LAUNDRY_PATH, ICON_TYPE_PROBIOTIC_PATH, ICON_TYPE_KOMBUCHA_PATH, ICON_TYPE_JUICE_PATH, ICON_TYPE_TEA_PATH};
 
     QString product_type;
     QString product_name;
@@ -199,10 +199,10 @@ void page_select_product::displayProducts()
             icon_path = ICON_TYPE_KOMBUCHA_PATH;
             type_text = "KOMBUCHA";
         }
-        else if (product_type == "Mocktail")
+        else if (product_type == "Probiotic Soda")
         {
-            icon_path = ICON_TYPE_MOCKTAIL_PATH;
-            type_text = "MOCKTAIL";
+            icon_path = ICON_TYPE_PROBIOTIC_PATH;
+            type_text = "PROBIOTIC SODA";
         }
         else if (product_type == "Juice")
         {

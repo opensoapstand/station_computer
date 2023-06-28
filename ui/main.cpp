@@ -186,7 +186,7 @@ int main(int argc, char *argv[])
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(ICON_TYPE_HAND_PATH));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(ICON_TYPE_LAUNDRY_PATH));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(ICON_TYPE_KOMBUCHA_PATH));
-    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(ICON_TYPE_MOCKTAIL_PATH));
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(ICON_TYPE_PROBIOTIC_PATH));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(ICON_TYPE_JUICE_PATH));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(ICON_TYPE_DEFAULT));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_HELP_BACKGROUND_GENERIC_WHITE));

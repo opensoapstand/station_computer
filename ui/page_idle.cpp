@@ -131,8 +131,8 @@ void page_idle::showEvent(QShowEvent *event)
     addPictureToLabel(ui->label_manufacturer_logo, machine_logo_full_path);
     ui->label_manufacturer_logo->setStyleSheet(styleSheet);
 
-    idlePageTypeSelectorTimer->start(100);
-    _idlePageTypeSelectorTimerTimeoutSec = 2;
+    idlePageTypeSelectorTimer->start(1000);
+    _idlePageTypeSelectorTimerTimeoutSec = PAGE_IDLE_DELAY_BEFORE_ENTERING_IDLE_PRODUCTS;
 
 // #define PLAY_VIDEO
 #ifdef PLAY_VIDEO
@@ -204,7 +204,7 @@ void page_idle::loadDynamicContent()
 
 void page_idle::changeToIdleProductsIfSet()
 {
-    if (thisMachine.getIdlePageType() == "static_products")
+    if (thisMachine.getIdlePageType() == "static_products" || thisMachine.getIdlePageType() == "dynamic")
     {
         hideCurrentPageAndShowProvided(this->p_page_idle_products);
     }
@@ -245,7 +245,6 @@ void page_idle::onIdlePageTypeSelectorTimerTick()
     else
     {
         changeToIdleProductsIfSet();
-        idlePageTypeSelectorTimer->stop();
     }
 }
 

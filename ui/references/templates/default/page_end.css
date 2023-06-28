@@ -14,7 +14,7 @@ QLabel {
    text-align: center;
    text-transform: lowercase;
    color: #FFFFFF;
-   /* qproperty-alignment: AlignCenter; */
+   qproperty-alignment: AlignCenter;
 }
 
 

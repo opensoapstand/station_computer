@@ -51,7 +51,7 @@ QListWidget::item:alternate {
    /* letter-spacing: px; */
    color: #003840;
    text-align: center;
-   /* qproperty-alignment: AlignCenter; */
+   qproperty-alignment: AlignCenter;
    border: none;
 }
 

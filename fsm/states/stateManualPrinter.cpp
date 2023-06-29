@@ -435,9 +435,7 @@ DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double v
    snprintf(chars_cost, sizeof(chars_cost), "%.2f", price);
    string receipt_cost = chars_cost;
 
-   debugOutput::sendMessage("---------=======fjiefjeifjef: " + receipt_volume_formatted, MSG_INFO);
-
-   g_machine.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, time_stamp, units, paymentMethod, plu, "");
+   g_machine.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, time_stamp, units, paymentMethod, plu, "", true);
 }
 
 // DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double volume_dispensed, double volume_requested, double price, string time_stamp)

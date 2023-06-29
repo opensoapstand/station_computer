@@ -66,6 +66,7 @@ bool machine::getPcb24VPowerSwitchStatus()
 {
     return power24VEnabled;
 }
+
 void machine::pcb24VPowerSwitch(bool enableElseDisable)
 {
     if (power24VEnabled != enableElseDisable)
@@ -75,12 +76,13 @@ void machine::pcb24VPowerSwitch(bool enableElseDisable)
     }
 }
 
-void machine::print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string char_units_formatted, string paymentMethod, string plu, string promoCode)
+void machine::print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string char_units_formatted, string paymentMethod, string plu, string promoCode, bool sleep_until_printed)
 {
 
     std::string out1 = name_receipt + "\nPrice: $" + receipt_cost + " \nQuantity: " + receipt_volume_formatted + "\nTime: " + time_stamp;
     receipt_printer->printText(out1.c_str());
 
+    debugOutput::sendMessage("Print receipt", MSG_INFO);
     debugOutput::sendMessage("Price" + receipt_cost, MSG_INFO);
     if (receipt_cost == "0.00")
     {
@@ -151,4 +153,10 @@ void machine::print_receipt(string name_receipt, string receipt_cost, string rec
 
     const char *out = "\n\n";
     receipt_printer->printText(out);
+
+
+    if (sleep_until_printed){
+
+        usleep(3000000);
+    }
 }

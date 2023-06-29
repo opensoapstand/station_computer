@@ -45,7 +45,7 @@ page_select_product->status_text->default,. . .
 page_select_product->status_text->available,
 
 # Page_product 
-page_product->pushButton_back,<- Products
+page_product->pushButton_back,<- back
 page_product->label_select_quantity,Select Quantity
 page_product->pushButton_continue,Continue
 page_product->custom_volume,Custom Volume
@@ -119,13 +119,13 @@ page_sendFeedback->pushButton_send,SEND
 page_qr_payment->label_title->pay_by_phone,pay by phone
 page_qr_payment->label_scan->label_scan_1,Scan to Pay
 page_qr_payment->label_scan->finalize_transaction,\nfinalize transaction
-page_qr_payment->label_steps,<style>        li:{margin-top:10px; margin-left: 5px;}        </style>        <ol>        <li><span class='tab'></span>Scan QR code with phone camera<br></li>        <li><span class='tab'></span>Click to open the link that appears<br></li>        <li><span class='tab'></span>Follow payment instructions on phone<br></li>        <li><span class='tab'></span>The station will proceed after payment<br></li>        <li><span class='tab'></span>Refill your soap!</li>        </ol>        <style>        li:{margin-top:10px;}        </style>        <ol>       
+page_qr_payment->label_steps,1. Scan QR code with phone camera<br><br>2. Click to open the link that appears<br><br>3. Follow payment instructions on phone<br><br>4. The station will proceed after payment<br><br>5. Refill your soap!        </ol>      
 page_qr_payment->label_processing,it can take a few moments for the station to<br>continue after your payment is confirmed
 page_qr_payment->label_title->almost_there,almost there
 page_qr_payment->pushButton_previous_page,<- back
 page_qr_payment->label_product_price->fixed_size,$%1
-page_qr_payment->label_product_price->custom_size,pre-authorized for $%1
-page_qr_payment->label_product_information->volume_up_to, volume max
+page_qr_payment->label_product_price->custom_size,Pre-authorize $%1
+page_qr_payment->label_product_information->volume_up_to, volume max 
 page_qr_payment->msgBox_cancel->default,<p align=center><br><br>Cancel transaction and exit page?<br><br>It can take up to 30 seconds for dispensing to start after a payment is completed. <br></p>
 page_qr_payment->msgBox_refund->default,<p align=center><br><br>Are you sure you want to cancel this order?<br><br>The QR code won't be valid anymore if this order is cancelled.<br><br>In case a payment was made with an invalid QR code or cancelled order, a refund will be issued within 24-48 hours. <br></p>
 

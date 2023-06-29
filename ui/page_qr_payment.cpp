@@ -97,6 +97,8 @@ void page_qr_payment::showEvent(QShowEvent *event)
     ui->label_scan->setStyleSheet(styleSheet);
     ui->label_steps->setStyleSheet(styleSheet);
     ui->label_processing->setStyleSheet(styleSheet);
+    ui->label_product_price->setStyleSheet(styleSheet);
+    ui->label_product_information->setStyleSheet(styleSheet);
 
     state_payment = s_init;
     double originalPrice = p_page_idle->selectedProduct->getBasePrice();

@@ -79,8 +79,9 @@ DF_ERROR stateManualPrinter::onAction()
 
          m_state_requested = STATE_IDLE;
       }
-      else if (ACTION_UI_COMMAND_PRINTER_SEND_STATUS == m_pMessaging->getAction())
+      else if ('1' == m_pMessaging->getAction())
       {
+         // DO NOT CHANGE THE COMMAND NUMBER. This is sent from the UI for checking the printer status.
          debugOutput::sendMessage("Printer status requested by UI", MSG_INFO);
          // sendPrinterStatus(); // first call after startup returns always online
          // displayPrinterStatus();
@@ -89,7 +90,7 @@ DF_ERROR stateManualPrinter::onAction()
          m_state_requested = STATE_IDLE; // return after finished.
       }
 
-      else if ('1' == m_pMessaging->getAction())
+      else if ('7' == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Do test print", MSG_INFO);
          printTest();
@@ -133,11 +134,13 @@ DF_ERROR stateManualPrinter::onAction()
          debugOutput::sendMessage("---Receipt printer menu---"
                                   "Available printer test commands: \n"
                                   " 0: Exit printer menu \n"
-                                  " 1: Test print\n"
+                                  " 1: emulated auto check request from UI \n"
                                   " 2: Printer status toggle continuous mode\n"
                                   " 3: Printer status \n"
                                   " 4: Check printer connected\n"
                                   " 5: Print transaction 959\n"
+                                  " 6: Test send OK to UI\n"
+                                  " 7: Test print\n"
                                   " h: Display this help menu",
                                   MSG_INFO);
       }

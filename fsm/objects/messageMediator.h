@@ -30,27 +30,7 @@
 #include "../../library/socket/SocketException.h"
 #include "../../library/socket/ClientSocket.h"
 
-// #define AIR_CHAR 'a'
-#define ACTION_REPAIR_PCA 'r'
-#define ACTION_DISPENSE 'd'
-#define ACTION_AUTOFILL 'a'
-// #define CLEAN_CHAR 'c'
 
-#define ACTION_NO_ACTION '-'
-#define ACTION_DISPENSE_END 'f'
-#define ACTION_DUMMY 'x'
-#define ACTION_QUIT 'q'
-#define ACTION_MANUAL_PUMP_PWM_SET 'i'
-#define ACTION_MANUAL_PUMP_SET 's'
-#define ACTION_PRINT_TRANSACTION 't'
-
-#define ACTION_UI_COMMAND_PRINTER_SEND_STATUS 'a'
-#define ACTION_UI_COMMAND_PRINTER_MENU 'p'
-#define ACTION_HELP 'h'
-
-#define PRODUCT_DUMMY 'z'
-
-#define PWM_CHAR 'P'
 
 class messageMediator
 {

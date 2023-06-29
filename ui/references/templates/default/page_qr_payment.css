@@ -5,6 +5,9 @@
 
 #label_product_price {
    text-align: right;
+   font-weight: 600;
+   /* font-style: normal; */
+   /* background-color: red; */
 }
 
 #pushButton_previous_page {
@@ -49,18 +52,19 @@ QPushButton {
    font-weight: 600;
    font-size: 48px;
    color: #5E8580;
+   /* background-color: red; */
    /* } .tab { */
    display: inline-block;
-   margin-left: 40px;
+   
 }
 
 #label_steps {
 
-   position: absolute;
-   width: 777px;
+   /* position: absolute; */
+   /* width: 777px;
    height: 306px;
    left: 143px;
-   top: 1029px;
+   top: 1029px; */
    font-family: 'Montserrat';
    font-style: normal;
    font-weight: 600;
@@ -113,4 +117,9 @@ QMessageBox.msgBoxbutton QPushButton {
 QLabel {
    /*this label controls the color of the checkbox */
    color: black;
+   font-family:'Montserrat';
+   font-size:24px;
+   color: #58595b;
+   font-style:light;
+
 }

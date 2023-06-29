@@ -143,10 +143,10 @@
   <widget class="QPushButton" name="pushButton_debug_Button">
    <property name="geometry">
     <rect>
-     <x>970</x>
-     <y>0</y>
-     <width>111</width>
-     <height>91</height>
+     <x>1000</x>
+     <y>240</y>
+     <width>81</width>
+     <height>71</height>
     </rect>
    </property>
    <property name="font">

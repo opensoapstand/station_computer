@@ -78,6 +78,13 @@ void machine::pcb24VPowerSwitch(bool enableElseDisable)
 
 void machine::print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string char_units_formatted, string paymentMethod, string plu, string promoCode, bool sleep_until_printed)
 {
+      debugOutput::sendMessage("start sleep1", MSG_INFO);
+    if (sleep_until_printed){
+
+        usleep(1500000);
+    }
+    debugOutput::sendMessage("end sleep1", MSG_INFO);
+
 
     std::string out1 = name_receipt + "\nPrice: $" + receipt_cost + " \nQuantity: " + receipt_volume_formatted + "\nTime: " + time_stamp;
     receipt_printer->printText(out1.c_str());
@@ -155,8 +162,10 @@ void machine::print_receipt(string name_receipt, string receipt_cost, string rec
     receipt_printer->printText(out);
 
 
+    debugOutput::sendMessage("start sleep", MSG_INFO);
     if (sleep_until_printed){
 
-        usleep(3000000);
+        usleep(3500000);
     }
+    debugOutput::sendMessage("end sleep", MSG_INFO);
 }

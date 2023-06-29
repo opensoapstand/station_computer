@@ -106,7 +106,7 @@ DF_ERROR stateManualConfig::onAction()
       {
          debugOutput::sendMessage("---Manual config menu---"
                                   "Available commands: \n"
-                                  "sX: Set active slot, where X= 1,2,3 or 4\n"
+                                  "nX: Set active slot, where X= 1,2,3 or 4\n"
                                   " 0: Exit manual config menu \n"
                                   " 1: Get active slot register info\n"
                                   " 2: Write active slot default register values\n"

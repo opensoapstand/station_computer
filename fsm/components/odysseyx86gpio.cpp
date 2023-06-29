@@ -266,7 +266,7 @@ void oddyseyx86GPIO::monitorGPIO_Flowsensor(bool *abortLoop)
 
         while (!*abortLoop)
         {
-                usleep(1000);
+                //usleep(1000);
 
                 char flowsensor_state_char;
 

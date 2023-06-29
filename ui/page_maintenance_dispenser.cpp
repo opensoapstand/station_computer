@@ -2,7 +2,7 @@
 #include "ui_page_maintenance_dispenser.h"
 #include "page_idle.h"
 // #include "/home/df-admin/drinkfill/fsm/components/pcb.cpp"
-// #include "/home/df-admin/drinkfill/fsm/components/pcb.h"
+//  #include "/home/df-admin/drinkfill/fsm/components/pcb.h"
 
 #include <QInputDialog>
 #include <QCoreApplication>
@@ -108,11 +108,11 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     ui->label_setting_speed_pwm->hide();
     ui->pushButton_setting_temperature->setVisible(false);
    // ui->label_setting_temperature->setVisible(false);
-  // double temperature = getTemperatureConfigure();
+//   double temperature = getTemperatureConfigure();
        //  debugOutput::sendMessage("Temperature in Celsius: " + std::to_string(temperature), MSG_INFO);
     //ui->label_setting_temperature->setText("Temp="+temperature);
-   // ui->label_setting_temperature->setText("Temp = " + QString::number(temperature));
-//      pcb myPcb;
+//    ui->label_setting_temperature->setText("Temp = " + QString::number(temperature));
+    //  pcb myPcb;
 
 //   // Call the `getTemperatureConfigure()` function
 //   double temperature = myPcb.getTemperatureConfigure();

@@ -23,10 +23,10 @@
    font-family: 'EuropaNuova-Regular';
    font-style: normal;
    font-weight: 700;
-   font-size: 40px;
+   font-size: 35px;
    color: #221F20;
-   /* qproperty-alignment: AlignCenter; */
-   text-align: center;
+   qproperty-alignment: AlignCenter;
+   text-align: left;
    border: none;
 }
 

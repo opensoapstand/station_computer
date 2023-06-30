@@ -5,7 +5,7 @@
    font-size: 52px;
    text-align: center;
    line-height: auto;
-   /* qproperty-alignment: AlignCenter; */
+   qproperty-alignment: AlignCenter;
    border-radius: 20px;
    color: #5E826A;
    border: none;
@@ -18,7 +18,7 @@
    font-size: 30px;
    text-align: center;
    line-height: auto;
-   /* qproperty-alignment: AlignCenter; */
+   qproperty-alignment: AlignCenter;
    border-radius: 20px;
    color: #5E826A;
    /* color: white; */
@@ -36,7 +36,7 @@
    line-height: 52px;
    color: #FFFFFF;
    text-align: center;
-   /* qproperty-alignment: AlignCenter; */
+   qproperty-alignment: AlignCenter;
    border: none;
 
 }
@@ -51,7 +51,7 @@
    line-height: 52px;
    color: #FFFFFF;
    text-align: center;
-   /* qproperty-alignment: AlignCenter; */
+   qproperty-alignment: AlignCenter;
    border: none;
 }
 
@@ -65,7 +65,7 @@
    line-height: 52px;
    color: #FFFFFF;
    text-align: center;
-   /* qproperty-alignment: AlignCenter; */
+   qproperty-alignment: AlignCenter;
    border: none;
 }
 
@@ -80,7 +80,7 @@
    line-height: 99px;
    color: #FFFFFF;
    text-align: center;
-   /* qproperty-alignment: AlignCenter; */
+   qproperty-alignment: AlignCenter;
    border: none;
    border-radius: 20px;
 }

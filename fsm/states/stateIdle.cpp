@@ -72,6 +72,7 @@ DF_ERROR stateIdle::onAction()
       else if ('1' == m_pMessaging->getAction() || ACTION_UI_COMMAND_PRINTER_MENU == m_pMessaging->getAction())
       {
          m_state_requested = STATE_MANUAL_PRINTER;
+         //g_stateArray[STATE_MANUAL_PRINTER].sendPrinterStatus();
       }
       else if ('2' == m_pMessaging->getAction())
       {

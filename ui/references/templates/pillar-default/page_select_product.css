@@ -22,7 +22,7 @@ QLabel {
     color: #221F20;
     /* color: #AB7B57; */
     text-align: left;
-    /* qproperty-alignment: AlignCenter; */
+    qproperty-alignment: AlignCenter;
     font-family: 'EuropaNuova-ExtraBold';
     /* font-family: 'Lora'; */
     /* font-family: 'Vollkorn'; */
@@ -63,26 +63,19 @@ QLabel {
     font-size: 37px;
     line-height: 49px;
     text-align: center;
-    /* qproperty-alignment: AlignCenter; */
-    /* color: #5E826A; */
+    qproperty-alignment: AlignCenter;
     color: #221F20;
-    /* color: #AB7B57; */
 }
 
 .label_product_name {
     line-height: 36px;
     text-align: center;
-    /* qproperty-alignment: AlignCenter; */
-    /* font-family: 'Lora'; */
-    /* font-family: 'Vollkorn'; */
+    qproperty-alignment: AlignCenter;
     font-family: 'EuropaNuova-Regular';
     font-style: normal;
     font-weight: 400;
     font-size: 22px;
     color: #221F20;
-    /* color: #D6BFAB; */
-    /* color: #F3DA7F; */
-
 }
 
 .label_product_photo {

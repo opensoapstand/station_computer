@@ -3,6 +3,13 @@
    border: 0px;
 } */
 
+#label_product_price {
+   text-align: right;
+   font-weight: 600;
+   /* font-style: normal; */
+   /* background-color: red; */
+}
+
 QPushButton {
    font-family: 'Brevia';
    font-style: normal;
@@ -100,4 +107,10 @@ QMessageBox.msgBoxbutton QPushButton{
 QLabel {
    /*this label controls the color of the checkbox */
    color: black;
+   font-family: 'EuropaNuova-Regular';
+   font-weight: 400;
+   font-style: normal;
+   font-size:24px;
+   color: #58595b;
+   font-style:light;
 }

@@ -3,7 +3,6 @@ QPushButton {
    border: 0px;
 }
 
-
 QLabel {
    font-family: 'EuropaNuova-ExtraBold';
    font-style: normal;
@@ -13,11 +12,11 @@ QLabel {
    text-align: center;
    /* letter-spacing: 1.5px; */
    color: #FFFFFF;
-   /* qproperty-alignment: AlignCenter; */
+   qproperty-alignment: AlignCenter;
 }
 
 #label_manufacturer_logo{
-   /* qproperty-alignment: AlignCenter; */
+   qproperty-alignment: AlignCenter;
    text-align: center;
 }
 
@@ -30,12 +29,11 @@ QLabel {
    text-align: center;
    /* letter-spacing: 1.5px; */
    color: #FFFFFF;
-   /* qproperty-alignment: AlignCenter; */
+   qproperty-alignment: AlignCenter;
 }
 
 
 .volumeDispensedStylesheet {
-
    font-family: 'EuropaNuova-Regular';
    font-style: normal;
    font-weight: 400;
@@ -43,7 +41,7 @@ QLabel {
    text-align: center;
    line-height: auto;
    /* letter-spacing: 0px; */
-   /* qproperty-alignment: AlignCenter; */
+   qproperty-alignment: AlignCenter;
    border-radius: 20px;
    color: #5E826A;
    border: none;

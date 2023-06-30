@@ -148,7 +148,7 @@ void page_maintenance_general::send_check_printer_status_command()
     // usleep(5000000); 
     // p_page_idle->dfUtility->send_command_to_FSM("1");
     // usleep(5000000); 
-    p_page_idle->dfUtility->send_command_to_FSM("a");
+    p_page_idle->dfUtility->send_command_to_FSM("1");
     usleep(50000);
 }
 

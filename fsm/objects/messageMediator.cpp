@@ -485,7 +485,7 @@ DF_ERROR messageMediator::parseCommandString()
 
        //  first_char == ACTION_MANUAL_PRINTER ||
        //  first_char == ACTION_PRINTER_CHECK_STATUS ||
-       first_char == ACTION_UI_COMMAND_PRINTER_SEND_STATUS ||
+      //  first_char == ACTION_UI_COMMAND_PRINTER_SEND_STATUS ||
        first_char == ACTION_UI_COMMAND_PRINTER_MENU ||
        //  first_char == ACTION_PRINTER_CHECK_STATUS_TOGGLE_CONTINUOUSLY ||
        //  first_char == ACTION_PRINTER_PRINT_TEST ||
@@ -520,6 +520,7 @@ DF_ERROR messageMediator::parseCommandString()
 void messageMediator::resetAction(){
    m_requestedAction = ACTION_NO_ACTION;
 }
+
 DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
 {
 

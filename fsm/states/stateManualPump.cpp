@@ -55,6 +55,8 @@ DF_ERROR stateManualPump::onEntry()
    productDispensers[m_active_pump_index].setPumpDirectionForward();
    productDispensers[m_active_pump_index].setPumpPWM(255, true);
 
+   productDispensers[m_active_pump_index].setAllDispenseButtonLightsOff();
+
    isFlowTest = false;
    isCyclicTesting = false;
    iscustomVolumeDispenseTest = false;
@@ -197,6 +199,7 @@ DF_ERROR stateManualPump::onAction()
 
       else if (ACTION_MANUAL_PUMP_SET == m_pMessaging->getAction())
       {
+         productDispensers[m_active_pump_index].setAllDispenseButtonLightsOff();
          productDispensers[m_active_pump_index].setPumpsDisableAll();
          // float PWM_value_byte = 3.12345;
          int val = m_pMessaging->getCommandValue();
@@ -231,7 +234,7 @@ DF_ERROR stateManualPump::onAction()
                  to_string(m_active_pump_index + 1) + "\n"
                                                       "Available commands:\n"
                                                       "0: Exit pump menu\n"
-                                                      "sX: Set active pump, where X= 1,2,3 or 4\n"
+                                                      "nX: Set active pump, where X= 1,2,3 or 4\n"
                                                       "ixxx: Set active pump pwm [0..255] always 3 digits e.g. 050 = 50 \n"
                                                       "1: Active pump enable (additionally, press dispense button for motor to actually run)\n"
                                                       "2: Active pump disable\n"
@@ -647,7 +650,8 @@ DF_ERROR stateManualPump::onExit()
 {
    DF_ERROR e_ret = OK;
    productDispensers[m_active_pump_index].setPumpsDisableAll();
-
+   productDispensers[m_active_pump_index].setAllDispenseButtonLightsOff();
+   productDispensers[m_active_pump_index].the_pcb->virtualButtonUnpressHack(m_active_pump_index + 1);
    g_machine.pcb24VPowerSwitch(false);
 
    return e_ret;

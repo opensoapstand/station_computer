@@ -756,7 +756,7 @@ DF_ERROR stateDispenseEnd::setup_and_print_receipt()
     // receipt_cost = m_pMessaging->getRequestedPrice();
     string promoCode = m_pMessaging->getPromoCode();
     debugOutput::sendMessage("Price changed to " + receipt_cost, MSG_INFO);
-    tmp.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, now, units, paymentMethod, plu, promoCode);
+    tmp.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, now, units, paymentMethod, plu, promoCode, true);
 }
 
 // DF_ERROR stateDispenseEnd::print_text(string text)

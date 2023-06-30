@@ -27,7 +27,7 @@ page_idle->label_printer_status->nopaper,Assistance needed<br>Receipt Printer em
 #page_idle_products
 
 #tap here to refill your soap
-page_idle_products->label_title,Quick and easy soap refill,<br>just a tap away.
+page_idle_products->label_title,Hola Hola Hola,<br>Jabón Jabón Jabón!
 page_idle_products->label_printer_status->assistance_printer_offline,Assistance needed<br>Receipt Printer offline.
 page_idle_products->label_printer_status->empty_improperly_loaded,Assistance needed<br>Receipt printer empty or improperly loaded.
 
@@ -66,7 +66,7 @@ page_dispenser->label_to_refill,to refill
 page_dispenser->label_instructions_container,bring container to nozzle
 page_dispenser->label_press,press and hold <br>the button
 page_dispenser->pushButton_problems,Tap here if you notice a problem.
-page_dispenser->pushButton_abort->abort,Cancel
+page_dispenser->pushButton_abort->abort,Abort
 page_dispenser->pushButton_abort->complete,Complete
 page_dispenser->label_finishTransactionMessage->no_pay,Voiding payment
 page_dispenser->label_finishTransactionMessage->display_price,Capturing payment: $%1

@@ -242,7 +242,8 @@ int page_idle_products::setStepTimerFromFileName(QString fileName, int defaultTi
 void page_idle_products::changeBackground()
 {
     QStringList all_files_in_template_folder = df_util::getFileList(p_page_idle->thisMachine.getTemplateFolder());
-    QString template_name = "background_idle_products_%1_"; // background_idle_products_x_yms.png  --> where x is a sequence number and y is a display time in ms.
+
+    QString template_name = "background_idle_products_%1_"; // background_idle_products_X_Yms.png  --> where X is a sequence number and Y is a display time in ms.
     QString filterPattern = template_name.arg(active_background_index);
     QStringList filteredList = all_files_in_template_folder.filter(filterPattern, Qt::CaseSensitive);
 
@@ -263,17 +264,14 @@ void page_idle_products::changeBackground()
     }
     else if (filteredList.count() >= 1)
     {
-        // qDebug() << "background  " << filterPattern << "found.";
         QString background_name = filteredList[0];
         if (active_background_index == 0)
         {
-            // qDebug() << "Main page (index 0 )";
             setStepTimerFromFileName(background_name, PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS * 10);
             showAllLabelsAndButtons();
         }
         else
         {
-            // qDebug() << "normal page. index: " << active_background_index;
             setStepTimerFromFileName(background_name, PAGE_IDLE_PRODUCTS_STEP_DISPLAY_TIME_SECONDS * 10);
             hideAllLabelAndButtons();
         }

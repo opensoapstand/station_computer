@@ -350,7 +350,7 @@ void machine::loadParametersFromDb()
         m_status_text_slots);
 
     qDebug() << "Machine ID as loaded from db: " << getMachineId();
-    qDebug() << "Template found : " << getTemplateFolder();
+    qDebug() << "Template folder from db : " << getTemplateFolder();
 }
 
 int machine::getDispensersCount()

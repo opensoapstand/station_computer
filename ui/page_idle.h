@@ -90,6 +90,7 @@ public:
     void setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier);
     void setTemplateTextToObject(QWidget *p_element);
     void setTextToObject(QWidget *p_element, QString text);
+    QString getCombinedElementPageAndName(QWidget *p_element);
     QString getTemplateTextByElementNameAndPage(QWidget *p_element);
     QString getTemplateTextByElementNameAndPageAndIdentifier(QWidget *p_element, QString identifier);
     QString getTemplateTextByPage(QWidget *page, QString identifier);

@@ -18,7 +18,7 @@
     <rect>
      <x>70</x>
      <y>40</y>
-     <width>401</width>
+     <width>291</width>
      <height>41</height>
     </rect>
    </property>
@@ -149,7 +149,7 @@
   <widget class="QPushButton" name="pushButton_set_status">
    <property name="geometry">
     <rect>
-     <x>580</x>
+     <x>610</x>
      <y>40</y>
      <width>201</width>
      <height>201</height>
@@ -595,11 +595,11 @@
     <string>Toggle Pump Enable</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_enabled_status">
+  <widget class="QLabel" name="label_pump_enabled_status">
    <property name="geometry">
     <rect>
      <x>330</x>
-     <y>1620</y>
+     <y>1500</y>
      <width>351</width>
      <height>20</height>
     </rect>
@@ -921,10 +921,10 @@
   <widget class="QLabel" name="label_status_dispenser">
    <property name="geometry">
     <rect>
-     <x>330</x>
-     <y>1670</y>
-     <width>701</width>
-     <height>51</height>
+     <x>20</x>
+     <y>250</y>
+     <width>311</width>
+     <height>81</height>
     </rect>
    </property>
    <property name="text">
@@ -1539,11 +1539,37 @@
     <string>Calibration value if exactly 1L dispensed</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="pushButton_clear_problem">
+   <property name="geometry">
+    <rect>
+     <x>390</x>
+     <y>40</y>
+     <width>201</width>
+     <height>201</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Clear problem</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_status_dispenser_elaborated">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1520</y>
+     <width>701</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Dispense Status</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_keypad"/>
   <buttongroup name="buttonGroup_edit_product"/>
+  <buttongroup name="buttonGroup_keypad"/>
  </buttongroups>
 </ui>

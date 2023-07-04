@@ -250,12 +250,8 @@ void machine::setRole(UserRole role)
 
 void machine::setStatusText(int slot, bool isSlotEnabled, QString status)
 {
-
     QString column = QString("status_text_slot_%1").arg(slot);
-    // UPDATE machine SET status_text_slot_1='SLOT_STATE_AVAILABLE'
-
     m_db->updateTableMachineWithText(column, status);
-    // bool success = db.updateSlotAvailability(slot, isSlotEnabled, status);
 }
 
 QString machine::getStatusText(int slot)
@@ -266,7 +262,6 @@ QString machine::getStatusText(int slot)
 
 QString machine::getPumpId(int slot)
 {
-
     slotNumberValidityCheck(slot);
     return m_pump_id_slots[slot - 1];
 }

@@ -176,8 +176,8 @@ page_maintenance_dispenser->pushButton_enable_pump->enable_pump,ENABLE PUMP
 page_maintenance_dispenser->pushButton_enable_pump->disable_pump,DISABLE PUMP
 page_maintenance_dispenser->pushButton_set_status->unavailable,Make\nunavailable
 page_maintenance_dispenser->pushButton_set_status->available,Make\navailable
-page_maintenance_dispenser->label_enabled_status->pump_ready,Manual Pump ready. Press dispense button.
-page_maintenance_dispenser->label_enabled_status->pump_off,Pump manual mode OFF.
+page_maintenance_dispenser->label_pump_enabled_status->pump_ready,Manual Pump ready. Press dispense button.
+page_maintenance_dispenser->label_pump_enabled_status->pump_off,Pump manual mode OFF.
 page_maintenance_dispenser->label_action_feedback->success,Refill Succesfull
 page_maintenance_dispenser->label_action_feedback->error,Refill ERROR
 page_maintenance_dispenser->label_title->small,Price Small:

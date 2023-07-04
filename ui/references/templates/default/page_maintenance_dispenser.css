@@ -1,16 +1,32 @@
 #label_action_feedback {
    font-size: 18px;
+
+}
+#label_status_dispenser {
+   font-size: 18px;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   font-weight: 600;
 }
 
 #label_product_name {
    text-align: center;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
 }
+
 #label_product_picture {
    border: 1px solid black;
 }
 
 #pushButton_restock {
    font-size: 32px;
+}
+
+
+#pushButton_clear_problem {
+   font-size: 32px;
+   background-color: #E0A0A0;
 }
 
 #pushButton_to_previous_page {
@@ -27,12 +43,12 @@
 }
 
 .pushButton_set_status_unavailable {
-   background-color: #abe0a0;
+   /* background-color: #abe0a0; */
    font-size: 32px;
 }
 
 .pushButton_set_status_available {
-   background-color: #E0A0A0;
+   /* background-color: #E0A0A0; */
    font-size: 32px;
 }
 

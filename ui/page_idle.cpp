@@ -73,7 +73,6 @@ page_idle::~page_idle()
     delete ui;
 }
 
-
 void page_idle::showEvent(QShowEvent *event)
 {
     registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
@@ -379,17 +378,20 @@ void page_idle::setBackgroundPictureToQWidget(QWidget *p_widget, QString image_p
     p_widget->update();
 }
 
-QString page_idle::getTemplateTextByElementNameAndPageAndIdentifier(QWidget *p_element, QString identifier)
-{
-    QString element_page_and_name = getTemplateTextByElementNameAndPage(p_element);
-    QString searchString = element_page_and_name + "->" + identifier;
-    return getTemplateText(searchString);
-}
 
 void page_idle::setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier)
 {
     QString text = getTemplateTextByElementNameAndPageAndIdentifier(p_element, identifier);
     setTextToObject(p_element, text);
+}
+
+QString page_idle::getTemplateTextByElementNameAndPageAndIdentifier(QWidget *p_element, QString identifier)
+{
+    // QString element_page_and_name = getTemplateTextByElementNameAndPage(p_element);
+    QString element_page_and_name = getCombinedElementPageAndName(p_element);
+
+    QString searchString = element_page_and_name + "->" + identifier;
+    return getTemplateText(searchString);
 }
 
 void page_idle::setTemplateTextToObject(QWidget *p_element)
@@ -398,20 +400,25 @@ void page_idle::setTemplateTextToObject(QWidget *p_element)
     setTextToObject(p_element, searchString);
 }
 
-QString page_idle::getTemplateTextByElementNameAndPage(QWidget *p_element)
+QString page_idle::getCombinedElementPageAndName(QWidget *p_element)
 {
     QString elementName = p_element->objectName();
     QWidget *parentWidget = p_element->parentWidget();
 
     if (!parentWidget)
     {
-        qDebug() << "No parent for the provide widget!! " << elementName;
+        qDebug() << "No parent for the provided widget!! " << elementName;
     }
 
     QString pageName = parentWidget->objectName();
 
-    QString searchString = pageName + "->" + elementName;
-    return getTemplateText(searchString);
+    return pageName + "->" + elementName;
+}
+
+QString page_idle::getTemplateTextByElementNameAndPage(QWidget *p_element)
+{
+    QString pageName_elementName_combination = getCombinedElementPageAndName(p_element);
+    return getTemplateText(pageName_elementName_combination);
 }
 
 void page_idle::setTextToObject(QWidget *p_element, QString text)
@@ -439,7 +446,6 @@ QString page_idle::getTemplateTextByPage(QWidget *page, QString identifier)
 {
     QString pageName = page->objectName();
     QString searchString = pageName + "->" + identifier;
-
     return getTemplateText(searchString);
 }
 
@@ -463,8 +469,7 @@ QString page_idle::getTemplateText(QString textName_to_find)
         }
         else
         {
-
-            qDebug() << "no template text value found for: " + textName_to_find;
+            qDebug() << "No template text value found for: " + textName_to_find;
             retval = textName_to_find;
         }
     }

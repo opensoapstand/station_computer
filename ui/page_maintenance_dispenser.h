@@ -51,7 +51,6 @@ public:
     void fsmReceiveDispenseRate(double flowrate);
     void fsmReceiveDispenserStatus(QString status);
     void fsmReceiveNoFlowAbort();
-    void setpushButton_set_statusText();
     void dispense_test_end(bool sendStopToController);
     void dispense_test_start();
     void update_volume_received_dispense_stats(double dispensed);
@@ -97,8 +96,10 @@ private slots:
     void buttonGroup_keypad_Pressed(int buttonId);
     
 
+    void on_pushButton_clear_problem_clicked();
+
 private:
-    void setStatusTextLabel(QString statusText);
+    void setStatusTextLabel(QLabel* label, QString statusText, bool displayRawStatus);
     void setButtonPressCountLabel(bool init);
     void setButtonPressCountLabel2(bool init);
 

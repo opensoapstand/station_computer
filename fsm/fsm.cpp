@@ -79,6 +79,7 @@ DF_ERROR createStateArray()
         g_stateArray[STATE_MANUAL_PUMP] = new stateManualPump();
         g_stateArray[STATE_MANUAL_CONFIG] = new stateManualConfig();
         g_stateArray[STATE_END] = new stateEnd();
+        g_stateArray[STATE_ASK_TEMPERATURE] = new stateAskTemperature();
         dfRet = OK;
     }
 

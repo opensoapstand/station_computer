@@ -5,6 +5,7 @@
 #include <cmath>
 #include <iostream>
 #include <bitset>
+#include <cstdint>
 #define DEFAULT_I2C_BUS "/dev/i2c-1"
 
 #define __USE_SMBUS_I2C_LIBRARY__ 1
@@ -361,99 +362,13 @@ bool pcb::define_pcb_version(void)
             }
             else if (i2c_probe_address == TEMPERATURE_SENSOR_ADDRESS)
             {
-                // temperatureSensor = 2;
-                // temperature
 
-                // debugOutput::sendMessage("-----------------------------temperature current sensor found. NOT IN USE YET.", MSG_INFO);
-
-                // uint8_t temperature_msb;
-                // uint8_t temperature_lsb;
-                // uint8_t temperature_msb3;
-                // uint8_t temperature_msb4;
-                // uint8_t temperature_msb5;
-                // uint8_t temperature_msb6;
-                // uint8_t temperature_msb7;
-                // uint8_t temperature_msb8;
-
-                // uint8_t temperature_msba;
-                // uint8_t temperature_msbb;
-                // uint8_t temperature_msbc;
-                // temperature_msb = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x01);
-                // temperature_lsb = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x02);
-
-                // int file;
-                // char bus[] = "/dev/i2c-1";
-                // file = open(bus, O_RDWR);
-                // ioctl(file, I2C_SLAVE, 0x18);
-
-                // // Select configuration register(0x01)
-                // // Continuous conversion mode, Power-up default(0x00, 0x00)
-                // char config[3] = {0};
-                // config[0] = 0x01;
-                // config[1] = 0x00;
-                // config[2] = 0x00;
-                // write(file, config, 3);
-                // // Select resolution rgister(0x08)
-                // // Resolution = +0.0625 / C(0x03)
-                // config[0] = 0x08;
-                // config[1] = 0x03;
-                // write(file, config, 2);
-                // sleep(1);
-
-                // // Read 2 bytes of data from register(0x05)
-                // // temp msb, temp lsb
-                // char reg[1] = {0x05};
-                // write(file, reg, 1);
-                // char data[2] = {0};
-                // if (read(file, data, 2) != 2)
-                // {
-                //     printf("Error : Input/Output error \n");
-                // }
-                // else
-                // {
-                //     // // Convert the data to 13-bits
-                //     // int temp = ((data[0] & 0x1F) * 256 + data[1]);
-                //     // if(temp > 4095)
-                //     // {
-                //     // 	temp -= 8192;
-                //     // }
-                //     // float cTemp = temp * 0.0625;
-                //     // float fTemp = cTemp * 1.8 + 32;
-                //     // Convert the data to temperature
-                //     int16_t temp = ((data[0] << 8) | data[1]);
-
-                //     if (temp > 4095)
-                //     {
-                //         temp -= 8192;
-                //     } // temperature in degrees Celsius
-                //     cTemp = (temp & 0x0FFF) * 0.0625;
-
-                //     // Calculate temperature in degrees Fahrenheit
-                //     double fTemp = cTemp * 1.8 + 32;
-
-                //     // Output data to screen
-                //     printf("Temperature in Celsius: %.2f °C\n", cTemp);
-                //     printf("Temperature in Fahrenheit: %.2f °F\n", fTemp);
-
-                //     // Output data to screen
-                //     printf("Temperature in Celsius is : %.2f C \n", cTemp);
-                // }
-                cTemp = getTemperatureConfigure();
+                cTemp = getTemperature();
                 char temp_celcius_chars[MAX_BUF];
                 snprintf(temp_celcius_chars, sizeof(temp_celcius_chars), "%.2f", cTemp);
                 string temp_celcius = (temp_celcius_chars);
                 // Output data to screen
                 debugOutput::sendMessage("At startup: " + std::string(temp_celcius), MSG_INFO);
-
-                // double temperature = calculateTemperature(temperature_msb, temperature_lsb);
-                //   debugOutput::sendMessage("temperaturetest3333333333333------------------------------------", temperature_msb);
-                //  debugOutput::sendMessage("temperaturetest------------------------------------" + temperature_msb,  MSG_INFO);
-                //  debugOutput::sendMessage("temperaturetest------------------------------------",  static_cast<MESSAGE_LEVEL>(temperature_lsb));
-                // debugOutput::sendMessage("temperaturetest------------------------------------",  static_cast<MESSAGE_LEVEL>(temperature_msb));
-                //  std::cout << "Temperature LSB: " << static_cast<int>(temperature_lsb) << std::endl;
-                //  std::cout << "Temperature MSB: " << static_cast<int>(temperature_msb) << std::endl;
-                //  debugOutput::sendMessage("temperature= " + std::to_string(temperature_msb9), MSG_INFO);
-                // debugOutput::sendMessage("temperaturetest------------------------------------" + temperature_msb, MSG_ERROR);
             }
             else if (i2c_probe_address == PIC_ADDRESS)
             {
@@ -1669,32 +1584,6 @@ void pcb::setSolenoid(uint8_t slot, bool onElseOff)
 
 double pcb::getTemperature()
 {
-    // debugOutput::sendMessage("init mcp9808 i2c", MSG_INFO);
-    // int file;
-    // char bus[] = "/dev/i2c-1";
-    // file = open(bus, O_RDWR);
-    // ioctl(file, I2C_SLAVE, TEMPERATURE_SENSOR_ADDRESS);
-
-    // debugOutput::sendMessage("read 0x05", MSG_INFO);
-    // char reg[1] = {0x05};
-    // write(file, reg, 1);
-    // char data[2] = {0};
-    // if (read(file, data, 2) != 2)
-    // {
-    //     debugOutput::sendMessage("Error did not read from temperature sensor mcp9808", MSG_INFO);
-    // }
-    // else
-    // {
-    //     int16_t temp = ((data[0] << 8) | data[1]);
-
-    //     if (temp > 4095)
-    //     {
-    //         temp -= 8192;
-    //     } // temperature in degrees Celsius
-    //     cTemp = (temp & 0x0FFF) * 0.0625;
-    // }
-    // return cTemp;
-
     set_i2c_address(TEMPERATURE_SENSOR_ADDRESS);
     int temperature_bytes = i2c_smbus_read_word_data(i2c_handle, 0x05);
     if (temperature_bytes < 0)
@@ -1705,249 +1594,37 @@ double pcb::getTemperature()
 
     uint16_t msbint = temperature_bytes >> 8;
     uint16_t lsbint = temperature_bytes & 0x00FF;
-    uint8_t msb = msbint;
-    uint8_t lsb = lsbint;
-
     uint16_t temperature_bytes_swapped = (lsbint << 8) | msbint;
-     
+    // create function to swap this
+    //     uint16_t swapBytes(uint16_t temperature_bytes) {
+    //     uint16_t msbint = temperature_bytes >> 8;
+    //     uint16_t lsbint = temperature_bytes & 0x00FF;
+    //     uint16_t temperature_bytes_swapped = (lsbint << 8) | msbint;
+    //     return temperature_bytes_swapped;
+    // }
+
     std::string binarymsb = std::bitset<16>(msbint).to_string();
     debugOutput::sendMessage("Temperature as bits msb: " + binarymsb, MSG_INFO);
-    
+
     std::string binarylsb = std::bitset<16>(lsbint).to_string();
     debugOutput::sendMessage("Temperature as bits lsb: " + binarylsb, MSG_INFO);
 
     temperature_bytes = temperature_bytes_swapped;
-
-    // cTemp = (temperature_bytes & 0x0FFF) * 0.0625; // page 24 datasheet https://ww1.microchip.com/downloads/en/DeviceDoc/25095A.pdf
-
-    // uint16_t Temperature;
-    // uint8_t upperByte = (temperature_bytes >> 8) & 0xFF; // Most significant byte
-    // uint8_t lowerByte = temperature_bytes & 0xFF;        // Least significant byte
-    // if ((upperByte & 0x10) == 0x10)
-    // {                                 // TA < 0°C
-    //     upperByte = upperByte & 0x0F; // Clear SIGN
-    //     Temperature = 256 - (upperByte * 16 + lowerByte / 16);
-    //     cTemp = Temperature * -1.0;
-    // }
-    // else
-    // {
-    //     // TA ³ 0°C
-    //     Temperature = (upperByte * 16 + lowerByte / 16);
-    //     // Temperature = Ambien
-    //     cTemp = Temperature * 1.0;
-    // }
-    // return cTemp;
-// //////////////////////////////////
-//     cTemp = (temperature_bytes & 0x0FFF) * 0.0625;
-//     std::string binary = std::bitset<16>(temperature_bytes).to_string();
-//     debugOutput::sendMessage("temperature as bits: " + binary, MSG_INFO);
-//     return cTemp;
-///////////////////////////////////////////////////
-    uint16_t signBit = (temperature_bytes >> 12) & 0x01; // Sign bit is at bit 12
+    uint16_t signBit = (temperature_bytes >> 12) & 0x01;   // Sign bit is at bit 12
     uint16_t temperatureData = temperature_bytes & 0x0FFF; // Temperature data is bits 11-0
-
-    
-
-if ((temperatureData & 0x0800) != 0) {
-    // Negative temperature
-    temperatureData = (~temperatureData & 0x0FFF) + 1; // Two's complement conversion
-    cTemp = -1.0 * temperatureData * 0.0625;
-} else {
-    // Positive temperature
-    cTemp = temperatureData * 0.0625;
-}
-
+    if ((temperatureData & 0x0800) != 0)
+    {
+        // Negative temperature
+        temperatureData = (~temperatureData & 0x0FFF) + 1; // Two's complement conversion
+        cTemp = -1.0 * temperatureData * 0.0625;
+    }
+    else
+    {
+        // Positive temperature
+        cTemp = temperatureData * 0.0625;
+    }
     std::string binary = std::bitset<16>(temperature_bytes).to_string();
     debugOutput::sendMessage("Temperature as bits: " + binary, MSG_INFO);
 
     return cTemp;
 }
-
-double pcb::getTemperatureConfigure()
-{
-    int file;
-    char bus[] = "/dev/i2c-1";
-    file = open(bus, O_RDWR);
-    ioctl(file, I2C_SLAVE, TEMPERATURE_SENSOR_ADDRESS);
-
-    // Select configuration register(0x01)
-    // Continuous conversion mode, Power-up default(0x00, 0x00)
-    char config[3] = {0};
-    config[0] = 0x01;
-    config[1] = 0x00;
-    config[2] = 0x00;
-    write(file, config, 3);
-    // Select resolution rgister(0x08)
-    // Resolution = +0.0625 / C(0x03)
-    config[0] = 0x08;
-    config[1] = 0x03;
-    write(file, config, 2);
-    sleep(1);
-
-    // Read 2 bytes of data from register(0x05)
-    // temp msb, temp lsb
-    char reg[1] = {0x05};
-    write(file, reg, 1);
-    char data[2] = {0};
-    if (read(file, data, 2) != 2)
-    {
-        debugOutput::sendMessage("Error did not read from temperature sensor mcp9808", MSG_INFO);
-    }
-    else
-    {
-        // // Convert the data to 13-bits
-        // int temp = ((data[0] & 0x1F) * 256 + data[1]);
-        // if(temp > 4095)
-        // {
-        // 	temp -= 8192;
-        // }
-        // float cTemp = temp * 0.0625;
-        // float fTemp = cTemp * 1.8 + 32;
-        // Convert the data to temperature
-        int16_t temp = ((data[0] << 8) | data[1]);
-
-        if (temp > 4095)
-        {
-            temp -= 8192;
-        } // temperature in degrees Celsius
-        cTemp = (temp & 0x0FFF) * 0.0625;
-
-        // Calculate temperature in degrees Fahrenheit
-        double fTemp = cTemp * 1.8 + 32;
-
-        char temp_celcius_chars[MAX_BUF];
-        snprintf(temp_celcius_chars, sizeof(temp_celcius_chars), "%.2f", cTemp);
-        string temp_celcius = (temp_celcius_chars);
-        // Output data to screen
-
-
-        debugOutput::sendMessage("Temperature in celcius: " + std::string(temp_celcius), MSG_INFO);
-    }
-      //toggleSDA(file);
-    
-    close(file);
-    return cTemp;
-}
-
-double pcb::getTemperaturenotworking()
-{ // uint8_t slot, bool temperature){
-    unsigned char i2c_probe_address;
-    for (i2c_probe_address = 0x03; i2c_probe_address <= 0x77; i2c_probe_address++)
-    {
-        // Go through all the addresses
-        debugOutput::sendMessage("Check I2C address " + to_string(i2c_probe_address), MSG_INFO);
-
-        if (!set_i2c_address(i2c_probe_address))
-        {
-            debugOutput::sendMessage("Error with i2c protocol", MSG_INFO);
-        }
-
-        if (i2c_probe_address == TEMPERATURE_SENSOR_ADDRESS)
-        {
-            //   temperatureSensor=2;
-            // temperature
-
-            //  debugOutput::sendMessage("-----------------------------temperature current sensor found. NOT IN USE YET.", MSG_INFO);
-
-            // uint8_t temperature_msb;
-            // uint8_t temperature_lsb;
-            // uint8_t temperature_msb3;
-            // uint8_t temperature_msb4;
-            // uint8_t temperature_msb5;
-            // uint8_t temperature_msb6;
-            // uint8_t temperature_msb7;
-            // uint8_t temperature_msb8;
-
-            // uint8_t temperature_msba;
-            // uint8_t temperature_msbb;
-            // uint8_t temperature_msbc;
-            // temperature_msb = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x01);
-            // temperature_lsb = ReadByte(TEMPERATURE_SENSOR_ADDRESS, 0x02);
-
-            ///
-            // Get I2C device, MCP9808 I2C address is 0x18(24)
-            int file;
-            // char *bus = "/dev/i2c-1";
-            char bus[] = "/dev/i2c-1";
-            file = open(bus, O_RDWR);
-            ioctl(file, I2C_SLAVE, 0x18);
-
-            // Select configuration register(0x01)
-            // Continuous conversion mode, Power-up default(0x00, 0x00)
-            char config[3] = {0};
-            config[0] = 0x01;
-            config[1] = 0x00;
-            config[2] = 0x00;
-            write(file, config, 3);
-            // Select resolution rgister(0x08)
-            // Resolution = +0.0625 / C(0x03)
-            config[0] = 0x08;
-            config[1] = 0x03;
-            write(file, config, 2);
-            sleep(1);
-
-            // Read 2 bytes of data from register(0x05)
-            // temp msb, temp lsb
-            char reg[1] = {0x05};
-            write(file, reg, 1);
-            char data[2] = {0};
-            if (read(file, data, 2) != 2)
-            {
-                debugOutput::sendMessage("Error did not read from temperature sensor mcp9808", MSG_INFO);
-            }
-            else
-            {
-                // // Convert the data to 13-bits
-                // int temp = ((data[0] & 0x1F) * 256 + data[1]);
-                // if(temp > 4095)
-                // {
-                // 	temp -= 8192;
-                // }
-                // float cTemp = temp * 0.0625;
-                // float fTemp = cTemp * 1.8 + 32;
-                // Convert the data to temperature
-                temp = ((data[0] << 8) | data[1]);
-
-                if (temp > 4095)
-                {
-                    temp -= 8192;
-                } // temperature in degrees Celsius
-                cTemp = (temp & 0x0FFF) * 0.0625;
-
-                // Calculate temperature in degrees Fahrenheit
-                double fTemp = cTemp * 1.8 + 32;
-
-                char temp_celcius_chars[MAX_BUF];
-                snprintf(temp_celcius_chars, sizeof(temp_celcius_chars), "%.2f", cTemp);
-                string temp_celcius = (temp_celcius_chars);
-                // Output data to screen
-                debugOutput::sendMessage("Temperature in celcius: " + std::string(temp_celcius), MSG_INFO);
-            }
-        }
-    }
-}
-// switch (pcb_version)
-// {
-
-// case (DSED8344_NO_PIC):
-// {
-// };
-// break;
-// case (DSED8344_PIC_MULTIBUTTON):
-// {
-// };
-// break;
-// case (EN134_4SLOTS):
-// {
-// };
-// break;
-// case (EN134_8SLOTS):
-// {
-// };
-// break;
-// default:
-// {
-//     debugOutput::sendMessage("Error PCB NOT VALID!!14", MSG_ERROR);
-// }
-// break;
-// }

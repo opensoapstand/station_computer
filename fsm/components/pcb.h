@@ -118,17 +118,8 @@ public:
     bool startPump(uint8_t slot);
     bool stopPump(uint8_t slot);
 
-    //double readTemperature();  //temp sensor
     double getTemperature();  //temp sensor
-    double getTemperatureConfigure();  //temp sensor
-    double getTemperaturenotworking();  //temp sensor
-    int temperatureSensor;
-    uint8_t temperature_msb9;
-    int16_t temp;
     double cTemp;
-
-    
-    // int fd = tempe(MCP9808_ADDRESS);
 
     void setSingleDispenseButtonLight(uint8_t slot, bool onElseOff);
     bool getDispenseButtonStateDebounced(uint8_t slot);

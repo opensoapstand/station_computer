@@ -1702,6 +1702,22 @@ double pcb::getTemperature()
         debugOutput::sendMessage("Error did not read from temperature sensor mcp9808", MSG_INFO);
         return 1;
     }
+
+    uint16_t msbint = temperature_bytes >> 8;
+    uint16_t lsbint = temperature_bytes & 0x00FF;
+    uint8_t msb = msbint;
+    uint8_t lsb = lsbint;
+
+    uint16_t temperature_bytes_swapped = (lsbint << 8) | msbint;
+     
+    std::string binarymsb = std::bitset<16>(msbint).to_string();
+    debugOutput::sendMessage("Temperature as bits msb: " + binarymsb, MSG_INFO);
+    
+    std::string binarylsb = std::bitset<16>(lsbint).to_string();
+    debugOutput::sendMessage("Temperature as bits lsb: " + binarylsb, MSG_INFO);
+
+    temperature_bytes = temperature_bytes_swapped;
+
     // cTemp = (temperature_bytes & 0x0FFF) * 0.0625; // page 24 datasheet https://ww1.microchip.com/downloads/en/DeviceDoc/25095A.pdf
 
     // uint16_t Temperature;
@@ -1727,8 +1743,10 @@ double pcb::getTemperature()
 //     debugOutput::sendMessage("temperature as bits: " + binary, MSG_INFO);
 //     return cTemp;
 ///////////////////////////////////////////////////
-       uint16_t signBit = (temperature_bytes >> 12) & 0x01; // Sign bit is at bit 12
+    uint16_t signBit = (temperature_bytes >> 12) & 0x01; // Sign bit is at bit 12
     uint16_t temperatureData = temperature_bytes & 0x0FFF; // Temperature data is bits 11-0
+
+    
 
 if ((temperatureData & 0x0800) != 0) {
     // Negative temperature

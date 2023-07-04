@@ -98,7 +98,8 @@ DF_ERROR stateIdle::onAction()
       else if ('5' == m_pMessaging->getAction())
       {
 
-         double temperature = this->productDispensers[0].the_pcb->getTemperatureConfigure();
+         double temperature = this->productDispensers[0].the_pcb->getTemperature();
+         // double temperature = this->productDispensers[0].the_pcb->getTemperatureConfigure();
          debugOutput::sendMessage("Temperature in Celsius: " + std::to_string(temperature), MSG_INFO);
 
 

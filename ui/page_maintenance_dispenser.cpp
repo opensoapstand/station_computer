@@ -107,18 +107,18 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     ui->pushButton_setting_speed_pwm->hide();
     ui->label_setting_speed_pwm->hide();
     ui->pushButton_setting_temperature->setVisible(false);
-   // ui->label_setting_temperature->setVisible(false);
-//   double temperature = getTemperatureConfigure();
-       //  debugOutput::sendMessage("Temperature in Celsius: " + std::to_string(temperature), MSG_INFO);
+    // ui->label_setting_temperature->setVisible(false);
+    // double temperature = getTemperatureConfigure();
+    //  debugOutput::sendMessage("Temperature in Celsius: " + std::to_string(temperature), MSG_INFO);
     //ui->label_setting_temperature->setText("Temp="+temperature);
-//    ui->label_setting_temperature->setText("Temp = " + QString::number(temperature));
-    //  pcb myPcb;
+    //    ui->label_setting_temperature->setText("Temp = " + QString::number(temperature));
+    //   pcb myPcb;
 
 //   // Call the `getTemperatureConfigure()` function
-//   double temperature = myPcb.getTemperatureConfigure();
+//    double temperature = myPcb.getTemperature();
 
 //   // Use the temperature value as needed
-//   ui->label_setting_temperature->setText("Temp = " + QString::number(temperature));
+//    ui->label_setting_temperature->setText("Temp = " + QString::number(temperature));
 
     isDispenseButtonPressed = false;
     activeEditField = "";
@@ -224,6 +224,14 @@ void page_maintenance_dispenser::onDispenseTimerTick()
     ui->label_status_button_press_time->setText(QString::number(dispenserPumpingSecs, 'f', 1) + "s / " + QString::number(dispenserEnabledSecs, 'f', 1) + "s");
 }
 
+
+void page_maintenance_dispenser::fsmReceiveTemperature(QString temperature)
+{
+    // qDebug() << "Dispense flow rate received from FSM: " << QString::number(flowrate, 'f', 2);
+        //ui->label_setting_temperature->setText("Temp="+temperature);
+
+    ui->label_setting_temperature->setText(temperature);
+};
 void page_maintenance_dispenser::onMaintainProductPageTimeoutTick()
 {
 

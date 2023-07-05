@@ -46,6 +46,7 @@ public:
     void resizeEvent(QResizeEvent *event);
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void fsmReceivedVolumeDispensed(double dispensed, bool isFull);
+    void fsmReceiveTemperature(QString temperature);
     void fsmReceiveTargetVolumeReached();
     void fsmReceiveDispenseButtonPressedPositiveEdge();
     void fsmReceiveDispenseButtonPressedNegativeEdge();

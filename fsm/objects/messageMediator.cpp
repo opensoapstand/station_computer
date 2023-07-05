@@ -410,7 +410,6 @@ DF_ERROR messageMediator::parseCommandString()
       debugOutput::sendMessage("*************************************************", MSG_INFO);
       debugOutput::sendMessage("Action: Repair PCA9534", MSG_INFO);
       m_requestedAction = ACTION_REPAIR_PCA;
-      
    }
    else if (sCommand.find("Order") != string::npos)
    {
@@ -485,7 +484,7 @@ DF_ERROR messageMediator::parseCommandString()
 
        //  first_char == ACTION_MANUAL_PRINTER ||
        //  first_char == ACTION_PRINTER_CHECK_STATUS ||
-      //  first_char == ACTION_UI_COMMAND_PRINTER_SEND_STATUS ||
+       //  first_char == ACTION_UI_COMMAND_PRINTER_SEND_STATUS ||
        first_char == ACTION_UI_COMMAND_PRINTER_MENU ||
        //  first_char == ACTION_PRINTER_CHECK_STATUS_TOGGLE_CONTINUOUSLY ||
        //  first_char == ACTION_PRINTER_PRINT_TEST ||
@@ -517,8 +516,15 @@ DF_ERROR messageMediator::parseCommandString()
    return e_ret;
 }
 
-void messageMediator::resetAction(){
+void messageMediator::resetAction()
+{
    m_requestedAction = ACTION_NO_ACTION;
+}
+
+void messageMediator::setDispenseCommandToDummy(){
+   m_requestedAction = ACTION_DUMMY;
+   m_RequestedProductIndexInt = PRODUCT_SLOT_DUMMY;
+   m_requestedSize = SIZE_DUMMY;
 }
 
 DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
@@ -531,6 +537,10 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
    char productChar = PRODUCT_DUMMY;
    char actionChar = ACTION_DUMMY;
    char volumeChar = SIZE_DUMMY;
+
+   m_requestedAction = ACTION_DUMMY;
+   m_RequestedProductIndexInt = PRODUCT_SLOT_DUMMY;
+   m_requestedSize = SIZE_DUMMY;
 
    // if (isdigit(sCommand[0]))
    if (isdigit(sCommand[0]))
@@ -559,6 +569,13 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
 
    switch (productChar)
    {
+   case PRODUCT_DUMMY:
+   {
+      m_RequestedProductIndexInt = PRODUCT_SLOT_DUMMY;
+      debugOutput::sendMessage("Invalid product char.", MSG_INFO);
+      e_ret = OK;
+      break;
+   }
    case '1':
    {
       m_RequestedProductIndexInt = 1;
@@ -643,10 +660,12 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
 
    if (!isalpha(actionChar))
    {
+      m_requestedAction = ACTION_DUMMY;
       debugOutput::sendMessage("Irrelevant input .. ", MSG_INFO);
    }
    else if (actionChar == ACTION_DUMMY)
    {
+      m_requestedAction = ACTION_DUMMY;
       debugOutput::sendMessage("No action provided ", MSG_INFO);
    }
    else
@@ -681,6 +700,7 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
          break;
 
       default:
+         m_requestedAction = ACTION_DUMMY;
          break;
       }
    }

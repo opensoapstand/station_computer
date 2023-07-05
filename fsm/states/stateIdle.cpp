@@ -60,9 +60,16 @@ DF_ERROR stateIdle::onAction()
       DF_ERROR ret_msg;
       ret_msg = m_pMessaging->parseCommandString();
 
-      if (ACTION_DISPENSE == m_pMessaging->getAction() || ACTION_AUTOFILL == m_pMessaging->getAction() )
+      if (ACTION_DISPENSE == m_pMessaging->getAction() || ACTION_AUTOFILL == m_pMessaging->getAction())
       {
-         m_state_requested = STATE_DISPENSE_INIT;
+         if (m_pMessaging->getRequestedSlot() == PRODUCT_SLOT_DUMMY || m_pMessaging->getRequestedSize() == SIZE_DUMMY)
+         {
+            debugOutput::sendMessage("Invalid dispenser command received. ", MSG_INFO);
+         }
+         else
+         {
+            m_state_requested = STATE_DISPENSE_INIT;
+         }
       }
       else if ('0' == m_pMessaging->getAction() || ACTION_QUIT == m_pMessaging->getAction())
       {
@@ -72,7 +79,7 @@ DF_ERROR stateIdle::onAction()
       else if ('1' == m_pMessaging->getAction() || ACTION_UI_COMMAND_PRINTER_MENU == m_pMessaging->getAction())
       {
          m_state_requested = STATE_MANUAL_PRINTER;
-         //g_stateArray[STATE_MANUAL_PRINTER].sendPrinterStatus();
+         // g_stateArray[STATE_MANUAL_PRINTER].sendPrinterStatus();
       }
       else if ('2' == m_pMessaging->getAction())
       {
@@ -94,7 +101,7 @@ DF_ERROR stateIdle::onAction()
          debugOutput::sendMessage("Before reload parameters from product", MSG_INFO);
          bool success = this->productDispensers[0].getProduct()->reloadParametersFromDb();
          this->productDispensers[0].loadGeneralProperties();
-         
+
          debugOutput::sendMessage("After" + to_string(success), MSG_INFO);
       }
       else

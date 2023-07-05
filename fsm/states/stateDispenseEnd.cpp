@@ -241,6 +241,8 @@ DF_ERROR stateDispenseEnd::handleTransactionPayment()
 DF_ERROR stateDispenseEnd::onExit()
 {
     DF_ERROR e_ret = OK;
+    m_pMessaging->setDispenseCommandToDummy();
+
     g_machine.pcb24VPowerSwitch(false);
     return e_ret;
 }

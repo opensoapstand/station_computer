@@ -104,6 +104,8 @@ DF_ERROR stateIdle::onAction()
 
 
          printf("Temperature polling from MCP9808: %.3f Celcius \n", temperature);
+         //  m_pMessaging->sendMessageOverIP("|temperature|" + to_int(temperature));
+          m_pMessaging->sendMessageOverIP("|temperature|" + (temperature));
       }
       else
       {

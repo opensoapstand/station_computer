@@ -210,7 +210,6 @@ typedef enum DF_FSM
    STATE_MANUAL_CONFIG,
    STATE_END,
    FSM_MAX,
-   STATE_ASK_TEMPERATURE,
 } DF_FSM;
 
 typedef enum DF_ERROR

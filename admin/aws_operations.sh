@@ -50,7 +50,7 @@ do
             full_path="$file"
             echo $full_path
             # ls -l "$file"
-            station_id=$(sqlite3 /home/df-admin/production/db/drinkfill-sqlite_newlayout.db "select machine_id from machine;")
+            station_id=$(sqlite3 /home/df-admin/production/db/configuration.db "select machine_id from machine;")
 
             cd /home/df-admin/Downloads
             scp -r -i DrinkfillAWS.pem "$full_path" ubuntu@ec2-44-225-153-121.us-west-2.compute.amazonaws.com:/home/ubuntu/Stations/$station_id

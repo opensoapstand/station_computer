@@ -11,7 +11,7 @@ import logging
 logging.basicConfig(filename="production/logging/dbLog.txt", level=logging.DEBUG,
                     format="%(asctime)s %(message)s", filemode="a+")
 
-database = sqlite3.connect("/home/df-admin/production/db/drinkfill-sqlite_newlayout.db")
+database = sqlite3.connect("/home/df-admin/production/db/configuration.db")
 machineId = database.execute("Select machine_id from machine").fetchone()[0]
 url = 'https://soapstandportal.com/api/machine/get_machine_info/'
 logging.info("Updating the local station database ")

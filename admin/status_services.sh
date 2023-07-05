@@ -13,7 +13,7 @@ active=$(systemctl is-active rtunnel.service)
 enabled=$(systemctl is-enabled rtunnel.service)
 echo -e "reversed ssh tunnel \t| $active  \t| $enabled"
 
-db_path=/home/df-admin/production/db/drinkfill-sqlite_newlayout.db
+db_path=/home/df-admin/production/db/configuration.db
 if [[ -f "$db_path" ]]; then
     station_id=$(sqlite3 $db_path "select machine_id from machine;")
     aws_port=$(sqlite3 $db_path "select aws_port from machine;")

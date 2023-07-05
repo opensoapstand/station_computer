@@ -24,7 +24,7 @@
 #define SIZE_CUSTOM_INDEX 4
 #define SIZE_TEST_INDEX 5
 
-#define DB_PATH "/home/df-admin/production/db/drinkfill-sqlite_newlayout.db"
+#define DB_PATH "/home/df-admin/production/db/configuration.db"
 
 #define PRODUCT_DETAILS_TSV_PATH "/home/df-admin/production/references/products/product_details.tsv"  // https://docs.google.com/spreadsheets/d/17WR2gRyPIDIlGKBy1YKFAqN-Hyw_3VOJ6JCmfcAtjVk/edit#gid=169583479 download as .tsv file
 #define UI_TEXTS_CSV_PATH "ui_texts.csv" 

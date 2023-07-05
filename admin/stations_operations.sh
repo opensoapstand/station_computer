@@ -160,36 +160,36 @@ if [[ $1 = "manual" ]]
 PS3='Choose option(digit + enter):'
 options=("dbname to dbname_xsrcx" "dbname_xsrcx to dbname OVERWRITE ALERT" "dbname_xDEST to dbname OVERWRITE ALERT --> SPECIAL CASE" "dbname to dbname OVERWRITE ALERT" "dbname_xsrcx to dbname_xsrcx")
 # 
-printf "\ndbname=drinkfill-sqlite_newlayout.db, xxxxx=port number (e.g. 43020)\n"
+printf "\ndbname=configuration.db, xxxxx=port number (e.g. 43020)\n"
 select opt in "${options[@]}"
 do
     case $opt in
         "dbname to dbname_xsrcx")
-           production_db_name_source="drinkfill-sqlite_newlayout.db"
-           production_db_name_destination="drinkfill-sqlite_newlayout_$source_port.db"
+           production_db_name_source="configuration.db"
+           production_db_name_destination="configuration_$source_port.db"
             ;;
         "dbname_xsrcx to dbname OVERWRITE ALERT")
-           production_db_name_source="drinkfill-sqlite_newlayout_$source_port.db"
-           production_db_name_destination="drinkfill-sqlite_newlayout.db"
+           production_db_name_source="configuration_$source_port.db"
+           production_db_name_destination="configuration.db"
             ;;
         "dbname_xDEST to dbname OVERWRITE ALERT --> SPECIAL CASE")
-           production_db_name_source="drinkfill-sqlite_newlayout_$destination_port.db"
-           production_db_name_destination="drinkfill-sqlite_newlayout.db"
+           production_db_name_source="configuration_$destination_port.db"
+           production_db_name_destination="configuration.db"
             ;;
         "dbname to dbname OVERWRITE ALERT")
-           production_db_name_source="drinkfill-sqlite_newlayout.db"
-           production_db_name_destination="drinkfill-sqlite_newlayout.db"
+           production_db_name_source="configuration.db"
+           production_db_name_destination="configuration.db"
             ;;
         "dbname_xsrcx to dbname_xsrcx")
-           production_db_name_source="drinkfill-sqlite_newlayout_$source_port.db"
-           production_db_name_destination="drinkfill-sqlite_newlayout_$source_port.db"
+           production_db_name_source="configuration_$source_port.db"
+           production_db_name_destination="configuration_$source_port.db"
             ;;
         *) echo "invalid option $REPLY";;
     esac
     break;
 done
 
-    production_db_name="drinkfill-sqlite_newlayout_$source_port.db"  # check for where used, not as a variable. Because... it's hard.
+    production_db_name="configuration_$source_port.db"  # check for where used, not as a variable. Because... it's hard.
     
     # transfer zip from source station to aws 
     cmd0=( scp -r -P $source_port "df-admin@localhost:/home/df-admin/production/db/$production_db_name_source" "/home/ubuntu/Stations/$production_db_name_destination" )
@@ -527,19 +527,19 @@ scp_transfer_db () {
     if [[ $1 = "to_aws" ]]
     then
         # run command https://stackoverflow.com/questions/2005192/how-to-execute-a-bash-command-stored-as-a-string-with-quotes-and-asterisk
-        cmd=( scp -P $port df-admin@localhost:~/production/db/drinkfill-sqlite_newlayout.db Stations/$station_id )
+        cmd=( scp -P $port df-admin@localhost:~/production/db/configuration.db Stations/$station_id )
         printf -v cmd_str '%q ' "${cmd[@]}"
         echo "Lined up command: "
         echo "$cmd_str"
         continu_or_exit
-        mv Stations/$station_id/drinkfill-sqlite_newlayout.db Stations/$station_id/drinkfill-sqlite_newlayout_bkp.db
+        mv Stations/$station_id/configuration.db Stations/$station_id/configuration_bkp.db
         # printf -v cmd_str '%q ' "${cmd[@]}"
         "${cmd[@]}"
        
     elif [[ $1 = "to_unit" ]]
     then
         # run command https://stackoverflow.com/questions/2005192/how-to-execute-a-bash-command-stored-as-a-string-with-quotes-and-asterisk
-        cmd=( scp -P $port Stations/$station_id/drinkfill-sqlite_newlayout.db df-admin@localhost:~/production/db/drinkfill-sqlite_newlayout.db )
+        cmd=( scp -P $port Stations/$station_id/configuration.db df-admin@localhost:~/production/db/configuration.db )
         printf -v cmd_str '%q ' "${cmd[@]}"
         echo "Lined up command: "        
         echo "$cmd_str"
@@ -551,8 +551,8 @@ scp_transfer_db () {
     elif [[ $1 = "to_dev" ]]
     then
         # run command https://stackoverflow.com/questions/2005192/how-to-execute-a-bash-command-stored-as-a-string-with-quotes-and-asterisk
-        cmd1=( scp -P $port df-admin@localhost:~/production/db/drinkfill-sqlite_newlayout.db Stations/$2/drinkfill-sqlite_newlayout_fromUnit.db )
-        cmd2=( scp -P $3 Stations/$2/drinkfill-sqlite_newlayout_fromUnit.db df-admin@localhost:~/production/db/drinkfill-sqlite_newlayout_$station_id.db )
+        cmd1=( scp -P $port df-admin@localhost:~/production/db/configuration.db Stations/$2/configuration_fromUnit.db )
+        cmd2=( scp -P $3 Stations/$2/configuration_fromUnit.db df-admin@localhost:~/production/db/configuration_$station_id.db )
         printf -v cmd1_str '%q ' "${cmd1[@]}"
         printf -v cmd2_str '%q ' "${cmd2[@]}"
         
@@ -562,15 +562,15 @@ scp_transfer_db () {
         echo "$cmd2_str"
         
         continu_or_exit
-        mv Stations/$2/drinkfill-sqlite_newlayout_fromUnit.db Stations/$2/drinkfill-sqlite_newlayout_fromUnit_bkp.db
+        mv Stations/$2/configuration_fromUnit.db Stations/$2/configuration_fromUnit_bkp.db
         "${cmd1[@]}"
         "${cmd2[@]}"
 
     elif [[ $1 = "from_dev" ]]
     then
         # run command https://stackoverflow.com/questions/2005192/how-to-execute-a-bash-command-stored-as-a-string-with-quotes-and-asterisk
-        cmd1=( scp -P $3 df-admin@localhost:~/production/db/drinkfill-sqlite_newlayout_$station_id.db Stations/$2/drinkfill-sqlite_newlayout_toUnit.db )
-        cmd2=( scp -P $port Stations/$2/drinkfill-sqlite_newlayout_toUnit.db df-admin@localhost:~/production/db/drinkfill-sqlite_newlayout.db )
+        cmd1=( scp -P $3 df-admin@localhost:~/production/db/configuration_$station_id.db Stations/$2/configuration_toUnit.db )
+        cmd2=( scp -P $port Stations/$2/configuration_toUnit.db df-admin@localhost:~/production/db/configuration.db )
         printf -v cmd1_str '%q ' "${cmd1[@]}"
         printf -v cmd2_str '%q ' "${cmd2[@]}"
         
@@ -580,7 +580,7 @@ scp_transfer_db () {
         echo "$cmd2_str"
         
         continu_or_exit
-        mv Stations/$2/drinkfill-sqlite_newlayout_toUnit.db Stations/$2/drinkfill-sqlite_newlayout_toUnit_bkp.db
+        mv Stations/$2/configuration_toUnit.db Stations/$2/configuration_toUnit_bkp.db
         "${cmd1[@]}"
         "${cmd2[@]}"
 DB

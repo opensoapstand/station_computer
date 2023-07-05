@@ -39,7 +39,7 @@
 #define ENABLE_TRANSACTION_TO_CLOUD
 // #define ENABLE_MULTI_BUTTON
 
-#define DB_PATH "/home/df-admin/production/db/drinkfill-sqlite_newlayout.db"
+#define DB_PATH "/home/df-admin/production/db/configuration.db"
 
 #define MOTOR_TEST_DATA_OUTPUT_INTERVAL_MILLIS 1000
 // #define MOTOR_TEST_DATA_OUTPUT_INTERVAL_MILLIS 1000

@@ -74,7 +74,7 @@ echo "Done. NOTE: the database was not copied from the drinkfill folder. It was 
 #echo    # (optional) move to a new line
 #if [[ $REPLY =~ ^[Yy]$ ]]
 #then
-#    sudo -u df-admin scp /home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite_newlayout.db /home/df-admin/production/db/drinkfill-sqlite_newlayout.db 
+#    sudo -u df-admin scp /home/df-admin/drinkfill/db/sqlite/configuration.db /home/df-admin/production/db/configuration.db 
 #else
 #    sudo -u df-admin rm -r /home/df-admin/production/db
 #    sudo -u df-admin scp -r $BKP_PATH/db /home/df-admin/production

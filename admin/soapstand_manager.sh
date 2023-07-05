@@ -94,7 +94,7 @@ do
         ;;
 
         "Copy db from drinkfill to production folder")
-            sudo -u df-admin scp /home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite_newlayout.db /home/df-admin/production/db/drinkfill-sqlite_newlayout.db 
+            sudo -u df-admin scp /home/df-admin/drinkfill/db/sqlite/configuration.db /home/df-admin/production/db/configuration.db 
             echo "done."
         ;;
         

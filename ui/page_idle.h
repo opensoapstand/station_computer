@@ -28,9 +28,9 @@
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
 
-// #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
-// #define DB_PATH_CLICKS "/release/db/sqlite/clicks.db"
-// #define DB_PATH_TEMPERATURE "/release/db/sqlite/temperature.db"
+// #define CONFIG_DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
+// #define USAGE_DB_PATH_CLICKS "/release/db/sqlite/clicks.db"
+// #define USAGE_DB_PATH_TEMPERATURE "/release/db/sqlite/temperature.db"
 
 class page_maintenance;
 class page_select_product;

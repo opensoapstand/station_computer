@@ -21,7 +21,7 @@
 
 DbManager::DbManager(const QString &path)
 {
-    m_dbPath2 = DB_PATH;
+    m_dbPath2 = CONFIG_DB_PATH;
     setPath(path);
 }
 DbManager::DbManager()
@@ -114,7 +114,7 @@ QSqlDatabase DbManager::openDb()
 {
     qDebug() << "Open db";
     QSqlDatabase m_db = QSqlDatabase::addDatabase("QSQLITE", "qt_sql_ui_connection");
-    QString p = DB_PATH;
+    QString p = CONFIG_DB_PATH;
     if (m_db.isOpen())
     {
         usleep(100000);
@@ -150,7 +150,7 @@ QSqlDatabase DbManager::openDb()
     {
         qDebug() << "Database name was not empty.";
         // m_db = QSqlDatabase::addDatabase("QSQLITE");
-        m_db.setDatabaseName(DB_PATH);
+        m_db.setDatabaseName(CONFIG_DB_PATH);
     }
 
     if (!m_db.open())

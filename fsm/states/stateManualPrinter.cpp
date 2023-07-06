@@ -161,7 +161,7 @@ void stateManualPrinter::printTransaction(int transactionNumber)
 {
    // gets transaction data from db.
    char *zErrMsg = 0;
-   rc = sqlite3_open(DB_PATH, &db);
+   rc = sqlite3_open(CONFIG_DB_PATH, &db);
    sqlite3_stmt *stmt;
    std::string sql_string;
 
@@ -220,7 +220,7 @@ void stateManualPrinter::printTransaction(int transactionNumber)
    sqlite3_close(db);
 
    //-------------------------------------------------
-   rc = sqlite3_open(DB_PATH, &db);
+   rc = sqlite3_open(CONFIG_DB_PATH, &db);
    sql_string = ("SELECT slot FROM products WHERE name='" + product + "';");
 
    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
@@ -279,7 +279,7 @@ DF_ERROR stateManualPrinter::sendPrinterStatus()
 
    char *zErrMsg = 0;
 
-   rc = sqlite3_open(DB_PATH, &db);
+   rc = sqlite3_open(CONFIG_DB_PATH, &db);
 
    std::string sql21;
    sql21 = ("UPDATE machine SET receipt_printer_is_online=" + to_string(isOnline) + ",receipt_printer_has_paper=" + to_string(hasPaper) + ";"); // omit where cause --> all rows will be updated.

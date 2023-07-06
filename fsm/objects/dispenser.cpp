@@ -790,7 +790,7 @@ unsigned short dispenser::getPumpSpeed()
 void dispenser::loadMultiDispenseButtonEnabledFromDb()
 {
 
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT dispense_buttons_count FROM machine";
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
@@ -828,7 +828,7 @@ void dispenser::loadPumpReversalEnabledFromDb()
     // val 0 = pump reversal not enabled
     // val 1 = pump reversal enabled. Will take retraction time from products
 
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT enable_pump_reversal FROM machine";
 
@@ -854,7 +854,7 @@ void dispenser::loadPumpRampingEnabledFromDb()
     // val 0 = pump slow start stop not enabled
     // val 1 = pump slow start, slow stop enabled (with hardwired ramp up / ramp down time)
 
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT enable_pump_ramping FROM machine";
 
@@ -877,7 +877,7 @@ bool dispenser::getPumpSlowStartStopEnabled()
 
 void dispenser::loadSlotStateFromDb()
 {
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT status_text_slot_" + to_string(getSlot()) + " FROM machine;";
 
@@ -930,7 +930,7 @@ void dispenser::loadEmptyContainerDetectionEnabledFromDb()
     // val 0 = empty container detection not enabled
     // val 1 = empty container detection enabled
 
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT has_empty_detection FROM machine";
 

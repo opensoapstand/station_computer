@@ -24,7 +24,8 @@
 #define SIZE_CUSTOM_INDEX 4
 #define SIZE_TEST_INDEX 5
 
-#define DB_PATH "/home/df-admin/production/db/configuration.db"
+#define CONFIG_DB_PATH "/home/df-admin/production/db/configuration.db"
+#define USAGE_DB_PATH "/home/df-admin/production/db/usage.db"
 
 #define PRODUCT_DETAILS_TSV_PATH "/home/df-admin/production/references/products/product_details.tsv"  // https://docs.google.com/spreadsheets/d/17WR2gRyPIDIlGKBy1YKFAqN-Hyw_3VOJ6JCmfcAtjVk/edit#gid=169583479 download as .tsv file
 #define UI_TEXTS_CSV_PATH "ui_texts.csv" 
@@ -44,8 +45,6 @@
 #define TRANSACTION_DISPENSE_END_OFFINE_PATH            "/home/df-admin/production/logging/transactions/failed_curl_transaction_dispense_end.txt"
 #define TRANSACTIONS_RESTOCK_OFFINE_PATH                "/home/df-admin/production/logging/transactions/failed_curl_transaction_restock.txt"
 
-#define DB_PATH_CLICKS                                  "/release/db/sqlite/clicks.db"
-#define DB_PATH_TEMPERATURE                             "/release/db/sqlite/temperature.db"
 
 #define ML_TO_OZ 0.033814
 #define OZ_TO_ML 29.5735

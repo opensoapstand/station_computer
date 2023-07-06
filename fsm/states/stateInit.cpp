@@ -61,7 +61,7 @@ DF_ERROR stateInit::onAction()
 {
     DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
-    debugOutput::sendMessage("Use database at: " + std::to_string(1) + DB_PATH, MSG_INFO);
+    debugOutput::sendMessage("Use database at: " + std::to_string(1) + CONFIG_DB_PATH, MSG_INFO);
 
     // setup PIC programmer pins. Set to input as we will not use them. (this replaces setting them manually in BIOS)
     pin_vpp = new oddyseyx86GPIO(PIC_PROGRAMMER_PIN_VPP);

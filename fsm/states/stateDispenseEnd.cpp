@@ -388,7 +388,7 @@ void stateDispenseEnd::write_curl_to_file(std::string curl_params)
 
 std::string stateDispenseEnd::getProductID(int slot)
 {
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
 
     sqlite3_stmt *stmt;
 
@@ -408,7 +408,7 @@ std::string stateDispenseEnd::getProductID(int slot)
 std::string stateDispenseEnd::getMachineID()
 {
 
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
 
     sqlite3_stmt *stmt;
 
@@ -438,7 +438,7 @@ DF_ERROR stateDispenseEnd::databaseUpdateSql(string sqlStatement)
 
     // FIXME: DB needs fully qualified link to find...obscure with XML loading.
     char *zErrMsg = 0;
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(USAGE_DB_PATH, &db);
 
     if (rc)
     {

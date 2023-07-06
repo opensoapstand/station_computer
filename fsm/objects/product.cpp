@@ -155,7 +155,7 @@ int product::getPWM()
 int product::getPWMFromDB()
 {
     // abandonned by Lode. What about updating the whole product properties at once when needed.
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
 
     sqlite3_stmt *stmt;
 
@@ -192,7 +192,7 @@ double product::getVolPerTickFromDB()
 {
     // abandonned by Lode. What about updating the whole product properties at once when needed.
 
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
 
     sqlite3_stmt *stmt;
 
@@ -530,7 +530,7 @@ void product::addPriceCustomDiscountToProductsTable()
 void product::executeSQLStatement(string sql_string)
 {
 
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
     int status;
@@ -544,7 +544,7 @@ bool product::isColumnInTable(string table, string column_name_to_find)
     bool contains_column_maintenance_pwd = false;
     // debugOutput::sendMessage("dcolumn nameee to seach e" + column_name_to_find, MSG_INFO);
 
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "PRAGMA table_info(" + table + ");";
 
@@ -598,7 +598,7 @@ bool product::isDbValid()
     string table_products_columns[TABLE_PRODUCTS_COLUMN_COUNT] = {"productId", "soapstand_product_serial", "slot", "name", "size_unit", "currency", "payment", "name_receipt", "concentrate_multiplier", "dispense_speed", "threshold_flow", "retraction_time", "calibration_const", "volume_per_tick", "last_restock", "volume_full", "volume_remaining", "volume_dispensed_since_restock", "volume_dispensed_total", "is_enabled_small", "is_enabled_medium", "is_enabled_large", "is_enabled_custom", "size_small", "size_medium", "size_large", "size_custom_min", "size_custom_max", "price_small", "price_medium", "price_large", "price_custom", "plu_small", "plu_medium", "plu_large", "plu_custom", "pid_small", "pid_medium", "pid_large", "pid_custom", "flavour", "image_url", "type", "ingredients", "features", "description", "is_enabled_custom_discount", "size_custom_discount", "price_custom_discount"};
     bool is_valid = true;
 
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "PRAGMA table_info(products);";
 
@@ -721,7 +721,7 @@ bool product::reloadParametersFromDb()
     }
 
     debugOutput::sendMessage("Database check: Valid. Please note that no NULL values are allowed in text fields.", MSG_INFO);
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT * FROM products WHERE slot=" + to_string(m_nSlot) + ";";
 
@@ -1028,7 +1028,7 @@ bool product::testParametersFromDb()
 
     debugOutput::sendMessage("***************************************************************************", MSG_INFO);
     // abandonned by Lode. What about updating the whole product properties at once when needed.
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
 
     sqlite3_stmt *stmt;
 

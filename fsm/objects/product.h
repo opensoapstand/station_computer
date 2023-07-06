@@ -24,7 +24,7 @@
 
 #include <sqlite3.h>
 
-// #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
+// #define CONFIG_DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 
 using namespace std;
 

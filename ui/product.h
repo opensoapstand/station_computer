@@ -45,9 +45,6 @@ public:
     void setFullVolumeCorrectUnits(QString inputFullValue);
     void getCustomDiscountDetails(bool *large_volume_discount_is_enabled, double *min_volume_for_discount, double *discount_price_per_liter);
 
-    void setSize(int sizeIndex);
-    int getSize();
-    char getSizeAsChar();
     QString getPlu(int sizeIndex);
     void setPlu(int sizeIndex, QString plu);
     bool is_valid_size_selected();
@@ -63,9 +60,16 @@ public:
     QString getProductIngredients();
     QString getProductFeatures();
     QString getLastRestockDate();
-    bool getSizeEnabled(int size);
-    int getBiggestEnabledSizeIndex();
 
+    
+    void setSize(int sizeIndex);
+    int getSize();
+    char getSizeAsChar();
+    
+    bool toggleSizeEnabled(int size);
+    bool getSizeEnabled(int size);
+    bool setSizeEnabled(int size, bool enabled);
+    int getBiggestEnabledSizeIndex();
     void setBiggestEnabledSizeIndex();
 
     QString getProductPicturePath();

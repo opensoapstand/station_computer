@@ -489,7 +489,7 @@ void page_idle::loadTextsFromTemplateCsv()
 
 void page_idle::loadTextsFromDefaultCsv()
 {
-    qDebug() << "Load dynamic texts from devault csv";
+    qDebug() << "Load dynamic texts from default csv";
     QString name = UI_TEXTS_CSV_PATH;
     QString csv_default_template_path = thisMachine.getDefaultTemplatePathFromName(name);
     loadTextsFromCsv(csv_default_template_path, &textNameToTextMap_default);

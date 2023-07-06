@@ -304,8 +304,18 @@ void page_product::reset_and_show_page_elements()
     // create signature by sizes availability, use the bits
     for (uint8_t i = 0; i < 4; i++)
     {
-        available_sizes_signature |= p_page_idle->selectedProduct->getSizeEnabled(product_sizes[i]) << i;
+        uint8_t enabled = p_page_idle->selectedProduct->getSizeEnabled(product_sizes[i]);
+        available_sizes_signature |= enabled << i;
         // S=1, M=2, L=4, C=8
+
+        if (enabled)
+        {
+            orderSizeButtons[i]->show();
+        }
+        else
+        {
+            orderSizeButtons[i]->hide();
+        }
     }
 
     // every combination
@@ -353,9 +363,9 @@ void page_product::reset_and_show_page_elements()
     {
         qDebug() << "ERROR: Product signature SIZES not available (limited combinations of size buttons available to be set in database) signature: " << available_sizes_signature;
         // only small available
-        xywh_size_buttons = orderSizeButtons_xywh_dynamic_ui_small_available;
-        xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_small_available;
-        xy_size_labels_price = orderSizePriceLabels_xy_dynamic_ui_small_available;
+        xywh_size_buttons = orderSizeButtons_xywh_dynamic_ui_all_sizes_available;
+        xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_all_sizes_available;
+        xy_size_labels_price = orderSizePriceLabels_xy_dynamic_ui_all_sizes_available;
     }
 
     // set size specific details

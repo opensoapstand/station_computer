@@ -117,6 +117,19 @@ QString product::getStatusText()
     return thisMachine->getStatusText(getSlot());
 }
 
+bool product::toggleSizeEnabled(int size)
+{
+    setSizeEnabled(size, !(getSizeEnabled(size)));
+}
+
+bool product::setSizeEnabled(int size, bool enabled)
+{
+    QString sizeIndexToText[6] = { "Invalid", "small", "medium", "large", "custom", "test" };
+    // m_sizeIndexIsEnabled[size] = enabled;
+    QString column_name = QString("is_enabled_%1").arg(sizeIndexToText[size]);
+    m_db->updateTableProductsWithInt(getSlot(), column_name, enabled);
+}
+
 bool product::getSizeEnabled(int size)
 {
     // caution!:  provide size index (0=small, ...)

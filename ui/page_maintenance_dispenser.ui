@@ -55,9 +55,9 @@
   <widget class="QPushButton" name="pushButton_price_medium">
    <property name="geometry">
     <rect>
-     <x>430</x>
+     <x>490</x>
      <y>660</y>
-     <width>201</width>
+     <width>181</width>
      <height>41</height>
     </rect>
    </property>
@@ -93,9 +93,9 @@
   <widget class="QPushButton" name="pushButton_price_small">
    <property name="geometry">
     <rect>
-     <x>430</x>
+     <x>490</x>
      <y>620</y>
-     <width>201</width>
+     <width>181</width>
      <height>41</height>
     </rect>
    </property>
@@ -630,9 +630,9 @@
   <widget class="QPushButton" name="pushButton_target_volume_small">
    <property name="geometry">
     <rect>
-     <x>630</x>
+     <x>670</x>
      <y>620</y>
-     <width>201</width>
+     <width>181</width>
      <height>41</height>
     </rect>
    </property>
@@ -650,9 +650,9 @@
   <widget class="QPushButton" name="pushButton_target_volume_medium">
    <property name="geometry">
     <rect>
-     <x>630</x>
+     <x>670</x>
      <y>660</y>
-     <width>201</width>
+     <width>181</width>
      <height>41</height>
     </rect>
    </property>
@@ -774,9 +774,9 @@
   <widget class="QPushButton" name="pushButton_price_large">
    <property name="geometry">
     <rect>
-     <x>430</x>
+     <x>490</x>
      <y>700</y>
-     <width>201</width>
+     <width>181</width>
      <height>41</height>
     </rect>
    </property>
@@ -793,9 +793,9 @@
   <widget class="QPushButton" name="pushButton_target_volume_large">
    <property name="geometry">
     <rect>
-     <x>630</x>
+     <x>670</x>
      <y>700</y>
-     <width>201</width>
+     <width>181</width>
      <height>41</height>
     </rect>
    </property>
@@ -813,9 +813,9 @@
   <widget class="QPushButton" name="pushButton_price_custom">
    <property name="geometry">
     <rect>
-     <x>430</x>
+     <x>490</x>
      <y>740</y>
-     <width>201</width>
+     <width>181</width>
      <height>41</height>
     </rect>
    </property>
@@ -832,9 +832,9 @@
   <widget class="QPushButton" name="pushButton_plu_medium">
    <property name="geometry">
     <rect>
-     <x>830</x>
+     <x>850</x>
      <y>660</y>
-     <width>201</width>
+     <width>181</width>
      <height>41</height>
     </rect>
    </property>
@@ -851,9 +851,9 @@
   <widget class="QPushButton" name="pushButton_plu_large">
    <property name="geometry">
     <rect>
-     <x>830</x>
+     <x>850</x>
      <y>700</y>
-     <width>201</width>
+     <width>181</width>
      <height>41</height>
     </rect>
    </property>
@@ -870,9 +870,9 @@
   <widget class="QPushButton" name="pushButton_plu_small">
    <property name="geometry">
     <rect>
-     <x>830</x>
+     <x>850</x>
      <y>620</y>
-     <width>201</width>
+     <width>181</width>
      <height>41</height>
     </rect>
    </property>
@@ -889,9 +889,9 @@
   <widget class="QPushButton" name="pushButton_plu_custom">
    <property name="geometry">
     <rect>
-     <x>830</x>
+     <x>850</x>
      <y>740</y>
-     <width>201</width>
+     <width>181</width>
      <height>41</height>
     </rect>
    </property>
@@ -1025,7 +1025,7 @@
   <widget class="QLabel" name="label_column_price">
    <property name="geometry">
     <rect>
-     <x>500</x>
+     <x>560</x>
      <y>590</y>
      <width>67</width>
      <height>17</height>
@@ -1038,7 +1038,7 @@
   <widget class="QLabel" name="label_column_target_volume">
    <property name="geometry">
     <rect>
-     <x>690</x>
+     <x>710</x>
      <y>590</y>
      <width>131</width>
      <height>17</height>
@@ -1116,9 +1116,9 @@
   <widget class="QPushButton" name="pushButton_target_volume_custom">
    <property name="geometry">
     <rect>
-     <x>630</x>
+     <x>670</x>
      <y>740</y>
-     <width>201</width>
+     <width>181</width>
      <height>41</height>
     </rect>
    </property>
@@ -1217,7 +1217,7 @@
   <widget class="Line" name="line_12">
    <property name="geometry">
     <rect>
-     <x>420</x>
+     <x>480</x>
      <y>580</y>
      <width>20</width>
      <height>201</height>
@@ -1230,7 +1230,7 @@
   <widget class="Line" name="line_13">
    <property name="geometry">
     <rect>
-     <x>620</x>
+     <x>660</x>
      <y>580</y>
      <width>20</width>
      <height>201</height>
@@ -1243,7 +1243,7 @@
   <widget class="Line" name="line_14">
    <property name="geometry">
     <rect>
-     <x>820</x>
+     <x>840</x>
      <y>580</y>
      <width>20</width>
      <height>201</height>
@@ -1565,11 +1565,89 @@
     <string>Dispense Status</string>
    </property>
   </widget>
+  <widget class="Line" name="line_23">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>580</y>
+     <width>20</width>
+     <height>201</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_column_enabled">
+   <property name="geometry">
+    <rect>
+     <x>430</x>
+     <y>590</y>
+     <width>67</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Enabled</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_enable_small">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>630</y>
+     <width>16</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_enable_medium">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>670</y>
+     <width>16</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_enable_large">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>710</y>
+     <width>16</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_enable_custom">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>750</y>
+     <width>16</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_edit_product"/>
   <buttongroup name="buttonGroup_keypad"/>
+  <buttongroup name="buttonGroup_edit_product"/>
  </buttongroups>
 </ui>

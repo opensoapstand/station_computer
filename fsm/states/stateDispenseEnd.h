@@ -53,7 +53,7 @@ public:
 private:
     char dispensedVolumeToSmallestFixedSize();
     void adjustSizeToDispensedVolume();
-    int pos_index;
+    int slot_index;
     int slot;
     char command;
 

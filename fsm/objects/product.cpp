@@ -870,7 +870,8 @@ bool product::reloadParametersFromDb()
             break;
             case DB_PRODUCTS_IS_ENABLED_CUSTOM:
             {
-                m_is_enabled_custom_discount = sqlite3_column_int(stmt, column_index);
+                isEnabledSizes[SIZE_INDEX_CUSTOM] = sqlite3_column_int(stmt, column_index);
+                //m_is_enabled_custom_discount = sqlite3_column_int(stmt, column_index);
             }
             break;
             case DB_PRODUCTS_IS_ENABLED_CUSTOM_DISCOUNT:

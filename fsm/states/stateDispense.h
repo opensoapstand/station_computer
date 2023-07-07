@@ -37,7 +37,7 @@ public:
 
 private:
     int slot;
-    int pos_index;
+    int slot_index;
 
     dispenser *productDispensers;
     bool flushCommand;

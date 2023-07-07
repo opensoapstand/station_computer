@@ -128,7 +128,6 @@ void page_product_overview::showEvent(QShowEvent *event)
     p_page_idle->setTemplateTextToObject(ui->pushButton_select_product_page);
     p_page_idle->setTemplateTextToObject(ui->label_discount_tag);
     p_page_idle->setTemplateTextToObject(ui->label_pay);
-    p_page_idle->setTemplateTextToObject(ui->label_total);
     p_page_idle->setTemplateTextToObject(ui->pushButton_continue);
 
     QString keyboard = KEYBOARD_IMAGE_PATH;
@@ -270,7 +269,7 @@ void page_product_overview::hideCurrentPageAndShowProvided(QWidget *pageToShow)
         p_page_idle->thisMachine.getCouponState() == enabled_processing_input ||
         p_page_idle->thisMachine.getCouponState() == network_error)
     {
-        p_page_idle->thisMachine.setCouponState( enabled_not_set);
+        p_page_idle->thisMachine.setCouponState(enabled_not_set);
     }
 
     selectIdleTimer->stop();
@@ -334,10 +333,17 @@ void page_product_overview::updatePriceLabel()
         ui->label_invoice_discount_amount->setText("-$" + QString::number(discountAmount, 'f', 2) + "/" + units);
 
         ui->label_invoice_price_total->setText("$" + QString::number(selectedPriceCorrected, 'f', 2) + "/" + units);
+        p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_total, "non_custom_volume");
+
+        base = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_total, "custom_volume");
+        ui->label_total->setText(base.arg(selected_volume));
+        
     }
     else
     {
-        // The label_invoice_price total displays the discounted total even when the user goes back to the select_product page. It's intended behaviour so user doesnt have to retype the promo-code
+        // The label_invoice_price total displays the discounted total even when the user goes back to the select_product page.
+        // It's intended behaviour so user doesnt have to retype the promo-code
+        // promo codes get reset when going to idle page.
         double selectedPrice = p_page_idle->selectedProduct->getBasePrice();
         double selectedPriceCorrected = p_page_idle->thisMachine.getPriceWithDiscount(selectedPrice);
         double discountFraction = p_page_idle->thisMachine.getDiscountPercentageFraction();
@@ -346,6 +352,8 @@ void page_product_overview::updatePriceLabel()
         ui->label_selected_volume->setText(selected_volume);
         ui->label_invoice_price->setText("$" + QString::number(selectedPrice, 'f', 2));
         ui->label_invoice_price_total->setText("$" + QString::number(selectedPriceCorrected, 'f', 2));
+
+        p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_total, "non_custom_volume");
     }
 }
 

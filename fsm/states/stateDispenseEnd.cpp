@@ -131,10 +131,11 @@ DF_ERROR stateDispenseEnd::onAction()
 
 void stateDispenseEnd::adjustSizeToDispensedVolume()
 {
-
-        debugOutput::sendMessage("Requested size" + to_string(SIZE_CUSTOM_CHAR), MSG_INFO);
-        debugOutput::sendMessage("is custome enabled: " + to_string(productDispensers[slot_index].getProduct()->getIsSizeEnabled(SIZE_CUSTOM_CHAR)), MSG_INFO);
-    if (m_pMessaging->getRequestedSize() != SIZE_CUSTOM_CHAR && productDispensers[slot_index].getProduct()->getIsSizeEnabled(SIZE_CUSTOM_CHAR) )
+    if (
+        (m_pMessaging->getRequestedSize() == SIZE_SMALL_CHAR ||
+         m_pMessaging->getRequestedSize() == SIZE_MEDIUM_CHAR ||
+         m_pMessaging->getRequestedSize() == SIZE_LARGE_CHAR) &&
+        productDispensers[slot_index].getProduct()->getIsSizeEnabled(SIZE_CUSTOM_CHAR))
     {
         // if custom volume is enabled, always revert back to the actual volume that's dispensed.
         m_pMessaging->setRequestedSize(SIZE_CUSTOM_CHAR);
@@ -160,7 +161,7 @@ void stateDispenseEnd::adjustSizeToDispensedVolume()
 
     else
     {
-            debugOutput::sendMessage("No volume adjustment", MSG_INFO);
+        debugOutput::sendMessage("No size adjustment", MSG_INFO);
 
 // WARNING: if enabled, customers can cheat. e.g. they can dispense 1.4L for a 1.5 liter dispense request. And then only pay for the next smaller volume (e.g. medium =1L)
 // --> Lode would advise against enabling it.

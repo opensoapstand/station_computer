@@ -29,7 +29,7 @@ page_product->pushButton_back,←back
 
 # page_product_overview
 page_product_overview->pushButton_select_product_page,←back
-page_product_overview->label_pay,Proceed to Pay
+page_product_overview->pushButton_continue,Proceed to Pay
 page_product_overview->label_total,Total Amount
 
 

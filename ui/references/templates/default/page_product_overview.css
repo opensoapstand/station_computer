@@ -133,19 +133,6 @@ QLabel {
     border: 2px solid #5E8580;
 }
 
-#label_pay {
-    font-family: 'Brevia';
-    font-style: normal;
-    font-weight: 200;
-    background-color: #5E8580;
-    font-size: 48px;
-    text-align: center;
-    line-height: auto;
-    /* qproperty-alignment: AlignCenter; */
-    border-radius: 20px;
-    color: white;
-    border: none;
-}
 .labelDiscount{
     font-family: 'Montserrat';
     font-style: normal;

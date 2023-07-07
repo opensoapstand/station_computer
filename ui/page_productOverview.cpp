@@ -107,8 +107,7 @@ void page_product_overview::showEvent(QShowEvent *event)
     ui->label_discount_tag->setStyleSheet(styleSheet);
     ui->label_invoice_discount_amount->setStyleSheet(styleSheet);
     ui->label_invoice_box->setStyleSheet(styleSheet);
-    ui->label_pay->setStyleSheet(styleSheet);
-    ui->label_pay->raise();
+
     ui->label_invoice_discount_name->setProperty("class", "labelDiscountName");
     ui->label_invoice_discount_name->setStyleSheet(styleSheet);
     ui->label_total->setStyleSheet(styleSheet);
@@ -127,7 +126,6 @@ void page_product_overview::showEvent(QShowEvent *event)
 
     p_page_idle->setTemplateTextToObject(ui->pushButton_select_product_page);
     p_page_idle->setTemplateTextToObject(ui->label_discount_tag);
-    p_page_idle->setTemplateTextToObject(ui->label_pay);
     p_page_idle->setTemplateTextToObject(ui->pushButton_continue);
 
     QString keyboard = KEYBOARD_IMAGE_PATH;
@@ -337,7 +335,6 @@ void page_product_overview::updatePriceLabel()
 
         base = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_total, "custom_volume");
         ui->label_total->setText(base.arg(selected_volume));
-        
     }
     else
     {

@@ -16,6 +16,10 @@
 #include "stateIdle.h"
 
 #define IDLE_STRING "Idle"
+#include <chrono>
+#include <iostream>
+#include <thread>
+
 
 // Default CTOR
 stateIdle::stateIdle()
@@ -48,6 +52,34 @@ DF_ERROR stateIdle::onEntry()
    return e_ret;
 }
 
+sendTemperature() {
+   temperatureRefresh=1;
+}
+int timer() {
+    std::chrono::seconds interval(5);
+
+    auto timerCallback = []() {
+        sendTemperature();
+    };
+
+    while (true) {
+        auto start = std::chrono::steady_clock::now();
+
+        timerCallback();
+
+        auto end = std::chrono::steady_clock::now();
+        auto elapsed = end - start;
+
+        auto sleepDuration = interval - std::chrono::duration_cast<std::chrono::seconds>(elapsed);
+
+        if (sleepDuration > std::chrono::seconds(0)) {
+            std::this_thread::sleep_for(sleepDuration);
+        }
+    }
+
+    return 0;
+}
+
 DF_ERROR stateIdle::onAction()
 {
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
@@ -56,6 +88,20 @@ DF_ERROR stateIdle::onAction()
    // {
 
    // Check if Command String is ready
+
+
+      if (temperatureRefresh==1) {
+        double temperature = this->productDispensers[0].the_pcb->getTemperature();
+        debugOutput::sendMessage("Temperature in Celsius: " + std::to_string(temperature), MSG_INFO);
+        printf("Temperature polling from MCP9808: %.3f Celcius \n", temperature);
+        m_pMessaging->sendMessageOverIP("|temperature|" + std::to_string(temperature));
+
+        std::this_thread::sleep_for(std::chrono::seconds(5));  // Wait for 5 seconds
+      temperatureRefresh==0;
+      }
+
+
+
    if (m_pMessaging->isCommandStringReadyToBeParsed())
    {
       DF_ERROR ret_msg;

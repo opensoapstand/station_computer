@@ -31,8 +31,8 @@ public:
     DF_ERROR onEntry();
     DF_ERROR onAction();
     DF_ERROR onExit();
-    
     product *productOrder;
+    int temperatureRefresh;
 
 private:
     int pos;

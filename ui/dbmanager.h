@@ -12,7 +12,7 @@ public:
     void closeDb();
     // void closeDb(QSqlDatabase db);
     void setPath(QString path);
-    QSqlDatabase openDb();
+    QSqlDatabase openDb(QString dbname);
 
     bool isDatabaseLocked(const QSqlDatabase &db);
 

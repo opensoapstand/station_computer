@@ -110,11 +110,11 @@ void DbManager::closeDb()
     // }
 }
 
-QSqlDatabase DbManager::openDb()
+QSqlDatabase DbManager::openDb(QString dbname)
 {
     qDebug() << "Open db";
     QSqlDatabase m_db = QSqlDatabase::addDatabase("QSQLITE", "qt_sql_ui_connection");
-    QString p = CONFIG_DB_PATH;
+    QString p = dbname;
     if (m_db.isOpen())
     {
         usleep(100000);
@@ -190,7 +190,7 @@ bool DbManager::executeQuery(QString sql)
     bool success = false;
 
     {
-        QSqlDatabase db = openDb();
+        QSqlDatabase db = openDb(CONFIG_DB_PATH);
         QSqlQuery qry(db);
         qry.prepare(sql);
 
@@ -384,7 +384,7 @@ void DbManager::getAllProductProperties(int slot,
     // qDebug() << "Open db";
     qDebug() << "Open db: load all product properties for slot: " << slot;
     {
-        QSqlDatabase db = openDb();
+        QSqlDatabase db = openDb(CONFIG_DB_PATH);
         QSqlQuery qry(db);
         // qry.prepare("SELECT soapstand_product_serial, size_unit, payment, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_max,price_small,price_medium, price_large,price_custom FROM products WHERE slot=:slot");
         qry.prepare("SELECT productId, soapstand_product_serial, slot, name, size_unit, currency, payment, name_receipt, concentrate_multiplier, dispense_speed, threshold_flow, retraction_time, calibration_const, volume_per_tick, last_restock, volume_full, volume_remaining, volume_dispensed_since_restock, volume_dispensed_total, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_min, size_custom_max, price_small, price_medium, price_large, price_custom, plu_small, plu_medium, plu_large, plu_custom, pid_small, pid_medium, pid_large, pid_custom, flavour, image_url, type, ingredients, features, description, is_enabled_custom_discount, size_custom_discount, price_custom_discount FROM products WHERE slot=:slot");
@@ -560,7 +560,7 @@ void DbManager::getAllMachineProperties(
 {
     qDebug() << " db... all machine properties";
     {
-        QSqlDatabase db = openDb();
+        QSqlDatabase db = openDb(CONFIG_DB_PATH);
         QSqlQuery qry(db);
 
         qry.prepare("SELECT machine_id,soapstand_customer_id,template,location,controller_type,controller_id,screen_type,'screen _id',has_receipt_printer,receipt_printer_is_online,receipt_printer_has_paper,has_tap_payment,hardware_version,software_version,aws_port,pump_id_slot_1,pump_id_slot_2,pump_id_slot_3,pump_id_slot_4,is_enabled_slot_1,is_enabled_slot_2,is_enabled_slot_3,is_enabled_slot_4,coupons_enabled,status_text_slot_1,status_text_slot_2,status_text_slot_3,status_text_slot_4,has_empty_detection,enable_pump_ramping,enable_pump_reversal,dispense_buttons_count,maintenance_pwd,show_transactions,help_text_html,idle_page_type,admin_pwd FROM machine");
@@ -650,7 +650,7 @@ uint32_t DbManager::getNumberOfRows(QString table)
 
     uint32_t row_count = 0;
     {
-        QSqlDatabase db = openDb();
+        QSqlDatabase db = openDb(CONFIG_DB_PATH);
         QSqlQuery qry(db);
         qry.prepare(qry_text);
 
@@ -683,7 +683,7 @@ void DbManager::addUserInteraction(QString action)
 {
 
     {
-        QSqlDatabase db = openDb();
+        QSqlDatabase db = openDb(USAGE_DB_PATH);
         QSqlQuery qry(db);
 
         QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
@@ -710,7 +710,7 @@ bool DbManager::getRecentTransactions(QString values[][5], int count, int *count
     // get most recent transactions
     // if less records available then asked for in count, return the retrieved count in count_retreived
     {
-        QSqlDatabase db = openDb();
+        QSqlDatabase db = openDb(USAGE_DB_PATH);
         QSqlQuery qry(db);
         qry.prepare("SELECT id,end_time,quantity_dispensed,price,product_id FROM transactions ORDER BY id DESC LIMIT :count");
         qry.bindValue(":count", count);
@@ -747,7 +747,7 @@ void DbManager::printerStatus(bool *isOnline, bool *hasPaper)
 {
 
     {
-        QSqlDatabase db = openDb();
+        QSqlDatabase db = openDb(CONFIG_DB_PATH);
         QSqlQuery qry(db);
         // bool is_online = false;
         // bool has_paper = false;

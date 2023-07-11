@@ -73,11 +73,18 @@ void page_maintenance::showEvent(QShowEvent *event)
     ui->label_ui_version->setProperty("class", "label_machine_ui");
     ui->label_ui_version->setStyleSheet(styleSheet);
 
+    ui->label_role->setProperty("class", "label_machine_ui");
+    ui->label_role->setStyleSheet(styleSheet);
+
     p_page_idle->setTemplateTextToObject(ui->label_title_maintenance_mode);
     p_page_idle->setTemplateTextToObject(ui->pushButton_to_previous_page);
     p_page_idle->setTemplateTextToObject(ui->pushButton_general_settings);
 
     ui->label_machine_id->setText("Machine ID: " + p_page_idle->thisMachine.getMachineId());
+    
+    QString role_as_text = p_page_idle->thisMachine.getActiveRoleAsText();
+    p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_role, role_as_text);
+
     QString title = QString("Soapstand UI v%1").arg(UI_VERSION);
     ui->label_ui_version->setText(title);
 

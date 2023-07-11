@@ -2,7 +2,6 @@
 #define MACHINE_H
 
 #include "df_util.h"
-// #include "page_idle.h"
 #include "dbmanager.h"
 
 typedef enum UserRole

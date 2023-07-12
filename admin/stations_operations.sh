@@ -14,6 +14,13 @@ station_ports=("44444" "43081" "44001" "44003" "43005" "43006" "43007" "43008" "
 # -----------------------------------
 
 # https://tldp.org/LDP/Bash-Beginners-Guide/html/sect_10_02.html
+global_port=666
+
+
+# output_list_as_enumerated_columns(){
+#     # https://stackoverflow.com/questions/70159505/bash-print-long-list-as-columns
+#      $1 | pr -2T
+# }
 
 get_choice_from_names() {
     # function can only return variables between 0 and 255 it's basically their exit code
@@ -85,6 +92,8 @@ function cd_and_stay() {
 
 ssh_into_station () {
 
+
+
     if [[ $1 = "manual" ]]
     then
         read -p "Input station port e.g. 43066: " port
@@ -122,72 +131,44 @@ ssh_into_station () {
 
 transfer_production_db(){
 
-if [[ $1 = "manual" ]]
-    then
-        read -p "Source station port e.g. 43066: " source_port
-        # port=$source_port
-        source_id="Manual"
-        source_description="Manual"
-        
-    else
-         echo "Choose source station:"
-        get_choice_from_names
-        choice_index=$?
-        source_id="${station_ids[$choice_index]}"
-        source_description="${station_descriptions[$choice_index]}"
-        source_port="${station_ports[$choice_index]}"
-    fi
+    echo "Source Station: "
+    user_input_port
+    source_port=$global_port
+    echo "Destination Station: "
+    user_input_port
+    destination_port=$global_port
 
-    if [[ $2 = "manual" ]]
-    then
-        read -p "Destination station port e.g. 43066: " destination_port
-        # port=$source_port
-        source_id="Manual"
-        source_description="Manual"
-        
-    else
-         echo "Choose destination station:"
-        get_choice_from_names
-        choice_index=$?
-        destination_id="${station_ids[$choice_index]}"
-        destination_description="${station_descriptions[$choice_index]}"
-        destination_port="${station_ports[$choice_index]}"
-    fi
-
-
-
-
-PS3='Choose option(digit + enter):'
-options=("dbname to dbname_xsrcx" "dbname_xsrcx to dbname OVERWRITE ALERT" "dbname_xDEST to dbname OVERWRITE ALERT --> SPECIAL CASE" "dbname to dbname OVERWRITE ALERT" "dbname_xsrcx to dbname_xsrcx")
-# 
-printf "\ndbname=configuration.db, xxxxx=port number (e.g. 43020)\n"
-select opt in "${options[@]}"
-do
-    case $opt in
-        "dbname to dbname_xsrcx")
-           production_db_name_source="configuration.db"
-           production_db_name_destination="configuration_$source_port.db"
-            ;;
-        "dbname_xsrcx to dbname OVERWRITE ALERT")
-           production_db_name_source="configuration_$source_port.db"
-           production_db_name_destination="configuration.db"
-            ;;
-        "dbname_xDEST to dbname OVERWRITE ALERT --> SPECIAL CASE")
-           production_db_name_source="configuration_$destination_port.db"
-           production_db_name_destination="configuration.db"
-            ;;
-        "dbname to dbname OVERWRITE ALERT")
-           production_db_name_source="configuration.db"
-           production_db_name_destination="configuration.db"
-            ;;
-        "dbname_xsrcx to dbname_xsrcx")
-           production_db_name_source="configuration_$source_port.db"
-           production_db_name_destination="configuration_$source_port.db"
-            ;;
-        *) echo "invalid option $REPLY";;
-    esac
-    break;
-done
+    PS3='Choose option(digit + enter):'
+    options=("dbname to dbname_xsrcx" "dbname_xsrcx to dbname OVERWRITE ALERT" "dbname_xDEST to dbname OVERWRITE ALERT --> SPECIAL CASE" "dbname to dbname OVERWRITE ALERT" "dbname_xsrcx to dbname_xsrcx")
+    # 
+    printf "\ndbname=drinkfill-sqlite_newlayout.db, xxxxx=port number (e.g. 43020)\n"
+    select opt in "${options[@]}"
+    do
+        case $opt in
+            "dbname to dbname_xsrcx")
+            production_db_name_source="drinkfill-sqlite_newlayout.db"
+            production_db_name_destination="drinkfill-sqlite_newlayout_$source_port.db"
+                ;;
+            "dbname_xsrcx to dbname OVERWRITE ALERT")
+            production_db_name_source="drinkfill-sqlite_newlayout_$source_port.db"
+            production_db_name_destination="drinkfill-sqlite_newlayout.db"
+                ;;
+            "dbname_xDEST to dbname OVERWRITE ALERT --> SPECIAL CASE")
+            production_db_name_source="drinkfill-sqlite_newlayout_$destination_port.db"
+            production_db_name_destination="drinkfill-sqlite_newlayout.db"
+                ;;
+            "dbname to dbname OVERWRITE ALERT")
+            production_db_name_source="drinkfill-sqlite_newlayout.db"
+            production_db_name_destination="drinkfill-sqlite_newlayout.db"
+                ;;
+            "dbname_xsrcx to dbname_xsrcx")
+            production_db_name_source="drinkfill-sqlite_newlayout_$source_port.db"
+            production_db_name_destination="drinkfill-sqlite_newlayout_$source_port.db"
+                ;;
+            *) echo "invalid option $REPLY";;
+        esac
+        break;
+    done
 
     production_db_name="configuration_$source_port.db"  # check for where used, not as a variable. Because... it's hard.
     
@@ -214,37 +195,12 @@ done
 
 transfer_production_logging(){
 
-    if [[ $1 = "manual" ]]
-    then
-        read -p "Source station port e.g. 43066: " source_port
-        # port=$source_port
-        source_id="Manual"
-        source_description="Manual"
-        
-    else
-         echo "Choose source station:"
-        get_choice_from_names
-        choice_index=$?
-        source_id="${station_ids[$choice_index]}"
-        source_description="${station_descriptions[$choice_index]}"
-        source_port="${station_ports[$choice_index]}"
-    fi
-
-    if [[ $2 = "manual" ]]
-    then
-        read -p "Destination station port e.g. 43066: " destination_port
-        # port=$source_port
-        source_id="Manual"
-        source_description="Manual"
-        
-    else
-         echo "Choose destination station:"
-        get_choice_from_names
-        choice_index=$?
-        destination_id="${station_ids[$choice_index]}"
-        destination_description="${station_descriptions[$choice_index]}"
-        destination_port="${station_ports[$choice_index]}"
-    fi
+    echo "Source Station: "
+    user_input_port
+    source_port=$global_port
+    echo "Destination Station: "
+    user_input_port
+    destination_port=$global_port
 
     logging_zip_name=logging_$source_port.zip  # check for where used, not as a variable. Because... it's hard.
     
@@ -277,40 +233,48 @@ transfer_production_logging(){
     echo "done"
 }
 
+user_input_port(){
+    PS3="Choose an option (or press Enter to exit): "
+    valid_choice=false
+
+    while [[ $valid_choice -eq false ]];do
+        select option in "port" "id"; do
+            case $option in
+                "port")
+                    read -p "Source station port e.g. 43066: " global_port
+                    valid_choice=true
+                    break
+                    ;;
+                "id")
+                    get_choice_from_names
+                    choice_index=$?
+                    global_port="${station_ports[$choice_index]}"
+                    valid_choice=true
+                    break
+                    ;;
+                *)
+                    echo "Invalid option. Try again."
+                    ;;
+            esac
+        done
+        break
+    done
+    # global_port="$source_port"
+}
+
+
+# user_input_port(){
+#     read -p "Source station port e.g. 43066: " global_port
+# }
 transfer_production_static_files(){
 
-    if [[ $1 = "manual" ]]
-    then
-        read -p "Source station port e.g. 43066: " source_port
-        # port=$source_port
-        source_id="Manual"
-        source_description="Manual"
-        
-    else
-         echo "Choose source station:"
-        get_choice_from_names
-        choice_index=$?
-        source_id="${station_ids[$choice_index]}"
-        source_description="${station_descriptions[$choice_index]}"
-        source_port="${station_ports[$choice_index]}"
-    fi
-
-    if [[ $2 = "manual" ]]
-    then
-        read -p "Destination station port e.g. 43066: " destination_port
-        # port=$source_port
-        source_id="Manual"
-        source_description="Manual"
-        
-    else
-         echo "Choose destination station:"
-        get_choice_from_names
-        choice_index=$?
-        destination_id="${station_ids[$choice_index]}"
-        destination_description="${station_descriptions[$choice_index]}"
-        destination_port="${station_ports[$choice_index]}"
-    fi
-
+    echo "Source Station: "
+    user_input_port
+    source_port=$global_port
+    echo "Destination Station: "
+    user_input_port
+    destination_port=$global_port
+ 
     production_zip_name=productionstatic.zip  # check for where used, not as a variable. Because... it's hard.
     
     # zip it up
@@ -607,7 +571,7 @@ deploy_with_ash () {
 
 echo 'At AWS: Drinkfill file transfer menu. CAUTION:Will impact station functionality.'
 PS3='Choose option(digit + enter):'
-options=("Quit" "Stations status" "Show Station Descriptions" "Station log in by SS-id" "Station mkdir" "Station log in by port" "Deploy wizard with Ash" "Static Production Copy: [SS-id] to [SS-id]" "Static Production Copy: [SS-id] to [port]" "Static Production Copy: [port] to [SS-id]" "Static Production Copy: [port] to [port]" "DB Production copy: [SS-id] to [SS-id]" "DB Production copy: [SS-id] to [port]" "DB Production copy: [port] to [SS-id]" "DB Production copy: [port] to [port]" "Logs Production Copy: [SS-id] to [SS-id]" "Logs Production Copy: [SS-id] to [port]" "Logs Production Copy: [port] to [SS-id]" "Logs Production Copy: [port] to [port]")
+options=("Quit" "Stations status" "Show Station Descriptions" "Station log in by SS-id" "Station mkdir" "Station log in by port" "Deploy wizard with Ash" "Production Folder Copy: Static files" "Production Folder Copy: Databases" "Production Folder Copy: Logging Folder")
 # options=("Quit" "Stations status" "Show Station Descriptions" "Station log in" "Station/production/x to Station/production/x" "Station/production/x to Station/home/x" "Station/home/x to Station/production/x" "Station/home/x to Station/home/x" "AWS to Station/home/x" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB" "Manualport/production/x to Manualport/home/x" "Station mkdir" "Station log in [port]" "Static Production Copy: Station to Station" "Static Production Copy: Station to [port]" "Static Production Copy: [port] to Station" "Static Production Copy: [port] to [port]" "DB Production copy: Station to Station" "DB Production copy: Station to [port]" "DB Production copy: [port] to Station" "DB Production copy: [port] to [port]" "Logs Production Copy: Station to Station" "Logs Production Copy: Station to [port]" "Logs Production Copy: [port] to Station" "Logs Production Copy: [port] to [port]")
 
 
@@ -658,43 +622,14 @@ do
             deploy_with_ash
             ;;
 
-        "Static Production Copy: [SS-id] to [SS-id]")
-            transfer_production_static_files "unit" "unit" 
+        "Production Folder Copy: Static files")
+            transfer_production_static_files  
             ;;
-        "Static Production Copy: [SS-id] to [port]")
-            transfer_production_static_files "unit" "manual" 
+        "Production Folder Copy: Databases")
+            transfer_production_db  
             ;;
-        "Static Production Copy: [port] to [SS-id]")
-            transfer_production_static_files "manual" "unit" 
-            ;;
-        "Static Production Copy: [port] to [port]")
-            transfer_production_static_files "manual" "manual" 
-            ;;
-
-        "DB Production copy: [SS-id] to [SS-id]")
-            transfer_production_db "unit" "unit" 
-            ;;
-        "DB Production copy: [SS-id] to [port]")
-            transfer_production_db "unit" "manual" 
-            ;;
-        "DB Production copy: [port] to [SS-id]")
-            transfer_production_db "manual" "unit" 
-            ;;
-        "DB Production copy: [port] to [port]")
-            transfer_production_db "manual" "manual" 
-            ;;
-      
-        "Logs Production Copy: [SS-id] to [SS-id]")
-            transfer_production_logging "unit" "unit" 
-            ;;
-        "Logs Production Copy: [SS-id] to [port]")
-            transfer_production_logging "unit" "manual" 
-            ;;
-        "Logs Production Copy: [port] to [SS-id]")
-            transfer_production_logging "manual" "unit" 
-            ;;
-        "Logs Production Copy: [port] to [port]")
-            transfer_production_logging "manual" "manual" 
+        "Production Folder Copy: Logging Folder")
+            transfer_production_logging  
             ;;
 
         "Station to Lode DB")

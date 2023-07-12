@@ -111,9 +111,9 @@ color: #7F8080;</string>
   <widget class="QLabel" name="label_invoice_price_total">
    <property name="geometry">
     <rect>
-     <x>749</x>
+     <x>659</x>
      <y>1340</y>
-     <width>211</width>
+     <width>301</width>
      <height>44</height>
     </rect>
    </property>
@@ -1976,22 +1976,6 @@ color: #58595B;
     <string>PushButton</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_pay">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>188</x>
-     <y>1541</y>
-     <width>740</width>
-     <height>92</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_invoice_box">
    <property name="geometry">
     <rect>
@@ -2046,7 +2030,7 @@ text-align: center;</string>
     <rect>
      <x>130</x>
      <y>1340</y>
-     <width>261</width>
+     <width>641</width>
      <height>44</height>
     </rect>
    </property>
@@ -2081,7 +2065,6 @@ text-align: center;</string>
    </property>
   </widget>
   <zorder>label_help</zorder>
-  <zorder>label_pay</zorder>
   <zorder>pushButton_continue</zorder>
   <zorder>label_invoice_box</zorder>
   <zorder>label_invoice_price</zorder>

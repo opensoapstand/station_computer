@@ -39,6 +39,7 @@ uint16_t orderSizeButtons_xywh_dynamic_ui_all_sizes_available[4][4] = {
     {852, 990, 135, 100}, // L
     {560, 1100, 430, 115} // custom
 };
+
 uint16_t orderSizeButtons_xywh_dynamic_ui_small_available[4][4] = {
     {564, 1088, 209, 126}, // S
     {1, 1, 1, 1},          // M
@@ -64,6 +65,13 @@ uint16_t orderSizeButtons_xywh_dynamic_ui_custom_available[4][4] = {
     {1, 1, 1, 1}, // M
     {1, 1, 1, 1},
     {564, 1037, 424, 113} // custom
+    // {564, 1037, 424, 113} // custom
+};
+uint16_t orderSizeButtons_xywh_dynamic_ui_small_custom_available[4][4] = {
+    {560, 990, 430, 100}, // S
+    {1, 1, 1, 1},         // M
+    {1, 1, 1, 1},
+    {560, 1100, 430, 115} // custom
     // {564, 1037, 424, 113} // custom
 };
 
@@ -99,6 +107,13 @@ uint16_t orderSizePriceLabels_xy_dynamic_ui_small_large_custom_available[8][2] =
     {825, 1040}, // L price
     {560, 1160}  // custom price
 };
+
+uint16_t orderSizeVolumeLabels_xy_dynamic_ui_custom_available[8][2] = {
+    {1, 1},     // S vol
+    {1, 1},     // M vol
+    {1, 1},     // L vol
+    {570, 1047} // custom col
+};
 uint16_t orderSizePriceLabels_xy_dynamic_ui_custom_available[8][2] = {
     {1, 1},     // S price
     {1, 1},     // M price
@@ -106,11 +121,17 @@ uint16_t orderSizePriceLabels_xy_dynamic_ui_custom_available[8][2] = {
     {560, 1097} // custom price
 };
 
-uint16_t orderSizeVolumeLabels_xy_dynamic_ui_custom_available[8][2] = {
-    {1, 1},     // S vol
-    {1, 1},     // M vol
-    {1, 1},     // L vol
-    {570, 1047} // custom col
+uint16_t orderSizeVolumeLabels_xy_dynamic_ui_small_custom_available[8][2] = {
+    {710, 1000}, // S vol
+    {1, 1},      // M vol
+    {1, 1},      // L vol
+    {570, 1110}  // custom col
+};
+uint16_t orderSizePriceLabels_xy_dynamic_ui_small_custom_available[8][2] = {
+    {710, 1040}, // S price
+    {1, 1},      // M price
+    {1, 1},      // L price
+    {560, 1160}  // custom price
 };
 
 uint16_t orderSizeVolumeLabels_xy_dynamic_ui_small_available[8][2] = {
@@ -119,6 +140,13 @@ uint16_t orderSizeVolumeLabels_xy_dynamic_ui_small_available[8][2] = {
     {1, 1},      // L vol
     {1, 1}       // custom col
 };
+uint16_t orderSizePriceLabels_xy_dynamic_ui_small_available[8][2] = {
+    {605, 1110}, // S price
+    {1, 1},      // M price
+    {1, 1},      // L price
+    {1, 1}       // custom price
+};
+
 uint16_t orderSizeVolumeLabels_xy_dynamic_ui_small_and_large_available[8][2] = {
     {605, 1050}, // S vol
     {1, 1},      // M vol
@@ -129,12 +157,6 @@ uint16_t orderSizePriceLabels_xy_dynamic_ui_small_and_large_available[8][2] = {
     {605, 1090}, // S price
     {1, 1},      // M price
     {825, 1090}, // L price
-    {1, 1}       // custom price
-};
-uint16_t orderSizePriceLabels_xy_dynamic_ui_small_available[8][2] = {
-    {605, 1110}, // S price
-    {1, 1},      // M price
-    {1, 1},      // L price
     {1, 1}       // custom price
 };
 
@@ -282,7 +304,18 @@ void page_product::reset_and_show_page_elements()
     // create signature by sizes availability, use the bits
     for (uint8_t i = 0; i < 4; i++)
     {
-        available_sizes_signature |= p_page_idle->selectedProduct->getSizeEnabled(product_sizes[i]) << i;
+        uint8_t enabled = p_page_idle->selectedProduct->getSizeEnabled(product_sizes[i]);
+        available_sizes_signature |= enabled << i;
+        // S=1, M=2, L=4, C=8
+
+        if (enabled)
+        {
+            orderSizeButtons[i]->show();
+        }
+        else
+        {
+            orderSizeButtons[i]->hide();
+        }
     }
 
     // every combination
@@ -300,18 +333,25 @@ void page_product::reset_and_show_page_elements()
         xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_small_and_large_available;
         xy_size_labels_price = orderSizePriceLabels_xy_dynamic_ui_small_and_large_available;
     }
-    else if (available_sizes_signature == 13)
-    {
-        xywh_size_buttons = orderSizeButtons_xywh_dynamic_ui_small_large_custom_available;
-        xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_small_large_custom_available;
-        xy_size_labels_price = orderSizePriceLabels_xy_dynamic_ui_small_large_custom_available;
-    }
     else if (available_sizes_signature == 8)
     {
         // only custom
         xywh_size_buttons = orderSizeButtons_xywh_dynamic_ui_custom_available;
         xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_custom_available;
         xy_size_labels_price = orderSizePriceLabels_xy_dynamic_ui_custom_available;
+    }
+    else if (available_sizes_signature == 9)
+    {
+        // only custom
+        xywh_size_buttons = orderSizeButtons_xywh_dynamic_ui_small_custom_available;
+        xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_small_custom_available;
+        xy_size_labels_price = orderSizePriceLabels_xy_dynamic_ui_small_custom_available;
+    }
+    else if (available_sizes_signature == 13)
+    {
+        xywh_size_buttons = orderSizeButtons_xywh_dynamic_ui_small_large_custom_available;
+        xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_small_large_custom_available;
+        xy_size_labels_price = orderSizePriceLabels_xy_dynamic_ui_small_large_custom_available;
     }
     else if (available_sizes_signature == 15)
     {
@@ -322,6 +362,10 @@ void page_product::reset_and_show_page_elements()
     else
     {
         qDebug() << "ERROR: Product signature SIZES not available (limited combinations of size buttons available to be set in database) signature: " << available_sizes_signature;
+        // only small available
+        xywh_size_buttons = orderSizeButtons_xywh_dynamic_ui_all_sizes_available;
+        xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_all_sizes_available;
+        xy_size_labels_price = orderSizePriceLabels_xy_dynamic_ui_all_sizes_available;
     }
 
     // set size specific details

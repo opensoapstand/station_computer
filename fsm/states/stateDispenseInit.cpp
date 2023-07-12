@@ -46,7 +46,16 @@ DF_ERROR stateDispenseInit::onEntry()
     productDispensers = g_productDispensers;
 
     size = m_pMessaging->getRequestedSize();
+    if (size == SIZE_DUMMY){
+        debugOutput::sendMessage("ASSERT ERROR: Size not set. Will not continue.",  MSG_ERROR);
+        m_state_requested = STATE_IDLE;
+    }
+
     dispenser_index = m_pMessaging->getRequestedSlot() - 1;
+    if (dispenser_index == PRODUCT_SLOT_DUMMY){
+        debugOutput::sendMessage("ASSERT ERROR: Slot number not set. Will not continue.",  MSG_ERROR);
+        m_state_requested = STATE_IDLE;
+    }
 
     debugOutput::sendMessage("dispense init, we (re)load parameters from database.", MSG_INFO);
 

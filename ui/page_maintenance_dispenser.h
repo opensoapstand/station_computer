@@ -98,6 +98,14 @@ private slots:
 
     void on_pushButton_clear_problem_clicked();
 
+    void on_checkBox_enable_small_clicked();
+
+    void on_checkBox_enable_medium_clicked();
+
+    void on_checkBox_enable_large_clicked();
+
+    void on_checkBox_enable_custom_clicked();
+
 private:
     void setStatusTextLabel(QLabel* label, QString statusText, bool displayRawStatus);
     void setButtonPressCountLabel(bool init);

@@ -123,11 +123,7 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
     }
 
     this->units_selected_product = this->p_page_idle->selectedProduct->getUnitsForSlot();
-
-    // volume_per_tick_buffer = p_page_idle->selectedProduct->getVolumePerTickForSlot();
-
     ui->label_volume_per_tick->setText(p_page_idle->selectedProduct->getVolumePerTickAsStringForSlot() + "/tick");
-
     ui->label_product_name->setText(p_page_idle->selectedProduct->getProductName());
 
     ui->pushButton_price_small->setText("$" + QString::number(p_page_idle->selectedProduct->getBasePrice(SIZE_SMALL_INDEX)));
@@ -139,6 +135,11 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
     ui->pushButton_target_volume_medium->setText(p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(SIZE_MEDIUM_INDEX, false, true));
     ui->pushButton_target_volume_large->setText(p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(SIZE_LARGE_INDEX, false, true));
     ui->pushButton_target_volume_custom->setText(p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(SIZE_CUSTOM_INDEX, false, true));
+
+    ui->checkBox_enable_small->setChecked(p_page_idle->selectedProduct->getSizeEnabled(SIZE_SMALL_INDEX));
+    ui->checkBox_enable_medium->setChecked(p_page_idle->selectedProduct->getSizeEnabled(SIZE_MEDIUM_INDEX));
+    ui->checkBox_enable_large->setChecked(p_page_idle->selectedProduct->getSizeEnabled(SIZE_LARGE_INDEX));
+    ui->checkBox_enable_custom->setChecked(p_page_idle->selectedProduct->getSizeEnabled(SIZE_CUSTOM_INDEX));
 
     ui->label_restock_volume->setText(p_page_idle->selectedProduct->getFullVolumeCorrectUnits(true));
 
@@ -177,13 +178,9 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
     }
     else
     {
-
         ui->pushButton_clear_problem->hide();
     }
 }
-
-
-
 
 void page_maintenance_dispenser::setStatusTextLabel(QLabel *label, QString statusText, bool displayRawStatus)
 {
@@ -991,3 +988,28 @@ void page_maintenance_dispenser::update_changes_to_portal()
     curl_easy_cleanup(curl2);
     readBuffer = "";
 }
+
+void page_maintenance_dispenser::on_checkBox_enable_small_clicked()
+{
+    p_page_idle->selectedProduct->toggleSizeEnabled(SIZE_SMALL_INDEX);
+    updateProductLabelValues(true);
+}
+
+void page_maintenance_dispenser::on_checkBox_enable_medium_clicked()
+{
+    p_page_idle->selectedProduct->toggleSizeEnabled(SIZE_MEDIUM_INDEX);
+    updateProductLabelValues(true);
+}
+
+void page_maintenance_dispenser::on_checkBox_enable_large_clicked()
+{
+    p_page_idle->selectedProduct->toggleSizeEnabled(SIZE_LARGE_INDEX);
+    updateProductLabelValues(true);
+}
+
+void page_maintenance_dispenser::on_checkBox_enable_custom_clicked()
+{
+    p_page_idle->selectedProduct->toggleSizeEnabled(SIZE_CUSTOM_INDEX);
+    updateProductLabelValues(true);
+}
+

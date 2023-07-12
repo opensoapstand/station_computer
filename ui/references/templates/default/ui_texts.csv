@@ -54,7 +54,9 @@ page_product->custom_volume,Custom Volume
 page_product_overview->pushButton_select_product_page,<- back
 page_product_overview->label_discount_tag,Discount
 page_product_overview->pushButton_continue,Continue
-page_product_overview->label_total,Total
+page_product_overview->label_pay,efijaiefj
+page_product_overview->label_total->non_custom_volume,Total
+page_product_overview->label_total->custom_volume,Price for maximum %1
 page_product_overview->lineEdit_promo_code->valid,Promo Code Valid
 page_product_overview->lineEdit_promo_code->invalid,Promo Code Invalid
 page_product_overview->lineEdit_promo_code->network_error,Network error, could not verify. Try again.
@@ -164,6 +166,10 @@ page_maintenance->label_product_1_position,P1
 page_maintenance->label_product_2_position,P2
 page_maintenance->label_product_3_position,P3
 page_maintenance->label_product_4_position,P4
+page_maintenance->label_role->User,Logged in as User. Use the machine as a customer.
+page_maintenance->label_role->Maintainer,Logged in as Maintainer. Swap out products and perform basic maintenance and tests.
+page_maintenance->label_role->Admin,Logged in as Administrator. Full rights.
+page_maintenance->label_role->Unknown,Logged in as: Unknown status. 
 
 
 #################### page_maintenance_dispenser

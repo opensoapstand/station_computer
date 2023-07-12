@@ -11,7 +11,7 @@
 ./status_services.sh
 
 PS3='Please enter your choice: '
-options=("Quit" "Station info" "Status" "Start" "Stop" "Restart" "Screenshotbot execute" "Enable Autostart" "Disable Autostart" "Copy binary files to production folder" "Create and run production data copied from drinkfill folder (without db!)" "(Re)load services from production" "Setup aws port (rtunnel)" "Setup Ubuntu for drinkfill UI" "Deploy productionstatic.zip" "Screenshot: Take single shot" "Copy db from drinkfill to production folder")
+options=("Quit" "Station info" "Status" "Start" "Stop" "Restart" "Screenshotbot execute" "Enable Autostart" "Disable Autostart" "Copy binary files to production folder" "Create and run production data copied from drinkfill folder (without db!)" "(Re)load services from production" "Setup aws port (rtunnel)" "Setup Ubuntu for drinkfill UI" "Deploy productionstatic.zip" "Screenshot: Take single shot" "Copy db from drinkfill to production folder OLD" "Copy configuration db from drinkfill to production folder" "Copy usage db from drinkfill to production folder")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -93,8 +93,16 @@ do
             echo "done."
         ;;
 
-        "Copy db from drinkfill to production folder")
+        "Copy db from drinkfill to production folder OLD")
+            sudo -u df-admin scp /home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite_newlayout.db /home/df-admin/production/db/drinkfill-sqlite_newlayout.db 
+            echo "done."
+        ;;
+        "Copy configuration db from drinkfill to production folder")
             sudo -u df-admin scp /home/df-admin/drinkfill/db/sqlite/configuration.db /home/df-admin/production/db/configuration.db 
+            echo "done."
+        ;;
+        "Copy usage db from drinkfill to production folder")
+            sudo -u df-admin scp /home/df-admin/drinkfill/db/sqlite/usage.db /home/df-admin/production/db/usage.db 
             echo "done."
         ;;
         

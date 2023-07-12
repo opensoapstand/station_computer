@@ -129,7 +129,215 @@ ssh_into_station () {
     "${cmd[@]}"
 }
 
-transfer_production_db(){
+
+
+
+transfer_production_usage_db(){
+    echo "Source Station: "
+    user_input_port
+    source_port=$global_port
+    echo "Destination Station: "
+    user_input_port
+    destination_port=$global_port
+
+    PS3='Choose option(digit + enter):'
+    options=("dbname to dbname_xsrcx" "dbname_xsrcx to dbname OVERWRITE ALERT" "dbname_xDEST to dbname OVERWRITE ALERT --> SPECIAL CASE" "dbname to dbname OVERWRITE ALERT" "dbname_xsrcx to dbname_xsrcx")
+    # 
+    printf "\ndbname=drinkfill-sqlite_newlayout.db, xxxxx=port number (e.g. 43020)\n"
+    select opt in "${options[@]}"
+    do
+        case $opt in
+            "dbname to dbname_xsrcx")
+            production_usage_db_name_source="usage.db"
+            production_usage_db_name_destination="usage_$source_port.db"
+                ;;
+            "dbname_xsrcx to dbname OVERWRITE ALERT")
+            production_usage_db_name_source="usage_$source_port.db"
+            production_usage_db_name_destination="usage.db"
+                ;;
+            "dbname_xDEST to dbname OVERWRITE ALERT --> SPECIAL CASE")
+            production_usage_db_name_source="usage_$destination_port.db"
+            production_usage_db_name_destination="usage.db"
+                ;;
+            "dbname to dbname OVERWRITE ALERT")
+            productionusagen_db_name_source="usage.db"
+            productionusagen_db_name_destination="usage.db"
+                ;;
+            "dbname_xsrcx to dbname_xsrcx")
+            production_usage_db_name_source="usage_$source_port.db"
+            production_usage_db_name_destination="usage_$source_port.db"
+                ;;
+            *) echo "invalid option $REPLY";;
+        esac
+        break;
+    done
+
+    production_db_name="configuration_$source_port.db"  # check for where used, not as a variable. Because... it's hard.
+    
+    cmd0=( scp -r -P $source_port "df-admin@localhost:/home/df-admin/production/db/$production_usage_db_name_source" "/home/ubuntu/Stations/$production_usage_db_name_destination" )
+    cmd1=( scp -r -P $destination_port "/home/ubuntu/Stations/$production_usage_db_name_destination" df-admin@localhost:/home/df-admin/production/db)
+    printf -v cmd0_str '%q ' "${cmd0[@]}"
+    printf -v cmd1_str '%q ' "${cmd1[@]}"
+
+    # confirm_execute "$cmd_str"
+    echo "Lined up commands: "
+    echo "$cmd0_str"
+    echo "$cmd1_str"
+    
+    continu_or_exit
+
+    echo "Transfer usage db to aws..."
+    "${cmd0[@]}"
+    echo "Transfer usage db from aws to station..."
+    "${cmd1[@]}"
+    echo "done"
+}
+
+transfer_production_configuration_db(){
+    echo "Source Station: "
+    user_input_port
+    source_port=$global_port
+    echo "Destination Station: "
+    user_input_port
+    destination_port=$global_port
+
+    PS3='Choose option(digit + enter):'
+    options=("dbname to dbname_xsrcx" "dbname_xsrcx to dbname OVERWRITE ALERT" "dbname_xDEST to dbname OVERWRITE ALERT --> SPECIAL CASE" "dbname to dbname OVERWRITE ALERT" "dbname_xsrcx to dbname_xsrcx")
+    # 
+    printf "\ndbname=drinkfill-sqlite_newlayout.db, xxxxx=port number (e.g. 43020)\n"
+    select opt in "${options[@]}"
+    do
+        case $opt in
+            "dbname to dbname_xsrcx")
+            production_configuration_db_name_source="configuration.db"
+            production_configuration_db_name_destination="configuration_$source_port.db"
+                ;;
+            "dbname_xsrcx to dbname OVERWRITE ALERT")
+            production_configuration_db_name_source="configuration_$source_port.db"
+            production_configuration_db_name_destination="configuration.db"
+                ;;
+            "dbname_xDEST to dbname OVERWRITE ALERT --> SPECIAL CASE")
+            production_configuration_db_name_source="configuration_$destination_port.db"
+            production_configuration_db_name_destination="configuration.db"
+                ;;
+            "dbname to dbname OVERWRITE ALERT")
+            production_configuration_db_name_source="configuration.db"
+            production_configuration_db_name_destination="configuration.db"
+                ;;
+            "dbname_xsrcx to dbname_xsrcx")
+            production_configuration_db_name_source="configuration_$source_port.db"
+            production_configuration_db_name_destination="configuration_$source_port.db"
+                ;;
+            *) echo "invalid option $REPLY";;
+        esac
+        break;
+    done
+
+    production_db_name="configuration_$source_port.db"  # check for where used, not as a variable. Because... it's hard.
+    
+    cmd0=( scp -r -P $source_port "df-admin@localhost:/home/df-admin/production/db/$production_configuration_db_name_source" "/home/ubuntu/Stations/$production_configuration_db_name_destination" )
+    cmd1=( scp -r -P $destination_port "/home/ubuntu/Stations/$production_configuration_db_name_destination" df-admin@localhost:/home/df-admin/production/db)
+    printf -v cmd0_str '%q ' "${cmd0[@]}"
+    printf -v cmd1_str '%q ' "${cmd1[@]}"
+
+    # confirm_execute "$cmd_str"
+    echo "Lined up commands: "
+    echo "$cmd0_str"
+    echo "$cmd1_str"
+    
+    continu_or_exit
+
+    echo "Transfer configuration db to aws..."
+    "${cmd0[@]}"
+    echo "Transfer configuration db from aws to station..."
+    "${cmd1[@]}"
+    echo "done"
+}
+
+
+
+transfer_all_production_dbs(){
+    echo "Source Station: "
+    user_input_port
+    source_port=$global_port
+    echo "Destination Station: "
+    user_input_port
+    destination_port=$global_port
+
+    PS3='Choose option(digit + enter):'
+    options=("dbname to dbname_xsrcx" "dbname_xsrcx to dbname OVERWRITE ALERT" "dbname_xDEST to dbname OVERWRITE ALERT --> SPECIAL CASE" "dbname to dbname OVERWRITE ALERT" "dbname_xsrcx to dbname_xsrcx")
+    # 
+    printf "\ndbname=drinkfill-sqlite_newlayout.db, xxxxx=port number (e.g. 43020)\n"
+    select opt in "${options[@]}"
+    do
+        case $opt in
+            "dbname to dbname_xsrcx")
+            production_configuration_db_name_source="configuration.db"
+            production_configuration_db_name_destination="configuration_$source_port.db"
+            production_usage_db_name_source="usage.db"
+            production_usage_db_name_destination="usage_$source_port.db"
+                ;;
+            "dbname_xsrcx to dbname OVERWRITE ALERT")
+            production_configuration_db_name_source="configuration_$source_port.db"
+            production_configuration_db_name_destination="configuration.db"
+            production_usage_db_name_source="usage_$source_port.db"
+            production_usage_db_name_destination="usage.db"
+                ;;
+            "dbname_xDEST to dbname OVERWRITE ALERT --> SPECIAL CASE")
+            production_configuration_db_name_source="configuration_$destination_port.db"
+            production_configuration_db_name_destination="configuration.db"
+            production_usage_db_name_source="usage_$destination_port.db"
+            production_usage_db_name_destination="usage.db"
+                ;;
+            "dbname to dbname OVERWRITE ALERT")
+            production_configuration_db_name_source="configuration.db"
+            production_configuration_db_name_destination="configuration.db"
+            productionusagen_db_name_source="usage.db"
+            productionusagen_db_name_destination="usage.db"
+                ;;
+            "dbname_xsrcx to dbname_xsrcx")
+            production_configuration_db_name_source="configuration_$source_port.db"
+            production_configuration_db_name_destination="configuration_$source_port.db"
+            production_usage_db_name_source="usage_$source_port.db"
+            production_usage_db_name_destination="usage_$source_port.db"
+                ;;
+            *) echo "invalid option $REPLY";;
+        esac
+        break;
+    done
+
+    production_db_name="configuration_$source_port.db"  # check for where used, not as a variable. Because... it's hard.
+    
+    cmd0=( scp -r -P $source_port "df-admin@localhost:/home/df-admin/production/db/$production_configuration_db_name_source" "/home/ubuntu/Stations/$production_configuration_db_name_destination" )
+    cmd1=( scp -r -P $destination_port "/home/ubuntu/Stations/$production_configuration_db_name_destination" df-admin@localhost:/home/df-admin/production/db)
+    cmd2=( scp -r -P $source_port "df-admin@localhost:/home/df-admin/production/db/$production_usage_db_name_source" "/home/ubuntu/Stations/$production_usage_db_name_destination" )
+    cmd3=( scp -r -P $destination_port "/home/ubuntu/Stations/$production_usage_db_name_destination" df-admin@localhost:/home/df-admin/production/db)
+    printf -v cmd0_str '%q ' "${cmd0[@]}"
+    printf -v cmd1_str '%q ' "${cmd1[@]}"
+    printf -v cmd2_str '%q ' "${cmd2[@]}"
+    printf -v cmd3_str '%q ' "${cmd3[@]}"
+
+    # confirm_execute "$cmd_str"
+    echo "Lined up commands: "
+    echo "$cmd0_str"
+    echo "$cmd1_str"
+    echo "$cmd2_str"
+    echo "$cmd3_str"
+    
+    continu_or_exit
+
+    echo "Transfer configuration db to aws..."
+    "${cmd0[@]}"
+    echo "Transfer configuration db from aws to station..."
+    "${cmd1[@]}"
+    echo "Transfer usage db to aws..."
+    "${cmd2[@]}"
+    echo "Transfer usage db from aws to station..."
+    "${cmd3[@]}"
+    echo "done"
+}
+
+transfer_production_db_old(){
 
     echo "Source Station: "
     user_input_port
@@ -571,11 +779,8 @@ deploy_with_ash () {
 
 echo 'At AWS: Drinkfill file transfer menu. CAUTION:Will impact station functionality.'
 PS3='Choose option(digit + enter):'
-options=("Quit" "Stations status" "Show Station Descriptions" "Station log in by SS-id" "Station mkdir" "Station log in by port" "Deploy wizard with Ash" "Production Folder Copy: Static files" "Production Folder Copy: Databases" "Production Folder Copy: Logging Folder")
+options=("Quit" "Stations status" "Show Station Descriptions" "Station log in by SS-id" "Station mkdir" "Station log in by port" "Deploy wizard with Ash" "Production Folder Copy: Static files" "Production Folder Copy: Database OLD" "Production Folder Copy: Databases" "Production Folder Copy: Configuration database" "Production Folder Copy: Usage database" "Production Folder Copy: Logging Folder")
 # options=("Quit" "Stations status" "Show Station Descriptions" "Station log in" "Station/production/x to Station/production/x" "Station/production/x to Station/home/x" "Station/home/x to Station/production/x" "Station/home/x to Station/home/x" "AWS to Station/home/x" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB" "Manualport/production/x to Manualport/home/x" "Station mkdir" "Station log in [port]" "Static Production Copy: Station to Station" "Static Production Copy: Station to [port]" "Static Production Copy: [port] to Station" "Static Production Copy: [port] to [port]" "DB Production copy: Station to Station" "DB Production copy: Station to [port]" "DB Production copy: [port] to Station" "DB Production copy: [port] to [port]" "Logs Production Copy: Station to Station" "Logs Production Copy: Station to [port]" "Logs Production Copy: [port] to Station" "Logs Production Copy: [port] to [port]")
-
-
-
 
 select opt in "${options[@]}"
 do
@@ -625,9 +830,20 @@ do
         "Production Folder Copy: Static files")
             transfer_production_static_files  
             ;;
-        "Production Folder Copy: Databases")
-            transfer_production_db  
+        "Production Folder Copy: Database OLD")
+            transfer_production_db_old
             ;;
+        "Production Folder Copy: Databases")
+            transfer_all_production_dbs  
+            ;;
+        "Production Folder Copy: Configuration database")
+            transfer_production_configuration_db  
+            ;;
+            
+        "Production Folder Copy: Usage database")
+            transfer_production_usage_db  
+            ;;
+
         "Production Folder Copy: Logging Folder")
             transfer_production_logging  
             ;;

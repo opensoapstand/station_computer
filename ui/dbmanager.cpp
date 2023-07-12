@@ -563,7 +563,7 @@ void DbManager::getAllMachineProperties(
         QSqlDatabase db = openDb(CONFIG_DB_PATH);
         QSqlQuery qry(db);
 
-        qry.prepare("SELECT machine_id,soapstand_customer_id,template,location,controller_type,controller_id,screen_type,'screen _id',has_receipt_printer,receipt_printer_is_online,receipt_printer_has_paper,has_tap_payment,hardware_version,software_version,aws_port,pump_id_slot_1,pump_id_slot_2,pump_id_slot_3,pump_id_slot_4,is_enabled_slot_1,is_enabled_slot_2,is_enabled_slot_3,is_enabled_slot_4,coupons_enabled,status_text_slot_1,status_text_slot_2,status_text_slot_3,status_text_slot_4,has_empty_detection,enable_pump_ramping,enable_pump_reversal,dispense_buttons_count,maintenance_pwd,show_transactions,help_text_html,idle_page_type,admin_pwd FROM machine");
+        qry.prepare("SELECT machine_id,soapstand_customer_id,template,location,controller_type,controller_id,screen_type,'screen_id',has_receipt_printer,receipt_printer_is_online,receipt_printer_has_paper,has_tap_payment,hardware_version,software_version,aws_port,pump_id_slot_1,pump_id_slot_2,pump_id_slot_3,pump_id_slot_4,is_enabled_slot_1,is_enabled_slot_2,is_enabled_slot_3,is_enabled_slot_4,coupons_enabled,status_text_slot_1,status_text_slot_2,status_text_slot_3,status_text_slot_4,has_empty_detection,enable_pump_ramping,enable_pump_reversal,dispense_buttons_count,maintenance_pwd,show_transactions,help_text_html,idle_page_type,admin_pwd FROM machine");
         bool success;
         success = qry.exec();
         if (!success)
@@ -687,7 +687,7 @@ void DbManager::addUserInteraction(QString action)
         QSqlQuery qry(db);
 
         QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
-        qry.prepare("INSERT INTO clicks (page_info,time) VALUES (:page_info,:time);");
+        qry.prepare("INSERT INTO userInteractions (page_info,time) VALUES (:page_info,:time);");
         qry.bindValue(":page_info", action);
         qry.bindValue(":time", time);
 

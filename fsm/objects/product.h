@@ -53,7 +53,7 @@ public:
         double convertVolumeMetricToDisplayUnits(double volume);
         string getProductName();
         string getBasePLU(char size);
-        string getProductId();
+        string getSoapstandProductSerial();
         string getPaymentMethod() { return m_paymentMethod; }
 
         // void setTargetVolume(double nVolumeTarget){m_nVolumeTarget = nVolumeTarget;};

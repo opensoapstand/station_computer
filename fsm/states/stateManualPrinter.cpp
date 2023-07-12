@@ -161,7 +161,7 @@ void stateManualPrinter::printTransaction(int transactionNumber)
 {
    // gets transaction data from db.
    char *zErrMsg = 0;
-   rc = sqlite3_open(CONFIG_DB_PATH, &db);
+   rc = sqlite3_open(USAGE_DB_PATH, &db);
    sqlite3_stmt *stmt;
    std::string sql_string;
 

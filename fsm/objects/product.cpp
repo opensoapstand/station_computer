@@ -458,7 +458,8 @@ double product::convertVolumeMetricToDisplayUnits(double volume)
     return converted_volume;
 }
 
-string product::getProductId()
+
+string product::getSoapstandProductSerial()
 {
     return m_soapstand_product_serial;
 }

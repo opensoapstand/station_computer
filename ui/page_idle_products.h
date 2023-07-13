@@ -78,7 +78,8 @@ private slots:
 
 private:
     void showEvent(QShowEvent *event);
-    void hideCurrentPageAndShowProvided(QWidget *pageToShow);
+    void hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createNewSessionId);
+    
     void hideAllLabelAndButtons();
     void showAllLabelsAndButtons();
     void changeBackground();

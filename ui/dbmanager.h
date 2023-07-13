@@ -37,7 +37,8 @@ public:
     // void setPaymentToQR();              // ASh to change.
 
     // bool updateSlotAvailability(int slot, int isEnabled, QString status_text);
-    void addUserInteraction(QString action);
+
+    void addUserInteraction(QString session_id, QString role, QString page, QString event);
     void getAllProductProperties(int slot,
                                  QString *productId,
                                  QString *soapstand_product_serial,
@@ -93,6 +94,7 @@ public:
                                  QString *status_text_slots);
 
     QString m_dbPath2;
+
 private:
     // QSqlDatabase m_db;
 };

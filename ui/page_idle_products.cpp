@@ -153,10 +153,18 @@ void page_idle_products::displayProducts()
     QString styleSheet = p_page_idle->getCSS(PAGE_IDLE_PRODUCTS_CSS);
     ui->label_printer_status->setStyleSheet(styleSheet);
 }
-void page_idle_products::hideCurrentPageAndShowProvided(QWidget *pageToShow)
+
+void page_idle_products::hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createNewSessionId)
 {
-    p_page_idle->pageTransition(this, pageToShow);
+    if (createNewSessionId)
+    {
+        // the moment there is a user interaction to go to select product , a new session ID is created.
+        p_page_idle->thisMachine.createSessionId();
+    }
+
     backgroundChangeTimer->stop();
+
+    p_page_idle->pageTransition(this, pageToShow);
 }
 
 void page_idle_products::showAllLabelsAndButtons()
@@ -297,5 +305,5 @@ void page_idle_products::onBackgroundChangeTimerTick()
 void page_idle_products::on_pushButton_to_select_product_page_clicked()
 {
     qDebug() << "To idle page press";
-    this->hideCurrentPageAndShowProvided(p_page_select_product);
+    this->hideCurrentPageAndShowProvided(p_page_select_product, true);
 }

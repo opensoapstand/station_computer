@@ -116,7 +116,7 @@ private:
     std::map<QString, QString> textNameToTextMap_template;
     std::map<QString, QString> textNameToTextMap_default;
 
-    void hideCurrentPageAndShowProvided(QWidget *pageToShow);
+    void hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createNewSessionId);
 
     QString m_templatePath;
     Ui::page_idle *ui;

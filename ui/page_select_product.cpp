@@ -82,10 +82,12 @@ page_select_product::~page_select_product()
 
 void page_select_product::showEvent(QShowEvent *event)
 {
+    
+    
+    
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
     QString full_path = p_page_idle->thisMachine.getTemplatePathFromName(IMAGE_BUTTON_HELP);
     p_page_idle->addPictureToLabel(ui->label_help, full_path);
-
 
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);

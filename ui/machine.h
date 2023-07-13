@@ -50,6 +50,9 @@ public:
     bool isAllowedAsAdmin();
     bool isAllowedAsMaintainer();
 
+    QString createSessionId();
+    QString getSessionId();
+
     QString getCustomerId();
 
     QString getTemplateFolder();
@@ -77,6 +80,8 @@ public:
 
     void setPromoCode(QString promoCode);
     QString getPromoCode();
+
+    QString m_session_id;
 
     void setDiscountPercentageFraction(double percentageFraction);
     double getDiscountPercentageFraction();

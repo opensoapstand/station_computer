@@ -203,6 +203,16 @@ void machine::processRolePassword(QString password_input)
         qDebug() << "Provided password not correct. Check machine tabel in database or contact soapstand.";
     }
 }
+
+QString machine::getSessionId(){
+    return m_session_id;
+}
+
+QString machine::createSessionId(){
+    QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+    m_session_id = time;
+}
+
 QString machine::getActiveRoleAsText()
 {
     switch (active_role)

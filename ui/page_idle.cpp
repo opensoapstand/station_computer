@@ -205,7 +205,7 @@ void page_idle::changeToIdleProductsIfSet()
 {
     if (thisMachine.getIdlePageType() == "static_products" || thisMachine.getIdlePageType() == "dynamic")
     {
-        hideCurrentPageAndShowProvided(this->p_page_idle_products);
+        hideCurrentPageAndShowProvided(this->p_page_idle_products, false);
     }
 }
 
@@ -224,12 +224,19 @@ void page_idle::registerUserInteraction(QWidget *page)
 {
     QString page_name = page->objectName();
     qDebug() << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< User entered: " + page_name + " >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
-
-    g_database->addUserInteraction(page_name);
+    QString event = "Entered Page";
+    g_database->addUserInteraction(thisMachine.getSessionId(), thisMachine.getActiveRoleAsText(), page_name, event);
 }
 
-void page_idle::hideCurrentPageAndShowProvided(QWidget *pageToShow)
+void page_idle::hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createNewSessionId)
 {
+    // the moment there is a user interaction, a new session ID is created.
+    // will only be relevant when user goes to select_products
+    if (createNewSessionId)
+    {
+        thisMachine.createSessionId();
+    }
+
     this->pageTransition(this, pageToShow);
     idlePageTypeSelectorTimer->stop();
 }
@@ -279,7 +286,7 @@ void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
 
 void page_idle::on_pushButton_to_select_product_page_clicked()
 {
-    this->hideCurrentPageAndShowProvided(p_pageSelectProduct);
+    this->hideCurrentPageAndShowProvided(p_pageSelectProduct, true);
 }
 
 void page_idle::on_pushButton_test_clicked()
@@ -377,7 +384,6 @@ void page_idle::setBackgroundPictureToQWidget(QWidget *p_widget, QString image_p
     p_widget->repaint();
     p_widget->update();
 }
-
 
 void page_idle::setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier)
 {

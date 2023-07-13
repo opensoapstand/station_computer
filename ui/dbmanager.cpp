@@ -679,7 +679,7 @@ void DbManager::emailEmpty(int slot)
     // system(email.toStdString().c_str());
 }
 
-void DbManager::addUserInteraction(QString action)
+void DbManager::addUserInteraction( QString session_id,QString role, QString page, QString event)
 {
 
     {
@@ -687,9 +687,12 @@ void DbManager::addUserInteraction(QString action)
         QSqlQuery qry(db);
 
         QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
-        qry.prepare("INSERT INTO userInteractions (page_info,time) VALUES (:page_info,:time);");
-        qry.bindValue(":page_info", action);
+        qry.prepare("INSERT INTO events (time,session_id,access_level,page,event) VALUES (:time,:session_id,:access_level,:page,:event);");
         qry.bindValue(":time", time);
+        qry.bindValue(":session_id", session_id );
+        qry.bindValue(":access_level", role );
+        qry.bindValue(":page", page);
+        qry.bindValue(":event", event );
 
         bool success;
         success = qry.exec();

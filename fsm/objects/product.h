@@ -56,6 +56,8 @@ public:
         string getSoapstandProductSerial();
         string getPaymentMethod() { return m_paymentMethod; }
 
+        string dbFieldAsValidString(sqlite3_stmt *stmt, int column_index);
+
         // void setTargetVolume(double nVolumeTarget){m_nVolumeTarget = nVolumeTarget;};
 
         bool getIsEnabled();

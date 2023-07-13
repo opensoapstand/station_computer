@@ -218,7 +218,7 @@ void page_end::onThankyouTimeoutTick()
 {
     if (--_thankYouTimeoutSec >= 0)
     {
-        qDebug() << QString::number(_thankYouTimeoutSec);
+        // qDebug() << QString::number(_thankYouTimeoutSec);
     }
     else
     {

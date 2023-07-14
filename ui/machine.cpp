@@ -204,11 +204,17 @@ void machine::processRolePassword(QString password_input)
     }
 }
 
-QString machine::getSessionId(){
+QString machine::getSessionId()
+{
     return m_session_id;
 }
 
-QString machine::createSessionId(){
+void machine::resetSessionId()
+{
+    m_session_id = "";
+}
+void machine::createSessionId()
+{
     QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
     m_session_id = time;
 }

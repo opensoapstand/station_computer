@@ -50,7 +50,8 @@ public:
     bool isAllowedAsAdmin();
     bool isAllowedAsMaintainer();
 
-    QString createSessionId();
+    void createSessionId();
+    void resetSessionId();
     QString getSessionId();
 
     QString getCustomerId();

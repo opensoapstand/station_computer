@@ -75,6 +75,8 @@ page_idle::~page_idle()
 
 void page_idle::showEvent(QShowEvent *event)
 {
+    thisMachine.resetSessionId();
+    
     registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
     loadDynamicContent();

@@ -144,7 +144,7 @@ public:
 
       DF_ERROR loadGeneralProperties();
 
-      void loadMultiDispenseButtonEnabledFromDb();
+      void loadButtonPropertiesFromDb();
       bool getMultiDispenseButtonEnabled();
       void loadEmptyContainerDetectionEnabledFromDb();
       void loadSlotStateFromDb();
@@ -159,6 +159,9 @@ public:
       void setSolenoid(bool openElseClosed);
       
       bool getIsStatusUpdateAllowed();
+
+      int getButtonAnimationProgram();
+
 
       // static pcb *the_pcb;
       pcb* the_pcb;
@@ -221,6 +224,7 @@ private:
       bool m_isPumpSlowStartStopEnabled = false;
       bool m_isPumpReversalEnabled = false;
       bool m_isMultiButtonEnabled = false;
+      int m_button_animation;
 
       // bool m_isDispenseDone; // XXX: Remove later.
       // bool m_isStill;

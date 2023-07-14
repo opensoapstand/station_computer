@@ -73,7 +73,7 @@ void machine::resetRunningLight()
     m_lights_animation_step = 0;
 }
 
-void machine::refreshRunningLight()
+void machine::refreshRunningLightCaterpillar()
 {
 
     using namespace std::chrono;
@@ -139,11 +139,6 @@ void machine::refreshRunningLight()
             // control_pcb->setSingleDispenseButtonLight(2, true);
         }
         break;
-        // case 8:
-        // {
-        //     control_pcb->setSingleDispenseButtonLight(4, false);
-        //     // control_pcb->setSingleDispenseButtonLight(2, true);
-        // }
         case 8:
         {
             // control_pcb->setSingleDispenseButtonLight(2, false);
@@ -204,72 +199,72 @@ void machine::refreshRunningLight()
     }
 }
 
-// knight r
-// void machine::refreshRunningLight()
-// {
+// ping pong
+void machine::refreshRunningLightPingPong()
+{
 
-//     using namespace std::chrono;
-//     uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-//     uint64_t step_delta_millis = 100;
+    using namespace std::chrono;
+    uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    uint64_t step_delta_millis = 250;
 
-//     if (millis_since_epoch > m_lights_animation_most_recent_step_millis + step_delta_millis)
-//     {
-//         m_lights_animation_step++;
-//         m_lights_animation_most_recent_step_millis = millis_since_epoch;
-//         if (m_lights_animation_step > 5)
-//         {
-//             m_lights_animation_step = 0;
-//         }
+    if (millis_since_epoch > m_lights_animation_most_recent_step_millis + step_delta_millis)
+    {
+        m_lights_animation_step++;
+        m_lights_animation_most_recent_step_millis = millis_since_epoch;
+        if (m_lights_animation_step > 5)
+        {
+            m_lights_animation_step = 0;
+        }
 
-//         switch (m_lights_animation_step)
-//         {
-//         case 0:
-//         {
-//             control_pcb->setSingleDispenseButtonLight(2, false);
-//             control_pcb->setSingleDispenseButtonLight(1, true);
-//         }
-//         break;
-//         case 1:
-//         {
-//             control_pcb->setSingleDispenseButtonLight(1, false);
-//             control_pcb->setSingleDispenseButtonLight(2, true);
-//         }
-//         break;
-//         case 2:
-//         {
-//             control_pcb->setSingleDispenseButtonLight(2, false);
-//             control_pcb->setSingleDispenseButtonLight(3, true);
-//         }
-//         break;
-//         case 3:
-//         {
-//             control_pcb->setSingleDispenseButtonLight(3, false);
-//             control_pcb->setSingleDispenseButtonLight(4, true);
-//         }
-//         break;
-//         case 4:
-//         {
-//             control_pcb->setSingleDispenseButtonLight(4, false);
-//             control_pcb->setSingleDispenseButtonLight(3, true);
-//         }
-//         break;
-//         case 5:
-//         {
-//             control_pcb->setSingleDispenseButtonLight(3, false);
-//             control_pcb->setSingleDispenseButtonLight(2, true);
-//         }
-//         break;
-//         default:
-//         {
-//             control_pcb->setSingleDispenseButtonLight(1, false);
-//             control_pcb->setSingleDispenseButtonLight(2, false);
-//             control_pcb->setSingleDispenseButtonLight(3, false);
-//             control_pcb->setSingleDispenseButtonLight(4, false);
-//         }
-//         break;
-//         }
-//     }
-// }
+        switch (m_lights_animation_step)
+        {
+        case 0:
+        {
+            control_pcb->setSingleDispenseButtonLight(2, false);
+            control_pcb->setSingleDispenseButtonLight(1, true);
+        }
+        break;
+        case 1:
+        {
+            control_pcb->setSingleDispenseButtonLight(1, false);
+            control_pcb->setSingleDispenseButtonLight(2, true);
+        }
+        break;
+        case 2:
+        {
+            control_pcb->setSingleDispenseButtonLight(2, false);
+            control_pcb->setSingleDispenseButtonLight(3, true);
+        }
+        break;
+        case 3:
+        {
+            control_pcb->setSingleDispenseButtonLight(3, false);
+            control_pcb->setSingleDispenseButtonLight(4, true);
+        }
+        break;
+        case 4:
+        {
+            control_pcb->setSingleDispenseButtonLight(4, false);
+            control_pcb->setSingleDispenseButtonLight(3, true);
+        }
+        break;
+        case 5:
+        {
+            control_pcb->setSingleDispenseButtonLight(3, false);
+            control_pcb->setSingleDispenseButtonLight(2, true);
+        }
+        break;
+        default:
+        {
+            control_pcb->setSingleDispenseButtonLight(1, false);
+            control_pcb->setSingleDispenseButtonLight(2, false);
+            control_pcb->setSingleDispenseButtonLight(3, false);
+            control_pcb->setSingleDispenseButtonLight(4, false);
+        }
+        break;
+        }
+    }
+}
 
 bool machine::getPcb24VPowerSwitchStatus()
 {

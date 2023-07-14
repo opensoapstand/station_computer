@@ -360,7 +360,7 @@ void machine::loadParametersFromDb()
 
 int machine::getDispensersCount()
 {
-    return m_dispense_buttons_count;
+    return m_dispense_buttons_count % 1000;
 }
 bool machine::getCouponsEnabled()
 {

@@ -83,6 +83,7 @@ DF_ERROR dispenser::setup(pcb *pcbtest)
     previousDispensedVolume = 0;
     isPumpSoftStarting = false;
     pwm_actual_set_speed = 0;
+    m_button_animation = 0;
 }
 
 void dispenser::refresh()
@@ -289,7 +290,7 @@ DF_ERROR dispenser::loadGeneralProperties()
     usleep(20000);
     loadPumpReversalEnabledFromDb();
     usleep(20000);
-    loadMultiDispenseButtonEnabledFromDb();
+    loadButtonPropertiesFromDb();
     usleep(20000);
     //  the_pcb->setSingleDispenseButtonLight(this->slot, false);
 
@@ -787,9 +788,8 @@ unsigned short dispenser::getPumpSpeed()
     the_pcb->getPumpPWM();
 }
 
-void dispenser::loadMultiDispenseButtonEnabledFromDb()
+void dispenser::loadButtonPropertiesFromDb()
 {
-
     rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT dispense_buttons_count FROM machine";
@@ -798,14 +798,20 @@ void dispenser::loadMultiDispenseButtonEnabledFromDb()
 
     int val = sqlite3_column_int(stmt, 0);
 
+    // button light effect program
+    m_button_animation = val / 1000;
+
+    // button count
+    int buttons_count = val % 1000;
+
     sqlite3_finalize(stmt);
     sqlite3_close(db);
     // val = 4;
-    if (val == 1)
+    if (buttons_count == 1)
     {
         m_isMultiButtonEnabled = false;
     }
-    else if (val == 4)
+    else if (buttons_count == 4)
     {
         m_isMultiButtonEnabled = true;
     }
@@ -816,6 +822,12 @@ void dispenser::loadMultiDispenseButtonEnabledFromDb()
     }
 
     debugOutput::sendMessage("Multiple dispense buttons enabled? : " + to_string(m_isMultiButtonEnabled), MSG_INFO);
+}
+
+
+int dispenser::getButtonAnimationProgram(){
+    // 0 is no animation. 
+    return m_button_animation;
 }
 
 bool dispenser::getMultiDispenseButtonEnabled()

@@ -50,25 +50,15 @@ DF_ERROR stateIdle::onEntry()
 
 DF_ERROR stateIdle::onAction()
 {
-   // g_machine.control_pcb->setSingleDispenseButtonLight(1, true);
-   // usleep(500000);
-   // g_machine.control_pcb->setSingleDispenseButtonLight(1,false);
-   // g_machine.control_pcb->setSingleDispenseButtonLight(2, true);
-   // usleep(500000);
-   // g_machine.control_pcb->setSingleDispenseButtonLight(2,false);
-   // g_machine.control_pcb->setSingleDispenseButtonLight(3, true);
-   // usleep(500000);
-   // g_machine.control_pcb->setSingleDispenseButtonLight(3,false);
-   // g_machine.control_pcb->setSingleDispenseButtonLight(4, true);
-   // usleep(500000);
-   // g_machine.control_pcb->setSingleDispenseButtonLight(4,false);
-   // g_machine.control_pcb->setSingleDispenseButtonLight(3, true);
-   // usleep(500000);
-   // g_machine.control_pcb->setSingleDispenseButtonLight(3,false);
-   // g_machine.control_pcb->setSingleDispenseButtonLight(2, true);
-   // usleep(500000);
-   // g_machine.control_pcb->setSingleDispenseButtonLight(2,false);
-   g_machine.refreshRunningLight();
+   if (g_productDispensers[0].getButtonAnimationProgram() == 1)
+   {
+      g_machine.refreshRunningLightPingPong();
+   }
+   else if (g_productDispensers[0].getButtonAnimationProgram() == 2)
+   {
+      g_machine.refreshRunningLightCaterpillar();
+   }
+
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
    // if (nullptr != &m_state_requested)

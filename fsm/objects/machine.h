@@ -32,7 +32,7 @@ public:
     // void print_text(string text);
     void print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string char_units_formatted, string paymentMethod, string plu, string promoCode, bool sleep_until_printed);
     gpio *switch_24V;
-    bool power24VEnabled=false;
+    bool power24VEnabled = false;
     void setup();
     pcb *getPcb();
 
@@ -40,6 +40,10 @@ public:
     // static pcb *control_pcb;
     pcb *control_pcb;
     Adafruit_Thermal *receipt_printer;
+    void refreshRunningLight();
+    void resetRunningLight();
+    uint64_t m_lights_animation_most_recent_step_millis;
+    uint8_t m_lights_animation_step;
 };
 
 #endif

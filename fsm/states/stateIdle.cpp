@@ -43,12 +43,32 @@ DF_ERROR stateIdle::onEntry()
 {
    m_state_requested = STATE_IDLE;
    DF_ERROR e_ret = OK;
+   g_machine.resetRunningLight();
 
    return e_ret;
 }
 
 DF_ERROR stateIdle::onAction()
 {
+   // g_machine.control_pcb->setSingleDispenseButtonLight(1, true);
+   // usleep(500000);
+   // g_machine.control_pcb->setSingleDispenseButtonLight(1,false);
+   // g_machine.control_pcb->setSingleDispenseButtonLight(2, true);
+   // usleep(500000);
+   // g_machine.control_pcb->setSingleDispenseButtonLight(2,false);
+   // g_machine.control_pcb->setSingleDispenseButtonLight(3, true);
+   // usleep(500000);
+   // g_machine.control_pcb->setSingleDispenseButtonLight(3,false);
+   // g_machine.control_pcb->setSingleDispenseButtonLight(4, true);
+   // usleep(500000);
+   // g_machine.control_pcb->setSingleDispenseButtonLight(4,false);
+   // g_machine.control_pcb->setSingleDispenseButtonLight(3, true);
+   // usleep(500000);
+   // g_machine.control_pcb->setSingleDispenseButtonLight(3,false);
+   // g_machine.control_pcb->setSingleDispenseButtonLight(2, true);
+   // usleep(500000);
+   // g_machine.control_pcb->setSingleDispenseButtonLight(2,false);
+   g_machine.refreshRunningLight();
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
    // if (nullptr != &m_state_requested)
@@ -133,6 +153,7 @@ DF_ERROR stateIdle::onAction()
 // Advances to Dispense Idle
 DF_ERROR stateIdle::onExit()
 {
+   g_machine.resetRunningLight();
    DF_ERROR e_ret = OK;
    return e_ret;
 }

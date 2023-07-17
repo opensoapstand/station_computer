@@ -216,7 +216,7 @@ void page_dispenser::dispensing_end_admin()
     stream << std::fixed << std::setprecision(2) << price;
     qDebug() << "Minimum volume dispensed" << MINIMUM_DISPENSE_VOLUME_ML;
     qDebug() << "volume dispensed" << p_page_idle->selectedProduct->getVolumeDispensedMl();
-    if (p_page_idle->selectedProduct->getVolumeDispensedMl() < MINIMUM_DISPENSE_VOLUME_ML && (p_page_idle->selectedProduct->getPaymentMethod()) == "tapTcp")
+    if (p_page_idle->selectedProduct->getVolumeDispensedMl() < MINIMUM_DISPENSE_VOLUME_ML && (p_page_idle->selectedProduct->getPaymentMethod()) == PAYMENT_TAP_TCP)
     {
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_finishTransactionMessage, "no_pay");
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
@@ -234,7 +234,7 @@ void page_dispenser::dispensing_end_admin()
         }
         finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
     }
-    else if ((p_page_idle->selectedProduct->getPaymentMethod() == "tapTcp") && p_page_idle->selectedProduct->getVolumeDispensedMl() >= MINIMUM_DISPENSE_VOLUME_ML)
+    else if ((p_page_idle->selectedProduct->getPaymentMethod() == PAYMENT_TAP_TCP) && p_page_idle->selectedProduct->getVolumeDispensedMl() >= MINIMUM_DISPENSE_VOLUME_ML)
     {
 
         
@@ -515,7 +515,7 @@ void page_dispenser::on_pushButton_abort_clicked()
         msgBox_abort->setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
         QString payment = p_page_idle->selectedProduct->getPaymentMethod();
 
-        if (payment == "qr" || payment == "tapTcp")
+        if (payment == "qr" || payment == PAYMENT_TAP_TCP)
         {
             QString searchString = this->objectName() + "->" + msgBox_abort->objectName() + "->" + "qr_tap";
             p_page_idle->setTextToObject(msgBox_abort, p_page_idle->getTemplateText(searchString));
@@ -562,7 +562,7 @@ void page_dispenser::on_pushButton_problems_clicked()
 
     QString payment = p_page_idle->selectedProduct->getPaymentMethod();
 
-    if (payment == "qr" || payment == "tapTcp")
+    if (payment == "qr" || payment == PAYMENT_TAP_TCP)
     {
         QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "qr_tap";
         p_page_idle->setTextToObject(msgBox_problems, p_page_idle->getTemplateText(searchString));

@@ -520,11 +520,11 @@ void page_product_overview::on_pushButton_continue_clicked()
         curl_easy_cleanup(curl);
         readBuffer = "";
     }
-    else if (paymentMethod == "tapTcp")
+    else if (paymentMethod == PAYMENT_TAP_TCP)
     {
         hideCurrentPageAndShowProvided(p_page_payment_tap);
     }
-    else if (paymentMethod == "tapSerial")
+    else if (paymentMethod == PAYMENT_TAP_SERIAL)
     {
         hideCurrentPageAndShowProvided(p_page_payment_tap_serial);
     }

@@ -123,31 +123,7 @@ ssh_into_station () {
     echo "Source Station: "
     get_station_port
     port=$global_port
-    
-
-    # if [[ $1 = "manual" ]]
-    # then
-    #     read -p "Input station port e.g. 43066: " port
-    #     # port=$source_port
-    #     station_id="Manual"
-    #     station_description="Manual"
-    # else
-    #     get_choice_from_names
-    #     choice_index=$?
-    #     # echo $choice_index
-
-    #     # menu index is linked to station number
-    #     # station_number=$(($choice_index + 1))
-
-    #     # station_name=$(printf "SS-%07d" $station_number)
-    #     # # echo $station_name
-    #     # port=$(printf "43%03d" $station_number)
-    #     station_id="${station_ids[$choice_index]}"
-    #     station_description="${station_descriptions[$choice_index]}"
-    #     port="${station_ports[$choice_index]}"
-
-    # fi
-
+   
     # echo $port
     # echo "Log into $station_description Station. (id: $station_id, port: $port)"
     # https://stackoverflow.com/questions/7114990/pseudo-terminal-will-not-be-allocated-because-stdin-is-not-a-terminal
@@ -158,9 +134,6 @@ ssh_into_station () {
     # printf -v cmd_str '%q ' "${cmd[@]}"
     "${cmd[@]}"
 }
-
-
-
 
 transfer_production_usage_db(){
     echo "Source Station: "
@@ -857,12 +830,10 @@ options=("Quit" "Stations status" "Station log in" "Production Folder Copy: Stat
 select opt in "${options[@]}"
 do
     case $opt in
-        "Station log in by SS-id")
+        "Station log in")
             ssh_into_station 
             ;;
-        "Station log in by port")
-            ssh_into_station "manual"
-            ;;
+        
         "List Stations as Name:Port")
             echo "List for display purposes. Chosing a station will have no effect."
             get_choice_from_names

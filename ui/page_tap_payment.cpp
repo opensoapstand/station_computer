@@ -57,7 +57,7 @@ page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
 
     ui->pushButton_payment_bypass->setEnabled(false);
     ui->label_title->hide();
-    ui->order_total_amount->hide();
+    // ui->order_total_amount->hide();
 }
 
 void page_tap_payment::initiate_tap_setup()

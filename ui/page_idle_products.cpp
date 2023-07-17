@@ -104,10 +104,11 @@ void page_idle_products::showEvent(QShowEvent *event)
 
     ui->label_printer_status->setStyleSheet(styleSheet);
 
-    if (p_page_idle->thisMachine.hasReceiptPrinter())
-    {
-        p_page_idle->checkReceiptPrinterStatus();
-    }
+    // we already checked this in p_page_idle the results from there. 
+    // if (p_page_idle->thisMachine.hasReceiptPrinter())
+    // {
+    //     p_page_idle->checkReceiptPrinterStatus();
+    // }
 
     p_page_idle->addCustomerLogoToLabel(ui->label_customer_logo);
 
@@ -197,25 +198,29 @@ void page_idle_products::hideAllLabelAndButtons()
     }
 }
 
-void page_idle_products::printerStatusFeedback(bool isOnline, bool hasPaper)
-{
-    qDebug() << "Printer feedback received from fsm";
-    m_printer_isOnline = isOnline;
-    m_printer_hasPaper = hasPaper;
-}
+// void page_idle_products::printerStatusFeedback(bool isOnline, bool hasPaper)
+// {
+//     qDebug() << "Printer feedback received from fsm";
+//     m_printer_isOnline = isOnline;
+//     m_printer_hasPaper = hasPaper;
+// }
 
 void page_idle_products::displayPrinterStatus()
 {
+    bool isOnline;
+    bool hasPaper;
+    p_page_idle->thisMachine.getPrinterStatusFromDb(&isOnline, &hasPaper);
+
     ui->label_printer_status->hide();
     if (p_page_idle->thisMachine.hasReceiptPrinter())
     {
-        if (!m_printer_isOnline)
+        if (!isOnline)
         {
             ui->label_printer_status->raise();
             p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_printer_status, "assistance_printer_offline");
             ui->label_printer_status->show();
         }
-        else if (!m_printer_hasPaper)
+        else if (!hasPaper)
         {
             ui->label_printer_status->raise();
             p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_printer_status, "empty_improperly_loaded");

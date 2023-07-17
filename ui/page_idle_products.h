@@ -98,8 +98,8 @@ private:
     int maintenanceCounter;
     QTimer *backgroundChangeTimer;
 
-    bool m_printer_isOnline = true;
-    bool m_printer_hasPaper = true;
+    // bool m_printer_isOnline = true;
+    // bool m_printer_hasPaper = true;
     // bool m_printer_status_visible;
 };
 

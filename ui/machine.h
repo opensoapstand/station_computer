@@ -73,7 +73,7 @@ public:
     int getDispensersCount();
 
     bool hasReceiptPrinter();
-    void printerStatus(bool *isOnline, bool *hasPaper);
+    void getPrinterStatusFromDb(bool *isOnline, bool *hasPaper);
 
     StateCoupon getCouponState();
     void setCouponState(StateCoupon state);

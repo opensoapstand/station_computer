@@ -31,7 +31,7 @@ public:
     uint32_t getNumberOfRows(QString table);
 
     bool getRecentTransactions(QString values[][5], int count, int *count_retreived);
-    void printerStatus(bool *isOnline, bool *hasPaper); // do not erase
+    void getPrinterStatus(bool *isOnline, bool *hasPaper); // do not erase
 
     // QString getPaymentMethod(int slot); // do not erase yet (wait for ash)
     // void setPaymentToQR();              // ASh to change.

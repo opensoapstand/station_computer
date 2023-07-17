@@ -76,7 +76,7 @@ page_idle::~page_idle()
 void page_idle::showEvent(QShowEvent *event)
 {
     thisMachine.resetSessionId();
-    
+
     registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
     loadDynamicContent();
@@ -272,19 +272,25 @@ void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
         ui->label_printer_status->raise();
         setTemplateTextWithIdentifierToObject(ui->label_printer_status, "offline");
         ui->label_printer_status->show();
+        // m_printer_isOnline_cached = false;
     }
     else if (!hasPaper)
     {
         ui->label_printer_status->raise();
         setTemplateTextWithIdentifierToObject(ui->label_printer_status, "nopaper");
         ui->label_printer_status->show();
+        // m_printer_hasPaper_cached = false;
     }
     else
     {
         ui->label_printer_status->hide();
+        // m_printer_isOnline_cached = true;
+        // m_printer_hasPaper_cached = true;
     }
     ui->pushButton_to_select_product_page->show();
 }
+
+// void page_idle::
 
 void page_idle::on_pushButton_to_select_product_page_clicked()
 {

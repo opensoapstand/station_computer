@@ -147,10 +147,10 @@ QString machine::getDefaultTemplatePathFromName(QString fileName)
     return template_root_path + TEMPLATES_DEFAULT_NAME + "/" + fileName;
 }
 
-void machine::printerStatus(bool *isOnline, bool *hasPaper)
+void machine::getPrinterStatusFromDb(bool *isOnline, bool *hasPaper)
 {
     qDebug() << "DB call: Check printer status. ";
-    m_db->printerStatus(isOnline, hasPaper);
+    m_db->getPrinterStatus(isOnline, hasPaper);
 }
 
 bool machine::hasReceiptPrinter()

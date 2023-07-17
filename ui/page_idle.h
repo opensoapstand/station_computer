@@ -127,6 +127,9 @@ private:
     page_error_wifi *p_page_error_wifi;
     // bool p1, p2, p3, p4;
     QString idle_page_type;
+
+    // bool m_printer_isOnline_cached = true;
+    // bool m_printer_hasPaper_cached = true;
 };
 
 #endif // IDLE_H

@@ -9,7 +9,8 @@
 #######################################################################
 echo 'Drinkfill file transfer menu. CAUTION:Will impact station functionality.'
 
-PS3='Choose option(digit + enter):'
+port_in_use=$(sudo ./rtunnel_print.sh 2>/dev/null)
+PS3="Choose option(digit + enter) (rtunnel port=$port_in_use) :"
 options=("Quit" "Station info" "AWS log in" "AWS run station operations" "upload to AWS home folder" "upload to AWS station folder" "upload production as version in AWS SoftwareStation" "upload stationsoperations.sh to aws home")
 select opt in "${options[@]}"
 do

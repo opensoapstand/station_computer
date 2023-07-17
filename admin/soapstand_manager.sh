@@ -10,7 +10,8 @@
 
 ./status_services.sh
 
-PS3='Please enter your choice: '
+port_in_use=$(sudo ./rtunnel_print.sh 2>/dev/null)
+PS3="Choose option(digit + enter) (rtunnel port=$port_in_use) :"
 options=("Quit" "Station info" "Status" "Start" "Stop" "Restart" "Screenshotbot execute" "Enable Autostart" "Disable Autostart" "Copy binary files to production folder" "Create and run production data copied from drinkfill folder (without db!)" "(Re)load services from production" "Setup aws port (rtunnel)" "Setup Ubuntu for drinkfill UI" "Deploy productionstatic.zip" "Screenshot: Take single shot" "Copy db from drinkfill to production folder OLD" "Copy configuration db from drinkfill to production folder" "Copy usage db from drinkfill to production folder")
 select opt in "${options[@]}"
 do

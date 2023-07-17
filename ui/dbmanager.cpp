@@ -746,7 +746,7 @@ bool DbManager::getRecentTransactions(QString values[][5], int count, int *count
     return true;
 }
 
-void DbManager::printerStatus(bool *isOnline, bool *hasPaper)
+void DbManager::getPrinterStatus(bool *isOnline, bool *hasPaper)
 {
 
     {

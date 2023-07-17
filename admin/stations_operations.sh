@@ -90,36 +90,66 @@ function cd_and_stay() {
 # }
 
 
+
+
+#     echo "Please select an option:"
+
+#     options=("Option 1" "Option 2" "Option 3" "Quit")
+
+#     select opt in "${options[@]}"
+#     do
+#         case $opt in
+#             "Option 1")
+#                 echo "You chose option 1"
+#                 ;;
+#             "Option 2")
+#                 echo "You chose option 2"
+#                 ;;
+#             "Option 3")
+#                 echo "You chose option 3"
+#                 ;;
+#             "Quit")
+#                 break
+#                 ;;
+#             *) 
+#                 echo "invalid option: $REPLY"
+#                 ;;
+#         esac
+#     done
+# }
+
 ssh_into_station () {
 
+    echo "Source Station: "
+    get_station_port
+    port=$global_port
+    
 
+    # if [[ $1 = "manual" ]]
+    # then
+    #     read -p "Input station port e.g. 43066: " port
+    #     # port=$source_port
+    #     station_id="Manual"
+    #     station_description="Manual"
+    # else
+    #     get_choice_from_names
+    #     choice_index=$?
+    #     # echo $choice_index
 
-    if [[ $1 = "manual" ]]
-    then
-        read -p "Input station port e.g. 43066: " port
-        # port=$source_port
-        station_id="Manual"
-        station_description="Manual"
-        
-    else
-        get_choice_from_names
-        choice_index=$?
-        # echo $choice_index
+    #     # menu index is linked to station number
+    #     # station_number=$(($choice_index + 1))
 
-        # menu index is linked to station number
-        # station_number=$(($choice_index + 1))
+    #     # station_name=$(printf "SS-%07d" $station_number)
+    #     # # echo $station_name
+    #     # port=$(printf "43%03d" $station_number)
+    #     station_id="${station_ids[$choice_index]}"
+    #     station_description="${station_descriptions[$choice_index]}"
+    #     port="${station_ports[$choice_index]}"
 
-        # station_name=$(printf "SS-%07d" $station_number)
-        # # echo $station_name
-        # port=$(printf "43%03d" $station_number)
-        station_id="${station_ids[$choice_index]}"
-        station_description="${station_descriptions[$choice_index]}"
-        port="${station_ports[$choice_index]}"
-
-    fi
+    # fi
 
     # echo $port
-    echo "Log into $station_description Station. (id: $station_id, port: $port)"
+    # echo "Log into $station_description Station. (id: $station_id, port: $port)"
     # https://stackoverflow.com/questions/7114990/pseudo-terminal-will-not-be-allocated-because-stdin-is-not-a-terminal
     cmd=( ssh -tt df-admin@localhost -p $port )
     printf -v cmd_str '%q ' "${cmd[@]}"
@@ -134,10 +164,10 @@ ssh_into_station () {
 
 transfer_production_usage_db(){
     echo "Source Station: "
-    user_input_port
+    get_station_port
     source_port=$global_port
     echo "Destination Station: "
-    user_input_port
+    get_station_port
     destination_port=$global_port
 
     PS3='Choose option(digit + enter):'
@@ -195,10 +225,10 @@ transfer_production_usage_db(){
 
 transfer_production_configuration_db(){
     echo "Source Station: "
-    user_input_port
+    get_station_port
     source_port=$global_port
     echo "Destination Station: "
-    user_input_port
+    get_station_port
     destination_port=$global_port
 
     PS3='Choose option(digit + enter):'
@@ -258,11 +288,17 @@ transfer_production_configuration_db(){
 
 transfer_all_production_dbs(){
     echo "Source Station: "
-    user_input_port
+    get_station_port
     source_port=$global_port
     echo "Destination Station: "
-    user_input_port
+    get_station_port
     destination_port=$global_port
+    # echo "Source Station: "
+    # user_input_port
+    # source_port=$global_port
+    # echo "Destination Station: "
+    # user_input_port
+    # destination_port=$global_port
 
     PS3='Choose option(digit + enter):'
     options=("dbname to dbname_xsrcx" "dbname_xsrcx to dbname OVERWRITE ALERT" "dbname_xDEST to dbname OVERWRITE ALERT --> SPECIAL CASE" "dbname to dbname OVERWRITE ALERT" "dbname_xsrcx to dbname_xsrcx")
@@ -340,10 +376,10 @@ transfer_all_production_dbs(){
 transfer_production_db_old(){
 
     echo "Source Station: "
-    user_input_port
+    get_station_port
     source_port=$global_port
     echo "Destination Station: "
-    user_input_port
+    get_station_port
     destination_port=$global_port
 
     PS3='Choose option(digit + enter):'
@@ -404,10 +440,10 @@ transfer_production_db_old(){
 transfer_production_logging(){
 
     echo "Source Station: "
-    user_input_port
+    get_station_port
     source_port=$global_port
     echo "Destination Station: "
-    user_input_port
+    get_station_port
     destination_port=$global_port
 
     logging_zip_name=logging_$source_port.zip  # check for where used, not as a variable. Because... it's hard.
@@ -441,7 +477,44 @@ transfer_production_logging(){
     echo "done"
 }
 
+get_station_port() {
+    # echo "Stations count: ${#station_descriptions[@]}";
+
+    # function can only return variables between 0 and 255 it's basically their exit code
+     PS3="Choose an option from the list, or enter a 5 digit port number: "
+    i=0
+    select selected in ${station_descriptions[*]}
+    do
+        # echo "$REPLY"
+        # echo "$i"
+        if [ -z "$selected" ]
+        then
+            # echo "\$selected is empty"
+            global_port=$REPLY
+        else
+            # echo "\$selected is NOT empty"
+            i=0
+            until [[ $selected = ${station_descriptions[$i]} || $i -gt ${#station_descriptions[@]} ]] # https://stackoverflow.com/questions/3427872/whats-the-difference-between-and-in-bash
+            do
+                # echo $i
+                # echo ${station_descriptions[$i]}
+                # echo $selected
+                
+                let "i+=1"
+            done 
+           
+            global_port="${station_ports[$i]}"
+        fi
+        break
+    done
+        # station_id="${station_ids[$choice_index]}"
+        # station_description="${station_descriptions[$choice_index]}"
+        # port="${station_ports[$choice_index]}"
+}
+
 user_input_port(){
+
+
     PS3="Choose an option (or press Enter to exit): "
     valid_choice=false
 
@@ -477,10 +550,10 @@ user_input_port(){
 transfer_production_static_files(){
 
     echo "Source Station: "
-    user_input_port
+    get_station_port
     source_port=$global_port
     echo "Destination Station: "
-    user_input_port
+    get_station_port
     destination_port=$global_port
  
     production_zip_name=productionstatic.zip  # check for where used, not as a variable. Because... it's hard.
@@ -777,9 +850,8 @@ deploy_with_ash () {
     
 }
 
-echo 'At AWS: Drinkfill file transfer menu. CAUTION:Will impact station functionality.'
-PS3='Choose option(digit + enter):'
-options=("Quit" "Stations status" "Show Station Descriptions" "Station log in by SS-id" "Station mkdir" "Station log in by port" "Deploy wizard with Ash" "Production Folder Copy: Static files" "Production Folder Copy: Database OLD" "Production Folder Copy: Databases" "Production Folder Copy: Configuration database" "Production Folder Copy: Usage database" "Production Folder Copy: Logging Folder")
+PS3="Choose option(digit + enter) :"
+options=("Quit" "Stations status" "Station log in" "Production Folder Copy: Static files" "Production Folder Copy: Logging Folder" "Production Folder Copy: Databases" "Production Folder Copy: Configuration database" "Production Folder Copy: Usage database" "Production Folder Copy: Database OLD" )
 # options=("Quit" "Stations status" "Show Station Descriptions" "Station log in" "Station/production/x to Station/production/x" "Station/production/x to Station/home/x" "Station/home/x to Station/production/x" "Station/home/x to Station/home/x" "AWS to Station/home/x" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB" "Manualport/production/x to Manualport/home/x" "Station mkdir" "Station log in [port]" "Static Production Copy: Station to Station" "Static Production Copy: Station to [port]" "Static Production Copy: [port] to Station" "Static Production Copy: [port] to [port]" "DB Production copy: Station to Station" "DB Production copy: Station to [port]" "DB Production copy: [port] to Station" "DB Production copy: [port] to [port]" "Logs Production Copy: Station to Station" "Logs Production Copy: Station to [port]" "Logs Production Copy: [port] to Station" "Logs Production Copy: [port] to [port]")
 
 select opt in "${options[@]}"
@@ -791,10 +863,7 @@ do
         "Station log in by port")
             ssh_into_station "manual"
             ;;
-        # "cd into Station AWS folder")
-        #     cd_into_station_AWS_folder
-        #     ;;
-        "Show Station Descriptions")
+        "List Stations as Name:Port")
             echo "List for display purposes. Chosing a station will have no effect."
             get_choice_from_names
             ;;
@@ -848,18 +917,7 @@ do
             transfer_production_logging  
             ;;
 
-        "Station to Lode DB")
-            scp_transfer_db "to_dev" "SS-DEV-LODE" "44444"
-            ;;
-        "Lode to Station DB")
-            scp_transfer_db "from_dev" "SS-DEV-LODE" "44444"
-            ;;
-        "Station to Ash DB")
-            scp_transfer_db "to_dev" "SS-DEV-ASH" "43081"
-            ;;
-        "Ash to Station DB")
-            scp_transfer_db "from_dev" "SS-DEV-ASH" "43081"
-            ;;
+      
         "Manualport/production/x to Manualport/home/x")
             scp_transfer_manual_ports "production/" ""
             ;;

@@ -50,6 +50,7 @@ scp /home/df-admin/drinkfill/admin/developer_tools.sh /home/df-admin/production/
 scp /home/df-admin/drinkfill/admin/copy_and_enable_services.sh /home/df-admin/production/admin/copy_and_enable_services.sh
 scp /home/df-admin/drinkfill/admin/create_and_run_production_data.sh /home/df-admin/production/admin/create_and_run_production_data.sh
 scp /home/df-admin/drinkfill/admin/rtunnel_print.sh /home/df-admin/production/admin/rtunnel_print.sh
+scp /home/df-admin/drinkfill/admin/deploy_production_from_zip.sh /home/df-admin/production/admin/deploy_production_from_zip.sh
 
 scp /home/df-admin/drinkfill/admin/aws_operations.sh /home/df-admin/production/admin/aws_operations.sh
 

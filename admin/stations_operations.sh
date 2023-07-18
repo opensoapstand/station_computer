@@ -557,6 +557,11 @@ transfer_production_static_files(){
     echo "Transfer static production data from aws to station..."
     "${cmd2[@]}"
     echo "done"
+
+    if [[ $1 = "deploy" ]]
+    then
+        ssh -tt df-admin@localhost -p $destination_port 'bash /home/df-admin/production/admin/deploy_production_from_zip.sh'
+    fi
 }
 
 
@@ -611,6 +616,8 @@ scp_transfer () {
     read -p "Enter file/folder name will append to /home/df-admin/production/" path
 
     full_source_path="/home/df-admin/$1$path"
+
+
 
     # check argument for being empty (which indicates home folder, in that case, we create a folder with the id of the source)
     if [ -z "$2" ]
@@ -824,7 +831,7 @@ deploy_with_ash () {
 }
 
 PS3="Choose option(digit + enter) :"
-options=("Quit" "Stations status" "Station log in" "Production Folder Copy: Static files" "Production Folder Copy: Logging Folder" "Production Folder Copy: Databases" "Production Folder Copy: Configuration database" "Production Folder Copy: Usage database" "Production Folder Copy: Database OLD" )
+options=("Quit" "Stations status" "Station log in" "Production Folder Copy and Deploy: Static files" "Production Folder Copy: Static files" "Production Folder Copy: Logging Folder" "Production Folder Copy: Databases" "Production Folder Copy: Configuration database" "Production Folder Copy: Usage database" "Production Folder Copy: Database OLD" )
 # options=("Quit" "Stations status" "Show Station Descriptions" "Station log in" "Station/production/x to Station/production/x" "Station/production/x to Station/home/x" "Station/home/x to Station/production/x" "Station/home/x to Station/home/x" "AWS to Station/home/x" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB" "Manualport/production/x to Manualport/home/x" "Station mkdir" "Station log in [port]" "Static Production Copy: Station to Station" "Static Production Copy: Station to [port]" "Static Production Copy: [port] to Station" "Static Production Copy: [port] to [port]" "DB Production copy: Station to Station" "DB Production copy: Station to [port]" "DB Production copy: [port] to Station" "DB Production copy: [port] to [port]" "Logs Production Copy: Station to Station" "Logs Production Copy: Station to [port]" "Logs Production Copy: [port] to Station" "Logs Production Copy: [port] to [port]")
 
 select opt in "${options[@]}"
@@ -870,6 +877,9 @@ do
         "Production Folder Copy: Static files")
             transfer_production_static_files  
             ;;
+        "Production Folder Copy and Deploy: Static files")
+            transfer_production_static_files "deploy"
+            ;;
         "Production Folder Copy: Database OLD")
             transfer_production_db_old
             ;;
@@ -887,7 +897,6 @@ do
         "Production Folder Copy: Logging Folder")
             transfer_production_logging  
             ;;
-
       
         "Manualport/production/x to Manualport/home/x")
             scp_transfer_manual_ports "production/" ""

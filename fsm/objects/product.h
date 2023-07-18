@@ -150,7 +150,6 @@ public:
         string m_nPLU_custom;
         string m_paymentMethod;
 
-
         // int m_PWM;
         // DF_ERROR reloadProductFromDB();
 

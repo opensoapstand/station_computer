@@ -117,13 +117,16 @@ double product::getVolumePerTick()
     return m_nVolumePerTick;
 }
 
+
 bool product::registerFlowSensorTick()
 {
     // tick from flowsensor interrupt will increase dispensed volume.
     //    cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
     // cout << getVolumePerTick()<< endl;
     // cout << m_concentration_multiplier <<endl;
-    m_nVolumeDispensed += getVolumePerTick() * m_concentration_multiplier;
+
+        m_nVolumeDispensed += getVolumePerTick() * m_concentration_multiplier;
+
     // m_nVolumeDispensed += 100.0;
 }
 void product::setVolumeDispensed(double volume)

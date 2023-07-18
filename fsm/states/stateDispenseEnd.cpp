@@ -356,7 +356,7 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
             std::string sql;
             std::string start_time = productDispensers[slot_index].getDispenseStartTime();
             sql = ("UPDATE transactions SET processed_by_backend=1 WHERE start_time='" + start_time + "';");
-            databaseUpdateSql(sql);
+            databaseUpdateSql(sql, USAGE_DB_PATH);
         }
         else
         {
@@ -445,12 +445,17 @@ std::string stateDispenseEnd::getMachineID()
     return str;
 }
 
-DF_ERROR stateDispenseEnd::databaseUpdateSql(string sqlStatement)
+DF_ERROR stateDispenseEnd::databaseUpdateSql(string sqlStatement, string dbPath)
 {
 
     // FIXME: DB needs fully qualified link to find...obscure with XML loading.
     char *zErrMsg = 0;
-    rc = sqlite3_open(USAGE_DB_PATH, &db);
+    if(dbPath == USAGE_DB_PATH){
+        rc = sqlite3_open(USAGE_DB_PATH, &db);
+    }
+    else{
+        rc = sqlite3_open(CONFIG_DB_PATH, &db);
+    }
 
     if (rc)
     {
@@ -566,21 +571,21 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     {
         std::string sql1;
         sql1 = ("INSERT INTO transactions (product,quantity_requested,price,start_time,quantity_dispensed,end_time,volume_remaining,slot,button_duration,button_times,processed_by_backend,product_id, soapstand_product_serial) VALUES ('" + product_name + "'," + target_volume + "," + price_string + ",'" + start_time + "'," + dispensed_volume_str + ",'" + end_time + "'," + updated_volume_remaining_str + "," + to_string(slot) + "," + button_press_duration + "," + dispense_button_count + "," + to_string(false) + ",'" + product_id + "','" + soapstand_product_serial + "');");
-        databaseUpdateSql(sql1);
+        databaseUpdateSql(sql1, USAGE_DB_PATH);
     }
     // update transactions table
 
     // update product table
     std::string sql2;
     sql2 = ("UPDATE products SET volume_dispensed_total=" + updated_volume_dispensed_total_ever_str + ", volume_remaining=" + updated_volume_remaining_str + ", volume_dispensed_since_restock=" + updated_volume_dispensed_since_restock_str + " WHERE slot='" + to_string(slot) + "';");
-    databaseUpdateSql(sql2);
+    databaseUpdateSql(sql2, CONFIG_DB_PATH);
 
     // update machine table
     std::string slot_status_field_name = "status_text_slot_" + to_string(slot);
 
     std::string sql3;
     sql3 = ("UPDATE machine SET " + slot_status_field_name + "='" + slot_state_str + "';");
-    databaseUpdateSql(sql3);
+    databaseUpdateSql(sql3,CONFIG_DB_PATH);
 
     // reload (changed) db values
     productDispensers[slot_index].getProduct()->reloadParametersFromDb();

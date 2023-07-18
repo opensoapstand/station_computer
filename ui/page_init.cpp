@@ -76,6 +76,10 @@ void page_init::showEvent(QShowEvent *event)
     }
     else
     {
+
+        QString command = "Ping";
+        p_page_idle->dfUtility->send_command_to_FSM(command);
+
         if (paymentMethod==PAYMENT_TAP_TCP || paymentMethod==PAYMENT_TAP_SERIAL)
         {
             // Thread setup for non-blocking tap payment initialization
@@ -108,6 +112,8 @@ void page_init::onInitTimeoutTick()
     if (--_initIdleTimeoutSec >= 0)
     {
         ui->label_init_message->setText(ui->label_init_message->text() + ".");
+        QString command = "Ping";
+        p_page_idle->dfUtility->send_command_to_FSM(command);
     }
     else
     {

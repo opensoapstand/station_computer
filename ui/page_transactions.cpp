@@ -169,7 +169,7 @@ void page_transactions::on_pushButton_print_clicked(bool checked)
                         QString transactionIndex = recent_transactions[rowIndex - 1][0];
                         qDebug() << "Selected row: " << rowIndex << " with dispense index: " + transactionIndex << ". Send to receipt printer.";
 
-                        p_page_idle->dfUtility->send_command_to_FSM("p");
+                        p_page_idle->dfUtility->send_command_to_FSM("Printer");
                         usleep(50000);
                         QString command = "t" + transactionIndex;
                         p_page_idle->dfUtility->send_command_to_FSM(command);

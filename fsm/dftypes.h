@@ -100,10 +100,9 @@
 #define SIZE_SMALLER_THAN_SMALL '0'
 #define SIZE_EMPTY_CONTAINER_DETECTED_CHAR 'i' // hack to accomodate for empty container or dispense timeout
 
-
-// #define AIR_CHAR 'a'
 #define ACTION_REPAIR_PCA 'r'
 #define ACTION_DISPENSE 'd'
+#define ACTION_RESET 'b'
 #define ACTION_AUTOFILL 'a'
 // #define CLEAN_CHAR 'c'
 

@@ -81,6 +81,11 @@ DF_ERROR stateIdle::onAction()
             m_state_requested = STATE_DISPENSE_INIT;
          }
       }
+      else if (m_pMessaging->getAction() == ACTION_RESET)
+      {
+         m_pMessaging->sendMessageOverIP("Init Ready");
+         debugOutput::sendMessage("Send msg to ui: Controller is ready.", MSG_INFO);
+      }
       else if ('0' == m_pMessaging->getAction() || ACTION_QUIT == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Request application exit.", MSG_INFO);

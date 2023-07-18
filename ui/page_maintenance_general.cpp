@@ -142,7 +142,7 @@ void page_maintenance_general::printerStatusFeedback(bool isOnline, bool hasPape
 void page_maintenance_general::send_check_printer_status_command()
 {
     qDebug() << "Send check printer status to controller";
-    p_page_idle->dfUtility->send_command_to_FSM("p");
+    p_page_idle->dfUtility->send_command_to_FSM("Printer");
     usleep(50000);
     usleep(1200000); // minimum
     // usleep(5000000); 
@@ -162,7 +162,7 @@ void page_maintenance_general::on_pushButton_printer_check_status_clicked()
 void page_maintenance_general::on_printer_test_print_button_clicked()
 {
     qDebug() << "Send test printer to controller";
-    p_page_idle->dfUtility->send_command_to_FSM("p");
+    p_page_idle->dfUtility->send_command_to_FSM("Printer");
     usleep(50000);
     p_page_idle->dfUtility->send_command_to_FSM("1");
     usleep(50000);

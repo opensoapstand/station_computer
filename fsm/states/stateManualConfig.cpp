@@ -62,7 +62,12 @@ DF_ERROR stateManualConfig::onAction()
       DF_ERROR ret_msg;
       ret_msg = m_pMessaging->parseCommandString();
 
-      if ('0' == m_pMessaging->getAction() || ACTION_QUIT == m_pMessaging->getAction())
+      
+      if (m_pMessaging->getAction() == ACTION_RESET)
+      {
+         m_pMessaging->sendMessageOverIP("Init Ready");
+         m_state_requested = STATE_IDLE;
+      }else if ('0' == m_pMessaging->getAction() || ACTION_QUIT == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Exit Manual Config State", MSG_INFO);
 

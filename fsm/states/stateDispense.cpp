@@ -133,6 +133,13 @@ DF_ERROR stateDispense::onAction()
       debugOutput::sendMessage(dispenseStatusStr, MSG_INFO);
    }
 
+   if (m_pMessaging->getAction() == ACTION_RESET)
+   {
+      m_pMessaging->sendMessageOverIP("Init Ready");
+      m_state_requested = STATE_IDLE;
+      return e_ret = OK;
+   }
+
    // Check if UI has sent a ACTION_DISPENSE_END to finish the transaction, or, if dispensing is complete
    if (m_pMessaging->getAction() == ACTION_DISPENSE_END)
    {
@@ -160,69 +167,6 @@ DF_ERROR stateDispense::onAction()
       stopPumping();
       return e_ret = OK;
    }
-
-   // if (productDispensers[slot_index].getEmptyContainerDetectionEnabled())
-   // {
-
-   //    Dispense_behaviour status = productDispensers[slot_index].getDispenseStatus();
-
-   //    if (status == FLOW_STATE_EMPTY)
-   //    {
-
-   //       debugOutput::sendMessage("******************* EMPTY CONTAINER DETECTED **********************", MSG_INFO);
-   //       usleep(100000);
-
-   //       send message delay (pause from previous message) desperate attempt to prevent crashes
-   //       m_pMessaging->sendMessageOverIP("No flow abort"); // send to UI
-   //       stopPumping();
-   //       m_state_requested = STATE_DISPENSE_END;
-
-   //       m_pMessaging->setRequestedSize(SIZE_EMPTY_CONTAINER_DETECTED_CHAR);
-   //    }
-   //    else if (status == FLOW_STATE_DISPENSING)
-   //    {
-   //       productDispensers[slot_index].logUpdateIfAllowed("debug. targets s,m,l,c_max:" +
-   //                                                       to_string(productDispensers[slot_index].getProduct()->m_nVolumeTarget_s) +
-   //                                                       "," + to_string(productDispensers[slot_index].getProduct()->m_nVolumeTarget_m) +
-   //                                                       "," + to_string(productDispensers[slot_index].getProduct()->m_nVolumeTarget_l) +
-   //                                                       "," + to_string(productDispensers[slot_index].getProduct()->m_nVolumeTarget_c_max) +
-   //                                                       ", Vol dispensed: " + to_string(productDispensers[slot_index].getVolumeDispensed()));
-   //    }
-   //    else if (status == FLOW_STATE_PRIMING_OR_EMPTY)
-   //    {
-   //       productDispensers[slot_index].logUpdateIfAllowed("No flow during pumping. Priming? Vol dispensed: " + to_string(productDispensers[slot_index].getVolumeDispensed()));
-   //    }
-   //    else if (status == FLOW_STATE_PUMPING_NOT_DISPENSING)
-   //    {
-   //       productDispensers[slot_index].logUpdateIfAllowed("No flow detected during pumping. Vol dispensed: " + to_string(productDispensers[slot_index].getVolumeDispensed()));
-   //    }
-   //    else if (status == FLOW_STATE_NOT_PUMPING_NOT_DISPENSING)
-   //    {
-   //       productDispensers[slot_index].logUpdateIfAllowed("Wait for button press.           Vol dispensed: " + to_string(productDispensers[slot_index].getVolumeDispensed()));
-   //    }
-   //    else if (status == FLOW_STATE_UNAVAILABLE)
-   //    {
-   //       productDispensers[slot_index].logUpdateIfAllowed("No flow data                     Vol dispensed: " + to_string(productDispensers[slot_index].getVolumeDispensed()));
-   //    }
-   //    else if (status == FLOW_STATE_RAMP_UP)
-   //    {
-   //       productDispensers[slot_index].logUpdateIfAllowed("Flow ramping up                  Vol dispensed: " + to_string(productDispensers[slot_index].getVolumeDispensed()));
-   //    }
-   //    else
-   //    {
-   //       debugOutput::sendMessage("Dispense status unknow: " + to_string(status), MSG_INFO);
-   //    };
-   // }
-   // else
-   // {
-   // // TODO: Do a check if Pumps are operational
-   // // send IPC if pump fails
-   // productDispensers[slot_index].logUpdateIfAllowed("Vol dispensed: " + to_string(productDispensers[slot_index].getVolumeDispensed()));
-
-   // productDispensers[slot_index].updateRunningAverageWindow();
-   // Time_val flowavg = productDispensers[slot_index].getAveragedFlowRate(2000);
-   // productDispensers[slot_index].logUpdateIfAllowed("Flow rate 2s: " + to_string(flowavg.value));
-   // }
 
    e_ret = OK;
 

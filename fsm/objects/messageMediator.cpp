@@ -318,7 +318,7 @@ void *messageMediator::doIPThread(void *pThreadArgs)
          {
             ServerSocket new_sock;
             fsm_comm_server.accept(new_sock);
-            debugOutput::sendMessage("new sock (UIDDFIJDF)", MSG_INFO);
+            debugOutput::sendMessage("Server: New incoming socket accepted. ", MSG_INFO);
 
             try
             {
@@ -390,19 +390,11 @@ void messageMediator::setRequestedSize(char size)
 
 DF_ERROR messageMediator::parseCommandString()
 {
-   //
-
-   //    parseSingleCommandString
-   // }
-
-   // DF_ERROR messageMediator::parseSingleCommandString(){
-
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
    string sCommand = getCommandString();
    char first_char = sCommand[0];
 
-   // m_commandValue = std::stoi( sCommand );
    debugOutput::sendMessage("command length:" + to_string(sCommand.length()), MSG_INFO);
 
    if (sCommand.find("pcabugfix") != string::npos)
@@ -410,6 +402,11 @@ DF_ERROR messageMediator::parseCommandString()
       debugOutput::sendMessage("*************************************************", MSG_INFO);
       debugOutput::sendMessage("Action: Repair PCA9534", MSG_INFO);
       m_requestedAction = ACTION_REPAIR_PCA;
+   }
+   else if (sCommand.find("Ping") != string::npos)
+   {
+      // simple is alive command will reset to idle state
+      m_requestedAction = ACTION_RESET;
    }
    else if (sCommand.find("Order") != string::npos)
    {
@@ -459,6 +456,10 @@ DF_ERROR messageMediator::parseCommandString()
       // check for dispensing command
       e_ret = parseDispenseCommand(sCommand);
    }
+   else if (sCommand.find("Printer") != string::npos)
+   {
+      m_requestedAction = ACTION_UI_COMMAND_PRINTER_MENU;
+   }
    else if (
        // other commands
        first_char == ACTION_MANUAL_PUMP_PWM_SET ||
@@ -485,7 +486,7 @@ DF_ERROR messageMediator::parseCommandString()
        //  first_char == ACTION_MANUAL_PRINTER ||
        //  first_char == ACTION_PRINTER_CHECK_STATUS ||
        //  first_char == ACTION_UI_COMMAND_PRINTER_SEND_STATUS ||
-       first_char == ACTION_UI_COMMAND_PRINTER_MENU ||
+       // first_char == ACTION_UI_COMMAND_PRINTER_MENU ||
        //  first_char == ACTION_PRINTER_CHECK_STATUS_TOGGLE_CONTINUOUSLY ||
        //  first_char == ACTION_PRINTER_PRINT_TEST ||
        //  first_char == ACTION_HELP ||
@@ -521,7 +522,8 @@ void messageMediator::resetAction()
    m_requestedAction = ACTION_NO_ACTION;
 }
 
-void messageMediator::setDispenseCommandToDummy(){
+void messageMediator::setDispenseCommandToDummy()
+{
    m_requestedAction = ACTION_DUMMY;
    m_RequestedProductIndexInt = PRODUCT_SLOT_DUMMY;
    m_requestedSize = SIZE_DUMMY;

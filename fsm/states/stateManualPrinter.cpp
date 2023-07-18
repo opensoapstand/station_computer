@@ -73,7 +73,12 @@ DF_ERROR stateManualPrinter::onAction()
       DF_ERROR ret_msg;
       ret_msg = m_pMessaging->parseCommandString();
 
-      if ('0' == m_pMessaging->getAction() || ACTION_QUIT == m_pMessaging->getAction())
+      if (m_pMessaging->getAction() == ACTION_RESET)
+      {
+         m_pMessaging->sendMessageOverIP("Init Ready");
+         m_state_requested = STATE_IDLE;
+      }
+      else if ('0' == m_pMessaging->getAction() || ACTION_QUIT == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Exit printer status test", MSG_INFO);
 
@@ -254,9 +259,8 @@ DF_ERROR stateManualPrinter::sendPrinterStatus()
 
    // bool isOnline = printerr->testComms();
    // bool hasPaper = printerr->hasPaper();
-   bool isOnline ;
-   bool hasPaper ;
-
+   bool isOnline;
+   bool hasPaper;
 
    getPrinterStatus(&isOnline, &hasPaper);
 
@@ -325,8 +329,9 @@ DF_ERROR stateManualPrinter::getPrinterStatus(bool *r_isOnline, bool *r_hasPaper
 
    bool hasPaper = false;
 
-   if (isOnline){
-      hasPaper= printerr->hasPaper();
+   if (isOnline)
+   {
+      hasPaper = printerr->hasPaper();
    }
 
    if (printerr->getPollCountLimitReached())

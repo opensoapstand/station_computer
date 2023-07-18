@@ -305,7 +305,7 @@ DF_ERROR dispenser::startDispense()
 
     this->the_pcb->flowSensorEnable(slot);
     this->the_pcb->resetFlowSensorTotalPulses(slot);
-
+    
     dispense_state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
     previous_dispense_state = FLOW_STATE_UNAVAILABLE;
 

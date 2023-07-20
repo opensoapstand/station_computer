@@ -408,6 +408,33 @@ DF_ERROR messageMediator::parseCommandString()
       // simple is alive command will reset to idle state
       m_requestedAction = ACTION_RESET;
    }
+   else if (sCommand.find("ButtonLights") != string::npos)
+   {
+      // simple is alive command will reset to idle state
+       // e.g.   Order|1sd|2.2|super30off
+      debugOutput::sendMessage("Order command found", MSG_INFO);
+      std::string delimiter = "|";
+      std::size_t found0 = sCommand.find(delimiter);
+      std::size_t found1 = sCommand.find(delimiter, found0 + 1);
+      // std::size_t found2 = sCommand.find(delimiter, found1 + 1);
+      // std::size_t found3 = sCommand.find(delimiter, found2 + 1);
+
+      debugOutput::sendMessage(to_string(found0), MSG_INFO);
+      debugOutput::sendMessage(to_string(found1), MSG_INFO);
+      // debugOutput::sendMessage(to_string(found2), MSG_INFO);
+      // debugOutput::sendMessage(to_string(found3), MSG_INFO);
+
+      std::string button_status = sCommand.substr(found0 + 1, found1 - found0 - 1);
+      debugOutput::sendMessage("button_status: " + button_status, MSG_INFO);
+      
+      //parseDispenseCommand(button_status);
+
+      // std::string  = sCommand.substr(found1 + 1, found2 - found1 - 1);
+      // double price = std::stod(pricestr);
+      // m_requestedDiscountPrice = price;
+      // debugOutput::sendMessage("(Discount) price : " + to_string(m_requestedDiscountPrice), MSG_INFO);
+      
+   }
    else if (sCommand.find("Order") != string::npos)
    {
       // e.g.   Order|1sd|2.2|super30off

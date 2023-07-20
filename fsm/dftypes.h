@@ -160,6 +160,14 @@ typedef enum Slot_state
 
 } Slot_state;
 
+typedef enum Button_lights_behaviour
+{
+   IDLE_OFF = 0,
+   IDLE_ANIMATION_PING_PONG,
+   IDLE_ANIMATION_FILL,
+
+} Button_lights_behaviour;
+
 typedef struct product_order product_order;
 
 struct Time_val

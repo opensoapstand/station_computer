@@ -42,7 +42,7 @@ public:
     void controllerFinishedTransaction();
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void finishHandler();
-
+    void fsmReceiveFinalDispensedVolume(double dispensed);
     bool is_controller_finished;
     bool is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER;
 

@@ -186,7 +186,7 @@ DF_ERROR initObjects()
 
     g_pMessaging = NULL;
     g_pMessaging = new messageMediator();
-
+    g_pMessaging->setMachine(&g_machine);
     g_machine.setup();
     debugOutput::sendMessage("Machine set up.", MSG_INFO);
     

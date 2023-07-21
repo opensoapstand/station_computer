@@ -146,6 +146,10 @@ DF_ERROR messageMediator::sendMessageOverIP(string msg)
    return dfError;
 }
 
+void messageMediator::setMachine(machine* machine){
+   m_machine = machine;
+}
+
 // Sends a progress of dispensing to QT through a socket
 // TODO: Need to grab information from flow sensor...and update on GUI...
 DF_ERROR messageMediator::sendProgress(int percentComplete)
@@ -427,6 +431,8 @@ DF_ERROR messageMediator::parseCommandString()
       std::string button_status = sCommand.substr(found0 + 1, found1 - found0 - 1);
       debugOutput::sendMessage("button_status: " + button_status, MSG_INFO);
       
+      
+
       //parseDispenseCommand(button_status);
 
       // std::string  = sCommand.substr(found1 + 1, found2 - found1 - 1);

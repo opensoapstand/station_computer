@@ -22,6 +22,7 @@
 #include <pthread.h>
 
 #include "dispenser.h"
+#include "machine.h"
 
 #include <stdio.h>
 #include <cstring>
@@ -29,8 +30,6 @@
 #include "../../library/socket/ServerSocket.h"
 #include "../../library/socket/SocketException.h"
 #include "../../library/socket/ClientSocket.h"
-
-
 
 class messageMediator
 {
@@ -41,7 +40,7 @@ public:
    DF_ERROR createThreads(pthread_t &kbThread, pthread_t &ipThread);
 
    DF_ERROR sendMessageOverIP(string msg);
-
+   void setMachine(machine *machine);
    string getProcessString();
    DF_ERROR parseCommandString();
    DF_ERROR parseSingleCommandString();
@@ -53,7 +52,7 @@ public:
    bool isCommandStringReadyToBeParsed() { return m_bCommandStringReceived; }
    void clearCommandString();
 
-   // dispense command 
+   // dispense command
    char getAction() { return m_requestedAction; }
    void resetAction();
    int getRequestedSlot() { return m_RequestedProductIndexInt; }
@@ -61,22 +60,22 @@ public:
    int getCommandValue() { return m_commandValue; }
    void setRequestedSize(char size);
 
-
-
-   double getRequestedPrice() { 
+   double getRequestedPrice()
+   {
       debugOutput::sendMessage("getRequestedPrice price" + to_string(m_requestedDiscountPrice), MSG_INFO);
-      return m_requestedDiscountPrice;}
+      return m_requestedDiscountPrice;
+   }
 
-   string getPromoCode() { 
-      return m_promoCode;}
-
+   string getPromoCode()
+   {
+      return m_promoCode;
+   }
 
    // static ServerSocket *fsm_comm_socket;
    // bool m_handlingRequest;
    // bool isBusySendingMessage();
 
 private:
-
    int messageIP;
    static bool m_fExitThreads;
 
@@ -103,6 +102,7 @@ private:
    static DF_ERROR updateCmdString();
    static void *doKBThread(void *pThreadArgs);
    static void *doIPThread(void *pThreadArgs);
+   machine *m_machine;
 };
 
 #endif

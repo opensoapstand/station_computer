@@ -40,9 +40,12 @@ public:
     // static pcb *control_pcb;
     pcb *control_pcb;
     Adafruit_Thermal *receipt_printer;
+    void setButtonLightsBehaviour(Button_lights_behaviour behaviour);
+
     void refreshRunningLightCaterpillar();
     void refreshRunningLightPingPong();
     void resetRunningLight();
+    Button_lights_behaviour m_button_lights_behaviour;
     uint64_t m_lights_animation_most_recent_step_millis;
     uint8_t m_lights_animation_step;
 };

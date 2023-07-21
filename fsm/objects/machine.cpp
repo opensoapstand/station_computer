@@ -73,6 +73,11 @@ void machine::resetRunningLight()
     m_lights_animation_step = 0;
 }
 
+void machine::setButtonLightsBehaviour(Button_lights_behaviour behaviour)
+{
+    m_button_lights_behaviour = behaviour;
+}
+
 void machine::refreshRunningLightCaterpillar()
 {
 

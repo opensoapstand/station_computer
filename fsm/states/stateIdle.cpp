@@ -7,10 +7,9 @@
 // command from IPC QT Socket
 //
 // created: 01-2022
-// by:Lode Ameije & Ash Singla
+// by:Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "stateIdle.h"
@@ -48,6 +47,7 @@ DF_ERROR stateIdle::onEntry()
 {
    m_state_requested = STATE_IDLE;
    DF_ERROR e_ret = OK;
+   g_machine.resetRunningLight();
 
    return e_ret;
 }
@@ -82,6 +82,15 @@ int timer() {
 
 DF_ERROR stateIdle::onAction()
 {
+   if (g_productDispensers[0].getButtonAnimationProgram() == 1)
+   {
+      g_machine.refreshRunningLightPingPong();
+   }
+   else if (g_productDispensers[0].getButtonAnimationProgram() == 2)
+   {
+      g_machine.refreshRunningLightCaterpillar();
+   }
+
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
    // if (nullptr != &m_state_requested)
@@ -109,7 +118,19 @@ DF_ERROR stateIdle::onAction()
 
       if (ACTION_DISPENSE == m_pMessaging->getAction() || ACTION_AUTOFILL == m_pMessaging->getAction())
       {
-         m_state_requested = STATE_DISPENSE_INIT;
+         if (m_pMessaging->getRequestedSlot() == PRODUCT_SLOT_DUMMY || m_pMessaging->getRequestedSize() == SIZE_DUMMY)
+         {
+            debugOutput::sendMessage("Invalid dispenser command received. ", MSG_INFO);
+         }
+         else
+         {
+            m_state_requested = STATE_DISPENSE_INIT;
+         }
+      }
+      else if (m_pMessaging->getAction() == ACTION_RESET)
+      {
+         m_pMessaging->sendMessageOverIP("Init Ready");
+         debugOutput::sendMessage("Send msg to ui: Controller is ready.", MSG_INFO);
       }
       else if ('0' == m_pMessaging->getAction() || ACTION_QUIT == m_pMessaging->getAction())
       {
@@ -119,6 +140,7 @@ DF_ERROR stateIdle::onAction()
       else if ('1' == m_pMessaging->getAction() || ACTION_UI_COMMAND_PRINTER_MENU == m_pMessaging->getAction())
       {
          m_state_requested = STATE_MANUAL_PRINTER;
+         // g_stateArray[STATE_MANUAL_PRINTER].sendPrinterStatus();
       }
       else if ('2' == m_pMessaging->getAction())
       {
@@ -137,9 +159,11 @@ DF_ERROR stateIdle::onAction()
       else if ('4' == m_pMessaging->getAction())
       {
          productDispensers = g_productDispensers;
-         debugOutput::sendMessage("beffooore reload parameters from product1", MSG_INFO);
+         debugOutput::sendMessage("Before reload parameters from product", MSG_INFO);
          bool success = this->productDispensers[0].getProduct()->reloadParametersFromDb();
-         debugOutput::sendMessage("after" + to_string(success), MSG_INFO);
+         this->productDispensers[0].loadGeneralProperties();
+
+         debugOutput::sendMessage("After" + to_string(success), MSG_INFO);
       }
       else if ('5' == m_pMessaging->getAction())
       {
@@ -183,6 +207,7 @@ DF_ERROR stateIdle::onAction()
 // Advances to Dispense Idle
 DF_ERROR stateIdle::onExit()
 {
+   g_machine.resetRunningLight();
    DF_ERROR e_ret = OK;
    return e_ret;
 }

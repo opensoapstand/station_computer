@@ -10,10 +10,9 @@
 // Connect or create database.
 //
 // created: 01-2022
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "stateInit.h"
@@ -62,7 +61,7 @@ DF_ERROR stateInit::onAction()
 {
     DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
-    debugOutput::sendMessage("Use database at: " + std::to_string(1) + DB_PATH, MSG_INFO);
+    debugOutput::sendMessage("Use database at: " + std::to_string(1) + CONFIG_DB_PATH, MSG_INFO);
 
     // setup PIC programmer pins. Set to input as we will not use them. (this replaces setting them manually in BIOS)
     pin_vpp = new oddyseyx86GPIO(PIC_PROGRAMMER_PIN_VPP);
@@ -145,8 +144,10 @@ DF_ERROR stateInit::dispenserSetup()
     }
     else if (g_machine.control_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS || g_machine.control_pcb->get_pcb_version() == pcb::PcbVersion::EN134_8SLOTS  )
     {
-        debugOutput::sendMessage(" Enable 24V", MSG_INFO);
-        g_machine.pcb24VPowerSwitch(true);
+        // debugOutput::sendMessage(" Enable 24V", MSG_INFO);
+        // g_machine.pcb24VPowerSwitch(true);
+        g_machine.pcb24VPowerSwitch(false);
+        
 
 
     }else{

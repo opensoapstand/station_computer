@@ -4,7 +4,7 @@
 // types specific to drinkfill
 //
 // created: 01-2022
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
 // copyright 2022 by Productfill Beverages Ltd
 // all rights reserved
@@ -18,7 +18,7 @@
 #include <sqlite3.h>
 #include <stdint.h>
 
-#define CONTROLLER_VERSION "1.5+"
+#define CONTROLLER_VERSION "2.0"
 
 #define PRODUCT_DETAILS_TSV_PATH "/home/df-admin/production/references/products/product_details.tsv" // https://docs.google.com/spreadsheets/d/17WR2gRyPIDIlGKBy1YKFAqN-Hyw_3VOJ6JCmfcAtjVk/edit#gid=169583479 download as .tsv file
 #define CSV_PRODUCT_COL_ID 0
@@ -39,7 +39,9 @@
 #define ENABLE_TRANSACTION_TO_CLOUD
 // #define ENABLE_MULTI_BUTTON
 
-#define DB_PATH "/home/df-admin/production/db/drinkfill-sqlite_newlayout.db"
+#define CONFIG_DB_PATH "/home/df-admin/production/db/configuration.db"
+#define USAGE_DB_PATH "/home/df-admin/production/db/usage.db"
+
 
 #define MOTOR_TEST_DATA_OUTPUT_INTERVAL_MILLIS 1000
 // #define MOTOR_TEST_DATA_OUTPUT_INTERVAL_MILLIS 1000
@@ -93,10 +95,34 @@
 #define SIZE_LARGE_CHAR 'l'
 #define SIZE_CUSTOM_CHAR 'c'
 #define SIZE_TEST_CHAR 't'
-#define SIZE_AUTO_CHAR 'a'
+// #define SIZE_AUTO_CHAR 'a'
 #define SIZE_DUMMY 'x'
 #define SIZE_SMALLER_THAN_SMALL '0'
 #define SIZE_EMPTY_CONTAINER_DETECTED_CHAR 'i' // hack to accomodate for empty container or dispense timeout
+
+#define ACTION_REPAIR_PCA 'r'
+#define ACTION_DISPENSE 'd'
+#define ACTION_RESET 'b'
+#define ACTION_AUTOFILL 'a'
+// #define CLEAN_CHAR 'c'
+
+#define ACTION_NO_ACTION '-'
+#define ACTION_DISPENSE_END 'f'
+#define ACTION_DUMMY 'x'
+#define ACTION_QUIT 'q'
+#define ACTION_MANUAL_PUMP_PWM_SET 'i'
+#define ACTION_MANUAL_PUMP_SET 'n'
+#define ACTION_PRINT_TRANSACTION 't'
+
+// #define ACTION_UI_COMMAND_PRINTER_SEND_STATUS 'a'
+#define ACTION_UI_COMMAND_PRINTER_MENU 'p'
+#define ACTION_HELP 'h'
+
+#define PRODUCT_DUMMY 'x'
+#define PRODUCT_SLOT_DUMMY 666
+
+#define PWM_CHAR 'P'
+
 
 #define SIZE_INDEX_TO_CHAR_ARRAY                                           \
    {                                                                       \

@@ -19,8 +19,8 @@
 .title {
    position: absolute;
    font-family: 'EuropaNuova-ExtraBold';
-   font-style: bold;
-   font-weight: 700;
+   font-style: normal;
+   font-weight: 400;
    font-size: 45px;
    line-height: 52px;
    text-transform: capitalize;
@@ -38,7 +38,7 @@
    font-weight: 400;
    font-size: 36px;
    line-height: auto;
-   color: #58595B;
+   color: #221F20;
    border: none;
 }
 
@@ -51,17 +51,16 @@
    line-height: 44px;
    color: #221F20;
    text-align: center;
-   qproperty-alignment: AlignCenter;
+   /* qproperty-alignment: AlignCenter; */
 }
 
 .orderSizeLabelsPrice {
    font-family: 'EuropaNuova-ExtraBold';
-   /* background-image: url(/home/df-admin/production/references/background.png); */
    font-style: normal;
-   font-weight: 400;
+   font-weight: 700;
    font-size: 34px;
    line-height: 44px;
-   color: #221F20;
+   color: #58595B;
 }
 
 .orderSizeBackgroundLabels {
@@ -70,8 +69,9 @@
 }
 
 .orderSizeButtons {
+   /* background-color: #2C2C2C; */
    background-color: transparent;
-   border: 2px solid #221F20;
+   border: 3px solid #58595B;
    border-radius: 25px;
 }
 
@@ -84,10 +84,10 @@
    font-family: 'EuropaNuova-Regular';
    font-style: normal;
    font-weight: 700;
-   font-size: 65px;
-   color: white;
+   font-size: 35px;
+   color: #221F20;
    text-align: left;
-   qproperty-alignment: AlignCenter;
+   /* qproperty-alignment: AlignCenter; */
    border: none;
 }
 
@@ -99,7 +99,7 @@
    font-weight: 400;
    font-size: 28px;
    line-height: 36px;
-   color: #221F20;
+   color: #58595B;
    text-align: left;
    qproperty-alignment: AlignLeftCenter;
    margin-top: 20px;
@@ -127,7 +127,7 @@
    font-weight: 400;
    font-size: 22px;
    line-height: 50px;
-   color: #221F20;
+   color: #58595B;
 }
 
 #pushButton_continue {
@@ -138,13 +138,13 @@
    font-size: 48px;
    text-align: center;
    line-height: auto;
-   qproperty-alignment: AlignCenter;
+   /* qproperty-alignment: AlignCenter; */
    border-radius: 20px;
    color: white;
    border: none;
 }
 
-#label_help {
+/* #label_help {
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 75;
@@ -154,4 +154,4 @@
    text-align: center;
    qproperty-alignment: AlignCenter;
    border: none;
-}
+} */

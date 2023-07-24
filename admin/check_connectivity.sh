@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Get machine id from database
-database_path="/home/df-admin/production/db/drinkfill-sqlite_newlayout.db"
+database_path="/home/df-admin/production/db/configuration.db"
 query="Select machine_id from machine"
 machineId=$(sqlite3 "$database_path" "$query")
 

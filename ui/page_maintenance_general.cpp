@@ -62,23 +62,14 @@ void page_maintenance_general::showEvent(QShowEvent *event)
     stdout = process.readAllStandardOutput();
     ui->label_wifi_internet->setText("Wifi Connectivity: " + stdout);
 
-    ui->wifiTable->setRowCount(0);
+    ui->table_wifi_networks->setRowCount(0);
 
     ui->keyboard_2->hide();
 
+    ui->label_aws_port->setText("AWS backend port: " + QString::number(p_page_idle->thisMachine.m_aws_port));
+    ui->label_machine_id->setText("Station id: " + p_page_idle->thisMachine.getMachineId());
 
-// p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_enabled_status,"pump_off");
-    // ui->pushButton_back->setText("<-back");
-    // ui->label_connectivity->setText("connectivity");
-    // ui->pushButton_wifi_networks->setText("Display Wifi networks");
-    // ui->pushButton_network_status->setText("Check Network status");
-    // ui->pushButton_rtunnel_restart->setText("Reset Backend Connection");
-    // ui->label_receipt_printer->setText("Receipt Printer");
-    // ui->pushButton_printer_check_status->setText("Check Status");
-    // ui->pushButton_printer_test_print->setText("Test Print");
-    // ui->pushButton_minimize->setText("Minimize Soapstand App");
-    // ui->label_settings->setText("Settings");
-    // ui->pushButton_restart_electronics->setText("Restart Soapstand App (ui+fsm)");
+
     p_page_idle->setTemplateTextToObject(ui->pushButton_back);
     p_page_idle->setTemplateTextToObject(ui->label_connectivity);
     p_page_idle->setTemplateTextToObject(ui->pushButton_wifi_networks);
@@ -96,12 +87,6 @@ void page_maintenance_general::showEvent(QShowEvent *event)
     p_page_idle->setTemplateTextToObject(ui->pushButton_reboot);
     p_page_idle->setTemplateTextToObject(ui->label_feedback);
     p_page_idle->setTemplateTextToObject(ui->label_status_feedback);
-    // ui->pushButton_restart_UI->setText("Restart UI only");
-    // ui->pushButton_reboot->setText("Restart Computer");
-    // ui->pushButton_shutdown->setText("Shut down\n(unplugging power is ok too)");
-    // ui->pushButton_reboot->setText("Minimize Soapstand App");
-    // ui->label_feedback->setText("Feedback");
-    // ui->label_status_feedback->setText("Command Feedback");
 
     updateLabelValues();
 }
@@ -157,9 +142,13 @@ void page_maintenance_general::printerStatusFeedback(bool isOnline, bool hasPape
 void page_maintenance_general::send_check_printer_status_command()
 {
     qDebug() << "Send check printer status to controller";
-    p_page_idle->dfUtility->send_command_to_FSM("p");
+    p_page_idle->dfUtility->send_command_to_FSM("Printer");
     usleep(50000);
-    p_page_idle->dfUtility->send_command_to_FSM("a");
+    usleep(1200000); // minimum
+    // usleep(5000000); 
+    // p_page_idle->dfUtility->send_command_to_FSM("1");
+    // usleep(5000000); 
+    p_page_idle->dfUtility->send_command_to_FSM("1");
     usleep(50000);
 }
 
@@ -173,7 +162,7 @@ void page_maintenance_general::on_pushButton_printer_check_status_clicked()
 void page_maintenance_general::on_printer_test_print_button_clicked()
 {
     qDebug() << "Send test printer to controller";
-    p_page_idle->dfUtility->send_command_to_FSM("p");
+    p_page_idle->dfUtility->send_command_to_FSM("Printer");
     usleep(50000);
     p_page_idle->dfUtility->send_command_to_FSM("1");
     usleep(50000);
@@ -255,7 +244,7 @@ void page_maintenance_general::on_test_lineEdit_textChanged(const QString &arg1)
 {
 }
 
-void page_maintenance_general::btn_clicked()
+void page_maintenance_general::button_connect_to_specifiic_wifi_network()
 {
     QObject *button = QObject::sender();
     //    qDebug() << "btn clicked -> " << button->objectName();
@@ -392,7 +381,7 @@ void page_maintenance_general::on_pushButton_wifi_networks_clicked()
 {
     //    qDebug() << "WiFi button clicked" << endl;
     // _page_maintenanceTimeoutSec = PAGE_MAINTENANCE_TIMEOUT_SECONDS;
-    ui->wifiTable->setRowCount(0);
+    ui->table_wifi_networks->setRowCount(0);
 
     // OPEN LIST OF WIFI CONNECTIONS AVAILABLE, AS BUTTONS, WHEN YOU CLICK ON A BUTTON, OPEN PASSWORD ENTRY
 
@@ -435,8 +424,8 @@ void page_maintenance_general::on_pushButton_wifi_networks_clicked()
             if (ap_interface.property("Ssid").toString() != "")
             {
                 //                qDebug() << " SSID: " << ap_interface.property("Ssid").toString();
-                ui->wifiTable->insertRow(ui->wifiTable->rowCount());
-                ui->wifiTable->setRowHeight(ui->wifiTable->rowCount() - 1, 60);
+                ui->table_wifi_networks->insertRow(ui->table_wifi_networks->rowCount());
+                ui->table_wifi_networks->setRowHeight(ui->table_wifi_networks->rowCount() - 1, 60);
                 QWidget *pWidget = new QWidget();
                 QPushButton *btn = new QPushButton();
                 btn->setText(ap_interface.property("Ssid").toString());
@@ -447,8 +436,8 @@ void page_maintenance_general::on_pushButton_wifi_networks_clicked()
                 // pLayout->setAlignment(Qt::AlignLeft);
                 pLayout->setContentsMargins(0, 0, 0, 0);
                 pWidget->setLayout(pLayout);
-                ui->wifiTable->setCellWidget(ui->wifiTable->rowCount() - 1, 0, pWidget);
-                connect(btn, SIGNAL(clicked()), this, SLOT(btn_clicked()));
+                ui->table_wifi_networks->setCellWidget(ui->table_wifi_networks->rowCount() - 1, 0, pWidget);
+                connect(btn, SIGNAL(clicked()), this, SLOT(button_connect_to_specifiic_wifi_network()));
             }
         }
     }

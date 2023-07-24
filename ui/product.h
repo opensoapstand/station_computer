@@ -3,6 +3,7 @@
 
 #include "df_util.h"
 #include "machine.h"
+#include "dbmanager.h"
 
 class product : public QObject
 {
@@ -14,6 +15,7 @@ public:
     ~product();
     product &operator=(const product &other);
     void setMachine(machine *machine);
+    void setDb(DbManager* db);
 
     // Setters and Getters
     void setSlot(int slot);
@@ -32,7 +34,7 @@ public:
 
     bool restock();
 
-    QString getVolumeRemainingCorrectUnits();
+    QString getVolumeRemainingCorrectUnits(bool addUnits);
     QString getTotalDispensedCorrectUnits();
     QString getVolumeDispensedSinceRestockCorrectUnits();
 
@@ -43,9 +45,6 @@ public:
     void setFullVolumeCorrectUnits(QString inputFullValue);
     void getCustomDiscountDetails(bool *large_volume_discount_is_enabled, double *min_volume_for_discount, double *discount_price_per_liter);
 
-    void setSize(int sizeIndex);
-    int getSize();
-    char getSizeAsChar();
     QString getPlu(int sizeIndex);
     void setPlu(int sizeIndex, QString plu);
     bool is_valid_size_selected();
@@ -54,22 +53,25 @@ public:
     QString getProductType();
     QString getProductDrinkfillSerial();
 
-    void loadProductPropertiesFromProductsFile();
-
     void loadProductProperties();
     void loadProductPropertiesFromDb();
     bool isProductVolumeInContainer();
-    // QString getLoadedProductName();
     QString getProductDescription();
     QString getProductIngredients();
     QString getProductFeatures();
     QString getLastRestockDate();
-    bool getSizeEnabled(int size);
-    int getBiggestEnabledSizeIndex();
 
+    
+    void setSize(int sizeIndex);
+    int getSize();
+    char getSizeAsChar();
+    
+    bool toggleSizeEnabled(int size);
+    bool getSizeEnabled(int size);
+    bool setSizeEnabled(int size, bool enabled);
+    int getBiggestEnabledSizeIndex();
     void setBiggestEnabledSizeIndex();
 
-    // QString getProductPicturePath(int slot);
     QString getProductPicturePath();
 
     double getVolumeOfSelectedSize();
@@ -90,13 +92,13 @@ public:
     QString getSizeToVolumeWithCorrectUnits(bool round, bool addUnits);
     QString getSizeToVolumeWithCorrectUnits(int size, bool roundValue, bool addUnits);
 
-    double getPrice(int sizeIndex);
-    double getDiscount();
+    double getBasePrice(int sizeIndex);
+
     void setPrice(int size, double price);
     double getPriceCorrected();
     double getPriceCustom();
 
-    double getPrice();
+    double getBasePrice();
 
     int getDispenseSpeedPercentage();
     void setDispenseSpeedPercentage(int percentage);
@@ -104,11 +106,11 @@ public:
     QString getPaymentMethod();
     void setPaymentMethod(QString paymentMethod);
 
-    double getDiscountPercentageFraction();
-    QString getPromoCode();
+    // double getDiscountPercentageFraction();
+    // QString getPromoCode();
 
 public slots:
-    void setDiscountPercentageFraction(double percentageFraction);
+    // void setDiscountPercentageFraction(double percentageFraction);
 
 signals:
     void orderSlotChange(int newOpt);
@@ -117,6 +119,7 @@ signals:
 
 private:
     machine *thisMachine;
+    DbManager* m_db;
 
     int slot;
 
@@ -125,44 +128,10 @@ private:
     QString m_soapstand_product_serial;
     QString m_payment;
 
-    // QString currency;
-    // QString name_receipt;
-    // int concentrate_multiplier;
-    // int dispense_speed;
-    // double threshold_flow;
-    // int retraction_time;
-    // double calibration_const;
-    // double volume_per_tick;
-    // QString last_restock;
-    // double volume_full;
-    // double volume_remaining;
-    // double volume_dispensed_since_restock;
-    // double volume_dispensed_toal;
-
-    // int is_enabled_small;
-    // int is_enabled_medium;
-    // int is_enabled_large;
-    // int is_enabled_custom;
-    // double size_small;
-    // double size_medium;
-    // double size_large;
-    // double size_custom_min;
-    // double size_custom_max;
-    // double price_small;
-    // double price_medium;
-    // double price_large;
-    // double price_custom;
-    // QString plu_small;
-    // QString plu_large;
-    // QString plu_medium;
-    // QString plu_custom;
-    // int is_enabled_custom_discount;
-    // double size_custom_discount;
-    // double price_custom_discount;
-
     QString m_ingredients_ui;
     QString m_product_type;
 
+    QString m_name;
     QString m_name_ui;
     QString m_features_ui;
     QString m_description_ui;

@@ -19,14 +19,14 @@
   <widget class="QPushButton" name="pushButton_back">
    <property name="geometry">
     <rect>
-     <x>60</x>
+     <x>70</x>
      <y>40</y>
-     <width>101</width>
-     <height>51</height>
+     <width>401</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="text">
-    <string/>
+    <string>back</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_minimize">
@@ -87,7 +87,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>.</string>
+    <string>paper status</string>
    </property>
   </widget>
   <widget class="QLabel" name="printer_isOnline_label">
@@ -95,12 +95,12 @@
     <rect>
      <x>310</x>
      <y>650</y>
-     <width>161</width>
+     <width>201</width>
      <height>17</height>
     </rect>
    </property>
    <property name="text">
-    <string>.</string>
+    <string>printer connection status</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_receipt_printer">
@@ -152,13 +152,13 @@
    <property name="geometry">
     <rect>
      <x>310</x>
-     <y>404</y>
+     <y>410</y>
      <width>391</width>
-     <height>51</height>
+     <height>31</height>
     </rect>
    </property>
    <property name="text">
-    <string/>
+    <string>wifi connectivity</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_wifi_networks">
@@ -174,7 +174,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QTableWidget" name="wifiTable">
+  <widget class="QTableWidget" name="table_wifi_networks">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -192,30 +192,17 @@
     </property>
    </column>
   </widget>
-  <widget class="QLabel" name="label_wifi_name">
-   <property name="geometry">
-    <rect>
-     <x>310</x>
-     <y>372</y>
-     <width>461</width>
-     <height>51</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_wifi_status">
    <property name="geometry">
     <rect>
      <x>310</x>
-     <y>436</y>
+     <y>440</y>
      <width>621</width>
-     <height>51</height>
+     <height>31</height>
     </rect>
    </property>
    <property name="text">
-    <string/>
+    <string>wifi status</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_wifi_ip_address">
@@ -224,11 +211,11 @@
      <x>310</x>
      <y>470</y>
      <width>711</width>
-     <height>51</height>
+     <height>31</height>
     </rect>
    </property>
    <property name="text">
-    <string/>
+    <string>wifi IP </string>
    </property>
   </widget>
   <widget class="QWidget" name="keyboard_2" native="true">
@@ -1492,6 +1479,45 @@
     <string>Restart UI only</string>
    </property>
   </widget>
+  <widget class="QLabel" name="label_aws_port">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>510</y>
+     <width>711</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>aws port</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_machine_id">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>540</y>
+     <width>711</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>machine id</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_wifi_name">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>376</y>
+     <width>711</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>wifi name</string>
+   </property>
+  </widget>
   <zorder>pushButton_back</zorder>
   <zorder>pushButton_minimize</zorder>
   <zorder>pushButton_reboot</zorder>
@@ -1502,8 +1528,7 @@
   <zorder>checkBox_enable_empty_container</zorder>
   <zorder>label_wifi_internet</zorder>
   <zorder>pushButton_wifi_networks</zorder>
-  <zorder>wifiTable</zorder>
-  <zorder>label_wifi_name</zorder>
+  <zorder>table_wifi_networks</zorder>
   <zorder>label_wifi_status</zorder>
   <zorder>label_wifi_ip_address</zorder>
   <zorder>keyboard_2</zorder>
@@ -1519,6 +1544,9 @@
   <zorder>pushButton_restart_electronics</zorder>
   <zorder>pushButton_restart_UI</zorder>
   <zorder>checkBox_enable_pump_ramping</zorder>
+  <zorder>label_aws_port</zorder>
+  <zorder>label_machine_id</zorder>
+  <zorder>label_wifi_name</zorder>
  </widget>
  <resources/>
  <connections/>

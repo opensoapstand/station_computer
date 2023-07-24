@@ -14,7 +14,7 @@ is_valid_port() {
     return 0
 }
 
-database_path="/home/df-admin/production/db/drinkfill-sqlite_newlayout.db"
+database_path="/home/df-admin/production/db/configuration.db"
 query="Select aws_port from machine"
 port=$(sqlite3 "$database_path" "$query")
 

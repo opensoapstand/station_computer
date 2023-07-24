@@ -8,8 +8,7 @@
 // updated: 08-11-2022
 // by: Ash Singla & Lode Ameije
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "page_help.h"
@@ -87,11 +86,11 @@ void page_help::showEvent(QShowEvent *event)
     
     if (help_text_html != ""){
 
-        ui->html_textBrowser->setHtml(help_text_html);
+        ui->html_help_text->setHtml(help_text_html);
     }
     else
     {
-        ui->html_textBrowser->hide();
+        ui->html_help_text->hide();
 
         QString image_path = p_page_idle->thisMachine.getTemplatePathFromName(PAGE_HELP_BACKGROUND_GENERIC_WHITE);
         if (df_util::pathExists(image_path)){

@@ -12,7 +12,6 @@ QLabel {
    font-size: 85px;
    line-height: 99px;
    text-align: center;
-   text-transform: lowercase;
    color: #FFFFFF;
    qproperty-alignment: AlignCenter;
    }
@@ -25,7 +24,7 @@ QLabel {
    font-size: 42px;
    text-align: center;
    line-height: auto;
-   qproperty-alignment: AlignCenter;
+   /* qproperty-alignment: AlignCenter; */
    border-radius: 20px;
    color: white;
    border: none;

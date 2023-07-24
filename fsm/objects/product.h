@@ -8,10 +8,9 @@
 // to dispense classes.
 //
 // created: 01-2022
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #ifndef _PRODUCT_H
@@ -25,7 +24,7 @@
 
 #include <sqlite3.h>
 
-// #define DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
+// #define CONFIG_DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 
 using namespace std;
 
@@ -54,8 +53,10 @@ public:
         double convertVolumeMetricToDisplayUnits(double volume);
         string getProductName();
         string getBasePLU(char size);
-        string getProductId();
+        string getSoapstandProductSerial();
         string getPaymentMethod() { return m_paymentMethod; }
+
+        string dbFieldAsValidString(sqlite3_stmt *stmt, int column_index);
 
         // void setTargetVolume(double nVolumeTarget){m_nVolumeTarget = nVolumeTarget;};
 
@@ -148,7 +149,6 @@ public:
         string m_nPLU_large;
         string m_nPLU_custom;
         string m_paymentMethod;
-
 
         // int m_PWM;
         // DF_ERROR reloadProductFromDB();

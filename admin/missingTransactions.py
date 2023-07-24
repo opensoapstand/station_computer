@@ -3,6 +3,8 @@ import json
 
 def convertStringToDictionary(stringObj):
     newString = '{"'
+    if b'\\00\\00' in stringObj:
+        return "Invalid"
     for i in stringObj:
         if i=='&':
             newString+= '","'
@@ -23,8 +25,10 @@ def pushTransaction():
     with open(filename,'r') as file1:
         transactions = file1.readlines()
         while transactions:
-            transaction = convertStringToDictionary(transactions[0].strip())
+            transaction = convertStringToDictionary(transactions[0].strip().replace(" & ", " and "))
             if transaction:
+                if transaction =="Invalid":
+                    transactions.pop(0)
                 x = requests.post(url, transaction)
                 if x.text:
                     transactions.pop(0)

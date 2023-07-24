@@ -7,10 +7,9 @@
 // command from IPC QT Socket
 //
 // created: 01-2022
-// by:Lode Ameije & Ash Singla
+// by:Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "stateManualPrinter.h"
@@ -54,6 +53,13 @@ DF_ERROR stateManualPrinter::onEntry()
    b_isContinuouslyChecking = false;
    productDispensers = g_productDispensers;
 
+   if (!g_machine.getPcb24VPowerSwitchStatus())
+   {
+      g_machine.pcb24VPowerSwitch(true); // printers take their power from the 24V converted to 5V (because of the high current)
+      // usleep(1200000);                   // wait for printer to come online.
+      printerr->resetPollCount();
+   }
+
    return e_ret;
 }
 
@@ -67,21 +73,29 @@ DF_ERROR stateManualPrinter::onAction()
       DF_ERROR ret_msg;
       ret_msg = m_pMessaging->parseCommandString();
 
-      if ('0' == m_pMessaging->getAction() || ACTION_QUIT == m_pMessaging->getAction())
+      if (m_pMessaging->getAction() == ACTION_RESET)
+      {
+         m_pMessaging->sendMessageOverIP("Init Ready");
+         m_state_requested = STATE_IDLE;
+      }
+      else if ('0' == m_pMessaging->getAction() || ACTION_QUIT == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Exit printer status test", MSG_INFO);
 
          m_state_requested = STATE_IDLE;
       }
-      else if (ACTION_UI_COMMAND_PRINTER_SEND_STATUS == m_pMessaging->getAction())
+      else if ('1' == m_pMessaging->getAction())
       {
+         // DO NOT CHANGE THE COMMAND NUMBER. This is sent from the UI for checking the printer status.
          debugOutput::sendMessage("Printer status requested by UI", MSG_INFO);
          // sendPrinterStatus(); // first call after startup returns always online
+         // displayPrinterStatus();
+         // displayPrinterStatus();
          sendPrinterStatus();
          m_state_requested = STATE_IDLE; // return after finished.
       }
 
-      else if ('1' == m_pMessaging->getAction())
+      else if ('7' == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Do test print", MSG_INFO);
          printTest();
@@ -125,11 +139,13 @@ DF_ERROR stateManualPrinter::onAction()
          debugOutput::sendMessage("---Receipt printer menu---"
                                   "Available printer test commands: \n"
                                   " 0: Exit printer menu \n"
-                                  " 1: Test print\n"
+                                  " 1: emulated auto check request from UI \n"
                                   " 2: Printer status toggle continuous mode\n"
                                   " 3: Printer status \n"
                                   " 4: Check printer connected\n"
                                   " 5: Print transaction 959\n"
+                                  " 6: Test send OK to UI\n"
+                                  " 7: Test print\n"
                                   " h: Display this help menu",
                                   MSG_INFO);
       }
@@ -150,7 +166,7 @@ void stateManualPrinter::printTransaction(int transactionNumber)
 {
    // gets transaction data from db.
    char *zErrMsg = 0;
-   rc = sqlite3_open(DB_PATH, &db);
+   rc = sqlite3_open(USAGE_DB_PATH, &db);
    sqlite3_stmt *stmt;
    std::string sql_string;
 
@@ -209,7 +225,7 @@ void stateManualPrinter::printTransaction(int transactionNumber)
    sqlite3_close(db);
 
    //-------------------------------------------------
-   rc = sqlite3_open(DB_PATH, &db);
+   rc = sqlite3_open(CONFIG_DB_PATH, &db);
    sql_string = ("SELECT slot FROM products WHERE name='" + product + "';");
 
    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
@@ -241,8 +257,13 @@ void stateManualPrinter::printTransaction(int transactionNumber)
 DF_ERROR stateManualPrinter::sendPrinterStatus()
 {
 
-   bool isOnline = printerr->testComms();
-   bool hasPaper = printerr->hasPaper();
+   // bool isOnline = printerr->testComms();
+   // bool hasPaper = printerr->hasPaper();
+   bool isOnline;
+   bool hasPaper;
+
+   getPrinterStatus(&isOnline, &hasPaper);
+
    string statusString;
    if (isOnline)
    {
@@ -262,7 +283,7 @@ DF_ERROR stateManualPrinter::sendPrinterStatus()
 
    char *zErrMsg = 0;
 
-   rc = sqlite3_open(DB_PATH, &db);
+   rc = sqlite3_open(CONFIG_DB_PATH, &db);
 
    std::string sql21;
    sql21 = ("UPDATE machine SET receipt_printer_is_online=" + to_string(isOnline) + ",receipt_printer_has_paper=" + to_string(hasPaper) + ";"); // omit where cause --> all rows will be updated.
@@ -287,40 +308,30 @@ DF_ERROR stateManualPrinter::sendPrinterStatus()
 
    sqlite3_close(db);
 
-   // power cycling the printer. This will erase a annoying error that every 11th poll, one charater is printed.
-   if (printerr->getPollCountLimitReached())
-   {
-      printerr->resetPollCount();
+   // // power cycling the printer. This will erase a annoying error that every 11th poll, one charater is printed.
+   // if (printerr->getPollCountLimitReached())
+   // {
+   //    printerr->resetPollCount();
 
-      debugOutput::sendMessage("Pollcount LIMIT REACHED. Will restart Printer ", MSG_INFO);
-      g_machine.pcb24VPowerSwitch(false);
-      usleep(1200000);
-      g_machine.pcb24VPowerSwitch(true);
-   }
+   //    debugOutput::sendMessage("Pollcount LIMIT REACHED. Will restart Printer ", MSG_INFO);
+   //    g_machine.pcb24VPowerSwitch(false);
+   //    usleep(1200000);
+   //    g_machine.pcb24VPowerSwitch(true);
+   // }
 
    m_pMessaging->sendMessageOverIP(statusString); // if commented out: Let's communicate by setting the db fields only
 }
 
-DF_ERROR stateManualPrinter::displayPrinterStatus()
+DF_ERROR stateManualPrinter::getPrinterStatus(bool *r_isOnline, bool *r_hasPaper)
 {
    bool isOnline = printerr->testComms(); // first call returns always "online"
    isOnline = printerr->testComms();
 
+   bool hasPaper = false;
+
    if (isOnline)
    {
-
-      if (printerr->hasPaper())
-      {
-         debugOutput::sendMessage("Printer online, has paper.", MSG_INFO);
-      }
-      else
-      {
-         debugOutput::sendMessage("Printer online, no paper.", MSG_INFO);
-      }
-   }
-   else
-   {
-      debugOutput::sendMessage("Printer not online.", MSG_INFO);
+      hasPaper = printerr->hasPaper();
    }
 
    if (printerr->getPollCountLimitReached())
@@ -332,6 +343,33 @@ DF_ERROR stateManualPrinter::displayPrinterStatus()
       usleep(1200000); // 2000000ok //1500000ok //1200000ok //1000000nok
       g_machine.pcb24VPowerSwitch(true);
       // usleep(2000000); //1000000
+   }
+   *r_isOnline = r_isOnline;
+   *r_hasPaper = hasPaper;
+}
+
+DF_ERROR stateManualPrinter::displayPrinterStatus()
+{
+
+   bool isOnline;
+   bool hasPaper;
+   getPrinterStatus(&isOnline, &hasPaper);
+
+   if (isOnline)
+   {
+
+      if (hasPaper)
+      {
+         debugOutput::sendMessage("Printer online, has paper.", MSG_INFO);
+      }
+      else
+      {
+         debugOutput::sendMessage("Printer online, no paper.", MSG_INFO);
+      }
+   }
+   else
+   {
+      debugOutput::sendMessage("Printer not online.", MSG_INFO);
    }
 }
 
@@ -374,18 +412,17 @@ DF_ERROR stateManualPrinter::onExit()
    // stop continuous checking setting
    b_isContinuouslyChecking = false;
 
-   // printerr->connectToPrinter();
-   // printTest();
-   // printerr->testPage();
-   // usleep(500000);
    printerr->disconnectPrinter();
+   g_machine.pcb24VPowerSwitch(false);
+   printerr->resetPollCount();
+
    DF_ERROR e_ret = OK;
    return e_ret;
 }
 
 DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double volume_dispensed, double volume_requested, double price, string time_stamp)
 {
-    std::string name_receipt = productDispensers[slot - 1].getProduct()->getProductName();
+   std::string name_receipt = productDispensers[slot - 1].getProduct()->getProductName();
    //  std::string plu = productDispensers[slot-1].getProduct()->getBasePLU( SIZE_CUSTOM_CHAR  );
 
    char size = productDispensers[slot - 1].getProduct()->getSizeCharFromTargetVolume(volume_requested);
@@ -406,9 +443,7 @@ DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double v
    snprintf(chars_cost, sizeof(chars_cost), "%.2f", price);
    string receipt_cost = chars_cost;
 
-   debugOutput::sendMessage("---------=======fjiefjeifjef: " + receipt_volume_formatted, MSG_INFO);
-
-   g_machine.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, time_stamp, units, paymentMethod, plu, "");
+   g_machine.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, time_stamp, units, paymentMethod, plu, "", true);
 }
 
 // DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double volume_dispensed, double volume_requested, double price, string time_stamp)

@@ -8,10 +8,9 @@
 // payment selection page
 //
 // created: 05-04-2022
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #ifndef page_select_product_H
@@ -65,7 +64,7 @@ private slots:
     
     void onProductPageTimeoutTick();
     //void on_backButton_clicked();
-    void on_p_page_maintenanceButton_pressed();
+    void on_pushButton_to_maintenance_pressed();
     void on_pushButton_to_idle_clicked();
     void on_pushButton_help_page_clicked();
 

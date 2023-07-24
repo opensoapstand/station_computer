@@ -47,7 +47,7 @@
     </size>
    </property>
    <property name="styleSheet">
-    <string notr="true">font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 44px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;</string>
+    <string notr="true"/>
    </property>
    <property name="text">
     <string/>
@@ -75,7 +75,7 @@
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 92px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;</string>
+    <string notr="true"/>
    </property>
    <property name="text">
     <string/>
@@ -87,11 +87,11 @@
     </size>
    </property>
   </widget>
-  <widget class="QPushButton" name="p_page_maintenanceButton">
+  <widget class="QPushButton" name="pushButton_to_maintenance">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>0</y>
+     <x>230</x>
+     <y>10</y>
      <width>281</width>
      <height>241</height>
     </rect>
@@ -122,7 +122,7 @@
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 44px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;</string>
+    <string notr="true"/>
    </property>
    <property name="text">
     <string/>
@@ -150,7 +150,7 @@
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">font-family: 'Montserrat';font-style: normal;font-weight: 400;font-size: 44px;line-height: 36px;qproperty-alignment: AlignCenter;color: #003840;</string>
+    <string notr="true"/>
    </property>
    <property name="text">
     <string/>
@@ -159,14 +159,14 @@
   <widget class="QPushButton" name="pushButton_to_idle">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>30</y>
-     <width>251</width>
-     <height>61</height>
+     <x>70</x>
+     <y>40</y>
+     <width>401</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="text">
-    <string/>
+    <string>back</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_help_page">
@@ -409,7 +409,7 @@
    <property name="geometry">
     <rect>
      <x>562</x>
-     <y>1508</y>
+     <y>1514</y>
      <width>450</width>
      <height>46</height>
     </rect>
@@ -431,27 +431,6 @@
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QLabel" name="product_photo_label_text_2">
-   <property name="geometry">
-    <rect>
-     <x>850</x>
-     <y>300</y>
-     <width>450</width>
-     <height>450</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>46</pointsize>
-    </font>
-   </property>
-   <property name="autoFillBackground">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_product_1_overlay_text">
    <property name="geometry">
     <rect>
@@ -469,7 +448,7 @@
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">color:#707173;</string>
+    <string notr="true"/>
    </property>
    <property name="text">
     <string/>
@@ -498,7 +477,7 @@
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">color:#707173;</string>
+    <string notr="true"/>
    </property>
    <property name="text">
     <string/>
@@ -527,7 +506,7 @@
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">color:#707173;</string>
+    <string notr="true"/>
    </property>
    <property name="text">
     <string/>
@@ -556,7 +535,7 @@
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">color:#707173;</string>
+    <string notr="true"/>
    </property>
    <property name="text">
     <string/>
@@ -611,7 +590,7 @@
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">color:#707173;</string>
+    <string notr="true"/>
    </property>
    <property name="text">
     <string/>
@@ -628,7 +607,7 @@
   <zorder>pushButton_selection1</zorder>
   <zorder>label_product_1_photo</zorder>
   <zorder>label_product_1_overlay_text</zorder>
-  <zorder>p_page_maintenanceButton</zorder>
+  <zorder>pushButton_to_maintenance</zorder>
   <zorder>pushButton_selection3</zorder>
   <zorder>pushButton_selection4</zorder>
   <zorder>label_product_3_photo</zorder>
@@ -645,7 +624,6 @@
   <zorder>label_product_2_type</zorder>
   <zorder>label_product_4_type</zorder>
   <zorder>label_product_1_type</zorder>
-  <zorder>product_photo_label_text_2</zorder>
   <zorder>label_product_4_overlay_text</zorder>
   <zorder>label_product_3_overlay_text</zorder>
   <zorder>label_pick_soap</zorder>

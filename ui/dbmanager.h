@@ -7,11 +7,12 @@ class DbManager
 {
 public:
     DbManager(const QString &path);
+    DbManager();
     ~DbManager();
     void closeDb();
-
+    // void closeDb(QSqlDatabase db);
     void setPath(QString path);
-    void openDb();
+    QSqlDatabase openDb(QString dbname);
 
     bool isDatabaseLocked(const QSqlDatabase &db);
 
@@ -30,13 +31,14 @@ public:
     uint32_t getNumberOfRows(QString table);
 
     bool getRecentTransactions(QString values[][5], int count, int *count_retreived);
-    void printerStatus(bool *isOnline, bool *hasPaper); // do not erase
+    void getPrinterStatus(bool *isOnline, bool *hasPaper); // do not erase
 
-    QString getPaymentMethod(int slot); // do not erase yet (wait for ash)
+    // QString getPaymentMethod(int slot); // do not erase yet (wait for ash)
     // void setPaymentToQR();              // ASh to change.
 
     // bool updateSlotAvailability(int slot, int isEnabled, QString status_text);
-    void addUserInteraction(QString action);
+
+    void addUserInteraction(QString session_id, QString role, QString page, QString event);
     void getAllProductProperties(int slot,
                                  QString *productId,
                                  QString *soapstand_product_serial,
@@ -91,9 +93,10 @@ public:
                                  int *is_enabled_slots,
                                  QString *status_text_slots);
 
+    QString m_dbPath2;
+
 private:
-    QString m_dbPath;
-    QSqlDatabase m_db;
+    // QSqlDatabase m_db;
 };
 
 #endif // DBMANAGER_H

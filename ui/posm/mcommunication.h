@@ -1,14 +1,3 @@
-//***************************************
-//
-// mcommunication.h
-// payment device communication
-//
-// created: 04-Oct-2019
-// by: Kiru Sri & Jason
-//
-// copyright 2019 by drinkfill
-// all rights reserved
-//***************************************
 
 #ifndef mCommunication_H
 #define mCommunication_H

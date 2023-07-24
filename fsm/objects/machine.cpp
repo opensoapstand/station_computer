@@ -6,10 +6,9 @@
 // override for other systems
 //
 // created: 15-06-2020
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "debugOutput.h"
@@ -50,6 +49,7 @@ void machine::setup()
 
     // the 24V power has a master on/off switch
     switch_24V = new oddyseyx86GPIO(IO_PIN_ENABLE_24V);
+    power24VEnabled = false;
     switch_24V->setPinAsInputElseOutput(false); // set as output
 }
 pcb *machine::getPcb()
@@ -61,18 +61,235 @@ pcb *machine::getPcb()
 //     debugOutput::sendMessage("*** global machine test message", MSG_INFO);
 // }
 
-void machine::pcb24VPowerSwitch(bool enableElseDisable)
+void machine::resetRunningLight()
 {
-
-    switch_24V->writePin(enableElseDisable);
+    using namespace std::chrono;
+    uint64_t m_lights_animation_most_recent_step_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    control_pcb->setSingleDispenseButtonLight(1, false);
+    control_pcb->setSingleDispenseButtonLight(2, false);
+    control_pcb->setSingleDispenseButtonLight(3, false);
+    control_pcb->setSingleDispenseButtonLight(4, false);
+    m_lights_animation_step = 0;
 }
 
-void machine::print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string char_units_formatted, string paymentMethod, string plu, string promoCode)
+void machine::refreshRunningLightCaterpillar()
 {
+
+    using namespace std::chrono;
+    uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    uint64_t step_delta_millis = 250;
+
+    if (millis_since_epoch > m_lights_animation_most_recent_step_millis + step_delta_millis)
+    {
+        m_lights_animation_step++;
+        m_lights_animation_most_recent_step_millis = millis_since_epoch;
+        if (m_lights_animation_step > 15)
+        {
+            m_lights_animation_step = 0;
+        }
+
+        switch (m_lights_animation_step)
+        {
+        case 0:
+        {
+            // control_pcb->setSingleDispenseButtonLight(2, false);
+            control_pcb->setSingleDispenseButtonLight(1, true);
+        }
+        break;
+        case 1:
+        {
+            // control_pcb->setSingleDispenseButtonLight(1, false);
+            control_pcb->setSingleDispenseButtonLight(2, true);
+        }
+        break;
+        case 2:
+        {
+            // control_pcb->setSingleDispenseButtonLight(2, false);
+            control_pcb->setSingleDispenseButtonLight(3, true);
+        }
+        break;
+        case 3:
+        {
+            // control_pcb->setSingleDispenseButtonLight(3, false);
+            control_pcb->setSingleDispenseButtonLight(4, true);
+        }
+        break;
+        case 4:
+        {
+            control_pcb->setSingleDispenseButtonLight(1, false);
+            // control_pcb->setSingleDispenseButtonLight(3, true);
+        }
+        break;
+        case 5:
+        {
+            control_pcb->setSingleDispenseButtonLight(2, false);
+            // control_pcb->setSingleDispenseButtonLight(2, true);
+        }
+        break;
+        case 6:
+        {
+            control_pcb->setSingleDispenseButtonLight(3, false);
+            // control_pcb->setSingleDispenseButtonLight(2, true);
+        }
+        break;
+        case 7:
+        {
+            control_pcb->setSingleDispenseButtonLight(4, false);
+            // control_pcb->setSingleDispenseButtonLight(2, true);
+        }
+        break;
+        case 8:
+        {
+            // control_pcb->setSingleDispenseButtonLight(2, false);
+            control_pcb->setSingleDispenseButtonLight(4, true);
+        }
+        break;
+        case 9:
+        {
+            // control_pcb->setSingleDispenseButtonLight(1, false);
+            control_pcb->setSingleDispenseButtonLight(3, true);
+        }
+        break;
+        case 10:
+        {
+            // control_pcb->setSingleDispenseButtonLight(2, false);
+            control_pcb->setSingleDispenseButtonLight(2, true);
+        }
+        break;
+        case 11:
+        {
+            // control_pcb->setSingleDispenseButtonLight(3, false);
+            control_pcb->setSingleDispenseButtonLight(1, true);
+        }
+        break;
+        case 12:
+        {
+            control_pcb->setSingleDispenseButtonLight(4, false);
+            // control_pcb->setSingleDispenseButtonLight(3, true);
+        }
+        break;
+        case 13:
+        {
+            control_pcb->setSingleDispenseButtonLight(3, false);
+            // control_pcb->setSingleDispenseButtonLight(2, true);
+        }
+        break;
+        case 14:
+        {
+            control_pcb->setSingleDispenseButtonLight(2, false);
+            // control_pcb->setSingleDispenseButtonLight(2, true);
+        }
+        break;
+        case 15:
+        {
+            control_pcb->setSingleDispenseButtonLight(1, false);
+            // control_pcb->setSingleDispenseButtonLight(2, true);
+        }
+        break;
+        default:
+        {
+            control_pcb->setSingleDispenseButtonLight(1, false);
+            control_pcb->setSingleDispenseButtonLight(2, false);
+            control_pcb->setSingleDispenseButtonLight(3, false);
+            control_pcb->setSingleDispenseButtonLight(4, false);
+        }
+        break;
+        }
+    }
+}
+
+// ping pong
+void machine::refreshRunningLightPingPong()
+{
+
+    using namespace std::chrono;
+    uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    uint64_t step_delta_millis = 250;
+
+    if (millis_since_epoch > m_lights_animation_most_recent_step_millis + step_delta_millis)
+    {
+        m_lights_animation_step++;
+        m_lights_animation_most_recent_step_millis = millis_since_epoch;
+        if (m_lights_animation_step > 5)
+        {
+            m_lights_animation_step = 0;
+        }
+
+        switch (m_lights_animation_step)
+        {
+        case 0:
+        {
+            control_pcb->setSingleDispenseButtonLight(2, false);
+            control_pcb->setSingleDispenseButtonLight(1, true);
+        }
+        break;
+        case 1:
+        {
+            control_pcb->setSingleDispenseButtonLight(1, false);
+            control_pcb->setSingleDispenseButtonLight(2, true);
+        }
+        break;
+        case 2:
+        {
+            control_pcb->setSingleDispenseButtonLight(2, false);
+            control_pcb->setSingleDispenseButtonLight(3, true);
+        }
+        break;
+        case 3:
+        {
+            control_pcb->setSingleDispenseButtonLight(3, false);
+            control_pcb->setSingleDispenseButtonLight(4, true);
+        }
+        break;
+        case 4:
+        {
+            control_pcb->setSingleDispenseButtonLight(4, false);
+            control_pcb->setSingleDispenseButtonLight(3, true);
+        }
+        break;
+        case 5:
+        {
+            control_pcb->setSingleDispenseButtonLight(3, false);
+            control_pcb->setSingleDispenseButtonLight(2, true);
+        }
+        break;
+        default:
+        {
+            control_pcb->setSingleDispenseButtonLight(1, false);
+            control_pcb->setSingleDispenseButtonLight(2, false);
+            control_pcb->setSingleDispenseButtonLight(3, false);
+            control_pcb->setSingleDispenseButtonLight(4, false);
+        }
+        break;
+        }
+    }
+}
+
+bool machine::getPcb24VPowerSwitchStatus()
+{
+    return power24VEnabled;
+}
+
+void machine::pcb24VPowerSwitch(bool enableElseDisable)
+{
+    if (power24VEnabled != enableElseDisable)
+    {
+        power24VEnabled = enableElseDisable;
+        switch_24V->writePin(power24VEnabled);
+    }
+}
+
+void machine::print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string char_units_formatted, string paymentMethod, string plu, string promoCode, bool sleep_until_printed)
+{
+    if (sleep_until_printed)
+    {
+        usleep(1500000);
+    }
 
     std::string out1 = name_receipt + "\nPrice: $" + receipt_cost + " \nQuantity: " + receipt_volume_formatted + "\nTime: " + time_stamp;
     receipt_printer->printText(out1.c_str());
 
+    debugOutput::sendMessage("Print receipt", MSG_INFO);
     debugOutput::sendMessage("Price" + receipt_cost, MSG_INFO);
     if (receipt_cost == "0.00")
     {
@@ -143,6 +360,13 @@ void machine::print_receipt(string name_receipt, string receipt_cost, string rec
 
     const char *out = "\n\n";
     receipt_printer->printText(out);
+
+    if (sleep_until_printed)
+    {
+
+        usleep(3500000);
+    }
+    debugOutput::sendMessage("end sleep", MSG_INFO);
 }
 
 //pcb *machine::getTemperature();

@@ -5,10 +5,9 @@
 // insert to the database table structures with keys to define relationships
 //
 // created: 27-04-2020
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reservedname
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reservedname
  ********************************************************/
  /*sample vendor insertion*/
 -- insert into `vendors` (`full_address`, `name`, `contact_name`, `contact_phone`,`contact_email`,`connector`) 

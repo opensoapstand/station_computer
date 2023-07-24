@@ -7,11 +7,10 @@
 // Listen for User interaction to load
 // Idle Page
 //
-// created: 16-04-2021
-// by: Paddy Riley
+// created: 16-06-2023
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "page_init.h"
@@ -36,6 +35,7 @@ page_init::page_init(QWidget *parent) : QWidget(parent),
     rebootTimer = new QTimer(this);
     rebootTimer->setInterval(1000);
     connect(rebootTimer, SIGNAL(timeout()), this, SLOT(onRebootTimeoutTick()));
+    connect(this, SIGNAL(tapSetupInitialized()), this, SLOT(showIdlePage()));
 }
 
 void page_init::setPage(page_idle *pageIdle)
@@ -54,15 +54,15 @@ void page_init::showEvent(QShowEvent *event)
 {
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
-    
-    // load template texts 
+
+    // load template texts
     p_page_idle->loadTextsFromTemplateCsv();
     p_page_idle->loadTextsFromDefaultCsv();
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_INIT_BACKGROUND_IMAGE_PATH);
 
-
     initIdleTimer->start(1000);
+    paymentMethod = p_page_idle->products[0].getPaymentMethod();
 #ifdef START_FSM_FROM_UI
     start_controller = true;
 #else
@@ -76,11 +76,20 @@ void page_init::showEvent(QShowEvent *event)
     }
     else
     {
-        p_page_idle->setTemplateTextToObject(ui->label_init_message);
-        _initIdleTimeoutSec = 1;
+
+        QString command = "Ping";
+        p_page_idle->dfUtility->send_command_to_FSM(command);
+
+        if (paymentMethod==PAYMENT_TAP_TCP || paymentMethod==PAYMENT_TAP_SERIAL)
+        {
+            // Thread setup for non-blocking tap payment initialization
+            // Using bind for non-static functions
+            auto bindFn = std::bind(&page_init::initiateTapPayment, this);
+            tapInitThread = std::thread(bindFn);
+            tapInitThread.detach();
+        }
     }
 }
-
 
 void page_init::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
@@ -92,7 +101,10 @@ void page_init::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 void page_init::initReadySlot(void)
 {
     qDebug() << "Signal: init ready from fsm";
-    hideCurrentPageAndShowProvided(p_page_idle);
+    if (paymentMethod != PAYMENT_TAP_TCP && paymentMethod != PAYMENT_TAP_SERIAL)
+    {
+        hideCurrentPageAndShowProvided(p_page_idle);
+    }
 }
 
 void page_init::onInitTimeoutTick()
@@ -100,16 +112,16 @@ void page_init::onInitTimeoutTick()
     if (--_initIdleTimeoutSec >= 0)
     {
         ui->label_init_message->setText(ui->label_init_message->text() + ".");
+        QString command = "Ping";
+        p_page_idle->dfUtility->send_command_to_FSM(command);
     }
     else
     {
-        qDebug() << "No response from controller. Will reboot";
-        // ui->label_fail_message->setText("No response from controller. Will reboot.");
-        // _rebootTimeoutSec = 5;
-        // rebootTimer->start(1000);
         initIdleTimer->stop();
-        p_page_idle->setTemplateTextToObject(ui->label_fail_message);
-        hideCurrentPageAndShowProvided(p_page_idle);
+        if (paymentMethod != PAYMENT_TAP_TCP && paymentMethod != PAYMENT_TAP_SERIAL)
+        {
+            hideCurrentPageAndShowProvided(p_page_idle);
+        }
     }
 }
 
@@ -127,4 +139,30 @@ void page_init::onRebootTimeoutTick()
         // REBOOT!
         system("./release/reboot.sh");
     }
+}
+
+void page_init::initiateTapPayment()
+{
+    this->showFullScreen();
+    // Waiting for payment label setup
+    QString waitingForPayment = p_page_idle->getTemplateText("page_init->label_fail_message->tap_payment");
+    p_page_idle->setTextToObject(ui->label_fail_message, waitingForPayment);
+    
+    if (paymentMethod == PAYMENT_TAP_TCP)
+    {
+        page_tap_payment paymentObject;
+        paymentObject.initiate_tap_setup();
+    }
+    else if (paymentMethod == PAYMENT_TAP_SERIAL)
+    {
+        page_tap_payment_serial paymentSerialObject;
+        paymentSerialObject.tap_serial_initiate();
+    }
+
+    emit tapSetupInitialized();
+}
+
+void page_init::showIdlePage()
+{
+    hideCurrentPageAndShowProvided(p_page_idle);
 }

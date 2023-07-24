@@ -8,10 +8,9 @@
 // class then communcates results to page_dispenser.
 //
 // created: 05-04-2022
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "page_qr_payment.h"
@@ -30,7 +29,6 @@ page_qr_payment::page_qr_payment(QWidget *parent) : QWidget(parent),
 {
     // Fullscreen background setup
     ui->setupUi(this);
-    ui->pushButton_payment_bypass->setEnabled(false);
 
     paymentEndTimer = new QTimer(this);
     paymentEndTimer->setInterval(1000);
@@ -42,13 +40,7 @@ page_qr_payment::page_qr_payment(QWidget *parent) : QWidget(parent),
     showErrorTimer = new QTimer(this);
     connect(showErrorTimer, SIGNAL(timeout()), this, SLOT(showErrorTimerPage()));
 
-    ui->pushButton_payment_bypass->setEnabled(false);
     state_payment = s_init;
-    ui->order_total_amount->hide();
-}
-
-void page_qr_payment::stopPayTimers()
-{
 }
 
 /*
@@ -71,41 +63,15 @@ page_qr_payment::~page_qr_payment()
 
 /* ----- GUI ----- */
 
-// Labels and button for tapping payment
-void page_qr_payment::displayPaymentPending(bool isVisible)
-{
-}
-
-void page_qr_payment::on_pushButton_payment_bypass_clicked()
-{
-    proceed_to_dispense();
-}
-
 void page_qr_payment::proceed_to_dispense()
 {
     hideCurrentPageAndShowProvided(p_page_dispense);
-}
-
-void page_qr_payment::updateTotals(string drinkDescription, string drinkAmount, string orderTotal)
-{
-}
-
-/*Cancel any previous payment*/
-void page_qr_payment::cancelPayment()
-{
-    // finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
-    checkPacketReceivedTimer->stop();
 }
 
 size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
 {
     ((std::string *)userp)->append((char *)contents, size * nmemb);
     return size * nmemb;
-}
-
-
-void page_qr_payment::resizeEvent(QResizeEvent *event)
-{
 }
 
 void page_qr_payment::showEvent(QShowEvent *event)
@@ -119,54 +85,58 @@ void page_qr_payment::showEvent(QShowEvent *event)
     p_page_idle->setTemplateTextToObject(ui->label_steps);
     p_page_idle->setTemplateTextToObject(ui->label_processing);
     p_page_idle->setTemplateTextToObject(ui->pushButton_previous_page);
-    
+
     QString styleSheet = p_page_idle->getCSS(PAGE_QR_PAYMENT_CSS);
 
-    ui->pushButton_payment_bypass->setProperty("class", "invisible_button");
     ui->pushButton_refresh->setProperty("class", "invisible_button");
 
     ui->pushButton_previous_page->setStyleSheet(styleSheet);
 
-    ui->pushButton_payment_bypass->setStyleSheet(styleSheet);
     ui->pushButton_refresh->setStyleSheet(styleSheet);
     ui->label_title->setStyleSheet(styleSheet);
     ui->label_scan->setStyleSheet(styleSheet);
     ui->label_steps->setStyleSheet(styleSheet);
     ui->label_processing->setStyleSheet(styleSheet);
+    ui->label_product_price->setStyleSheet(styleSheet);
+    ui->label_product_information->setStyleSheet(styleSheet);
 
     state_payment = s_init;
-    double originalPrice = p_page_idle->selectedProduct->getPrice();
+    double originalPrice = p_page_idle->selectedProduct->getBasePrice();
     if (p_page_idle->selectedProduct->getSizeAsChar() == 'c')
     {
         originalPrice = p_page_idle->selectedProduct->getPriceCustom();
     }
-    QString price = QString::number(p_page_idle->getPriceCorrectedAfterDiscount(originalPrice), 'f', 2);
+    QString price = QString::number(p_page_idle->thisMachine.getPriceWithDiscount(originalPrice), 'f', 2);
 
+    if (p_page_idle->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
+    {
+        ui->label_product_information->setText(p_page_idle->selectedProduct->getProductName() + p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_information, "volume_up_to") + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
+        QString base_text = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_price, "custom_size");
+        QString label_product_price_text = base_text.arg(price);
+        ui->label_product_price->setText(label_product_price_text);
+    }
+    else
+    {
+        ui->label_product_information->setText(p_page_idle->selectedProduct->getProductName() + " " + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
+        QString base_text = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_price, "fixed_size");
+        QString label_product_price_text = base_text.arg(price);
+        ui->label_product_price->setText(label_product_price_text);
+    }
 
-    ui->qrCode->show();
-    ui->productLabel->show();
-    ui->order_drink_amount->show();
-
-
+    ui->label_qrCode->show();
+    ui->label_product_information->show();
+    ui->label_product_price->show();
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
-    ui->pushButton_payment_bypass->setEnabled(false);
 
-    ui->productLabel->setText(p_page_idle->selectedProduct->getProductName() + " " + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
-    QString base_text = p_page_idle->getTemplateTextByElementNameAndPage(ui->order_drink_amount);
-    ui->order_drink_amount->setText(base_text.arg(price));
-
- 
     ui->label_steps->show();
     ui->label_processing->hide();
 
     paymentEndTimer->start(1000);
     _pageTimeoutCounterSecondsLeft = QR_PAGE_TIMEOUT_SECONDS;
 
-    this->ui->payment_countdownLabel->setText("");
-
-    ui->refreshLabel->hide();
-    ui->pushButton_refresh->raise(); // make sure refresh button is on top. 
+    ui->label_refresh_page->hide();
+    ui->pushButton_refresh->raise(); // make sure refresh button is on top.
     ui->pushButton_previous_page->raise();
 
     setupQrOrder();
@@ -185,10 +155,13 @@ void page_qr_payment::setupQrOrder()
 
         // build up qr content (link)
         QString qrdata = "https://soapstandportal.com/payment?oid=" + orderId;
+        if((p_page_idle->thisMachine.getMachineId()).left(2)=="PA"){
+            qrdata = "https://soapstandportal.com/paymentAelen?oid=" + orderId;
 
+        }
         // create qr code graphics
         paintQR(painter, QSize(360, 360), qrdata, QColor("white"));
-        ui->qrCode->setPixmap(map);
+        ui->label_qrCode->setPixmap(map);
         // _paymentTimeoutSec = QR_PAGE_TIMEOUT_SECONDS;
 
         _paymentTimeLabel = QR_PAGE_TIMEOUT_SECONDS;
@@ -200,12 +173,11 @@ void page_qr_payment::setupQrOrder()
     }
     else
     {
-        ui->qrCode->show();
-        ui->productLabel->show();
-        ui->order_drink_amount->show();
+        ui->label_qrCode->show();
+        ui->label_product_information->show();
+        ui->label_product_price->show();
         ui->label_title->hide();
         ui->label_scan->hide();
-        ui->order_total_amount->hide();
         ui->label_steps->hide();
         showErrorTimer->start();
     }
@@ -234,7 +206,7 @@ bool page_qr_payment::createOrderIdAndSendToBackend()
         originalPrice = p_page_idle->selectedProduct->getPriceCustom();
     }
 
-    QString price = QString::number(p_page_idle->getPriceCorrectedAfterDiscount(originalPrice), 'f', 2);
+    QString price = QString::number(p_page_idle->thisMachine.getPriceWithDiscount(originalPrice), 'f', 2);
 
     // create a unique order id locally
     orderId = QUuid::createUuid().QUuid::toString();
@@ -345,16 +317,14 @@ void page_qr_payment::isQrProcessedCheckOnline()
             qDebug() << "Wait for QR processed. User must have finished transaction to continue.";
             // user scanned qr code and is processing transaction. Delete qr code and make it harder for user to leave page.
             state_payment = s_payment_processing;
-            ui->qrCode->hide();
-            ui->productLabel->hide();
-            ui->order_drink_amount->hide();
-            ui->order_total_amount->hide();
+            ui->label_qrCode->hide();
+            ui->label_product_information->hide();
+            ui->label_product_price->hide();
             ui->label_steps->hide();
 
             ui->label_processing->show();
             p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_scan, "finalize_transaction");
             p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_title, "almost_there");
-
         }
         else
         {
@@ -380,7 +350,7 @@ void page_qr_payment::qrProcessedPeriodicalCheck()
 
 void page_qr_payment::on_pushButton_refresh_clicked()
 {
-    ui->refreshLabel->hide();
+    ui->label_refresh_page->hide();
     _pageTimeoutCounterSecondsLeft = QR_PAGE_TIMEOUT_SECONDS;
 }
 
@@ -390,55 +360,36 @@ void page_qr_payment::onTimeoutTick()
     if (--_pageTimeoutCounterSecondsLeft >= 0)
     {
         QString label_text = "Transaction will be cancelled in " + QString::number(_pageTimeoutCounterSecondsLeft) + "s.\nTOUCH THE SCREEN\n if you need more time \n";
-        ui->refreshLabel->setText(label_text);
+        ui->label_refresh_page->setText(label_text);
     }
     else
     {
-        qDebug() << "Timer Done!" << _pageTimeoutCounterSecondsLeft ;
+        qDebug() << "Timer Done!" << _pageTimeoutCounterSecondsLeft;
         transactionLogging += "\n 5: Timeout - True";
 
         idlePaymentTimeout();
     }
     if (_pageTimeoutCounterSecondsLeft < QR_PAGE_TIMEOUT_WARNING_SECONDS)
     {
-        ui->refreshLabel->show();
+        ui->label_refresh_page->show();
     }
-}
-
-bool page_qr_payment::setpaymentProcess(bool status)
-{
-    return (paymentProcessing = status);
-}
-
-void page_qr_payment::setProgressLabel(QLabel *label, int dot)
-{
-}
-
-// Local storge for now.  Will need to refactor logger to do a nightly push to AWS
-void page_qr_payment::storePaymentEvent(QSqlDatabase db, QString event)
-{
 }
 
 bool page_qr_payment::exitConfirm()
 {
     qDebug() << "In exit confirm";
     QMessageBox msgBox;
-        // msgBox_abort = new QMessageBox();
-        // msgBox_abort->setObjectName("msgBox_abort");
 
     msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
     if (state_payment == s_payment_processing || state_payment == s_payment_done)
     {
         QString searchString = this->objectName() + "->msgBox_cancel->default";
         p_page_idle->setTextToObject(&msgBox, p_page_idle->getTemplateText(searchString));
-        //p_page_idle->setTemplateTextToObject();
-        // msgBox.setText("");
     }
     else if (state_payment == s_init)
     {
         QString searchString = this->objectName() + "->msgBox_refund->default";
         p_page_idle->setTextToObject(&msgBox, p_page_idle->getTemplateText(searchString));
-        // msgBox.setText("");
     }
     QString styleSheet = p_page_idle->getCSS(PAGE_QR_PAYMENT_CSS);
     msgBox.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
@@ -446,7 +397,6 @@ bool page_qr_payment::exitConfirm()
 
     msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     int ret = msgBox.exec();
-    bool success;
     switch (ret)
     {
     case QMessageBox::Yes:
@@ -465,22 +415,15 @@ bool page_qr_payment::exitConfirm()
 
 void page_qr_payment::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
-    transactionLogging = "";
 
-    paymentEndTimer->stop();
-    qrPeriodicalCheckTimer->stop();
-    showErrorTimer->stop();
-
-    response = true;
-    qDebug() << "Cancelled";
-
+    resetPaymentPage();
     p_page_idle->pageTransition(this, pageToShow);
 }
 
-// Navigation: Back to Drink Size Selection
+// Navigation: Back to Product Size Selection
 void page_qr_payment::on_pushButton_previous_page_clicked()
 {
-    qDebug() << "In previous page button" ;
+    qDebug() << "In previous page button";
     if (exitConfirm())
     {
         hideCurrentPageAndShowProvided(p_page_product);
@@ -490,6 +433,14 @@ void page_qr_payment::on_pushButton_previous_page_clicked()
 void page_qr_payment::idlePaymentTimeout()
 {
     hideCurrentPageAndShowProvided(p_page_idle);
+}
+
+void page_qr_payment::resetPaymentPage()
+{
+    transactionLogging = "";
+    paymentEndTimer->stop();
+    qrPeriodicalCheckTimer->stop();
+    showErrorTimer->stop();
 }
 
 std::string page_qr_payment::toSvgString(const QrCode &qr, int border)
@@ -536,16 +487,6 @@ void page_qr_payment::printQr(const QrCode &qr)
         std::cout << std::endl;
     }
     std::cout << std::endl;
-}
-
-void page_qr_payment::testQRgen()
-{
-
-    QPixmap map(400, 400);
-    QPainter painter(&map);
-
-    paintQR(painter, QSize(400, 400), "SoapStand RULES", QColor("white"));
-    ui->qrCode->setPixmap(map);
 }
 
 void page_qr_payment::paintQR(QPainter &painter, const QSize sz, const QString &data, QColor fg)

@@ -10,8 +10,9 @@
 
 ./status_services.sh
 
-PS3='Please enter your choice: '
-options=("Quit" "Station info" "Status" "Start" "Stop" "Restart" "Screenshotbot execute" "Enable Autostart" "Disable Autostart" "Copy binary files to production folder" "Create and run production data copied from drinkfill folder (without db!)" "(Re)load services from production" "Setup aws port (rtunnel)" "Setup Ubuntu for drinkfill UI" "Deploy productionstatic.zip" "Screenshot: Take single shot" "Copy db from drinkfill to production folder")
+port_in_use=$(sudo ./rtunnel_print.sh 2>/dev/null)
+PS3="Choose option(digit + enter) (rtunnel port=$port_in_use) :"
+options=("Quit" "Station info" "Status" "Start" "Stop" "Restart" "Screenshotbot execute" "Enable Autostart" "Disable Autostart" "Copy binary files to production folder" "Create and run production data copied from drinkfill folder (without db!)" "(Re)load services from production" "Setup aws port (rtunnel)" "Setup Ubuntu for drinkfill UI" "Deploy productionstatic.zip" "Screenshot: Take single shot" "Copy db from drinkfill to production folder OLD" "Copy configuration db from drinkfill to production folder" "Copy usage db from drinkfill to production folder")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -93,8 +94,16 @@ do
             echo "done."
         ;;
 
-        "Copy db from drinkfill to production folder")
+        "Copy db from drinkfill to production folder OLD")
             sudo -u df-admin scp /home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite_newlayout.db /home/df-admin/production/db/drinkfill-sqlite_newlayout.db 
+            echo "done."
+        ;;
+        "Copy configuration db from drinkfill to production folder")
+            sudo -u df-admin scp /home/df-admin/drinkfill/db/sqlite/configuration.db /home/df-admin/production/db/configuration.db 
+            echo "done."
+        ;;
+        "Copy usage db from drinkfill to production folder")
+            sudo -u df-admin scp /home/df-admin/drinkfill/db/sqlite/usage.db /home/df-admin/production/db/usage.db 
             echo "done."
         ;;
         
@@ -105,36 +114,7 @@ do
         ;;
         
         "Deploy productionstatic.zip")
-            echo "stop soapstand services"
-            sudo systemctl stop ui_soapstand.service
-            sudo systemctl stop controller_soapstand.service
-            sudo systemctl stop check_connectivity.service
-            
-            echo "take backup of production folder"
-            cd /home/df-admin/
-            mv production productionBKP
-            
-            echo "unzip productionstatic.zip"
-            unzip productionstatic.zip -d ./production
-            
-            echo "copy db from production backup"
-            scp -r productionBKP/db production
-            
-            echo "copy log files from production backup"
-            scp -r productionBKP/logging production/logging
-            
-            echo "change production backup to a name with a date."
-            # Get the current date in YYYY-MM-DD format
-            current_date=$(date +%Y%m%d-%H%M%S)
-                       
-            # Append the current date to the folder name
-            name_with_date="production_bkp${current_date}"
-            mkdir production_archive
-            mv productionBKP "${name_with_date}"
-            sudo mv "${name_with_date}" ./production_archive
-
-            cd /home/df-admin/production/admin
-            ./copy_and_enable_services.sh
+            deploy_production_from_zip.sh
         ;;
         "Quit")
             break

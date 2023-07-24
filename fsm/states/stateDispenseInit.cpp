@@ -4,10 +4,9 @@
 // Dispense Init State
 //
 // created: 01-2022
-// by:Lode Ameije & Ash Singla
+// by:Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "stateDispenseInit.h"
@@ -47,7 +46,16 @@ DF_ERROR stateDispenseInit::onEntry()
     productDispensers = g_productDispensers;
 
     size = m_pMessaging->getRequestedSize();
+    if (size == SIZE_DUMMY){
+        debugOutput::sendMessage("ASSERT ERROR: Size not set. Will not continue.",  MSG_ERROR);
+        m_state_requested = STATE_IDLE;
+    }
+
     dispenser_index = m_pMessaging->getRequestedSlot() - 1;
+    if (dispenser_index == PRODUCT_SLOT_DUMMY){
+        debugOutput::sendMessage("ASSERT ERROR: Slot number not set. Will not continue.",  MSG_ERROR);
+        m_state_requested = STATE_IDLE;
+    }
 
     debugOutput::sendMessage("dispense init, we (re)load parameters from database.", MSG_INFO);
 
@@ -56,6 +64,8 @@ DF_ERROR stateDispenseInit::onEntry()
     {
         debugOutput::sendMessage("Did not reload parameters from database", MSG_INFO);
     }
+
+    g_machine.pcb24VPowerSwitch(true);
     
     return e_ret;
 }
@@ -65,6 +75,9 @@ DF_ERROR stateDispenseInit::onAction()
 
     DF_ERROR e_ret = OK;
     this->productDispensers[dispenser_index].loadGeneralProperties();
+    debugOutput::sendMessage(std::string("SLOT dispenesrs erstate: ") + productDispensers[dispenser_index].getSlotStateAsString(),
+                             MSG_INFO);
+
 
     debugOutput::sendMessage("Chosen dispenser slot: " +
                                  std::to_string(productDispensers[dispenser_index].getSlot()) +

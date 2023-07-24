@@ -1,7 +1,6 @@
-
-.buttonTransparent{
-    background-color: transparent;
-    border: 0px;
+.buttonTransparent {
+   background-color: transparent;
+   border: 0px;
 }
 
 .buttonNoBorder {
@@ -17,6 +16,15 @@
    border: none;
 }
 
+#pushButton_to_transactions{
+   text-align: right;
+
+}
+
+#pushButton_to_idle {
+   text-align: left;
+}
+
 QPushButton {
    font-family: 'Brevia';
    font-style: normal;
@@ -25,10 +33,9 @@ QPushButton {
    color: #003840;
    background-color: #FFFFFF;
    border: 0px;
-   text-align: center;
+
    border-radius: 20px;
    border: none;
-  
 }
 
 /* QPushButton#pushButton_refresh {

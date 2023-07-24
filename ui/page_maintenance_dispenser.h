@@ -7,11 +7,10 @@
 // Coordinates User input from payment select
 // class then communcates results to page_dispenser.
 //
-// created: 4-01-2021
-// by: Paddy Riley
+// created: 16-06-2023
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #ifndef PAGE_MAINTENANCE_DISPENSER_H
@@ -53,7 +52,6 @@ public:
     void fsmReceiveDispenseRate(double flowrate);
     void fsmReceiveDispenserStatus(QString status);
     void fsmReceiveNoFlowAbort();
-    void setpushButton_soldOutText();
     void dispense_test_end(bool sendStopToController);
     void dispense_test_start();
     void update_volume_received_dispense_stats(double dispensed);
@@ -77,7 +75,7 @@ private slots:
     void on_pushButton_plu_custom_clicked();
     void on_pushButton_volume_per_tick_clicked();
     void on_pushButton_restock_clicked();
-    void on_pushButton_soldOut_clicked();
+    void on_pushButton_set_status_clicked();
     void on_pushButton_set_restock_volume_clicked();
     void onMaintainProductPageTimeoutTick();
     void onDispenseTimerTick();
@@ -94,12 +92,23 @@ private slots:
     void on_pushButton_auto_dispense_medium_clicked();
     void on_pushButton_auto_dispense_small_clicked();
 
-    void on_pushButton_update_portal_clicked();
+    void update_changes_to_portal();
     void buttonGroup_edit_product_Pressed(int buttonId);
     void buttonGroup_keypad_Pressed(int buttonId);
     
 
+    void on_pushButton_clear_problem_clicked();
+
+    void on_checkBox_enable_small_clicked();
+
+    void on_checkBox_enable_medium_clicked();
+
+    void on_checkBox_enable_large_clicked();
+
+    void on_checkBox_enable_custom_clicked();
+
 private:
+    void setStatusTextLabel(QLabel* label, QString statusText, bool displayRawStatus);
     void setButtonPressCountLabel(bool init);
     void setButtonPressCountLabel2(bool init);
 
@@ -116,28 +125,10 @@ private:
     QTimer *maintainProductPageEndTimer;
     QTimer *dispenseTimer;
 
-    // QString text_entered;
-    // bool price_small;
-    // bool price_medium;
-    // bool price_large;
-    // bool price_custom;
-
-    // bool target_s;
-    // bool pushButton_target_volume_medium;
-    // bool target_l;
-    // bool vol_per_tick;
-    // bool full;
-    // bool pwm;
-    // bool buffer;
-    // bool modify_stock;
     bool isDispenseButtonPressed;
     uint16_t button_press_count;
 
     QString units_selected_product;
-    //    bool plu_s;
-    //    bool plu_l;
-
-    double volume_per_tick_buffer= 0.0;
 
     void sendRestockToCloud();
     void autoDispenseStart(int size);

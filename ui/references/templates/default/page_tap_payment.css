@@ -4,10 +4,9 @@
    font-weight: 75;
    font-size: 32px;
    line-height: 99px;
-   text-transform: lowercase;
    color: #003840;
-   text-align: center;
-   qproperty-alignment: AlignCenter;
+   text-align: left;
+   /* qproperty-alignment: AlignCenter; */
    border: none;
 }
 

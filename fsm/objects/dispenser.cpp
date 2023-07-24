@@ -8,13 +8,13 @@
 // holds instructions for dispensing.
 //
 // created: 25-06-2020
-// by:Lode Ameije & Ash Singla
+// by:Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 #include "dispenser.h"
 #include <chrono>
+// #include "machine.h"
 
 #define ACTIVATION_TIME 5
 #define TEST_ACTIVATION_TIME 3
@@ -66,12 +66,14 @@ dispenser::dispenser()
     previous_dispense_state = FLOW_STATE_UNAVAILABLE;
 }
 
+// DF_ERROR dispenser::setup(pcb *pcbtest, machine* machine)
 DF_ERROR dispenser::setup(pcb *pcbtest)
 {
     // Set the pump PWM value to a nominal value
 
     // the_pcb->setup();
     the_pcb = pcbtest;
+    // global_machine = machine;
 
     the_pcb->setPumpPWM(DEFAULT_PUMP_PWM);
 
@@ -81,6 +83,7 @@ DF_ERROR dispenser::setup(pcb *pcbtest)
     previousDispensedVolume = 0;
     isPumpSoftStarting = false;
     pwm_actual_set_speed = 0;
+    m_button_animation = 0;
 }
 
 void dispenser::refresh()
@@ -287,7 +290,7 @@ DF_ERROR dispenser::loadGeneralProperties()
     usleep(20000);
     loadPumpReversalEnabledFromDb();
     usleep(20000);
-    loadMultiDispenseButtonEnabledFromDb();
+    loadButtonPropertiesFromDb();
     usleep(20000);
     //  the_pcb->setSingleDispenseButtonLight(this->slot, false);
 
@@ -302,7 +305,7 @@ DF_ERROR dispenser::startDispense()
 
     this->the_pcb->flowSensorEnable(slot);
     this->the_pcb->resetFlowSensorTotalPulses(slot);
-
+    
     dispense_state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
     previous_dispense_state = FLOW_STATE_UNAVAILABLE;
 
@@ -593,6 +596,7 @@ DF_ERROR dispenser::setPumpDirectionReverse()
 // Stops pumping: Turn forward pin LOW - Reverse pin LOW
 DF_ERROR dispenser::setPumpsDisableAll()
 {
+    // g_machine.pcb24VPowerSwitch(false);
     debugOutput::sendMessage("Pump disable: all.", MSG_INFO);
     the_pcb->setPumpsDisableAll();
     m_isSlotEnabled = false;
@@ -765,6 +769,7 @@ DF_ERROR dispenser::setPumpEnable()
     // first pump is 1.
     // still needs dispense button to actually get the pump to start
     debugOutput::sendMessage("Pump enable position: " + to_string(this->slot), MSG_INFO);
+    // g_machine.pcb24VPowerSwitch(true);
     the_pcb->setPumpEnable(this->slot); // pump 1 to 4
     m_isSlotEnabled = true;
 }
@@ -783,10 +788,9 @@ unsigned short dispenser::getPumpSpeed()
     the_pcb->getPumpPWM();
 }
 
-void dispenser::loadMultiDispenseButtonEnabledFromDb()
+void dispenser::loadButtonPropertiesFromDb()
 {
-
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT dispense_buttons_count FROM machine";
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
@@ -794,14 +798,20 @@ void dispenser::loadMultiDispenseButtonEnabledFromDb()
 
     int val = sqlite3_column_int(stmt, 0);
 
+    // button light effect program
+    m_button_animation = val / 1000;
+
+    // button count
+    int buttons_count = val % 1000;
+
     sqlite3_finalize(stmt);
     sqlite3_close(db);
     // val = 4;
-    if (val == 1)
+    if (buttons_count == 1)
     {
         m_isMultiButtonEnabled = false;
     }
-    else if (val == 4)
+    else if (buttons_count == 4)
     {
         m_isMultiButtonEnabled = true;
     }
@@ -814,6 +824,12 @@ void dispenser::loadMultiDispenseButtonEnabledFromDb()
     debugOutput::sendMessage("Multiple dispense buttons enabled? : " + to_string(m_isMultiButtonEnabled), MSG_INFO);
 }
 
+
+int dispenser::getButtonAnimationProgram(){
+    // 0 is no animation. 
+    return m_button_animation;
+}
+
 bool dispenser::getMultiDispenseButtonEnabled()
 {
     return m_isMultiButtonEnabled;
@@ -824,7 +840,7 @@ void dispenser::loadPumpReversalEnabledFromDb()
     // val 0 = pump reversal not enabled
     // val 1 = pump reversal enabled. Will take retraction time from products
 
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT enable_pump_reversal FROM machine";
 
@@ -850,7 +866,7 @@ void dispenser::loadPumpRampingEnabledFromDb()
     // val 0 = pump slow start stop not enabled
     // val 1 = pump slow start, slow stop enabled (with hardwired ramp up / ramp down time)
 
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT enable_pump_ramping FROM machine";
 
@@ -873,7 +889,7 @@ bool dispenser::getPumpSlowStartStopEnabled()
 
 void dispenser::loadSlotStateFromDb()
 {
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT status_text_slot_" + to_string(getSlot()) + " FROM machine;";
 
@@ -885,6 +901,7 @@ void dispenser::loadSlotStateFromDb()
 
     sqlite3_finalize(stmt);
     sqlite3_close(db);
+
     if (slotStateText.find("SLOT_STATE_AVAILABLE") != string::npos)
     {
         setSlotState(SLOT_STATE_AVAILABLE);
@@ -917,7 +934,7 @@ void dispenser::loadSlotStateFromDb()
     {
         setSlotState(SLOT_STATE_AVAILABLE);
     }
-    debugOutput::sendMessage("Set dispenser state to : " + std::string(getSlotStateAsString()), MSG_INFO);
+    debugOutput::sendMessage("Dispenser state loaded from db: " + std::string(getSlotStateAsString())  + "(db value: " + std::string(slotStateText) + ")", MSG_INFO);
 }
 
 void dispenser::loadEmptyContainerDetectionEnabledFromDb()
@@ -925,7 +942,7 @@ void dispenser::loadEmptyContainerDetectionEnabledFromDb()
     // val 0 = empty container detection not enabled
     // val 1 = empty container detection enabled
 
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT has_empty_detection FROM machine";
 
@@ -1144,11 +1161,8 @@ const char *dispenser::getSlotStateAsString()
 
 void dispenser::setSlotState(Slot_state state)
 {
-    // disabled states are only manually changeable.
-    if (getSlotState() != SLOT_STATE_DISABLED_COMING_SOON && getSlotState() != SLOT_STATE_DISABLED)
-    {
         slot_state = state;
-    }
+    
 }
 
 Slot_state dispenser::getSlotState()

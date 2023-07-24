@@ -135,7 +135,6 @@ QByteArray DfUiCommThread::readyRead()
     {
         qDebug() << "Non actionable message from fsm received: " << Data;
     }
-
     emit messageHandlerFinishedSignal();
     return Data;
 }

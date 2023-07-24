@@ -7,11 +7,10 @@
 // Coordinates User input from payment select
 // class then communcates results to page_dispenser.
 //
-// created: 4-01-2021
-// by: Paddy Riley
+// created: 16-06-2023
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #ifndef PAGE_MAINTENANCE_H
@@ -53,15 +52,15 @@ public:
 
 private slots:
     void on_pushButton_to_previous_page_clicked();
-    void on_product1_button_clicked();
-    void on_product2_button_clicked();
-    void on_product3_button_clicked();
-    void on_product4_button_clicked();
-//    void on_product5_button_clicked();
-//    void on_product6_button_clicked();
-//    void on_product7_button_clicked();
-//    void on_product8_button_clicked();
-//    void on_product9_button_clicked();
+    void on_pushButton_product_1_clicked();
+    void on_pushButton_product_2_clicked();
+    void on_pushButton_product_3_clicked();
+    void on_pushButton_product_4_clicked();
+//    void on_pushButton_product_5_clicked();
+//    void on_pushButton_product_6_clicked();
+//    void on_pushButton_product_7_clicked();
+//    void on_pushButton_product_8_clicked();
+//    void on_pushButton_product_9_clicked();
     // void on_wifiButton_clicked();
     //void on_clean_button_clicked();
     //void on_restock_button_clicked();
@@ -85,8 +84,10 @@ private:
     page_product* p_page_product;
 
     // QResizeEvent *productSelection;
-    QPushButton* product_buttons[4];
-    QLabel* product_overlay_labels[4];
+    QPushButton* pushButtons_products[SLOT_COUNT];
+    QLabel* labels_product_status[SLOT_COUNT];
+    QLabel* labels_product_name[SLOT_COUNT];
+    QLabel* labels_product_position[SLOT_COUNT];
     int _page_maintenanceTimeoutSec;
     QTimer* page_maintenanceEndTimer;
 

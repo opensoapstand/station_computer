@@ -49,6 +49,8 @@ scp /home/df-admin/drinkfill/admin/check_connectivity.sh /home/df-admin/producti
 scp /home/df-admin/drinkfill/admin/developer_tools.sh /home/df-admin/production/admin/developer_tools.sh
 scp /home/df-admin/drinkfill/admin/copy_and_enable_services.sh /home/df-admin/production/admin/copy_and_enable_services.sh
 scp /home/df-admin/drinkfill/admin/create_and_run_production_data.sh /home/df-admin/production/admin/create_and_run_production_data.sh
+scp /home/df-admin/drinkfill/admin/rtunnel_print.sh /home/df-admin/production/admin/rtunnel_print.sh
+scp /home/df-admin/drinkfill/admin/deploy_production_from_zip.sh /home/df-admin/production/admin/deploy_production_from_zip.sh
 
 scp /home/df-admin/drinkfill/admin/aws_operations.sh /home/df-admin/production/admin/aws_operations.sh
 
@@ -68,14 +70,3 @@ sudo -u df-admin rm -r /home/df-admin/production/db
 sudo -u df-admin scp -r $BKP_PATH/db /home/df-admin/production
 
 echo "Done. NOTE: the database was not copied from the drinkfill folder. It was preserved from the previous production folder. Copy the db manually from drinkfill if needed."
-
-## ask for db to be copied from drinkfill to production. By default: NO! 
-#read -p "Copy database? [y] for yes. [enter,anykey] for no:" -n 1 -r
-#echo    # (optional) move to a new line
-#if [[ $REPLY =~ ^[Yy]$ ]]
-#then
-#    sudo -u df-admin scp /home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite_newlayout.db /home/df-admin/production/db/drinkfill-sqlite_newlayout.db 
-#else
-#    sudo -u df-admin rm -r /home/df-admin/production/db
-#    sudo -u df-admin scp -r $BKP_PATH/db /home/df-admin/production
-#fi

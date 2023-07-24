@@ -11,7 +11,7 @@ QPushButton {
     font-size: 48px;
     text-align: center;
     line-height: auto;
-    qproperty-alignment: AlignCenter;
+    /* qproperty-alignment: AlignCenter; */
     border-radius: 20px;
     color: white;
     border: none;
@@ -30,6 +30,15 @@ QPushButton {
     color: #58595B;
     border: 1px solid #58595B;
 }
+.promoCode_network_error{
+    font-family: Montserrat; 
+    font-style: normal; 
+    font-weight: bold; 
+    font-size: 28px; 
+    line-height: 44px; 
+    color: #da980a;
+    border: 1px solid #da980a;
+}
 .promoCode_invalid{
     font-family: Montserrat; 
     font-style: normal; 
@@ -38,6 +47,15 @@ QPushButton {
     line-height: 44px; 
     color: #f44336;
     border: 1px solid #f44336;
+}
+.promoCode_processing{
+    font-family: Montserrat; 
+    font-style: normal; 
+    font-weight: bold; 
+    font-size: 28px; 
+    line-height: 44px; 
+    color: #858585;
+    border: 1px solid #858585;
 }
 .promoCode_valid{
     font-family: Montserrat; 
@@ -55,10 +73,9 @@ QPushButton {
     font-weight: 75;
     font-size: 32px;
     line-height: 99px;
-    text-transform: lowercase;
     color: #003840;
     text-align: left;
-    qproperty-alignment: AlignLeft;
+    /* qproperty-alignment: AlignLeft; */
     border: none;
 }
 .buttonPromo {
@@ -67,12 +84,11 @@ QPushButton {
     font-weight: 75;
     font-size: 32px;
     line-height: 99px;
-    text-transform: lowercase;
     background-color: #5E8580;
     border: 1px solid #3D6675;
     color: #FFFFFF;
     text-align: center;
-    qproperty-alignment: AlignCenter;
+    /* qproperty-alignment: AlignCenter; */
 }
 .buttonBGTransparent{ 
     background-color: transparent; 
@@ -102,7 +118,7 @@ QLabel {
     line-height: 99px;
     color: #003840;
     text-align: center;
-    qproperty-alignment: AlignCenter;
+    /* qproperty-alignment: AlignCenter; */
     border: 2px solid #5E8580;
 }
 .labelOrderOverview{
@@ -117,19 +133,6 @@ QLabel {
     border: 2px solid #5E8580;
 }
 
-#label_pay {
-    font-family: 'Brevia';
-    font-style: normal;
-    font-weight: 200;
-    background-color: #5E8580;
-    font-size: 48px;
-    text-align: center;
-    line-height: auto;
-    qproperty-alignment: AlignCenter;
-    border-radius: 20px;
-    color: white;
-    border: none;
-}
 .labelDiscount{
     font-family: 'Montserrat';
     font-style: normal;
@@ -168,6 +171,6 @@ QLabel {
 #label_product_photo {
     border: 2px solid #5E8580;
 }
-#invoice_line{
+#line_invoice{
     border: none;
 }

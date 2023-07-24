@@ -2,7 +2,7 @@
 #define MACHINE_H
 
 #include "df_util.h"
-// #include "page_idle.h"
+#include "dbmanager.h"
 
 typedef enum UserRole
 {
@@ -10,6 +10,18 @@ typedef enum UserRole
     maintainer,
     admin
 } UserRole;
+
+typedef enum StateCoupon
+{
+    no_state,
+    disabled,
+    enabled_not_set,
+    enabled_show_keyboard,
+    enabled_processing_input,
+    enabled_invalid_input,
+    enabled_valid_active,
+    network_error
+} StateCoupon;
 
 class machine : public QObject
 {
@@ -19,10 +31,12 @@ public:
     machine();
     ~machine();
     void loadParametersFromDb();
+    void setDb(DbManager *db);
 
     bool slotNumberValidityCheck(int slot);
     QString getStatusText(int slot);
     void setStatusText(int slot, bool isSlotEnabled, QString status);
+    void loadProductPropertiesFromProductsFile(QString soapstand_product_number, QString *name, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui);
 
     QString getPumpId(int slot);
 
@@ -36,11 +50,16 @@ public:
     bool isAllowedAsAdmin();
     bool isAllowedAsMaintainer();
 
+    void createSessionId();
+    void resetSessionId();
+    QString getSessionId();
+
     QString getCustomerId();
 
     QString getTemplateFolder();
     QString getTemplatePathFromName(QString fileName);
     QString getDefaultTemplatePathFromName(QString fileName);
+
     bool getEmptyContainerDetectionEnabled();
     void setEmptyContainerDetectionEnabled(bool isEnabled);
     void setPumpRampingEnabled(bool isEnabled);
@@ -54,14 +73,22 @@ public:
     int getDispensersCount();
 
     bool hasReceiptPrinter();
-    void printerStatus(bool *isOnline, bool *hasPaper);
+    void getPrinterStatusFromDb(bool *isOnline, bool *hasPaper);
 
-public slots:
+    StateCoupon getCouponState();
+    void setCouponState(StateCoupon state);
+    void initCouponState();
 
-signals:
+    void setPromoCode(QString promoCode);
+    QString getPromoCode();
 
-private:
-    UserRole active_role;
+    QString m_session_id;
+
+    void setDiscountPercentageFraction(double percentageFraction);
+    double getDiscountPercentageFraction();
+    double getDiscountAmount(double price);
+    double getPriceWithDiscount(double price);
+
     QString m_machine_id;
     QString m_soapstand_customer_id;
     QString m_template;
@@ -87,6 +114,20 @@ private:
     QString m_help_text_html;
     QString m_idle_page_type;
     QString m_admin_pwd;
+
+
+public slots:
+
+signals:
+
+private:
+    StateCoupon m_stateCoupon;
+    double m_discount_percentage_fraction = 0.0;
+    QString m_promoCode;
+
+    DbManager *m_db;
+    UserRole active_role;
+
 
     QString m_pump_id_slots[SLOT_COUNT];
     int m_is_enabled_slots[SLOT_COUNT];

@@ -111,9 +111,9 @@ color: #7F8080;</string>
   <widget class="QLabel" name="label_invoice_price_total">
    <property name="geometry">
     <rect>
-     <x>749</x>
+     <x>659</x>
      <y>1340</y>
-     <width>211</width>
+     <width>301</width>
      <height>44</height>
     </rect>
    </property>
@@ -1835,8 +1835,8 @@ outline: none;
     <rect>
      <x>130</x>
      <y>993</y>
-     <width>571</width>
-     <height>80</height>
+     <width>590</width>
+     <height>90</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -1966,30 +1966,14 @@ color: #58595B;
   <widget class="QPushButton" name="pushButton_select_product_page">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>30</y>
-     <width>351</width>
-     <height>61</height>
+     <x>70</x>
+     <y>40</y>
+     <width>401</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="text">
     <string>PushButton</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_pay">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>188</x>
-     <y>1541</y>
-     <width>740</width>
-     <height>92</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="label_invoice_box">
@@ -1998,7 +1982,7 @@ color: #58595B;
      <x>94</x>
      <y>890</y>
      <width>891</width>
-     <height>781</height>
+     <height>760</height>
     </rect>
    </property>
    <property name="font">
@@ -2046,7 +2030,7 @@ text-align: center;</string>
     <rect>
      <x>130</x>
      <y>1340</y>
-     <width>261</width>
+     <width>641</width>
      <height>44</height>
     </rect>
    </property>
@@ -2067,13 +2051,13 @@ text-align: center;</string>
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="Line" name="invoice_line">
+  <widget class="Line" name="line_invoice">
    <property name="geometry">
     <rect>
      <x>137</x>
      <y>1280</y>
      <width>821</width>
-     <height>20</height>
+     <height>5</height>
     </rect>
    </property>
    <property name="orientation">
@@ -2081,7 +2065,6 @@ text-align: center;</string>
    </property>
   </widget>
   <zorder>label_help</zorder>
-  <zorder>label_pay</zorder>
   <zorder>pushButton_continue</zorder>
   <zorder>label_invoice_box</zorder>
   <zorder>label_invoice_price</zorder>
@@ -2101,7 +2084,7 @@ text-align: center;</string>
   <zorder>label_product_photo</zorder>
   <zorder>label_gif</zorder>
   <zorder>pushButton_to_help</zorder>
-  <zorder>invoice_line</zorder>
+  <zorder>line_invoice</zorder>
  </widget>
  <resources/>
  <connections/>

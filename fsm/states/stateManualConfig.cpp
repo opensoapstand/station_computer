@@ -7,10 +7,9 @@
 // command from IPC QT Socket
 //
 // created: 01-2022
-// by:Lode Ameije & Ash Singla
+// by:Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "stateManualConfig.h"
@@ -63,7 +62,12 @@ DF_ERROR stateManualConfig::onAction()
       DF_ERROR ret_msg;
       ret_msg = m_pMessaging->parseCommandString();
 
-      if ('0' == m_pMessaging->getAction() || ACTION_QUIT == m_pMessaging->getAction())
+      
+      if (m_pMessaging->getAction() == ACTION_RESET)
+      {
+         m_pMessaging->sendMessageOverIP("Init Ready");
+         m_state_requested = STATE_IDLE;
+      }else if ('0' == m_pMessaging->getAction() || ACTION_QUIT == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Exit Manual Config State", MSG_INFO);
 
@@ -107,7 +111,7 @@ DF_ERROR stateManualConfig::onAction()
       {
          debugOutput::sendMessage("---Manual config menu---"
                                   "Available commands: \n"
-                                  "sX: Set active slot, where X= 1,2,3 or 4\n"
+                                  "nX: Set active slot, where X= 1,2,3 or 4\n"
                                   " 0: Exit manual config menu \n"
                                   " 1: Get active slot register info\n"
                                   " 2: Write active slot default register values\n"

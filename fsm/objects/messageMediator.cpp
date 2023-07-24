@@ -44,7 +44,7 @@ double messageMediator::m_requestedDiscountPrice;
 string messageMediator::m_promoCode;
 
 // CTOR
-messageMediator::messageMediator(): m_machine(nullptr)
+messageMediator::messageMediator() : m_machine(nullptr)
 {
 
    debugOutput::sendMessage("Init messageMediator...", MSG_INFO);
@@ -52,6 +52,7 @@ messageMediator::messageMediator(): m_machine(nullptr)
    // new_sock = new ServerSocket();
    m_fExitThreads = false;
    // m_pKBThread = -1;
+   m_machine = nullptr;
 }
 
 // DTOR
@@ -148,7 +149,15 @@ DF_ERROR messageMediator::sendMessageOverIP(string msg)
 
 void messageMediator::setMachine(machine *machine)
 {
-   m_machine = machine;
+   if (machine == nullptr)
+   {
+
+      debugOutput::sendMessage("ASSERT ERROR: Nullpointer as argument. ", MSG_ERROR);
+   }
+   else
+   {
+      m_machine = machine;
+   }
 }
 
 // Sends a progress of dispensing to QT through a socket
@@ -430,6 +439,15 @@ DF_ERROR messageMediator::parseCommandString()
 
       std::string button_status = sCommand.substr(found0 + 1, found1 - found0 - 1);
       debugOutput::sendMessage("DispenseButtonLights. Button_status: " + button_status, MSG_INFO);
+
+      if (m_machine == nullptr)
+      {
+         debugOutput::sendMessage("PANIC", MSG_ERROR);
+      }
+      // else
+      // {
+      //    debugOutput::sendMessage(m_machine, MSG_ERROR);
+      // }
 
       // if (button_status == "ANIMATE")
       // {

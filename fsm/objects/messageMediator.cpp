@@ -431,25 +431,25 @@ DF_ERROR messageMediator::parseCommandString()
       std::string button_status = sCommand.substr(found0 + 1, found1 - found0 - 1);
       debugOutput::sendMessage("DispenseButtonLights. Button_status: " + button_status, MSG_INFO);
 
-      if (button_status == "ANIMATE")
-      {
-         debugOutput::sendMessage("animate", MSG_INFO);
+      // if (button_status == "ANIMATE")
+      // {
+      //    debugOutput::sendMessage("animate", MSG_INFO);
 
-         if (m_machine == nullptr)
-         {
-            debugOutput::sendMessage("PANIC", MSG_ERROR);
-         }
-         // m_machine->setButtonLightsBehaviour(Button_lights_behaviour::IDLE_ANIMATION_FROM_DB);
-      }
-      else if (button_status == "OFF")
-      {
-         if (m_machine == nullptr)
-         {
-            debugOutput::sendMessage("PANIC", MSG_ERROR);
-         }
-         debugOutput::sendMessage("Off", MSG_INFO);
-         // m_machine->setButtonLightsBehaviour(Button_lights_behaviour::IDLE_OFF);
-      }
+      //    if (m_machine == nullptr)
+      //    {
+      //       debugOutput::sendMessage("PANIC", MSG_ERROR);
+      //    }
+      //    // m_machine->setButtonLightsBehaviour(Button_lights_behaviour::IDLE_ANIMATION_FROM_DB);
+      // }
+      // else if (button_status == "OFF")
+      // {
+      //    if (m_machine == nullptr)
+      //    {
+      //       debugOutput::sendMessage("PANIC", MSG_ERROR);
+      //    }
+      //    debugOutput::sendMessage("Off", MSG_INFO);
+      //    // m_machine->setButtonLightsBehaviour(Button_lights_behaviour::IDLE_OFF);
+      // }
       m_requestedAction = ACTION_NO_ACTION;
    }
    else if (sCommand.find("Order") != string::npos)

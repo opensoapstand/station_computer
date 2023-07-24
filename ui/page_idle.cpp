@@ -46,6 +46,10 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     idlePageTypeSelectorTimer->setInterval(1000);
     connect(idlePageTypeSelectorTimer, SIGNAL(timeout()), this, SLOT(onIdlePageTypeSelectorTimerTick()));
 
+    pollTemperatureTimer = new QTimer(this);
+    pollTemperatureTimer->setInterval(1000);
+    connect(pollTemperatureTimer, SIGNAL(timeout()), this, SLOT(onPollTemperatureTimerTick()));
+
     for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
         products[slot_index].setSlot(slot_index + 1);
@@ -134,6 +138,9 @@ void page_idle::showEvent(QShowEvent *event)
 
     idlePageTypeSelectorTimer->start(1000);
     _idlePageTypeSelectorTimerTimeoutSec = PAGE_IDLE_DELAY_BEFORE_ENTERING_IDLE_PRODUCTS;
+
+    pollTemperatureTimer->start(1000);
+    _pollTemperatureTimerTimeoutSec = PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS;
 
 // #define PLAY_VIDEO
 #ifdef PLAY_VIDEO
@@ -241,6 +248,7 @@ void page_idle::hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createN
 
     this->pageTransition(this, pageToShow);
     idlePageTypeSelectorTimer->stop();
+    pollTemperatureTimer->stop();
 }
 /*
  * Screen click shows product page as full screen and hides page_idle screen
@@ -253,6 +261,19 @@ void page_idle::onIdlePageTypeSelectorTimerTick()
     else
     {
         changeToIdleProductsIfSet();
+    }
+}
+
+void page_idle::onPollTemperatureTimerTick()
+{
+    if (--_pollTemperatureTimerTimeoutSec >= 0)
+    {
+    }
+    else
+    {
+        qDebug() << "Check temperature.";
+        _pollTemperatureTimerTimeoutSec = PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS;
+        dfUtility->send_command_to_FSM("getTemperature");
     }
 }
 

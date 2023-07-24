@@ -707,6 +707,37 @@ void DbManager::addUserInteraction( QString session_id,QString role, QString pag
     }
     closeDb();
 }
+void DbManager::addTemperature(QString machine_id, double temperature, QString alert)
+{
+
+    {
+        QSqlDatabase db = openDb(USAGE_DB_PATH);
+        QSqlQuery qry(db);
+
+        QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+        qry.prepare("INSERT INTO temperature (time,machine_id,temperature,alert) VALUES (:time,:machine_id,:temperature,:alert);");
+        qry.bindValue(":time", time);
+        qry.bindValue(":machine_id", machine_id );
+        double temperature_rounded = std::round(temperature * 100) / 100;  // round to 2 decimal places
+
+        qry.bindValue(":temperature", temperature_rounded);
+        qry.bindValue(":alert", alert );
+
+        bool success;
+        success = qry.exec();
+
+        if (!success)
+        {
+            qDebug() << "Failed to write user interaction. error type: " << qry.lastError().type() << "Error message:" << qry.lastError().text();
+            qDebug() << "Error message:" << qry.lastError().text();
+            qDebug() << "Query:" << qry.lastQuery();
+        }
+        qry.finish();
+    }
+    closeDb();
+}
+
+
 
 bool DbManager::getRecentTransactions(QString values[][5], int count, int *count_retreived)
 {

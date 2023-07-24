@@ -60,7 +60,7 @@ void DfUiServer::noFlowAbortSlot()
 }
 
 
-void DfUiServer::receiveTemperatureFromFsm(QString temperature)
+void DfUiServer::receiveTemperatureFromFsm(double temperature)
 {
     emit temperatureSignal(temperature);
 }

@@ -103,12 +103,17 @@ public:
 
     QTimer *idlePageTypeSelectorTimer;
     int _idlePageTypeSelectorTimerTimeoutSec;
+    QTimer *pollTemperatureTimer;
+    int _pollTemperatureTimerTimeoutSec;
+
+
 
     void checkReceiptPrinterStatus();
 
 private slots:
     void on_pushButton_to_select_product_page_clicked();
     void onIdlePageTypeSelectorTimerTick();
+    void onPollTemperatureTimerTick();
 
     void on_pushButton_test_clicked();
 

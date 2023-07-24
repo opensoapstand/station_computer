@@ -107,6 +107,7 @@ public:
     bool define_pcb_version(void);
     PcbVersion get_pcb_version();
     bool isSlotAvailable(uint8_t slot);
+    bool isTemperatureSensorAvailable();
 
     unsigned char getPumpPWM();
     bool setPumpPWM(uint8_t pwm_val);
@@ -183,6 +184,7 @@ private:
 
     bool pic_pwm_found = false;
     bool max31760_pwm_found = false;
+    bool mcp9808_temperature_sensor_found = false;
 
     uint64_t pump_start_delay_start_epoch[MAX_SLOT_COUNT];
     uint64_t pump_stop_before_backtrack_delay_start_epoch[MAX_SLOT_COUNT];

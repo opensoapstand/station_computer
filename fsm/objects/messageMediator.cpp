@@ -408,6 +408,18 @@ DF_ERROR messageMediator::parseCommandString()
       // simple is alive command will reset to idle state
       m_requestedAction = ACTION_RESET;
    }
+   else if (sCommand.find("getTemperature") != string::npos)
+   {
+      
+      // double temperature = productDispensers[0].the_pcb->getTemperature();
+      // debugOutput::sendMessage("Temperature in Celsius: " + std::to_string(temperature), MSG_INFO);
+      // printf("Temperature polling from MCP9808: %.3f Celcius \n", temperature);
+      // //  m_pMessaging->sendMessageOverIP("|temperature|" + to_int(temperature));
+      //    m_pMessaging->sendMessageOverIP("|temperature|" + std::to_string(temperature));
+      
+      m_requestedAction = '5';
+      debugOutput::sendMessage("Request temperature", MSG_INFO);
+   }
    else if (sCommand.find("Order") != string::npos)
    {
       // e.g.   Order|1sd|2.2|super30off

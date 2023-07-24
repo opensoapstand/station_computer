@@ -105,15 +105,15 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     // ui->label_setting_temperature->setVisible(false);
     // double temperature = getTemperatureConfigure();
     //  debugOutput::sendMessage("Temperature in Celsius: " + std::to_string(temperature), MSG_INFO);
-    //ui->label_setting_temperature->setText("Temp="+temperature);
+    // ui->label_setting_temperature->setText("Temp="+temperature);
     //    ui->label_setting_temperature->setText("Temp = " + QString::number(temperature));
     //   pcb myPcb;
 
-//   // Call the `getTemperatureConfigure()` function
-//    double temperature = myPcb.getTemperature();
+    //   // Call the `getTemperatureConfigure()` function
+    //    double temperature = myPcb.getTemperature();
 
-//   // Use the temperature value as needed
-//    ui->label_setting_temperature->setText("Temp = " + QString::number(temperature));
+    //   // Use the temperature value as needed
+    //    ui->label_setting_temperature->setText("Temp = " + QString::number(temperature));
 
     isDispenseButtonPressed = false;
     activeEditField = "";
@@ -269,13 +269,12 @@ void page_maintenance_dispenser::onDispenseTimerTick()
     ui->label_status_button_press_time->setText(QString::number(dispenserPumpingSecs, 'f', 1) + "s / " + QString::number(dispenserEnabledSecs, 'f', 1) + "s");
 }
 
-
-void page_maintenance_dispenser::fsmReceiveTemperature(QString temperature)
+void page_maintenance_dispenser::fsmReceiveTemperature(double temperature)
 {
-    // qDebug() << "Dispense flow rate received from FSM: " << QString::number(flowrate, 'f', 2);
-        //ui->label_setting_temperature->setText("Temp="+temperature);
-
-    ui->label_setting_temperature->setText(temperature);
+    qDebug() << "Temperature received from FSM: " << temperature;
+    // ui->label_setting_temperature->setText("Temp="+temperature);
+    ui->label_setting_temperature->setText( QString::number(temperature, 'f', 2));
+    p_page_idle->thisMachine.writeTemperatureToDb(temperature);
 };
 
 void page_maintenance_dispenser::onMaintainProductPageTimeoutTick()
@@ -1034,4 +1033,3 @@ void page_maintenance_dispenser::on_checkBox_enable_custom_clicked()
     p_page_idle->selectedProduct->toggleSizeEnabled(SIZE_CUSTOM_INDEX);
     updateProductLabelValues(true);
 }
-

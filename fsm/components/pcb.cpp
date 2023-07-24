@@ -362,7 +362,8 @@ bool pcb::define_pcb_version(void)
             }
             else if (i2c_probe_address == TEMPERATURE_SENSOR_ADDRESS)
             {
-
+                debugOutput::sendMessage("MCP9808 Temperature Sensor found.", MSG_INFO);
+                mcp9808_temperature_sensor_found = true;
                 cTemp = getTemperature();
                 char temp_celcius_chars[MAX_BUF];
                 snprintf(temp_celcius_chars, sizeof(temp_celcius_chars), "%.2f", cTemp);
@@ -584,6 +585,10 @@ void pcb::initialize_pcb()
     }
 }
 
+bool pcb::isTemperatureSensorAvailable()
+{
+    return mcp9808_temperature_sensor_found;
+}
 bool pcb::isSlotAvailable(uint8_t slot)
 {
     if (slot == 0)

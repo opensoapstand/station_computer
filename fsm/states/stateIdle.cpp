@@ -19,10 +19,10 @@
 #include <iostream>
 #include <thread>
 
-
 // Default CTOR
 stateIdle::stateIdle()
 {
+   productDispensers = g_productDispensers;
 }
 
 // CTOR Linked to IP Thread Socket Listener
@@ -99,18 +99,15 @@ DF_ERROR stateIdle::onAction()
 
    // Check if Command String is ready
 
+   // if (temperatureRefresh==1) {
+   //   double temperature = this->productDispensers[0].the_pcb->getTemperature();
+   //   debugOutput::sendMessage("Temperature in Celsius: " + std::to_string(temperature), MSG_INFO);
+   //   printf("Temperature polling from MCP9808: %.3f Celcius \n", temperature);
+   //   m_pMessaging->sendMessageOverIP("|temperature|" + std::to_string(temperature));
 
-      if (temperatureRefresh==1) {
-        double temperature = this->productDispensers[0].the_pcb->getTemperature();
-        debugOutput::sendMessage("Temperature in Celsius: " + std::to_string(temperature), MSG_INFO);
-        printf("Temperature polling from MCP9808: %.3f Celcius \n", temperature);
-        m_pMessaging->sendMessageOverIP("|temperature|" + std::to_string(temperature));
-
-        std::this_thread::sleep_for(std::chrono::seconds(5));  // Wait for 5 seconds
-      temperatureRefresh==0;
-      }
-
-
+   //   std::this_thread::sleep_for(std::chrono::seconds(5));  // Wait for 5 seconds
+   // temperatureRefresh==0;
+   // }
 
    if (m_pMessaging->isCommandStringReadyToBeParsed())
    {
@@ -159,7 +156,7 @@ DF_ERROR stateIdle::onAction()
       }
       else if ('4' == m_pMessaging->getAction())
       {
-         productDispensers = g_productDispensers;
+         
          debugOutput::sendMessage("Before reload parameters from product", MSG_INFO);
          bool success = this->productDispensers[0].getProduct()->reloadParametersFromDb();
          this->productDispensers[0].loadGeneralProperties();
@@ -168,15 +165,23 @@ DF_ERROR stateIdle::onAction()
       }
       else if ('5' == m_pMessaging->getAction())
       {
+         debugOutput::sendMessage("Temperature requested", MSG_INFO);
+         
+         if (g_productDispensers[0].the_pcb->isTemperatureSensorAvailable())
+         {
+            debugOutput::sendMessage("lode", MSG_INFO);
+            double temperature = g_productDispensers[0].the_pcb->getTemperature();
+            // double temperature = g_productDispensers[0].the_pcb->getTemperatureConfigure();
+            debugOutput::sendMessage("Temperature in Celsius: " + std::to_string(temperature), MSG_INFO);
 
-         double temperature = this->productDispensers[0].the_pcb->getTemperature();
-         // double temperature = this->productDispensers[0].the_pcb->getTemperatureConfigure();
-         debugOutput::sendMessage("Temperature in Celsius: " + std::to_string(temperature), MSG_INFO);
-
-
-         printf("Temperature polling from MCP9808: %.3f Celcius \n", temperature);
-         //  m_pMessaging->sendMessageOverIP("|temperature|" + to_int(temperature));
-          m_pMessaging->sendMessageOverIP("|temperature|" + std::to_string(temperature));
+            // printf("Temperature polling from MCP9808: %.3f Celcius \n", temperature);
+            //  m_pMessaging->sendMessageOverIP("|temperature|" + to_int(temperature));
+            m_pMessaging->sendMessageOverIP("|temperature|" + std::to_string(temperature));
+         }
+         else
+         {
+            debugOutput::sendMessage("No temperature sensor found", MSG_INFO);
+         }
       }
       else
       {

@@ -22,7 +22,7 @@
 #include <pthread.h>
 
 #include "dispenser.h"
-#include "machine.h"
+#include "machine.h" 
 
 #include <stdio.h>
 #include <cstring>
@@ -30,6 +30,9 @@
 #include "../../library/socket/ServerSocket.h"
 #include "../../library/socket/SocketException.h"
 #include "../../library/socket/ClientSocket.h"
+
+// Forward declaration  to avoid circular dependencies problem
+class machine; 
 
 class messageMediator
 {

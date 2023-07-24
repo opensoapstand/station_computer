@@ -76,6 +76,7 @@ page_idle::~page_idle()
 void page_idle::showEvent(QShowEvent *event)
 {
     thisMachine.resetSessionId();
+    // dfUtility->send_command_to_FSM("DispenseButtonLights|ANIMATE");
 
     registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);

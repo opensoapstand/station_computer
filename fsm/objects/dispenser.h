@@ -18,7 +18,7 @@
 #include "../dftypes.h"
 #include "../components/gpio.h"
 #include "../components/pcb.h"
-// #include "machine.h"
+#include "machine.h"
 #include "../components/odysseyx86gpio.h"
 #include "product.h"
 #include <sqlite3.h>
@@ -50,6 +50,8 @@
 #define MCP_PIN_START 0
 #define MPC_PIN_END 15
 
+class machine; 
+
 class dispenser
 {
 public:
@@ -57,7 +59,7 @@ public:
       dispenser(gpio *buttonReference);
       ~dispenser();
 
-      DF_ERROR setup(pcb* pcb);
+      DF_ERROR setup(machine* machine);
       // DF_ERROR setup(pcb* pcb, machine* machine);
       void refresh();
       // void initDispenser(int slot);
@@ -144,8 +146,7 @@ public:
 
       DF_ERROR loadGeneralProperties();
 
-      void loadButtonPropertiesFromDb();
-      bool getMultiDispenseButtonEnabled();
+
       void loadEmptyContainerDetectionEnabledFromDb();
       void loadSlotStateFromDb();
       void loadPumpReversalEnabledFromDb();
@@ -160,11 +161,10 @@ public:
       
       bool getIsStatusUpdateAllowed();
 
-      int getButtonAnimationProgram();
 
 
-      // static pcb *the_pcb;
       pcb* the_pcb;
+      machine* m_machine;
       // machine* global_machine;
 private:
       bool dispenseButtonValueMemory;
@@ -223,8 +223,7 @@ private:
       bool m_isEmptyContainerDetectionEnabled = false;
       bool m_isPumpSlowStartStopEnabled = false;
       bool m_isPumpReversalEnabled = false;
-      bool m_isMultiButtonEnabled = false;
-      int m_button_animation;
+
 
       // bool m_isDispenseDone; // XXX: Remove later.
       // bool m_isStill;

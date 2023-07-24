@@ -44,7 +44,7 @@ double messageMediator::m_requestedDiscountPrice;
 string messageMediator::m_promoCode;
 
 // CTOR
-messageMediator::messageMediator()
+messageMediator::messageMediator(): m_machine(nullptr)
 {
 
    debugOutput::sendMessage("Init messageMediator...", MSG_INFO);
@@ -146,7 +146,8 @@ DF_ERROR messageMediator::sendMessageOverIP(string msg)
    return dfError;
 }
 
-void messageMediator::setMachine(machine* machine){
+void messageMediator::setMachine(machine *machine)
+{
    m_machine = machine;
 }
 
@@ -412,11 +413,10 @@ DF_ERROR messageMediator::parseCommandString()
       // simple is alive command will reset to idle state
       m_requestedAction = ACTION_RESET;
    }
-   else if (sCommand.find("ButtonLights") != string::npos)
+   else if (sCommand.find("DispenseButtonLights") != string::npos)
    {
       // simple is alive command will reset to idle state
-       // e.g.   Order|1sd|2.2|super30off
-      debugOutput::sendMessage("Order command found", MSG_INFO);
+      // e.g.   ButtonLights|ON
       std::string delimiter = "|";
       std::size_t found0 = sCommand.find(delimiter);
       std::size_t found1 = sCommand.find(delimiter, found0 + 1);
@@ -429,17 +429,28 @@ DF_ERROR messageMediator::parseCommandString()
       // debugOutput::sendMessage(to_string(found3), MSG_INFO);
 
       std::string button_status = sCommand.substr(found0 + 1, found1 - found0 - 1);
-      debugOutput::sendMessage("button_status: " + button_status, MSG_INFO);
-      
-      
+      debugOutput::sendMessage("DispenseButtonLights. Button_status: " + button_status, MSG_INFO);
 
-      //parseDispenseCommand(button_status);
+      if (button_status == "ANIMATE")
+      {
+         debugOutput::sendMessage("animate", MSG_INFO);
 
-      // std::string  = sCommand.substr(found1 + 1, found2 - found1 - 1);
-      // double price = std::stod(pricestr);
-      // m_requestedDiscountPrice = price;
-      // debugOutput::sendMessage("(Discount) price : " + to_string(m_requestedDiscountPrice), MSG_INFO);
-      
+         if (m_machine == nullptr)
+         {
+            debugOutput::sendMessage("PANIC", MSG_ERROR);
+         }
+         // m_machine->setButtonLightsBehaviour(Button_lights_behaviour::IDLE_ANIMATION_FROM_DB);
+      }
+      else if (button_status == "OFF")
+      {
+         if (m_machine == nullptr)
+         {
+            debugOutput::sendMessage("PANIC", MSG_ERROR);
+         }
+         debugOutput::sendMessage("Off", MSG_INFO);
+         // m_machine->setButtonLightsBehaviour(Button_lights_behaviour::IDLE_OFF);
+      }
+      m_requestedAction = ACTION_NO_ACTION;
    }
    else if (sCommand.find("Order") != string::npos)
    {
@@ -472,7 +483,6 @@ DF_ERROR messageMediator::parseCommandString()
       std::string promoCode = "";
       if (found1 != string::npos)
       {
-
          promoCode = sCommand.substr(found2 + 1, found3 - found2 - 1);
       }
       m_promoCode = promoCode;

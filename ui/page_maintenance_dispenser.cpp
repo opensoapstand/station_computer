@@ -277,6 +277,7 @@ void page_maintenance_dispenser::fsmReceiveTemperature(QString temperature)
 
     ui->label_setting_temperature->setText(temperature);
 };
+
 void page_maintenance_dispenser::onMaintainProductPageTimeoutTick()
 {
 

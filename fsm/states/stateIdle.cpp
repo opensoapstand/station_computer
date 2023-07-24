@@ -52,33 +52,34 @@ DF_ERROR stateIdle::onEntry()
    return e_ret;
 }
 
-sendTemperature() {
-   temperatureRefresh=1;
-}
-int timer() {
-    std::chrono::seconds interval(5);
+// sendTemperature() {
+//    temperatureRefresh=1;
+// }
 
-    auto timerCallback = []() {
-        sendTemperature();
-    };
+// int timer() {
+//     std::chrono::seconds interval(5);
 
-    while (true) {
-        auto start = std::chrono::steady_clock::now();
+//     auto timerCallback = []() {
+//         sendTemperature();
+//     };
 
-        timerCallback();
+//     while (true) {
+//         auto start = std::chrono::steady_clock::now();
 
-        auto end = std::chrono::steady_clock::now();
-        auto elapsed = end - start;
+//         timerCallback();
 
-        auto sleepDuration = interval - std::chrono::duration_cast<std::chrono::seconds>(elapsed);
+//         auto end = std::chrono::steady_clock::now();
+//         auto elapsed = end - start;
 
-        if (sleepDuration > std::chrono::seconds(0)) {
-            std::this_thread::sleep_for(sleepDuration);
-        }
-    }
+//         auto sleepDuration = interval - std::chrono::duration_cast<std::chrono::seconds>(elapsed);
 
-    return 0;
-}
+//         if (sleepDuration > std::chrono::seconds(0)) {
+//             std::this_thread::sleep_for(sleepDuration);
+//         }
+//     }
+
+//     return 0;
+// }
 
 DF_ERROR stateIdle::onAction()
 {

@@ -45,23 +45,16 @@ void machine::setup()
     // }
     //  if (control_pcb == nullptr)
     // {
-    debugOutput::sendMessage(" machine setupt busyggggggggsysyte", MSG_INFO);
     control_pcb = new pcb();
-    debugOutput::sendMessage(" machine setudddddddpt busysysyte", MSG_INFO);
     // }
 
     receipt_printer = new Adafruit_Thermal();
-    debugOutput::sendMessage(" machineqqqqq setupt busysysyte", MSG_INFO);
-
     control_pcb->setup();
     control_pcb->setPumpPWM(DEFAULT_PUMP_PWM);
-    debugOutput::sendMessage(" machwqqine setupt busysysyte", MSG_INFO);
-
     // the 24V power has a master on/off switch
     switch_24V = new oddyseyx86GPIO(IO_PIN_ENABLE_24V);
     power24VEnabled = false;
     switch_24V->setPinAsInputElseOutput(false); // set as output
-    debugOutput::sendMessage(" enie", MSG_INFO);
 }
 
 void machine::loadGeneralProperties()

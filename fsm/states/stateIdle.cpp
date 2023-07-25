@@ -22,8 +22,9 @@ stateIdle::stateIdle()
 }
 
 // CTOR Linked to IP Thread Socket Listener
-stateIdle::stateIdle(messageMediator *message)
+stateIdle::stateIdle(messageMediator *pmm)
 {
+   m_pMessaging = pmm;
 }
 
 // DTOR
@@ -50,7 +51,7 @@ DF_ERROR stateIdle::onEntry()
 
 DF_ERROR stateIdle::onAction()
 {
-   // g_machine.refreshButtonLightAnimation();
+   g_machine.refreshButtonLightAnimation();
 
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 

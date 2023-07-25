@@ -51,8 +51,7 @@ messageMediator::messageMediator() : m_machine(nullptr)
    // TODO: Initialize with Pointer reference to socket...
    // new_sock = new ServerSocket();
    m_fExitThreads = false;
-   // m_pKBThread = -1;
-   m_machine = nullptr;
+   // m_machine = nullptr; // already implied from the "member initialization list" (: m_machine(nullptr))
 }
 
 // DTOR
@@ -156,7 +155,16 @@ void messageMediator::setMachine(machine *machine)
    }
    else
    {
-      m_machine = machine;
+
+      if (m_machine == nullptr)
+      {
+         debugOutput::sendMessage("normal TO BE NULLPTR AT START ", MSG_ERROR);
+      }
+      else
+      {
+         debugOutput::sendMessage("not nullptr at start ", MSG_ERROR);
+      }
+      this->m_machine = machine;
    }
 }
 
@@ -439,35 +447,43 @@ DF_ERROR messageMediator::parseCommandString()
 
       std::string button_status = sCommand.substr(found0 + 1, found1 - found0 - 1);
       debugOutput::sendMessage("DispenseButtonLights. Button_status: " + button_status, MSG_INFO);
+      // std::string pointerAddress = std::to_string(reinterpret_cast<uintptr_t>(m_machine));
 
-      if (m_machine == nullptr)
-      {
-         debugOutput::sendMessage("PANIC", MSG_ERROR);
-      }
+
+      //  debugOutput::sendMessage("m_machine poitner address : " + pointerAddress, MSG_INFO);
+      
+      // if (this == nullptr){
+      //    debugOutput::sendMessage("yes yes. ", MSG_ERROR);
+      // }
+      // if (m_machine == nullptr)
+      // {
+      //    // debugOutput::sendMessage("yes yes. ", MSG_ERROR);
+      //    found0++;
+      // }
       // else
       // {
       //    debugOutput::sendMessage(m_machine, MSG_ERROR);
       // }
 
-      // if (button_status == "ANIMATE")
-      // {
-      //    debugOutput::sendMessage("animate", MSG_INFO);
+      if (button_status == "ANIMATE")
+      {
+         debugOutput::sendMessage("animate", MSG_INFO);
 
-      //    if (m_machine == nullptr)
-      //    {
-      //       debugOutput::sendMessage("PANIC", MSG_ERROR);
-      //    }
-      //    // m_machine->setButtonLightsBehaviour(Button_lights_behaviour::IDLE_ANIMATION_FROM_DB);
-      // }
-      // else if (button_status == "OFF")
-      // {
-      //    if (m_machine == nullptr)
-      //    {
-      //       debugOutput::sendMessage("PANIC", MSG_ERROR);
-      //    }
-      //    debugOutput::sendMessage("Off", MSG_INFO);
-      //    // m_machine->setButtonLightsBehaviour(Button_lights_behaviour::IDLE_OFF);
-      // }
+         if (m_machine == nullptr)
+         {
+            debugOutput::sendMessage("PANIC", MSG_ERROR);
+         }
+         m_machine->setButtonLightsBehaviour(Button_lights_behaviour::IDLE_ANIMATION_FROM_DB);
+      }
+      else if (button_status == "OFF")
+      {
+         if (m_machine == nullptr)
+         {
+            debugOutput::sendMessage("PANIC", MSG_ERROR);
+         }
+         debugOutput::sendMessage("Off", MSG_INFO);
+         m_machine->setButtonLightsBehaviour(Button_lights_behaviour::IDLE_OFF);
+      }
       m_requestedAction = ACTION_NO_ACTION;
    }
    else if (sCommand.find("Order") != string::npos)

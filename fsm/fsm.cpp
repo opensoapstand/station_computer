@@ -56,8 +56,6 @@ DF_ERROR initObjects();
 DF_ERROR createStateArray();
 DF_ERROR stateLoop();
 
-
-
 /*
  * Instantiate Array to hold objects specfic to states (DF_FSM)
  * XXX: Reminder to instantiate new states here!
@@ -69,7 +67,7 @@ DF_ERROR createStateArray()
     if (NULL != g_pMessaging)
     {
         g_stateArray[STATE_INIT] = new stateInit();
-        g_stateArray[STATE_IDLE] = new stateIdle();
+        g_stateArray[STATE_IDLE] = new stateIdle(g_pMessaging);
         g_stateArray[STATE_DISPENSE_INIT] = new stateDispenseInit();
         g_stateArray[STATE_DISPENSE_IDLE] = new stateDispenseIdle();
         g_stateArray[STATE_DISPENSE] = new stateDispense();
@@ -100,14 +98,11 @@ int main()
     // machine test;
     // test.testtest();
 
-
-
     if (OK == initObjects())
     {
         debugOutput::sendMessage("Init objects done", MSG_INFO);
         dfRet = g_pMessaging->createThreads(kbThread, ipThread);
 
-       
         if (OK == dfRet)
         {
             dfRet = stateLoop();
@@ -184,15 +179,20 @@ DF_ERROR initObjects()
 {
     DF_ERROR dfRet = OK;
 
-    g_pMessaging = NULL;
+    // g_pMessaging = NULL;
     g_pMessaging = new messageMediator();
 
-//    g_machine = new machine();
-    //g_pMessaging->setMachine(g_machine);
+    if (g_pMessaging == nullptr)
+    {
+        debugOutput::sendMessage("**************Failed to allocate messageMediator", MSG_ERROR);
+    }
+
+    //    g_machine = new machine();
     debugOutput::sendMessage("message mediator set up.", MSG_INFO);
     g_machine.setup();
+    g_pMessaging->setMachine(&g_machine);
     debugOutput::sendMessage("Machine set up.", MSG_INFO);
-    
+
     for (int i = 0; i < PRODUCT_DISPENSERS_MAX; i++)
     {
         g_productDispensers[i].setup(&g_machine);

@@ -21,6 +21,7 @@ stateDispenseInit::stateDispenseInit()
 // CTOR Linked to IPC
 stateDispenseInit::stateDispenseInit(messageMediator *message)
 {
+    m_pMessaging = message;
 }
 
 // DTOR

@@ -26,6 +26,7 @@ stateManualPrinter::stateManualPrinter()
 // CTOR Linked to IP Thread Socket Listener
 stateManualPrinter::stateManualPrinter(messageMediator *message)
 {
+   m_pMessaging = message;
 }
 
 // DTOR

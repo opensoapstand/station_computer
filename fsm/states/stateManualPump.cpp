@@ -28,6 +28,7 @@ stateManualPump::stateManualPump()
 stateManualPump::stateManualPump(messageMediator *message)
 {
    isCyclicTesting = false;
+   m_pMessaging = message;
 }
 
 // DTOR

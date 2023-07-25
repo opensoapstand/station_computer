@@ -32,6 +32,7 @@ stateInit::stateInit()
 // CTOR Linked to IPC
 stateInit::stateInit(messageMediator *message)
 {
+    m_pMessaging = message;
 }
 
 // DTOR

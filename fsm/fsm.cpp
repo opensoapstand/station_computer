@@ -66,16 +66,16 @@ DF_ERROR createStateArray()
 
     if (NULL != g_pMessaging)
     {
-        g_stateArray[STATE_INIT] = new stateInit();
+        g_stateArray[STATE_INIT] = new stateInit(g_pMessaging);
         g_stateArray[STATE_IDLE] = new stateIdle(g_pMessaging);
-        g_stateArray[STATE_DISPENSE_INIT] = new stateDispenseInit();
-        g_stateArray[STATE_DISPENSE_IDLE] = new stateDispenseIdle();
-        g_stateArray[STATE_DISPENSE] = new stateDispense();
-        g_stateArray[STATE_DISPENSE_END] = new stateDispenseEnd();
-        g_stateArray[STATE_MANUAL_PRINTER] = new stateManualPrinter();
-        g_stateArray[STATE_MANUAL_PUMP] = new stateManualPump();
-        g_stateArray[STATE_MANUAL_CONFIG] = new stateManualConfig();
-        g_stateArray[STATE_END] = new stateEnd();
+        g_stateArray[STATE_DISPENSE_INIT] = new stateDispenseInit(g_pMessaging);
+        g_stateArray[STATE_DISPENSE_IDLE] = new stateDispenseIdle(g_pMessaging);
+        g_stateArray[STATE_DISPENSE] = new stateDispense(g_pMessaging);
+        g_stateArray[STATE_DISPENSE_END] = new stateDispenseEnd(g_pMessaging);
+        g_stateArray[STATE_MANUAL_PRINTER] = new stateManualPrinter(g_pMessaging);
+        g_stateArray[STATE_MANUAL_PUMP] = new stateManualPump(g_pMessaging);
+        g_stateArray[STATE_MANUAL_CONFIG] = new stateManualConfig(g_pMessaging);
+        g_stateArray[STATE_END] = new stateEnd(g_pMessaging);
         dfRet = OK;
     }
 

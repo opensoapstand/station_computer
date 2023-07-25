@@ -23,6 +23,7 @@ stateDispenseEnd::stateDispenseEnd()
 // CTOR Linked to IPC
 stateDispenseEnd::stateDispenseEnd(messageMediator *message)
 {
+    m_pMessaging = message;
 }
 
 // DTOR

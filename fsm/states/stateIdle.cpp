@@ -22,9 +22,9 @@ stateIdle::stateIdle()
 }
 
 // CTOR Linked to IP Thread Socket Listener
-stateIdle::stateIdle(messageMediator *pmm)
+stateIdle::stateIdle(messageMediator *message)
 {
-   m_pMessaging = pmm;
+   m_pMessaging = message;
 }
 
 // DTOR

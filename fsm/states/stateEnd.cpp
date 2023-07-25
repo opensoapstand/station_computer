@@ -24,6 +24,7 @@ stateEnd::stateEnd()
 // CTOR Linked to IP Thread Socket Listener
 stateEnd::stateEnd(messageMediator *message)
 {
+   m_pMessaging = message;
 }
 
 // DTOR

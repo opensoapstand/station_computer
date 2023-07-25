@@ -1608,11 +1608,11 @@ double pcb::getTemperature()
     //     return temperature_bytes_swapped;
     // }
 
-    std::string binarymsb = std::bitset<16>(msbint).to_string();
-    debugOutput::sendMessage("Temperature as bits msb: " + binarymsb, MSG_INFO);
+    // std::string binarymsb = std::bitset<16>(msbint).to_string();
+    //debugOutput::sendMessage("Temperature as bits msb: " + binarymsb, MSG_INFO);
 
-    std::string binarylsb = std::bitset<16>(lsbint).to_string();
-    debugOutput::sendMessage("Temperature as bits lsb: " + binarylsb, MSG_INFO);
+    // std::string binarylsb = std::bitset<16>(lsbint).to_string();
+    // debugOutput::sendMessage("Temperature as bits lsb: " + binarylsb, MSG_INFO);
 
     temperature_bytes = temperature_bytes_swapped;
     uint16_t signBit = (temperature_bytes >> 12) & 0x01;   // Sign bit is at bit 12
@@ -1628,8 +1628,8 @@ double pcb::getTemperature()
         // Positive temperature
         cTemp = temperatureData * 0.0625;
     }
-    std::string binary = std::bitset<16>(temperature_bytes).to_string();
-    debugOutput::sendMessage("Temperature as bits: " + binary, MSG_INFO);
+    // std::string binary = std::bitset<16>(temperature_bytes).to_string();
+    // debugOutput::sendMessage("Temperature as bits: " + binary, MSG_INFO);
 
     return cTemp;
 }

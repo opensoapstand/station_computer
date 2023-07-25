@@ -124,6 +124,21 @@ QByteArray DfUiCommThread::readyRead()
         emit dispenseRateSignal(flowrate); 
         emit dispenseStatusSignal(dispenseStatusString); 
     }
+    else if (Data.contains("finalVolumeDispensed|"))
+
+    {
+        // qDebug() << "dispenseupdatedata received: " << Data;
+        int first_delim_pos = Data.indexOf('|');
+        int second_delim_pos = Data.indexOf('|', first_delim_pos + 1);
+
+        QByteArray first_part = Data.mid(0, first_delim_pos);
+        QByteArray second_part = Data.mid(first_delim_pos + 1, second_delim_pos - first_delim_pos - 1);
+       
+        double volumeDispensed = second_part.toDouble();
+    
+        emit updateFinalVolumeDispensedSignal(volumeDispensed); 
+
+    }
 
     else
     {

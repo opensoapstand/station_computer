@@ -633,7 +633,9 @@ double stateDispenseEnd::getFinalPrice()
         price = m_pMessaging->getRequestedPrice();
     }
     debugOutput::sendMessage("Post dispense final price: " + to_string(price), MSG_INFO);
-
+    double volume = productDispensers[slot_index].getVolumeDispensed();
+    std::string message = "finalVolumeDispensed|" + std::to_string(volume) + "|";
+    m_pMessaging->sendMessageOverIP(message);
     return price;
 }
 

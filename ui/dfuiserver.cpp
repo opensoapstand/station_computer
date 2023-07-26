@@ -41,6 +41,12 @@ void DfUiServer::updateVolumeSlot(double dispensed)
 {
     emit signalUpdateVolume(dispensed, false);
 }
+
+void DfUiServer::updateFinalVolumeDispensed(double dispensed)
+{
+    emit finalVolumeDispensed(dispensed);
+}
+
 void DfUiServer::dispenseStatusSlot(QString status)
 {
     emit signalDispenseStatus(status);
@@ -127,6 +133,7 @@ void DfUiServer::incomingConnection(qintptr socketDescriptor)
     connect(messageHandlerThread, &DfUiCommThread::transactionEndSignal, this, &DfUiServer::transactionEndSlot);
     connect(messageHandlerThread, &DfUiCommThread::resetTimerSignal, this, &DfUiServer::resetTimerSlot);
     connect(messageHandlerThread, &DfUiCommThread::updateVolumeSignal, this, &DfUiServer::updateVolumeSlot);
+    connect(messageHandlerThread, &DfUiCommThread::updateFinalVolumeDispensedSignal, this, &DfUiServer::updateFinalVolumeDispensed);
     connect(messageHandlerThread, &DfUiCommThread::dispenseRateSignal, this, &DfUiServer::dispenseRateSlot);
     connect(messageHandlerThread, &DfUiCommThread::dispenseStatusSignal, this, &DfUiServer::dispenseStatusSlot);
     connect(messageHandlerThread, &DfUiCommThread::messageHandlerFinishedSignal, this, &DfUiServer::messageHandlerFinishedSlot);

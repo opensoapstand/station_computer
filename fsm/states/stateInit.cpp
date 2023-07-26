@@ -32,6 +32,7 @@ stateInit::stateInit()
 // CTOR Linked to IPC
 stateInit::stateInit(messageMediator *message)
 {
+    m_pMessaging = message;
 }
 
 // DTOR
@@ -129,14 +130,15 @@ DF_ERROR stateInit::dispenserSetup()
         productDispensers[idx].setPump(0, 0, idx);
         productDispensers[idx].loadGeneralProperties();
     }
+    g_machine.loadGeneralProperties();
 
-    productDispensers[0].initButtonsShutdownAndMaintenance(); // todo: this is a hack for the maintenance and power button. It should not be part of the dispenser class
+    // productDispensers[0].initButtonsShutdownAndMaintenance(); // todo: this is a hack for the maintenance and power button. It should not be part of the dispenser class
 
     // needs to be set up only once. Dispenser index is only important for the button 4 index.
     
     if (g_machine.control_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON )  //&& this->slot == 4
     {
-        if (productDispensers[3].getMultiDispenseButtonEnabled())
+        if (g_machine.getMultiDispenseButtonEnabled())
         {
             productDispensers[3].initDispenseButton4Light(); // THE DISPENSER SLOT MUST REPRESENT THE BUTTON. It's dirty and I know it.
             productDispensers[3].setAllDispenseButtonLightsOff();

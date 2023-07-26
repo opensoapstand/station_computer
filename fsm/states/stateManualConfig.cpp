@@ -27,6 +27,7 @@ stateManualConfig::stateManualConfig()
 // CTOR Linked to IP Thread Socket Listener
 stateManualConfig::stateManualConfig(messageMediator *message)
 {
+   m_pMessaging = message;
 }
 
 // DTOR

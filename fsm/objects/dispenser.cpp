@@ -66,14 +66,13 @@ dispenser::dispenser()
     previous_dispense_state = FLOW_STATE_UNAVAILABLE;
 }
 
-// DF_ERROR dispenser::setup(pcb *pcbtest, machine* machine)
-DF_ERROR dispenser::setup(pcb *pcbtest)
+DF_ERROR dispenser::setup(machine* machine)
 {
     // Set the pump PWM value to a nominal value
 
-    // the_pcb->setup();
-    the_pcb = pcbtest;
-    // global_machine = machine;
+    m_machine = machine;
+
+    the_pcb = m_machine->getPcb();
 
     the_pcb->setPumpPWM(DEFAULT_PUMP_PWM);
 
@@ -83,7 +82,6 @@ DF_ERROR dispenser::setup(pcb *pcbtest)
     previousDispensedVolume = 0;
     isPumpSoftStarting = false;
     pwm_actual_set_speed = 0;
-    m_button_animation = 0;
 }
 
 void dispenser::refresh()
@@ -219,7 +217,7 @@ void dispenser::setMultiDispenseButtonLight(int slot, bool enableElseDisable)
 
     if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON)
     {
-        if (getMultiDispenseButtonEnabled())
+        if (m_machine->getMultiDispenseButtonEnabled())
         {
 
             if (this->slot == 4)
@@ -290,8 +288,7 @@ DF_ERROR dispenser::loadGeneralProperties()
     usleep(20000);
     loadPumpReversalEnabledFromDb();
     usleep(20000);
-    loadButtonPropertiesFromDb();
-    usleep(20000);
+
     //  the_pcb->setSingleDispenseButtonLight(this->slot, false);
 
     resetVolumeDispensed();
@@ -331,7 +328,7 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
     // if (the_pcb->get_pcb_version() == 2){
     if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON)
     {
-        if (getMultiDispenseButtonEnabled())
+        if (m_machine->getMultiDispenseButtonEnabled())
         {
             setMultiDispenseButtonLight(getSlot(), true);
         }
@@ -366,10 +363,8 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
 DF_ERROR dispenser::stopDispense()
 {
     debugOutput::sendMessage("stop dispense actions...", MSG_INFO);
-    // if (getMultiDispenseButtonEnabled())
-    // {
+  
     setAllDispenseButtonLightsOff();
-    // }
 
     the_pcb->flowSensorsDisableAll();
 
@@ -786,53 +781,6 @@ DF_ERROR dispenser::setPumpPWM(uint8_t value, bool enableLog)
 unsigned short dispenser::getPumpSpeed()
 {
     the_pcb->getPumpPWM();
-}
-
-void dispenser::loadButtonPropertiesFromDb()
-{
-    rc = sqlite3_open(CONFIG_DB_PATH, &db);
-    sqlite3_stmt *stmt;
-    string sql_string = "SELECT dispense_buttons_count FROM machine";
-    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
-    sqlite3_step(stmt);
-
-    int val = sqlite3_column_int(stmt, 0);
-
-    // button light effect program
-    m_button_animation = val / 1000;
-
-    // button count
-    int buttons_count = val % 1000;
-
-    sqlite3_finalize(stmt);
-    sqlite3_close(db);
-    // val = 4;
-    if (buttons_count == 1)
-    {
-        m_isMultiButtonEnabled = false;
-    }
-    else if (buttons_count == 4)
-    {
-        m_isMultiButtonEnabled = true;
-    }
-    else
-    {
-        m_isMultiButtonEnabled = false;
-        debugOutput::sendMessage("ASSERT Error: unimplemented number of dispense buttons. Default to single dispense button. Buttons indicated in db:" + to_string(m_isMultiButtonEnabled), MSG_ERROR);
-    }
-
-    debugOutput::sendMessage("Multiple dispense buttons enabled? : " + to_string(m_isMultiButtonEnabled), MSG_INFO);
-}
-
-
-int dispenser::getButtonAnimationProgram(){
-    // 0 is no animation. 
-    return m_button_animation;
-}
-
-bool dispenser::getMultiDispenseButtonEnabled()
-{
-    return m_isMultiButtonEnabled;
 }
 
 void dispenser::loadPumpReversalEnabledFromDb()

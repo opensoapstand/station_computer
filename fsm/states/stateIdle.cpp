@@ -28,6 +28,7 @@ stateIdle::stateIdle()
 // CTOR Linked to IP Thread Socket Listener
 stateIdle::stateIdle(messageMediator *message)
 {
+   m_pMessaging = message;
 }
 
 // DTOR
@@ -47,7 +48,7 @@ DF_ERROR stateIdle::onEntry()
 {
    m_state_requested = STATE_IDLE;
    DF_ERROR e_ret = OK;
-   g_machine.resetRunningLight();
+   g_machine.resetButtonLightAnimation();
 
    return e_ret;
 }
@@ -83,14 +84,7 @@ DF_ERROR stateIdle::onEntry()
 
 DF_ERROR stateIdle::onAction()
 {
-   if (g_productDispensers[0].getButtonAnimationProgram() == 1)
-   {
-      g_machine.refreshRunningLightPingPong();
-   }
-   else if (g_productDispensers[0].getButtonAnimationProgram() == 2)
-   {
-      g_machine.refreshRunningLightCaterpillar();
-   }
+   g_machine.refreshButtonLightAnimation();
 
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
@@ -124,6 +118,9 @@ DF_ERROR stateIdle::onAction()
          {
             m_state_requested = STATE_DISPENSE_INIT;
          }
+      }
+      else if (m_pMessaging->getAction() == ACTION_NO_ACTION){
+
       }
       else if (m_pMessaging->getAction() == ACTION_RESET)
       {
@@ -160,6 +157,7 @@ DF_ERROR stateIdle::onAction()
          debugOutput::sendMessage("Before reload parameters from product", MSG_INFO);
          bool success = this->productDispensers[0].getProduct()->reloadParametersFromDb();
          this->productDispensers[0].loadGeneralProperties();
+         g_machine.loadGeneralProperties();
 
          debugOutput::sendMessage("After" + to_string(success), MSG_INFO);
       }
@@ -213,7 +211,7 @@ DF_ERROR stateIdle::onAction()
 // Advances to Dispense Idle
 DF_ERROR stateIdle::onExit()
 {
-   g_machine.resetRunningLight();
+   g_machine.resetButtonLightAnimation();
    DF_ERROR e_ret = OK;
    return e_ret;
 }

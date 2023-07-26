@@ -25,7 +25,13 @@
 #include <iomanip>
 
 using namespace std;
-// pcb *machine::control_pcb = nullptr;
+
+machine::machine()
+{
+    m_button_lights_behaviour = Button_lights_behaviour::IDLE_ANIMATION_FROM_DB;
+    // m_button_lights_behaviour = Button_lights_behaviour::IDLE_OFF;
+    m_button_animation_program = 0;
+}
 
 void machine::setup()
 {
@@ -43,15 +49,20 @@ void machine::setup()
     // }
 
     receipt_printer = new Adafruit_Thermal();
-
     control_pcb->setup();
     control_pcb->setPumpPWM(DEFAULT_PUMP_PWM);
-
     // the 24V power has a master on/off switch
     switch_24V = new oddyseyx86GPIO(IO_PIN_ENABLE_24V);
     power24VEnabled = false;
     switch_24V->setPinAsInputElseOutput(false); // set as output
 }
+
+void machine::loadGeneralProperties()
+{
+    loadButtonPropertiesFromDb();
+    usleep(20000);
+}
+
 pcb *machine::getPcb()
 {
     return control_pcb;
@@ -61,7 +72,60 @@ pcb *machine::getPcb()
 //     debugOutput::sendMessage("*** global machine test message", MSG_INFO);
 // }
 
-void machine::resetRunningLight()
+void machine::loadButtonPropertiesFromDb()
+{
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
+    sqlite3_stmt *stmt;
+    string sql_string = "SELECT dispense_buttons_count FROM machine";
+    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+    sqlite3_step(stmt);
+
+    int val = sqlite3_column_int(stmt, 0);
+
+    // button light effect program
+    m_button_animation_program = val / 1000;
+
+    // button count
+    int buttons_count = val % 1000;
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+    // val = 4;
+    if (buttons_count == 1)
+    {
+        m_isMultiButtonEnabled = false;
+    }
+    else if (buttons_count == 4)
+    {
+        m_isMultiButtonEnabled = true;
+    }
+    else
+    {
+        m_isMultiButtonEnabled = false;
+        debugOutput::sendMessage("ASSERT Error: unimplemented number of dispense buttons. Default to single dispense button. Buttons indicated in db:" + to_string(m_isMultiButtonEnabled), MSG_ERROR);
+    }
+
+    debugOutput::sendMessage("Multiple dispense buttons enabled? : " + to_string(m_isMultiButtonEnabled), MSG_INFO);
+    debugOutput::sendMessage("Animation program number (0=no animation)? : " + to_string(m_button_animation_program), MSG_INFO);
+}
+
+int machine::getButtonAnimationProgram()
+{
+    // 0 is no animation.
+    return m_button_animation_program;
+}
+
+bool machine::getMultiDispenseButtonEnabled()
+{
+    return m_isMultiButtonEnabled;
+}
+
+void machine::setButtonLightsBehaviour(Button_lights_behaviour behaviour)
+{
+    m_button_lights_behaviour = behaviour;
+}
+
+void machine::resetButtonLightAnimation()
 {
     using namespace std::chrono;
     uint64_t m_lights_animation_most_recent_step_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
@@ -69,10 +133,46 @@ void machine::resetRunningLight()
     control_pcb->setSingleDispenseButtonLight(2, false);
     control_pcb->setSingleDispenseButtonLight(3, false);
     control_pcb->setSingleDispenseButtonLight(4, false);
+
     m_lights_animation_step = 0;
 }
 
-void machine::refreshRunningLightCaterpillar()
+void machine::refreshButtonLightAnimation()
+{
+
+    if (m_button_lights_behaviour != m_button_lights_behaviour_memory)
+    {
+        resetButtonLightAnimation();
+    }
+
+    switch (m_button_lights_behaviour)
+    {
+    case IDLE_OFF:
+    {
+    }
+    break;
+    case IDLE_ANIMATION_FROM_DB:
+    {
+        if (getButtonAnimationProgram() == 1)
+        {
+            refreshButtonLightAnimationPingPong();
+        }
+        else if (getButtonAnimationProgram() == 2)
+        {
+            refreshButtonLightAnimationCaterpillar();
+        }
+    }
+    break;
+    default:
+    {
+        // assert error
+    }
+
+    }
+        m_button_lights_behaviour_memory = m_button_lights_behaviour;
+}
+
+void machine::refreshButtonLightAnimationCaterpillar()
 {
 
     using namespace std::chrono;
@@ -199,7 +299,7 @@ void machine::refreshRunningLightCaterpillar()
 }
 
 // ping pong
-void machine::refreshRunningLightPingPong()
+void machine::refreshButtonLightAnimationPingPong()
 {
 
     using namespace std::chrono;

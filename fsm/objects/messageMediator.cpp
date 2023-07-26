@@ -44,14 +44,14 @@ double messageMediator::m_requestedDiscountPrice;
 string messageMediator::m_promoCode;
 
 // CTOR
-messageMediator::messageMediator()
+messageMediator::messageMediator() : m_machine(nullptr)
 {
 
    debugOutput::sendMessage("Init messageMediator...", MSG_INFO);
    // TODO: Initialize with Pointer reference to socket...
    // new_sock = new ServerSocket();
    m_fExitThreads = false;
-   // m_pKBThread = -1;
+   // m_machine = nullptr; // already implied from the "member initialization list" (: m_machine(nullptr))
 }
 
 // DTOR
@@ -144,6 +144,28 @@ DF_ERROR messageMediator::sendMessageOverIP(string msg)
    }
 
    return dfError;
+}
+
+void messageMediator::setMachine(machine *machine)
+{
+   if (machine == nullptr)
+   {
+
+      debugOutput::sendMessage("ASSERT ERROR: Nullpointer as argument. ", MSG_ERROR);
+   }
+   else
+   {
+
+      if (m_machine == nullptr)
+      {
+         debugOutput::sendMessage("normal TO BE NULLPTR AT START ", MSG_ERROR);
+      }
+      else
+      {
+         debugOutput::sendMessage("not nullptr at start ", MSG_ERROR);
+      }
+      this->m_machine = machine;
+   }
 }
 
 // Sends a progress of dispensing to QT through a socket
@@ -399,7 +421,7 @@ DF_ERROR messageMediator::parseCommandString()
 
    if (sCommand.find("pcabugfix") != string::npos)
    {
-      debugOutput::sendMessage("*************************************************", MSG_INFO);
+      // debugOutput::sendMessage("*************************************************", MSG_INFO);
       debugOutput::sendMessage("Action: Repair PCA9534", MSG_INFO);
       m_requestedAction = ACTION_REPAIR_PCA;
    }
@@ -410,15 +432,44 @@ DF_ERROR messageMediator::parseCommandString()
    }
    else if (sCommand.find("getTemperature") != string::npos)
    {
-      
-      // double temperature = productDispensers[0].the_pcb->getTemperature();
-      // debugOutput::sendMessage("Temperature in Celsius: " + std::to_string(temperature), MSG_INFO);
-      // printf("Temperature polling from MCP9808: %.3f Celcius \n", temperature);
-      // //  m_pMessaging->sendMessageOverIP("|temperature|" + to_int(temperature));
-      //    m_pMessaging->sendMessageOverIP("|temperature|" + std::to_string(temperature));
-      
-      m_requestedAction = '5';
       debugOutput::sendMessage("Request temperature", MSG_INFO);
+
+      if (m_machine->control_pcb->isTemperatureSensorAvailable())
+      {
+         debugOutput::sendMessage("lode", MSG_INFO);
+         double temperature = m_machine->control_pcb->getTemperature();
+         // double temperature = g_productDispensers[0].the_pcb->getTemperatureConfigure();
+         debugOutput::sendMessage("Temperature in Celsius: " + std::to_string(temperature), MSG_INFO);
+
+         // printf("Temperature polling from MCP9808: %.3f Celcius \n", temperature);
+         //  m_pMessaging->sendMessageOverIP("|temperature|" + to_int(temperature));
+         sendMessageOverIP("|temperature|" + std::to_string(temperature));
+      }
+      else
+      {
+         debugOutput::sendMessage("No temperature sensor found", MSG_INFO);
+      }
+
+   }
+   else if (sCommand.find("DispenseButtonLights") != string::npos)
+   {
+      // simple is alive command will reset to idle state
+      // e.g.   ButtonLights|ON
+      std::string delimiter = "|";
+      std::size_t found0 = sCommand.find(delimiter);
+      std::size_t found1 = sCommand.find(delimiter, found0 + 1);
+
+      std::string button_status = sCommand.substr(found0 + 1, found1 - found0 - 1);
+
+      if (button_status == "ANIMATE")
+      {
+         m_machine->setButtonLightsBehaviour(Button_lights_behaviour::IDLE_ANIMATION_FROM_DB);
+      }
+      else if (button_status == "OFF")
+      {
+         m_machine->setButtonLightsBehaviour(Button_lights_behaviour::IDLE_OFF);
+      }
+      m_requestedAction = ACTION_NO_ACTION;
    }
    else if (sCommand.find("Order") != string::npos)
    {
@@ -451,7 +502,6 @@ DF_ERROR messageMediator::parseCommandString()
       std::string promoCode = "";
       if (found1 != string::npos)
       {
-
          promoCode = sCommand.substr(found2 + 1, found3 - found2 - 1);
       }
       m_promoCode = promoCode;

@@ -25,7 +25,7 @@ class stateVirtual
 {
 public:
     stateVirtual();
-    stateVirtual(messageMediator *message);
+    // stateVirtual(messageMediator *message);
     ~stateVirtual();
 
     virtual string toString() = 0;

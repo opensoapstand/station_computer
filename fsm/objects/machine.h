@@ -27,6 +27,7 @@
 class machine
 {
 public:
+    machine();
     void pcb24VPowerSwitch(bool enableElseDisable);
     bool getPcb24VPowerSwitchStatus();
     // void print_text(string text);
@@ -41,11 +42,28 @@ public:
     // static pcb *control_pcb;
     pcb *control_pcb;
     Adafruit_Thermal *receipt_printer;
-    void refreshRunningLightCaterpillar();
-    void refreshRunningLightPingPong();
-    void resetRunningLight();
+    void setButtonLightsBehaviour(Button_lights_behaviour behaviour);
+
+    void refreshButtonLightAnimationCaterpillar();
+    void refreshButtonLightAnimationPingPong();
+    void refreshButtonLightAnimation();
+    void resetButtonLightAnimation();
+    Button_lights_behaviour m_button_lights_behaviour;
+    Button_lights_behaviour m_button_lights_behaviour_memory;
     uint64_t m_lights_animation_most_recent_step_millis;
     uint8_t m_lights_animation_step;
+
+    int getButtonAnimationProgram();
+    void loadButtonPropertiesFromDb();
+    bool getMultiDispenseButtonEnabled();
+
+    void loadGeneralProperties();
+
+private:
+    bool m_isMultiButtonEnabled = false;
+    int m_button_animation_program;
+    sqlite3 *db;
+    int rc;
 };
 
 #endif

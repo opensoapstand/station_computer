@@ -26,6 +26,7 @@ stateDispenseIdle::stateDispenseIdle()
 // CTOR Linked to IPC
 stateDispenseIdle::stateDispenseIdle(messageMediator *message)
 {
+    m_pMessaging = message;
 }
 
 // DTOR

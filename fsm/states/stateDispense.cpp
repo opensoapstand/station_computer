@@ -26,6 +26,7 @@ stateDispense::stateDispense()
 // CTOR Linked to IPC
 stateDispense::stateDispense(messageMediator *message)
 {
+      m_pMessaging = message;
 }
 
 // DTOR
@@ -146,6 +147,7 @@ DF_ERROR stateDispense::onAction()
       debugOutput::sendMessage("Stop dispensing (stop command received)", MSG_INFO);
       m_state_requested = STATE_DISPENSE_END;
       stopPumping();
+      
       return e_ret = OK;
    }
 

@@ -15,6 +15,7 @@ public:
     void resetTimerSlot();
     void transactionEndSlot();
     void updateVolumeSlot(double dispensed);
+    void updateFinalVolumeDispensed(double dispensed);
     void dispenseRateSlot(double flowrate);
     void dispenseStatusSlot(QString status);
     void printerStatusSlot(bool isOnline, bool hasPaper);
@@ -34,6 +35,7 @@ signals:
     void controllerFinishedAck();
     void pleaseReset();
     void signalUpdateVolume(double dispensed, bool isFull);
+    void finalVolumeDispensed(double dispensed);
     void signalDispenseRate(double flowrate);
     void signalDispenseStatus(QString status);
     void targetHit();

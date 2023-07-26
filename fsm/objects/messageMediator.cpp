@@ -421,7 +421,7 @@ DF_ERROR messageMediator::parseCommandString()
 
    if (sCommand.find("pcabugfix") != string::npos)
    {
-      debugOutput::sendMessage("*************************************************", MSG_INFO);
+      // debugOutput::sendMessage("*************************************************", MSG_INFO);
       debugOutput::sendMessage("Action: Repair PCA9534", MSG_INFO);
       m_requestedAction = ACTION_REPAIR_PCA;
    }
@@ -438,11 +438,8 @@ DF_ERROR messageMediator::parseCommandString()
       std::size_t found0 = sCommand.find(delimiter);
       std::size_t found1 = sCommand.find(delimiter, found0 + 1);
 
-      debugOutput::sendMessage(to_string(found0), MSG_INFO);
-      debugOutput::sendMessage(to_string(found1), MSG_INFO);
-
       std::string button_status = sCommand.substr(found0 + 1, found1 - found0 - 1);
-
+   
       if (button_status == "ANIMATE")
       {
          m_machine->setButtonLightsBehaviour(Button_lights_behaviour::IDLE_ANIMATION_FROM_DB);

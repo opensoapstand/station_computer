@@ -1,6 +1,8 @@
 #include "page_maintenance_dispenser.h"
 #include "ui_page_maintenance_dispenser.h"
 #include "page_idle.h"
+// #include "/home/df-admin/drinkfill/fsm/components/pcb.cpp"
+//  #include "/home/df-admin/drinkfill/fsm/components/pcb.h"
 
 #include <QInputDialog>
 #include <QCoreApplication>
@@ -100,7 +102,18 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     ui->pushButton_setting_speed_pwm->hide();
     ui->label_setting_speed_pwm->hide();
     ui->pushButton_setting_temperature->setVisible(false);
-    ui->label_setting_temperature->setVisible(false);
+    // ui->label_setting_temperature->setVisible(false);
+    // double temperature = getTemperatureConfigure();
+    //  debugOutput::sendMessage("Temperature in Celsius: " + std::to_string(temperature), MSG_INFO);
+    // ui->label_setting_temperature->setText("Temp="+temperature);
+    //    ui->label_setting_temperature->setText("Temp = " + QString::number(temperature));
+    //   pcb myPcb;
+
+    //   // Call the `getTemperatureConfigure()` function
+    //    double temperature = myPcb.getTemperature();
+
+    //   // Use the temperature value as needed
+    //    ui->label_setting_temperature->setText("Temp = " + QString::number(temperature));
 
     isDispenseButtonPressed = false;
     activeEditField = "";
@@ -255,6 +268,14 @@ void page_maintenance_dispenser::onDispenseTimerTick()
     }
     ui->label_status_button_press_time->setText(QString::number(dispenserPumpingSecs, 'f', 1) + "s / " + QString::number(dispenserEnabledSecs, 'f', 1) + "s");
 }
+
+void page_maintenance_dispenser::fsmReceiveTemperature(double temperature)
+{
+    qDebug() << "Temperature received from FSM: " << temperature;
+    // ui->label_setting_temperature->setText("Temp="+temperature);
+    ui->label_setting_temperature->setText( QString::number(temperature, 'f', 2));
+    p_page_idle->thisMachine.writeTemperatureToDb(temperature);
+};
 
 void page_maintenance_dispenser::onMaintainProductPageTimeoutTick()
 {
@@ -1012,4 +1033,3 @@ void page_maintenance_dispenser::on_checkBox_enable_custom_clicked()
     p_page_idle->selectedProduct->toggleSizeEnabled(SIZE_CUSTOM_INDEX);
     updateProductLabelValues(true);
 }
-

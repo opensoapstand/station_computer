@@ -38,6 +38,7 @@ public:
 
     // bool updateSlotAvailability(int slot, int isEnabled, QString status_text);
 
+    void addTemperature(QString machine_id, double temperature, QString alert);
     void addUserInteraction(QString session_id, QString role, QString page, QString event);
     void getAllProductProperties(int slot,
                                  QString *productId,

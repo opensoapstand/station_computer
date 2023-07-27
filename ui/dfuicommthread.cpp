@@ -85,6 +85,12 @@ QByteArray DfUiCommThread::readyRead()
     {
         emit dispenseButtonPressedNegEdgeSignal();
     }
+    else if (Data.startsWith("|temperature|"))
+    {
+        QString temperature = Data.mid(13);
+        qDebug() << temperature;
+        emit temperatureSignal(temperature.toDouble());
+    }
     // else if (strtol(Data, &pEnd, 10) || (Data[0] == '0' && Data[1] == '.'))
     // old rudimentary way of sending dispensed volumen from fsm to ui
     // {

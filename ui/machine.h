@@ -74,6 +74,7 @@ public:
 
     bool hasReceiptPrinter();
     void getPrinterStatusFromDb(bool *isOnline, bool *hasPaper);
+    void writeTemperatureToDb(double temperature);
 
     StateCoupon getCouponState();
     void setCouponState(StateCoupon state);

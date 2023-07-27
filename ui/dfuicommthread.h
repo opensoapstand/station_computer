@@ -28,6 +28,7 @@ signals:
     void dispenseStatusSignal(QString status);
     void printerStatusSignal(bool isOnline, bool hasPaper);
     void initReadySignal(void);
+    void temperatureSignal(double temperature);
     // void MMSignal(void);
     void dispenseButtonPressedPosEdgeSignal(void);
     void dispenseButtonPressedNegEdgeSignal(void);

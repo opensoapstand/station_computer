@@ -23,6 +23,7 @@ public:
     void dispenseButtonPressedPosEdgeSlot();
     void dispenseButtonPressedNegEdgeSlot();
     void noFlowAbortSlot();
+    void receiveTemperatureFromFsm(double temperature);
     void initReadySlot();
     // void MMSlot();
     void messageHandlerFinishedSlot();
@@ -41,6 +42,7 @@ signals:
     void dispenseButtonPressedPosEdgeSignal();
     void dispenseButtonPressedNegEdgeSignal();
     void noFlowAbort();
+    void temperatureSignal(double temperature);
     void initReady();
     void MM();
 

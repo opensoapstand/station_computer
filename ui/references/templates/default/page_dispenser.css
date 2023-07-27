@@ -145,7 +145,7 @@ QLabel{
    qproperty-alignment: AlignCenter;
 }
 
-QPushButton {
+/* QPushButton {
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 50;
@@ -157,7 +157,7 @@ QPushButton {
    border-radius: 20px;
    border: none;
   
-}
+} */
 
 QMessageBox {
    min-width: 7000px;

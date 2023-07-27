@@ -152,6 +152,11 @@ void machine::getPrinterStatusFromDb(bool *isOnline, bool *hasPaper)
     qDebug() << "DB call: Check printer status. ";
     m_db->getPrinterStatus(isOnline, hasPaper);
 }
+void machine::writeTemperatureToDb(double temperature)
+{
+    qDebug() << "DB call: Add temperature record ";
+    m_db->addTemperature(getMachineId(), temperature, "");
+}
 
 bool machine::hasReceiptPrinter()
 {

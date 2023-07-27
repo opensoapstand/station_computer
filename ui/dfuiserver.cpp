@@ -65,6 +65,13 @@ void DfUiServer::noFlowAbortSlot()
     emit noFlowAbort();
 }
 
+
+void DfUiServer::receiveTemperatureFromFsm(double temperature)
+{
+    emit temperatureSignal(temperature);
+}
+
+
 void DfUiServer::initReadySlot()
 {
     emit initReady();
@@ -132,6 +139,8 @@ void DfUiServer::incomingConnection(qintptr socketDescriptor)
     connect(messageHandlerThread, &DfUiCommThread::messageHandlerFinishedSignal, this, &DfUiServer::messageHandlerFinishedSlot);
 
     connect(messageHandlerThread, &DfUiCommThread::noFlowAbortSignal, this, &DfUiServer::noFlowAbortSlot);
+    connect(messageHandlerThread, &DfUiCommThread::temperatureSignal, this, &DfUiServer::receiveTemperatureFromFsm);
+
     connect(messageHandlerThread, &DfUiCommThread::targetHitSignal, this, &DfUiServer::targetHitSlot);
 
     // connect(messageHandlerThread, &DfUiCommThread::targetHitSignal, this, &DfUiServer::noFlowAbortSlot);

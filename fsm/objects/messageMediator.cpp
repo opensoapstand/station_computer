@@ -430,6 +430,27 @@ DF_ERROR messageMediator::parseCommandString()
       // simple is alive command will reset to idle state
       m_requestedAction = ACTION_RESET;
    }
+   else if (sCommand.find("getTemperature") != string::npos)
+   {
+      debugOutput::sendMessage("Request temperature", MSG_INFO);
+
+      if (m_machine->control_pcb->isTemperatureSensorAvailable())
+      {
+         debugOutput::sendMessage("lode", MSG_INFO);
+         double temperature = m_machine->control_pcb->getTemperature();
+         // double temperature = g_productDispensers[0].the_pcb->getTemperatureConfigure();
+         debugOutput::sendMessage("Temperature in Celsius: " + std::to_string(temperature), MSG_INFO);
+
+         // printf("Temperature polling from MCP9808: %.3f Celcius \n", temperature);
+         //  m_pMessaging->sendMessageOverIP("|temperature|" + to_int(temperature));
+         sendMessageOverIP("|temperature|" + std::to_string(temperature));
+      }
+      else
+      {
+         debugOutput::sendMessage("No temperature sensor found", MSG_INFO);
+      }
+
+   }
    else if (sCommand.find("DispenseButtonLights") != string::npos)
    {
       // simple is alive command will reset to idle state
@@ -439,7 +460,7 @@ DF_ERROR messageMediator::parseCommandString()
       std::size_t found1 = sCommand.find(delimiter, found0 + 1);
 
       std::string button_status = sCommand.substr(found0 + 1, found1 - found0 - 1);
-   
+
       if (button_status == "ANIMATE")
       {
          m_machine->setButtonLightsBehaviour(Button_lights_behaviour::IDLE_ANIMATION_FROM_DB);

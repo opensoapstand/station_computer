@@ -37,7 +37,8 @@ public:
     void setup();
     pcb *getPcb();
 
-    // getTemperature(); temp sensor
+    pcb *getTemperature(); 
+    // void getTemperature(temperature sensor); 
     // static pcb *control_pcb;
     pcb *control_pcb;
     Adafruit_Thermal *receipt_printer;

@@ -58,7 +58,7 @@ make_options () {
 
 port_in_use=$(sudo ./rtunnel_print.sh 2>/dev/null)
 PS3="Choose option(digit + enter) (rtunnel port=$port_in_use) :"
-options=("Quit" "aws_operations" "AWS log in" "AWS run station operations" "soapstand_manager" "Station info" "Stop ui and controller" "(Re)start ui and controller" "run standalone controller" "Copy program binary files from drinkfill to production folder and run" "Create and run production data copied from drinkfill folder (without db!)" "Services: Soapstand (re)load from production (ui,controller,wificheck,transactioncheck)" "Setup aws port (rtunnel)" "make ui and fsm" "make ui and fsm and deploy binaries" "make ui" "make ui and deploy binaries" "make fsm" "make fsm and deploy binaries")
+options=("Quit" "aws_operations" "AWS log in" "AWS run station operations" "soapstand_manager" "Station info" "Stop ui and controller" "(Re)start ui and controller" "run standalone controller" "Copy program binary files from drinkfill to production folder and run" "Create and run production data copied from drinkfill folder (without db!)" "Services: Soapstand (re)load from production (ui,controller,wificheck,transactioncheck)" "Setup aws port (rtunnel)" "make ui and fsm" "make ui and fsm and deploy binaries" "make ui" "make ui and deploy binaries" "make fsm" "make fsm and deploy binaries" "check temperature")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -134,6 +134,12 @@ do
             cd ../fsm
             ./controller
             ;;
+        "check temperature")
+            DATABASE="/home/df-admin/production/db/usage.db"
+            temperature=$(sqlite3 $DATABASE "SELECT * FROM temperature ORDER BY ROWID DESC LIMIT 1;")
+            echo "The most recent temperature record is: $temperature"
+
+        ;;
         "Services: Soapstand (re)load from production (ui,controller,wificheck,transactioncheck)")
             # move files to service folder
             ./copy_and_enable_services.sh

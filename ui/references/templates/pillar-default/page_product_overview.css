@@ -181,8 +181,8 @@ QLabel {
     font-family: 'EuropaNuova-Regular';
     font-style: normal;
     font-weight: 700;
-    font-size: 60px;
-    line-height: 79px;
+    font-size: 32px;
+    line-height: 99px;
     color: #221F20;
     text-align: center;
     /* qproperty-alignment: AlignCenter; */

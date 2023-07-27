@@ -75,6 +75,14 @@ uint16_t orderSizeButtons_xywh_dynamic_ui_small_custom_available[4][4] = {
     // {564, 1037, 424, 113} // custom
 };
 
+uint16_t orderSizeButtons_xywh_dynamic_ui_large_custom_available[4][4] = {
+    {1, 1, 1, 1},         // S
+    {1, 1, 1, 1},         // M
+    {560, 990, 430, 100}, // L
+    {560, 1100, 430, 115} // custom
+    // {564, 1037, 424, 113} // custom
+};
+
 // labels of volume and price are different (and annoying)
 uint16_t orderSizeButtons_xywh_static_product_page[4][4] = {
     {564, 1088, 209, 126},
@@ -127,12 +135,28 @@ uint16_t orderSizeVolumeLabels_xy_dynamic_ui_small_custom_available[8][2] = {
     {1, 1},      // L vol
     {570, 1110}  // custom col
 };
+
 uint16_t orderSizePriceLabels_xy_dynamic_ui_small_custom_available[8][2] = {
     {710, 1040}, // S price
     {1, 1},      // M price
     {1, 1},      // L price
     {560, 1160}  // custom price
 };
+
+uint16_t orderSizeVolumeLabels_xy_dynamic_ui_large_custom_available[8][2] = {
+    {1, 1}, // S vol
+    {1, 1},      // M vol
+    {710, 1000},      // L vol
+    {570, 1110}  // custom col
+};
+
+uint16_t orderSizePriceLabels_xy_dynamic_ui_large_custom_available[8][2] = {
+    {1, 1}, // S price
+    {1, 1},      // M price
+    {710, 1040},      // L price
+    {560, 1160}  // custom price
+};
+
 
 uint16_t orderSizeVolumeLabels_xy_dynamic_ui_small_available[8][2] = {
     {605, 1150}, // S vol
@@ -342,10 +366,15 @@ void page_product::reset_and_show_page_elements()
     }
     else if (available_sizes_signature == 9)
     {
-        // only custom
         xywh_size_buttons = orderSizeButtons_xywh_dynamic_ui_small_custom_available;
         xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_small_custom_available;
         xy_size_labels_price = orderSizePriceLabels_xy_dynamic_ui_small_custom_available;
+    }
+     else if (available_sizes_signature == 12)
+    {
+        xywh_size_buttons = orderSizeButtons_xywh_dynamic_ui_large_custom_available;
+        xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_large_custom_available;
+        xy_size_labels_price = orderSizePriceLabels_xy_dynamic_ui_large_custom_available;
     }
     else if (available_sizes_signature == 13)
     {

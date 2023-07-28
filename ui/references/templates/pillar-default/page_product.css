@@ -38,8 +38,9 @@
    font-weight: 400;
    font-size: 36px;
    line-height: auto;
-   color: #221F20;
+   color: #d2705e;
    border: none;
+   margin-bottom: 10px;
 }
 
 .orderSizeLabelsVolume {
@@ -71,7 +72,7 @@
 .orderSizeButtons {
    /* background-color: #2C2C2C; */
    background-color: transparent;
-   border: 3px solid #58595B;
+   border: 3px solid #d2705e;
    border-radius: 25px;
 }
 

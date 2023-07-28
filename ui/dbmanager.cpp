@@ -21,8 +21,8 @@
 
 DbManager::DbManager(const QString &path)
 {
-    m_dbPath2 = CONFIG_DB_PATH;
-    setPath(path);
+    // m_dbPath2 = CONFIG_DB_PATH;
+    // setPath(path);
 }
 DbManager::DbManager()
 {
@@ -34,10 +34,10 @@ DbManager::~DbManager()
     // closeDb();
 }
 
-void DbManager::setPath(QString path)
-{
-    m_dbPath2 = path;
-}
+// void DbManager::setPath(QString path)
+// {
+//     // m_dbPath2 = path;
+// }
 
 void DbManager::closeDb()
 {
@@ -48,7 +48,6 @@ void DbManager::closeDb()
     {
         QSqlDatabase::removeDatabase("qt_sql_ui_connection");
     }
-
 
     // // this works, but outputs a warning line all the time (even if I close the queries)
     // // the warning:  connection 'qt_sql_ui_connection' is still in use, all queries will cease to work. (at the removeDatabase line)
@@ -382,7 +381,7 @@ void DbManager::getAllProductProperties(int slot,
 
 {
     // qDebug() << "Open db";
-    qDebug() << "Open db: load all product properties for slot: " << slot;
+    qDebug() << "Open db: load all product properties for slot: " << slot << "From: " << CONFIG_DB_PATH;
     {
         QSqlDatabase db = openDb(CONFIG_DB_PATH);
         QSqlQuery qry(db);
@@ -453,6 +452,12 @@ void DbManager::getAllProductProperties(int slot,
         qry.finish();
     }
     closeDb();
+
+    for (int i = 0; i < 4; i++)
+    {
+
+        qDebug() << prices[i];
+    }
 }
 
 /*
@@ -558,7 +563,7 @@ void DbManager::getAllMachineProperties(
     int *is_enabled_slots,
     QString *status_text_slots)
 {
-    qDebug() << " db... all machine properties";
+    qDebug() << " db... all machine properties from: " << CONFIG_DB_PATH;
     {
         QSqlDatabase db = openDb(CONFIG_DB_PATH);
         QSqlQuery qry(db);
@@ -679,7 +684,7 @@ void DbManager::emailEmpty(int slot)
     // system(email.toStdString().c_str());
 }
 
-void DbManager::addUserInteraction( QString session_id,QString role, QString page, QString event)
+void DbManager::addUserInteraction(QString session_id, QString role, QString page, QString event)
 {
 
     {
@@ -689,10 +694,10 @@ void DbManager::addUserInteraction( QString session_id,QString role, QString pag
         QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
         qry.prepare("INSERT INTO events (time,session_id,access_level,page,event) VALUES (:time,:session_id,:access_level,:page,:event);");
         qry.bindValue(":time", time);
-        qry.bindValue(":session_id", session_id );
-        qry.bindValue(":access_level", role );
+        qry.bindValue(":session_id", session_id);
+        qry.bindValue(":access_level", role);
         qry.bindValue(":page", page);
-        qry.bindValue(":event", event );
+        qry.bindValue(":event", event);
 
         bool success;
         success = qry.exec();
@@ -717,11 +722,11 @@ void DbManager::addTemperature(QString machine_id, double temperature, QString a
         QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
         qry.prepare("INSERT INTO temperature (time,machine_id,temperature,alert) VALUES (:time,:machine_id,:temperature,:alert);");
         qry.bindValue(":time", time);
-        qry.bindValue(":machine_id", machine_id );
-        double temperature_rounded = std::round(temperature * 100) / 100;  // round to 2 decimal places
+        qry.bindValue(":machine_id", machine_id);
+        double temperature_rounded = std::round(temperature * 100) / 100; // round to 2 decimal places
 
         qry.bindValue(":temperature", temperature_rounded);
-        qry.bindValue(":alert", alert );
+        qry.bindValue(":alert", alert);
 
         bool success;
         success = qry.exec();
@@ -736,8 +741,6 @@ void DbManager::addTemperature(QString machine_id, double temperature, QString a
     }
     closeDb();
 }
-
-
 
 bool DbManager::getRecentTransactions(QString values[][5], int count, int *count_retreived)
 {

@@ -11,7 +11,7 @@ public:
     ~DbManager();
     void closeDb();
     // void closeDb(QSqlDatabase db);
-    void setPath(QString path);
+    // void setPath(QString path);
     QSqlDatabase openDb(QString dbname);
 
     bool isDatabaseLocked(const QSqlDatabase &db);
@@ -94,7 +94,7 @@ public:
                                  int *is_enabled_slots,
                                  QString *status_text_slots);
 
-    QString m_dbPath2;
+    // QString m_dbPath2;
 
 private:
     // QSqlDatabase m_db;

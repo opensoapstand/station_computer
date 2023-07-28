@@ -272,7 +272,7 @@ void page_idle::onPollTemperatureTimerTick()
     }
     else
     {
-        qDebug() << "Check temperature.";
+        // qDebug() << "Check temperature.";
         _pollTemperatureTimerTimeoutSec = PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS;
         dfUtility->send_command_to_FSM("getTemperature");
     }

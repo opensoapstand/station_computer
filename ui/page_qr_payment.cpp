@@ -155,7 +155,7 @@ void page_qr_payment::setupQrOrder()
 
         // build up qr content (link)
         QString qrdata = "https://soapstandportal.com/payment?oid=" + orderId;
-        if((p_page_idle->thisMachine.getMachineId()).left(2)=="PA"){
+        if((p_page_idle->thisMachine.getMachineId()).left(2)=="AP"){
             qrdata = "https://soapstandportal.com/paymentAelen?oid=" + orderId;
 
         }

@@ -68,7 +68,7 @@ page_dispenser->label_press,press and hold <br>the button
 page_dispenser->pushButton_problems,Tap here if you notice a problem.
 page_dispenser->pushButton_abort->abort,Abort
 page_dispenser->pushButton_abort->complete,Complete
-page_dispenser->label_finishTransactionMessage->no_pay,Voiding payment
+page_dispenser->label_finishTransactionMessage->no_pay,Cancelling payment
 page_dispenser->label_finishTransactionMessage->display_price,Capturing payment: $%1
 page_dispenser->label_dispense_message->priming,Please keep the button pressed.<br>for up to 15 seconds<br>before the product starts dispensing.
 page_dispenser->label_dispense_message->out_of_stock,It appears we're out of stock.

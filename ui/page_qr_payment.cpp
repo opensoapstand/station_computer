@@ -200,7 +200,7 @@ bool page_qr_payment::createOrderIdAndSendToBackend()
     QString contents = p_page_idle->selectedProduct->getProductName();
     QString quantity_requested = p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(false, false);
     char drinkSize = p_page_idle->selectedProduct->getSizeAsChar();
-    double originalPrice = p_page_idle->selectedProduct->getPriceCorrected();
+    double originalPrice = p_page_idle->selectedProduct->getBasePrice();
     if (drinkSize == 'c')
     {
         originalPrice = p_page_idle->selectedProduct->getPriceCustom();

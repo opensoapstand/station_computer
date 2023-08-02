@@ -305,6 +305,14 @@ void page_idle::onIdlePageTypeSelectorTimerTick()
     {
         changeToIdleProductsIfSet();
         idlePageTypeSelectorTimer->stop();
+        qDebug() << "Check temperature.";
+        _pollTemperatureTimerTimeoutSec = PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS;
+        
+        thisMachine.getTemperatureFromController();
+        
+        // hack, will not be ready when asked from controller. This basically displaying the "previous temperature".
+        ui->label_printer_status->setText( QString::number( thisMachine.getTemperature(), 'f', 2));
+        
     }
 }
 void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)

@@ -21,8 +21,55 @@
 
 DbManager::DbManager(const QString &path)
 {
-    //    qDebug() << "CREATING DB OBJECT" << endl;
-    int attempts = 10;
+    m_dbPath2 = CONFIG_DB_PATH;
+    setPath(path);
+}
+DbManager::DbManager()
+{
+}
+
+// DTOR
+DbManager::~DbManager()
+{
+    // closeDb();
+}
+
+void DbManager::setPath(QString path)
+{
+    m_dbPath2 = path;
+}
+
+void DbManager::closeDb()
+{
+    qDebug() << "Close db";
+    // no problem, even if called hundred times after one other and the db was not open.
+    QSqlDatabase::database("qt_sql_ui_connection").close();
+    if (QSqlDatabase::contains("qt_sql_ui_connection"))
+    {
+        QSqlDatabase::removeDatabase("qt_sql_ui_connection");
+    }
+
+    // // this works, but outputs a warning line all the time (even if I close the queries)
+    // // the warning:  connection 'qt_sql_ui_connection' is still in use, all queries will cease to work. (at the removeDatabase line)
+    // if (db.isOpen())
+    // {
+    //     // QSqlQuery::clear();
+    //     // db.close();
+    //     // db = QSqlDatabase();
+    //     // QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
+    //     // QSqlDatabase::removeDatabase("qt_sql_ui_connection");
+    //     QSqlDatabase::database("qt_sql_ui_connection").close();
+    //     // QSqlDatabase::removeDatabase("qt_sql_ui_connection");
+    // }
+    // else
+    // {
+    //     qDebug() << "Db was not open.";
+    // }
+    // if (QSqlDatabase::contains("qt_sql_ui_connection"))
+    // {
+    //     QSqlDatabase::removeDatabase("qt_sql_ui_connection");
+    // }
+    // // qDebug() << "Db close done.";
 
     // while (!m_db.open() && attempts > 0)
     // {
@@ -273,6 +320,176 @@ double DbManager::getProductPrice(int slot, char size)
         else
         {
             qDebug() << " invalid size to volume character found.  " << size;
+            *productId = qry.value(0).toString();
+            *soapstand_product_serial = qry.value(1).toString();
+            *size_unit = qry.value(4).toString();
+            *currency = qry.value(5).toString();
+            *payment = qry.value(6).toString();
+            *name_receipt = qry.value(7).toString();
+            *concentrate_multiplier = qry.value(8).toInt();
+            *dispense_speed = qry.value(9).toInt();
+            *threshold_flow = qry.value(10).toDouble();
+            *retraction_time = qry.value(11).toInt();
+            *calibration_const = qry.value(12).toDouble();
+            *volume_per_tick = qry.value(13).toDouble();
+            *last_restock = qry.value(14).toString();
+            *volume_full = qry.value(15).toDouble();
+            *volume_remaining = qry.value(16).toDouble();
+            *volume_dispensed_since_restock = qry.value(17).toDouble();
+            *volume_dispensed_total = qry.value(18).toDouble();
+
+            isSizeEnabled[1] = qry.value(19).toInt(); // small is index 1!!
+            isSizeEnabled[2] = qry.value(20).toInt();
+            isSizeEnabled[3] = qry.value(21).toInt();
+            isSizeEnabled[4] = qry.value(22).toInt();
+
+            volumes[1] = qry.value(23).toDouble();
+            volumes[2] = qry.value(24).toDouble();
+            volumes[3] = qry.value(25).toDouble();
+            // size custom min
+            volumes[4] = qry.value(27).toDouble();
+
+            prices[1] = qry.value(28).toDouble();
+            prices[2] = qry.value(29).toDouble();
+            prices[3] = qry.value(30).toDouble();
+            prices[4] = qry.value(31).toDouble();
+
+            PLUs[SIZE_SMALL_INDEX] = qry.value(32).toString();
+            PLUs[SIZE_MEDIUM_INDEX] = qry.value(33).toString();
+            PLUs[SIZE_LARGE_INDEX] = qry.value(34).toString();
+            PLUs[SIZE_CUSTOM_INDEX] = qry.value(35).toString();
+
+            PIDs[1] = qry.value(36).toString();
+            PIDs[2] = qry.value(37).toString();
+            PIDs[3] = qry.value(38).toString();
+            PIDs[4] = qry.value(39).toString();
+
+            *is_enabled_custom_discount = qry.value(46).toInt();
+            *size_custom_discount = qry.value(47).toDouble();
+            *price_custom_discount = qry.value(48).toDouble();
+        }
+        qry.finish();
+    }
+    closeDb();
+}
+
+/*
+0	machine_id
+1	soapstand_customer_id
+2	template
+3	location
+4	controller_type
+5	controller_id
+6	screen_type
+7	screen_id
+8	has_receipt_printer
+9	receipt_printer_is_online
+10	receipt_printer_has_paper
+11	has_tap_payment
+12	hardware_version
+13	software_version
+14	aws_port
+15	pump_id_slot_1
+16	pump_id_slot_2
+17	pump_id_slot_3
+18	pump_id_slot_4
+19	is_enabled_slot_1
+20	is_enabled_slot_2
+21	is_enabled_slot_3
+22	is_enabled_slot_4
+23	coupons_enabled
+24	status_text_slot_1
+25	status_text_slot_2
+26	status_text_slot_3
+27	status_text_slot_4
+28	has_empty_detection
+29	enable_pump_ramping
+30	enable_pump_reversal
+31	dispense_buttons_count
+32	maintenance_pwd
+33	show_transactions
+34	help_text_html
+35	idle_page_type
+36	admin_pwd
+
+QString* machine_id,
+int* soapstand_customer_id,
+QString* template,
+QString* location,
+QString* controller_type,
+QString* controller_id,
+QString* screen_type,
+QString* screen_id,
+int* has_receipt_printer,
+int* receipt_printer_is_online,
+int* receipt_printer_has_paper,
+int* has_tap_payment,
+QString* hardware_version,
+QString* software_version,
+int* aws_port,
+
+int* coupons_enabled,
+int* has_empty_detection,
+int* enable_pump_ramping,
+int* enable_pump_reversal,
+int* dispense_buttons_count,
+QString* maintenance_pwd,
+int* show_transactions,
+QString* help_text_html,
+QString* idle_page_type,
+
+QString* pump_id_slots*,
+int* is_enabled_slots*,
+QString* status_text_slots
+
+*/
+
+void DbManager::getAllMachineProperties(
+    QString *machine_id,
+    QString *soapstand_customer_id,
+    QString *ttttemplate,
+    QString *location,
+    QString *controller_type,
+    QString *controller_id,
+    QString *screen_type,
+    QString *screen_id,
+    int *has_receipt_printer,
+    int *receipt_printer_is_online,
+    int *receipt_printer_has_paper,
+    int *has_tap_payment,
+    QString *hardware_version,
+    QString *software_version,
+    int *aws_port,
+
+    int *coupons_enabled,
+    int *has_empty_detection,
+    int *enable_pump_ramping,
+    int *enable_pump_reversal,
+    int *dispense_buttons_count,
+    QString *maintenance_pwd,
+    int *show_transactions,
+    QString *help_text_html,
+    QString *idle_page_type,
+    QString *admin_pwd,
+    int *alert_temperature,
+
+    QString *pump_id_slots,
+    int *is_enabled_slots,
+    QString *status_text_slots)
+{
+    qDebug() << " db... all machine properties";
+    {
+        QSqlDatabase db = openDb(CONFIG_DB_PATH);
+        QSqlQuery qry(db);
+
+        qry.prepare("SELECT machine_id,soapstand_customer_id,template,location,controller_type,controller_id,screen_type,'screen_id',has_receipt_printer,receipt_printer_is_online,receipt_printer_has_paper,has_tap_payment,hardware_version,software_version,aws_port,pump_id_slot_1,pump_id_slot_2,pump_id_slot_3,pump_id_slot_4,is_enabled_slot_1,is_enabled_slot_2,is_enabled_slot_3,is_enabled_slot_4,coupons_enabled,status_text_slot_1,status_text_slot_2,status_text_slot_3,status_text_slot_4,has_empty_detection,enable_pump_ramping,enable_pump_reversal,dispense_buttons_count,maintenance_pwd,show_transactions,help_text_html,idle_page_type,admin_pwd FROM machine");
+        bool success;
+        success = qry.exec();
+        if (!success)
+        {
+            qDebug() << "Did not execute sql. "
+                     << qry.lastError() << " | " << qry.lastQuery();
+            // success = false;
         }
 
         price_query.bindValue(":slot", slot);
@@ -283,6 +500,74 @@ double DbManager::getProductPrice(int slot, char size)
             price = price_query.value(0).toDouble();
         }
     }
+            *machine_id = qry.value(0).toString();
+            *soapstand_customer_id = qry.value(1).toString();
+            *ttttemplate = qry.value(2).toString();
+            *location = qry.value(3).toString();
+            *controller_type = qry.value(4).toString();
+            *controller_id = qry.value(5).toString();
+            *screen_type = qry.value(6).toString();
+            *screen_id = qry.value(7).toString();
+            *has_receipt_printer = qry.value(8).toInt();
+            *receipt_printer_is_online = qry.value(9).toInt();
+            *receipt_printer_has_paper = qry.value(10).toInt();
+            *has_tap_payment = qry.value(11).toInt();
+            *hardware_version = qry.value(12).toString();
+            *software_version = qry.value(13).toString();
+            *aws_port = qry.value(14).toInt();
+            pump_id_slots[0] = qry.value(15).toString();
+            pump_id_slots[1] = qry.value(16).toString();
+            pump_id_slots[2] = qry.value(17).toString();
+            pump_id_slots[3] = qry.value(18).toString();
+            is_enabled_slots[0] = qry.value(19).toInt();
+            is_enabled_slots[1] = qry.value(20).toInt();
+            is_enabled_slots[2] = qry.value(21).toInt();
+            is_enabled_slots[3] = qry.value(22).toInt();
+            *coupons_enabled = qry.value(23).toInt();
+            status_text_slots[0] = qry.value(24).toString();
+            status_text_slots[1] = qry.value(25).toString();
+            status_text_slots[2] = qry.value(26).toString();
+            status_text_slots[3] = qry.value(27).toString();
+            *has_empty_detection = qry.value(28).toInt();
+            *enable_pump_ramping = qry.value(29).toInt();
+            *enable_pump_reversal = qry.value(30).toInt();
+            *dispense_buttons_count = qry.value(31).toInt();
+            *maintenance_pwd = qry.value(32).toString();
+            *show_transactions = qry.value(33).toInt();
+            *help_text_html = qry.value(34).toString();
+            *idle_page_type = qry.value(35).toString();
+            *admin_pwd = qry.value(36).toString();
+            *alert_temperature = qry.value(37).toInt();
+        }
+        qry.finish();
+    }
+    closeDb();
+}
+
+// QString DbManager::getPaymentMethod(int slot)
+// {
+//     // used by Ash in tap. to do --> get tap init out of constructor.
+//     qDebug() << "********* DEPRECATED *********** ";
+//     qDebug() << "DB call: get payment method for slot";
+//     QString payment_method;
+//     {
+//         QSqlDatabase db = openDb();
+//         QSqlQuery qry(db);
+
+//         qry.prepare("SELECT payment FROM products WHERE slot=:slot");
+//         qry.bindValue(":slot", slot);
+//         bool success;
+//         success = qry.exec();
+
+//         while (qry.next())
+//         {
+//             payment_method = qry.value(0).toString();
+//         }
+//         qry.finish();
+//     }
+//     closeDb();
+//     return payment_method;
+// }
 
     return price;
 }
@@ -350,6 +635,7 @@ double DbManager::getProductVolume(int slot, char size)
 }
 
 double DbManager::getFullProduct(int slot)
+void DbManager::addUserInteraction(QString session_id, QString role, QString page, QString event)
 {
     qDebug() << " db... getFullProduct";
     QSqlQuery full_query;
@@ -357,6 +643,13 @@ double DbManager::getFullProduct(int slot)
     {
 
         full_query.prepare("SELECT volume_full FROM products WHERE slot=:slot");
+        QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+        qry.prepare("INSERT INTO events (time,session_id,access_level,page,event) VALUES (:time,:session_id,:access_level,:page,:event);");
+        qry.bindValue(":time", time);
+        qry.bindValue(":session_id", session_id);
+        qry.bindValue(":access_level", role);
+        qry.bindValue(":page", page);
+        qry.bindValue(":event", event);
 
         full_query.bindValue(":slot", slot);
         full_query.exec();
@@ -382,6 +675,19 @@ QString DbManager::getPaymentMethod(int slot)
         paymeny_query.exec();
 
         while (paymeny_query.next())
+        QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+        qry.prepare("INSERT INTO temperature (time,machine_id,temperature,alert) VALUES (:time,:machine_id,:temperature,:alert);");
+        qry.bindValue(":time", time);
+        qry.bindValue(":machine_id", machine_id);
+        double temperature_rounded = std::round(temperature * 100) / 100; // round to 2 decimal places
+
+        qry.bindValue(":temperature", temperature_rounded);
+        qry.bindValue(":alert", alert);
+
+        bool success;
+        success = qry.exec();
+
+        if (!success)
         {
             payment_method = paymeny_query.value(0).toString();
         }
@@ -411,6 +717,7 @@ uint32_t DbManager::getNumberOfRows(QString table)
 }
 
 bool DbManager::setVolumeRemaining(int slot, double volumeMl)
+bool DbManager::getRecentTransactions(QString values[][5], int count, int *count_retreived)
 {
     
     
@@ -1631,4 +1938,16 @@ int DbManager::getLastTransactionIdFromDb()
     qDebug() << " Last transaction :" << lastTransactionId << endl;
 
     return lastTransactionId;
+}
+
+double DbManager::getAlertTemperature()
+{
+    {
+        QSqlDatabase db = openDb(CONFIG_DB_PATH);
+        QSqlQuery qry(db);
+
+        qry.prepare("SELECT alert_temperature FROM machine");
+        qry.exec();
+    }
+    closeDb();
 }

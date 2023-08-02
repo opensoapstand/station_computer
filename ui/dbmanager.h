@@ -19,7 +19,6 @@ public:
     // bool remainingVolumeIsBiggerThanLargestFixedSize(int slot);
 
     bool getRecentTransactions(QString values[][5], int count, int *count_retreived);
-<<<<<<< Updated upstream
     bool hasReceiptPrinter();
     void printerStatus(bool *isOnline, bool *hasPaper);
     bool showTransactions();
@@ -93,7 +92,6 @@ public:
     void getProductProperties(int slot, QString *product_id, bool *isSizeEnabled);
     QString getTemplateName();
     void updateTapToQR();
-=======
     void getPrinterStatus(bool *isOnline, bool *hasPaper); // do not erase
     double getAlertTemperature();
 
@@ -160,7 +158,6 @@ public:
                                  QString *status_text_slots);
 
     QString m_dbPath2;
->>>>>>> Stashed changes
 
 private:
     void emailEmpty(int slot);

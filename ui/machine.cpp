@@ -174,11 +174,9 @@ double machine::getTemperature(){
 void machine::temperatureFeedback(double m_temperature)
 {
     if((m_db->getAlertTemperature())< m_temperature){
-        ui->label_printer_status->setText("Temperature= " + QString::number(temperature, 'f', 2) + " is too high");
+        ui->label_warning_info_alert->setText("Temperature= " + QString::number(temperature, 'f', 2) + " is too high");
     }
-
 }
-
 
 void machine::getTemperatureFromController(){
     p_page_idle->dfUtility->send_command_to_FSM("getTemperature");

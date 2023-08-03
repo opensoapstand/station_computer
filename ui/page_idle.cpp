@@ -58,6 +58,10 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     idlePageTypeSelectorTimer = new QTimer(this);
     idlePageTypeSelectorTimer->setInterval(1000);
     connect(idlePageTypeSelectorTimer, SIGNAL(timeout()), this, SLOT(onIdlePageTypeSelectorTimerTick()));
+    
+    pollTemperatureTimer = new QTimer(this);
+    pollTemperatureTimer->setInterval(1000);
+    connect(pollTemperatureTimer, SIGNAL(timeout()), this, SLOT(onPollTemperatureTimerTick()));
 }
 
 /*
@@ -94,7 +98,7 @@ void page_idle::showEvent(QShowEvent *event)
     ui->pushButton_to_select_product_page->setStyleSheet(styleSheet);
     ui->label_welcome_message->setStyleSheet(styleSheet);
     ui->pushButton_test->setStyleSheet(styleSheet);
-    ui->label_printer_status->setStyleSheet(styleSheet);
+    ui->label_warning_info_alert->setStyleSheet(styleSheet);
 
     qDebug() << "open db: payment method";
     setDiscountPercentage(0.0);
@@ -134,7 +138,7 @@ void page_idle::showEvent(QShowEvent *event)
 
     addCompanyLogoToLabel(ui->logo_label);
 
-    ui->label_printer_status->hide(); // always hide here, will show if enabled and has problems.
+    ui->label_warning_info_alert->hide(); // always hide here, will show if enabled and has problems.
     if (needsReceiptPrinter)
     {
         checkReceiptPrinterStatus();
@@ -200,6 +204,10 @@ void page_idle::showEvent(QShowEvent *event)
 #endif
     qDebug() << "Video player. Is fullscreen? : " << videoWidget->isFullScreen();
 #endif
+
+
+    ui->label_warning_info_alert->setText( QString::number( thisMachine.getTemperature(), 'f', 2));
+
 }
 
 void page_idle::changeToIdleProductsIfSet()
@@ -293,9 +301,27 @@ void page_idle::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     this->pageTransition(this, pageToShow);
     idlePageTypeSelectorTimer->stop();
 }
-/*
- * Screen click shows product page as full screen and hides page_idle screen
- */
+
+// periodical temperature check initiated 
+void page_idle::onPollTemperatureTimerTick()
+{
+    if (--_pollTemperatureTimerTimeoutSec >= 0)
+    {
+    }
+    else
+    {
+
+        qDebug() << "Check temperature.";
+        _pollTemperatureTimerTimeoutSec = PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS;
+        
+        thisMachine.getTemperatureFromController();
+        // hack, will not be ready when asked from controller. This basically displaying the "previous temperature".
+        ui->label_warning_info_alert->setText( QString::number( thisMachine.getTemperature(), 'f', 2));
+    }
+        
+}
+
+// periodical check to transition to other idle page type
 void page_idle::onIdlePageTypeSelectorTimerTick()
 {
     if (--_idlePageTypeSelectorTimerTimeoutSec >= 0)
@@ -303,15 +329,9 @@ void page_idle::onIdlePageTypeSelectorTimerTick()
     }
     else
     {
+
         changeToIdleProductsIfSet();
         idlePageTypeSelectorTimer->stop();
-        qDebug() << "Check temperature.";
-        _pollTemperatureTimerTimeoutSec = PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS;
-        
-        thisMachine.getTemperatureFromController();
-        
-        // hack, will not be ready when asked from controller. This basically displaying the "previous temperature".
-        ui->label_printer_status->setText( QString::number( thisMachine.getTemperature(), 'f', 2));
         
     }
 }
@@ -321,19 +341,19 @@ void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
 
     if (!isOnline)
     {
-        ui->label_printer_status->raise();
-        setTemplateTextWithIdentifierToObject(ui->label_printer_status, "offline");
-        ui->label_printer_status->show();
+        ui->label_warning_info_alert->raise();
+        setTemplateTextWithIdentifierToObject(ui->label_warning_info_alert, "offline");
+        ui->label_warning_info_alert->show();
     }
     else if (!hasPaper)
     {
-        ui->label_printer_status->raise();
-        setTemplateTextWithIdentifierToObject(ui->label_printer_status, "nopaper");
-        ui->label_printer_status->show();
+        ui->label_warning_info_alert->raise();
+        setTemplateTextWithIdentifierToObject(ui->label_warning_info_alert, "nopaper");
+        ui->label_warning_info_alert->show();
     }
     else
     {
-        ui->label_printer_status->hide();
+        ui->label_warning_info_alert->hide();
     }
     ui->pushButton_to_select_product_page->show();
     // ui->pushButton_to_select_product_page->show();

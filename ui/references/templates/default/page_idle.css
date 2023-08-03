@@ -18,7 +18,7 @@ QLabel {
    qproperty-alignment: AlignCenter;
    }
 
-#label_printer_status {
+#label_warning_info_alert {
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 100;

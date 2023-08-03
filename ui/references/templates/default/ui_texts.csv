@@ -12,8 +12,8 @@
 
 # page_idle
 page_idle->label_welcome_message,Refill soap here!<br>Tap screen to start
-page_idle->label_printer_status->offline,Assistance needed<br>Receipt Printer offline.
-page_idle->label_printer_status->nopaper,Assistance needed<br>Receipt Printer empty or improperly loaded.
+page_idle->label_warning_info_alert->offline,Assistance needed<br>Receipt Printer offline.
+page_idle->label_warning_info_alert->nopaper,Assistance needed<br>Receipt Printer empty or improperly loaded.
 
 #page_select_product
 page_select_product->label_pick_soap,Pick your soap

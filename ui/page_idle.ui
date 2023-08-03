@@ -104,7 +104,7 @@ text-transform: lowercase;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="label_printer_status">
+  <widget class="QLabel" name="label_warning_info_alert">
    <property name="geometry">
     <rect>
      <x>50</x>

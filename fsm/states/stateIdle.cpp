@@ -167,7 +167,6 @@ DF_ERROR stateIdle::onAction()
          
          if (g_productDispensers[0].the_pcb->isTemperatureSensorAvailable())
          {
-            debugOutput::sendMessage("lode", MSG_INFO);
             double temperature = g_productDispensers[0].the_pcb->getTemperature();
             // double temperature = g_productDispensers[0].the_pcb->getTemperatureConfigure();
             debugOutput::sendMessage("Temperature in Celsius: " + std::to_string(temperature), MSG_INFO);

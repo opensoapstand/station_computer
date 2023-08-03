@@ -38,7 +38,6 @@ public:
 
     // bool updateSlotAvailability(int slot, int isEnabled, QString status_text);
 
-    double getAlertTemperature();
     void addTemperature(QString machine_id, double temperature, QString alert);
     void addUserInteraction(QString session_id, QString role, QString page, QString event);
     void getAllProductProperties(int slot,
@@ -93,7 +92,8 @@ public:
 
                                  QString *pump_id_slots,
                                  int *is_enabled_slots,
-                                 QString *status_text_slots);
+                                 QString *status_text_slots,
+                                 double *alert_temperature);
 
     // QString m_dbPath2;
 

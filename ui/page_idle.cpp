@@ -268,7 +268,15 @@ void page_idle::onPollTemperatureTimerTick()
         
         thisMachine.getTemperatureFromController();
         // hack, will not be ready when asked from controller. This basically displaying the "previous temperature".
-        ui->label_printer_status->setText( QString::number( thisMachine.getTemperature(), 'f', 2));
+        //ui->label_printer_status->setText( QString::number( thisMachine.getTemperature(), 'f', 2));
+        if (thisMachine.isTemperatureTooHigh()){
+
+            
+            QString temperature = QString::number( thisMachine.getTemperature(), 'f', 2);
+            
+            QString base = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_printer_status, "temperature_too_high");
+            ui->label_printer_status->setText(base.arg(temperature));
+        }
     }
         
 }

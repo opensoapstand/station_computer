@@ -33,7 +33,7 @@ public:
     void loadParametersFromDb();
     void setDb(DbManager *db);
 
-    
+
 
     void dispenseButtonLightsAnimateState(bool animateElseOff);
     bool slotNumberValidityCheck(int slot);
@@ -80,8 +80,9 @@ public:
     void getTemperatureFromController();
     void writeTemperatureToDb(double temperature);
     double getTemperature();
+    bool isTemperatureTooHigh();
     void fsmReceiveTemperature(double temperature);
-    void temperatureFeedback(double m_temperature);
+    // void temperatureFromControllerFeedback(double m_temperature);
 
     StateCoupon getCouponState();
     void setCouponState(StateCoupon state);
@@ -123,6 +124,7 @@ public:
     QString m_idle_page_type;
     QString m_admin_pwd;
     double m_temperature;
+    double m_alert_temperature;
 
     df_util *dfUtility;
 

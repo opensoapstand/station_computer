@@ -561,7 +561,8 @@ void DbManager::getAllMachineProperties(
 
     QString *pump_id_slots,
     int *is_enabled_slots,
-    QString *status_text_slots)
+    QString *status_text_slots,
+    double *alert_temperature)
 {
     qDebug() << " db... all machine properties from: " << CONFIG_DB_PATH;
     {
@@ -617,6 +618,7 @@ void DbManager::getAllMachineProperties(
             *help_text_html = qry.value(34).toString();
             *idle_page_type = qry.value(35).toString();
             *admin_pwd = qry.value(36).toString();
+            *alert_temperature = qry.value(37).toDouble();
         }
         qry.finish();
     }
@@ -798,18 +800,6 @@ void DbManager::getPrinterStatus(bool *isOnline, bool *hasPaper)
             *hasPaper = (qry.value(1).toInt() == 1);
         }
         qry.finish();
-    }
-    closeDb();
-}
-
-double DbManager::getAlertTemperature()
-{
-    {
-        QSqlDatabase db = openDb(CONFIG_DB_PATH);
-        QSqlQuery qry(db);
-
-        qry.prepare("SELECT alert_temperature FROM machine");
-        qry.exec();
     }
     closeDb();
 }

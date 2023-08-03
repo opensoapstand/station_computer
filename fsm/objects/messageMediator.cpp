@@ -436,7 +436,6 @@ DF_ERROR messageMediator::parseCommandString()
 
       if (m_machine->control_pcb->isTemperatureSensorAvailable())
       {
-         debugOutput::sendMessage("lode", MSG_INFO);
          double temperature = m_machine->control_pcb->getTemperature();
          // double temperature = g_productDispensers[0].the_pcb->getTemperatureConfigure();
          debugOutput::sendMessage("Temperature in Celsius: " + std::to_string(temperature), MSG_INFO);

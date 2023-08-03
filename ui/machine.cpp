@@ -167,6 +167,13 @@ void machine::writeTemperatureToDb(double temperature)
     m_db->addTemperature(getMachineId(), temperature, "");
 }
 
+bool machine::isTemperatureTooHigh(){
+    if (m_alert_temperature >100.0){
+        return false;
+    }
+    return m_temperature < m_alert_temperature ;
+}
+
 void machine::fsmReceiveTemperature(double temperature)
 {
     qDebug() << "Temperature received from FSM: " << temperature;
@@ -174,21 +181,25 @@ void machine::fsmReceiveTemperature(double temperature)
    
     writeTemperatureToDb(getTemperature());
     m_temperature = temperature;
+   
+    if(isTemperatureTooHigh()){
+        // ui->label_printer_status->setText("Temperature= " + QString::number(temperature, 'f', 2) + " is too high")
+        qDebug() << "Temperature too hights afeifaf    debug test";
+    }
 }
 
 double machine::getTemperature(){
     return m_temperature;
 }
 
-void machine::temperatureFeedback(double temperature)
-{
-    m_temperature = temperature;
-    if((m_db->getAlertTemperature()) < m_temperature){
-        // ui->label_printer_status->setText("Temperature= " + QString::number(temperature, 'f', 2) + " is too high");
-
-        qDebug() << "Temperature too hights afeifaf    debug test";
-    }
-}
+// void machine::temperatureFromControllerFeedback(double temperature)
+// {
+//     m_temperature = temperature;
+//     if((m_db->getAlertTemperature()) < m_temperature){
+//         // ui->label_printer_status->setText("Temperature= " + QString::number(temperature, 'f', 2) + " is too high")
+//         qDebug() << "Temperature too hights afeifaf    debug test";
+//     }
+// }
 
 void machine::getTemperatureFromController(){
     dfUtility->send_command_to_FSM("getTemperature");
@@ -399,7 +410,8 @@ void machine::loadParametersFromDb()
         &m_admin_pwd,
         m_pump_id_slots,
         m_is_enabled_slots,
-        m_status_text_slots);
+        m_status_text_slots,
+        &m_alert_temperature);
 
     qDebug() << "Machine ID as loaded from db: " << getMachineId();
     qDebug() << "Template folder from db : " << getTemplateFolder();

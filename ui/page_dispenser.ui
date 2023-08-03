@@ -19,7 +19,7 @@
   <property name="styleSheet">
    <string notr="true"/>
   </property>
-  <widget class="QLabel" name="dispense_bottle_label">
+  <widget class="QLabel" name="label_background_during_dispense_animation">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -32,7 +32,7 @@
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="fill_animation_label">
+  <widget class="QLabel" name="label_moving_bottle_fill_effect">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -82,7 +82,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Volume dispensed</string>
+    <string>volume dispensed</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_volume_dispensed_ml">
@@ -143,10 +143,10 @@
   <widget class="QPushButton" name="pushButton_debug_Button">
    <property name="geometry">
     <rect>
-     <x>970</x>
-     <y>0</y>
-     <width>111</width>
-     <height>91</height>
+     <x>1000</x>
+     <y>240</y>
+     <width>81</width>
+     <height>71</height>
     </rect>
    </property>
    <property name="font">
@@ -219,26 +219,13 @@
     <string>Problem detected</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_report">
-   <property name="geometry">
-    <rect>
-     <x>240</x>
-     <y>180</y>
-     <width>241</width>
-     <height>71</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>button report</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_dispense_message">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>1760</y>
+     <x>0</x>
+     <y>1710</y>
      <width>1051</width>
-     <height>151</height>
+     <height>191</height>
     </rect>
    </property>
    <property name="text">
@@ -259,8 +246,8 @@
    </property>
   </widget>
   <zorder>pushButton_abort</zorder>
-  <zorder>fill_animation_label</zorder>
-  <zorder>dispense_bottle_label</zorder>
+  <zorder>label_moving_bottle_fill_effect</zorder>
+  <zorder>label_background_during_dispense_animation</zorder>
   <zorder>label_volume_dispensed</zorder>
   <zorder>label_volume_dispensed_ml</zorder>
   <zorder>label_to_refill</zorder>
@@ -271,7 +258,6 @@
   <zorder>label_dispense_status</zorder>
   <zorder>label_dispense_flowrate</zorder>
   <zorder>pushButton_problems</zorder>
-  <zorder>pushButton_report</zorder>
   <zorder>label_dispense_message</zorder>
   <zorder>label_logo</zorder>
  </widget>

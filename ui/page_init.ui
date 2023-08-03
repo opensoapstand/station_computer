@@ -16,7 +16,7 @@
   <property name="styleSheet">
    <string notr="true"/>
   </property>
-  <widget class="QLabel" name="init_label">
+  <widget class="QLabel" name="label_init_message">
    <property name="geometry">
     <rect>
      <x>30</x>
@@ -40,7 +40,7 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="fail_label">
+  <widget class="QLabel" name="label_fail_message">
    <property name="geometry">
     <rect>
      <x>270</x>

@@ -8,8 +8,7 @@
 // updated: 08-11-2022
 // by: Ash Singla & Lode Ameije
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "page_help.h"
@@ -27,22 +26,9 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     // Fullscreen background setup
     ui->setupUi(this);
 
-
-    DbManager db(DB_PATH);
-    bool showTransactions = db.showTransactions();
-    db.closeDB();
-
-    if (!showTransactions)
-    {
-        ui->pushButton_to_transactions->hide();
-    }
-
     helpIdleTimer = new QTimer(this);
     helpIdleTimer->setInterval(1000);
     connect(helpIdleTimer, SIGNAL(timeout()), this, SLOT(onHelpTimeoutTick()));
- 
-
-
     connect(ui->buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(keyboardButtonPressed(int)));
 }
 
@@ -60,6 +46,13 @@ void page_help::setPage(page_select_product *pageSelect, page_product *page_prod
     this->p_page_select_product = pageSelect;
     this->p_page_transactions = pageTransactions;
     this->p_page_maintenance = pageMaintenance;
+}
+
+void page_help::showEvent(QShowEvent *event)
+{
+
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+    QWidget::showEvent(event);
 
     QString styleSheet = p_page_idle->getCSS(PAGE_HELP_CSS);
 
@@ -72,54 +65,51 @@ void page_help::setPage(page_select_product *pageSelect, page_product *page_prod
     ui->pushButton_resetTimeout->setStyleSheet(styleSheet);
     ui->pushButton_to_maintenance->setStyleSheet(styleSheet);
     ui->pushButton_to_feedback->setStyleSheet(styleSheet);
-    // QString buttonSelector2 = QString("QPushButton#%1").arg(ui->pushButton_back->objectName());
 
-    // QString styleSheet = p_page_idle->getCSS(PAGE_HELP_CSS);
-    ui->pushButton_to_transactions->setText("Transaction History ->");
-    ui->pushButton_to_maintenance->setText("Settings");
-    ui->pushButton_to_feedback->setText("Contact Us");
-    ui->pushButton_to_idle->setText("<-back");
-    ui->label_keyboardInfo->setText("Enter password followed by the \"Done\" key to enter maintenance mode");
-    
-
-}
-
-void page_help::showEvent(QShowEvent *event)
-{
-    qDebug() << "<<<<<<< Page Enter: Help >>>>>>>>>";
-    QWidget::showEvent(event);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_to_transactions);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_to_maintenance);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_to_feedback);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_to_idle);
+    ui->label_keyboardInfo->setText(p_page_idle->getTemplateTextByPage(this, "label_keyboardInfo")); //p_page_idle->setTemplateTextToObject(ui->label_keyboardInfo); // does not work because the parent is the keyboard, not the page.
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_PATH);
 
-    DbManager db(DB_PATH);
-    maintenance_pwd = db.getMaintenanceAdminPassword();
-    help_text_html = db.getHelpPageHtmlText();
-    db.closeDB();
-    if(help_text_html!=""){
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_GENERIC_WHITE);
-        ui->html_textBrowser->setHtml(help_text_html);
+    help_text_html = p_page_idle->thisMachine.getHelpPageHtmlText();
+    if (p_page_idle->thisMachine.getShowTransactionHistory())
+    {
+        ui->pushButton_to_transactions->show();
     }
-    else{
-        ui->html_textBrowser->hide();
+    else
+    {
+        ui->pushButton_to_transactions->hide();
     }
+    
+    if (help_text_html != ""){
 
-   
-   
+        ui->html_help_text->setHtml(help_text_html);
+    }
+    else
+    {
+        ui->html_help_text->hide();
+
+        QString image_path = p_page_idle->thisMachine.getTemplatePathFromName(PAGE_HELP_BACKGROUND_GENERIC_WHITE);
+        if (df_util::pathExists(image_path)){
+            p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_GENERIC_WHITE);
+        }
+    }
 
     helpIdleTimer->start(1000);
     _helpIdleTimeoutSec = 60;
     ui->keyboard_3->hide();
+    ui->keyboardTextEntry->setText("");
 }
+
 void page_help::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     helpIdleTimer->stop();
-    ui->keyboardTextEntry->setText("");
     ui->keyboard_3->hide();
     p_page_idle->pageTransition(this, pageToShow);
 }
-/*
- * Page Tracking reference
- */
 
 void page_help::on_pushButton_to_idle_clicked()
 {
@@ -207,21 +197,41 @@ void page_help::keyboardButtonPressed(int buttonID)
         qDebug() << "DONE CLICKED";
         QString textEntry = ui->keyboardTextEntry->text();
 
-        int compareResult = QString::compare(textEntry, maintenance_pwd, Qt::CaseInsensitive);
-        int shortcut = QString::compare(textEntry, "lll", Qt::CaseInsensitive);
+        // if role was already set, do not check pwd. 
+        if (!p_page_idle->thisMachine.isAllowedAsMaintainer()){
+            p_page_idle->thisMachine.processRolePassword(textEntry);
+            
+            if (p_page_idle->thisMachine.isAllowedAsMaintainer()){
+                hideCurrentPageAndShowProvided(p_page_maintenance);
+            }else{
+                ui->keyboardTextEntry->setText("");
+            
+            }
+        }
 
-        if (compareResult == 0)
-        // if (compareResult == 0 || shortcut == 0) // shortcut for developing.
-        {
-            usleep(100000);
-            qDebug() << "Password correct. Will open maintenance page";
+        if (p_page_idle->thisMachine.isAllowedAsMaintainer()){
             hideCurrentPageAndShowProvided(p_page_maintenance);
+
         }
-        else
-        {
-            qDebug() << "Wrong password. Check db in database or contact soapstand.";
-            ui->keyboardTextEntry->setText("");
-        }
+        // int compareResult_user = QString::compare(textEntry, p_page_idle->thisMachine.getMaintenanceAdminPassword(false), Qt::CaseInsensitive);
+        // int compareResult_admin = QString::compare(textEntry, p_page_idle->thisMachine.getMaintenanceAdminPassword(true), Qt::CaseInsensitive);
+
+        // if (compareResult_user == 0)
+        // {
+        //     usleep(100000);
+        //     qDebug() << "Maintenance user password correct.";
+        //     hideCurrentPageAndShowProvided(p_page_maintenance);
+        // }
+        // else if (compareResult_user == 0){
+        //     qDebug() << "Maintenance admin password correct.";
+        //     hideCurrentPageAndShowProvided(p_page_maintenance);
+
+        // }
+        // else
+        // {
+        //     qDebug() << "Maintenance use password wrong . Check db in database or contact soapstand.";
+        //     ui->keyboardTextEntry->setText("");
+        // }
     }
     else if (buttonText == "Space")
     {

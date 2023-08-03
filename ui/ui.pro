@@ -15,6 +15,7 @@ FORMS += \
     page_idle.ui \
     page_qr_payment.ui \
     page_tap_payment.ui \
+    page_tap_payment_serial.ui \
     page_product.ui \
     page_select_product.ui \
     page_end.ui \
@@ -37,6 +38,7 @@ HEADERS += \
     includefiles.h \
     page_qr_payment.h \
     page_tap_payment.h \
+    page_tap_payment_serial.h \
     page_product.h \
     posm/enums.h \
     posm/lrcgenerator.h \
@@ -63,7 +65,8 @@ HEADERS += \
     page_sendFeedback.h  \
     page_transactions.h \
     product.h \
-    page_idle_products.h
+    page_idle_products.h \
+    machine.h
 
 SOURCES += \
     dfuicommthread.cpp \
@@ -73,6 +76,7 @@ SOURCES += \
     main.cpp \
     page_qr_payment.cpp \
     page_tap_payment.cpp \
+    page_tap_payment_serial.cpp \
     page_product.cpp \
     posm/lrcgenerator.cpp \
     posm/mcommunication.cpp \
@@ -99,7 +103,8 @@ SOURCES += \
     ../library/qr/qrcodegen.cpp \
     page_transactions.cpp \
     product.cpp \
-    page_idle_products.cpp
+    page_idle_products.cpp \
+    machine.cpp
 
 RESOURCES += \
     src.qrc

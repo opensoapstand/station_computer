@@ -1,11 +1,12 @@
 #include "df_util.h" // lode added for settings
 #include "dbmanager.h"
-#include "page_dispenser.h"
+// #include "page_dispenser.h"
 #include "page_idle.h"
+#include "machine.h"
+
 // Ctor
 product::product()
 {
-    // overruledPrice = INVALID_PRICE;
     m_discount_percentage_fraction = 0.0;
     m_promoCode = "";
 }
@@ -13,7 +14,6 @@ product::product()
 // Ctor Object Copy
 product::product(const product &other) : QObject(nullptr)
 {
-    // slot = getSlot();
 }
 
 // Dtor
@@ -21,18 +21,52 @@ product::~product()
 {
 }
 
-void product::load()
+void product::setDb(DbManager *db)
 {
-    qDebug() << "Open db: db load product properties from product load";
-    DbManager db(DB_PATH);
+    m_db = db;
+}
 
-    m_product_id = db.getProductID(getSlot());
-    soapstand_product_serial = db.getProductDrinkfillSerial(getSlot());
-    db.closeDB();
+void product::setMachine(machine *machine)
+{
+    thisMachine = machine;
+}
 
-    size_unit = getUnitsForSlot();
-    payment = getPaymentMethod();
-    loadProductProperties();
+void product::loadProductProperties()
+{
+    qDebug() << "Load product properties from db and csv";
+    loadProductPropertiesFromDb();
+    thisMachine->loadProductPropertiesFromProductsFile(getProductDrinkfillSerial(),
+                                                       &m_name,
+                                                       &m_name_ui,
+                                                       &m_product_type,
+                                                       &m_description_ui,
+                                                       &m_features_ui,
+                                                       &m_ingredients_ui);
+}
+
+void product::loadProductPropertiesFromDb()
+{
+    qDebug() << "Open db: db load product properties";
+    m_db->getAllProductProperties(getSlot(), &m_aws_product_id,
+                                  &m_soapstand_product_serial,
+                                  &m_size_unit,
+                                  &m_currency,
+                                  &m_payment,
+                                  &m_name_receipt,
+                                  &m_concentrate_multiplier,
+                                  &m_dispense_speed,
+                                  &m_threshold_flow,
+                                  &m_retraction_time,
+                                  &m_calibration_const,
+                                  &m_volume_per_tick,
+                                  &m_lastRestockDate,
+                                  &m_volume_full,
+                                  &m_volume_remaining,
+                                  &m_volume_dispensed_since_restock,
+                                  &m_volume_dispensed_total,
+                                  &m_is_enabled_custom_discount,
+                                  &m_size_custom_discount,
+                                  &m_price_custom_discount, m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
 }
 
 char product::getSizeAsChar()
@@ -40,34 +74,7 @@ char product::getSizeAsChar()
     // ! = invalid.
     // t  test to fsm, but should become c for custom. we're so ready for it.
     // t
-
-    return df_util::sizeIndexToChar(Size);
-}
-
-void product::getCustomDiscountDetails(bool *large_volume_discount_is_enabled, double *min_volume_for_discount, double *discount_price_per_liter)
-{
-    qDebug() << "Open db: get bulk volume discount details ";
-
-    DbManager db(DB_PATH);
-    db.getCustomDiscountProperties(getSlot(), large_volume_discount_is_enabled, min_volume_for_discount, discount_price_per_liter);
-    db.closeDB();
-}
-
-int product::getSize()
-{
-    // e.g. SIZE_SMALL_INDEX
-    return Size;
-}
-
-void product::setSize(int sizeIndex)
-{
-    qDebug() << "Set size index: " << sizeIndex;
-    Size = sizeIndex;
-}
-
-void product::setBiggestEnabledSizeIndex()
-{
-    setSize(getBiggestEnabledSizeIndex());
+    return df_util::sizeIndexToChar(m_selected_size);
 }
 
 int product::getBiggestEnabledSizeIndex()
@@ -90,36 +97,57 @@ int product::getBiggestEnabledSizeIndex()
     return maxSize;
 }
 
+void product::setSlotEnabled(bool isEnabled)
+{
+    thisMachine->setSlotEnabled(getSlot(), isEnabled);
+}
+
 bool product::getSlotEnabled()
 {
-    qDebug() << "Open db: get slot enabled";
-    DbManager db(DB_PATH);
-    bool enabled = db.getSlotEnabled(getSlot());
+    return thisMachine->getSlotEnabled(getSlot());
+}
 
-    db.closeDB();
-    return enabled;
+void product::setStatusText(QString status)
+{
+    thisMachine->setStatusText(getSlot(), getSlotEnabled(), status);
+}
+
+QString product::getStatusText()
+{
+    return thisMachine->getStatusText(getSlot());
+}
+
+bool product::toggleSizeEnabled(int size)
+{
+    setSizeEnabled(size, !(getSizeEnabled(size)));
+}
+
+bool product::setSizeEnabled(int size, bool enabled)
+{
+    QString sizeIndexToText[6] = { "Invalid", "small", "medium", "large", "custom", "test" };
+    // m_sizeIndexIsEnabled[size] = enabled;
+    QString column_name = QString("is_enabled_%1").arg(sizeIndexToText[size]);
+    m_db->updateTableProductsWithInt(getSlot(), column_name, enabled);
 }
 
 bool product::getSizeEnabled(int size)
 {
     // caution!:  provide size index (0=small, ...)
-    qDebug() << size;
+    qDebug() << "Size enabled? for: " << size << "enabled? : " << m_sizeIndexIsEnabled[size];
     return m_sizeIndexIsEnabled[size];
 }
 
 int product::getSlot()
 {
-    return m_selectedSlot;
+    return m_dispenser_slot;
 }
 
 void product::setSlot(int slot)
 {
-
     if (slot >= OPTION_SLOT_INVALID && slot <= SLOT_COUNT)
     {
 
-            m_selectedSlot = slot;
-        
+        m_dispenser_slot = slot;
     }
     else
     {
@@ -127,100 +155,118 @@ void product::setSlot(int slot)
     }
 }
 
-// SLOTS Section
-
-bool product::isOrderValid()
+int product::getSize()
 {
-    if (!(m_selectedSlot >= OPTION_SLOT_INVALID && m_selectedSlot <= SLOT_COUNT))
-    {
-        qInfo() << "ERROR: no slot set. " << m_selectedSlot;
-        return false;
-    }
-    if (!(Size >= 0 && Size <= SIZES_COUNT))
-    {
-        qInfo() << "ERROR: no size set. " << m_selectedSlot;
-        return false;
-    }
+    // e.g. SIZE_SMALL_INDEX
+    return m_selected_size;
+}
 
+void product::setSize(int sizeIndex)
+{
+    qDebug() << "Set size index: " << sizeIndex;
+    m_selected_size = sizeIndex;
+}
+
+void product::setBiggestEnabledSizeIndex()
+{
+    setSize(getBiggestEnabledSizeIndex());
+}
+
+// SLOTS Section
+bool product::is_valid_size_selected()
+{
+    if (!(m_dispenser_slot >= OPTION_SLOT_INVALID && m_dispenser_slot <= SLOT_COUNT))
+    {
+        qInfo() << "ERROR: no slot set. " << m_dispenser_slot;
+        return false;
+    }
+    if (!(m_selected_size >= 0 && m_selected_size <= SIZES_COUNT))
+    {
+        qInfo() << "ERROR: no size set. " << m_selected_size;
+        return false;
+    }
     return true;
 }
 
-double product::getDiscount()
-{
-    // the discount is the original price minus the discounted price
-    return getPrice(getSize()) - getPriceCorrected();
-}
+// double product::getDiscountAmount()
+// {
+//     // the discount is the original price minus the discounted price
+//     return getBasePrice(getSize()) - getPriceCorrected();
+// }
 
-double product::getDiscountPercentageFraction()
-{
-    return m_discount_percentage_fraction;
-}
+// double product::getDiscountPercentageFraction()
+// {
+//     return m_discount_percentage_fraction;
+// }
 
 QString product::getLastRestockDate()
 {
-    qDebug() << "Open db:  last restock date";
-    QString restockdate;
-    DbManager db(DB_PATH);
-    restockdate = db.getLastRestockDate(getSlot());
-    db.closeDB();
-    return restockdate;
+
+    return m_lastRestockDate;
 }
 
-QString product::getPromoCode()
-{
-    return m_promoCode;
-}
+// QString product::getPromoCode()
+// {
+//     return m_promoCode;
+// }
 
-void product::setDiscountPercentageFraction(double percentageFraction)
-{
-    // ratio = percentage / 100;
-    qDebug() << "Set discount percentage fraction: " << QString::number(percentageFraction, 'f', 3);
-    m_discount_percentage_fraction = percentageFraction;
-}
+// void product::setDiscountPercentageFraction(double percentageFraction)
+// {
+//     qDebug() << "Set discount percentage fraction: " << QString::number(percentageFraction, 'f', 3);
+//     m_discount_percentage_fraction = percentageFraction;
+// }
 
-void product::setPromoCode(QString promoCode)
-{
-    // ratio = percentage / 100;
-    qDebug() << "Set Promo Code: " << promoCode;
-    m_promoCode = promoCode;
-}
+// void product::setPromoCode(QString promoCode)
+// {
+//     qDebug() << "Set Promo Code: " << promoCode;
+//     m_promoCode = promoCode;
+// }
 
 void product::setPrice(int size, double price)
 {
+    QString price_columns[5] = {"size_error", "price_small", "price_medium", "price_large", "price_custom"};
+    QString column_name = price_columns[size];
+
     qDebug() << "Open db: set product price";
-    DbManager db(DB_PATH);
-    db.updatePrice(getSlot(), size, price);
-    db.closeDB();
+
+    m_db->updateTableProductsWithDouble(getSlot(), column_name, price, 2);
 }
 
-double product::getPrice(int sizeIndex)
+double product::getBasePrice(int sizeIndex)
 {
-    // always from database
-    qDebug() << "Open db: get product price";
-    DbManager db(DB_PATH);
-    double price;
-    price = db.getProductPrice(getSlot(), df_util::sizeIndexToChar(sizeIndex));
-    qDebug() << "productsize: " << df_util::sizeIndexToChar(sizeIndex) << " price: " << price;
-    db.closeDB();
-    return price;
+    return m_sizeIndexPrices[sizeIndex];
 }
 
-double product::getPrice()
+double product::getBasePrice()
 {
-    return getPrice(getSize());
+    return getBasePrice(getSize());
 }
 
 double product::getPriceCorrected()
 {
-    // slot and size needs to be set.
     double price;
-    if (isOrderValid())
+    if (is_valid_size_selected())
     {
-        price = getPrice(getSize()) * (1.0 - m_discount_percentage_fraction);
+        price = getBasePrice(getSize()) * (1.0 - thisMachine->getDiscountPercentageFraction());
     }
     else
     {
 
+        qInfo() << "ERROR: no product set";
+        price = 66.6;
+    }
+    return price;
+}
+
+double product::getPriceCustom()
+{
+    double price;
+    if (is_valid_size_selected())
+    {
+        price = getBasePrice(getSize()) * (1.0 - m_discount_percentage_fraction) * getVolumeOfSelectedSize();
+    }
+    else
+    {
         qInfo() << "ERROR: no product set";
         price = 66.6;
     }
@@ -244,39 +290,23 @@ void product::setVolumeDispensedMl(double volumeMl)
     this->DispensedVolumeMl = volumeMl;
 }
 
-double product::getPriceCustom()
+double product::getRestockVolume()
 {
-    // slot and size needs to be set.
-    double price;
-    if (isOrderValid())
-    {
-        price = getPrice(getSize()) * (1.0 - m_discount_percentage_fraction) * getVolume();
-    }
-    else
-    {
-
-        qInfo() << "ERROR: no product set";
-        price = 66.6;
-    }
-    return price;
+    return m_volume_full;
 }
 
-double product::getVolume(int size)
+double product::getVolumeBySize(int size)
 {
-    double volume;
-    qInfo() << "Open db: get volume";
-    DbManager db(DB_PATH);
-    volume = db.getProductVolume(getSlot(), df_util::sizeIndexToChar(size));
-    db.closeDB();
-    return volume;
+
+    return m_sizeIndexVolumes[size];
 }
 
-double product::getVolume()
+double product::getVolumeOfSelectedSize()
 {
     double volume;
-    if (isOrderValid())
+    if (is_valid_size_selected())
     {
-        volume = getVolume(getSize());
+        volume = getVolumeBySize(getSize());
     }
     else
     {
@@ -289,12 +319,7 @@ double product::getVolume()
 QString product::getUnitsForSlot()
 {
 
-    qDebug() << "Open db:  units for label.";
-    QString units;
-    DbManager db(DB_PATH);
-    units = db.getUnits(getSlot());
-    db.closeDB();
-    return units;
+    return m_size_unit;
 }
 
 QString product::getVolumePerTickAsStringForSlot()
@@ -307,69 +332,69 @@ QString product::getVolumePerTickAsStringForSlot()
 
 double product::getVolumePerTickForSlot()
 {
-    qInfo() << "Open db: get vol per tick";
-    DbManager db(DB_PATH);
-    double ml_per_tick = db.getProductVolumePerTick(getSlot());
-
-    db.closeDB();
-    return ml_per_tick;
+    return m_volume_per_tick;
 }
 
 void product::setVolumePerTickForSlot(QString volumePerTickInput)
 {
     double ml_per_tick = inputTextToMlConvertUnits(volumePerTickInput);
     qInfo() << "Open db: set vol per tick";
-    DbManager db(DB_PATH);
-    db.updateVolumePerTick(getSlot(), ml_per_tick);
-
-    db.closeDB();
+    m_db->updateTableProductsWithDouble(getSlot(), "volume_per_tick", ml_per_tick, 2);
 }
 
 void product::setSizeToVolumeForSlot(QString volumeInput, int size)
 {
     double volume = inputTextToMlConvertUnits(volumeInput);
+    QString volume_columns[5] = {"invalid_size", "size_small", "size_medium", "size_large", "size_custom_max"};
+    QString column_name = volume_columns[size];
+
     qInfo() << "Open db: size to volume";
-    DbManager db(DB_PATH);
-    db.updateTargetVolume(getSlot(), size, volume);
-    db.closeDB();
+    m_db->updateTableProductsWithDouble(getSlot(), column_name, volume, 2);
 }
 
-QString product::getVolumeRemainingCorrectUnits()
+void product::setVolumeRemainingUserInput(QString volumeRemainingAsUserText)
 {
-    qInfo() << "Open db: volume dispensed since last restock";
-    DbManager db(DB_PATH);
-    double volume = db.getVolumeRemaining(getSlot());
-    db.closeDB();
+    double vol_as_ml = inputTextToMlConvertUnits(volumeRemainingAsUserText);
+    setVolumeRemaining(vol_as_ml);
+}
 
+bool product::restock()
+{
+    qDebug() << "Open db: restock";
+
+    bool success = true;
+    success &= m_db->updateTableProductsWithDouble(getSlot(), "volume_remaining", m_volume_full, 0);
+    success &= m_db->updateTableProductsWithDouble(getSlot(), "volume_dispensed_since_restock", 0, 0);
+    success &= m_db->updateTableProductsWithText(getSlot(), "last_restock", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
+
+    return success;
+}
+
+void product::setVolumeRemaining(double volume_as_ml)
+{
+    qDebug() << "Open db: set volume remaining";
+    m_db->updateTableProductsWithDouble(getSlot(), "volume_remaining", volume_as_ml, 0);
+}
+
+QString product::getVolumeRemainingCorrectUnits(bool addUnits)
+{
     QString units = getUnitsForSlot();
-    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(volume, units, false, true);
+    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(m_volume_remaining, units, false, addUnits);
 
     return volume_as_string;
 }
 
 QString product::getVolumeDispensedSinceRestockCorrectUnits()
 {
-    qInfo() << "Open db:  volume dispensed since last restock";
-    DbManager db(DB_PATH);
-    double volume = db.getVolumeDispensedSinceRestock(getSlot());
-    db.closeDB();
-
     QString units = getUnitsForSlot();
-    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(volume, units, false, true);
-
+    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(m_volume_dispensed_since_restock, units, false, true);
     return volume_as_string;
 }
 
 QString product::getTotalDispensedCorrectUnits()
 {
-    qInfo() << "Open db:  volume dispensed";
-    DbManager db(DB_PATH);
-    double volume = db.getTotalDispensed(getSlot());
-    db.closeDB();
-
     QString units = getUnitsForSlot();
-    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(volume, units, false, true);
-
+    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(m_volume_dispensed_total, units, false, true);
     return volume_as_string;
 }
 
@@ -380,7 +405,7 @@ QString product::getSizeToVolumeWithCorrectUnits(int size, bool roundValue, bool
     double volume_oz;
     QString units;
 
-    v = getVolume(size);
+    v = getVolumeBySize(size);
     units = getUnitsForSlot();
     volume_as_string = df_util::getConvertedStringVolumeFromMl(v, units, roundValue, addUnits);
     return volume_as_string;
@@ -400,74 +425,26 @@ double product::inputTextToMlConvertUnits(QString inputValueAsText)
 
 QString product::getProductDrinkfillSerial()
 {
-    qDebug() << "Open db: get product id";
-    DbManager db(DB_PATH);
-    QString serial = db.getProductDrinkfillSerial(getSlot());
-    db.closeDB();
-    return serial;
-}
-
-void product::loadProductProperties()
-{
-    loadProductPropertiesFromDb();
-    qDebug() << "done loading from db";
-    loadProductPropertiesFromProductsFile();
-    qDebug() << "done loading from csv";
+    return m_soapstand_product_serial;
 }
 
 bool product::isProductVolumeInContainer()
 {
-    DbManager db(DB_PATH);
-    bool retval=true;
-    if (!db.getEmptyContainerDetectionEnabled())
-    {
-        retval = db.getVolumeRemaining(getSlot()) > CONTAINER_EMPTY_THRESHOLD_ML;
-    }
 
-    db.closeDB();
+    bool retval = true;
+
+    if (!thisMachine->getEmptyContainerDetectionEnabled())
+    {
+        retval = m_volume_remaining > CONTAINER_EMPTY_THRESHOLD_ML;
+    }
     return retval;
 }
-void product::loadProductPropertiesFromDb()
+
+void product::getCustomDiscountDetails(bool *large_volume_discount_is_enabled, double *min_volume_for_discount, double *discount_price_per_liter)
 {
-    qDebug() << "Open db: db load product properties";
-    DbManager db(DB_PATH);
-
-    db.getProductProperties(getSlot(), &m_product_id, m_sizeIndexIsEnabled);
-    db.closeDB();
-}
-
-void product::loadProductPropertiesFromProductsFile()
-{
-    QFile file(PRODUCT_DETAILS_TSV_PATH);
-    if (!file.open(QIODevice::ReadOnly))
-    {
-        qDebug() << "ERROR: Opening product details file. Expect unexpected behaviour now! ";
-        return;
-    }
-
-    QTextStream in(&file);
-    qDebug() << "Load csv file with product properties";
-    while (!in.atEnd())
-    {
-        QString line = in.readLine();
-
-        QStringList fields = line.split("\t");
-        int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], m_product_id, Qt::CaseSensitive);
-        if (compareResult == 0)
-        {
-            qDebug() << "compare result is 0";
-            m_name_ui = fields[CSV_PRODUCT_COL_NAME_UI];
-            m_product_type = fields[CSV_PRODUCT_COL_TYPE];
-            m_description_ui = fields[CSV_PRODUCT_COL_DESCRIPTION_UI];
-            m_features_ui = fields[CSV_PRODUCT_COL_FEATURES_UI];
-            m_ingredients_ui = fields[CSV_PRODUCT_COL_INGREDIENTS_UI];
-            break;            
-        }
-        
-    }
-    qDebug() << "properties file read before close ";
-    file.close();
-    qDebug() << "properties file read done ";
+    *large_volume_discount_is_enabled = m_is_enabled_custom_discount;
+    *min_volume_for_discount = m_size_custom_discount;
+    *discount_price_per_liter = m_price_custom_discount;
 }
 
 QString product::getProductIngredients()
@@ -481,7 +458,6 @@ QString product::getProductFeatures()
 }
 QString product::getProductName()
 {
-    qDebug() << m_name_ui;
     return m_name_ui;
 }
 QString product::getProductDescription()
@@ -491,60 +467,38 @@ QString product::getProductDescription()
 
 QString product::getProductType()
 {
-  
+
     return m_product_type;
 }
 
 QString product::getProductPicturePath()
 {
-    QString serial = getProductDrinkfillSerial();
-    return QString(PRODUCT_PICTURES_ROOT_PATH).arg(serial);
+    return QString(PRODUCT_PICTURES_ROOT_PATH).arg(m_soapstand_product_serial);
 }
 
-
-
-QString product::getPLU(char size)
+QString product::getPlu(int sizeIndex)
 {
-
-    DbManager db(DB_PATH);
-    QString plu = db.getPLU(getSlot(), size);
-    db.closeDB();
-    return plu;
+    return m_sizeIndexPLUs[sizeIndex];
 }
 
-
-QString product::getMachineId()
+void product::setPlu(int sizeIndex, QString plu)
 {
+    QString plu_columns[5] = {"Invalid size", "plu_small", "plu_medium", "plu_large", "plu_custom"};
+    QString column_name = plu_columns[sizeIndex];
 
-    qDebug() << "Open db: getMachineID";
-
-    DbManager db(DB_PATH);
-    QString idString = db.getMachineID();
-    db.closeDB();
-    return idString;
+    qDebug() << "Open db: Set plu";
+    bool success = m_db->updateTableProductsWithText(getSlot(), column_name, plu);
 }
 
-QString product::getProductId()
+QString product::getAwsProductId()
 {
-    qDebug() << "Open db: get productId ";
-    DbManager db(DB_PATH);
-    QString idString = db.getProductID(getSlot());
-    db.closeDB();
-    return idString;
+    return m_aws_product_id;
 }
 
 QString product::getFullVolumeCorrectUnits(bool addUnits)
 {
-
-    qDebug() << "Open db: get full volume ";
-    DbManager db(DB_PATH);
-
-    double volume = db.getFullProduct(getSlot());
-    db.closeDB();
-
     QString units = getUnitsForSlot();
-    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(volume, units, false, addUnits);
-
+    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(m_volume_full, units, false, addUnits);
     return volume_as_string;
 }
 
@@ -552,9 +506,7 @@ void product::setFullVolumeCorrectUnits(QString inputFullValue)
 {
     qDebug() << "Open db: for write full vol";
     double full_volume = inputTextToMlConvertUnits(inputFullValue);
-    DbManager db(DB_PATH);
-    db.updateFullVolume(getSlot(), full_volume);
-    db.closeDB();
+    m_db->updateTableProductsWithDouble(getSlot(), "volume_full", full_volume, 0);
 }
 
 QString product::getSizeToVolumeWithCorrectUnits(bool round, bool addUnits)
@@ -562,34 +514,26 @@ QString product::getSizeToVolumeWithCorrectUnits(bool round, bool addUnits)
     return getSizeToVolumeWithCorrectUnits(getSize(), round, addUnits);
 }
 
+void product::setPaymentMethod(QString paymentMethod)
+{
+    qDebug() << "Open db: set payment method";
+    m_db->updateTableProductsWithText(getSlot(), "payment", paymentMethod);
+}
+
 QString product::getPaymentMethod()
 {
-    QString paymentMethod;
-    qDebug() << "Open db: product payment method";
-    
-    DbManager db(DB_PATH);
-    paymentMethod = db.getPaymentMethod(getSlot());
-    db.closeDB();
-    return paymentMethod;
+    return m_payment;
 }
 
 int product::getDispenseSpeedPercentage()
 {
-    int pwm;
-
-    qInfo() << "Open db: pwm speed";
-    DbManager db(DB_PATH);
-    pwm = db.getPWM(getSlot());
-    db.closeDB();
-
-    return (int)round((double(pwm) * 100) / 255);
+    return (int)round((double(m_dispense_speed) * 100) / 255);
 }
+
 void product::setDispenseSpeedPercentage(int percentage)
 {
     int pwm = (int)round((percentage * 255) / 100);
 
     qInfo() << "Open db: pwm speed set";
-    DbManager db(DB_PATH);
-    db.updatePWM(getSlot(), pwm);
-    db.closeDB();
+    m_db->updateTableProductsWithInt(getSlot(), "dispense_speed", pwm);
 }

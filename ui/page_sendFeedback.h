@@ -8,10 +8,9 @@
 // payment page and page_idle page
 //
 // created: 05-04-2022
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #ifndef FEEDBACK_H
@@ -62,26 +61,16 @@ signals:
     void paymentTotal(string, string, string);
 
 private slots:
-    // **** Navigation ****
-//     void on_pushButton_previous_page_clicked();
-    // void on_page_qr_payment_Button_clicked();
-    // void on_lineEdit_promo_codeInput_clicked();
 
-    // Set Drink Order
     void on_pushButton_to_idle_clicked();
     void onSelectTimeoutTick();
 
     void on_pushButton_send_clicked();
 
-    // void keyboardButtonPressed(int);
     void on_pushButton_previous_page_clicked();
     void on_pushButton_start_input_clicked();
     void on_feedback_Text_Input_clicked();
     void keyboardButtonPressed(int);
-
-    
-
-    void on_feedbackText_cursorPositionChanged(int arg1, int arg2);
 
     void on_pushButton_help_page_clicked();
 

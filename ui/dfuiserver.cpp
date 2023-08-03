@@ -41,6 +41,12 @@ void DfUiServer::updateVolumeSlot(double dispensed)
 {
     emit signalUpdateVolume(dispensed, false);
 }
+
+void DfUiServer::updateFinalVolumeDispensed(double dispensed)
+{
+    emit finalVolumeDispensed(dispensed);
+}
+
 void DfUiServer::dispenseStatusSlot(QString status)
 {
     emit signalDispenseStatus(status);
@@ -58,6 +64,13 @@ void DfUiServer::noFlowAbortSlot()
 {
     emit noFlowAbort();
 }
+
+
+void DfUiServer::receiveTemperatureFromFsm(double temperature)
+{
+    emit temperatureSignal(temperature);
+}
+
 
 void DfUiServer::initReadySlot()
 {
@@ -84,11 +97,6 @@ void DfUiServer::messageHandlerFinishedSlot()
     startServer(); // task
 }
 
-// void DfUiServer::MMSlot()
-// {
-//     emit MM();
-// }
-
 // This function is called by QTcpServer when a new connection is available.
 void DfUiServer::incomingConnection(qintptr socketDescriptor)
 {
@@ -107,7 +115,7 @@ void DfUiServer::incomingConnection(qintptr socketDescriptor)
         // this->pauseAccepting(); // controller does not get error when trying to connect
 
 
-        // this turns out to be the most solid solution. Stop the server. Start up again when command finished. 
+        // this turns out to be the most solid solution. Stop the server after every command. Start up again when command finished. 
         closeServer(); // closes server. controller gets error when trying to connect
         
         // following works well, but controller needs a blocking routine to catch feedback. --> should be in different thread --> concurrency problems.
@@ -125,11 +133,14 @@ void DfUiServer::incomingConnection(qintptr socketDescriptor)
     connect(messageHandlerThread, &DfUiCommThread::transactionEndSignal, this, &DfUiServer::transactionEndSlot);
     connect(messageHandlerThread, &DfUiCommThread::resetTimerSignal, this, &DfUiServer::resetTimerSlot);
     connect(messageHandlerThread, &DfUiCommThread::updateVolumeSignal, this, &DfUiServer::updateVolumeSlot);
+    connect(messageHandlerThread, &DfUiCommThread::updateFinalVolumeDispensedSignal, this, &DfUiServer::updateFinalVolumeDispensed);
     connect(messageHandlerThread, &DfUiCommThread::dispenseRateSignal, this, &DfUiServer::dispenseRateSlot);
     connect(messageHandlerThread, &DfUiCommThread::dispenseStatusSignal, this, &DfUiServer::dispenseStatusSlot);
     connect(messageHandlerThread, &DfUiCommThread::messageHandlerFinishedSignal, this, &DfUiServer::messageHandlerFinishedSlot);
 
     connect(messageHandlerThread, &DfUiCommThread::noFlowAbortSignal, this, &DfUiServer::noFlowAbortSlot);
+    connect(messageHandlerThread, &DfUiCommThread::temperatureSignal, this, &DfUiServer::receiveTemperatureFromFsm);
+
     connect(messageHandlerThread, &DfUiCommThread::targetHitSignal, this, &DfUiServer::targetHitSlot);
 
     // connect(messageHandlerThread, &DfUiCommThread::targetHitSignal, this, &DfUiServer::noFlowAbortSlot);

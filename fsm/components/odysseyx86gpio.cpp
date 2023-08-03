@@ -5,10 +5,9 @@
 // NATIVE x86 pins on Oddysey board
 //
 // created: 15-06-2020
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include <stdio.h>
@@ -246,10 +245,8 @@ DF_ERROR oddyseyx86GPIO::writePin(bool level)
 
 void oddyseyx86GPIO::monitorGPIO_Flowsensor(bool *abortLoop)
 {
-        // debugOutput::sendMessage("monitorGPIO_Flowsensor", MSG_INFO);  //nuke this later it will cause so much spam
         int fd, len;
         char buf[MAX_BUF];
-        // char flowsensor_state_memory;
         struct pollfd pfd;
 
         string GPIO = "" + to_string(IO_PIN_FLOW_SENSOR);
@@ -266,7 +263,8 @@ void oddyseyx86GPIO::monitorGPIO_Flowsensor(bool *abortLoop)
 
         while (!*abortLoop)
         {
-                usleep(1000);
+
+                usleep(1000); // mandatory to relieve processor. If omitted, cpu will race at 100% all the time. (or if four cores, alll the cores all the time). Optimize to make as high as possible
 
                 char flowsensor_state_char;
 
@@ -285,18 +283,17 @@ void oddyseyx86GPIO::monitorGPIO_Flowsensor(bool *abortLoop)
                 }
 
                 using namespace std::chrono;
-                uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+                uint64_t now = duration_cast<microseconds>(system_clock::now().time_since_epoch()).count();
+                // using namespace std::chrono;
+                // uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
                 if (flowsensor_state_memory != flowsensor_state_char)
                 {
-                        // debugOutput::sendMessage(to_string(now - flowsensor_most_recent_edge_millis), MSG_INFO);
-                        // debugOutput::sendMessage(to_string((now - flowsensor_most_recent_edge_millis) > 30ULL), MSG_INFO);
                         flowsensor_most_recent_edge_millis = now;
-                        //debugOutput::sendMessage("chara relfeiejf", MSG_INFO);
                         
                 }
 
-                if ((now - flowsensor_most_recent_edge_millis) > FLOWSENSOR_DEJITTER_MILLIS)
+                if ((now - flowsensor_most_recent_edge_millis) > FLOWSENSOR_DEJITTER_MICROS) // Dejittering of the sensor. 
                 {
                         if (flowsensor_state_char == '1')
                         {
@@ -319,7 +316,7 @@ void oddyseyx86GPIO::monitorGPIO_Flowsensor(bool *abortLoop)
                         {
                                 // pos edge
                                 m_pDispenser->registerFlowSensorTick(); // trigger the callback
-                                //debugOutput::sendMessage("Flow tick received interrupt!", MSG_INFO);
+                                // debugOutput::sendMessage("Flow tick received interrupt!", MSG_INFO);
                         }
                         else
                         {

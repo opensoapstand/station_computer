@@ -7,10 +7,9 @@
 // command from IPC QT Socket
 //
 // created: 01-2022
-// by:Lode Ameije & Ash Singla
+// by:Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "stateManualPump.h"
@@ -29,6 +28,7 @@ stateManualPump::stateManualPump()
 stateManualPump::stateManualPump(messageMediator *message)
 {
    isCyclicTesting = false;
+   m_pMessaging = message;
 }
 
 // DTOR
@@ -56,6 +56,8 @@ DF_ERROR stateManualPump::onEntry()
    productDispensers[m_active_pump_index].setPumpDirectionForward();
    productDispensers[m_active_pump_index].setPumpPWM(255, true);
 
+   productDispensers[m_active_pump_index].setAllDispenseButtonLightsOff();
+
    isFlowTest = false;
    isCyclicTesting = false;
    iscustomVolumeDispenseTest = false;
@@ -65,6 +67,8 @@ DF_ERROR stateManualPump::onEntry()
    using namespace std::chrono;
    uint64_t millis_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
    most_recent_data_output_epoch = millis_epoch;
+
+   g_machine.pcb24VPowerSwitch(true);
 
    return e_ret;
 }
@@ -79,7 +83,12 @@ DF_ERROR stateManualPump::onAction()
       DF_ERROR ret_msg;
       ret_msg = m_pMessaging->parseCommandString();
 
-      if ('0' == m_pMessaging->getAction() || ACTION_QUIT == m_pMessaging->getAction())
+      if (m_pMessaging->getAction() == ACTION_RESET)
+      {
+         m_pMessaging->sendMessageOverIP("Init Ready");
+         m_state_requested = STATE_IDLE;
+      }
+      else if ('0' == m_pMessaging->getAction() || ACTION_QUIT == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Exit pump test", MSG_INFO);
          productDispensers[m_active_pump_index].setPumpsDisableAll();
@@ -196,6 +205,7 @@ DF_ERROR stateManualPump::onAction()
 
       else if (ACTION_MANUAL_PUMP_SET == m_pMessaging->getAction())
       {
+         productDispensers[m_active_pump_index].setAllDispenseButtonLightsOff();
          productDispensers[m_active_pump_index].setPumpsDisableAll();
          // float PWM_value_byte = 3.12345;
          int val = m_pMessaging->getCommandValue();
@@ -230,7 +240,7 @@ DF_ERROR stateManualPump::onAction()
                  to_string(m_active_pump_index + 1) + "\n"
                                                       "Available commands:\n"
                                                       "0: Exit pump menu\n"
-                                                      "sX: Set active pump, where X= 1,2,3 or 4\n"
+                                                      "nX: Set active pump, where X= 1,2,3 or 4\n"
                                                       "ixxx: Set active pump pwm [0..255] always 3 digits e.g. 050 = 50 \n"
                                                       "1: Active pump enable (additionally, press dispense button for motor to actually run)\n"
                                                       "2: Active pump disable\n"
@@ -563,7 +573,7 @@ DF_ERROR stateManualPump::autofillPresetQuantity()
    }
    else if (m_state_auto_pump == AUTO_PUMP_STATE_INIT)
    {
-      // pump should be enabled first. 
+      // pump should be enabled first.
       // productDispensers[m_active_pump_index].startDispense();
       // productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
       // productDispensers[m_active_pump_index].setMultiDispenseButtonLight(m_active_pump_index + 1, true);
@@ -597,9 +607,7 @@ DF_ERROR stateManualPump::autofillPresetQuantity()
       {
          debugOutput::sendMessage("Interrupt auto fill process with button.", MSG_INFO);
          m_state_auto_pump = AUTO_PUMP_STATE_FINISHED;
-        
       }
-
    }
    else if (m_state_auto_pump == AUTO_PUMP_STATE_FINISHED)
    {
@@ -648,6 +656,9 @@ DF_ERROR stateManualPump::onExit()
 {
    DF_ERROR e_ret = OK;
    productDispensers[m_active_pump_index].setPumpsDisableAll();
+   productDispensers[m_active_pump_index].setAllDispenseButtonLightsOff();
+   productDispensers[m_active_pump_index].the_pcb->virtualButtonUnpressHack(m_active_pump_index + 1);
+   g_machine.pcb24VPowerSwitch(false);
 
    return e_ret;
 }

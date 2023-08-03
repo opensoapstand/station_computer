@@ -4,10 +4,9 @@
 // idle state class
 //
 // created: 01-2022
-// by:Lode Ameije & Ash Singla
+// by:Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #ifndef STATEMANUALPRINTER__H_
@@ -18,7 +17,7 @@
 #include "stateVirtual.h"
 #include "../fsm.h"
 #include "../objects/product.h"
-#include "../objects/machine.h"
+// #include "../objects/machine.h"
 
 
 #include "../../library/printer/Adafruit_Thermal.h"
@@ -38,6 +37,7 @@ public:
 
     string toString();
     DF_ERROR printTest();
+    DF_ERROR getPrinterStatus(bool *r_isOnline, bool *r_hasPaper);
     DF_ERROR displayPrinterStatus();
     DF_ERROR displayPrinterReachable();
     DF_ERROR sendPrinterStatus();

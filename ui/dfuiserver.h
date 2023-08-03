@@ -15,6 +15,7 @@ public:
     void resetTimerSlot();
     void transactionEndSlot();
     void updateVolumeSlot(double dispensed);
+    void updateFinalVolumeDispensed(double dispensed);
     void dispenseRateSlot(double flowrate);
     void dispenseStatusSlot(QString status);
     void printerStatusSlot(bool isOnline, bool hasPaper);
@@ -22,6 +23,7 @@ public:
     void dispenseButtonPressedPosEdgeSlot();
     void dispenseButtonPressedNegEdgeSlot();
     void noFlowAbortSlot();
+    void receiveTemperatureFromFsm(double temperature);
     void initReadySlot();
     // void MMSlot();
     void messageHandlerFinishedSlot();
@@ -33,12 +35,14 @@ signals:
     void controllerFinishedAck();
     void pleaseReset();
     void signalUpdateVolume(double dispensed, bool isFull);
+    void finalVolumeDispensed(double dispensed);
     void signalDispenseRate(double flowrate);
     void signalDispenseStatus(QString status);
     void targetHit();
     void dispenseButtonPressedPosEdgeSignal();
     void dispenseButtonPressedNegEdgeSignal();
     void noFlowAbort();
+    void temperatureSignal(double temperature);
     void initReady();
     void MM();
 

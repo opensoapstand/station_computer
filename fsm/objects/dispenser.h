@@ -7,10 +7,9 @@
 // holds instructions for dispensing.
 //
 // created: 01-2022
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #ifndef _DISPENSER__H_
@@ -19,6 +18,7 @@
 #include "../dftypes.h"
 #include "../components/gpio.h"
 #include "../components/pcb.h"
+#include "machine.h"
 #include "../components/odysseyx86gpio.h"
 #include "product.h"
 #include <sqlite3.h>
@@ -50,6 +50,8 @@
 #define MCP_PIN_START 0
 #define MPC_PIN_END 15
 
+class machine; 
+
 class dispenser
 {
 public:
@@ -57,7 +59,8 @@ public:
       dispenser(gpio *buttonReference);
       ~dispenser();
 
-      DF_ERROR setup(pcb* pcb);
+      DF_ERROR setup(machine* machine);
+      // DF_ERROR setup(pcb* pcb, machine* machine);
       void refresh();
       // void initDispenser(int slot);
 
@@ -143,8 +146,7 @@ public:
 
       DF_ERROR loadGeneralProperties();
 
-      void loadMultiDispenseButtonEnabledFromDb();
-      bool getMultiDispenseButtonEnabled();
+
       void loadEmptyContainerDetectionEnabledFromDb();
       void loadSlotStateFromDb();
       void loadPumpReversalEnabledFromDb();
@@ -159,8 +161,11 @@ public:
       
       bool getIsStatusUpdateAllowed();
 
-      // static pcb *the_pcb;
+
+
       pcb* the_pcb;
+      machine* m_machine;
+      // machine* global_machine;
 private:
       bool dispenseButtonValueMemory;
       bool dispenseButtonValueEdgePositive;
@@ -218,7 +223,7 @@ private:
       bool m_isEmptyContainerDetectionEnabled = false;
       bool m_isPumpSlowStartStopEnabled = false;
       bool m_isPumpReversalEnabled = false;
-      bool m_isMultiButtonEnabled = false;
+
 
       // bool m_isDispenseDone; // XXX: Remove later.
       // bool m_isStill;

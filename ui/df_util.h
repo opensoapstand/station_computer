@@ -8,7 +8,7 @@
 // TODO: Refactor to fit with dfuicommthread
 //#define START_FSM_FROM_UI //enabled by default (start controller from ui)
 
-#define UI_VERSION "1.5+"
+#define UI_VERSION "2.0s"
 
 #define ENABLE_COUPON   // Petros stations have no coupon
 
@@ -24,7 +24,8 @@
 #define SIZE_CUSTOM_INDEX 4
 #define SIZE_TEST_INDEX 5
 
-#define DB_PATH "/home/df-admin/production/db/drinkfill-sqlite_newlayout.db"
+#define CONFIG_DB_PATH "/home/df-admin/production/db/configuration.db"
+#define USAGE_DB_PATH "/home/df-admin/production/db/usage.db"
 
 #define PRODUCT_DETAILS_TSV_PATH "/home/df-admin/production/references/products/product_details.tsv"  // https://docs.google.com/spreadsheets/d/17WR2gRyPIDIlGKBy1YKFAqN-Hyw_3VOJ6JCmfcAtjVk/edit#gid=169583479 download as .tsv file
 #define UI_TEXTS_CSV_PATH "ui_texts.csv" 
@@ -44,14 +45,17 @@
 #define TRANSACTION_DISPENSE_END_OFFINE_PATH            "/home/df-admin/production/logging/transactions/failed_curl_transaction_dispense_end.txt"
 #define TRANSACTIONS_RESTOCK_OFFINE_PATH                "/home/df-admin/production/logging/transactions/failed_curl_transaction_restock.txt"
 
-#define DB_PATH_CLICKS                                  "/release/db/sqlite/clicks.db"
-#define DB_PATH_TEMPERATURE                             "/release/db/sqlite/temperature.db"
 
 #define ML_TO_OZ 0.033814
 #define OZ_TO_ML 29.5735
 #define VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G 2999.0
 
 using namespace std;
+
+#define PAGE_IDLE_DELAY_BEFORE_ENTERING_IDLE_PRODUCTS 15
+#define PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS 60 //60
+#define PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS 6
+#define PAGE_IDLE_PRODUCTS_STEP_DISPLAY_TIME_SECONDS 1
 
 #define QR_PAGE_TIMEOUT_SECONDS 420
 #define QR_PAGE_TIMEOUT_WARNING_SECONDS 120
@@ -63,6 +67,8 @@ using namespace std;
 #define PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS 5
 
 #define CONTAINER_EMPTY_THRESHOLD_ML 2000
+
+
 
 #define TEMPLATES_ROOT_PATH                             "/home/df-admin/production/references/templates/"
 #define TEMPLATES_DEFAULT_NAME                          "default"
@@ -82,23 +88,27 @@ using namespace std;
 #define PAGE_ERROR_WIFI_CSS                             "page_error_wifi.css"
 #define PAGE_TAP_PAYMENT_CSS                            "page_tap_payment.css"
 #define PAGE_TRANSACTIONS_CSS                           "page_transactions.css"
+#define PAGE_MAINTENANCE_CSS                            "page_maintenance.css"
+#define PAGE_MAINTENANCE_DISPENSER_CSS                  "page_maintenance_dispenser.css"
+#define PAGE_IDLE_PRODUCTS_CSS                          "page_idle_products.css"
+#define PAGE_TAP_PAYMENT_SERIAL_CSS                     "page_tap_payment_serial.css"
 
 
 
 
-#define PAGE_IDLE_BACKGROUND_PATH                       "background_message.png"
-#define PAGE_IDLE_PRODUCTS_BACKGROUND_PATH              "background_product_select.png"
-#define PAGE_END_BACKGROUND_PATH                    "background_message.png"
-#define PAGE_TRANSACTIONS_BACKGROUND_PATH               "background_message.png"
+#define PAGE_IDLE_BACKGROUND_PATH                       "background_idle.png"
+#define PAGE_IDLE_PRODUCTS_BACKGROUND_PATH              "background_idle_products.png"
+#define PAGE_END_BACKGROUND_PATH                        "background_end.png"
+#define PAGE_TRANSACTIONS_BACKGROUND_PATH               "background_transactions.png"
 
 #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH             "background_product_select.png"
 #define PAGE_PRODUCT_BACKGROUND_PATH                    "background_product_quantity.png"
-#define PAGE_ORDER_OVERVIEW_PATH                        "background_generic_white_empty.png"
+#define PAGE_ORDER_OVERVIEW_PATH                        "background_order_overview.png"
 #define PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH      "background_dispense_instructions.png"
 #define PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH      "background_dispense_instructions_multispout.png"
 #define PAGE_DISPENSE_BACKGROUND_PATH                   "background_dispense.png"
-#define PAGE_QR_PAY_BACKGROUND_PATH                     "background_generic_white_empty.png"
-#define PAGE_MAINTENANCE_BACKGROUND_PATH                "background_generic_white_empty.png"
+#define PAGE_QR_PAY_BACKGROUND_PATH                     "background_qr.png"
+#define PAGE_MAINTENANCE_BACKGROUND_PATH                "background_maintenance.png"
 #define ERROR_MESSAGE_PATH                              "error_message.png"
 #define PAGE_TAP_PAY                                    "tapNow.png"
 #define PAGE_TAP_PAY_SUCCESS                            "paymentSuccess.png"
@@ -106,12 +116,13 @@ using namespace std;
 #define PAGE_AUTHORIZE_NOW                              "authorizeNow.png"
 #define PAGE_TAP_GENERIC                                "genericTap.png"
 #define PAGE_SEND_FEEDBACK_PATH                         "background_sendfeedback.png"
-#define PAGE_INIT_BACKGROUND_IMAGE_PATH                 "background_message.png"
+#define PAGE_INIT_BACKGROUND_IMAGE_PATH                 "background_init.png"
 #define IMAGE_BUTTON_HELP                               "help_icon.png"
 #define THANK_YOU_FOR_YOUR_FEEDBACK                     "background_feedbacksent.png"
-
+#define PAGE_ERROR_BACKGROUND_PATH                      "background_error_wifi.png"
 #define KEYBOARD_IMAGE_PATH                             "soapstand-keyboard.png"
 #define MACHINE_LOGO_PATH                               "machine_logo.png"
+#define PAGE_DISPENSE_FILL_ANIMATION                    "bottle_fill_for_animation.png"
 
 #define ICON_TYPE_CONCENTRATE_PATH                      "Soapstand_UI-concentrate-icon.png"
 #define ICON_TYPE_ALL_PURPOSE_PATH                      "Soapstand-UI-icon-all-purpose.png"
@@ -119,8 +130,10 @@ using namespace std;
 #define ICON_TYPE_HAND_PATH                             "Soapstand-UI-icon-hand-soap.png"
 #define ICON_TYPE_LAUNDRY_PATH                          "Soapstand-UI-icon-laundry.png"
 #define ICON_TYPE_KOMBUCHA_PATH                         "Soapstand-UI-icon-kombucha.png"
-#define ICON_TYPE_MOCKTAIL_PATH                         "Soapstand-UI-icon-mocktail.png"
+#define ICON_TYPE_PROBIOTIC_PATH                         "Soapstand-UI-icon-probiotic.png"
 #define ICON_TYPE_JUICE_PATH                            "Soapstand-UI-icon-juice.png"
+#define ICON_TYPE_TEA_PATH                            "Soapstand-UI-icon-tea.png"
+#define ICON_TYPE_DEFAULT                               "Soapstand-UI-icon-default.png"
 
 #define PAGE_HELP_BACKGROUND_GENERIC_WHITE              "background_generic_white_empty.png"
 #define PAGE_HELP_BACKGROUND_PATH                       "background_help.png"
@@ -129,13 +142,18 @@ using namespace std;
 #define SEND_REPAIR_PCA "pcabugfix"
 #define SEND_DISPENSE_AUTOFILL "a"
 
+#define PAYMENT_TAP_SERIAL                              "tapSerial"
+#define PAYMENT_TAP_TCP                                 "tapTCP"
+#define PAYMENT_QR                                      "qr"
 class df_util : public QWidget
 {
     Q_OBJECT
 public:
     explicit df_util(QWidget *parent = nullptr);
 
-    static bool fileExists(QString path);
+    static void warnIfPathDoesNotExist(QString path);
+    static bool pathExists(QString path);
+    static QStringList getFileList(const QString& folderPath);
     static double convertMlToOz(double vol_ml);
     static double convertOzToMl(double vol_oz);
     static char sizeIndexToChar(int size_index);

@@ -12,23 +12,21 @@ QLabel {
    font-size: 85px;
    line-height: 95px;
    text-align: center;
-   letter-spacing: 1.5px;
    text-transform: lowercase;
    color: #FFFFFF;
    qproperty-alignment: AlignCenter;
 }
 
 
-#thank_you_subtitle_message_label {
+#label_message_2 {
    font-family: 'Montserrat';
    font-style: normal;
    font-weight: 600;
    font-size: 36px;
    line-height: 44px;
    text-align: center;
-   letter-spacing: 1.5px;
    color: #FFFFFF;
-   qproperty-alignment: AlignCenter;
+   /* qproperty-alignment: AlignCenter; */
 }
 
 
@@ -38,22 +36,23 @@ QLabel {
    font-style: normal;
    font-weight: 100;
    font-size: 42px;
-   text-align: centre;
+   text-align: center;
    line-height: auto;
-   letter-spacing: 0px;
-   qproperty-alignment: AlignCenter;
+   /* qproperty-alignment: AlignCenter; */
    border-radius: 20px;
    color: #ffffff;
    /* / "color: #5e8580; */
    border: none;
 }
 
-#notifyUs_Button{
+#pushButton_contact {
    color: #003840;
    background-color: #FFFFFF;
    border: 0px;
-   text-align: centre;
+   text-align: center;
    border-radius: 20px;
    border: none;
+   font-family: Brevia;
+   font-size: 20pt;
+   font-weight: 500;
 }
-

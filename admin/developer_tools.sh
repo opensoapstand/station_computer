@@ -6,7 +6,7 @@
 # Place and run in Station. In /home/df-admin/drinkfill/admin         #
 #######################################################################
 
-./status_services.sh
+sudo ./status_services.sh
 
 echo 'Drinkfill developer tools. Quick shortcuts to tools.'
 echo 'ui is the qt user interface program'
@@ -56,9 +56,9 @@ make_options () {
 
 }
 
-
-PS3='Choose option(digit + enter):'
-options=("Quit" "aws_operations" "AWS log in" "AWS run station operations" "soapstand_manager" "Station info" "Stop ui and controller" "(Re)start ui and controller" "run standalone controller" "Copy binaries to production and run" "Create and run production data" "Services: Soapstand (re)load from production (ui,controller,wificheck,transactioncheck)" "Services: SSH rtunnel setup from production" "make ui and fsm" "make ui and fsm and deploy binaries" "make ui" "make ui and deploy binaries" "make fsm" "make fsm and deploy binaries")
+port_in_use=$(sudo ./rtunnel_print.sh 2>/dev/null)
+PS3="Choose option(digit + enter) (rtunnel port=$port_in_use) :"
+options=("Quit" "aws_operations" "AWS log in" "AWS run station operations" "soapstand_manager" "Station info" "Stop ui and controller" "(Re)start ui and controller" "run standalone controller" "Copy program binary files from drinkfill to production folder and run" "Create and run production data copied from drinkfill folder (without db!)" "Services: Soapstand (re)load from production (ui,controller,wificheck,transactioncheck)" "Setup aws port (rtunnel)" "make ui and fsm" "make ui and fsm and deploy binaries" "make ui" "make ui and deploy binaries" "make fsm" "make fsm and deploy binaries" "check temperature")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -84,7 +84,7 @@ do
              cmd=( ssh -tt -i DrinkfillAWS.pem ubuntu@ec2-44-225-153-121.us-west-2.compute.amazonaws.com "bash stations_operations.sh" )
             "${cmd[@]}"
             ;;
-        "Copy binaries to production and run")
+        "Copy program binary files from drinkfill to production folder and run")
             echo "Copy soapstand application to production folder"
             sudo systemctl stop ui_soapstand
             sudo systemctl stop controller_soapstand
@@ -96,7 +96,7 @@ do
             sudo systemctl start controller_soapstand.service
             echo "done."
         ;;
-        "Create and run production data")
+        "Create and run production data copied from drinkfill folder (without db!)")
             sudo ./create_and_run_production_data.sh
             echo "done."
             ;;
@@ -134,13 +134,26 @@ do
             cd ../fsm
             ./controller
             ;;
+        "check temperature")
+            DATABASE="/home/df-admin/production/db/usage.db"
+            temperature=$(sqlite3 $DATABASE "SELECT * FROM temperature ORDER BY ROWID DESC LIMIT 1;")
+            echo "The most recent temperature record is: $temperature"
+
+        ;;
         "Services: Soapstand (re)load from production (ui,controller,wificheck,transactioncheck)")
             # move files to service folder
             ./copy_and_enable_services.sh
             echo 'All done. (note: rtunnel.service is not copied automatically.)'
             ;;
-        "Services: SSH rtunnel setup from production")
-            ./rtunnel_setup.sh
+        "Set port number")
+        #0 ask for port number 
+        #1 change db open close
+        #2 get port number from db and add to service open close db
+        #3 restart service 
+
+        ;;
+        "Setup aws port (rtunnel)")
+            sudo ./set_aws_port.sh
             ;;
         "Quit") 
             break

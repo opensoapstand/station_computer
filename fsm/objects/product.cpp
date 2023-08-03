@@ -8,10 +8,9 @@
 // to dispense classes.
 //
 // created: 01-2022
-// by:Lode Ameije & Ash Singla
+// by:Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 #include "product.h"
 #include <stdio.h>
@@ -118,13 +117,16 @@ double product::getVolumePerTick()
     return m_nVolumePerTick;
 }
 
+
 bool product::registerFlowSensorTick()
 {
     // tick from flowsensor interrupt will increase dispensed volume.
     //    cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
     // cout << getVolumePerTick()<< endl;
     // cout << m_concentration_multiplier <<endl;
-    m_nVolumeDispensed += getVolumePerTick() * m_concentration_multiplier;
+
+        m_nVolumeDispensed += getVolumePerTick() * m_concentration_multiplier;
+
     // m_nVolumeDispensed += 100.0;
 }
 void product::setVolumeDispensed(double volume)
@@ -156,7 +158,7 @@ int product::getPWM()
 int product::getPWMFromDB()
 {
     // abandonned by Lode. What about updating the whole product properties at once when needed.
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
 
     sqlite3_stmt *stmt;
 
@@ -193,7 +195,7 @@ double product::getVolPerTickFromDB()
 {
     // abandonned by Lode. What about updating the whole product properties at once when needed.
 
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
 
     sqlite3_stmt *stmt;
 
@@ -459,7 +461,7 @@ double product::convertVolumeMetricToDisplayUnits(double volume)
     return converted_volume;
 }
 
-string product::getProductId()
+string product::getSoapstandProductSerial()
 {
     return m_soapstand_product_serial;
 }
@@ -531,7 +533,7 @@ void product::addPriceCustomDiscountToProductsTable()
 void product::executeSQLStatement(string sql_string)
 {
 
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
     int status;
@@ -545,7 +547,7 @@ bool product::isColumnInTable(string table, string column_name_to_find)
     bool contains_column_maintenance_pwd = false;
     // debugOutput::sendMessage("dcolumn nameee to seach e" + column_name_to_find, MSG_INFO);
 
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "PRAGMA table_info(" + table + ");";
 
@@ -599,7 +601,7 @@ bool product::isDbValid()
     string table_products_columns[TABLE_PRODUCTS_COLUMN_COUNT] = {"productId", "soapstand_product_serial", "slot", "name", "size_unit", "currency", "payment", "name_receipt", "concentrate_multiplier", "dispense_speed", "threshold_flow", "retraction_time", "calibration_const", "volume_per_tick", "last_restock", "volume_full", "volume_remaining", "volume_dispensed_since_restock", "volume_dispensed_total", "is_enabled_small", "is_enabled_medium", "is_enabled_large", "is_enabled_custom", "size_small", "size_medium", "size_large", "size_custom_min", "size_custom_max", "price_small", "price_medium", "price_large", "price_custom", "plu_small", "plu_medium", "plu_large", "plu_custom", "pid_small", "pid_medium", "pid_large", "pid_custom", "flavour", "image_url", "type", "ingredients", "features", "description", "is_enabled_custom_discount", "size_custom_discount", "price_custom_discount"};
     bool is_valid = true;
 
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "PRAGMA table_info(products);";
 
@@ -632,11 +634,12 @@ bool product::isDbValid()
                 // debugOutput::sendMessage("found name: " + column_name, MSG_INFO);
                 // debugOutput::sendMessage("should be : " + table_products_columns[row], MSG_INFO);
 
-                if (row >= TABLE_PRODUCTS_COLUMN_COUNT ){
+                if (row >= TABLE_PRODUCTS_COLUMN_COUNT)
+                {
 
                     debugOutput::sendMessage("ASSERT ERROR: More columns found than anticipated. CORRUPT DATABASE", MSG_ERROR);
                     debugOutput::sendMessage("************************** PLEASE FIX DATABASE ********************. ", MSG_ERROR);
-                   is_valid = false;
+                    is_valid = false;
                 }
                 if (!column_name.compare(table_products_columns[row]))
                 {
@@ -722,7 +725,7 @@ bool product::reloadParametersFromDb()
     }
 
     debugOutput::sendMessage("Database check: Valid. Please note that no NULL values are allowed in text fields.", MSG_INFO);
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT * FROM products WHERE slot=" + to_string(m_nSlot) + ";";
 
@@ -743,12 +746,14 @@ bool product::reloadParametersFromDb()
             {
             case DB_PRODUCTS_PRODUCTID:
             {
-                m_dispenser_id = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+                // m_dispenser_id = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+                m_dispenser_id = dbFieldAsValidString(stmt, column_index);
             }
             break;
             case DB_PRODUCTS_SOAPSTAND_PRODUCT_SERIAL:
             {
-                m_soapstand_product_serial = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+                m_soapstand_product_serial = dbFieldAsValidString(stmt, column_index);
+                // m_soapstand_product_serial = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
                 debugOutput::sendMessage("m_soapstand_product_serial:" + m_soapstand_product_serial, MSG_INFO);
             }
             break;
@@ -766,12 +771,15 @@ bool product::reloadParametersFromDb()
             break;
             case DB_PRODUCTS_NAME:
             {
-                m_name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+                // m_display_unit
+                m_name = dbFieldAsValidString(stmt, column_index);
+                // m_name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
             }
             break;
             case DB_PRODUCTS_SIZE_UNIT:
             {
-                m_display_unit = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+                m_display_unit = dbFieldAsValidString(stmt, column_index);
+                // m_display_unit = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
             }
             break;
             case DB_PRODUCTS_CURRENCY:
@@ -780,7 +788,8 @@ bool product::reloadParametersFromDb()
             break;
             case DB_PRODUCTS_PAYMENT:
             {
-                m_paymentMethod = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+                m_paymentMethod = dbFieldAsValidString(stmt, column_index);
+                // m_paymentMethod = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
             }
             break;
             case DB_PRODUCTS_NAME_RECEIPT:
@@ -831,7 +840,7 @@ bool product::reloadParametersFromDb()
             case DB_PRODUCTS_LAST_RESTOCK:
             {
 
-                //m_nVolumeDispensedSinceRestock = sqlite3_column_double(stmt, column_index);
+                // m_nVolumeDispensedSinceRestock = sqlite3_column_double(stmt, column_index);
             }
             break;
             case DB_PRODUCTS_VOLUME_FULL:
@@ -871,7 +880,8 @@ bool product::reloadParametersFromDb()
             break;
             case DB_PRODUCTS_IS_ENABLED_CUSTOM:
             {
-                m_is_enabled_custom_discount = sqlite3_column_int(stmt, column_index);
+                isEnabledSizes[SIZE_INDEX_CUSTOM] = sqlite3_column_int(stmt, column_index);
+                // m_is_enabled_custom_discount = sqlite3_column_int(stmt, column_index);
             }
             break;
             case DB_PRODUCTS_IS_ENABLED_CUSTOM_DISCOUNT:
@@ -941,22 +951,26 @@ bool product::reloadParametersFromDb()
             break;
             case DB_PRODUCTS_PLU_SMALL:
             {
-                m_nPLU_small = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+                m_nPLU_small = dbFieldAsValidString(stmt, column_index);
+                // m_nPLU_small = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
             }
             break;
             case DB_PRODUCTS_PLU_MEDIUM:
             {
-                m_nPLU_medium = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+                m_nPLU_medium = dbFieldAsValidString(stmt, column_index);
+                // m_nPLU_medium = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
             }
             break;
             case DB_PRODUCTS_PLU_LARGE:
             {
-                m_nPLU_large = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+                m_nPLU_large = dbFieldAsValidString(stmt, column_index);
+                // m_nPLU_large = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
             }
             break;
             case DB_PRODUCTS_PLU_CUSTOM:
             {
-                m_nPLU_custom = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+                m_nPLU_custom = dbFieldAsValidString(stmt, column_index);
+                // m_nPLU_custom = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
             }
             break;
             case DB_PRODUCTS_PID_SMALL:
@@ -1022,14 +1036,28 @@ bool product::reloadParametersFromDb()
     return true;
 }
 
-// #endif
+string product::dbFieldAsValidString(sqlite3_stmt *stmt, int column_index)
+{
+    // protect against null values in db.
+    const unsigned char *column_text = sqlite3_column_text(stmt, column_index);
+    if (column_text != nullptr)
+    {
+        return std::string(reinterpret_cast<const char *>(column_text));
+    }
+    else
+    {
+        debugOutput::sendMessage("Null value in db at column index: " + to_string(column_index), MSG_WARNING);
+        // Handle the case when the value is NULL
+        return "";
+    }
+}
 
 bool product::testParametersFromDb()
 {
 
     debugOutput::sendMessage("***************************************************************************", MSG_INFO);
     // abandonned by Lode. What about updating the whole product properties at once when needed.
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
 
     sqlite3_stmt *stmt;
 
@@ -1070,19 +1098,7 @@ bool product::testParametersFromDb()
         status = sqlite3_step(stmt);
     }; // every sqlite3_step returns a row. if it returns 0, it's run over all the rows.
 
-    // std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
-
-    // int pwm = stod(str);
-
-    // int pwm = sqlite3_column_int(stmt, 0);
-    // // debugOutput debugInfo;
-
-    // // debugOutput::sendMessage("***************************************************************************", MSG_INFO);
-    // sqlite3_column_int(stmt,0);
-
     sqlite3_finalize(stmt);
     sqlite3_close(db);
-    //     cout << "INSIDE getPWM() and PWM is = " << str << endl;
     return pwm;
 }
-

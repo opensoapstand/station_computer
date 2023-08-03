@@ -85,6 +85,12 @@ QByteArray DfUiCommThread::readyRead()
     {
         emit dispenseButtonPressedNegEdgeSignal();
     }
+    else if (Data.startsWith("|temperature|"))
+    {
+        QString temperature = Data.mid(13);
+        qDebug() << temperature;
+        emit temperatureSignal(temperature.toDouble());
+    }
     // else if (strtol(Data, &pEnd, 10) || (Data[0] == '0' && Data[1] == '.'))
     // old rudimentary way of sending dispensed volumen from fsm to ui
     // {
@@ -103,10 +109,7 @@ QByteArray DfUiCommThread::readyRead()
     else if (Data.contains("dispenseupdate|"))
 
     {
-        qDebug() << "dispenseupdatedata received: " << Data;
-        // bool isOnline = Data.at(13) == '1';
-        // bool hasPaper = Data.at(14) == '1';
-        // emit printerStatusSignal(isOnline, hasPaper);
+        // qDebug() << "dispenseupdatedata received: " << Data;
         int first_delim_pos = Data.indexOf('|');
         int second_delim_pos = Data.indexOf('|', first_delim_pos + 1);
         int third_delim_pos = Data.indexOf('|', second_delim_pos + 1);
@@ -120,19 +123,33 @@ QByteArray DfUiCommThread::readyRead()
         double flowrate = third_part.toDouble();
         QString dispenseStatusString = QString::fromUtf8(fourth_part);
 
-        qDebug() << "volume: " << QString::number(volumeDispensed, 'f', 2);
-        qDebug() << "flowrate: " << QString::number(flowrate, 'f', 2);
-        qDebug() << "dispenseStatus: " << dispenseStatusString;
+        // qDebug() << "volume: " << QString::number(volumeDispensed, 'f', 2);
+        // qDebug() << "flowrate: " << QString::number(flowrate, 'f', 2);
+        // qDebug() << "dispenseStatus: " << dispenseStatusString;
         emit updateVolumeSignal(volumeDispensed); // induced crash at cancel dispense.
         emit dispenseRateSignal(flowrate); 
         emit dispenseStatusSignal(dispenseStatusString); 
+    }
+    else if (Data.contains("finalVolumeDispensed|"))
+
+    {
+        // qDebug() << "dispenseupdatedata received: " << Data;
+        int first_delim_pos = Data.indexOf('|');
+        int second_delim_pos = Data.indexOf('|', first_delim_pos + 1);
+
+        QByteArray first_part = Data.mid(0, first_delim_pos);
+        QByteArray second_part = Data.mid(first_delim_pos + 1, second_delim_pos - first_delim_pos - 1);
+       
+        double volumeDispensed = second_part.toDouble();
+    
+        emit updateFinalVolumeDispensedSignal(volumeDispensed); 
+
     }
 
     else
     {
         qDebug() << "Non actionable message from fsm received: " << Data;
     }
-
     emit messageHandlerFinishedSignal();
     return Data;
 }

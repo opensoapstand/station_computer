@@ -4,10 +4,9 @@
 // dispense state class
 //
 // created: 01-2022
-// by:Lode Ameije & Ash Singla
+// by:Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #ifndef STATEDISPENSEEND__H_
@@ -54,7 +53,7 @@ public:
 private:
     char dispensedVolumeToSmallestFixedSize();
     void adjustSizeToDispensedVolume();
-    int pos_index;
+    int slot_index;
     int slot;
     char command;
 
@@ -77,7 +76,7 @@ private:
 
     DF_ERROR handleTransactionPayment();
     DF_ERROR dispenseEndUpdateTransactionDB();
-    DF_ERROR databaseUpdateSql(string sqlStatement);
+    DF_ERROR databaseUpdateSql(string sqlStatement, string dbPath);
 
     // DF_ERROR print_text(std::string text);
 

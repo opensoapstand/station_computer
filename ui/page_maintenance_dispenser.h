@@ -7,11 +7,10 @@
 // Coordinates User input from payment select
 // class then communcates results to page_dispenser.
 //
-// created: 4-01-2021
-// by: Paddy Riley
+// created: 16-06-2023
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #ifndef PAGE_MAINTENANCE_DISPENSER_H
@@ -46,68 +45,70 @@ public:
     void resizeEvent(QResizeEvent *event);
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void fsmReceivedVolumeDispensed(double dispensed, bool isFull);
+    void fsmReceiveTemperature(double temperature);
     void fsmReceiveTargetVolumeReached();
     void fsmReceiveDispenseButtonPressedPositiveEdge();
     void fsmReceiveDispenseButtonPressedNegativeEdge();
     void fsmReceiveDispenseRate(double flowrate);
     void fsmReceiveDispenserStatus(QString status);
     void fsmReceiveNoFlowAbort();
-    void setSoldOutButtonText();
     void dispense_test_end(bool sendStopToController);
     void dispense_test_start();
     void update_volume_received_dispense_stats(double dispensed);
     void reset_all_dispense_stats();
 
 private slots:
-    void refreshLabels();
-    void on_backButton_clicked();
+    void updateProductLabelValues(bool reloadFromDb);
+    void on_pushButton_to_previous_page_clicked();
     void on_image_clicked();
-    void on_nameButton_clicked();
-    void on_priceButton_s_clicked();
-    void on_priceButton_m_clicked();
-    void on_priceButton_l_clicked();
-    void on_priceButton_c_clicked();
-    void on_target_volumeButton_s_clicked();
-    void on_target_volumeButton_m_clicked();
-    void on_target_volumeButton_l_clicked();
-    void on_vol_per_tickButton_clicked();
-    void on_refillButton_clicked();
-    void on_soldOutButton_clicked();
+    void on_pushButton_price_small_clicked();
+    void on_pushButton_price_medium_clicked();
+    void on_pushButton_price_large_clicked();
+    void on_pushButton_price_custom_clicked();
+    void on_pushButton_target_volume_small_clicked();
+    void on_pushButton_target_volume_medium_clicked();
+    void on_pushButton_target_volume_large_clicked();
+    void on_pushButton_target_volume_custom_clicked();
+    void on_pushButton_plu_small_clicked();
+    void on_pushButton_plu_medium_clicked();
+    void on_pushButton_plu_large_clicked();
+    void on_pushButton_plu_custom_clicked();
+    void on_pushButton_volume_per_tick_clicked();
+    void on_pushButton_restock_clicked();
+    void on_pushButton_set_status_clicked();
     void on_pushButton_set_restock_volume_clicked();
     void onMaintainProductPageTimeoutTick();
     void onDispenseTimerTick();
     void on_pushButton_set_volume_remaining_clicked();
-    void on_dispensedButton_clicked();
-    void on_temperatureButton_clicked();
-    void on_pwmButton_clicked();
-    void on_pumpButton_clicked();
-    void on_button1_clicked();
-    void on_button2_clicked();
-    void on_button3_clicked();
-    void on_button4_clicked();
-    void on_button5_clicked();
-    void on_button6_clicked();
-    void on_button7_clicked();
-    void on_button8_clicked();
-    void on_button9_clicked();
-    void on_button0_clicked();
+    void on_pushButton_setting_temperature_clicked();
+    void on_pushButton_setting_speed_pwm_clicked();
+    void on_pushButton_enable_pump_clicked();
     void on_buttonBack_clicked();
-    void on_buttonPoint_clicked();
-    void on_buttonDone_clicked();
-    void on_buttonCancel_clicked();
+    void on_buttonPeriod_clicked();
+    void on_pushButton_done_clicked();
+    void on_pushButton_cancel_clicked();
 
-    void pwmSliderMoved(int percentage);
+    void on_pushButton_auto_dispense_large_clicked();
+    void on_pushButton_auto_dispense_medium_clicked();
+    void on_pushButton_auto_dispense_small_clicked();
 
-    void on_autoDispenseLarge_clicked();
-
-    void on_autoDispenseMedium_clicked();
-
-    void on_autoDispenseSmallButton_clicked();
-
-    void on_update_portal_clicked();
+    void update_changes_to_portal();
     void buttonGroup_edit_product_Pressed(int buttonId);
+    void buttonGroup_keypad_Pressed(int buttonId);
+    
+
+    void on_pushButton_clear_problem_clicked();
+
+    void on_checkBox_enable_small_clicked();
+
+    void on_checkBox_enable_medium_clicked();
+
+    void on_checkBox_enable_large_clicked();
+
+    void on_checkBox_enable_custom_clicked();
 
 private:
+    void setStatusTextLabel(QLabel* label, QString statusText, bool displayRawStatus);
     void setButtonPressCountLabel(bool init);
     void setButtonPressCountLabel2(bool init);
 
@@ -116,7 +117,7 @@ private:
     page_maintenance *p_page_maintenance;
     page_idle *p_page_idle;
 
-    bool pumping = false;
+    bool pump_enabled = false;
 
     int _maintainProductPageTimeoutSec;
     float dispenserEnabledSecs;
@@ -124,30 +125,11 @@ private:
     QTimer *maintainProductPageEndTimer;
     QTimer *dispenseTimer;
 
-    QString text_entered;
-    bool price_small;
-    bool price_medium;
-    bool price_large;
-    bool price_custom;
-
-    bool target_s;
-    bool target_m;
-    bool target_l;
-    bool vol_per_tick;
-    bool full;
-    bool pwm;
-    bool buffer;
-    bool modify_stock;
     bool isDispenseButtonPressed;
     uint16_t button_press_count;
 
     QString units_selected_product;
-    //    bool plu_s;
-    //    bool plu_l;
 
-    double volume_per_tick_buffer;
-
-    void updateValues();
     void sendRestockToCloud();
     void autoDispenseStart(int size);
     void restockTransactionToFile(char *curl_params);

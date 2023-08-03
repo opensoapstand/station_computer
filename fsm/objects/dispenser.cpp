@@ -8,13 +8,13 @@
 // holds instructions for dispensing.
 //
 // created: 25-06-2020
-// by:Lode Ameije & Ash Singla
+// by:Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 #include "dispenser.h"
 #include <chrono>
+// #include "machine.h"
 
 #define ACTIVATION_TIME 5
 #define TEST_ACTIVATION_TIME 3
@@ -66,12 +66,13 @@ dispenser::dispenser()
     previous_dispense_state = FLOW_STATE_UNAVAILABLE;
 }
 
-DF_ERROR dispenser::setup(pcb *pcbtest)
+DF_ERROR dispenser::setup(machine* machine)
 {
     // Set the pump PWM value to a nominal value
 
-    // the_pcb->setup();
-    the_pcb = pcbtest;
+    m_machine = machine;
+
+    the_pcb = m_machine->getPcb();
 
     the_pcb->setPumpPWM(DEFAULT_PUMP_PWM);
 
@@ -216,7 +217,7 @@ void dispenser::setMultiDispenseButtonLight(int slot, bool enableElseDisable)
 
     if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON)
     {
-        if (getMultiDispenseButtonEnabled())
+        if (m_machine->getMultiDispenseButtonEnabled())
         {
 
             if (this->slot == 4)
@@ -287,8 +288,7 @@ DF_ERROR dispenser::loadGeneralProperties()
     usleep(20000);
     loadPumpReversalEnabledFromDb();
     usleep(20000);
-    loadMultiDispenseButtonEnabledFromDb();
-    usleep(20000);
+
     //  the_pcb->setSingleDispenseButtonLight(this->slot, false);
 
     resetVolumeDispensed();
@@ -302,7 +302,7 @@ DF_ERROR dispenser::startDispense()
 
     this->the_pcb->flowSensorEnable(slot);
     this->the_pcb->resetFlowSensorTotalPulses(slot);
-
+    
     dispense_state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
     previous_dispense_state = FLOW_STATE_UNAVAILABLE;
 
@@ -328,7 +328,7 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
     // if (the_pcb->get_pcb_version() == 2){
     if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON)
     {
-        if (getMultiDispenseButtonEnabled())
+        if (m_machine->getMultiDispenseButtonEnabled())
         {
             setMultiDispenseButtonLight(getSlot(), true);
         }
@@ -363,10 +363,8 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
 DF_ERROR dispenser::stopDispense()
 {
     debugOutput::sendMessage("stop dispense actions...", MSG_INFO);
-    // if (getMultiDispenseButtonEnabled())
-    // {
+  
     setAllDispenseButtonLightsOff();
-    // }
 
     the_pcb->flowSensorsDisableAll();
 
@@ -593,6 +591,7 @@ DF_ERROR dispenser::setPumpDirectionReverse()
 // Stops pumping: Turn forward pin LOW - Reverse pin LOW
 DF_ERROR dispenser::setPumpsDisableAll()
 {
+    // g_machine.pcb24VPowerSwitch(false);
     debugOutput::sendMessage("Pump disable: all.", MSG_INFO);
     the_pcb->setPumpsDisableAll();
     m_isSlotEnabled = false;
@@ -765,6 +764,7 @@ DF_ERROR dispenser::setPumpEnable()
     // first pump is 1.
     // still needs dispense button to actually get the pump to start
     debugOutput::sendMessage("Pump enable position: " + to_string(this->slot), MSG_INFO);
+    // g_machine.pcb24VPowerSwitch(true);
     the_pcb->setPumpEnable(this->slot); // pump 1 to 4
     m_isSlotEnabled = true;
 }
@@ -783,48 +783,12 @@ unsigned short dispenser::getPumpSpeed()
     the_pcb->getPumpPWM();
 }
 
-void dispenser::loadMultiDispenseButtonEnabledFromDb()
-{
-
-    rc = sqlite3_open(DB_PATH, &db);
-    sqlite3_stmt *stmt;
-    string sql_string = "SELECT dispense_buttons_count FROM machine";
-    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
-    sqlite3_step(stmt);
-
-    int val = sqlite3_column_int(stmt, 0);
-
-    sqlite3_finalize(stmt);
-    sqlite3_close(db);
-    // val = 4;
-    if (val == 1)
-    {
-        m_isMultiButtonEnabled = false;
-    }
-    else if (val == 4)
-    {
-        m_isMultiButtonEnabled = true;
-    }
-    else
-    {
-        m_isMultiButtonEnabled = false;
-        debugOutput::sendMessage("ASSERT Error: unimplemented number of dispense buttons. Default to single dispense button. Buttons indicated in db:" + to_string(m_isMultiButtonEnabled), MSG_ERROR);
-    }
-
-    debugOutput::sendMessage("Multiple dispense buttons enabled? : " + to_string(m_isMultiButtonEnabled), MSG_INFO);
-}
-
-bool dispenser::getMultiDispenseButtonEnabled()
-{
-    return m_isMultiButtonEnabled;
-}
-
 void dispenser::loadPumpReversalEnabledFromDb()
 {
     // val 0 = pump reversal not enabled
     // val 1 = pump reversal enabled. Will take retraction time from products
 
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT enable_pump_reversal FROM machine";
 
@@ -850,7 +814,7 @@ void dispenser::loadPumpRampingEnabledFromDb()
     // val 0 = pump slow start stop not enabled
     // val 1 = pump slow start, slow stop enabled (with hardwired ramp up / ramp down time)
 
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT enable_pump_ramping FROM machine";
 
@@ -873,7 +837,7 @@ bool dispenser::getPumpSlowStartStopEnabled()
 
 void dispenser::loadSlotStateFromDb()
 {
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT status_text_slot_" + to_string(getSlot()) + " FROM machine;";
 
@@ -885,6 +849,7 @@ void dispenser::loadSlotStateFromDb()
 
     sqlite3_finalize(stmt);
     sqlite3_close(db);
+
     if (slotStateText.find("SLOT_STATE_AVAILABLE") != string::npos)
     {
         setSlotState(SLOT_STATE_AVAILABLE);
@@ -917,7 +882,7 @@ void dispenser::loadSlotStateFromDb()
     {
         setSlotState(SLOT_STATE_AVAILABLE);
     }
-    debugOutput::sendMessage("Set dispenser state to : " + std::string(getSlotStateAsString()), MSG_INFO);
+    debugOutput::sendMessage("Dispenser state loaded from db: " + std::string(getSlotStateAsString())  + "(db value: " + std::string(slotStateText) + ")", MSG_INFO);
 }
 
 void dispenser::loadEmptyContainerDetectionEnabledFromDb()
@@ -925,7 +890,7 @@ void dispenser::loadEmptyContainerDetectionEnabledFromDb()
     // val 0 = empty container detection not enabled
     // val 1 = empty container detection enabled
 
-    rc = sqlite3_open(DB_PATH, &db);
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT has_empty_detection FROM machine";
 
@@ -1144,11 +1109,8 @@ const char *dispenser::getSlotStateAsString()
 
 void dispenser::setSlotState(Slot_state state)
 {
-    // disabled states are only manually changeable.
-    if (getSlotState() != SLOT_STATE_DISABLED_COMING_SOON && getSlotState() != SLOT_STATE_DISABLED)
-    {
         slot_state = state;
-    }
+    
 }
 
 Slot_state dispenser::getSlotState()

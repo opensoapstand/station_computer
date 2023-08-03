@@ -3,7 +3,9 @@
 #include "pcb.h"
 #include <chrono>
 #include <cmath>
-
+#include <iostream>
+#include <bitset>
+#include <cstdint>
 #define DEFAULT_I2C_BUS "/dev/i2c-1"
 
 #define __USE_SMBUS_I2C_LIBRARY__ 1
@@ -358,6 +360,17 @@ bool pcb::define_pcb_version(void)
 
                 debugOutput::sendMessage("ADC081C021 current sensor found. NOT IN USE YET.", MSG_INFO);
             }
+            else if (i2c_probe_address == TEMPERATURE_SENSOR_ADDRESS)
+            {
+                debugOutput::sendMessage("MCP9808 Temperature Sensor found.", MSG_INFO);
+                mcp9808_temperature_sensor_found = true;
+                cTemp = getTemperature();
+                char temp_celcius_chars[MAX_BUF];
+                snprintf(temp_celcius_chars, sizeof(temp_celcius_chars), "%.2f", cTemp);
+                string temp_celcius = (temp_celcius_chars);
+                // Output data to screen
+                debugOutput::sendMessage("At startup: " + std::string(temp_celcius), MSG_INFO);
+            }
             else if (i2c_probe_address == PIC_ADDRESS)
             {
                 pic_pwm_found = true;
@@ -480,10 +493,11 @@ void pcb::sendEN134DefaultConfigurationToPCA9534(uint8_t slot, bool reportIfModi
     sendByteIfNotSetToSlot(slot, 0x03, 0b01011000, reportIfModified);
 }
 
-void pcb::sendByteIfNotSetToSlot(uint8_t slot, unsigned char reg, unsigned char value, bool reportIfModified){
+void pcb::sendByteIfNotSetToSlot(uint8_t slot, unsigned char reg, unsigned char value, bool reportIfModified)
+{
     int attempts = 10;
     uint8_t readVal = readRegisterFromSlot(slot, reg);
-    while ( readVal != value)
+    while (readVal != value)
     {
         if (attempts < 0)
         {
@@ -493,7 +507,8 @@ void pcb::sendByteIfNotSetToSlot(uint8_t slot, unsigned char reg, unsigned char 
         attempts--;
         SendByteToSlot(slot, reg, value); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
         debugOutput::sendMessage("PCA9534 register " + to_string(reg) + " of slot: " + to_string(slot) + ": " + to_string(readVal) + ". Not configured right. Set to value: " + to_string(value), MSG_INFO);
-        if (reportIfModified){
+        if (reportIfModified)
+        {
             debugOutput::sendMessage("WARNING: This register was changed. Was this a glitch?", MSG_WARNING);
         }
         readVal = readRegisterFromSlot(slot, reg);
@@ -570,6 +585,10 @@ void pcb::initialize_pcb()
     }
 }
 
+bool pcb::isTemperatureSensorAvailable()
+{
+    return mcp9808_temperature_sensor_found;
+}
 bool pcb::isSlotAvailable(uint8_t slot)
 {
     if (slot == 0)
@@ -1271,7 +1290,6 @@ void pcb::EN134_PumpCycle_refresh(uint8_t slots)
     }
     }
 }
-
 unsigned char pcb::getPumpPWM()
 {
     // pump speed is set globally. Not set per slot!
@@ -1569,28 +1587,49 @@ void pcb::setSolenoid(uint8_t slot, bool onElseOff)
     }
 }
 
-// switch (pcb_version)
-// {
+double pcb::getTemperature()
+{
+    set_i2c_address(TEMPERATURE_SENSOR_ADDRESS);
+    int temperature_bytes = i2c_smbus_read_word_data(i2c_handle, 0x05);
+    if (temperature_bytes < 0)
+    {
+        debugOutput::sendMessage("Error did not read from temperature sensor mcp9808", MSG_INFO);
+        return 1;
+    }
 
-// case (DSED8344_NO_PIC):
-// {
-// };
-// break;
-// case (DSED8344_PIC_MULTIBUTTON):
-// {
-// };
-// break;
-// case (EN134_4SLOTS):
-// {
-// };
-// break;
-// case (EN134_8SLOTS):
-// {
-// };
-// break;
-// default:
-// {
-//     debugOutput::sendMessage("Error PCB NOT VALID!!14", MSG_ERROR);
-// }
-// break;
-// }
+    uint16_t msbint = temperature_bytes >> 8;
+    uint16_t lsbint = temperature_bytes & 0x00FF;
+    uint16_t temperature_bytes_swapped = (lsbint << 8) | msbint;
+    // create function to swap this
+    //     uint16_t swapBytes(uint16_t temperature_bytes) {
+    //     uint16_t msbint = temperature_bytes >> 8;
+    //     uint16_t lsbint = temperature_bytes & 0x00FF;
+    //     uint16_t temperature_bytes_swapped = (lsbint << 8) | msbint;
+    //     return temperature_bytes_swapped;
+    // }
+
+    // std::string binarymsb = std::bitset<16>(msbint).to_string();
+    //debugOutput::sendMessage("Temperature as bits msb: " + binarymsb, MSG_INFO);
+
+    // std::string binarylsb = std::bitset<16>(lsbint).to_string();
+    // debugOutput::sendMessage("Temperature as bits lsb: " + binarylsb, MSG_INFO);
+
+    temperature_bytes = temperature_bytes_swapped;
+    uint16_t signBit = (temperature_bytes >> 12) & 0x01;   // Sign bit is at bit 12
+    uint16_t temperatureData = temperature_bytes & 0x0FFF; // Temperature data is bits 11-0
+    if ((temperatureData & 0x0800) != 0)
+    {
+        // Negative temperature
+        temperatureData = (~temperatureData & 0x0FFF) + 1; // Two's complement conversion
+        cTemp = -1.0 * temperatureData * 0.0625;
+    }
+    else
+    {
+        // Positive temperature
+        cTemp = temperatureData * 0.0625;
+    }
+    // std::string binary = std::bitset<16>(temperature_bytes).to_string();
+    // debugOutput::sendMessage("Temperature as bits: " + binary, MSG_INFO);
+
+    return cTemp;
+}

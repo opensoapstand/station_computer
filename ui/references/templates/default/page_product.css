@@ -1,4 +1,69 @@
-.css_title {
+/* QPushButton {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 20px;
+   line-height: 99px;
+   color: green;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   border: none;
+   }
+   QFont {
+      
+      font-family: Brevia;
+      font-size: 20pt;
+   font-weight: 200;
+   font-style: normal;
+} */
+
+
+#label_help {
+
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 20px;
+   line-height: 99px;
+   color: #FFFFFF;
+   text-align: center;
+   /* qproperty-alignment: AlignCenter; */
+   border: none;
+}
+
+/* #pushButton_to_idle {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 20px;
+   line-height: 99px;
+   color: #FFFFFF;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   border: none;
+} */
+
+.button_transparent {
+   background-color: transparent;
+   border: 0px;
+}
+
+#pushButton_to_idle {
+
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 32px;
+   background-color: transparent;
+   /* border: 0px; */
+   line-height: 99px;
+   color: #003840;
+   text-align: center;
+   /* qproperty-alignment: AlignCenter; */
+   border: none;
+}
+
+.title {
 
 
    /*QString css_title = "QLabel{"*/
@@ -41,16 +106,14 @@
    color: #5E8580;
 }
 
-.orderSizeBackgroundLabels{
-   background-color: #FFFFFF; 
+.orderSizeBackgroundLabels {
+   background-color: #FFFFFF;
    border: 0px;
 }
 
-.orderSizeButtons{
-    
+.orderSizeButtons {
    background-color: transparent;
-   border: 1px  solid #3D6675;
-   
+   border: 1px solid #3D6675;
 }
 
 #pushButton_previous_page {
@@ -65,11 +128,9 @@
    font-weight: 200;
    font-size: 36px;
    line-height: auto;
-   letter-spacing: 0px;
    color: #58595B;
    border: none;
 }
-
 
 #pushButton_back {
    /*QPushButton*/
@@ -78,45 +139,10 @@
    font-weight: 75;
    font-size: 32px;
    line-height: 99px;
-   letter-spacing: 1.5px;
-   text-transform: lowercase;
    color: #003840;
-   text-align: center;
-   qproperty-alignment: AlignCenter;
+   text-align: left;
+   /* qproperty-alignment: AlignLeft; */
    border: none;
-}
-
-#pushButton_to_help {
-
-   font-family: 'Brevia';
-   font-style: normal;
-   font-weight: 75;
-   font-size: 20px;
-   line-height: 99px;
-   letter-spacing: px;
-   color: #FFFFFF;
-   text-align: center;
-   qproperty-alignment: AlignCenter;
-   border: none;
-}
-QPushButton {
-   font-family: 'Brevia';
-   font-style: normal;
-   font-weight: 75;
-   font-size: 20px;
-   line-height: 99px;
-   letter-spacing: px;
-   color: green;
-   text-align: center;
-   qproperty-alignment: AlignCenter;
-   border: none;
-   }
-QFont {
-
-   font-family: Brevia;
-   font-size: 20pt;
-   font-weight: 200;
-   font-style: normal;
 }
 
 #label_product_description {
@@ -130,9 +156,7 @@ QFont {
 }
 
 #label_product_photo {
-
    border: 1px solid #5E8680;
-
 }
 
 #label_product_ingredients {
@@ -166,19 +190,6 @@ QFont {
    color: #58595B;
 }
 
-#label_notify_us {
-
-   font-family: 'Brevia';
-   font-style: normal;
-   font-weight: 75;
-   font-size: 20px;
-   line-height: 99px;
-   letter-spacing: px;
-   color: #FFFFFF;
-   text-align: center;
-   qproperty-alignment: AlignCenter;
-   border: none;
-}
 
 #pushButton_continue {
    font-family: 'Brevia';
@@ -186,10 +197,9 @@ QFont {
    font-weight: 200;
    background-color: #5E8580;
    font-size: 48px;
-   text-align: centre;
+   text-align: center;
    line-height: auto;
-   letter-spacing: 0px;
-   qproperty-alignment: AlignCenter;
+   /* qproperty-alignment: AlignCenter; */
    border-radius: 20px;
    color: white;
    border: none;

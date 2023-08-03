@@ -35,58 +35,72 @@ page_maintenance_general::~page_maintenance_general()
 
 void page_maintenance_general::showEvent(QShowEvent *event)
 {
-    qDebug() << "<<<<<<< Page Enter: maintenance general machine settings >>>>>>>>>";
-    qDebug() << "db for maintenance general";
-    DbManager db(DB_PATH);
-    ui->enable_empty_container_checkBox->setChecked(db.getEmptyContainerDetectionEnabled());
-    ui->enable_empty_container_checkBox->setText( "Enable auto empty detection. (If disabled, will display sold out if less than " + QString::number(CONTAINER_EMPTY_THRESHOLD_ML) + "ml remaining)");
-    ui->enable_pump_ramping_checkBox->setChecked(db.getPumpRampingEnabled());
-    ui->enable_pump_ramping_checkBox->hide();
-    db.closeDB();
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+    QWidget::showEvent(event);
+
+    ui->checkBox_enable_empty_container->setText("Enable auto empty detection. (If disabled, will display sold out if less than " + QString::number(CONTAINER_EMPTY_THRESHOLD_ML) + "ml remaining)");
 
     QProcess process;
 
     process.start("iwgetid -r");
     process.waitForFinished(-1);
     QString stdout = process.readAllStandardOutput();
-    ui->wifi_name->setText("Wifi Name: " + stdout);
+    ui->label_wifi_name->setText("Wifi Name: " + stdout);
 
     process.start("hostname -I");
     process.waitForFinished(-1);
     stdout = process.readAllStandardOutput();
-    ui->wifi_ip_address->setText("Wifi IP Address: " + stdout);
+    ui->label_wifi_ip_address->setText("Wifi IP Address: " + stdout);
 
     process.start("nmcli -t -f STATE general");
     process.waitForFinished(-1);
     stdout = process.readAllStandardOutput();
-    ui->wifi_status->setText("Wifi State: " + stdout);
+    ui->label_wifi_status->setText("Wifi State: " + stdout);
 
     process.start("nmcli networking connectivity");
     process.waitForFinished(-1);
     stdout = process.readAllStandardOutput();
-    ui->wifi_internet->setText("Wifi Connectivity: " + stdout);
+    ui->label_wifi_internet->setText("Wifi Connectivity: " + stdout);
 
-    ui->wifiTable->setRowCount(0);
+    ui->table_wifi_networks->setRowCount(0);
 
     ui->keyboard_2->hide();
+
+    ui->label_aws_port->setText("AWS backend port: " + QString::number(p_page_idle->thisMachine.m_aws_port));
+    ui->label_machine_id->setText("Station id: " + p_page_idle->thisMachine.getMachineId());
+
+
+    p_page_idle->setTemplateTextToObject(ui->pushButton_back);
+    p_page_idle->setTemplateTextToObject(ui->label_connectivity);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_wifi_networks);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_network_status);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_rtunnel_restart);
+    p_page_idle->setTemplateTextToObject(ui->label_receipt_printer);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_printer_check_status);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_printer_test_print);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_minimize);
+    p_page_idle->setTemplateTextToObject(ui->label_settings);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_restart_electronics);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_restart_UI);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_reboot);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_shutdown);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_reboot);
+    p_page_idle->setTemplateTextToObject(ui->label_feedback);
+    p_page_idle->setTemplateTextToObject(ui->label_status_feedback);
+
+    updateLabelValues();
 }
 
 /*
  * Page Tracking reference
  */
-void page_maintenance_general::setPage(page_maintenance *pageMaintenance, page_idle *pageIdle, page_idle_products *p_page_idle_products )
+void page_maintenance_general::setPage(page_maintenance *pageMaintenance, page_idle *pageIdle, page_idle_products *p_page_idle_products)
 {
 
     this->p_page_maintenance = pageMaintenance;
     this->p_page_idle = pageIdle;
 
-    // refreshLabels();
-    // ui->minimize_Button->setStyleSheet("QPushButton { background-color: 0x88448811; border: 5px }"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-    ui->minimize_Button->setStyleSheet("QPushButton {}"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
-}
-
-void page_maintenance_general::refreshLabels()
-{
+    ui->pushButton_minimize->setStyleSheet("QPushButton {}"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
 }
 
 void page_maintenance_general::hideCurrentPageAndShowProvided(QWidget *pageToShow)
@@ -98,18 +112,11 @@ void page_maintenance_general::resizeEvent(QResizeEvent *event)
     QWidget::resizeEvent(event);
 }
 
-void page_maintenance_general::on_printer_test_button_clicked()
+void page_maintenance_general::updateLabelValues()
 {
-
-    // qDebug() << "Send test printer to controller";
-
-    // // Send to fsm
-
-    // p_page_idle->dfUtility->send_command_to_FSM("p");
-    // usleep(50000);
-    // p_page_idle->dfUtility->send_command_to_FSM("1");
-    // usleep(50000);
-    // p_page_idle->dfUtility->send_command_to_FSM("q");
+    p_page_idle->loadDynamicContent();
+    ui->checkBox_enable_empty_container->setChecked(p_page_idle->thisMachine.getEmptyContainerDetectionEnabled());
+    ui->checkBox_enable_pump_ramping->setChecked(p_page_idle->thisMachine.getPumpRampingEnabled());
 }
 
 void page_maintenance_general::printerStatusFeedback(bool isOnline, bool hasPaper)
@@ -129,63 +136,67 @@ void page_maintenance_general::printerStatusFeedback(bool isOnline, bool hasPape
     }
     ui->printer_isOnline_label->setText(printerStatus);
     ui->printer_hasPaper_label->setText(printerHasPaper);
-    ui->printer_check_status_button->show();
+    ui->pushButton_printer_check_status->show();
 }
 
 void page_maintenance_general::send_check_printer_status_command()
 {
     qDebug() << "Send check printer status to controller";
-    p_page_idle->dfUtility->send_command_to_FSM("p");
+    p_page_idle->thisMachine.dfUtility->send_command_to_FSM("Printer");
     usleep(50000);
-    p_page_idle->dfUtility->send_command_to_FSM("a");
+    usleep(1200000); // minimum
+    // usleep(5000000); 
+    // p_page_idle->thisMachine.dfUtility->send_command_to_FSM("1");
+    // usleep(5000000); 
+    p_page_idle->thisMachine.dfUtility->send_command_to_FSM("1");
     usleep(50000);
 }
-void page_maintenance_general::on_printer_check_status_button_clicked()
+
+void page_maintenance_general::on_pushButton_printer_check_status_clicked()
 {
     // qDebug() << "Maintenance general. yoooo.";
     send_check_printer_status_command();
-    ui->printer_check_status_button->hide();
+    ui->pushButton_printer_check_status->hide();
 }
 
 void page_maintenance_general::on_printer_test_print_button_clicked()
 {
     qDebug() << "Send test printer to controller";
-
-    // Send to fsm
-
-    p_page_idle->dfUtility->send_command_to_FSM("p");
+    p_page_idle->thisMachine.dfUtility->send_command_to_FSM("Printer");
     usleep(50000);
-    p_page_idle->dfUtility->send_command_to_FSM("1");
+    p_page_idle->thisMachine.dfUtility->send_command_to_FSM("1");
     usleep(50000);
-    p_page_idle->dfUtility->send_command_to_FSM("q");
+    p_page_idle->thisMachine.dfUtility->send_command_to_FSM("q");
 }
 
-void page_maintenance_general::on_enable_pump_ramping_checkBox_clicked(bool checked)
+void page_maintenance_general::on_checkBox_enable_pump_ramping_clicked(bool checked)
 {
-    // qDebug() << "test ramp clicked" << checked;
-    DbManager db(DB_PATH);
-    // qDebug() << "test empty db: " << db.getPumpRampingEnabled();
-    if (checked != db.getPumpRampingEnabled())
+    if (!p_page_idle->thisMachine.isAllowedAsAdmin())
     {
-        qDebug() << "Write to db: Pump ramping enabled?" << checked;
-        db.setPumpRampingEnabled(checked);
-        ui->enable_pump_ramping_checkBox->setChecked(db.getPumpRampingEnabled());
+        QMessageBox::information(this, "Admininstrator role required", "You do not have the rights to change these values. Please enter maintenance mode with the admin password.", QMessageBox::Ok);
+        return;
     }
-    db.closeDB();
+
+    if (checked != p_page_idle->thisMachine.getPumpRampingEnabled())
+    {
+        p_page_idle->thisMachine.setPumpRampingEnabled(checked);
+        updateLabelValues();
+    }
 }
 
-void page_maintenance_general::on_enable_empty_container_checkBox_clicked(bool checked)
+void page_maintenance_general::on_checkBox_enable_empty_container_clicked(bool checked)
 {
-    // qDebug() << "test empty clicked" << checked;
-    DbManager db(DB_PATH);
-    // qDebug() << "test empty db: " << db.getEmptyContainerDetectionEnabled();
-    if (checked != db.getEmptyContainerDetectionEnabled())
+    if (!p_page_idle->thisMachine.isAllowedAsAdmin())
     {
-        qDebug() << "Empty container detection enabled?" << checked;
-        db.setEmptyContainerDetectionEnabled(checked);
-        ui->enable_empty_container_checkBox->setChecked(db.getEmptyContainerDetectionEnabled());
+        QMessageBox::information(this, "Admininstrator role required", "You do not have the rights to change these values. Please enter maintenance mode with the admin password.", QMessageBox::Ok);
+        return;
     }
-    db.closeDB();
+
+    if (checked != p_page_idle->thisMachine.getEmptyContainerDetectionEnabled())
+    {
+        p_page_idle->thisMachine.setEmptyContainerDetectionEnabled(checked);
+        updateLabelValues();
+    }
 }
 
 void page_maintenance_general::on_pushButton_back_clicked()
@@ -193,27 +204,36 @@ void page_maintenance_general::on_pushButton_back_clicked()
     hideCurrentPageAndShowProvided(p_page_maintenance);
 }
 
-void page_maintenance_general::on_minimize_Button_clicked()
+void page_maintenance_general::on_pushButton_minimize_clicked()
 {
+    if (!p_page_idle->thisMachine.isAllowedAsAdmin())
+    {
+        QMessageBox::information(this, "Admininstrator role required", "You do not have the rights to change these values. Please enter maintenance mode with the admin password.", QMessageBox::Ok);
+        return;
+    }
     qDebug() << "Maintenance Minimize button pressed.";
     this->showMinimized();
 }
 
-void page_maintenance_general::on_reboot_Button_clicked()
+void page_maintenance_general::on_pushButton_reboot_clicked()
 {
+    if (!p_page_idle->thisMachine.isAllowedAsAdmin())
+    {
+        QMessageBox::information(this, "Admininstrator role required", "You do not have the rights to change these values. Please enter maintenance mode with the admin password.", QMessageBox::Ok);
+        return;
+    }
     qDebug() << "Maintenance Reboot button pressed.";
-    // QProcess process;
-    // process.start("reboot now");
-    // process.waitForFinished(-1);
-    // QString stdout = process.readAllStandardOutput();
-    // qDebug()<<"reboot test finished.";
-    // qApp->exit();
     QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -r 0";
     system(qPrintable(command));
 }
 
-void page_maintenance_general::on_shutdown_Button_clicked()
+void page_maintenance_general::on_pushButton_shutdown_clicked()
 {
+    if (!p_page_idle->thisMachine.isAllowedAsAdmin())
+    {
+        QMessageBox::information(this, "Admininstrator role required", "You do not have the rights to change these values. Please enter maintenance mode with the admin password.", QMessageBox::Ok);
+        return;
+    }
     qDebug() << "Maintenance Shutdown button pressed.";
 
     QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -h 0";
@@ -224,7 +244,7 @@ void page_maintenance_general::on_test_lineEdit_textChanged(const QString &arg1)
 {
 }
 
-void page_maintenance_general::btn_clicked()
+void page_maintenance_general::button_connect_to_specifiic_wifi_network()
 {
     QObject *button = QObject::sender();
     //    qDebug() << "btn clicked -> " << button->objectName();
@@ -241,22 +261,22 @@ void page_maintenance_general::btn_clicked()
     process.start("iwgetid -r"); // nmcli -t -f NAME connection show --active
     process.waitForFinished(-1);
     QString stdout = process.readAllStandardOutput();
-    ui->wifi_name->setText("Wifi Name: " + stdout);
+    ui->label_wifi_name->setText("Wifi Nfrfame: " + stdout);
 
     process.start("hostname -I");
     process.waitForFinished(-1);
     stdout = process.readAllStandardOutput();
-    ui->wifi_ip_address->setText("Wifi IP Address: " + stdout);
+    ui->label_wifi_ip_address->setText("Wifi IP Address: " + stdout);
 
     process.start("nmcli networking connectivity");
     process.waitForFinished(-1);
     stdout = process.readAllStandardOutput();
-    ui->wifi_internet->setText("Wifi Connectivity: " + stdout);
+    ui->label_wifi_internet->setText("Wifi Connectivity: " + stdout);
 
     process.start("nmcli -t -f STATE general");
     process.waitForFinished(-1);
     stdout = process.readAllStandardOutput();
-    ui->wifi_status->setText("Wifi State: " + stdout);
+    ui->label_wifi_status->setText("Wifi State: " + stdout);
 }
 
 void page_maintenance_general::keyboardButtonPressed(int buttonID)
@@ -326,22 +346,22 @@ void page_maintenance_general::keyboardButtonPressed(int buttonID)
         process.start("iwgetid -r");
         process.waitForFinished(-1);
         QString stdout = process.readAllStandardOutput();
-        ui->wifi_name->setText("Wifi Name: " + stdout);
+        ui->label_wifi_name->setText("Wifi Name: " + stdout);
 
         process.start("hostname -I");
         process.waitForFinished(-1);
         stdout = process.readAllStandardOutput();
-        ui->wifi_ip_address->setText("Wifi IP Address: " + stdout);
+        ui->label_wifi_ip_address->setText("Wifi IP Address: " + stdout);
 
         process.start("nmcli -t -f STATE general");
         process.waitForFinished(-1);
         stdout = process.readAllStandardOutput();
-        ui->wifi_status->setText("Wifi State: " + stdout);
+        ui->label_wifi_status->setText("Wifi State: " + stdout);
 
         process.start("nmcli networking connectivity");
         process.waitForFinished(-1);
         stdout = process.readAllStandardOutput();
-        ui->wifi_internet->setText("Wifi Connectivity: " + stdout);
+        ui->label_wifi_internet->setText("Wifi Connectivity: " + stdout);
     }
     else if (buttonText == "Space")
     {
@@ -357,11 +377,11 @@ void page_maintenance_general::keyboardButtonPressed(int buttonID)
     }
 }
 
-void page_maintenance_general::on_wifiButton_clicked()
+void page_maintenance_general::on_pushButton_wifi_networks_clicked()
 {
     //    qDebug() << "WiFi button clicked" << endl;
     // _page_maintenanceTimeoutSec = PAGE_MAINTENANCE_TIMEOUT_SECONDS;
-    ui->wifiTable->setRowCount(0);
+    ui->table_wifi_networks->setRowCount(0);
 
     // OPEN LIST OF WIFI CONNECTIONS AVAILABLE, AS BUTTONS, WHEN YOU CLICK ON A BUTTON, OPEN PASSWORD ENTRY
 
@@ -404,8 +424,8 @@ void page_maintenance_general::on_wifiButton_clicked()
             if (ap_interface.property("Ssid").toString() != "")
             {
                 //                qDebug() << " SSID: " << ap_interface.property("Ssid").toString();
-                ui->wifiTable->insertRow(ui->wifiTable->rowCount());
-                ui->wifiTable->setRowHeight(ui->wifiTable->rowCount() - 1, 60);
+                ui->table_wifi_networks->insertRow(ui->table_wifi_networks->rowCount());
+                ui->table_wifi_networks->setRowHeight(ui->table_wifi_networks->rowCount() - 1, 60);
                 QWidget *pWidget = new QWidget();
                 QPushButton *btn = new QPushButton();
                 btn->setText(ap_interface.property("Ssid").toString());
@@ -416,8 +436,8 @@ void page_maintenance_general::on_wifiButton_clicked()
                 // pLayout->setAlignment(Qt::AlignLeft);
                 pLayout->setContentsMargins(0, 0, 0, 0);
                 pWidget->setLayout(pLayout);
-                ui->wifiTable->setCellWidget(ui->wifiTable->rowCount() - 1, 0, pWidget);
-                connect(btn, SIGNAL(clicked()), this, SLOT(btn_clicked()));
+                ui->table_wifi_networks->setCellWidget(ui->table_wifi_networks->rowCount() - 1, 0, pWidget);
+                connect(btn, SIGNAL(clicked()), this, SLOT(button_connect_to_specifiic_wifi_network()));
             }
         }
     }
@@ -428,25 +448,25 @@ void page_maintenance_general::on_wifiButton_clicked()
     process.start("iwgetid -r");
     process.waitForFinished(-1);
     QString stdout = process.readAllStandardOutput();
-    ui->wifi_name->setText("Wifi Name: " + stdout);
+    ui->label_wifi_name->setText("Wifi Name: " + stdout);
 
     process.start("hostname -I");
     process.waitForFinished(-1);
     stdout = process.readAllStandardOutput();
-    ui->wifi_ip_address->setText("Wifi IP Address: " + stdout);
+    ui->label_wifi_ip_address->setText("Wifi IP Address: " + stdout);
 
     process.start("nmcli -t -f STATE general");
     process.waitForFinished(-1);
     stdout = process.readAllStandardOutput();
-    ui->wifi_status->setText("Wifi State: " + stdout);
+    ui->label_wifi_status->setText("Wifi State: " + stdout);
 
     process.start("nmcli networking connectivity");
     process.waitForFinished(-1);
     stdout = process.readAllStandardOutput();
-    ui->wifi_internet->setText("Wifi Connectivity: " + stdout);
+    ui->label_wifi_internet->setText("Wifi Connectivity: " + stdout);
 }
 
-void page_maintenance_general::on_rtunnel_restart_Button_clicked()
+void page_maintenance_general::on_pushButton_rtunnel_restart_clicked()
 {
 
     // https://stackoverflow.com/questions/75689836/system-command-executed-from-qt-does-not-work-for-service
@@ -466,7 +486,7 @@ void page_maintenance_general::on_rtunnel_restart_Button_clicked()
     // QString feedback = process.readAllStandardOutput();
     // // QString feedback = process.readAllStandardError();
     // qDebug() << "rtunnel restart status: " << feedback;
-    // ui->status_feedback_label->setText("rtunnel restart " + feedback);
+    // ui->label_status_feedback->setText("rtunnel restart " + feedback);
 
     QProcess process;
     process.start("bash");
@@ -480,7 +500,7 @@ void page_maintenance_general::on_rtunnel_restart_Button_clicked()
     process.waitForFinished(-1);
     QString feedback = process.readAllStandardOutput();
 
-    ui->status_feedback_label->setText("rtunnel restart " + feedback);
+    ui->label_status_feedback->setText("rtunnel restart " + feedback);
 
     // https://stackoverflow.com/questions/23322739/how-to-execute-complex-linux-commands-in-qt
 
@@ -507,13 +527,13 @@ void page_maintenance_general::on_rtunnel_restart_Button_clicked()
     // if (!retval)
     // {
     //     qDebug() << "Process 2 error:" << process2.errorString();
-    //     ui->status_feedback_label->setText("Process 2 error:" + process2.errorString());
+    //     ui->label_status_feedback->setText("Process 2 error:" + process2.errorString());
     //     return;
     // }
-    // ui->status_feedback_label->setText("Process 2 success:");
+    // ui->label_status_feedback->setText("Process 2 success:");
 }
 
-void page_maintenance_general::on_network_status_Button_clicked()
+void page_maintenance_general::on_pushButton_network_status_clicked()
 {
     // iwconfig wlo2 | awk -F'[ =]+' '/Signal level/
 
@@ -526,18 +546,29 @@ void page_maintenance_general::on_network_status_Button_clicked()
     process.waitForFinished(-1);
     QString feedback = process.readAllStandardOutput();
 
-    ui->status_feedback_label->setText(feedback);
+    ui->label_status_feedback->setText(feedback);
 }
 
-void page_maintenance_general::on_restart_UI_Button_clicked()
+void page_maintenance_general::on_pushButton_restart_UI_clicked()
 {
+    if (!p_page_idle->thisMachine.isAllowedAsAdmin())
+    {
+        QMessageBox::information(this, "Admininstrator role required", "You do not have the rights to change these values. Please enter maintenance mode with the admin password.", QMessageBox::Ok);
+        return;
+    }
     // app is configured as an auto start service. So, dont bother about restarting.
     // QProcess::startDetached(qApp->applicationFilePath()); // if needed to start app
     qApp->exit();
 }
 
-void page_maintenance_general::on_restart_electronics_Button_clicked()
+void page_maintenance_general::on_pushButton_restart_electronics_clicked()
 {
+    if (!p_page_idle->thisMachine.isAllowedAsAdmin())
+    {
+        QMessageBox::information(this, "Admininstrator role required", "You do not have the rights to change these values. Please enter maintenance mode with the admin password.", QMessageBox::Ok);
+        return;
+    }
+
     QProcess process;
     process.start("bash");
     process.waitForStarted();
@@ -545,8 +576,7 @@ void page_maintenance_general::on_restart_electronics_Button_clicked()
     process.write("exit\n");
     process.waitForFinished(-1);
     QString feedback = process.readAllStandardOutput();
-    ui->status_feedback_label->setText(feedback);
+    ui->label_status_feedback->setText(feedback);
 
     qApp->exit(); // restart UI. The problem with only controller restart is that there are two screens now.
 }
-

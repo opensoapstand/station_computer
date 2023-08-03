@@ -1,0 +1,140 @@
+#label_action_feedback {
+   font-size: 18px;
+
+}
+#label_status_dispenser {
+   font-size: 18px;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   font-weight: 600;
+}
+
+#label_product_name {
+   text-align: center;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+}
+
+#label_product_picture {
+   border: 1px solid black;
+}
+
+#pushButton_restock {
+   font-size: 32px;
+}
+
+
+#pushButton_clear_problem {
+   font-size: 32px;
+   background-color: #E0A0A0;
+}
+
+#pushButton_to_previous_page {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 32px;
+   background-color: transparent;
+   border: 0px;
+   line-height: 99px;
+   color: #003840;
+   text-align: left;
+   border: none;
+}
+
+.pushButton_set_status_unavailable {
+   /* background-color: #abe0a0; */
+   font-size: 32px;
+}
+
+.pushButton_set_status_available {
+   /* background-color: #E0A0A0; */
+   font-size: 32px;
+}
+
+.pump_disable {
+   background-color: #E0A0A0;
+   font-size: 20px;
+}
+
+.pump_enable {
+   background-color: #AAAAAA;
+   font-size: 20px;
+}
+
+QMessageBox {
+
+   min-width: 7000px;
+   font-size: 24px;
+}
+
+QMessageBox.msgBoxbutton QPushButton {
+
+   font-size: 18px;
+   min-width: 300px;
+   min-height: 300px;
+}
+
+QLabel {
+   /*this label controls the color of the checkbox */
+   color: black;
+}
+
+/* QPushButton {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 20px;
+   line-height: 99px;
+   color: green;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   border: none;
+   }
+   QFont {
+      
+      font-family: Brevia;
+      font-size: 20pt;
+   font-weight: 200;
+   font-style: normal;
+} */
+/* 
+
+#label_help {
+   
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 20px;
+   line-height: 99px;
+   color: #FFFFFF;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   border: none;
+}
+
+/* #pushButton_to_idle {
+
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 20px;
+   line-height: 99px;
+   color: #FFFFFF;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   border: none;
+} */
+
+/* .button_transparent {
+   background-color: transparent;
+   border: 0px;
+} 
+#pushButton_to_idle {
+
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 32px;
+   background-color: transparent;
+   /* border: 0px; */

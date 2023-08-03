@@ -16,22 +16,22 @@
   <widget class="QPushButton" name="pushButton_back">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>34</y>
-     <width>131</width>
-     <height>51</height>
+     <x>70</x>
+     <y>40</y>
+     <width>401</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="text">
     <string>Back</string>
    </property>
   </widget>
-  <widget class="QListWidget" name="transactions_List">
+  <widget class="QListWidget" name="list_transactions">
    <property name="geometry">
     <rect>
-     <x>5</x>
-     <y>430</y>
-     <width>1071</width>
+     <x>40</x>
+     <y>420</y>
+     <width>1001</width>
      <height>901</height>
     </rect>
    </property>
@@ -50,7 +50,7 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QPushButton" name="print_Button">
+  <widget class="QPushButton" name="pushButton_print">
    <property name="geometry">
     <rect>
      <x>280</x>
@@ -61,6 +61,19 @@
    </property>
    <property name="text">
     <string>Print Selected Receipt</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_title">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>178</y>
+     <width>1080</width>
+     <height>86</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
    </property>
   </widget>
  </widget>

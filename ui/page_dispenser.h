@@ -9,10 +9,9 @@
 // thankyou page
 //
 // created: 05-04-2022
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #ifndef PAGE_DISPENSER_H
@@ -46,8 +45,9 @@ class page_dispenser : public QWidget
 
 public:
 
-    QMessageBox* msgBox2;
-    QMessageBox* msgBox;
+    QMessageBox* msgBox_problems;
+    QMessageBox* msgBox_abort;
+    // QMessageBox* msgBox;
 
     // **** GUI ****
     explicit page_dispenser(QWidget *parent = nullptr);
@@ -69,7 +69,7 @@ public:
     void fsmReceiveNoFlowAbort();
     
     // QString getMostRecentDispensed();
-    QString getPromoCodeUsed();
+    // QString getPromoCodeUsed();
     // void startDispensing();
     void force_finish_dispensing();
     QString getStartDispensingCommand();
@@ -97,15 +97,13 @@ private slots:
     void on_pushButton_debug_Button_clicked();
     void on_pushButton_problems_clicked();
 
-    void on_pushButton_report_clicked();
-
 private:
     bool isDispensing = false;
     bool askForFeedbackAtEnd;
     // **** GUI *****
     Ui::page_dispenser *ui;
     page_qr_payment* paymentPage;
-    page_tap_payment* paymentTapPage;
+    page_tap_payment* p_page_payment_tap;
     page_end* thanksPage;
     page_sendFeedback* feedbackPage;
     page_idle* p_page_idle;

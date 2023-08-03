@@ -1,55 +1,26 @@
-
-
 #label_finishTransactionMessage {
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 100;
    font-size: 52px;
-   text-align: centre;
+   text-align: center;
    line-height: auto;
-   letter-spacing: 0px;
-   qproperty-alignment: AlignCenter;
+   /* qproperty-alignment: AlignCenter; */
    border-radius: 20px;
    color: #5e8580;
    border: none;
 }
 
-#pushButton_debug_Button {
-   
-   color: #5E8580;
-   background-color: transparent;
-   border: 5px;
-   border-color: #5E8580;
-}
-
-#pushButton_abort {
-   
-   font-family: 'Brevia';
-   font-style: normal;
-   font-weight: 100;
-   background-color: #5E8580;
-   font-size: 42px;
-   text-align: centre;
-   line-height: auto;
-   letter-spacing: 0px;
-   qproperty-alignment: AlignCenter;
-   border-radius: 20px;
-   color: white;
-   border: none;
-   
-}
-
 .label_volume_dispensed_ml {
-   
+
 
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 100;
    font-size: 42px;
-   text-align: centre;
+   text-align: center;
    line-height: auto;
-   letter-spacing: 0px;
-   qproperty-alignment: AlignCenter;
+   /* qproperty-alignment: AlignCenter; */
    border-radius: 20px;
    color: #5e8580;
    border: none;
@@ -57,7 +28,7 @@
 }
 
 #label_to_refill {
-   
+
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 75;
@@ -65,16 +36,15 @@
    background-color: transparent;
    border: 0px;
    line-height: 99px;
-   letter-spacing: 1.5px;
    color: #FFFFFF;
    text-align: center;
-   qproperty-alignment: AlignCenter;
+   /* qproperty-alignment: AlignCenter; */
    border: none;
-   
+
 }
 
 #label_instructions_container {
-   
+
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 75;
@@ -82,10 +52,9 @@
    background-color: transparent;
    border: 0px;
    line-height: 99px;
-   letter-spacing: 1.5px;
    color: #FFFFFF;
    text-align: center;
-   qproperty-alignment: AlignCenter;
+   /* qproperty-alignment: AlignCenter; */
    border: none;
 }
 
@@ -97,10 +66,9 @@
    background-color: transparent;
    border: 0px;
    line-height: 99px;
-   letter-spacing: 1.5px;
    color: #FFFFFF;
    text-align: center;
-   qproperty-alignment: AlignCenter;
+   /* qproperty-alignment: AlignCenter; */
    border: none;
 }
 
@@ -113,75 +81,94 @@
    background-color: orangered;
    border: 0px;
    line-height: 99px;
-   letter-spacing: 1.5px;
    color: #FFFFFF;
    text-align: center;
-   qproperty-alignment: AlignCenter;
+   /* qproperty-alignment: AlignCenter; */
    border: none;
    border-radius: 20px;
 }
 
-#pushButton_problems.normal {
+.normal {
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 75;
    background-color: #5E8580;
    font-size: 42px;
-   text-align: centre;
+   text-align: center;
    line-height: auto;
-   letter-spacing: 0px;
-   qproperty-alignment: AlignCenter;
+   /* qproperty-alignment: AlignCenter; */
    border-radius: 20px;
    color: white;
    border: none;
 }
+
 #pushButton_problems.alert {
    font-family: 'Brevia';
    font-style: normal;
    font-weight: 75;
    background-color: #b87b0b;
    font-size: 42px;
-   text-align: centre;
+   text-align: center;
    line-height: auto;
-   letter-spacing: 0px;
-   qproperty-alignment: AlignCenter;
+   /* qproperty-alignment: AlignCenter; */
    border-radius: 20px;
    color: white;
    border: none;
 }
 
-#pushButton_report {
+#pushButton_debug_Button {
+
+   color: #5E8580;
+   background-color: transparent;
+   border: 5px;
+   border-color: #5E8580;
+}
+
+#pushButton_abort {
+
    font-family: 'Brevia';
    font-style: normal;
-   font-weight: 75;
+   font-weight: 100;
    background-color: #5E8580;
    font-size: 42px;
-   text-align: centre;
+   text-align: center;
    line-height: auto;
-   letter-spacing: 0px;
-   qproperty-alignment: AlignCenter;
+   /* qproperty-alignment: AlignCenter; */
    border-radius: 20px;
    color: white;
    border: none;
    
 }
 
-QMessageBox.msgBoxbox{
+QLabel{
+   
+   qproperty-alignment: AlignCenter;
+}
+
+/* QPushButton {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 50;
+   font-size: 32px;
+   color: #003840;
+   background-color: #ffffff;
+   border: 0px;
+   text-align: center;
+   border-radius: 20px;
+   border: none;
+  
+} */
+
+QMessageBox {
    min-width: 7000px;
    font-size: 24px;
    font-weight: bold;
    font-style: normal;
    font-family: 'Montserrat';
-   /* Additional styles specific to QMessageBox */
 }
 
 QMessageBox.msgBoxbutton QPushButton{
    font-size: 24px;
    min-width: 300px;
    min-height: 300px;
-   /* Additional styles specific to QPushButton within QMessageBox */
-   
-}
- QLabel{ /*this label controls the color of the checkbox */
-  color: black;  
 }

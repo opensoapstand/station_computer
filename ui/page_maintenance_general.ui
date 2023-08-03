@@ -19,17 +19,17 @@
   <widget class="QPushButton" name="pushButton_back">
    <property name="geometry">
     <rect>
-     <x>60</x>
+     <x>70</x>
      <y>40</y>
-     <width>101</width>
-     <height>51</height>
+     <width>401</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="text">
-    <string>&lt;-- back</string>
+    <string>back</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="minimize_Button">
+  <widget class="QPushButton" name="pushButton_minimize">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -42,7 +42,7 @@
     <string>Minimize Soapstand App</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="reboot_Button">
+  <widget class="QPushButton" name="pushButton_reboot">
    <property name="geometry">
     <rect>
      <x>290</x>
@@ -55,7 +55,7 @@
     <string>Restart Computer</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="shutdown_Button">
+  <widget class="QPushButton" name="pushButton_shutdown">
    <property name="geometry">
     <rect>
      <x>290</x>
@@ -87,7 +87,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>.</string>
+    <string>paper status</string>
    </property>
   </widget>
   <widget class="QLabel" name="printer_isOnline_label">
@@ -95,15 +95,15 @@
     <rect>
      <x>310</x>
      <y>650</y>
-     <width>161</width>
+     <width>201</width>
      <height>17</height>
     </rect>
    </property>
    <property name="text">
-    <string>.</string>
+    <string>printer connection status</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label">
+  <widget class="QLabel" name="label_receipt_printer">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -122,7 +122,7 @@
     <string>Receipt Printer</string>
    </property>
   </widget>
-  <widget class="QCheckBox" name="enable_pump_ramping_checkBox">
+  <widget class="QCheckBox" name="checkBox_enable_pump_ramping">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -135,7 +135,7 @@
     <string>Enable pump ramp up / ramp down</string>
    </property>
   </widget>
-  <widget class="QCheckBox" name="enable_empty_container_checkBox">
+  <widget class="QCheckBox" name="checkBox_enable_empty_container">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -148,20 +148,20 @@
     <string>Enable empty stock detection</string>
    </property>
   </widget>
-  <widget class="QLabel" name="wifi_internet">
+  <widget class="QLabel" name="label_wifi_internet">
    <property name="geometry">
     <rect>
      <x>310</x>
-     <y>404</y>
+     <y>410</y>
      <width>391</width>
-     <height>51</height>
+     <height>31</height>
     </rect>
    </property>
    <property name="text">
-    <string>Internet connection</string>
+    <string>wifi connectivity</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="wifiButton">
+  <widget class="QPushButton" name="pushButton_wifi_networks">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -171,10 +171,10 @@
     </rect>
    </property>
    <property name="text">
-    <string>Display WiFi networks</string>
+    <string/>
    </property>
   </widget>
-  <widget class="QTableWidget" name="wifiTable">
+  <widget class="QTableWidget" name="table_wifi_networks">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -192,43 +192,30 @@
     </property>
    </column>
   </widget>
-  <widget class="QLabel" name="wifi_name">
+  <widget class="QLabel" name="label_wifi_status">
    <property name="geometry">
     <rect>
      <x>310</x>
-     <y>372</y>
-     <width>461</width>
-     <height>51</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Wifi Name</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="wifi_status">
-   <property name="geometry">
-    <rect>
-     <x>310</x>
-     <y>436</y>
+     <y>440</y>
      <width>621</width>
-     <height>51</height>
+     <height>31</height>
     </rect>
    </property>
    <property name="text">
-    <string>Wifi Status</string>
+    <string>wifi status</string>
    </property>
   </widget>
-  <widget class="QLabel" name="wifi_ip_address">
+  <widget class="QLabel" name="label_wifi_ip_address">
    <property name="geometry">
     <rect>
      <x>310</x>
      <y>470</y>
      <width>711</width>
-     <height>51</height>
+     <height>31</height>
     </rect>
    </property>
    <property name="text">
-    <string>Wifi Name</string>
+    <string>wifi IP </string>
    </property>
   </widget>
   <widget class="QWidget" name="keyboard_2" native="true">
@@ -1322,7 +1309,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QLabel" name="label_2">
+  <widget class="QLabel" name="label_settings">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -1341,7 +1328,7 @@
     <string>Settings</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_3">
+  <widget class="QLabel" name="label_connectivity">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -1357,7 +1344,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Connectivity</string>
+    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="label_4">
@@ -1379,7 +1366,7 @@
     <string>Control</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="printer_check_status_button">
+  <widget class="QPushButton" name="pushButton_printer_check_status">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -1392,7 +1379,7 @@
     <string>Check Status</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="printer_test_print_button">
+  <widget class="QPushButton" name="pushButton_printer_test_print">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -1405,7 +1392,7 @@
     <string>Test Print</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="rtunnel_restart_Button">
+  <widget class="QPushButton" name="pushButton_rtunnel_restart">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -1418,7 +1405,7 @@
     <string>Reset Backend Connection</string>
    </property>
   </widget>
-  <widget class="QLabel" name="status_feedback_label">
+  <widget class="QLabel" name="label_status_feedback">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -1434,7 +1421,7 @@
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
    </property>
   </widget>
-  <widget class="QLabel" name="label_5">
+  <widget class="QLabel" name="label_feedback">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -1453,7 +1440,7 @@
     <string>Feedback</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="network_status_Button">
+  <widget class="QPushButton" name="pushButton_network_status">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -1466,7 +1453,7 @@
     <string>Check network status</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="restart_electronics_Button">
+  <widget class="QPushButton" name="pushButton_restart_electronics">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -1479,7 +1466,7 @@
     <string>Restart Soapstand App (ui+fsm)</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="restart_UI_Button">
+  <widget class="QPushButton" name="pushButton_restart_UI">
    <property name="geometry">
     <rect>
      <x>290</x>
@@ -1492,6 +1479,74 @@
     <string>Restart UI only</string>
    </property>
   </widget>
+  <widget class="QLabel" name="label_aws_port">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>510</y>
+     <width>711</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>aws port</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_machine_id">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>540</y>
+     <width>711</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>machine id</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_wifi_name">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>376</y>
+     <width>711</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>wifi name</string>
+   </property>
+  </widget>
+  <zorder>pushButton_back</zorder>
+  <zorder>pushButton_minimize</zorder>
+  <zorder>pushButton_reboot</zorder>
+  <zorder>pushButton_shutdown</zorder>
+  <zorder>printer_hasPaper_label</zorder>
+  <zorder>printer_isOnline_label</zorder>
+  <zorder>label_receipt_printer</zorder>
+  <zorder>checkBox_enable_empty_container</zorder>
+  <zorder>label_wifi_internet</zorder>
+  <zorder>pushButton_wifi_networks</zorder>
+  <zorder>table_wifi_networks</zorder>
+  <zorder>label_wifi_status</zorder>
+  <zorder>label_wifi_ip_address</zorder>
+  <zorder>keyboard_2</zorder>
+  <zorder>label_settings</zorder>
+  <zorder>label_connectivity</zorder>
+  <zorder>label_4</zorder>
+  <zorder>pushButton_printer_check_status</zorder>
+  <zorder>pushButton_printer_test_print</zorder>
+  <zorder>pushButton_rtunnel_restart</zorder>
+  <zorder>label_status_feedback</zorder>
+  <zorder>label_feedback</zorder>
+  <zorder>pushButton_network_status</zorder>
+  <zorder>pushButton_restart_electronics</zorder>
+  <zorder>pushButton_restart_UI</zorder>
+  <zorder>checkBox_enable_pump_ramping</zorder>
+  <zorder>label_aws_port</zorder>
+  <zorder>label_machine_id</zorder>
+  <zorder>label_wifi_name</zorder>
  </widget>
  <resources/>
  <connections/>

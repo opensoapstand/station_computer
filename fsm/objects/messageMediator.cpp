@@ -9,10 +9,9 @@
 // Database threads
 //
 // created: 01-2022
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "messageMediator.h"
@@ -45,14 +44,14 @@ double messageMediator::m_requestedDiscountPrice;
 string messageMediator::m_promoCode;
 
 // CTOR
-messageMediator::messageMediator()
+messageMediator::messageMediator() : m_machine(nullptr)
 {
 
    debugOutput::sendMessage("Init messageMediator...", MSG_INFO);
    // TODO: Initialize with Pointer reference to socket...
    // new_sock = new ServerSocket();
    m_fExitThreads = false;
-   // m_pKBThread = -1;
+   // m_machine = nullptr; // already implied from the "member initialization list" (: m_machine(nullptr))
 }
 
 // DTOR
@@ -145,6 +144,28 @@ DF_ERROR messageMediator::sendMessageOverIP(string msg)
    }
 
    return dfError;
+}
+
+void messageMediator::setMachine(machine *machine)
+{
+   if (machine == nullptr)
+   {
+
+      debugOutput::sendMessage("ASSERT ERROR: Nullpointer as argument. ", MSG_ERROR);
+   }
+   else
+   {
+
+      if (m_machine == nullptr)
+      {
+         debugOutput::sendMessage("normal TO BE NULLPTR AT START ", MSG_ERROR);
+      }
+      else
+      {
+         debugOutput::sendMessage("not nullptr at start ", MSG_ERROR);
+      }
+      this->m_machine = machine;
+   }
 }
 
 // Sends a progress of dispensing to QT through a socket
@@ -319,7 +340,7 @@ void *messageMediator::doIPThread(void *pThreadArgs)
          {
             ServerSocket new_sock;
             fsm_comm_server.accept(new_sock);
-            debugOutput::sendMessage("new sock (UIDDFIJDF)", MSG_INFO);
+            debugOutput::sendMessage("Server: New incoming socket accepted. ", MSG_INFO);
 
             try
             {
@@ -391,27 +412,64 @@ void messageMediator::setRequestedSize(char size)
 
 DF_ERROR messageMediator::parseCommandString()
 {
-   //
-
-   //    parseSingleCommandString
-   // }
-
-   // DF_ERROR messageMediator::parseSingleCommandString(){
-
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
    string sCommand = getCommandString();
    char first_char = sCommand[0];
 
-   // m_commandValue = std::stoi( sCommand );
    debugOutput::sendMessage("command length:" + to_string(sCommand.length()), MSG_INFO);
 
    if (sCommand.find("pcabugfix") != string::npos)
    {
-      debugOutput::sendMessage("*************************************************", MSG_INFO);
+      // debugOutput::sendMessage("*************************************************", MSG_INFO);
       debugOutput::sendMessage("Action: Repair PCA9534", MSG_INFO);
       m_requestedAction = ACTION_REPAIR_PCA;
-      
+   }
+   else if (sCommand.find("Ping") != string::npos)
+   {
+      // simple is alive command will reset to idle state
+      m_requestedAction = ACTION_RESET;
+   }
+   else if (sCommand.find("getTemperature") != string::npos)
+   {
+      debugOutput::sendMessage("Request temperature", MSG_INFO);
+
+      if (m_machine->control_pcb->isTemperatureSensorAvailable())
+      {
+         debugOutput::sendMessage("lode", MSG_INFO);
+         double temperature = m_machine->control_pcb->getTemperature();
+         // double temperature = g_productDispensers[0].the_pcb->getTemperatureConfigure();
+         debugOutput::sendMessage("Temperature in Celsius: " + std::to_string(temperature), MSG_INFO);
+
+         // printf("Temperature polling from MCP9808: %.3f Celcius \n", temperature);
+         //  m_pMessaging->sendMessageOverIP("|temperature|" + to_int(temperature));
+         sendMessageOverIP("|temperature|" + std::to_string(temperature));
+      }
+      else
+      {
+         debugOutput::sendMessage("No temperature sensor found", MSG_INFO);
+      }
+
+   }
+   else if (sCommand.find("DispenseButtonLights") != string::npos)
+   {
+      // simple is alive command will reset to idle state
+      // e.g.   ButtonLights|ON
+      std::string delimiter = "|";
+      std::size_t found0 = sCommand.find(delimiter);
+      std::size_t found1 = sCommand.find(delimiter, found0 + 1);
+
+      std::string button_status = sCommand.substr(found0 + 1, found1 - found0 - 1);
+
+      if (button_status == "ANIMATE")
+      {
+         m_machine->setButtonLightsBehaviour(Button_lights_behaviour::IDLE_ANIMATION_FROM_DB);
+      }
+      else if (button_status == "OFF")
+      {
+         m_machine->setButtonLightsBehaviour(Button_lights_behaviour::IDLE_OFF);
+      }
+      m_requestedAction = ACTION_NO_ACTION;
    }
    else if (sCommand.find("Order") != string::npos)
    {
@@ -444,7 +502,6 @@ DF_ERROR messageMediator::parseCommandString()
       std::string promoCode = "";
       if (found1 != string::npos)
       {
-
          promoCode = sCommand.substr(found2 + 1, found3 - found2 - 1);
       }
       m_promoCode = promoCode;
@@ -460,6 +517,10 @@ DF_ERROR messageMediator::parseCommandString()
       // length 3 command is always a dispense instruction. This is annoying, but it's grown organically like that.
       // check for dispensing command
       e_ret = parseDispenseCommand(sCommand);
+   }
+   else if (sCommand.find("Printer") != string::npos)
+   {
+      m_requestedAction = ACTION_UI_COMMAND_PRINTER_MENU;
    }
    else if (
        // other commands
@@ -486,8 +547,8 @@ DF_ERROR messageMediator::parseCommandString()
 
        //  first_char == ACTION_MANUAL_PRINTER ||
        //  first_char == ACTION_PRINTER_CHECK_STATUS ||
-       first_char == ACTION_UI_COMMAND_PRINTER_SEND_STATUS ||
-       first_char == ACTION_UI_COMMAND_PRINTER_MENU ||
+       //  first_char == ACTION_UI_COMMAND_PRINTER_SEND_STATUS ||
+       // first_char == ACTION_UI_COMMAND_PRINTER_MENU ||
        //  first_char == ACTION_PRINTER_CHECK_STATUS_TOGGLE_CONTINUOUSLY ||
        //  first_char == ACTION_PRINTER_PRINT_TEST ||
        //  first_char == ACTION_HELP ||
@@ -518,9 +579,18 @@ DF_ERROR messageMediator::parseCommandString()
    return e_ret;
 }
 
-void messageMediator::resetAction(){
+void messageMediator::resetAction()
+{
    m_requestedAction = ACTION_NO_ACTION;
 }
+
+void messageMediator::setDispenseCommandToDummy()
+{
+   m_requestedAction = ACTION_DUMMY;
+   m_RequestedProductIndexInt = PRODUCT_SLOT_DUMMY;
+   m_requestedSize = SIZE_DUMMY;
+}
+
 DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
 {
 
@@ -531,6 +601,10 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
    char productChar = PRODUCT_DUMMY;
    char actionChar = ACTION_DUMMY;
    char volumeChar = SIZE_DUMMY;
+
+   m_requestedAction = ACTION_DUMMY;
+   m_RequestedProductIndexInt = PRODUCT_SLOT_DUMMY;
+   m_requestedSize = SIZE_DUMMY;
 
    // if (isdigit(sCommand[0]))
    if (isdigit(sCommand[0]))
@@ -559,6 +633,13 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
 
    switch (productChar)
    {
+   case PRODUCT_DUMMY:
+   {
+      m_RequestedProductIndexInt = PRODUCT_SLOT_DUMMY;
+      debugOutput::sendMessage("Invalid product char.", MSG_INFO);
+      e_ret = OK;
+      break;
+   }
    case '1':
    {
       m_RequestedProductIndexInt = 1;
@@ -643,10 +724,12 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
 
    if (!isalpha(actionChar))
    {
+      m_requestedAction = ACTION_DUMMY;
       debugOutput::sendMessage("Irrelevant input .. ", MSG_INFO);
    }
    else if (actionChar == ACTION_DUMMY)
    {
+      m_requestedAction = ACTION_DUMMY;
       debugOutput::sendMessage("No action provided ", MSG_INFO);
    }
    else
@@ -681,6 +764,7 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
          break;
 
       default:
+         m_requestedAction = ACTION_DUMMY;
          break;
       }
    }

@@ -9,7 +9,8 @@
 #######################################################################
 echo 'Drinkfill file transfer menu. CAUTION:Will impact station functionality.'
 
-PS3='Choose option(digit + enter):'
+port_in_use=$(sudo ./rtunnel_print.sh 2>/dev/null)
+PS3="Choose option(digit + enter) (rtunnel port=$port_in_use) :"
 options=("Quit" "Station info" "AWS log in" "AWS run station operations" "upload to AWS home folder" "upload to AWS station folder" "upload production as version in AWS SoftwareStation" "upload stationsoperations.sh to aws home")
 select opt in "${options[@]}"
 do
@@ -50,7 +51,7 @@ do
             full_path="$file"
             echo $full_path
             # ls -l "$file"
-            station_id=$(sqlite3 /home/df-admin/production/db/drinkfill-sqlite_newlayout.db "select machine_id from machine;")
+            station_id=$(sqlite3 /home/df-admin/production/db/configuration.db "select machine_id from machine;")
 
             cd /home/df-admin/Downloads
             scp -r -i DrinkfillAWS.pem "$full_path" ubuntu@ec2-44-225-153-121.us-west-2.compute.amazonaws.com:/home/ubuntu/Stations/$station_id

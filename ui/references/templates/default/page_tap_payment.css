@@ -4,12 +4,25 @@
    font-weight: 75;
    font-size: 32px;
    line-height: 99px;
-   letter-spacing: 1.5px;
-   text-transform: lowercase;
    color: #003840;
-   text-align: cCenter;
-   qproperty-alignment: AlignCenter;
+   text-align: left;
+   /* qproperty-alignment: AlignCenter; */
    border: none;
+}
+
+
+QPushButton {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 50;
+   font-size: 32px;
+   color: #003840;
+   background-color: #FFFFFF;
+   border: 0px;
+   text-align: center;
+   border-radius: 20px;
+   border: none;
+  
 }
 
 .invisible_button {
@@ -35,7 +48,6 @@ QMessageBox.msgBoxbutton QPushButton{
    
 }
 
-
 /* 
 
 
@@ -52,7 +64,6 @@ QMessageBox.msgBoxbutton QPushButton{
    font-weight: 75;
    font-size: 32px;
    line-height: 99px;
-   letter-spacing: 1.5px;
    color: #003840;
    text-align: center;
    border: none;
@@ -65,7 +76,6 @@ QMessageBox.msgBoxbutton QPushButton{
       font-weight: 75;
       font-size: 43px;
       line-height: 99px;
-      letter-spacing: 1.5px;
       color: #438080;
       text-align: center;
       qproperty-alignment: AlignCenter;
@@ -77,7 +87,6 @@ QMessageBox.msgBoxbutton QPushButton{
    font-weight: 75;
    font-size: 32px;
    line-height: 99px;
-   letter-spacing: 1.5px;
    color: #FFFFFF;
    text-align: left;
    qproperty-alignment: AlignCenter;

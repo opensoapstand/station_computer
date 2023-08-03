@@ -28,19 +28,25 @@ page_maintenance::page_maintenance(QWidget *parent) : QWidget(parent),
     page_maintenanceEndTimer->setInterval(1000);
     connect(page_maintenanceEndTimer, SIGNAL(timeout()), this, SLOT(onPage_maintenanceTimeoutTick()));
 
-    
-    product_buttons[0] = ui->product1_button;
-    product_buttons[1] = ui->product2_button;
-    product_buttons[2] = ui->product3_button;
-    product_buttons[3] = ui->product4_button;
+    pushButtons_products[0] = ui->pushButton_product_1;
+    pushButtons_products[1] = ui->pushButton_product_2;
+    pushButtons_products[2] = ui->pushButton_product_3;
+    pushButtons_products[3] = ui->pushButton_product_4;
 
-    product_overlay_labels[0] = ui->product1_overlay_label;
-    product_overlay_labels[1] = ui->product2_overlay_label;
-    product_overlay_labels[2] = ui->product3_overlay_label;
-    product_overlay_labels[3] = ui->product4_overlay_label;
+    labels_product_status[0] = ui->label_product_1_status;
+    labels_product_status[1] = ui->label_product_2_status;
+    labels_product_status[2] = ui->label_product_3_status;
+    labels_product_status[3] = ui->label_product_4_status;
 
-    QString title = QString("Soapstand UI v%1").arg(UI_VERSION);
-    ui->label_ui_version->setText(title);
+    labels_product_name[0] = ui->label_product_1_name;
+    labels_product_name[1] = ui->label_product_2_name;
+    labels_product_name[2] = ui->label_product_3_name;
+    labels_product_name[3] = ui->label_product_4_name;
+
+    labels_product_position[0] = ui->label_product_1_position;
+    labels_product_position[1] = ui->label_product_2_position;
+    labels_product_position[2] = ui->label_product_3_position;
+    labels_product_position[3] = ui->label_product_4_position;
 }
 
 // DTOR
@@ -51,114 +57,98 @@ page_maintenance::~page_maintenance()
 
 void page_maintenance::showEvent(QShowEvent *event)
 {
-    //    db.addPageClick("PAGE_PAGE_MAINTENANCE PAGE ENTERED");
-
-    qDebug() << "<<<<<<< Page Enter: maintenance >>>>>>>>>";
+    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
-    // p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_MAINTENANCE_BACKGROUND_PATH); // delays the page loading significantly.
+    _page_maintenanceTimeoutSec = PAGE_MAINTENANCE_TIMEOUT_SECONDS;
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_MAINTENANCE_BACKGROUND_PATH); // delays the page loading significantly.
 
-    for (int i = 0; i < SLOT_COUNT; i++)
+    QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_CSS);
+    ui->pushButton_to_previous_page->setStyleSheet(styleSheet);
+    ui->pushButton_general_settings->setStyleSheet(styleSheet);
+    ui->label_title_maintenance_mode->setStyleSheet(styleSheet);
+
+    ui->label_machine_id->setProperty("class", "label_machine_ui");
+    ui->label_machine_id->setStyleSheet(styleSheet);
+
+    ui->label_ui_version->setProperty("class", "label_machine_ui");
+    ui->label_ui_version->setStyleSheet(styleSheet);
+
+    ui->label_role->setProperty("class", "label_machine_ui");
+    ui->label_role->setStyleSheet(styleSheet);
+
+    p_page_idle->setTemplateTextToObject(ui->label_title_maintenance_mode);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_to_previous_page);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_general_settings);
+
+    ui->label_machine_id->setText("Machine ID: " + p_page_idle->thisMachine.getMachineId());
+    
+    QString role_as_text = p_page_idle->thisMachine.getActiveRoleAsText();
+    p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_role, role_as_text);
+
+    QString title = QString("Soapstand UI v%1").arg(UI_VERSION);
+    ui->label_ui_version->setText(title);
+
+    for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
-        QString p = p_page_idle->products[i].getProductPicturePath();
-        p_page_idle->dfUtility->fileExists(p);
+        p_page_idle->setTemplateTextToObject(labels_product_position[slot_index]);
+
+        labels_product_status[slot_index]->setProperty("class", "label_product_status");
+        labels_product_status[slot_index]->setStyleSheet(styleSheet);
+
+        labels_product_position[slot_index]->setProperty("class", "label_product_position");
+        labels_product_position[slot_index]->setStyleSheet(styleSheet);
+
+        QString p = p_page_idle->products[slot_index].getProductPicturePath();
+        p_page_idle->thisMachine.dfUtility->pathExists(p);
         QPixmap im(p);
         QIcon qi(im);
-        product_buttons[i]->setIcon(qi);
-        product_buttons[i]->setIconSize(QSize(241, 381));
-        product_overlay_labels[i]->hide();
-    }
+        pushButtons_products[slot_index]->setIcon(qi);
+        // pushButtons_products[slot_index]->setObjectName("product");
+        pushButtons_products[slot_index]->setStyleSheet(styleSheet);
+        pushButtons_products[slot_index]->setIconSize(QSize(241, 341));
 
+        pushButtons_products[slot_index]->setStyleSheet("background-color: transparent; border: 1px solid black;");
+        pushButtons_products[slot_index]->raise();
 
-    // page_maintenanceEndTimer->start(1000);
-    _page_maintenanceTimeoutSec = PAGE_MAINTENANCE_TIMEOUT_SECONDS;
+        labels_product_name[slot_index]->setText(p_page_idle->products[slot_index].getProductName());
+        int product_slot_enabled = p_page_idle->products[slot_index].getSlotEnabled();
 
-    // int product_sold_out [SLOT_COUNT];
-    // bool product_slot_enabled [SLOT_COUNT];
-
-    qDebug() << "db for names and id maintenance";
-    DbManager db(DB_PATH);
-    // ui->enable_empty_container_checkBox->setChecked(db.getEmptyContainerDetectionEnabled());
-    // ui->enable_pump_ramping_checkBox->setChecked(db.getPumpRampingEnabled());
-    // qDebug()<<"ramping?"<<db.getPumpRampingEnabled();
-    // ui->enable_pump_ramping_checkBox->setChecked(true);
-
-    // ui->product1_label->setText(db.getProductName(1));
-    // ui->product2_label->setText(db.getProductName(2));
-    // ui->product3_label->setText(db.getProductName(3));
-    // ui->product4_label->setText(db.getProductName(4));
-    ui->machineLabel->setText("Machine ID: " + db.getMachineID());
-
-    db.closeDB();
-
-    ui->product1_label->setText(p_page_idle->products[0].getProductName());
-    ui->product2_label->setText(p_page_idle->products[1].getProductName());
-    ui->product3_label->setText(p_page_idle->products[2].getProductName());
-    ui->product4_label->setText(p_page_idle->products[3].getProductName());
-
-    for (uint8_t i = 0; i < SLOT_COUNT; i++)
-    {
-        uint8_t slot = i + 1;
-
-        qDebug() << "db for names and id maintenance";
-        DbManager db(DB_PATH);
-        int product_slot_enabled = db.getSlotEnabled(slot);
-        QString product_status_text = db.getStatusText(slot);
-
-        db.closeDB();
-
-        if (product_status_text.compare("SLOT_STATE_AVAILABLE") == 0)
+        QString product_status_text = p_page_idle->products[slot_index].getStatusText();
+        QString status_display_text = "";
+        if (!(p_page_idle->products[slot_index].isProductVolumeInContainer()))
         {
-            product_overlay_labels[i]->setText("");
+            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->auto_empty");
+        }
+        else if (!p_page_idle->products[slot_index].getSlotEnabled())
+        {
+            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->not_enabled");
+        }
+        else if (product_status_text.compare("SLOT_STATE_AVAILABLE") == 0)
+        {
+            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->available");
         }
         else if (product_status_text.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
         {
-            product_overlay_labels[i]->setText("Almost Empty");
-        }
-        else if (product_status_text.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
-        {
-            product_overlay_labels[i]->setText("Sold Out");
+            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->almost_empty");
         }
         else if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
         {
-            product_overlay_labels[i]->setText("Coming Soon");
+            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->coming_soon");
         }
         else if (product_status_text.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
-
         {
-            product_overlay_labels[i]->setText("Assistance Needed");
+            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->assistance");
+        }
+        else if (product_status_text.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
+        {
+            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->empty");
         }
         else
         {
-            product_overlay_labels[i]->setText("Assistance Needed");
+            status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->default");
         }
-
-        if (!(p_page_idle->products[i].isProductVolumeInContainer()))
-        {
-            product_overlay_labels[i]->setText("Auto Sold Out");
-        }
-
-        // // overlay product status
-        // if (!product_slot_enabled)
-        // {
-        //     product_overlay_labels[i]->setText(product_status_text);
-        //     product_overlay_labels[i]->setStyleSheet("background-color: rgba(255,255,255,170);");
-        //     // labels_product_picture[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
-        // }
-        // // else if (product_sold_out)
-        // // {
-        // //     product_overlay_labels[i]->setText("Sold out");
-        // //     product_overlay_labels[i]->setStyleSheet("background-color: transparent;");
-        // //     // labels_product_picture[i]->setStyleSheet("Qlabel {background-color: rgba(255,255,255,127);}");
-        // // }
-        // else
-        // {
-        // product_overlay_labels[i]->setText("");
-        product_overlay_labels[i]->setStyleSheet("background-color: transparent;");
-        // product_buttons[i]->setStyleSheet("QPushButton {background-color: transparent; border: 0px }");
-        // }
+        labels_product_status[slot_index]->setText(status_display_text);
     }
-    // p_pageSelectProduct->cancelTimers();
-    // p_page_product->cancelTimers();
     qDebug() << "End maintenance load";
 }
 
@@ -192,68 +182,39 @@ void page_maintenance::onPage_maintenanceTimeoutTick()
     }
 }
 
-void page_maintenance::on_generalSettings_button_clicked()
+void page_maintenance::on_pushButton_general_settings_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_maintenance_general);
 }
 
-void page_maintenance::on_backButton_clicked()
+void page_maintenance::on_pushButton_to_previous_page_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_idle);
 }
 
-void page_maintenance::on_product1_button_clicked()
+void page_maintenance::on_pushButton_product_1_clicked()
 {
     p_page_idle->setSelectedProduct(1);
-    p_page_maintenance_product->resizeEvent(productSelection);
     hideCurrentPageAndShowProvided(p_page_maintenance_product);
 }
 
-void page_maintenance::on_product2_button_clicked()
+void page_maintenance::on_pushButton_product_2_clicked()
 {
     p_page_idle->setSelectedProduct(2);
-    p_page_maintenance_product->resizeEvent(productSelection);
     hideCurrentPageAndShowProvided(p_page_maintenance_product);
 }
 
-void page_maintenance::on_product3_button_clicked()
+void page_maintenance::on_pushButton_product_3_clicked()
 {
     p_page_idle->setSelectedProduct(3);
-    p_page_maintenance_product->resizeEvent(productSelection);
     hideCurrentPageAndShowProvided(p_page_maintenance_product);
 }
 
-void page_maintenance::on_product4_button_clicked()
+void page_maintenance::on_pushButton_product_4_clicked()
 {
     p_page_idle->setSelectedProduct(4);
-    p_page_maintenance_product->resizeEvent(productSelection);
     hideCurrentPageAndShowProvided(p_page_maintenance_product);
 }
-
-// void page_maintenance::on_product5_button_clicked(){
-//     qDebug() << "Product 5 button clicked" << endl;
-
-//}
-
-// void page_maintenance::on_product6_button_clicked(){
-//     qDebug() << "Product 6 button clicked" << endl;
-
-//}
-
-// void page_maintenance::on_product7_button_clicked(){
-//     qDebug() << "Product 7 button clicked" << endl;
-
-//}
-
-// void page_maintenance::on_product8_button_clicked(){
-//     qDebug() << "Product 8 button clicked" << endl;
-
-//}
-
-// void page_maintenance::on_product9_button_clicked(){
-//     qDebug() << "Product 9 button clicked" << endl;
-
-//}
 
 int getSelection()
 {

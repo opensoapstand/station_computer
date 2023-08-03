@@ -8,10 +8,9 @@
 // payment page and page_idle page
 //
 // created: 05-04-2022
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #ifndef OVERVIEW_H
@@ -22,16 +21,26 @@
 #include "page_error_wifi.h"
 #include "page_help.h"
 #include "page_product.h"
-
+#include "page_tap_payment_serial.h"
 
 class page_select_product;
 class page_qr_payment;
 class page_tap_payment;
+class page_tap_payment_serial;
 class page_idle;
 class page_dispenser;
 class page_error_wifi;
 class page_help;
 class page_product;
+
+// typedef enum UserRole
+// {
+//     user,
+//     maintainer,
+//     admin
+// } UserRole;
+
+
 namespace Ui
 {
     class page_product_overview;
@@ -48,23 +57,17 @@ public:
     QLabel *orderSizeBackgroundLabels[4];
 
     explicit page_product_overview(QWidget *parent = nullptr);
-    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,page_tap_payment *page_tap_payment, page_help *pageHelp, page_product *page_product);
+    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_tap_payment *page_tap_payment, page_tap_payment_serial *page_tap_payment_serial, page_help *pageHelp, page_product *page_product);
     ~page_product_overview();
 
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
-    // void paintEvent(QPaintEvent *event);
 
     void cancelTimers();
-    // void updatePriceAfterPromo(double promoPercent);
-    void couponHandler();
-    void coupon_disable();
-    void coupon_input_show();
-    void coupon_input_hide();
-    void coupon_input_reset();
 
-    bool areCouponsEnabled();
-    void apply_promo_code();
+    void apply_promo_code(QString promocode);
+
+    bool m_readyToSendCoupon; 
 
 signals:
     void paymentTotal(string, string, string);
@@ -72,29 +75,31 @@ signals:
 private slots:
     // **** Navigation ****
     void on_pushButton_previous_page_clicked();
-    void on_page_qr_payment_Button_clicked();
-   
+    void on_pushButton_continue_clicked();
+
     void on_lineEdit_promo_codeInput_clicked();
     void on_pushButton_select_product_page_clicked();
     void return_to_selectProductPage();
-    void updatePrice();
-    // Set Drink Order
+    void updatePriceLabel();
     void on_pushButton_to_help_clicked();
     void onSelectTimeoutTick();
     void keyboardButtonPressed(int);
+
 private:
+
+
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     int product_sizes[4] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX};
     bool stopSelectTimers();
     void reset_and_show_page_elements();
     void selectOnTick();
-    void mainPage();
 
     std::string readBuffer;
     Ui::page_product_overview *ui;
     page_select_product *p_page_select_product;
-    page_qr_payment *paymentQrPage;
-    page_tap_payment *paymentTapPage;
+    page_qr_payment *p_page_payment_qr;
+    page_tap_payment *p_page_payment_tap;
+    page_tap_payment_serial *p_page_payment_tap_serial;
     page_idle *p_page_idle;
     page_dispenser *p_page_dispense;
     page_error_wifi *p_page_wifi_error;

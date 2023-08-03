@@ -7,8 +7,7 @@
  // created: 07-08-2020
  // by: Li Yan Tong
  //
- // copyright 2022 by Drinkfill Beverages Ltd
- // all rights reservedname
+ // copyright 2023 by Drinkfill Beverages Ltd // all rights reservedname
  ********************************************************/
 
 /*Daily update of the revenue from the machine, get summarized revenue daily*/

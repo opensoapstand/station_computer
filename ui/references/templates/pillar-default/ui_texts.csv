@@ -1,35 +1,67 @@
 # Display texts. 
 # Default template. 
 # Non default templates can be put in their template folder with the same name. Object names not found in the file in the template folder will be taken from the default template file
-# PAGE->OBJECTNAME,mytext
-# PAGE = QT page name
-# OBJECTNAME = QWidget (QLabel or QPushButton)
-# , = separator between name and text
-# mytext = custom text to be displayed on screen
-# template comment example (needs to start with a #)
 
+########################################## example ##############################
+# PAGE->OBJECTNAME,mytext
+#    PAGE = QT page name
+#    OBJECTNAME = QWidget (QLabel or QPushButton)
+#    , = separator between name and text
+#    mytext = custom text to be displayed on screen
+#################################################################################
+
+# comment example (needs to start with a #)
 # empty lines are also permitted
 
 # page_idle
-page_idle->label_welcome_message,Want a drink?
-page_idle->label_warning_info_alert->offline,Assistance needed<br>Receipt Printer offline.
-page_idle->label_warning_info_alert->nopaper,Assistance needed<br>Receipt Printer empty or improperly loaded.
+page_idle->label_welcome_message,Try a free<br>beverage sample
+page_idle->label_printer_status->offline,Assistance needed<br>Receipt Printer offline.
+page_idle->label_printer_status->nopaper,Assistance needed<br>Receipt Printer empty or improperly loaded.
 
 #page_select_product
-page_select_product->label_pick_soap,Discover our Drinks
-page_select_product->pushButton_to_idle,⇦
+page_select_product->label_pick_soap,Discover our Beverages
+page_select_product->pushButton_to_idle,←back
 page_select_product->no_text,
-page_select_product->empty,empty
-page_select_product->almost_empty,almost-empty
-page_select_product->sold_out,sold-out
-page_select_product->assistance,assistance
-page_select_product->coming_soon,coming-soon
-page_select_product->default,. . .
-page_select_product->available,
 
 
-# Pageproduct 
-pageProduct->pushButton_back,<- Products
-pageProduct->label_select_quantity,Select Quantity
-pageProduct->pushButton_continue,Continue
+# Page_product 
+page_product->pushButton_back,←back
 
+# page_product_overview
+page_product_overview->pushButton_select_product_page,←back
+page_product_overview->pushButton_continue,Proceed to Pay
+page_product_overview->label_total,Total Amount
+
+
+# page_dispenser
+page_dispenser->label_to_refill,To Refill
+page_dispenser->label_instructions_container,bring container to nozzle
+page_dispenser->label_press,press and hold the<br>button
+
+# page_end
+page_end->pushButton_contact,Feedback
+
+# page_help
+page_help->pushButton_to_idle,←back
+
+# page_sendFeedback
+page_sendFeedback->pushButton_previous_page,←back
+page_sendFeedback->checkBox_1_Label,I love this, keep me in the loop.
+page_sendFeedback->checkBox_2_Label,User interface problem
+page_sendFeedback->checkBox_3_Label,Drink dispensing problem
+page_sendFeedback->checkBox_4_Label,Payment problem
+page_sendFeedback->checkBox_5_Label,Other
+page_sendFeedback->label_enter_feedback,Please enter details or comments below.<br>Provide email for feedback.
+page_sendFeedback->label_thanks_for_feedback,Thank you for <br> your feedback
+page_sendFeedback->pushButton_send,Send
+
+# page_qr_payment
+page_qr_payment->pushButton_previous_page,←back
+page_qr_payment->label_title->pay_by_phone,Pay by Phone
+page_qr_payment->label_steps,<style>        li:{margin-top:10px; margin-left: 5px;}        </style>        <ol>        <li><span class='tab'></span>Scan QR code with phone camera<br></li>        <li><span class='tab'></span>Click to open the link that appears<br></li>        <li><span class='tab'></span>Follow payment instructions on phone<br></li>        <li><span class='tab'></span>The station will proceed after payment<br></li>        <li><span class='tab'></span>Refill your beverage!</li>        </ol>        <style>        li:{margin-top:10px;}        </style>        <ol>       
+
+# page_tap_payment
+page_tap_payment->pushButton_previous_page,←back
+
+# page_tap_payment_serial
+page_tap_payment_serial->pushButton_previous_page,←back

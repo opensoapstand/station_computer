@@ -3,6 +3,17 @@
    border: 0px;
 } */
 
+#label_product_price {
+   text-align: right;
+   font-weight: 600;
+   /* font-style: normal; */
+   /* background-color: red; */
+}
+
+#pushButton_previous_page {
+   text-align: left;
+}
+
 QPushButton {
    font-family: 'Brevia';
    font-style: normal;
@@ -11,18 +22,18 @@ QPushButton {
    color: #003840;
    background-color: #FFFFFF;
    border: 0px;
-   text-align: centre;
+   text-align: center;
    border-radius: 20px;
    border: none;
-  
+
 }
 
 
-.invisible_button{
+.invisible_button {
    background-color: transparent;
    border: 0px;
 }
- 
+
 #label_title {
    font-family: 'Brevia';
    font-style: normal;
@@ -30,7 +41,6 @@ QPushButton {
    font-size: 64px;
    line-height: 86px;
    text-align: center;
-   text-transform: lowercase;
    color: #003840;
    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
@@ -42,18 +52,19 @@ QPushButton {
    font-weight: 600;
    font-size: 48px;
    color: #5E8580;
+   /* background-color: red; */
    /* } .tab { */
    display: inline-block;
-   margin-left: 40px;
+   
 }
 
 #label_steps {
 
-   position: absolute;
-   width: 777px;
+   /* position: absolute; */
+   /* width: 777px;
    height: 306px;
    left: 143px;
-   top: 1029px;
+   top: 1029px; */
    font-family: 'Montserrat';
    font-style: normal;
    font-weight: 600;
@@ -76,6 +87,19 @@ QPushButton {
    color: #003840;
 }
 
+#pushButton_previous_page{ 
+   background-color: transparent; 
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 32px;
+   line-height: 99px;
+   color: #003840;
+   text-align: left;
+   /* qproperty-alignment: AlignLeft; */
+   border: none;
+}
+
 QMessageBox {
    min-width: 7000px;
    font-size: 24px;
@@ -84,7 +108,7 @@ QMessageBox {
    font-family: 'Montserrat';
 }
 
-QMessageBox.msgBoxbutton QPushButton{
+QMessageBox.msgBoxbutton QPushButton {
    font-size: 24px;
    min-width: 300px;
    min-height: 300px;
@@ -93,4 +117,9 @@ QMessageBox.msgBoxbutton QPushButton{
 QLabel {
    /*this label controls the color of the checkbox */
    color: black;
+   font-family:'Montserrat';
+   font-size:24px;
+   color: #58595b;
+   font-style:light;
+
 }

@@ -4,10 +4,9 @@
 // main state class
 //
 // created: 01-2022
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "fsm.h"
@@ -57,8 +56,6 @@ DF_ERROR initObjects();
 DF_ERROR createStateArray();
 DF_ERROR stateLoop();
 
-
-
 /*
  * Instantiate Array to hold objects specfic to states (DF_FSM)
  * XXX: Reminder to instantiate new states here!
@@ -69,16 +66,16 @@ DF_ERROR createStateArray()
 
     if (NULL != g_pMessaging)
     {
-        g_stateArray[STATE_INIT] = new stateInit();
-        g_stateArray[STATE_IDLE] = new stateIdle();
-        g_stateArray[STATE_DISPENSE_INIT] = new stateDispenseInit();
-        g_stateArray[STATE_DISPENSE_IDLE] = new stateDispenseIdle();
-        g_stateArray[STATE_DISPENSE] = new stateDispense();
-        g_stateArray[STATE_DISPENSE_END] = new stateDispenseEnd();
-        g_stateArray[STATE_MANUAL_PRINTER] = new stateManualPrinter();
-        g_stateArray[STATE_MANUAL_PUMP] = new stateManualPump();
-        g_stateArray[STATE_MANUAL_CONFIG] = new stateManualConfig();
-        g_stateArray[STATE_END] = new stateEnd();
+        g_stateArray[STATE_INIT] = new stateInit(g_pMessaging);
+        g_stateArray[STATE_IDLE] = new stateIdle(g_pMessaging);
+        g_stateArray[STATE_DISPENSE_INIT] = new stateDispenseInit(g_pMessaging);
+        g_stateArray[STATE_DISPENSE_IDLE] = new stateDispenseIdle(g_pMessaging);
+        g_stateArray[STATE_DISPENSE] = new stateDispense(g_pMessaging);
+        g_stateArray[STATE_DISPENSE_END] = new stateDispenseEnd(g_pMessaging);
+        g_stateArray[STATE_MANUAL_PRINTER] = new stateManualPrinter(g_pMessaging);
+        g_stateArray[STATE_MANUAL_PUMP] = new stateManualPump(g_pMessaging);
+        g_stateArray[STATE_MANUAL_CONFIG] = new stateManualConfig(g_pMessaging);
+        g_stateArray[STATE_END] = new stateEnd(g_pMessaging);
         dfRet = OK;
     }
 
@@ -101,14 +98,11 @@ int main()
     // machine test;
     // test.testtest();
 
-
-
     if (OK == initObjects())
     {
         debugOutput::sendMessage("Init objects done", MSG_INFO);
         dfRet = g_pMessaging->createThreads(kbThread, ipThread);
 
-       
         if (OK == dfRet)
         {
             dfRet = stateLoop();
@@ -185,15 +179,23 @@ DF_ERROR initObjects()
 {
     DF_ERROR dfRet = OK;
 
-    g_pMessaging = NULL;
+    // g_pMessaging = NULL;
     g_pMessaging = new messageMediator();
 
+    if (g_pMessaging == nullptr)
+    {
+        debugOutput::sendMessage("**************Failed to allocate messageMediator", MSG_ERROR);
+    }
+
+    //    g_machine = new machine();
+    debugOutput::sendMessage("message mediator set up.", MSG_INFO);
     g_machine.setup();
+    g_pMessaging->setMachine(&g_machine);
     debugOutput::sendMessage("Machine set up.", MSG_INFO);
-    
+
     for (int i = 0; i < PRODUCT_DISPENSERS_MAX; i++)
     {
-        g_productDispensers[i].setup(g_machine.getPcb());
+        g_productDispensers[i].setup(&g_machine);
     }
 
     debugOutput::sendMessage("Dispensers set up. ", MSG_INFO);

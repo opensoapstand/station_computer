@@ -1,74 +1,75 @@
  QPushButton {
-   background-color: transparent;
-   border: 0px;
-} 
+    background-color: transparent;
+    border: 0px;
+ }
 
-QLabel {
+ QLabel {
 
-   font-family: 'Brevia';
-   font-style: normal;
-   font-weight: 75;
-   font-size: 64px;
-   line-height: 99px;
-   letter-spacing: px;
-   color: #003840;
-   text-align: center;
-   qproperty-alignment: AlignCenter;
-   border: none;
-}
+    font-family: 'Brevia';
+    font-style: normal;
+    font-weight: 75;
+    font-size: 64px;
+    line-height: 99px;
+    color: #003840;
+    text-align: center;
+    qproperty-alignment: AlignCenter;
+    border: none;
+ }
 
-#pushButton_to_idle {
+ #pushButton_to_idle {
 
-   font-family: 'Brevia';
-   font-style: normal;
-   font-weight: 75;
-   font-size: 32px;
-   background-color: transparent;
-   border: 0px;
-   line-height: 99px;
-   letter-spacing: 1.5px;
-   color: #003840;
-   text-align: center;
-   qproperty-alignment: AlignCenter;
-   border: none;
-}
+    font-family: 'Brevia';
+    font-style: normal;
+    font-weight: 75;
+    font-size: 32px;
+    background-color: transparent;
+    border: 0px;
+    line-height: 99px;
+    color: #003840;
+    text-align: left;
+    /* qproperty-alignment: AlignLeft; */
+    border: none;
+ }
 
 
-.label_product_name {
-   font-family: 'Montserrat';
-   font-style: normal;
-   font-weight: 400;
-   font-size: 28px;
-   line-height: 36px;
-   qproperty-alignment: AlignCenter;
-   color: #003840;
-}
+ .label_product_name {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 36px;
+    text-align: center;
+    qproperty-alignment: AlignCenter;
+    color: #003840;
+ }
 
-.PushButton_selection {
-   background-color: transparent;
-   border: 0px;
-}
+ .PushButton_selection {
+    background-color: transparent;
+    border: 0px;
+ }
 
-.label_product_overlay_available{
-   background-color: transparent;
-}
+ .label_product_overlay_available {
+    background-color: rgba(0, 0, 0, 0);
+    font-size: 80px;
+ }
 
+ .label_product_overlay_unavailable {
+    background-color: rgba(0, 0, 0, 80);
+    font-size: 80px;
+ }
 
-.label_product_oberlay_sold_out{
-   background-color: rgba(0,0,0,80);
-}
-.label_product_type{
-      font-family: 'Brevia';
-      font-style: normal;
-      font-weight: 700;
-      font-size: 30px;
-      line-height: 41px;
-      qproperty-alignment: AlignCenter;
-      text-transform: uppercase;
-      color: #5E8580;
-}
+ .label_product_type {
+    font-family: 'Brevia';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 41px;
+    text-align: center;
+    qproperty-alignment: AlignCenter;
+    text-transform: uppercase;
+    color: #5E8580;
+ }
 
-.label_product_photo{
-   border: 1px solid black;
-}
-
+ .label_product_photo {
+    border: 1px solid black;
+ }

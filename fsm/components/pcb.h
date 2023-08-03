@@ -32,6 +32,8 @@
 
 // #include "pcbEN134.h"
 
+#define MAX_BUF 64
+
 #define MAX_SLOT_COUNT 8
 #define PCA9534_ADDRESS_SLOT_1 0b0100000
 #define PCA9534_ADDRESS_SLOT_2 0b0100001
@@ -58,6 +60,8 @@
 #define DS2485Q_ADDRESS 0b1000000
 #define MCP3424T_ADDRESS 0b1101000
 #define ADC081C021_ADDRESS 0b01010100
+//#define TEMPERATURE_SENSOR_ADDRESS 0b00011000 
+#define TEMPERATURE_SENSOR_ADDRESS 0b00011000 
 
 #define PUMP_START_DELAY_MILLIS 100
 #define PUMP_STOP_BEFORE_BACKTRACK_TIME_MILLIS 0
@@ -66,6 +70,7 @@
 
 #define SLOT_ENABLED_BLINK_BUTTON_ON_MILLIS 200
 #define SLOT_ENABLED_BLINK_BUTTON_OFF_MILLIS 500
+
 
 class pcb
 {
@@ -102,6 +107,7 @@ public:
     bool define_pcb_version(void);
     PcbVersion get_pcb_version();
     bool isSlotAvailable(uint8_t slot);
+    bool isTemperatureSensorAvailable();
 
     unsigned char getPumpPWM();
     bool setPumpPWM(uint8_t pwm_val);
@@ -112,6 +118,9 @@ public:
     bool setPumpDirection(uint8_t slot, bool forwardElseReverse);
     bool startPump(uint8_t slot);
     bool stopPump(uint8_t slot);
+
+    double getTemperature();  //temp sensor
+    double cTemp;
 
     void setSingleDispenseButtonLight(uint8_t slot, bool onElseOff);
     bool getDispenseButtonStateDebounced(uint8_t slot);
@@ -175,6 +184,7 @@ private:
 
     bool pic_pwm_found = false;
     bool max31760_pwm_found = false;
+    bool mcp9808_temperature_sensor_found = false;
 
     uint64_t pump_start_delay_start_epoch[MAX_SLOT_COUNT];
     uint64_t pump_stop_before_backtrack_delay_start_epoch[MAX_SLOT_COUNT];

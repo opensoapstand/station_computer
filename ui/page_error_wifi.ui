@@ -19,36 +19,7 @@
   <property name="styleSheet">
    <string notr="true"/>
   </property>
-  <widget class="QPushButton" name="wifi_ack_Button">
-   <property name="geometry">
-    <rect>
-     <x>420</x>
-     <y>1450</y>
-     <width>251</width>
-     <height>91</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="error_message_label">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1081</width>
-     <height>1921</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true"/>
-   </property>
-   <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="mainPageButton">
+  <widget class="QPushButton" name="pushButton_mainPage">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -61,9 +32,71 @@
     <string/>
    </property>
   </widget>
-  <zorder>error_message_label</zorder>
-  <zorder>wifi_ack_Button</zorder>
-  <zorder>mainPageButton</zorder>
+  <widget class="QLabel" name="label_error_message">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>650</y>
+     <width>580</width>
+     <height>620</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_logo_drinkfill">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>720</y>
+     <width>200</width>
+     <height>120</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_oops">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>870</y>
+     <width>200</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_error_occured">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>990</y>
+     <width>580</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_check_back">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>1050</y>
+     <width>580</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

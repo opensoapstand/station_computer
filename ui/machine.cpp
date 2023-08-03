@@ -8,6 +8,10 @@ machine::machine()
 {
     setRole(UserRole::user);
     setCouponState(no_state);
+
+    // IPC Networking
+    dfUtility = new df_util();
+
 }
 
 // Dtor
@@ -28,6 +32,11 @@ StateCoupon machine::getCouponState()
 void machine::setCouponState(StateCoupon state)
 {
     m_stateCoupon = state;
+}
+
+
+void machine::dispenseButtonLightsAnimateState(bool animateElseOff){
+    dfUtility->send_command_to_FSM("DispenseButtonLights|ANIMATE");
 }
 
 void machine::initCouponState()
@@ -171,15 +180,18 @@ double machine::getTemperature(){
     return m_temperature;
 }
 
-void machine::temperatureFeedback(double m_temperature)
+void machine::temperatureFeedback(double temperature)
 {
-    if((m_db->getAlertTemperature())< m_temperature){
-        ui->label_warning_info_alert->setText("Temperature= " + QString::number(temperature, 'f', 2) + " is too high");
+    m_temperature = temperature;
+    if((m_db->getAlertTemperature()) < m_temperature){
+        // ui->label_printer_status->setText("Temperature= " + QString::number(temperature, 'f', 2) + " is too high");
+
+        qDebug() << "Temperature too hights afeifaf    debug test";
     }
 }
 
 void machine::getTemperatureFromController(){
-    p_page_idle->dfUtility->send_command_to_FSM("getTemperature");
+    dfUtility->send_command_to_FSM("getTemperature");
 }
 
 bool machine::hasReceiptPrinter()
@@ -416,6 +428,3 @@ QString machine::getCustomerId()
     }
     return m_soapstand_customer_id;
 }
-
-
-

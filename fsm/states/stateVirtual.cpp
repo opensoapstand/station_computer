@@ -4,10 +4,9 @@
 // virtual state class
 //
 // created: 01-2022
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "stateVirtual.h"
@@ -19,17 +18,17 @@ stateVirtual::stateVirtual()
    //m_state_requested = START; // should error if ever on "START", this is only virtual!
 }
 
-stateVirtual::stateVirtual(messageMediator *message)
-{
-   if (nullptr == message)
-   {
-      //bad things have occured
-   }
-   //m_state = START;
+// stateVirtual::stateVirtual(messageMediator *message)
+// {
+//    if (nullptr == message)
+//    {
+//       //bad things have occured
+//    }
+//    //m_state = START;
 
-   m_pMessaging = message; // linking of the message sender (TCP/IP)
+//    m_pMessaging = message; // linking of the message sender (TCP/IP)
 
-}
+// }
 
 stateVirtual::~stateVirtual()
 {

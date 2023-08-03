@@ -11,29 +11,22 @@ page_transactions::page_transactions(QWidget *parent) : QWidget(parent),
 
         transaction_count = TRANSACTION_HISTORY_COUNT;
 
-        // set up back button
-        QFont font;
-        font.setFamily(QStringLiteral("Brevia"));
-        font.setPointSize(20);
-        font.setBold(true);
-        font.setWeight(75);
+        // // set up back button
+        // QFont font;
+        // font.setFamily(QStringLiteral("Brevia"));
+        // font.setPointSize(20);
+        // font.setBold(true);
+        // font.setWeight(75);
 
-        ui->pushButton_back->setFont(font);
-        ui->pushButton_back->setText("<- Back");
+        // ui->pushButton_back->setFont(font);
 
-        // set up print button
+        // // set up print button
 
-        font.setFamily(QStringLiteral("Brevia"));
-        font.setPointSize(20);
-        font.setBold(true);
-        font.setWeight(75);
-
-        // ui->print_Button->setStyleSheet("QPushButton { color:#FFFFFF; background-color: transparent; border: 0px }");
-
-        ui->print_Button->setFont(font);
-        ui->print_Button->setText("Print Selected Receipt");
-
-        // ui->transactions_List->setStyleSheet("QListWidget{  background:transparent; }QListWidget::item{background:green;}");
+        // font.setFamily(QStringLiteral("Brevia"));
+        // font.setPointSize(20);
+        // font.setBold(true);
+        // font.setWeight(75);
+        // ui->pushButton_print->setFont(font);
 }
 
 void page_transactions::setPage(page_idle *pageIdle)
@@ -54,39 +47,32 @@ void page_transactions::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 
 void page_transactions::showEvent(QShowEvent *event)
 {
-        QString styleSheet = p_page_idle->getCSS(PAGE_TRANSACTIONS_CSS);
-
-        ui->pushButton_back->setStyleSheet(styleSheet);
-        ui->print_Button->setStyleSheet(styleSheet);
-        ui->transactions_List->setStyleSheet(styleSheet);
-
-
-
-        qDebug() << "<<<<<<< Page Enter: Transactions >>>>>>>>>";
+        p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
         QWidget::showEvent(event);
 
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TRANSACTIONS_BACKGROUND_PATH);
+        QString styleSheet = p_page_idle->getCSS(PAGE_TRANSACTIONS_CSS);
+        ui->pushButton_back->setStyleSheet(styleSheet);
+        ui->pushButton_print->setStyleSheet(styleSheet);
+        ui->label_title->setStyleSheet(styleSheet);
+        ui->list_transactions->setStyleSheet(styleSheet);
 
+        p_page_idle->setTemplateTextToObject(ui->label_title);
+        p_page_idle->setTemplateTextToObject(ui->pushButton_back);
+        p_page_idle->setTemplateTextToObject(ui->pushButton_print);
+
+        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TRANSACTIONS_BACKGROUND_PATH);
 
         idleTimer->start(1000);
         _idleTimeoutSec = 60;
         populateTransactionsTable();
 
-        qDebug() << "db for receipt printer check";
-        QString paymentMethod = p_page_idle->selectedProduct->getPaymentMethod();
-
-        DbManager db(DB_PATH);
-        bool hasReceiptPrinter = db.hasReceiptPrinter();
-        db.closeDB();
-
-        if (hasReceiptPrinter)
+        if (p_page_idle->thisMachine.hasReceiptPrinter())
         {
-                ui->print_Button->show();
+                ui->pushButton_print->show();
         }
         else
         {
-                ui->print_Button->show();
-                // ui->print_Button->hide();
+                ui->pushButton_print->hide();
         }
 }
 
@@ -107,19 +93,14 @@ void page_transactions::populateTransactionsTable()
 {
         transaction_count = TRANSACTION_HISTORY_COUNT;
         int retrieved_count;
-
-        DbManager db(DB_PATH);
-        db.getRecentTransactions(recent_transactions, transaction_count, &retrieved_count);
-        db.closeDB();
-        
+        p_page_idle->g_database->getRecentTransactions(recent_transactions, transaction_count, &retrieved_count);
         transaction_count = retrieved_count;
-
         populateList();
 }
 
 void page_transactions::deleteAllListItems()
 {
-        ui->transactions_List->clear();
+        ui->list_transactions->clear();
 }
 
 void page_transactions::populateList()
@@ -127,22 +108,36 @@ void page_transactions::populateList()
         deleteAllListItems();
 
         // header is the first row. (caution: It messes up the indexing a little bit)
-        ui->transactions_List->addItem("Dispense time     \t Volume [ml]     Price[$]\t  Name");
+        ui->list_transactions->addItem("Dispense time     \t Volume [ml]     Price[$]\t  Name");
 
         // populate the items of the list
         for (int i = 0; i < transaction_count; i++)
         {
+                QString name;
+                QString name_ui;
+                QString product_type;
+                QString description_ui;
+                QString features_ui;
+                QString ingredients_ui;
                 QString rowItem;
-                for (int j = 1; j < 5; j++)
+                p_page_idle->thisMachine.loadProductPropertiesFromProductsFile(recent_transactions[i][4],
+                                                                               &name,
+                                                                               &name_ui,
+                                                                               &product_type,
+                                                                               &description_ui,
+                                                                               &features_ui,
+                                                                               &ingredients_ui);
+                for (int j = 1; j < 4; j++)
                 {
                         rowItem += recent_transactions[i][j].rightJustified(8, ' ') + "\t";
                 }
+                rowItem += name.rightJustified(8, ' ') + "\t";
 
                 // get rid of last tab
                 int pos = rowItem.lastIndexOf(QChar('\t'));
-                qDebug() << rowItem.left(pos);
+                // qDebug() << rowItem.left(pos);
 
-                ui->transactions_List->addItem(rowItem);
+                ui->list_transactions->addItem(rowItem);
         }
 }
 
@@ -151,20 +146,20 @@ void page_transactions::on_pushButton_back_clicked()
         hideCurrentPageAndShowProvided(p_page_idle);
 }
 
-void page_transactions::on_print_Button_clicked(bool checked)
+void page_transactions::on_pushButton_print_clicked(bool checked)
 {
 
         // Get the pointer to the currently selected item.
-        if (ui->transactions_List->selectedItems().size() != 0)
+        if (ui->list_transactions->selectedItems().size() != 0)
         {
 
-                QListWidgetItem *item = ui->transactions_List->currentItem();
+                QListWidgetItem *item = ui->list_transactions->currentItem();
 
                 // Set the text color and its background color using the pointer to the item.
                 // item->setTextColor(Qt::white);
                 item->setBackgroundColor(Qt::green);
                 _idleTimeoutSec = 60;
-                QModelIndex selectedRow = ui->transactions_List->selectionModel()->selectedIndexes()[0];
+                QModelIndex selectedRow = ui->list_transactions->selectionModel()->selectedIndexes()[0];
                 int rowIndex = selectedRow.row();
 
                 if (rowIndex != 0)
@@ -174,12 +169,12 @@ void page_transactions::on_print_Button_clicked(bool checked)
                         QString transactionIndex = recent_transactions[rowIndex - 1][0];
                         qDebug() << "Selected row: " << rowIndex << " with dispense index: " + transactionIndex << ". Send to receipt printer.";
 
-                        p_page_idle->dfUtility->send_command_to_FSM("p");
+                        p_page_idle->thisMachine.dfUtility->send_command_to_FSM("Printer");
                         usleep(50000);
                         QString command = "t" + transactionIndex;
-                        p_page_idle->dfUtility->send_command_to_FSM(command);
+                        p_page_idle->thisMachine.dfUtility->send_command_to_FSM(command);
                         usleep(50000);
-                        p_page_idle->dfUtility->send_command_to_FSM("q");
+                        p_page_idle->thisMachine.dfUtility->send_command_to_FSM("q");
                 }
         }
         else

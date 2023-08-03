@@ -4,10 +4,9 @@
 // virtual state class
 //
 // created: 01-2022
-// by: Lode Ameije & Ash Singla
+// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
 //
-// copyright 2022 by Drinkfill Beverages Ltd
-// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #ifndef STATEVIRTUAL__H_
@@ -26,7 +25,7 @@ class stateVirtual
 {
 public:
     stateVirtual();
-    stateVirtual(messageMediator *message);
+    // stateVirtual(messageMediator *message);
     ~stateVirtual();
 
     virtual string toString() = 0;

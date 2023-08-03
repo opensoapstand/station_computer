@@ -33,6 +33,9 @@ public:
     void loadParametersFromDb();
     void setDb(DbManager *db);
 
+    
+
+    void dispenseButtonLightsAnimateState(bool animateElseOff);
     bool slotNumberValidityCheck(int slot);
     QString getStatusText(int slot);
     void setStatusText(int slot, bool isSlotEnabled, QString status);
@@ -120,6 +123,8 @@ public:
     QString m_idle_page_type;
     QString m_admin_pwd;
     double m_temperature;
+
+    df_util *dfUtility;
 
 
 public slots:

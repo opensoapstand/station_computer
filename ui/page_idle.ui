@@ -137,6 +137,19 @@ text-transform: lowercase;</string>
     </rect>
    </property>
   </widget>
+  <widget class="QLabel" name="label_temperature_status">
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>110</y>
+     <width>980</width>
+     <height>120</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
   <zorder>pushButton_to_select_product_page</zorder>
   <zorder>savedBottles_label</zorder>
   <zorder>label_customer_logo</zorder>
@@ -146,6 +159,7 @@ text-transform: lowercase;</string>
   <zorder>media_player</zorder>
   <zorder>video_player</zorder>
   <zorder>label_printer_status</zorder>
+  <zorder>label_temperature_status</zorder>
  </widget>
  <resources/>
  <connections/>

@@ -99,6 +99,7 @@ void page_idle::showEvent(QShowEvent *event)
     ui->label_welcome_message->setStyleSheet(styleSheet);
     ui->pushButton_test->setStyleSheet(styleSheet);
     ui->label_printer_status->setStyleSheet(styleSheet);
+    ui->label_temperature_status->setStyleSheet(styleSheet);
 
     // bool needsReceiptPrinter = false;
     // for (int slot = 1; slot <= SLOT_COUNT; slot++)
@@ -274,14 +275,14 @@ void page_idle::onPollTemperatureTimerTick()
             
             QString temperature = QString::number( thisMachine.getTemperature(), 'f', 2);
             
-            QString base = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_printer_status, "temperature_too_high");
-            ui->label_printer_status->show();
-            ui->label_printer_status->setText(base.arg(temperature));
+            QString base = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_temperature_status, "temperature_too_high");
+            ui->label_temperature_status->show();
+            ui->label_temperature_status->setText(base.arg(temperature));
             qDebug() << "Temperature too high";
         }else{
 
             qDebug() << "Temperature ok";
-            ui->label_printer_status->hide();
+            ui->label_temperature_status->hide();
         }
     }
         

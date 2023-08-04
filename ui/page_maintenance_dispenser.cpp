@@ -271,10 +271,13 @@ void page_maintenance_dispenser::onDispenseTimerTick()
 
 void page_maintenance_dispenser::fsmReceiveTemperature(double temperature)
 {
+
     qDebug() << "Temperature received from FSM: " << temperature;
+    
+    p_page_idle->thisMachine.fsmReceiveTemperature(temperature);
     // ui->label_setting_temperature->setText("Temp="+temperature);
     ui->label_setting_temperature->setText( QString::number(temperature, 'f', 2));
-    p_page_idle->thisMachine.writeTemperatureToDb(temperature);
+    
 };
 
 void page_maintenance_dispenser::onMaintainProductPageTimeoutTick()

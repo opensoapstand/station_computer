@@ -168,6 +168,8 @@ void machine::writeTemperatureToDb(double temperature)
 }
 
 bool machine::isTemperatureTooHigh(){
+    qDebug() << "alert temperature: " << m_alert_temperature;
+    qDebug() << "current temperature: " << m_temperature;
     if (m_alert_temperature >100.0){
         return false;
     }
@@ -177,7 +179,7 @@ bool machine::isTemperatureTooHigh(){
 void machine::fsmReceiveTemperature(double temperature)
 {
     m_temperature = temperature;
-    qDebug() << "Temperature received from FSM: " << m_temperature;
+    qDebug() << "Temperature received from FSM in machine: " << m_temperature;
     // ui->label_setting_temperature->setText("Temp="+temperature);
    
     writeTemperatureToDb(m_temperature);

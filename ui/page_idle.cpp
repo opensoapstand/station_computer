@@ -276,6 +276,10 @@ void page_idle::onPollTemperatureTimerTick()
             
             QString base = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_printer_status, "temperature_too_high");
             ui->label_printer_status->setText(base.arg(temperature));
+            ui->label_printer_status->show();
+        }else{
+
+            ui->label_printer_status->hide();
         }
     }
         

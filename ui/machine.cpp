@@ -171,16 +171,16 @@ bool machine::isTemperatureTooHigh(){
     if (m_alert_temperature >100.0){
         return false;
     }
-    return m_temperature < m_alert_temperature ;
+    return m_temperature > m_alert_temperature ;
 }
 
 void machine::fsmReceiveTemperature(double temperature)
 {
-    qDebug() << "Temperature received from FSM: " << temperature;
+    m_temperature = temperature;
+    qDebug() << "Temperature received from FSM: " << m_temperature;
     // ui->label_setting_temperature->setText("Temp="+temperature);
    
-    writeTemperatureToDb(getTemperature());
-    m_temperature = temperature;
+    writeTemperatureToDb(m_temperature);
    
     if(isTemperatureTooHigh()){
         // ui->label_printer_status->setText("Temperature= " + QString::number(temperature, 'f', 2) + " is too high")

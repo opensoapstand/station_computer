@@ -1,0 +1,20 @@
+page_select_product->label_product_1_type,{"x":50, "y":100, "h":553}
+page_select_product->label_product_2_type,{"x":550, "y":400, "w":445, "h":553,"visible":false}
+
+#[
+#    {
+#        "page_and_name": "page_select_product->label_product_1_type",
+#        "x": 100,
+#        "y": 150
+#    },
+#    {
+#        "page_and_name": "page_select_product->label_product_2_type",
+#        "x": 200,
+#        "y": 250
+#    },
+#    {
+#        "page_and_name": "page_select_product->label_product_3_type",
+#        "x": 300,
+#        "y": 350
+#    }
+#]

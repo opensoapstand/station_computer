@@ -148,12 +148,9 @@ int main(int argc, char *argv[])
 
     p_page_idle->loadDynamicContent();
 
-    
-
-    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_IDLE_BACKGROUND_PATH));
-
     qDebug() << "Check image paths.... (all paths resolved if nothing shows up).";
 
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_IDLE_BACKGROUND_PATH));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_IDLE_BACKGROUND_PATH));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_IDLE_PRODUCTS_BACKGROUND_PATH));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_END_BACKGROUND_PATH));

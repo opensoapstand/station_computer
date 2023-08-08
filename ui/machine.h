@@ -128,6 +128,10 @@ public:
 
     df_util *dfUtility;
 
+    QJsonObject m_propertiesObject;
+    // QStringList getChildNames(QObject *parent);
+
+    void loadElementPropertiesFile();
 
 public slots:
 

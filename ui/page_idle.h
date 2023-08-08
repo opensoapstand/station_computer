@@ -65,6 +65,7 @@ public:
 
     void setSelectedProduct(uint8_t slot);
     product *getSelectedProduct();
+    QStringList getChildNames(QObject *parent);
 
     product products[SLOT_COUNT];
     product *selectedProduct;
@@ -106,6 +107,8 @@ public:
     int _pollTemperatureTimerTimeoutSec;
 
     void checkReceiptPrinterStatus();
+
+    void applyPropertiesToQWidget(QWidget* widget);
 
 private slots:
     void on_pushButton_to_select_product_page_clicked();

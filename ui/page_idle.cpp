@@ -21,6 +21,7 @@
 #include "product.h"
 #include "dbmanager.h"
 
+#include <QStringList>
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
 // #include <QMainWindow>
@@ -508,6 +509,7 @@ QString page_idle::getTemplateTextByPage(QWidget *page, QString identifier)
     return getTemplateText(searchString);
 }
 
+
 QString page_idle::getTemplateText(QString textName_to_find)
 {
 
@@ -539,6 +541,39 @@ QString page_idle::getTemplateText(QString textName_to_find)
     return retval;
 }
 
+void page_idle::applyPropertiesToQWidget(QWidget* widget){
+    // get name and page from element ()
+    // foreach (QObject *element, allElements) {
+    QString combinedName = getCombinedElementPageAndName(widget);
+
+    QStringList elementNames = thisMachine.m_propertiesObject.keys();
+
+        qDebug()<< "TODODODODODO TOD DO   ---> parse the files correctly. maybe in a similar layout as the texts.csv file!!!";
+
+    for (const QString &name : elementNames) {
+        qDebug() << "Element Name: " << name;
+    }
+    
+    if (elementNames.contains(combinedName)) {
+        qDebug()<< "found!!!";
+        // find the element name in the json object
+        QJsonObject elementProperties = thisMachine.m_propertiesObject[combinedName].toObject();
+
+        // Apply properties to the element
+        if (elementProperties.contains("x")) {
+            int x = elementProperties["x"].toInt();
+             widget->setGeometry(x, widget->y(), widget->width(), widget->height()); 
+            
+        }
+        if (elementProperties.contains("y")) {
+            int y = elementProperties["y"].toInt();
+             widget->setGeometry(widget->x(),y, widget->width(), widget->height()); 
+        }
+    }
+}
+
+
+
 void page_idle::loadTextsFromTemplateCsv()
 {
     qDebug() << "Load dynamic texts from template csv";
@@ -566,7 +601,7 @@ void page_idle::loadTextsFromCsv(QString csv_path, std::map<QString, QString> *d
             {
                 // qDebug() << QString::fromStdString(line);
 
-                std::size_t space_pos = line.find(',');
+                std::size_t space_pos = line.find(','); // left of , is the element name, right is its text
                 if (space_pos != std::string::npos)
                 {
                     std::string word = line.substr(0, space_pos);
@@ -589,4 +624,24 @@ void page_idle::loadTextsFromCsv(QString csv_path, std::map<QString, QString> *d
     {
         qDebug() << "Texts file path could not be opened: " + csv_path;
     }
+}
+
+
+QStringList page_idle::getChildNames(QObject *parent)
+{
+    QStringList childNames;
+
+    if (!parent)
+    {
+        qDebug() << "Invalid parent object.";
+        return childNames;
+    }
+
+    QList<QObject *> allChildren = parent->findChildren<QObject *>();
+
+    foreach (QObject *child, allChildren) {
+        childNames.append(child->objectName());
+    }
+
+    return childNames;
 }

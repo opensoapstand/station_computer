@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <QFileInfo>
 
+
 static QPointer<QFile> file_out = nullptr;
 
 void df_util::warnIfPathDoesNotExist(QString path)
@@ -178,6 +179,7 @@ void df_util::write_to_file(QString path, QString data)
     out << data << "\n";
     file.close();
 }
+
 
 void df_util::send_to_FSM()
 {

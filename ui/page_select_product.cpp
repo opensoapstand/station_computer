@@ -20,6 +20,8 @@
 
 #include "page_product.h"
 #include "page_idle.h"
+#include "df_util.h"
+
 
 // CTOR
 page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
@@ -71,7 +73,6 @@ void page_select_product::setPage(page_product *p_page_product, page_idle_produc
     this->p_page_idle = pageIdle;
     this->p_page_maintenance = pageMaintenance;
     this->p_page_help = pageHelp;
-
 }
 
 // DTOR
@@ -125,6 +126,40 @@ void page_select_product::showEvent(QShowEvent *event)
     _productPageTimeoutSec = 15;
 
     this->raise();
+
+
+    QStringList all_page_elements = p_page_idle->getChildNames(ui->pushButton_to_idle->parentWidget());
+
+
+    foreach (const QString &childName, all_page_elements) {
+        qDebug() << "Child name:" << childName;
+    }
+
+
+    QList<QObject *> allChildren = ui->pushButton_to_idle->parentWidget()->findChildren<QObject *>();
+
+    foreach (QObject *child, allChildren) {
+        
+        // childNames.append(child->objectName());
+        // child->objectName();
+
+        QWidget *widget = qobject_cast<QWidget *>(child);
+        if (widget) {
+
+            QString combinedName = p_page_idle->getCombinedElementPageAndName(widget);
+            qDebug() << combinedName;
+            p_page_idle->applyPropertiesToQWidget(widget);
+
+            // widget->setGeometry(500, widget->y(), widget->width(), widget->height()); // set all elements to x 500
+
+        } else {
+            // The object is not a QWidget or the cast failed
+        }
+
+
+    }
+
+
 }
 
 void page_select_product::resizeEvent(QResizeEvent *event)

@@ -165,6 +165,8 @@ public:
     void send_command_to_FSM(QString command);
     void set_message_to_send_to_FSM(QString msg);
 
+    static QJsonObject parseJsonString(QString jsonString);
+
     bool m_IsSendingFSM;
 
     QString send_msg;

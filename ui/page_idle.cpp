@@ -28,6 +28,12 @@
 #include <QtWidgets>
 #include <QtMultimediaWidgets>
 
+#include <QFileInfo>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonParseError>
+#include <QDebug>
+
 //    #define PLAY_VIDEO
 // CTOR
 
@@ -551,26 +557,68 @@ void page_idle::applyPropertiesToQWidget(QWidget* widget){
 
     auto it = elementDynamicPropertiesMap_default.find(combinedName);
     QString retval;
+    QString jsonString;
+    bool valid = true;
+
     if (it != elementDynamicPropertiesMap_default.end())
     {
-        qDebug() << "Word found! Sentence: " << it->second ;
-        retval = it->second;
+        qDebug() << "element name found! json string: " << it->second ;
+        jsonString = it->second;
     }
     else
     {
         it = elementDynamicPropertiesMap_default.find(combinedName);
         if (it != elementDynamicPropertiesMap_default.end())
         {
-            retval = it->second;
+            jsonString = it->second;
         }
         else
         {
-            qDebug() << "No template text value found for: " + combinedName;
+            // qDebug() << "No template text value found for: " + combinedName;
             retval = combinedName;
+            valid = false;
         }
     }
 
-    
+    if (!valid){
+        // return retval;
+        return;
+    }
+    // QString jsonString = "{\"x\":550, \"y\":400, \"w\":445, \"h\":553,\"visible\":false}";
+
+    QJsonObject jsonObject = df_util::parseJsonString(jsonString);
+
+
+    if (jsonObject.contains("x")) {
+        QJsonValue xValue = jsonObject.value("x");
+         int x = xValue.toInt();
+        qDebug() << "x found  " << x;
+        qDebug() << "x orig:   " << widget->x();
+         widget->setGeometry( x, widget->y(), widget->width(), widget->height()); 
+
+
+        // if (xValue.isDouble()) {
+        //     double xDouble = xValue.toDouble();
+        // qDebug() << "x found as double! " ;
+        //     // Use the double value of "x" as needed
+        // } else if (xValue.isString()) {
+        // qDebug() << "x found as string! "  ;
+        //     QString xString = xValue.toString();
+        //     // Use the string value of "x" as needed
+        // } else if (xValue.isNumeric()) {
+        // qDebug() << "x found as int! " ;
+        //     QString x = xValue.toInt();
+        //     widget->setGeometry(x, widget->y(), widget->width(), widget->height()); 
+        // } else {
+        //     // Handle other data types if necessary
+        // }
+    } else {
+        qDebug() << "x not found  " ;
+        // The key "x" does not exist in the JSON object
+        // Handle this case as needed
+    }
+
+
     // // \n values in the csv file get automatically escaped. We need to deescape them.
     // retval.replace("\\n", "\n");
 

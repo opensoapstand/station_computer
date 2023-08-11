@@ -2,8 +2,12 @@
 #include "includefiles.h"
 #include <sys/time.h>
 #include <stdio.h>
-#include <QFileInfo>
 
+#include <QFileInfo>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonParseError>
+#include <QDebug>
 
 static QPointer<QFile> file_out = nullptr;
 
@@ -213,4 +217,23 @@ void df_util::send_to_FSM()
 
 void df_util::displayError(QAbstractSocket::SocketError socketError)
 {
+}
+
+QJsonObject df_util::parseJsonString(QString jsonString)
+// QJsonObject df_util::parseJsonString(const QString &jsonString)
+{
+    QJsonParseError jsonParseError;
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonString.toUtf8(), &jsonParseError);
+
+    if (jsonParseError.error != QJsonParseError::NoError) {
+        qWarning() << "JSON parse error:" << jsonParseError.errorString();
+        return QJsonObject();
+    }
+
+    if (jsonDoc.isObject()) {
+        return jsonDoc.object();
+    } else {
+        qWarning() << "Invalid JSON object format";
+        return QJsonObject();
+    }
 }

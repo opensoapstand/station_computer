@@ -601,11 +601,11 @@ void page_idle::loadTextsFromCsv(QString csv_path, std::map<QString, QString> *d
             {
                 // qDebug() << QString::fromStdString(line);
 
-                std::size_t space_pos = line.find(','); // left of , is the element name, right is its text
-                if (space_pos != std::string::npos)
+                std::size_t delimiter_pos = line.find(','); // left of , is the element name, right is its text
+                if (delimiter_pos != std::string::npos)
                 {
-                    std::string word = line.substr(0, space_pos);
-                    std::string sentence = line.substr(space_pos + 1);
+                    std::string word = line.substr(0, delimiter_pos);
+                    std::string sentence = line.substr(delimiter_pos + 1);
                     QString qword = QString::fromStdString(word);
                     QString qsentence = QString::fromStdString(sentence);
                     (*dictionary)[qword] = qsentence;

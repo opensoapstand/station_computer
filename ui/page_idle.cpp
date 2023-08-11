@@ -213,6 +213,7 @@ void page_idle::loadDynamicContent()
     }
     loadTextsFromTemplateCsv(); // dynamic content (text by template)
     loadTextsFromDefaultCsv();  // dynamic styling (css by template)
+    loadElementDynamicPropertiesFromDefaultCsv();  // dynamic elements (position, visibility)
 }
 
 void page_idle::changeToIdleProductsIfSet()
@@ -548,31 +549,116 @@ void page_idle::applyPropertiesToQWidget(QWidget* widget){
 
     QStringList elementNames = thisMachine.m_propertiesObject.keys();
 
-        qDebug()<< "TODODODODODO TOD DO   ---> parse the files correctly. maybe in a similar layout as the texts.csv file!!!";
-
-    for (const QString &name : elementNames) {
-        qDebug() << "Element Name: " << name;
+    auto it = elementDynamicPropertiesMap_default.find(combinedName);
+    QString retval;
+    if (it != elementDynamicPropertiesMap_default.end())
+    {
+        qDebug() << "Word found! Sentence: " << it->second ;
+        retval = it->second;
     }
+    else
+    {
+        it = elementDynamicPropertiesMap_default.find(combinedName);
+        if (it != elementDynamicPropertiesMap_default.end())
+        {
+            retval = it->second;
+        }
+        else
+        {
+            qDebug() << "No template text value found for: " + combinedName;
+            retval = combinedName;
+        }
+    }
+
     
-    if (elementNames.contains(combinedName)) {
-        qDebug()<< "found!!!";
-        // find the element name in the json object
-        QJsonObject elementProperties = thisMachine.m_propertiesObject[combinedName].toObject();
+    // // \n values in the csv file get automatically escaped. We need to deescape them.
+    // retval.replace("\\n", "\n");
 
-        // Apply properties to the element
-        if (elementProperties.contains("x")) {
-            int x = elementProperties["x"].toInt();
-             widget->setGeometry(x, widget->y(), widget->width(), widget->height()); 
+    // return retval;
+
+
+
+
+
+
+
+
+    // // qDebug()<< "TODODODODODO TOD DO   ---> parse the files correctly. maybe in a similar layout as the texts.csv file!!!";
+
+    // for (const QString &name : elementNames) {
+    //     qDebug() << "Element Name: " << name;
+    // }
+    
+    // if (elementNames.contains(combinedName)) {
+    //     qDebug()<< "---------->found!!!";
+    //     // find the element name in the json object
+    //     QJsonObject elementProperties = thisMachine.m_propertiesObject[combinedName].toObject();
+
+    //     // Apply properties to the element
+    //     if (elementProperties.contains("x")) {
+    //         int x = elementProperties["x"].toInt();
+    //          widget->setGeometry(x, widget->y(), widget->width(), widget->height()); 
             
-        }
-        if (elementProperties.contains("y")) {
-            int y = elementProperties["y"].toInt();
-             widget->setGeometry(widget->x(),y, widget->width(), widget->height()); 
-        }
-    }
+    //     }
+    //     if (elementProperties.contains("y")) {
+    //         int y = elementProperties["y"].toInt();
+    //          widget->setGeometry(widget->x(),y, widget->width(), widget->height()); 
+    //     }
+    // }else{
+    //     qDebug()<< "NOT found!!!";
+
+    // }
 }
+// void page_idle::applyPropertiesToQWidget(QWidget* widget){
+//     // get name and page from element ()
+//     // foreach (QObject *element, allElements) {
+//     QString combinedName = getCombinedElementPageAndName(widget);
+
+//     QStringList elementNames = thisMachine.m_propertiesObject.keys();
+
+//     // qDebug()<< "TODODODODODO TOD DO   ---> parse the files correctly. maybe in a similar layout as the texts.csv file!!!";
+
+//     for (const QString &name : elementNames) {
+//         qDebug() << "Element Name: " << name;
+//     }
+    
+//     if (elementNames.contains(combinedName)) {
+//         qDebug()<< "---------->found!!!";
+//         // find the element name in the json object
+//         QJsonObject elementProperties = thisMachine.m_propertiesObject[combinedName].toObject();
+
+//         // Apply properties to the element
+//         if (elementProperties.contains("x")) {
+//             int x = elementProperties["x"].toInt();
+//              widget->setGeometry(x, widget->y(), widget->width(), widget->height()); 
+            
+//         }
+//         if (elementProperties.contains("y")) {
+//             int y = elementProperties["y"].toInt();
+//              widget->setGeometry(widget->x(),y, widget->width(), widget->height()); 
+//         }
+//     }else{
+//         qDebug()<< "NOT found!!!";
+
+//     }
+// }
 
 
+void page_idle::loadElementDynamicPropertiesFromDefaultCsv()
+{
+    qDebug() << "Load dynamic properties from default csv";
+    QString name = UI_ELEMENT_PROPERTIES_PATH;
+    QString csv_dynamic_properties_default_path = thisMachine.getDefaultTemplatePathFromName(name);
+    loadTextsFromCsv(csv_dynamic_properties_default_path, &elementDynamicPropertiesMap_default);
+
+
+    // Print the word-sentence mapping
+        for (const auto &pair : elementDynamicPropertiesMap_default)
+        {
+            qDebug() << pair.first << ": " << pair.second;
+        }
+        
+}
 
 void page_idle::loadTextsFromTemplateCsv()
 {
@@ -580,6 +666,7 @@ void page_idle::loadTextsFromTemplateCsv()
     QString csv_path = thisMachine.getTemplatePathFromName(UI_TEXTS_CSV_PATH);
     loadTextsFromCsv(csv_path, &textNameToTextMap_template);
 }
+
 
 void page_idle::loadTextsFromDefaultCsv()
 {

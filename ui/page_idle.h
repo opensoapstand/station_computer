@@ -97,6 +97,7 @@ public:
     QString getTemplateText(QString textName_to_find);
     void loadTextsFromTemplateCsv();
     void loadTextsFromDefaultCsv();
+    void loadElementDynamicPropertiesFromDefaultCsv();
     void registerUserInteraction(QWidget *page);
 
     void loadTextsFromCsv(QString csv_path, std::map<QString, QString> *dictionary);
@@ -120,6 +121,7 @@ private slots:
 private:
     std::map<QString, QString> textNameToTextMap_template;
     std::map<QString, QString> textNameToTextMap_default;
+    std::map<QString, QString> elementDynamicPropertiesMap_default;
 
     void hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createNewSessionId);
 

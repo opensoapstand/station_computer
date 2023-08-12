@@ -54,11 +54,12 @@ void page_init::showEvent(QShowEvent *event)
 {
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
+    
+    // template content
+    p_page_idle->loadDynamicContent();
 
-    // load template texts
-    p_page_idle->loadTextsFromTemplateCsv();
-    p_page_idle->loadTextsFromDefaultCsv();
-
+    p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+    
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_INIT_BACKGROUND_IMAGE_PATH);
 
     initIdleTimer->start(1000);

@@ -97,7 +97,7 @@ public:
     QString getTemplateText(QString textName_to_find);
     void loadTextsFromTemplateCsv();
     void loadTextsFromDefaultCsv();
-    void loadElementDynamicPropertiesFromDefaultCsv();
+    void loadElementDynamicPropertiesFromTemplate();
     void registerUserInteraction(QWidget *page);
 
     void loadTextsFromCsv(QString csv_path, std::map<QString, QString> *dictionary);
@@ -110,6 +110,7 @@ public:
     void checkReceiptPrinterStatus();
 
     void applyPropertiesToQWidget(QWidget* widget);
+    void applyDynamicPropertiesFromTemplateToWidgetChildren(QWidget* widget);
 
 private slots:
     void on_pushButton_to_select_product_page_clicked();

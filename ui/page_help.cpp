@@ -54,8 +54,9 @@ void page_help::showEvent(QShowEvent *event)
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
+    p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+    
     QString styleSheet = p_page_idle->getCSS(PAGE_HELP_CSS);
-
     ui->pushButton_to_idle->setProperty("class", "buttonNoBorder");
     ui->pushButton_to_transactions->setProperty("class", "buttonNoBorder");
     ui->pushButton_resetTimeout->setProperty("class", "buttonTransparent");

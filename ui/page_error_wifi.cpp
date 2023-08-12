@@ -53,6 +53,8 @@ void page_error_wifi::showEvent(QShowEvent *event)
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
 
     QWidget::showEvent(event);
+    p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+    
     QString styleSheet = p_page_idle->getCSS(PAGE_ERROR_WIFI_CSS);
     ui->label_error_message->setStyleSheet(styleSheet);
     ui->label_oops->setStyleSheet(styleSheet);

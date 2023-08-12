@@ -50,13 +50,14 @@ page_end::~page_end()
 
 void page_end::showEvent(QShowEvent *event)
 {
-
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
-
-    p_page_idle->setTemplateTextToObject(ui->pushButton_contact);
+    
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_END_BACKGROUND_PATH);
+    p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
 
     QString styleSheet = p_page_idle->getCSS(PAGE_END_CSS);
+    p_page_idle->setTemplateTextToObject(ui->pushButton_contact);
 
     ui->pushButton_to_idle->setStyleSheet(styleSheet);
     ui->label_message->setStyleSheet(styleSheet);
@@ -76,7 +77,6 @@ void page_end::showEvent(QShowEvent *event)
     ui->label_customer_logo->hide();
 
     p_page_idle->addCustomerLogoToLabel(ui->label_customer_logo);
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_END_BACKGROUND_PATH);
 
     QString paymentMethod = p_page_idle->selectedProduct->getPaymentMethod();
 

@@ -84,12 +84,13 @@ page_idle::~page_idle()
 
 void page_idle::showEvent(QShowEvent *event)
 {
-    thisMachine.resetSessionId();
-    thisMachine.dispenseButtonLightsAnimateState(true);
 
     registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
     loadDynamicContent();
+   
+    thisMachine.resetSessionId();
+    thisMachine.dispenseButtonLightsAnimateState(true);
     thisMachine.setRole(UserRole::user);
 
     // everything coupon is reset when idle page is reached.
@@ -100,6 +101,8 @@ void page_idle::showEvent(QShowEvent *event)
 #ifndef PLAY_VIDEO
     setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
 #endif
+    applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+    
 
     QString styleSheet = getCSS(PAGE_IDLE_CSS);
     ui->pushButton_to_select_product_page->setStyleSheet(styleSheet);
@@ -219,7 +222,7 @@ void page_idle::loadDynamicContent()
     }
     loadTextsFromTemplateCsv(); // dynamic content (text by template)
     loadTextsFromDefaultCsv();  // dynamic styling (css by template)
-    loadElementDynamicPropertiesFromDefaultCsv();  // dynamic elements (position, visibility)
+    loadElementDynamicPropertiesFromTemplate();  // dynamic elements (position, visibility)
 }
 
 void page_idle::changeToIdleProductsIfSet()
@@ -548,6 +551,21 @@ QString page_idle::getTemplateText(QString textName_to_find)
     return retval;
 }
 
+void page_idle::applyDynamicPropertiesFromTemplateToWidgetChildren(QWidget* widget){
+    // in reality, send a page widget as argument. All the childeren will be checked. (i.e. buttons, labels,...)
+    QList<QObject *> allChildren = widget->findChildren<QObject *>(); 
+    foreach (QObject *child, allChildren) {
+        QWidget *widget = qobject_cast<QWidget *>(child);
+        if (widget) {
+            // not all child element are widgets. 
+
+            QString combinedName = getCombinedElementPageAndName(widget);
+            // qDebug() << combinedName;
+            applyPropertiesToQWidget(widget);
+        }
+    }
+}
+
 void page_idle::applyPropertiesToQWidget(QWidget* widget){
     QString combinedName = getCombinedElementPageAndName(widget);
 
@@ -620,115 +638,20 @@ void page_idle::applyPropertiesToQWidget(QWidget* widget){
 
         widget->setVisible(isVisible); 
     }
-    //     // if (xValue.isDouble()) {
-    //     //     double xDouble = xValue.toDouble();
-    //     // qDebug() << "x found as double! " ;
-    //     //     // Use the double value of "x" as needed
-    //     // } else if (xValue.isString()) {
-    //     // qDebug() << "x found as string! "  ;
-    //     //     QString xString = xValue.toString();
-    //     //     // Use the string value of "x" as needed
-    //     // } else if (xValue.isNumeric()) {
-    //     // qDebug() << "x found as int! " ;
-    //     //     QString x = xValue.toInt();
-    //     //     widget->setGeometry(x, widget->y(), widget->width(), widget->height()); 
-    //     // } else {
-    //     //     // Handle other data types if necessary
-    //     // }
-    // } else {
-    //     qDebug() << "x not found  " ;
-    //     // The key "x" does not exist in the JSON object
-    //     // Handle this case as needed
-    // }
-
-
-    // // \n values in the csv file get automatically escaped. We need to deescape them.
-    // retval.replace("\\n", "\n");
-
-    // return retval;
-
-
-
-
-
-
-
-
-    // // qDebug()<< "TODODODODODO TOD DO   ---> parse the files correctly. maybe in a similar layout as the texts.csv file!!!";
-
-    // for (const QString &name : elementNames) {
-    //     qDebug() << "Element Name: " << name;
-    // }
-    
-    // if (elementNames.contains(combinedName)) {
-    //     qDebug()<< "---------->found!!!";
-    //     // find the element name in the json object
-    //     QJsonObject elementProperties = thisMachine.m_propertiesObject[combinedName].toObject();
-
-    //     // Apply properties to the element
-    //     if (elementProperties.contains("x")) {
-    //         int x = elementProperties["x"].toInt();
-    //          widget->setGeometry(x, widget->y(), widget->width(), widget->height()); 
-            
-    //     }
-    //     if (elementProperties.contains("y")) {
-    //         int y = elementProperties["y"].toInt();
-    //          widget->setGeometry(widget->x(),y, widget->width(), widget->height()); 
-    //     }
-    // }else{
-    //     qDebug()<< "NOT found!!!";
-
-    // }
+   
 }
-// void page_idle::applyPropertiesToQWidget(QWidget* widget){
-//     // get name and page from element ()
-//     // foreach (QObject *element, allElements) {
-//     QString combinedName = getCombinedElementPageAndName(widget);
 
-//     QStringList elementNames = thisMachine.m_propertiesObject.keys();
-
-//     // qDebug()<< "TODODODODODO TOD DO   ---> parse the files correctly. maybe in a similar layout as the texts.csv file!!!";
-
-//     for (const QString &name : elementNames) {
-//         qDebug() << "Element Name: " << name;
-//     }
-    
-//     if (elementNames.contains(combinedName)) {
-//         qDebug()<< "---------->found!!!";
-//         // find the element name in the json object
-//         QJsonObject elementProperties = thisMachine.m_propertiesObject[combinedName].toObject();
-
-//         // Apply properties to the element
-//         if (elementProperties.contains("x")) {
-//             int x = elementProperties["x"].toInt();
-//              widget->setGeometry(x, widget->y(), widget->width(), widget->height()); 
-            
-//         }
-//         if (elementProperties.contains("y")) {
-//             int y = elementProperties["y"].toInt();
-//              widget->setGeometry(widget->x(),y, widget->width(), widget->height()); 
-//         }
-//     }else{
-//         qDebug()<< "NOT found!!!";
-
-//     }
-// }
-
-
-void page_idle::loadElementDynamicPropertiesFromDefaultCsv()
+void page_idle::loadElementDynamicPropertiesFromTemplate()
 {
-    qDebug() << "Load dynamic properties from default csv";
-    QString name = UI_ELEMENT_PROPERTIES_PATH;
-    QString csv_dynamic_properties_default_path = thisMachine.getDefaultTemplatePathFromName(name);
+    qDebug() << "Load dynamic properties from template file";
+    QString csv_dynamic_properties_default_path = thisMachine.getTemplatePathFromName(UI_ELEMENT_PROPERTIES_PATH);
     loadTextsFromCsv(csv_dynamic_properties_default_path, &elementDynamicPropertiesMap_default);
 
-
     // Print the word-sentence mapping
-        for (const auto &pair : elementDynamicPropertiesMap_default)
-        {
-            qDebug() << pair.first << ": " << pair.second;
-        }
-        
+    // for (const auto &pair : elementDynamicPropertiesMap_default)
+    // {
+    //     qDebug() << pair.first << ": " << pair.second;
+    // }
 }
 
 void page_idle::loadTextsFromTemplateCsv()

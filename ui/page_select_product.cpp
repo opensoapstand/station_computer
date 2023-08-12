@@ -27,8 +27,7 @@
 page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
                                                             ui(new Ui::page_select_product)
 {
-    ui->setupUi(this);
-    // mainWidget = ui->setupUi(this);
+    ui->setupUi(this); // "this" is the page, the centralWidget, the main widget of which all other widgets are children.
 
     pushButtons_product_select[0] = ui->pushButton_selection1;
     pushButtons_product_select[1] = ui->pushButton_selection2;
@@ -84,13 +83,20 @@ page_select_product::~page_select_product()
 
 void page_select_product::showEvent(QShowEvent *event)
 {
-    p_page_idle->thisMachine.dispenseButtonLightsAnimateState(false);
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
-    QString full_path = p_page_idle->thisMachine.getTemplatePathFromName(IMAGE_BUTTON_HELP);
-    p_page_idle->addPictureToLabel(ui->label_help, full_path);
 
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
+
+    p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+    
+    p_page_idle->thisMachine.dispenseButtonLightsAnimateState(false);
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
+    p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+    
+    QString full_path = p_page_idle->thisMachine.getTemplatePathFromName(IMAGE_BUTTON_HELP);
+    p_page_idle->addPictureToLabel(ui->label_help, full_path);
+    
+
 
     QString styleSheet = p_page_idle->getCSS(PAGE_SELECT_PRODUCT_CSS);
     ui->pushButton_to_maintenance->setStyleSheet(styleSheet);
@@ -127,38 +133,7 @@ void page_select_product::showEvent(QShowEvent *event)
     _productPageTimeoutSec = 15;
 
     this->raise();
-
-
-    // QStringList all_page_elements = p_page_idle->getChildNames(ui->pushButton_to_idle->parentWidget());
-    // foreach (const QString &childName, all_page_elements) {
-    //     qDebug() << "Child name:" << childName;
-    // }
-
-    // QList<QObject *> allChildren = ui->pushButton_to_idle->parentWidget()->findChildren<QObject *>();
-    QList<QObject *> allChildren = this->findChildren<QObject *>(); // or ui->centralWidget()
-
-    foreach (QObject *child, allChildren) {
-        
-        // childNames.append(child->objectName());
-        // child->objectName();
-
-        QWidget *widget = qobject_cast<QWidget *>(child);
-        if (widget) {
-
-            QString combinedName = p_page_idle->getCombinedElementPageAndName(widget);
-            qDebug() << combinedName;
-            p_page_idle->applyPropertiesToQWidget(widget);
-
-            // widget->setGeometry(500, widget->y(), widget->width(), widget->height()); // set all elements to x 500
-
-        } else {
-            // The object is not a QWidget or the cast failed
-        }
-
-
-    }
-
-
+    
 }
 
 void page_select_product::resizeEvent(QResizeEvent *event)

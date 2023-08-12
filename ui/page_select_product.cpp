@@ -20,12 +20,14 @@
 
 #include "page_product.h"
 #include "page_idle.h"
+#include "df_util.h"
+
 
 // CTOR
 page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
                                                             ui(new Ui::page_select_product)
 {
-    ui->setupUi(this);
+    ui->setupUi(this); // "this" is the page, the centralWidget, the main widget of which all other widgets are children.
 
     pushButtons_product_select[0] = ui->pushButton_selection1;
     pushButtons_product_select[1] = ui->pushButton_selection2;
@@ -71,7 +73,6 @@ void page_select_product::setPage(page_product *p_page_product, page_idle_produc
     this->p_page_idle = pageIdle;
     this->p_page_maintenance = pageMaintenance;
     this->p_page_help = pageHelp;
-
 }
 
 // DTOR
@@ -82,13 +83,19 @@ page_select_product::~page_select_product()
 
 void page_select_product::showEvent(QShowEvent *event)
 {
-    p_page_idle->thisMachine.dispenseButtonLightsAnimateState(false);
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
-    QString full_path = p_page_idle->thisMachine.getTemplatePathFromName(IMAGE_BUTTON_HELP);
-    p_page_idle->addPictureToLabel(ui->label_help, full_path);
 
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
+
+    p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+    
+    p_page_idle->thisMachine.dispenseButtonLightsAnimateState(false);
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
+    
+    QString full_path = p_page_idle->thisMachine.getTemplatePathFromName(IMAGE_BUTTON_HELP);
+    p_page_idle->addPictureToLabel(ui->label_help, full_path);
+    
+
 
     QString styleSheet = p_page_idle->getCSS(PAGE_SELECT_PRODUCT_CSS);
     ui->pushButton_to_maintenance->setStyleSheet(styleSheet);
@@ -125,6 +132,7 @@ void page_select_product::showEvent(QShowEvent *event)
     _productPageTimeoutSec = 15;
 
     this->raise();
+    
 }
 
 void page_select_product::resizeEvent(QResizeEvent *event)

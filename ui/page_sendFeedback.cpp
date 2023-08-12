@@ -89,9 +89,11 @@ page_sendFeedback::~page_sendFeedback()
 
 void page_sendFeedback::showEvent(QShowEvent *event)
 {
-    QWidget::showEvent(event);
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+    QWidget::showEvent(event);
 
+    p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+    
     p_page_idle->setTemplateTextToObject(ui->pushButton_previous_page);
     p_page_idle->setTemplateTextToObject(ui->label_select_problem);
     p_page_idle->setTemplateTextToObject(ui->label_still_cant_find);

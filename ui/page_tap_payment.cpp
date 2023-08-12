@@ -147,6 +147,8 @@ void page_tap_payment::showEvent(QShowEvent *event)
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
+    p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+    
     QString styleSheet = p_page_idle->getCSS(PAGE_TAP_PAYMENT_CSS);
 
     ui->pushButton_previous_page->setStyleSheet(styleSheet);

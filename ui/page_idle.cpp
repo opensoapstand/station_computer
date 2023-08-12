@@ -21,11 +21,18 @@
 #include "product.h"
 #include "dbmanager.h"
 
+#include <QStringList>
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
 // #include <QMainWindow>
 #include <QtWidgets>
 #include <QtMultimediaWidgets>
+
+#include <QFileInfo>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonParseError>
+#include <QDebug>
 
 //    #define PLAY_VIDEO
 // CTOR
@@ -77,12 +84,13 @@ page_idle::~page_idle()
 
 void page_idle::showEvent(QShowEvent *event)
 {
-    thisMachine.resetSessionId();
-    thisMachine.dispenseButtonLightsAnimateState(true);
 
     registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
     loadDynamicContent();
+   
+    thisMachine.resetSessionId();
+    thisMachine.dispenseButtonLightsAnimateState(true);
     thisMachine.setRole(UserRole::user);
 
     // everything coupon is reset when idle page is reached.
@@ -93,6 +101,8 @@ void page_idle::showEvent(QShowEvent *event)
 #ifndef PLAY_VIDEO
     setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
 #endif
+    applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+    
 
     QString styleSheet = getCSS(PAGE_IDLE_CSS);
     ui->pushButton_to_select_product_page->setStyleSheet(styleSheet);
@@ -212,6 +222,9 @@ void page_idle::loadDynamicContent()
     }
     loadTextsFromTemplateCsv(); // dynamic content (text by template)
     loadTextsFromDefaultCsv();  // dynamic styling (css by template)
+    loadElementDynamicPropertiesFromTemplate();  // dynamic elements (position, visibility)
+    loadElementDynamicPropertiesFromDefaultTemplate();  // dynamic elements (position, visibility)
+    
 }
 
 void page_idle::changeToIdleProductsIfSet()
@@ -508,6 +521,7 @@ QString page_idle::getTemplateTextByPage(QWidget *page, QString identifier)
     return getTemplateText(searchString);
 }
 
+
 QString page_idle::getTemplateText(QString textName_to_find)
 {
 
@@ -539,6 +553,119 @@ QString page_idle::getTemplateText(QString textName_to_find)
     return retval;
 }
 
+void page_idle::applyDynamicPropertiesFromTemplateToWidgetChildren(QWidget* widget){
+    // in reality, send a page widget as argument. All the childeren will be checked. (i.e. buttons, labels,...)
+    QList<QObject *> allChildren = widget->findChildren<QObject *>(); 
+    foreach (QObject *child, allChildren) {
+        QWidget *widget = qobject_cast<QWidget *>(child);
+        if (widget) {
+            // not all child element are widgets. 
+
+            QString combinedName = getCombinedElementPageAndName(widget);
+            // qDebug() << combinedName;
+            applyPropertiesToQWidget(widget);
+        }
+    }
+}
+
+void page_idle::applyPropertiesToQWidget(QWidget* widget){
+
+    // example of line in text file with properties:
+    // page_idle->label_customer_logo,{"x":570, "y":1580, "width":351, "height":211,"isVisibleAtLoad":true}
+
+    QString combinedName = getCombinedElementPageAndName(widget);
+
+    auto it = elementDynamicPropertiesMap_template.find(combinedName);
+    QString jsonString;
+    bool valid = true;
+
+    if (it != elementDynamicPropertiesMap_template.end())
+    {
+        qDebug() << "element " << combinedName << "found in template. json string: " << it->second ;
+        jsonString = it->second;
+    }
+    else
+    {
+        it = elementDynamicPropertiesMap_default.find(combinedName);
+        if (it != elementDynamicPropertiesMap_default.end())
+        {
+            qDebug() << "element " << combinedName << "found in default. json string: " << it->second ;
+            jsonString = it->second;
+        }
+        else
+        {
+            // qDebug() << "No template text value found for: " + combinedName;
+            valid = false;
+        }
+    }
+
+    if (!valid){
+        return;
+    }
+    
+    QJsonObject jsonObject = df_util::parseJsonString(jsonString);
+
+    int x= widget->x();
+    int y = widget->y();
+    int width = widget->width();
+    int height = widget->height();
+
+    if (jsonObject.contains("x")) {
+        QJsonValue xValue = jsonObject.value("x");
+        x = xValue.toInt();
+        // qDebug() << "x found  " << x ;
+    }
+    if (jsonObject.contains("y")) {
+        QJsonValue val = jsonObject.value("y");
+        y = val.toInt();
+        // qDebug() << "y found  " << y ;
+    }
+    if (jsonObject.contains("width")) {
+        QJsonValue val = jsonObject.value("width");
+        width = val.toInt();
+        // qDebug() << "width found  " << width ;
+    }
+    if (jsonObject.contains("height")) {
+        QJsonValue val = jsonObject.value("height");
+        height = val.toInt();
+        // qDebug() << "height found  " << height ;
+    }
+    widget->setGeometry( x, y, width, height); 
+
+    if (jsonObject.contains("isVisibleAtLoad")) {
+        QJsonValue val = jsonObject.value("isVisibleAtLoad");
+        bool isVisible = val.toBool();
+        // qDebug() << "visibility found  " << isVisible ;
+
+        widget->setVisible(isVisible); 
+    }
+}
+
+void page_idle::loadElementDynamicPropertiesFromDefaultTemplate()
+{
+    qDebug() << "Load dynamic properties from default template file";
+    QString path = thisMachine.getDefaultTemplatePathFromName(UI_ELEMENT_PROPERTIES_PATH);
+    loadTextsFromCsv(path, &elementDynamicPropertiesMap_default);
+    // Print the word-sentence mapping
+    // for (const auto &pair : elementDynamicPropertiesMap_default)
+    // {
+    //     qDebug() << pair.first << ": " << pair.second;
+    // }
+}
+
+void page_idle::loadElementDynamicPropertiesFromTemplate()
+{
+    qDebug() << "Load dynamic properties from template file";
+    QString path = thisMachine.getTemplatePathFromName(UI_ELEMENT_PROPERTIES_PATH);
+    loadTextsFromCsv(path, &elementDynamicPropertiesMap_template);
+
+    // Print the word-sentence mapping
+    // for (const auto &pair : elementDynamicPropertiesMap_default)
+    // {
+    //     qDebug() << pair.first << ": " << pair.second;
+    // }
+}
+
 void page_idle::loadTextsFromTemplateCsv()
 {
     qDebug() << "Load dynamic texts from template csv";
@@ -546,11 +673,11 @@ void page_idle::loadTextsFromTemplateCsv()
     loadTextsFromCsv(csv_path, &textNameToTextMap_template);
 }
 
+
 void page_idle::loadTextsFromDefaultCsv()
 {
     qDebug() << "Load dynamic texts from default csv";
-    QString name = UI_TEXTS_CSV_PATH;
-    QString csv_default_template_path = thisMachine.getDefaultTemplatePathFromName(name);
+    QString csv_default_template_path = thisMachine.getDefaultTemplatePathFromName(UI_TEXTS_CSV_PATH);
     loadTextsFromCsv(csv_default_template_path, &textNameToTextMap_default);
 }
 
@@ -566,11 +693,11 @@ void page_idle::loadTextsFromCsv(QString csv_path, std::map<QString, QString> *d
             {
                 // qDebug() << QString::fromStdString(line);
 
-                std::size_t space_pos = line.find(',');
-                if (space_pos != std::string::npos)
+                std::size_t delimiter_pos = line.find(','); // left of , is the element name, right is its text
+                if (delimiter_pos != std::string::npos)
                 {
-                    std::string word = line.substr(0, space_pos);
-                    std::string sentence = line.substr(space_pos + 1);
+                    std::string word = line.substr(0, delimiter_pos);
+                    std::string sentence = line.substr(delimiter_pos + 1);
                     QString qword = QString::fromStdString(word);
                     QString qsentence = QString::fromStdString(sentence);
                     (*dictionary)[qword] = qsentence;
@@ -589,4 +716,24 @@ void page_idle::loadTextsFromCsv(QString csv_path, std::map<QString, QString> *d
     {
         qDebug() << "Texts file path could not be opened: " + csv_path;
     }
+}
+
+
+QStringList page_idle::getChildNames(QObject *parent)
+{
+    QStringList childNames;
+
+    if (!parent)
+    {
+        qDebug() << "Invalid parent object.";
+        return childNames;
+    }
+
+    QList<QObject *> allChildren = parent->findChildren<QObject *>();
+
+    foreach (QObject *child, allChildren) {
+        childNames.append(child->objectName());
+    }
+
+    return childNames;
 }

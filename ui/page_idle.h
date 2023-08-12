@@ -65,6 +65,7 @@ public:
 
     void setSelectedProduct(uint8_t slot);
     product *getSelectedProduct();
+    QStringList getChildNames(QObject *parent);
 
     product products[SLOT_COUNT];
     product *selectedProduct;
@@ -96,6 +97,8 @@ public:
     QString getTemplateText(QString textName_to_find);
     void loadTextsFromTemplateCsv();
     void loadTextsFromDefaultCsv();
+    void loadElementDynamicPropertiesFromTemplate();
+    void loadElementDynamicPropertiesFromDefaultTemplate();
     void registerUserInteraction(QWidget *page);
 
     void loadTextsFromCsv(QString csv_path, std::map<QString, QString> *dictionary);
@@ -107,6 +110,9 @@ public:
 
     void checkReceiptPrinterStatus();
 
+    void applyPropertiesToQWidget(QWidget* widget);
+    void applyDynamicPropertiesFromTemplateToWidgetChildren(QWidget* widget);
+
 private slots:
     void on_pushButton_to_select_product_page_clicked();
     void onIdlePageTypeSelectorTimerTick();
@@ -117,6 +123,8 @@ private slots:
 private:
     std::map<QString, QString> textNameToTextMap_template;
     std::map<QString, QString> textNameToTextMap_default;
+    std::map<QString, QString> elementDynamicPropertiesMap_default;
+    std::map<QString, QString> elementDynamicPropertiesMap_template;
 
     void hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createNewSessionId);
 

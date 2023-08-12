@@ -102,6 +102,34 @@ QString machine::getTemplateFolder()
     return TEMPLATES_ROOT_PATH + template_name + "/";
 }
 
+void machine::loadElementPropertiesFile(){
+    QString json_path = getTemplatePathFromName(UI_ELEMENT_PROPERTIES_PATH);
+    QFile file(json_path);
+    if (file.open(QIODevice::ReadOnly)) {
+        QByteArray jsonData = file.readAll();
+        QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonData);
+        m_propertiesObject = jsonDoc.object();
+
+        file.close();
+
+        // Now you have the propertiesObject containing properties for listed elements
+    }    
+
+    // QList<QPushButton *> buttonList = centralWidget->findChildren<QPushButton *>();
+
+    // foreach (QPushButton *button, buttonList) {
+    //     qDebug() << "Button text:" << button->text();
+    // }
+
+}
+
+
+// void machine::setExternalPropertiesToWidget(QWidget tmp){
+    
+// }
+
+
+
 void machine::loadProductPropertiesFromProductsFile(QString soapstand_product_number, QString *name, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui)
 {
     QFile file(PRODUCT_DETAILS_TSV_PATH);

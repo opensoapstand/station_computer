@@ -92,6 +92,8 @@ void page_dispenser::showEvent(QShowEvent *event)
     qDebug() << "Selected slot: " << QString::number(p_page_idle->selectedProduct->getSlot());
     QWidget::showEvent(event);
 
+    p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+    
     p_page_idle->setTemplateTextToObject(ui->pushButton_problems);
     p_page_idle->setTemplateTextToObject(ui->label_to_refill);
     p_page_idle->setTemplateTextToObject(ui->label_instructions_container);

@@ -29,6 +29,7 @@
 
 #define PRODUCT_DETAILS_TSV_PATH "/home/df-admin/production/references/products/product_details.tsv"  // https://docs.google.com/spreadsheets/d/17WR2gRyPIDIlGKBy1YKFAqN-Hyw_3VOJ6JCmfcAtjVk/edit#gid=169583479 download as .tsv file
 #define UI_TEXTS_CSV_PATH "ui_texts.csv" 
+#define UI_ELEMENT_PROPERTIES_PATH "ui_element_properties.txt" 
 #define CSV_PRODUCT_COL_ID 0
 #define CSV_PRODUCT_COL_NAME 1
 #define CSV_PRODUCT_COL_TYPE 2
@@ -64,7 +65,6 @@ using namespace std;
 #define PAGE_THANK_YOU_TIMEOUT_SECONDS 7
 #define SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS 3000
 #define QR_PROCESSED_PERIODICAL_CHECK_SECONDS 5
-#define PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS 5
 
 #define CONTAINER_EMPTY_THRESHOLD_ML 2000
 
@@ -164,6 +164,8 @@ public:
 
     void send_command_to_FSM(QString command);
     void set_message_to_send_to_FSM(QString msg);
+
+    static QJsonObject parseJsonString(QString jsonString);
 
     bool m_IsSendingFSM;
 

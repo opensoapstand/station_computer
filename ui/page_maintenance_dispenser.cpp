@@ -64,6 +64,8 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     qDebug() << "Active Slot: " << QString::number(this->p_page_idle->selectedProduct->getSlot());
     QWidget::showEvent(event);
 
+    p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+    
     QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
     p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_pump_enabled_status, "pump_off");
     p_page_idle->setTemplateTextToObject(ui->label_calibration_instructions);

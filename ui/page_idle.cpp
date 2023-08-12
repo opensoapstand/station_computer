@@ -569,9 +569,11 @@ void page_idle::applyDynamicPropertiesFromTemplateToWidgetChildren(QWidget* widg
 }
 
 void page_idle::applyPropertiesToQWidget(QWidget* widget){
-    QString combinedName = getCombinedElementPageAndName(widget);
 
-    // QStringList elementNames = thisMachine.m_propertiesObject.keys();
+    // example of line in text file with properties:
+    // page_idle->label_customer_logo,{"x":570, "y":1580, "width":351, "height":211,"isVisibleAtLoad":true}
+
+    QString combinedName = getCombinedElementPageAndName(widget);
 
     auto it = elementDynamicPropertiesMap_template.find(combinedName);
     QString jsonString;
@@ -598,11 +600,9 @@ void page_idle::applyPropertiesToQWidget(QWidget* widget){
     }
 
     if (!valid){
-        // return retval;
         return;
     }
-    // QString jsonString = "{\"x\":550, \"y\":400, \"w\":445, \"h\":553,\"visible\":false}";
-
+    
     QJsonObject jsonObject = df_util::parseJsonString(jsonString);
 
     int x= widget->x();
@@ -613,33 +613,32 @@ void page_idle::applyPropertiesToQWidget(QWidget* widget){
     if (jsonObject.contains("x")) {
         QJsonValue xValue = jsonObject.value("x");
         x = xValue.toInt();
-        qDebug() << "x found  " << x ;
+        // qDebug() << "x found  " << x ;
     }
     if (jsonObject.contains("y")) {
         QJsonValue val = jsonObject.value("y");
         y = val.toInt();
-        qDebug() << "y found  " << y ;
+        // qDebug() << "y found  " << y ;
     }
     if (jsonObject.contains("width")) {
         QJsonValue val = jsonObject.value("width");
         width = val.toInt();
-        qDebug() << "width found  " << width ;
+        // qDebug() << "width found  " << width ;
     }
     if (jsonObject.contains("height")) {
         QJsonValue val = jsonObject.value("height");
         height = val.toInt();
-        qDebug() << "height found  " << height ;
+        // qDebug() << "height found  " << height ;
     }
     widget->setGeometry( x, y, width, height); 
 
     if (jsonObject.contains("isVisibleAtLoad")) {
         QJsonValue val = jsonObject.value("isVisibleAtLoad");
         bool isVisible = val.toBool();
-        qDebug() << "visibility found  " << isVisible ;
+        // qDebug() << "visibility found  " << isVisible ;
 
         widget->setVisible(isVisible); 
     }
-   
 }
 
 void page_idle::loadElementDynamicPropertiesFromDefaultTemplate()

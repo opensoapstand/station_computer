@@ -1,20 +1,22 @@
-page_select_product->label_product_1_type,{"x":50, "y":100, "h":553}
-page_select_product->label_product_2_type,{"x":550, "y":400, "w":445, "h":553,"visible":false}
+# Dynamic widget properties
 
-#[
-#    {
-#        "page_and_name": "page_select_product->label_product_1_type",
-#        "x": 100,
-#        "y": 150
-#    },
-#    {
-#        "page_and_name": "page_select_product->label_product_2_type",
-#        "x": 200,
-#        "y": 250
-#    },
-#    {
-#        "page_and_name": "page_select_product->label_product_3_type",
-#        "x": 300,
-#        "y": 350
-#    }
-#]
+########################################## example ##############################
+# PAGE->OBJECTNAME,properties
+#    PAGE = QT page name
+#    OBJECTNAME = QWidget (QLabel or QPushButton)
+#    , = separator between name and text
+#    properties = widget properties, defined by a json string with various key value pairs e.g. {"property1":value,"property2:value,...}  
+#           available property keys: 
+#           x(int)
+#           y(int)
+#           width(int)
+#           height(int)
+#           isVisibleAtLoad(bool) = widget visibilty at page load. If during the program the element visibility is set, it will not be stopped by this value. If an element should always be hidden, move it outside the page. e.g. "x":10000 
+#################################################################################
+
+# comment example (needs to start with a #)
+# empty lines are also permitted
+
+page_select_product->label_product_1_type,{"x":53, "y":814, "width":450, "height":46,"isVisibleAtLoad":true}
+page_select_product->label_product_2_type,{"x":562, "y":814, "width":450, "height":46,"isVisibleAtLoad":true}
+# page_select_product->label_product_2_type,{"x":550, "y":400, "w":445, "h":553,"isVisibleAtLoad":true}

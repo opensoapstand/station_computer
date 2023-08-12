@@ -28,6 +28,7 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
                                                             ui(new Ui::page_select_product)
 {
     ui->setupUi(this);
+    // mainWidget = ui->setupUi(this);
 
     pushButtons_product_select[0] = ui->pushButton_selection1;
     pushButtons_product_select[1] = ui->pushButton_selection2;
@@ -128,15 +129,13 @@ void page_select_product::showEvent(QShowEvent *event)
     this->raise();
 
 
-    QStringList all_page_elements = p_page_idle->getChildNames(ui->pushButton_to_idle->parentWidget());
+    // QStringList all_page_elements = p_page_idle->getChildNames(ui->pushButton_to_idle->parentWidget());
+    // foreach (const QString &childName, all_page_elements) {
+    //     qDebug() << "Child name:" << childName;
+    // }
 
-
-    foreach (const QString &childName, all_page_elements) {
-        qDebug() << "Child name:" << childName;
-    }
-
-
-    QList<QObject *> allChildren = ui->pushButton_to_idle->parentWidget()->findChildren<QObject *>();
+    // QList<QObject *> allChildren = ui->pushButton_to_idle->parentWidget()->findChildren<QObject *>();
+    QList<QObject *> allChildren = this->findChildren<QObject *>(); // or ui->centralWidget()
 
     foreach (QObject *child, allChildren) {
         

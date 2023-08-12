@@ -77,6 +77,8 @@ private:
     page_product *p_page_product;
     page_idle* p_page_idle;
 
+    QWidget* mainWidget;
+
     QResizeEvent *productResize;
 
     int _productPageTimeoutSec;

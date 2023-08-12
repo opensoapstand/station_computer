@@ -223,6 +223,8 @@ void page_idle::loadDynamicContent()
     loadTextsFromTemplateCsv(); // dynamic content (text by template)
     loadTextsFromDefaultCsv();  // dynamic styling (css by template)
     loadElementDynamicPropertiesFromTemplate();  // dynamic elements (position, visibility)
+    loadElementDynamicPropertiesFromDefaultTemplate();  // dynamic elements (position, visibility)
+    
 }
 
 void page_idle::changeToIdleProductsIfSet()
@@ -571,14 +573,13 @@ void page_idle::applyPropertiesToQWidget(QWidget* widget){
 
     // QStringList elementNames = thisMachine.m_propertiesObject.keys();
 
-    auto it = elementDynamicPropertiesMap_default.find(combinedName);
-    QString retval;
+    auto it = elementDynamicPropertiesMap_template.find(combinedName);
     QString jsonString;
     bool valid = true;
 
-    if (it != elementDynamicPropertiesMap_default.end())
+    if (it != elementDynamicPropertiesMap_template.end())
     {
-        qDebug() << "element name found! json string: " << it->second ;
+        qDebug() << "element " << combinedName << "found in template. json string: " << it->second ;
         jsonString = it->second;
     }
     else
@@ -586,12 +587,12 @@ void page_idle::applyPropertiesToQWidget(QWidget* widget){
         it = elementDynamicPropertiesMap_default.find(combinedName);
         if (it != elementDynamicPropertiesMap_default.end())
         {
+            qDebug() << "element " << combinedName << "found in default. json string: " << it->second ;
             jsonString = it->second;
         }
         else
         {
             // qDebug() << "No template text value found for: " + combinedName;
-            retval = combinedName;
             valid = false;
         }
     }
@@ -641,11 +642,23 @@ void page_idle::applyPropertiesToQWidget(QWidget* widget){
    
 }
 
+void page_idle::loadElementDynamicPropertiesFromDefaultTemplate()
+{
+    qDebug() << "Load dynamic properties from default template file";
+    QString path = thisMachine.getDefaultTemplatePathFromName(UI_ELEMENT_PROPERTIES_PATH);
+    loadTextsFromCsv(path, &elementDynamicPropertiesMap_default);
+    // Print the word-sentence mapping
+    // for (const auto &pair : elementDynamicPropertiesMap_default)
+    // {
+    //     qDebug() << pair.first << ": " << pair.second;
+    // }
+}
+
 void page_idle::loadElementDynamicPropertiesFromTemplate()
 {
     qDebug() << "Load dynamic properties from template file";
-    QString csv_dynamic_properties_default_path = thisMachine.getTemplatePathFromName(UI_ELEMENT_PROPERTIES_PATH);
-    loadTextsFromCsv(csv_dynamic_properties_default_path, &elementDynamicPropertiesMap_default);
+    QString path = thisMachine.getTemplatePathFromName(UI_ELEMENT_PROPERTIES_PATH);
+    loadTextsFromCsv(path, &elementDynamicPropertiesMap_template);
 
     // Print the word-sentence mapping
     // for (const auto &pair : elementDynamicPropertiesMap_default)
@@ -665,8 +678,7 @@ void page_idle::loadTextsFromTemplateCsv()
 void page_idle::loadTextsFromDefaultCsv()
 {
     qDebug() << "Load dynamic texts from default csv";
-    QString name = UI_TEXTS_CSV_PATH;
-    QString csv_default_template_path = thisMachine.getDefaultTemplatePathFromName(name);
+    QString csv_default_template_path = thisMachine.getDefaultTemplatePathFromName(UI_TEXTS_CSV_PATH);
     loadTextsFromCsv(csv_default_template_path, &textNameToTextMap_default);
 }
 

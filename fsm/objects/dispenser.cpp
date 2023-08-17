@@ -452,18 +452,18 @@ DF_ERROR dispenser::initDispenseButton4Light()
     }
 }
 
-DF_ERROR dispenser::initButtonsShutdownAndMaintenance()
-{
+// DF_ERROR dispenser::initButtonsShutdownAndMaintenance()
+// {
 
-    m_pPowerOffOrMaintenanceModeButtonPressed[0] = new oddyseyx86GPIO(IO_PIN_BUTTON_MAINTENANCE_SHUTDOWN_EDGE_DETECTOR);
-    m_pButtonPowerOff[0] = new oddyseyx86GPIO(IO_PIN_BUTTON_MAINTENANCE);
-    m_pButtonDisplayMaintenanceMode[0] = new oddyseyx86GPIO(IO_PIN_BUTTON_SHUTDOWN);
+//     m_pPowerOffOrMaintenanceModeButtonPressed[0] = new oddyseyx86GPIO(IO_PIN_BUTTON_MAINTENANCE_SHUTDOWN_EDGE_DETECTOR);
+//     m_pButtonPowerOff[0] = new oddyseyx86GPIO(IO_PIN_BUTTON_MAINTENANCE);
+//     m_pButtonDisplayMaintenanceMode[0] = new oddyseyx86GPIO(IO_PIN_BUTTON_SHUTDOWN);
 
-    m_pPowerOffOrMaintenanceModeButtonPressed[0]->setPinAsInputElseOutput(true);
-    m_pButtonPowerOff[0]->setPinAsInputElseOutput(true);
-    m_pButtonDisplayMaintenanceMode[0]->setPinAsInputElseOutput(true);
-    m_pPowerOffOrMaintenanceModeButtonPressed[0]->startListener_buttons_powerAndMaintenance();
-}
+//     m_pPowerOffOrMaintenanceModeButtonPressed[0]->setPinAsInputElseOutput(true);
+//     m_pButtonPowerOff[0]->setPinAsInputElseOutput(true);
+//     m_pButtonDisplayMaintenanceMode[0]->setPinAsInputElseOutput(true);
+//     m_pPowerOffOrMaintenanceModeButtonPressed[0]->startListener_buttons_powerAndMaintenance();
+// }
 
 // TODO: Call this function on Dispense onEntry()
 DF_ERROR dispenser::setPump(int mcpAddress, int pin, int position)

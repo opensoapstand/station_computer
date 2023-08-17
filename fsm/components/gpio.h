@@ -40,10 +40,10 @@ public:
 	void registerProduct(product *pDispenser) { m_pDispenser = pDispenser; } 
 
 	void startListener_flowsensor();
-	void startListener_buttons_powerAndMaintenance();
-	void startButtonListener();
+	// void startListener_buttons_powerAndMaintenance();
+	// void startButtonListener();
 	void listener_flowsensor();
-	void listener_buttons_powerAndMaintenance();
+	// void listener_buttons_powerAndMaintenance();
 	void stopListener_flowsensor() { m_stop = true; }
 
 protected:
@@ -55,7 +55,7 @@ protected:
 	// Interrupt Function Definition
 	product* m_pDispenser; //UNCOMMENT LODE
 	virtual void monitorGPIO_Flowsensor(bool* abortLoop) = 0;
-	virtual void monitorGPIO_Buttons_powerAndMaintenance() = 0;
+	// virtual void monitorGPIO_Buttons_powerAndMaintenance() = 0;
 	std::thread *gpioThread;
 };
 

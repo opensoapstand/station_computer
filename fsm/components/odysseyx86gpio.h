@@ -36,7 +36,7 @@ public:
 
 protected:
 	void monitorGPIO_Flowsensor(bool* abortLoop);
-	void monitorGPIO_Buttons_powerAndMaintenance();
+	// void monitorGPIO_Buttons_powerAndMaintenance();
 	string command_to_string(string cmd);
 	messageMediator *m_pMessaging;
 

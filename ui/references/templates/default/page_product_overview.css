@@ -1,0 +1,176 @@
+QPushButton { 
+    border: 1px solid #5E8580;
+}
+
+
+#pushButton_continue {
+    font-family: 'Brevia';
+    font-style: normal;
+    font-weight: 200;
+    background-color: #5E8580;
+    font-size: 48px;
+    text-align: center;
+    line-height: auto;
+    /* qproperty-alignment: AlignCenter; */
+    border-radius: 20px;
+    color: white;
+    border: none;
+ }
+ 
+#pushButton_promo_input{ 
+    background-color: transparent; 
+    border: none;
+}
+.promoCode{
+    font-family: Montserrat; 
+    font-style: normal; 
+    font-weight: bold; 
+    font-size: 28px; 
+    line-height: 44px; 
+    color: #58595B;
+    border: 1px solid #58595B;
+}
+.promoCode_network_error{
+    font-family: Montserrat; 
+    font-style: normal; 
+    font-weight: bold; 
+    font-size: 28px; 
+    line-height: 44px; 
+    color: #da980a;
+    border: 1px solid #da980a;
+}
+.promoCode_invalid{
+    font-family: Montserrat; 
+    font-style: normal; 
+    font-weight: bold; 
+    font-size: 28px; 
+    line-height: 44px; 
+    color: #f44336;
+    border: 1px solid #f44336;
+}
+.promoCode_processing{
+    font-family: Montserrat; 
+    font-style: normal; 
+    font-weight: bold; 
+    font-size: 28px; 
+    line-height: 44px; 
+    color: #858585;
+    border: 1px solid #858585;
+}
+.promoCode_valid{
+    font-family: Montserrat; 
+    font-style: normal; 
+    font-weight: bold; 
+    font-size: 28px; 
+    line-height: 44px; 
+    color: #5E8580;
+    border: 1px solid #58595B;
+}
+#pushButton_select_product_page{ 
+    background-color: transparent; 
+    font-family: 'Brevia';
+    font-style: normal;
+    font-weight: 75;
+    font-size: 32px;
+    line-height: 99px;
+    color: #003840;
+    text-align: left;
+    /* qproperty-alignment: AlignLeft; */
+    border: none;
+}
+.buttonPromo {
+    font-family: 'Brevia';
+    font-style: normal;
+    font-weight: 75;
+    font-size: 32px;
+    line-height: 99px;
+    background-color: #5E8580;
+    border: 1px solid #3D6675;
+    color: #FFFFFF;
+    text-align: center;
+    /* qproperty-alignment: AlignCenter; */
+}
+.buttonBGTransparent{ 
+    background-color: transparent; 
+    border: 0px
+}
+
+
+QLabel {
+    position: absolute;
+    width: 870px;
+    height: 102px;
+    left: 99px;
+    top: 261px;
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 42px;
+    line-height: 48px;
+    text-transform: capitalize;
+    color: #438080;
+}
+#label_selected_volume{
+    font-family: 'Brevia';
+    font-style: normal;
+    font-weight: 75;
+    font-size: 32px;
+    line-height: 99px;
+    color: #003840;
+    text-align: center;
+    /* qproperty-alignment: AlignCenter; */
+    border: 2px solid #5E8580;
+}
+.labelOrderOverview{
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 40px;
+    color: #58595B;
+}
+#label_invoice_box{
+    border: 2px solid #5E8580;
+}
+
+.labelDiscount{
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 28px;
+    color: #248C8C;
+}
+.labelDiscountName{
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 29px;
+    color: #58595B;
+}
+#label_total{
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 36px;
+    line-height: 40px;
+    color: #58595B;
+}
+#label_gif{
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 36px;
+    line-height: 40px;
+    color: #58595B;
+    padding: 3px;
+    border:8px solid #248C8C;
+    border-radius: 20px;
+}
+#label_product_photo {
+    border: 2px solid #5E8580;
+}
+#line_invoice{
+    border: none;
+}

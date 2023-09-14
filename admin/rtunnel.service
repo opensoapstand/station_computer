@@ -1,0 +1,17 @@
+[Unit]
+Description = Reverse ssh tunnel
+After=network.target
+
+[Service]
+# WARNING: do not set the port number here, set it in the database (machine table aws_port), and run the appropriate commands in developer_tools, it will be applied automatically.
+ExecStart = /usr/bin/ssh -NTC -o ServerAliveInterval=60 -o ExitOnForwardFailure=yes -o StrictHostKeyChecking=no -R 43666:localhost:22 -i /home/df-admin/.ssh/DrinkfillAWS.pem ubuntu@ec2-44-225-153-121.us-west-2.compute.amazonaws.com
+
+# StrictHostKeyChecking=no  if set to yes, it will ask confirmation the first time we use the rtunnel from server to station (with ssh df-admin@localhost -p 43xxx). 
+
+# restart rtunnel service regularly. This to counter "connection refused" errors when the rtunnel is active in a suboptimal wifi environment for a prolonged time
+Restart = always
+RestartSec = 5
+RuntimeMaxSec=2h
+
+[Install]
+WantedBy = multi-user.target

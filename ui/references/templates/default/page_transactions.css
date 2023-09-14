@@ -1,0 +1,202 @@
+#pushButton_back {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 32px;
+   background-color: transparent;
+   border: 0px;
+   line-height: 99px;
+   color: #003840;
+   text-align: left;
+   /* qproperty-alignment: AlignCenter; */
+   border: none;
+}
+
+
+#pushButton_print {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 32px;
+   /* qproperty-alignment: AlignCenter; */
+   text-align: center;
+
+   color: #FFFFFF;
+   background-color: #5e8580;
+   border: 1px solid #3D6675;
+   box-sizing: border-box;
+   border-radius: 20px;
+}
+
+QListWidget {
+   
+   background: transparent;
+}
+
+QListWidget::item {
+   background-color: #c9ddc2;
+}
+
+QListWidget::item:alternate {
+   background-color: white;
+}
+
+#label_title {
+
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 54px;
+   line-height: 99px;
+   /* letter-spacing: px; */
+   color: #003840;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   border: none;
+}
+
+/* 
+#label_finishTransactionMessage {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 100;
+   font-size: 52px;
+   text-align: center;
+   line-height: auto;
+   qproperty-alignment: AlignCenter;
+   border-radius: 20px;
+   color: #5e8580;
+   border: none;
+}
+
+#pushButton_debug_Button {
+   
+   color: #5E8580;
+   background-color: transparent;
+   border: 5px;
+   border-color: #5E8580;
+}
+
+#pushButton_abort {
+   
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 100;
+   background-color: #5E8580;
+   font-size: 42px;
+   text-align: center;
+   line-height: auto;
+   qproperty-alignment: AlignCenter;
+   border-radius: 20px;
+   color: white;
+   border: none;
+   
+}
+
+.label_volume_dispensed_ml {
+   
+
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 100;
+   font-size: 42px;
+   text-align: center;
+   line-height: auto;
+   qproperty-alignment: AlignCenter;
+   border-radius: 20px;
+   color: #5e8580;
+   border: none;
+
+}
+
+#label_to_refill {
+   
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 85px;
+   background-color: transparent;
+   border: 0px;
+   line-height: 99px;
+   color: #FFFFFF;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   border: none;
+   
+}
+
+#label_instructions_container {
+   
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 55px;
+   background-color: transparent;
+   border: 0px;
+   line-height: 99px;
+   color: #FFFFFF;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   border: none;
+}
+
+#label_press {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 55px;
+   background-color: transparent;
+   border: 0px;
+   line-height: 99px;
+   color: #FFFFFF;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   border: none;
+}
+
+
+#label_dispense_message {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 42px;
+   background-color: transparent;
+   border: 0px;
+   line-height: 99px;
+   color: #FFFFFF;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   border: none;
+}
+
+#pushButton_problems {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   background-color: #5E8580;
+   font-size: 42px;
+   text-align: center;
+   line-height: auto;
+   qproperty-alignment: AlignCenter;
+   border-radius: 20px;
+   color: white;
+   border: none;
+}
+
+QMessageBox.msgBoxbox{
+   min-width: 7000px;
+   font-size: 24px;
+   font-weight: bold;
+   font-style: normal;
+   font-family: 'Montserrat';
+   /* Additional styles specific to QMessageBox */
+/* }
+
+QMessageBox.msgBoxbutton QPushButton{
+   font-size: 24px;
+   min-width: 300px;
+   min-height: 300px;
+   /* Additional styles specific to QPushButton within QMessageBox */
+
+/* }
+ QLabel{ /*this label controls the color of the checkbox */

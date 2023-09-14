@@ -1,0 +1,23 @@
+# Dynamic widget properties
+
+########################################## example ##############################
+# PAGE->OBJECTNAME,properties
+#    PAGE = QT page name
+#    OBJECTNAME = QWidget (QLabel or QPushButton)
+#    , = separator between name and text
+#    properties = widget properties, defined by a json string with various key value pairs e.g. {"property1":value,"property2:value,...}  
+#           available property keys: 
+#           x(int)
+#           y(int)
+#           width(int)
+#           height(int)
+#           isVisibleAtLoad(bool) = widget visibilty at page load. If during the program the element visibility is set, it will not be stopped by this value. If an element should always be hidden, move it outside the page. e.g. "x":10000 
+#################################################################################
+
+# comment example (needs to start with a #)
+# empty lines are also permitted
+
+
+# page_idle->label_customer_logo,{"x":370, "y":1580, "width":351, "height":211,"isVisibleAtLoad":true}
+# page_select_product->label_product_1_type,{"x":53, "y":814, "width":450, "height":46,"isVisibleAtLoad":true}
+# page_select_product->label_product_2_type,{"x":562, "y":814, "width":450, "height":46,"isVisibleAtLoad":false}

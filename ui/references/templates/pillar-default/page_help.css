@@ -1,0 +1,83 @@
+
+.buttonTransparent{
+    background-color: transparent;
+    border: 0px;
+}
+
+.buttonNoBorder {
+   font-family: 'EuropaNuova-Regular';
+   font-style: normal;
+   font-weight: 700;
+   font-size: 65px;
+
+   border: 0px;
+   color: white;
+   text-align: center;
+   background: transparent;
+   /* qproperty-alignment: AlignCenter; */
+}
+
+#pushButton_to_idle{
+   text-align: left;
+   color: #221F20;
+   font-family: 'EuropaNuova-Regular';
+   font-style: normal;
+   font-weight: 700;
+   font-size: 35px;
+   color: #221F20;
+   qproperty-alignment: AlignCenter;
+   text-align: left;
+   border: none;
+}
+
+QPushButton {
+   font-family: 'EuropaNuova-ExtraBold';
+   font-style: normal;
+   font-weight: 400;
+   font-size: 32px;
+   color: white;
+   background-color: #221F20;
+   border: 2px solid white;
+   text-align: center;
+   border-radius: 20px;  
+}
+
+/* QPushButton#pushButton_refresh {
+   background-color: transparent;
+   border: 0px;
+} */
+/* QPushButton#pushButton_previous_page_2 {
+   color: #0000FF;
+}  */
+/* QPushButton#transactions_Button {
+   color: #FF0000;
+} */
+
+/* QPushButton {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 32px;
+   background-color: transparent;
+   border: 0px;
+   line-height: 99px;
+   /* color: #003840; */
+/* color: #FF0000;
+text-align: center;
+border: none;
+} */
+
+
+/* QPushButton:hover {
+   background-color: #2980b9;
+   border: 2px solid #3498db;
+} */
+
+.big {
+   /* font-size: 100px; */
+}
+
+.small {
+   /* font-size: 20px; */
+
+}

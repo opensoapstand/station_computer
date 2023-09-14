@@ -1,0 +1,12 @@
+[Unit]
+Description=Periodical Wifi Connectivity Check
+
+[Service]
+Type=simple
+ExecStart=/home/df-admin/production/admin/check_connectivity.sh
+Restart=always
+RestartSec=1800
+User=df-admin
+
+[Install]
+WantedBy=multi-user.target

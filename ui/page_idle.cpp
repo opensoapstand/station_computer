@@ -110,6 +110,29 @@ void page_idle::showEvent(QShowEvent *event)
     ui->pushButton_test->setStyleSheet(styleSheet);
     ui->label_printer_status->setStyleSheet(styleSheet);
     ui->label_temperature_status->setStyleSheet(styleSheet);
+    
+    ui->label_show_temperature->setStyleSheet(styleSheet);
+    //setTemplateTextToObject(ui->label_show_temperature);
+    //  ui->label_show_temperature->setText( "33");
+
+
+    QString base_text = getTemplateTextByElementNameAndPage(ui->label_show_temperature);
+    ui->label_show_temperature->setText(base_text.arg(QString::number(thisMachine.getTemperature_1(), 'f', 2))); // will replace %1 character in string by the provide text
+        
+
+    //   QString temperature = QString::number( thisMachine.getTemperature_1(), 'f', 2);
+    //   QString base = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_show_temperature, "temperature");
+    //   QString base = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_show_temperature, "temperature");
+//         // ui->label_show_temperature->show();
+          //ui->label_show_temperature->setText(base.arg(temperature));
+        //  ui->label_show_temperature->setText(temperature);
+//          if(ui->label_show_temperature) {
+//     qDebug() << "Label exists.";
+// } else {
+//     qDebug() << "Label does not exist.";
+// }
+// qDebug() << "Temperature: " << temperature;
+// qDebug() << "Base2: " << base;
    ui->label_temperature_status->hide();
     // bool needsReceiptPrinter = false;
     // for (int slot = 1; slot <= SLOT_COUNT; slot++)
@@ -283,6 +306,7 @@ void page_idle::onPollTemperatureTimerTick()
         thisMachine.getTemperatureFromController();
         // hack, will not be ready when asked from controller. This basically displaying the "previous temperature".
         //ui->label_printer_status->setText( QString::number( thisMachine.getTemperature_1(), 'f', 2));
+       
         if (thisMachine.isTemperatureTooHigh_1()){
 
             
@@ -737,3 +761,4 @@ QStringList page_idle::getChildNames(QObject *parent)
 
     return childNames;
 }
+

@@ -33,6 +33,7 @@ public:
     QWidget *video_player;
     QWidget *media_player;
     QLabel *label_temperature_status;
+    QLabel *label_show_temperature;
 
     void setupUi(QWidget *page_idle)
     {
@@ -75,6 +76,9 @@ public:
         label_temperature_status = new QLabel(page_idle);
         label_temperature_status->setObjectName(QStringLiteral("label_temperature_status"));
         label_temperature_status->setGeometry(QRect(49, 1000, 981, 381));
+        label_show_temperature = new QLabel(page_idle);
+        label_show_temperature->setObjectName(QStringLiteral("label_show_temperature"));
+        label_show_temperature->setGeometry(QRect(10, 1840, 581, 71));
         pushButton_to_select_product_page->raise();
         savedBottles_label->raise();
         label_customer_logo->raise();
@@ -85,6 +89,7 @@ public:
         video_player->raise();
         label_printer_status->raise();
         label_temperature_status->raise();
+        label_show_temperature->raise();
 
         retranslateUi(page_idle);
 
@@ -102,6 +107,7 @@ public:
         label_manufacturer_logo->setText(QString());
         label_printer_status->setText(QString());
         label_temperature_status->setText(QString());
+        label_show_temperature->setText(QApplication::translate("page_idle", "Label show temperature ", Q_NULLPTR));
     } // retranslateUi
 
 };

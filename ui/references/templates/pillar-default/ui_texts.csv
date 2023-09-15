@@ -17,6 +17,8 @@
 page_idle->label_welcome_message,Try a free<br>beverage sample
 page_idle->label_printer_status->offline,Assistance needed<br>Receipt Printer offline.
 page_idle->label_printer_status->nopaper,Assistance needed<br>Receipt Printer empty or improperly loaded.
+page_idle->label_show_temperature->temperature,Temperature is..
+page_idle->label_show_temperature,Temperature: %1
 
 #page_select_product
 page_select_product->label_pick_soap,Discover our Beverages

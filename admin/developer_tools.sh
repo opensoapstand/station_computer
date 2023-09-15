@@ -3,7 +3,7 @@
 #######################################################################
 # created by Lode for Drinkfill.                                      #
 # 2023-03-23                                                          #
-# Place and run in Station. In /home/df-admin/drinkfill/admin         #
+# Place and run in Station. In /home/df-admin/station_computer/admin         #
 #######################################################################
 
 sudo ./status_services.sh
@@ -44,8 +44,8 @@ make_options () {
         sudo systemctl stop ui_soapstand
         sudo systemctl stop controller_soapstand
 
-        sudo scp /home/df-admin/drinkfill/ui/DF_UI /home/df-admin/production/bin/DF_UI
-        sudo scp /home/df-admin/drinkfill/fsm/controller /home/df-admin/production/bin/controller
+        sudo scp /home/df-admin/station_computer/ui/DF_UI /home/df-admin/production/bin/DF_UI
+        sudo scp /home/df-admin/station_computer/fsm/controller /home/df-admin/production/bin/controller
         
         sudo systemctl start controller_soapstand.service
         sudo systemctl start ui_soapstand.service
@@ -89,8 +89,8 @@ do
             sudo systemctl stop ui_soapstand
             sudo systemctl stop controller_soapstand
             
-            sudo scp /home/df-admin/drinkfill/ui/DF_UI /home/df-admin/production/bin/DF_UI
-            sudo scp /home/df-admin/drinkfill/fsm/controller /home/df-admin/production/bin/controller
+            sudo scp /home/df-admin/station_computer/ui/DF_UI /home/df-admin/production/bin/DF_UI
+            sudo scp /home/df-admin/station_computer/fsm/controller /home/df-admin/production/bin/controller
             
             sudo systemctl start ui_soapstand.service
             sudo systemctl start controller_soapstand.service

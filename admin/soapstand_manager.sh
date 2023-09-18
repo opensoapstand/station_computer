@@ -82,8 +82,8 @@ do
             sudo systemctl stop ui_soapstand
             sudo systemctl stop controller_soapstand
             
-            sudo scp /home/df-admin/drinkfill/ui/DF_UI /home/df-admin/production/bin/DF_UI
-            sudo scp /home/df-admin/drinkfill/fsm/controller /home/df-admin/production/bin/controller
+            sudo scp /home/df-admin/station_computer/ui/DF_UI /home/df-admin/production/bin/DF_UI
+            sudo scp /home/df-admin/station_computer/fsm/controller /home/df-admin/production/bin/controller
             
             sudo systemctl start ui_soapstand.service
             sudo systemctl start controller_soapstand.service
@@ -95,15 +95,15 @@ do
         ;;
 
         "Copy db from drinkfill to production folder OLD")
-            sudo -u df-admin scp /home/df-admin/drinkfill/db/sqlite/drinkfill-sqlite_newlayout.db /home/df-admin/production/db/drinkfill-sqlite_newlayout.db 
+            sudo -u df-admin scp /home/df-admin/station_computer/db/sqlite/drinkfill-sqlite_newlayout.db /home/df-admin/production/db/drinkfill-sqlite_newlayout.db 
             echo "done."
         ;;
         "Copy configuration db from drinkfill to production folder")
-            sudo -u df-admin scp /home/df-admin/drinkfill/db/sqlite/configuration.db /home/df-admin/production/db/configuration.db 
+            sudo -u df-admin scp /home/df-admin/station_computer/db/sqlite/configuration.db /home/df-admin/production/db/configuration.db 
             echo "done."
         ;;
         "Copy usage db from drinkfill to production folder")
-            sudo -u df-admin scp /home/df-admin/drinkfill/db/sqlite/usage.db /home/df-admin/production/db/usage.db 
+            sudo -u df-admin scp /home/df-admin/station_computer/db/sqlite/usage.db /home/df-admin/production/db/usage.db 
             echo "done."
         ;;
         

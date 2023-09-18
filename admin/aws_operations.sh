@@ -22,7 +22,7 @@ do
         "upload stationsoperations.sh to aws home")
 
             cd /home/df-admin/Downloads
-            scp -r -i DrinkfillAWS.pem "/home/df-admin/drinkfill/admin/stations_operations.sh" ubuntu@ec2-44-225-153-121.us-west-2.compute.amazonaws.com:/home/ubuntu
+            scp -r -i DrinkfillAWS.pem "/home/df-admin/station_computer/admin/stations_operations.sh" ubuntu@ec2-44-225-153-121.us-west-2.compute.amazonaws.com:/home/ubuntu
             ;;
 
         "AWS log in")

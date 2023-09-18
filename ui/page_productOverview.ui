@@ -1866,9 +1866,9 @@ color: #58595B;
    </property>
    <property name="geometry">
     <rect>
-     <x>751</x>
+     <x>709</x>
      <y>1160</y>
-     <width>201</width>
+     <width>251</width>
      <height>80</height>
     </rect>
    </property>

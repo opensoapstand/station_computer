@@ -53,7 +53,7 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
 
     pollTemperatureTimer = new QTimer(this);
     pollTemperatureTimer->setInterval(1000);
-    // connect(pollTemperatureTimer, SIGNAL(timeout()), this, SLOT(onPollTemperatureTimerTick()));
+    connect(pollTemperatureTimer, SIGNAL(timeout()), this, SLOT(onPollTemperatureTimerTick())); 
 
     for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
@@ -296,6 +296,7 @@ void page_idle::onPollTemperatureTimerTick()
 {
     if (--_pollTemperatureTimerTimeoutSec >= 0)
     {
+
     }
     else
     {
@@ -316,10 +317,18 @@ void page_idle::onPollTemperatureTimerTick()
             ui->label_temperature_status->show();
             ui->label_temperature_status->setText(base.arg(temperature));
             qDebug() << "Temperature too high";
+            
+    QString base_text = getTemplateTextByElementNameAndPage(ui->label_show_temperature);
+    ui->label_show_temperature->setText(base_text.arg(QString::number(thisMachine.getTemperature_1(), 'f', 2))); // will replace %1 character in string by the provide text
+        
         }else{
 
             qDebug() << "Temperature ok";
             ui->label_temperature_status->hide();
+            
+    QString base_text = getTemplateTextByElementNameAndPage(ui->label_show_temperature);
+    ui->label_show_temperature->setText(base_text.arg(QString::number(thisMachine.getTemperature_1(), 'f', 2))); // will replace %1 character in string by the provide text
+        
         }
     }
         

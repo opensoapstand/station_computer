@@ -8,7 +8,7 @@ QPushButton {
 .promoCode{
     font-family: "EuropaNuova-Regular"; 
     font-style: normal; 
-    font-weight: 400; 
+    font-weight: 700; 
     font-size: 28px; 
     line-height: 44px; 
     color: #58595B;
@@ -135,17 +135,17 @@ QLabel {
 .labelDiscount{
     font-family: 'EuropaNuova-Regular';
     font-style: normal;
-    font-weight: 400;
-    font-size: 28px;
+    font-weight: 700;
+    font-size: 34px;
     line-height: 28px;
-    color: #248C8C;
+    color: #5E8580;
     text-align: right;
 }
 .labelDiscountName{
     font-family: 'EuropaNuova-Regular';
     font-style: normal;
-    font-weight: 400;
-    font-size: 28px;
+    font-weight: 700;
+    font-size: 34px;
     line-height: 29px;
     color: #221F20;
 }

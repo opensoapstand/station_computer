@@ -735,7 +735,7 @@ public:
         label_invoice_discount_amount = new QLabel(page_product_overview);
         label_invoice_discount_amount->setObjectName(QStringLiteral("label_invoice_discount_amount"));
         label_invoice_discount_amount->setEnabled(true);
-        label_invoice_discount_amount->setGeometry(QRect(751, 1160, 201, 80));
+        label_invoice_discount_amount->setGeometry(QRect(709, 1160, 251, 80));
         label_invoice_discount_amount->setStyleSheet(QLatin1String("font-family: Montserrat;\n"
 "background-image: url(/home/df-admin/production/references/background.png);\n"
 "font-style: normal;\n"

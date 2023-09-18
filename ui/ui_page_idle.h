@@ -78,7 +78,7 @@ public:
         label_temperature_status->setGeometry(QRect(49, 1000, 981, 381));
         label_show_temperature = new QLabel(page_idle);
         label_show_temperature->setObjectName(QStringLiteral("label_show_temperature"));
-        label_show_temperature->setGeometry(QRect(10, 1840, 581, 71));
+        label_show_temperature->setGeometry(QRect(10, 1840, 311, 71));
         pushButton_to_select_product_page->raise();
         savedBottles_label->raise();
         label_customer_logo->raise();

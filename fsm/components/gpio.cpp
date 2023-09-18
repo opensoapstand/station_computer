@@ -48,18 +48,18 @@ void gpio::startListener_flowsensor()
         }
 }
 
-void gpio::startListener_buttons_powerAndMaintenance()
-{
-        debugOutput::sendMessage("Thread init: Maintenance Button and Shutdown Button listener", MSG_INFO);
-        DF_ERROR df_ret = ERROR_BAD_PARAMS;
+// void gpio::startListener_buttons_powerAndMaintenance()
+// {
+//         debugOutput::sendMessage("Thread init: Maintenance Button and Shutdown Button listener", MSG_INFO);
+//         DF_ERROR df_ret = ERROR_BAD_PARAMS;
 
-        //        if ((nullptr ==  gpioThread) && (nullptr != m_pDispenser)){
-        gpioThread = new std::thread(&gpio::listener_buttons_powerAndMaintenance, this);
-        df_ret = OK;
-        //        } else {
-        //                debugOutput::sendMessage("Did not pass null check", MSG_INFO);
-        //        }
-}
+//         //        if ((nullptr ==  gpioThread) && (nullptr != m_pDispenser)){
+//         gpioThread = new std::thread(&gpio::listener_buttons_powerAndMaintenance, this);
+//         df_ret = OK;
+//         //        } else {
+//         //                debugOutput::sendMessage("Did not pass null check", MSG_INFO);
+//         //        }
+// }
 
 // void gpio::startButtonListener()
 //{
@@ -94,18 +94,18 @@ void gpio::listener_flowsensor()
                        //  return;
 }
 
-void gpio::listener_buttons_powerAndMaintenance()
-{
-        // cout << "Spin up GPIO Thread" << endl;
-        DF_ERROR df_ret = ERROR_BAD_PARAMS;
-        m_stop = false;
+// void gpio::listener_buttons_powerAndMaintenance()
+// {
+//         // cout << "Spin up GPIO Thread" << endl;
+//         DF_ERROR df_ret = ERROR_BAD_PARAMS;
+//         m_stop = false;
 
-        while (!m_stop)
-        {
-                monitorGPIO_Buttons_powerAndMaintenance();
-                usleep(100000);
-        }
+//         while (!m_stop)
+//         {
+//                 monitorGPIO_Buttons_powerAndMaintenance();
+//                 usleep(100000);
+//         }
 
-        m_stop = true; // reset
-                       //  return;
-}
+//         m_stop = true; // reset
+//                        //  return;
+// }

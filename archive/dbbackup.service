@@ -1,0 +1,11 @@
+[Unit]
+Description=Backup DB to Heroku
+After=network.target
+
+[Service]
+Restart=always
+RestartSec=120s
+ExecStart=/bin/bash /release/dbbackup.sh >> /home/df-admin/dbbackup.log
+
+[Install]
+WantedBy=multi-user.target

@@ -329,69 +329,69 @@ void oddyseyx86GPIO::monitorGPIO_Flowsensor(bool *abortLoop)
         return;
 }
 
-void oddyseyx86GPIO::monitorGPIO_Buttons_powerAndMaintenance()
-{
-        //        debugOutput::sendMessage("monitorGPIO", MSG_INFO);  //nuke this later it will cause so much spam
-        int fd, len;
-        char buf[MAX_BUF];
+// void oddyseyx86GPIO::monitorGPIO_Buttons_powerAndMaintenance()
+// {
+//         //        debugOutput::sendMessage("monitorGPIO", MSG_INFO);  //nuke this later it will cause so much spam
+//         int fd, len;
+//         char buf[MAX_BUF];
 
-        struct pollfd pfd;
+//         struct pollfd pfd;
 
-        // string GPIO = "391";
-        string GPIO = "" + to_string(IO_PIN_BUTTON_MAINTENANCE_SHUTDOWN_EDGE_DETECTOR);
-        string command("/sys/class/gpio/gpio");
-        command += GPIO;
-        command += "/edge";
+//         // string GPIO = "391";
+//         string GPIO = "" + to_string(IO_PIN_BUTTON_MAINTENANCE_SHUTDOWN_EDGE_DETECTOR);
+//         string command("/sys/class/gpio/gpio");
+//         command += GPIO;
+//         command += "/edge";
 
-        // debugOutput::sendMessage("++++++++++++++++++" + command, MSG_INFO);
+//         // debugOutput::sendMessage("++++++++++++++++++" + command, MSG_INFO);
 
-        // set the pin to interrupt
-        fd = open(command.c_str(), O_WRONLY);
-        write(fd, "rising", 4);
-        close(fd);
+//         // set the pin to interrupt
+//         fd = open(command.c_str(), O_WRONLY);
+//         write(fd, "rising", 4);
+//         close(fd);
 
-        command = "/sys/class/gpio/gpio" + GPIO + "/value";
-        fd = open(command.c_str(), O_RDONLY);
-        pfd.fd = fd;
-        pfd.events = POLLPRI | POLLERR;
+//         command = "/sys/class/gpio/gpio" + GPIO + "/value";
+//         fd = open(command.c_str(), O_RDONLY);
+//         pfd.fd = fd;
+//         pfd.events = POLLPRI | POLLERR;
 
-        lseek(fd, 0, SEEK_SET);
-        int ret = poll(&pfd, 1, 100000);
-        char c;
-        read(fd, &c, 1);
+//         lseek(fd, 0, SEEK_SET);
+//         int ret = poll(&pfd, 1, 100000);
+//         char c;
+//         read(fd, &c, 1);
 
-        if (0 == ret)
-        {
-                // debugOutput::sendMessage("gpioTimeout", MSG_INFO);
-        }
-        else
-        {
-                if ((c == '1') && (button_state_memory != c))
-                {
-                        debugOutput::sendMessage("Power button pushed", MSG_INFO);
-                        usleep(1000000); // todo: why one second?!?!?! lode
-                        if (readButtonPin(IO_PIN_BUTTON_SHUTDOWN))
-                        {
-                                debugOutput::sendMessage("POWER OFF\n", MSG_INFO);
-                                system("echo D@nkF1ll$ | sudo -S shutdown -h now");
-                        }
-                        else if (readButtonPin(IO_PIN_BUTTON_MAINTENANCE))
-                        {
-                                debugOutput::sendMessage("Sending MM to UI. Deprecated. UI not listening.\n", MSG_INFO);
-                                // ENTER MAINTENANCE MODE!
-                                //m_pMessaging->sendMessageOverIP("MM");
-                        }
-                        else
-                        {
-                                debugOutput::sendMessage("Invalid press. Ghost button ?! Buttons not connected?", MSG_INFO);
-                        }
-                        usleep(5000); // Sleep to make sure debug gets chance to print
-                }
-        }
-        button_state_memory = c;
-        close(fd);
-        return;
-}
+//         if (0 == ret)
+//         {
+//                 // debugOutput::sendMessage("gpioTimeout", MSG_INFO);
+//         }
+//         else
+//         {
+//                 if ((c == '1') && (button_state_memory != c))
+//                 {
+//                         debugOutput::sendMessage("Power button pushed", MSG_INFO);
+//                         usleep(1000000); // todo: why one second?!?!?! lode
+//                         if (readButtonPin(IO_PIN_BUTTON_SHUTDOWN))
+//                         {
+//                                 debugOutput::sendMessage("POWER OFF\n", MSG_INFO);
+//                                 system("echo D@nkF1ll$ | sudo -S shutdown -h now");
+//                         }
+//                         else if (readButtonPin(IO_PIN_BUTTON_MAINTENANCE))
+//                         {
+//                                 debugOutput::sendMessage("Sending MM to UI. Deprecated. UI not listening.\n", MSG_INFO);
+//                                 // ENTER MAINTENANCE MODE!
+//                                 //m_pMessaging->sendMessageOverIP("MM");
+//                         }
+//                         else
+//                         {
+//                                 debugOutput::sendMessage("Invalid press. Ghost button ?! Buttons not connected?", MSG_INFO);
+//                         }
+//                         usleep(5000); // Sleep to make sure debug gets chance to print
+//                 }
+//         }
+//         button_state_memory = c;
+//         close(fd);
+//         return;
+// }
 
 bool oddyseyx86GPIO::readButtonPin(int pin)
 {

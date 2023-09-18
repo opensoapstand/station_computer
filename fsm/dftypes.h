@@ -49,15 +49,15 @@
 #define CYCLIC_PUMP_TEST_OFF_CYCLE_MILLIS 30000
 
 #define MILLIS_INIT_DUMMY 0
-#define IO_PIN_BUTTON_MAINTENANCE 340
-#define IO_PIN_BUTTON_SHUTDOWN 341
-#define IO_PIN_BUTTON_MAINTENANCE_SHUTDOWN_EDGE_DETECTOR 391
-#define IO_PIN_FLOW_SENSOR 364
+#define IO_PIN_BUTTON_MAINTENANCE 340 // connector pin 38
+#define IO_PIN_BUTTON_SHUTDOWN 341 //  connector pin 40 deprecated 
+#define IO_PIN_BUTTON_MAINTENANCE_SHUTDOWN_EDGE_DETECTOR 391 // connector pin 32 deprecated.
+#define IO_PIN_FLOW_SENSOR 364 // connector pin 11
 
 #define FLOWSENSOR_DEJITTER_MICROS 700ULL  //digmesa flowsensor
 //#define FLOWSENSOR_DEJITTER_MICROS 10000ULL  // AICHI flow sensor
-#define IO_PIN_BUTTON_4 410   // for EN-29 pcb
-#define IO_PIN_ENABLE_24V 410 // for EN-134 pcb
+#define IO_PIN_BUTTON_4 410   // connector pin 36 for EN-29 pcb
+#define IO_PIN_ENABLE_24V 410 // connector pin 36 for EN-134 pcb
 
 #define PIC_PROGRAMMER_PIN_VPP 337
 #define PIC_PROGRAMMER_PIN_PGC 412

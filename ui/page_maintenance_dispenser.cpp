@@ -106,7 +106,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     ui->pushButton_setting_temperature->setVisible(false);
     // ui->label_setting_temperature->setVisible(false);
     // double temperature = getTemperatureConfigure();
-    //  debugOutput::sendMessage("Temperature in Celsius: " + std::to_string(temperature), MSG_INFO);
+  //debugOutput::sendMessage("Temperature in Celsius: " + std::to_string(temperature), MSG_INFO);
     // ui->label_setting_temperature->setText("Temp="+temperature);
     //    ui->label_setting_temperature->setText("Temp = " + QString::number(temperature));
     //   pcb myPcb;

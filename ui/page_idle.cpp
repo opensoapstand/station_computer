@@ -53,7 +53,7 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
 
     pollTemperatureTimer = new QTimer(this);
     pollTemperatureTimer->setInterval(1000);
-    // connect(pollTemperatureTimer, SIGNAL(timeout()), this, SLOT(onPollTemperatureTimerTick()));
+    connect(pollTemperatureTimer, SIGNAL(timeout()), this, SLOT(onPollTemperatureTimerTick())); //timer poll try it was commented
 
     for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
@@ -273,6 +273,7 @@ void page_idle::onPollTemperatureTimerTick()
 {
     if (--_pollTemperatureTimerTimeoutSec >= 0)
     {
+
     }
     else
     {

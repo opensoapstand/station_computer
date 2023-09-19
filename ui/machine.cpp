@@ -11,7 +11,6 @@ machine::machine()
 
     // IPC Networking
     dfUtility = new df_util();
-
 }
 
 // Dtor
@@ -34,9 +33,16 @@ void machine::setCouponState(StateCoupon state)
     m_stateCoupon = state;
 }
 
-
-void machine::dispenseButtonLightsAnimateState(bool animateElseOff){
-    dfUtility->send_command_to_FSM("DispenseButtonLights|ANIMATE");
+void machine::dispenseButtonLightsAnimateState(bool animateElseOff)
+{
+    if (animateElseOff)
+    {
+        dfUtility->send_command_to_FSM("DispenseButtonLights|ANIMATE");
+    }
+    else
+    {
+        dfUtility->send_command_to_FSM("DispenseButtonLights|OFF");
+    }
 }
 
 void machine::initCouponState()
@@ -64,7 +70,7 @@ void machine::setDiscountPercentageFraction(double percentageFraction)
 }
 
 // void machine::setConditionalDiscount(const std::map<std::string, std::string>& dictionary){
-//     qDebug() << 
+//     qDebug() <<
 // }
 
 double machine::getDiscountPercentageFraction()
@@ -79,7 +85,7 @@ double machine::getDiscountAmount(double price)
 }
 
 double machine::getPriceWithDiscount(double price)
-{   
+{
     double discount = price * m_discount_percentage_fraction;
     qDebug() << m_max_dollar_amount_discount;
     max_discount = m_max_dollar_amount_discount.toDouble();
@@ -111,10 +117,12 @@ QString machine::getTemplateFolder()
     return TEMPLATES_ROOT_PATH + template_name + "/";
 }
 
-void machine::loadElementPropertiesFile(){
+void machine::loadElementPropertiesFile()
+{
     QString json_path = getTemplatePathFromName(UI_ELEMENT_PROPERTIES_PATH);
     QFile file(json_path);
-    if (file.open(QIODevice::ReadOnly)) {
+    if (file.open(QIODevice::ReadOnly))
+    {
         QByteArray jsonData = file.readAll();
         QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonData);
         m_propertiesObject = jsonDoc.object();
@@ -122,22 +130,18 @@ void machine::loadElementPropertiesFile(){
         file.close();
 
         // Now you have the propertiesObject containing properties for listed elements
-    }    
+    }
 
     // QList<QPushButton *> buttonList = centralWidget->findChildren<QPushButton *>();
 
     // foreach (QPushButton *button, buttonList) {
     //     qDebug() << "Button text:" << button->text();
     // }
-
 }
 
-
 // void machine::setExternalPropertiesToWidget(QWidget tmp){
-    
+
 // }
-
-
 
 void machine::loadProductPropertiesFromProductsFile(QString soapstand_product_number, QString *name, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui)
 {
@@ -201,16 +205,16 @@ void machine::getPrinterStatusFromDb(bool *isOnline, bool *hasPaper)
 void machine::writeTemperatureToDb(double temperature_1, double temperature_2)
 {
     qDebug() << "DB call: Add temperature record ";
-    double defaultTemperature2 = 0.0;  // Default value for temperature2
-    QString defaultAlert = "";         // Default alert message (can be adjusted as needed)
-    m_db->addTemperature(getMachineId(), temperature_1, temperature_2, defaultAlert);  
+    double defaultTemperature2 = 0.0; // Default value for temperature2
+    QString defaultAlert = "";        // Default alert message (can be adjusted as needed)
+    m_db->addTemperature(getMachineId(), temperature_1, temperature_2, defaultAlert);
 }
 // void machine::writeTemperature2ToDb(double temperature2)
 // {
 //     qDebug() << "DB call: Add temperature2 record ";
 //     double defaultTemperature = 0.0;  // Default value for temperature
 //     QString defaultAlert = "";         // Default alert message (can be adjusted as needed)
-//     m_db->addTemperature(getMachineId(), defaultTemperature, temperature2, defaultAlert);  
+//     m_db->addTemperature(getMachineId(), defaultTemperature, temperature2, defaultAlert);
 // }
 // void machine::writeTemperatureToDb(double temperature)
 // {
@@ -224,13 +228,15 @@ void machine::writeTemperatureToDb(double temperature_1, double temperature_2)
 //     m_db->addTemperature2(getMachineId(), temperature2, "");
 // }
 
-bool machine::isTemperatureTooHigh_1(){
+bool machine::isTemperatureTooHigh_1()
+{
     qDebug() << "alert temperature: " << m_alert_temperature;
     qDebug() << "current temperature: " << m_temperature;
-    if (m_alert_temperature >100.0){
+    if (m_alert_temperature > 100.0)
+    {
         return false;
     }
-    return m_temperature > m_alert_temperature ;
+    return m_temperature > m_alert_temperature;
 }
 
 void machine::fsmReceiveTemperature(double temperature_1, double temperature_2)
@@ -239,30 +245,31 @@ void machine::fsmReceiveTemperature(double temperature_1, double temperature_2)
     m_temperature2 = temperature_2;
     qDebug() << "Temperature received from FSM in machine: " << m_temperature;
     qDebug() << "Temperature 2 received from FSM in machine: " << m_temperature2;
-   
+
     writeTemperatureToDb(m_temperature, m_temperature2);
-   
-    if(isTemperatureTooHigh_1()){
+
+    if (isTemperatureTooHigh_1())
+    {
         // ui->label_printer_status->setText("Temperature= " + QString::number(temperature, 'f', 2) + " is too high")
         qDebug() << "Temperature too hights afeifaf    debug test";
     }
-
 }
 // void machine::fsmReceiveTemperature2(double temperature2)
 // {
 //     m_temperature2 = temperature2;
 //     qDebug() << "Temperature 2 received from FSM in machine: " << m_temperature2;
 //     // ui->label_setting_temperature->setText("Temp="+temperature);
-   
+
 //     writeTemperature2ToDb(m_temperature2);
-   
+
 //     if(isTemperatureTooHigh()){
 //         // ui->label_printer_status->setText("Temperature= " + QString::number(temperature, 'f', 2) + " is too high")
 //         qDebug() << "Temperature 222222 too hights afeifaf    debug test";
 //     }
 // }
 
-double machine::getTemperature_1(){
+double machine::getTemperature_1()
+{
     return m_temperature;
 }
 // double machine::getTemperature2(){
@@ -278,7 +285,8 @@ double machine::getTemperature_1(){
 //     }
 // }
 
-void machine::getTemperatureFromController(){
+void machine::getTemperatureFromController()
+{
     dfUtility->send_command_to_FSM("getTemperature");
 }
 // void machine::getTemperature2FromController(){
@@ -521,7 +529,8 @@ QString machine::getCustomerId()
     return m_soapstand_customer_id;
 }
 
-void machine::setCouponConditions(QString couponConditions){
+void machine::setCouponConditions(QString couponConditions)
+{
     QJsonDocument jsonDoc = QJsonDocument::fromJson(couponConditions.toUtf8());
     QJsonObject jsonObj = jsonDoc.object();
     m_min_threshold_vol_ml_discount = jsonObj["min_threshold_vol_ml"].toString();
@@ -529,11 +538,11 @@ void machine::setCouponConditions(QString couponConditions){
     m_max_dollar_amount_discount = jsonObj["max_dollar_amount_discount"].toString();
 }
 
-std::map<QString,QString> machine::getCouponConditions(){
-    std::map<QString,QString> myMap;
+std::map<QString, QString> machine::getCouponConditions()
+{
+    std::map<QString, QString> myMap;
     myMap["m_min_threshold_vol_ml_discount"] = m_min_threshold_vol_ml_discount;
     myMap["m_max_threshold_vol_ml_discount"] = m_max_threshold_vol_ml_discount;
     myMap["m_max_dollar_amount_discount"] = m_max_dollar_amount_discount;
     return myMap;
-    }
-
+}

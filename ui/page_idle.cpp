@@ -118,7 +118,30 @@ void page_idle::showEvent(QShowEvent *event)
 
     QString base_text = getTemplateTextByElementNameAndPage(ui->label_show_temperature);
     ui->label_show_temperature->setText(base_text.arg(QString::number(thisMachine.getTemperature_1(), 'f', 2))); // will replace %1 character in string by the provide text
-        
+       
+        if(thisMachine.isAelenPillarElseSoapStand()==false){
+        ui->label_show_temperature->hide();
+    qDebug() << "hide label";
+    qDebug() << "hide label";
+    qDebug() << "hide label";
+    qDebug() << "hide label";
+    qDebug() << "hide temperature label";
+    qDebug() << "hide temperature label";
+    qDebug() << "hide temperature label";
+    qDebug() << "hide temperature label";
+    qDebug() << "hide temperature label";
+    qDebug() << "hide temperature label";
+    qDebug() << "hide temperature label";
+        }else{
+    qDebug() << "show temperature label";
+    qDebug() << "show temperature label";
+    qDebug() << "show temperature label";
+    qDebug() << "show temperature label";
+    qDebug() << "show temperature label";
+    qDebug() << "show temperature label";
+    qDebug() << "show temperature label";
+
+        }
 
     //   QString temperature = QString::number( thisMachine.getTemperature_1(), 'f', 2);
     //   QString base = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_show_temperature, "temperature");
@@ -127,7 +150,6 @@ void page_idle::showEvent(QShowEvent *event)
           //ui->label_show_temperature->setText(base.arg(temperature));
         //  ui->label_show_temperature->setText(temperature);
 //          if(ui->label_show_temperature) {
-//     qDebug() << "Label exists.";
 // } else {
 //     qDebug() << "Label does not exist.";
 // }
@@ -353,6 +375,7 @@ void page_idle::checkReceiptPrinterStatus()
     this->p_page_maintenance_general->send_check_printer_status_command();
     ui->pushButton_to_select_product_page->hide(); // when printer needs to be restarted, it can take some time. Make sure nobody presses the button in that interval (to prevent crashes)
 }
+
 
 void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
 {

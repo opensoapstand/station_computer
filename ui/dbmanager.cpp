@@ -714,6 +714,14 @@ void DbManager::addUserInteraction(QString session_id, QString role, QString pag
     }
     closeDb();
 }
+
+
+QString DbManager::getHardwareVersion() {
+    QString hardwareVersion;
+    // Your database code here
+    // Populate hardwareVersion from the database
+    return hardwareVersion;
+}
 void DbManager::addTemperature(QString machine_id, double temperature_1,double temperature_2, QString alert)
 {
 

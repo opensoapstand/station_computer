@@ -651,6 +651,7 @@ void page_maintenance_dispenser::on_pushButton_set_status_clicked()
     // set to database
     p_page_idle->selectedProduct->setSlotEnabled(isEnabled);
     p_page_idle->selectedProduct->setStatusText(slotStatus);
+//    p_page_idle->selectedProduct->setStatusText(SLOT_STATE_DISABLED); //to be used where I check themperature
 
     ui->label_action_feedback->setText("Slot Status set to " + slotStatus);
     updateProductLabelValues(true);

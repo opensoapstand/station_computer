@@ -119,6 +119,10 @@ void page_idle::showEvent(QShowEvent *event)
     QString base_text = getTemplateTextByElementNameAndPage(ui->label_show_temperature);
     ui->label_show_temperature->setText(base_text.arg(QString::number(thisMachine.getTemperature_1(), 'f', 2))); // will replace %1 character in string by the provide text
        
+    if(thisMachine.getTemperature_1()>=24){
+        selectedProduct->setStatusText(SLOT_STATE_DISABLED); //to be used where I check themperature
+    }   
+
         if(thisMachine.isAelenPillarElseSoapStand()==false){
         ui->label_show_temperature->hide();
         ui->label_temperature_status->hide();

@@ -87,6 +87,7 @@ private slots:
     // void fsmSendPrice();
     // void fsmSendPromo();
     void fsmSendStopDispensing();
+    void onArrowAnimationStepTimerTick();
 
     void onDispenseIdleTick();
 
@@ -108,14 +109,17 @@ private:
     page_sendFeedback* feedbackPage;
     page_idle* p_page_idle;
 
+    uint16_t arrow_animation_step_counter;
+
     product* selectedProduct;
 
     // XXX: Remove when interrupts and flowsensors work.
 
     QString _dispenseTimeLabel;
-    QTimer *dispenseEndTimer;
+    //QTimer *dispenseEndTimer;
     int _dispenseIdleTimeoutSec;
     QTimer *dispenseIdleTimer;
+    QTimer *arrowAnimationStepTimer;
 
     // double volumeDispensed;
     // double targetVolume;

@@ -245,6 +245,20 @@
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="label_arrow_active_spout_down">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>1096</y>
+     <width>121</width>
+     <height>121</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+
   <zorder>pushButton_abort</zorder>
   <zorder>label_moving_bottle_fill_effect</zorder>
   <zorder>label_background_during_dispense_animation</zorder>
@@ -260,6 +274,7 @@
   <zorder>pushButton_problems</zorder>
   <zorder>label_dispense_message</zorder>
   <zorder>label_logo</zorder>
+  <zorder>label_arrow_active_spout_down</zorder>
  </widget>
  <resources/>
  <connections/>

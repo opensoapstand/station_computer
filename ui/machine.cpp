@@ -444,13 +444,13 @@ bool machine::slotNumberValidityCheck(int slot)
 void machine::setSlotCount(){
 check hardwarenumber
 
-swtich 
+switch ()blhahbahbs
 
 if AP1:
     slotcount=4
     if AP2:
     slotcount=6
-    
+
 }
 
 void machine::setSlotEnabled(int slot, bool isEnabled)

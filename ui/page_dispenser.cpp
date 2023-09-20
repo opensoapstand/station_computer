@@ -123,6 +123,8 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     transactionLogging += "\n 6: Station Unlocked - True";
 
+    animationStepForwardElseBackward = true;
+
     // important to set to nullptr, to check at timeout if it was initialized (displayed...) or not.
     msgBox_problems = nullptr;
     msgBox_abort = nullptr;
@@ -146,10 +148,13 @@ void page_dispenser::showEvent(QShowEvent *event)
     }
 
     // p_page_idle->addPictureToLabel(ui->label_indicate_active_spout, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_DOWN));
-    
-    if (p_page_idle->thisMachine.isDispenseAreaBelowElseBesideScreen()){
+
+    if (p_page_idle->thisMachine.isDispenseAreaBelowElseBesideScreen())
+    {
         p_page_idle->addPictureToLabel(ui->label_indicate_active_spout, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_DOWN));
-    }else{
+    }
+    else
+    {
         p_page_idle->addPictureToLabel(ui->label_indicate_active_spout, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_RIGHT));
     }
 
@@ -320,26 +325,52 @@ void page_dispenser::fsmSendStopDispensing()
     p_page_idle->thisMachine.dfUtility->send_command_to_FSM(command);
 }
 
-void page_dispenser::onArrowAnimationStepTimerTick(){
+void page_dispenser::onArrowAnimationStepTimerTick()
+{
 
-    arrow_animation_step_counter++;
-    if (arrow_animation_step_counter > 200){
-        arrow_animation_step_counter = 0;
-    }
+    // arrow_animation_step_counter++;
+    // if (arrow_animation_step_counter > 200){
+    //     arrow_animation_step_counter = 0;
+    // }
 
-    int16_t x_offset = 200 * p_page_idle->selectedProduct->getSlot();
+    // int16_t x_offset = 200 * p_page_idle->selectedProduct->getSlot();
 
-////////    // if (arrow_animation_step_counter < 100){
-////////
-////////    //     ui->label_indicate_active_spout->move(ui->label_indicate_active_spout->x(),ui->label_indicate_active_spout->y() + 1);
-////////    // }else{
-////////    //     ui->label_indicate_active_spout->move(ui->label_indicate_active_spout->x(),ui->label_indicate_active_spout->y() -1);
-////////    // }
+    ////////    // if (arrow_animation_step_counter < 100){
+    ////////
+    ////////    //     ui->label_indicate_active_spout->move(ui->label_indicate_active_spout->x(),ui->label_indicate_active_spout->y() + 1);
+    ////////    // }else{
+    ////////    //     ui->label_indicate_active_spout->move(ui->label_indicate_active_spout->x(),ui->label_indicate_active_spout->y() -1);
+    ////////    // }
     // if (arrow_animation_step_counter < 100){
     //     ui->label_indicate_active_spout->move(x_offset + ui->label_indicate_active_spout->x(),ui->label_indicate_active_spout->y() + 1);
     // }else{
     //     ui->label_indicate_active_spout->move(x_offset + ui->label_indicate_active_spout->x(),ui->label_indicate_active_spout->y() - 1);
     // }
+
+    arrow_animation_step_counter++;
+
+    if (arrow_animation_step_counter > 10)
+    {
+        arrow_animation_step_counter = 0;
+        animationStepForwardElseBackward = !animationStepForwardElseBackward;
+    }
+
+    // int16_t x_offset = 200 * p_page_idle->selectedProduct->getSlot();
+
+    // if (arrow_animation_step_counter < 100){
+
+    //     ui->label_indicate_active_spout->move(ui->label_indicate_active_spout->x(),ui->label_indicate_active_spout->y() + 1);
+    // }else{
+    //     ui->label_indicate_active_spout->move(ui->label_indicate_active_spout->x(),ui->label_indicate_active_spout->y() -1);
+    // }
+    if (animationStepForwardElseBackward)
+    {
+        ui->label_indicate_active_spout->move(ui->label_indicate_active_spout->x() + 1, ui->label_indicate_active_spout->y() + 1);
+    }
+    else
+    {
+        ui->label_indicate_active_spout->move(ui->label_indicate_active_spout->x() - 1, ui->label_indicate_active_spout->y() - 1);
+    }
 }
 
 void page_dispenser::onDispenseIdleTick()

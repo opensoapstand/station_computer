@@ -110,6 +110,7 @@ private:
     page_idle* p_page_idle;
 
     uint16_t arrow_animation_step_counter;
+    bool animationStepForwardElseBackward;
 
     product* selectedProduct;
 

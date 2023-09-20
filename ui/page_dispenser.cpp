@@ -145,7 +145,7 @@ void page_dispenser::showEvent(QShowEvent *event)
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH);
     }
 
-    // p_page_idle->addPictureToLabel(ui->label_arrow_active_spout_down, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_DOWN));
+    // p_page_idle->addPictureToLabel(ui->label_indicate_active_spout, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_DOWN));
     
     if (p_page_idle->thisMachine.isDispenseAreaBelowElseBesideScreen()){
         p_page_idle->addPictureToLabel(ui->label_indicate_active_spout, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_DOWN));
@@ -329,17 +329,17 @@ void page_dispenser::onArrowAnimationStepTimerTick(){
 
     int16_t x_offset = 200 * p_page_idle->selectedProduct->getSlot();
 
+////////    // if (arrow_animation_step_counter < 100){
+////////
+////////    //     ui->label_indicate_active_spout->move(ui->label_indicate_active_spout->x(),ui->label_indicate_active_spout->y() + 1);
+////////    // }else{
+////////    //     ui->label_indicate_active_spout->move(ui->label_indicate_active_spout->x(),ui->label_indicate_active_spout->y() -1);
+////////    // }
     // if (arrow_animation_step_counter < 100){
-
-    //     ui->label_arrow_active_spout_down->move(ui->label_arrow_active_spout_down->x(),ui->label_arrow_active_spout_down->y() + 1);
+    //     ui->label_indicate_active_spout->move(x_offset + ui->label_indicate_active_spout->x(),ui->label_indicate_active_spout->y() + 1);
     // }else{
-    //     ui->label_arrow_active_spout_down->move(ui->label_arrow_active_spout_down->x(),ui->label_arrow_active_spout_down->y() -1);
+    //     ui->label_indicate_active_spout->move(x_offset + ui->label_indicate_active_spout->x(),ui->label_indicate_active_spout->y() - 1);
     // }
-    if (arrow_animation_step_counter < 100){
-        ui->label_arrow_active_spout_down->move(x_offset + ui->label_arrow_active_spout_down->x(),ui->label_arrow_active_spout_down->y() + 1);
-    }else{
-        ui->label_arrow_active_spout_down->move(x_offset + ui->label_arrow_active_spout_down->x(),ui->label_arrow_active_spout_down->y() - 1);
-    }
 }
 
 void page_dispenser::onDispenseIdleTick()
@@ -439,7 +439,7 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
     if (p_page_idle->selectedProduct->getVolumeDispensedMl() >= MINIMUM_DISPENSE_VOLUME_ML)
     {
 
-        ui->label_indicate_active_spout->hide();
+        // ui->label_indicate_active_spout->hide();
         updatelabel_volume_dispensed_ml(p_page_idle->selectedProduct->getVolumeDispensedMl());
 
         double percentage = p_page_idle->selectedProduct->getVolumeDispensedMl() / (p_page_idle->selectedProduct->getVolumeOfSelectedSize()) * 100;

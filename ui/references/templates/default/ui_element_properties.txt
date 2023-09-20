@@ -21,4 +21,4 @@
 # page_select_product->label_product_1_type,{"x":53, "y":814, "width":450, "height":46,"isVisibleAtLoad":true}
 # page_select_product->label_product_2_type,{"x":562, "y":814, "width":450, "height":46,"isVisibleAtLoad":false}
 
-#page_dispenser->label_arrow_active_spout_down,{"x":955,"y":300,"isVisibleAtLoad":true}
+# page_dispenser->label_indicate_active_spout,{"x":955,"y":300,"isVisibleAtLoad":true}

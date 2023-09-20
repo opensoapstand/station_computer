@@ -245,19 +245,6 @@
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="label_arrow_active_spout_down">
-   <property name="geometry">
-    <rect>
-     <x>270</x>
-     <y>1096</y>
-     <width>121</width>
-     <height>121</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_indicate_active_spout">
    <property name="geometry">
     <rect>
@@ -286,7 +273,6 @@
   <zorder>pushButton_problems</zorder>
   <zorder>label_dispense_message</zorder>
   <zorder>label_logo</zorder>
-  <zorder>label_arrow_active_spout_down</zorder>
   <zorder>label_indicate_active_spout</zorder>
  </widget>
  <resources/>

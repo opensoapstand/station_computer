@@ -441,6 +441,18 @@ bool machine::slotNumberValidityCheck(int slot)
     return valid;
 }
 
+void machine::setSlotCount(){
+check hardwarenumber
+
+swtich 
+
+if AP1:
+    slotcount=4
+    if AP2:
+    slotcount=6
+    
+}
+
 void machine::setSlotEnabled(int slot, bool isEnabled)
 {
     // do this through product.cpp, as this should have been a part of products table

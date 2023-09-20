@@ -328,25 +328,6 @@ void page_dispenser::fsmSendStopDispensing()
 void page_dispenser::onArrowAnimationStepTimerTick()
 {
 
-    // arrow_animation_step_counter++;
-    // if (arrow_animation_step_counter > 200){
-    //     arrow_animation_step_counter = 0;
-    // }
-
-    // int16_t x_offset = 200 * p_page_idle->selectedProduct->getSlot();
-
-    ////////    // if (arrow_animation_step_counter < 100){
-    ////////
-    ////////    //     ui->label_indicate_active_spout->move(ui->label_indicate_active_spout->x(),ui->label_indicate_active_spout->y() + 1);
-    ////////    // }else{
-    ////////    //     ui->label_indicate_active_spout->move(ui->label_indicate_active_spout->x(),ui->label_indicate_active_spout->y() -1);
-    ////////    // }
-    // if (arrow_animation_step_counter < 100){
-    //     ui->label_indicate_active_spout->move(x_offset + ui->label_indicate_active_spout->x(),ui->label_indicate_active_spout->y() + 1);
-    // }else{
-    //     ui->label_indicate_active_spout->move(x_offset + ui->label_indicate_active_spout->x(),ui->label_indicate_active_spout->y() - 1);
-    // }
-
     arrow_animation_step_counter++;
 
     if (arrow_animation_step_counter > 10)
@@ -355,14 +336,6 @@ void page_dispenser::onArrowAnimationStepTimerTick()
         animationStepForwardElseBackward = !animationStepForwardElseBackward;
     }
 
-    // int16_t x_offset = 200 * p_page_idle->selectedProduct->getSlot();
-
-    // if (arrow_animation_step_counter < 100){
-
-    //     ui->label_indicate_active_spout->move(ui->label_indicate_active_spout->x(),ui->label_indicate_active_spout->y() + 1);
-    // }else{
-    //     ui->label_indicate_active_spout->move(ui->label_indicate_active_spout->x(),ui->label_indicate_active_spout->y() -1);
-    // }
     if (animationStepForwardElseBackward)
     {
         ui->label_indicate_active_spout->move(ui->label_indicate_active_spout->x() + 1, ui->label_indicate_active_spout->y() + 1);
@@ -470,7 +443,7 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
     if (p_page_idle->selectedProduct->getVolumeDispensedMl() >= MINIMUM_DISPENSE_VOLUME_ML)
     {
 
-        // ui->label_indicate_active_spout->hide();
+        ui->label_indicate_active_spout->hide();
         updatelabel_volume_dispensed_ml(p_page_idle->selectedProduct->getVolumeDispensedMl());
 
         double percentage = p_page_idle->selectedProduct->getVolumeDispensedMl() / (p_page_idle->selectedProduct->getVolumeOfSelectedSize()) * 100;

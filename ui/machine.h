@@ -47,6 +47,7 @@ public:
     QString getMachineId();
     bool getCouponsEnabled();
     bool getShowTransactionHistory();
+    bool isAelenPillarElseSoapStand();
 
     void processRolePassword(QString password_input);
     QString getActiveRoleAsText();

@@ -94,7 +94,7 @@ public:
                                  int *is_enabled_slots,
                                  QString *status_text_slots,
                                  double *alert_temperature);
-
+         QString getHardwareVersion();
     // QString m_dbPath2;
 
 private:

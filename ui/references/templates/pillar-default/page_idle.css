@@ -24,6 +24,17 @@ QLabel {
     qproperty-alignment: AlignCenter;
 }
 
+#label_show_temperature {
+    font-size: 49px;
+    font-weight: 700;
+    line-height: 43px;
+    color: rgb(255, 255, 255);
+    
+    font-family: 'Lora';
+    /* font-family: 'Vollkorn'; */
+    qproperty-alignment: AlignCenter;
+}
+
 #label_printer_status {
     font-family: 'EuropaNuova';
     font-style: normal;

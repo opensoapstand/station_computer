@@ -1,8 +1,8 @@
 #include "page_maintenance_dispenser.h"
 #include "ui_page_maintenance_dispenser.h"
 #include "page_idle.h"
-// #include "/home/df-admin/drinkfill/fsm/components/pcb.cpp"
-//  #include "/home/df-admin/drinkfill/fsm/components/pcb.h"
+// #include "/home/df-admin/station_computer/fsm/components/pcb.cpp"
+//  #include "/home/df-admin/station_computer/fsm/components/pcb.h"
 
 #include <QInputDialog>
 #include <QCoreApplication>

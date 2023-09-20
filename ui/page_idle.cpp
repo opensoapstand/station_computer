@@ -53,7 +53,7 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
 
     pollTemperatureTimer = new QTimer(this);
     pollTemperatureTimer->setInterval(1000);
-    connect(pollTemperatureTimer, SIGNAL(timeout()), this, SLOT(onPollTemperatureTimerTick())); //timer poll try it was commented
+    connect(pollTemperatureTimer, SIGNAL(timeout()), this, SLOT(onPollTemperatureTimerTick())); 
 
     for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
@@ -110,6 +110,21 @@ void page_idle::showEvent(QShowEvent *event)
     ui->pushButton_test->setStyleSheet(styleSheet);
     ui->label_printer_status->setStyleSheet(styleSheet);
     ui->label_temperature_status->setStyleSheet(styleSheet);
+    
+    ui->label_show_temperature->setStyleSheet(styleSheet);
+    //setTemplateTextToObject(ui->label_show_temperature);
+    //  ui->label_show_temperature->setText( "33");
+
+
+    QString base_text = getTemplateTextByElementNameAndPage(ui->label_show_temperature);
+    ui->label_show_temperature->setText(base_text.arg(QString::number(thisMachine.getTemperature_1(), 'f', 2))); // will replace %1 character in string by the provide text
+       
+        if(thisMachine.isAelenPillarElseSoapStand()==false){
+        ui->label_show_temperature->hide();
+        ui->label_temperature_status->hide();
+        }else{
+        }
+ 
    ui->label_temperature_status->hide();
     // bool needsReceiptPrinter = false;
     // for (int slot = 1; slot <= SLOT_COUNT; slot++)
@@ -284,19 +299,33 @@ void page_idle::onPollTemperatureTimerTick()
         thisMachine.getTemperatureFromController();
         // hack, will not be ready when asked from controller. This basically displaying the "previous temperature".
         //ui->label_printer_status->setText( QString::number( thisMachine.getTemperature_1(), 'f', 2));
+       
         if (thisMachine.isTemperatureTooHigh_1()){
 
             
             QString temperature = QString::number( thisMachine.getTemperature_1(), 'f', 2);
             
             QString base = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_temperature_status, "temperature_too_high");
+               if(thisMachine.isAelenPillarElseSoapStand()==false){
+        ui->label_show_temperature->hide();
+        ui->label_temperature_status->hide();
+        }else{
             ui->label_temperature_status->show();
+        }
             ui->label_temperature_status->setText(base.arg(temperature));
             qDebug() << "Temperature too high";
+            
+    QString base_text = getTemplateTextByElementNameAndPage(ui->label_show_temperature);
+    ui->label_show_temperature->setText(base_text.arg(QString::number(thisMachine.getTemperature_1(), 'f', 2))); // will replace %1 character in string by the provide text
+        
         }else{
 
             qDebug() << "Temperature ok";
             ui->label_temperature_status->hide();
+            
+    QString base_text = getTemplateTextByElementNameAndPage(ui->label_show_temperature);
+    ui->label_show_temperature->setText(base_text.arg(QString::number(thisMachine.getTemperature_1(), 'f', 2))); // will replace %1 character in string by the provide text
+        
         }
     }
         
@@ -321,6 +350,7 @@ void page_idle::checkReceiptPrinterStatus()
     this->p_page_maintenance_general->send_check_printer_status_command();
     ui->pushButton_to_select_product_page->hide(); // when printer needs to be restarted, it can take some time. Make sure nobody presses the button in that interval (to prevent crashes)
 }
+
 
 void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
 {
@@ -738,3 +768,4 @@ QStringList page_idle::getChildNames(QObject *parent)
 
     return childNames;
 }
+

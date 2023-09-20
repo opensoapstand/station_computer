@@ -28,6 +28,28 @@ StateCoupon machine::getCouponState()
     return m_stateCoupon;
 }
 
+bool machine::isAelenPillarElseSoapStand()
+{
+    // check in database if hardware_version starts with AP or SS
+    // get hardware_version from db_manager
+    // if starts with SS return false, if starts with ap reeturn true
+
+
+    if (m_hardware_version.startsWith("AP"))
+    {
+        return true;
+    }
+    else if (m_hardware_version.startsWith("SS"))
+    {
+        return false;
+    }
+    else
+    {
+        qDebug() << "ASSERT ERROR: Unknown Hardware version:  " << m_hardware_version;
+    }
+    return false; // default case
+}
+
 void machine::setCouponState(StateCoupon state)
 {
     m_stateCoupon = state;

@@ -258,7 +258,19 @@
     <string>TextLabel</string>
    </property>
   </widget>
-
+  <widget class="QLabel" name="label_indicate_active_spout">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>1130</y>
+     <width>171</width>
+     <height>171</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>active spout</string>
+   </property>
+  </widget>
   <zorder>pushButton_abort</zorder>
   <zorder>label_moving_bottle_fill_effect</zorder>
   <zorder>label_background_during_dispense_animation</zorder>
@@ -275,6 +287,7 @@
   <zorder>label_dispense_message</zorder>
   <zorder>label_logo</zorder>
   <zorder>label_arrow_active_spout_down</zorder>
+  <zorder>label_indicate_active_spout</zorder>
  </widget>
  <resources/>
  <connections/>

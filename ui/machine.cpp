@@ -28,6 +28,19 @@ StateCoupon machine::getCouponState()
     return m_stateCoupon;
 }
 
+bool machine::isDispenseAreaBelowElseBesideScreen()
+{
+    // check in database if hardware_version starts with AP or SS
+    // get hardware_version from db_manager
+    // if starts with SS return false, if starts with ap reeturn true
+
+    if (m_hardware_version.startsWith("SS1"))
+    {
+        return false;
+    }
+    return true; 
+}
+
 bool machine::isAelenPillarElseSoapStand()
 {
     // check in database if hardware_version starts with AP or SS

@@ -145,8 +145,13 @@ void page_dispenser::showEvent(QShowEvent *event)
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH);
     }
 
-    p_page_idle->addPictureToLabel(ui->label_arrow_active_spout_down, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_DOWN));
-
+    // p_page_idle->addPictureToLabel(ui->label_arrow_active_spout_down, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_DOWN));
+    
+    if (p_page_idle->thisMachine.isDispenseAreaBelowElseBesideScreen()){
+        p_page_idle->addPictureToLabel(ui->label_indicate_active_spout, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_DOWN));
+    }else{
+        p_page_idle->addPictureToLabel(ui->label_indicate_active_spout, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_RIGHT));
+    }
 
     p_page_idle->addCustomerLogoToLabel(ui->label_logo);
     ui->label_logo->hide();
@@ -162,6 +167,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     ui->label_finishTransactionMessage->hide();
     ui->label_background_during_dispense_animation->hide();
     ui->label_moving_bottle_fill_effect->hide();
+    ui->label_indicate_active_spout->show();
 
     ui->label_dispense_message->hide();
     ui->pushButton_problems->show();
@@ -433,7 +439,7 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
     if (p_page_idle->selectedProduct->getVolumeDispensedMl() >= MINIMUM_DISPENSE_VOLUME_ML)
     {
 
-        ui->label_arrow_active_spout_down->hide();
+        ui->label_indicate_active_spout->hide();
         updatelabel_volume_dispensed_ml(p_page_idle->selectedProduct->getVolumeDispensedMl());
 
         double percentage = p_page_idle->selectedProduct->getVolumeDispensedMl() / (p_page_idle->selectedProduct->getVolumeOfSelectedSize()) * 100;
@@ -542,7 +548,6 @@ void page_dispenser::on_pushButton_abort_clicked()
         msgBox_abort->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 
         int ret = msgBox_abort->exec();
-        bool success;
         switch (ret)
         {
         case QMessageBox::Yes:
@@ -589,7 +594,6 @@ void page_dispenser::on_pushButton_problems_clicked()
     msgBox_problems->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 
     int ret = msgBox_problems->exec();
-    bool success;
     switch (ret)
     {
     case QMessageBox::Yes:

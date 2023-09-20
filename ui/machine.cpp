@@ -34,13 +34,6 @@ bool machine::isAelenPillarElseSoapStand()
     // get hardware_version from db_manager
     // if starts with SS return false, if starts with ap reeturn true
 
-    //    DbManager dbManager;
-    //         QString hardware_version = dbManager.getHardwareVersion();
-    //     qDebug() << "Hardware version is/////////////////////////////////////////////////////////////////: " << hardware_version;
-    //     qDebug() << "Hardware version is/////////////////////////////////////////////////////////////////: " << hardware_version;
-    //     qDebug() << "Hardware version is/////////////////////////////////////////////////////////////////: " << hardware_version;
-    //     qDebug() << "Hardware version is/////////////////////////////////////////////////////////////////: " << hardware_version;
-        qDebug() << "Hardware version is/////////////////////////////////////////////////////////////////: " << m_hardware_version;
 
     if (m_hardware_version.startsWith("AP"))
     {

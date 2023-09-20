@@ -121,40 +121,10 @@ void page_idle::showEvent(QShowEvent *event)
        
         if(thisMachine.isAelenPillarElseSoapStand()==false){
         ui->label_show_temperature->hide();
-    qDebug() << "hide label";
-    qDebug() << "hide label";
-    qDebug() << "hide label";
-    qDebug() << "hide label";
-    qDebug() << "hide temperature label";
-    qDebug() << "hide temperature label";
-    qDebug() << "hide temperature label";
-    qDebug() << "hide temperature label";
-    qDebug() << "hide temperature label";
-    qDebug() << "hide temperature label";
-    qDebug() << "hide temperature label";
+        ui->label_temperature_status->hide();
         }else{
-    qDebug() << "show temperature label";
-    qDebug() << "show temperature label";
-    qDebug() << "show temperature label";
-    qDebug() << "show temperature label";
-    qDebug() << "show temperature label";
-    qDebug() << "show temperature label";
-    qDebug() << "show temperature label";
-
         }
-
-    //   QString temperature = QString::number( thisMachine.getTemperature_1(), 'f', 2);
-    //   QString base = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_show_temperature, "temperature");
-    //   QString base = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_show_temperature, "temperature");
-//         // ui->label_show_temperature->show();
-          //ui->label_show_temperature->setText(base.arg(temperature));
-        //  ui->label_show_temperature->setText(temperature);
-//          if(ui->label_show_temperature) {
-// } else {
-//     qDebug() << "Label does not exist.";
-// }
-// qDebug() << "Temperature: " << temperature;
-// qDebug() << "Base2: " << base;
+ 
    ui->label_temperature_status->hide();
     // bool needsReceiptPrinter = false;
     // for (int slot = 1; slot <= SLOT_COUNT; slot++)
@@ -336,7 +306,12 @@ void page_idle::onPollTemperatureTimerTick()
             QString temperature = QString::number( thisMachine.getTemperature_1(), 'f', 2);
             
             QString base = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_temperature_status, "temperature_too_high");
+               if(thisMachine.isAelenPillarElseSoapStand()==false){
+        ui->label_show_temperature->hide();
+        ui->label_temperature_status->hide();
+        }else{
             ui->label_temperature_status->show();
+        }
             ui->label_temperature_status->setText(base.arg(temperature));
             qDebug() << "Temperature too high";
             

@@ -274,7 +274,7 @@ void page_maintenance_dispenser::onDispenseTimerTick()
 void page_maintenance_dispenser::fsmReceiveTemperature(double temperature_1, double temperature_2)
 {
 
-    qDebug() << "Temperatures received from FSM. Sensor1: " << temperature_1 << " Sensor2: " << temperature_2;
+    // qDebug() << "Temperatures received from FSM. Sensor1: " << temperature_1 << " Sensor2: " << temperature_2;
     
     p_page_idle->thisMachine.fsmReceiveTemperature(temperature_1, temperature_2);
     ui->label_setting_temperature->setText( QString::number(temperature_1, 'f', 2));

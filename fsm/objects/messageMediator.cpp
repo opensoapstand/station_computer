@@ -573,12 +573,12 @@ void messageMediator::sendTemperatureData()
 
    if (m_machine->control_pcb->isTemperatureSensorAvailable())
    {
-      temperature_1 = m_machine->control_pcb->getTemperature();
+      temperature_1 = m_machine->control_pcb->getTemperature(TEMPERATURE_SENSOR_1_ADDRESS);
    }
 
    if (m_machine->control_pcb->isTemperatureSensor2Available())
    {
-      temperature_2 = m_machine->control_pcb->getTemperature2();
+      temperature_2 = m_machine->control_pcb->getTemperature(TEMPERATURE_SENSOR_2_ADDRESS);
    }
    char temp_celcius_chars[MAX_BUF];
    snprintf(temp_celcius_chars, sizeof(temp_celcius_chars), "%.2f", temperature_1);

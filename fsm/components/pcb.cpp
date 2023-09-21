@@ -360,27 +360,27 @@ bool pcb::define_pcb_version(void)
 
                 debugOutput::sendMessage("ADC081C021 current sensor found. NOT IN USE YET.", MSG_INFO);
             }
-            else if (i2c_probe_address == TEMPERATURE_SENSOR_ADDRESS2)
+            else if (i2c_probe_address == TEMPERATURE_SENSOR_2_ADDRESS)
             {
-                debugOutput::sendMessage("MCP9808 Temperature Sensor found2.", MSG_INFO);
+                debugOutput::sendMessage("MCP9808 Temperature Sensor 2 found.", MSG_INFO);
                 mcp9808_temperature2_sensor_found = true;
-                cTemp2 = getTemperature2();
+                cTemp2 = getTemperature(TEMPERATURE_SENSOR_2_ADDRESS);
                 char temp_celcius_chars[MAX_BUF];
                 snprintf(temp_celcius_chars, sizeof(temp_celcius_chars), "%.2f", cTemp2);
                 string temp_celcius = (temp_celcius_chars);
                 // Output data to screen
-                debugOutput::sendMessage("At startup:2 " + std::string(temp_celcius), MSG_INFO);
+                debugOutput::sendMessage("Temperature at startup: " + std::string(temp_celcius), MSG_INFO);
             }
-            else if (i2c_probe_address == TEMPERATURE_SENSOR_ADDRESS)
+            else if (i2c_probe_address == TEMPERATURE_SENSOR_1_ADDRESS)
             {
-                debugOutput::sendMessage("MCP9808 Temperature Sensor found.", MSG_INFO);
+                debugOutput::sendMessage("MCP9808 Temperature Sensor 1 found.", MSG_INFO);
                 mcp9808_temperature_sensor_found = true;
-                cTemp = getTemperature();
+                cTemp = getTemperature(TEMPERATURE_SENSOR_1_ADDRESS);
                 char temp_celcius_chars[MAX_BUF];
                 snprintf(temp_celcius_chars, sizeof(temp_celcius_chars), "%.2f", cTemp);
                 string temp_celcius = (temp_celcius_chars);
                 // Output data to screen
-                debugOutput::sendMessage("At startup: " + std::string(temp_celcius), MSG_INFO);
+                debugOutput::sendMessage("Temperature at startup: " + std::string(temp_celcius), MSG_INFO);
             }
             else if (i2c_probe_address == PIC_ADDRESS)
             {
@@ -1602,9 +1602,9 @@ void pcb::setSolenoid(uint8_t slot, bool onElseOff)
     }
 }
 
-double pcb::getTemperature()
+double pcb::getTemperature(uint8_t temperatureSensorI2CAddress)
 {
-    set_i2c_address(TEMPERATURE_SENSOR_ADDRESS);
+    set_i2c_address(temperatureSensorI2CAddress);
     int temperature_bytes = i2c_smbus_read_word_data(i2c_handle, 0x05);
     if (temperature_bytes < 0)
     {
@@ -1615,19 +1615,6 @@ double pcb::getTemperature()
     uint16_t msbint = temperature_bytes >> 8;
     uint16_t lsbint = temperature_bytes & 0x00FF;
     uint16_t temperature_bytes_swapped = (lsbint << 8) | msbint;
-    // create function to swap this
-    //     uint16_t swapBytes(uint16_t temperature_bytes) {
-    //     uint16_t msbint = temperature_bytes >> 8;
-    //     uint16_t lsbint = temperature_bytes & 0x00FF;
-    //     uint16_t temperature_bytes_swapped = (lsbint << 8) | msbint;
-    //     return temperature_bytes_swapped;
-    // }
-
-    // std::string binarymsb = std::bitset<16>(msbint).to_string();
-    //debugOutput::sendMessage("Temperature as bits msb: " + binarymsb, MSG_INFO);
-
-    // std::string binarylsb = std::bitset<16>(lsbint).to_string();
-    // debugOutput::sendMessage("Temperature as bits lsb: " + binarylsb, MSG_INFO);
 
     temperature_bytes = temperature_bytes_swapped;
     uint16_t signBit = (temperature_bytes >> 12) & 0x01;   // Sign bit is at bit 12
@@ -1643,54 +1630,52 @@ double pcb::getTemperature()
         // Positive temperature
         cTemp = temperatureData * 0.0625;
     }
-    // std::string binary = std::bitset<16>(temperature_bytes).to_string();
-    // debugOutput::sendMessage("Temperature as bits: " + binary, MSG_INFO);
 
     return cTemp;
 }
-double pcb::getTemperature2()
-{
-    set_i2c_address(TEMPERATURE_SENSOR_ADDRESS2);
-    int temperature_bytes = i2c_smbus_read_word_data(i2c_handle, 0x05);
-    if (temperature_bytes < 0)
-    {
-        debugOutput::sendMessage("Error did not read from temperature sensor mcp9808", MSG_INFO);
-        return 1;
-    }
+// double pcb::getTemperature2()
+// {
+//     set_i2c_address(TEMPERATURE_SENSOR_ADDRESS2);
+//     int temperature_bytes = i2c_smbus_read_word_data(i2c_handle, 0x05);
+//     if (temperature_bytes < 0)
+//     {
+//         debugOutput::sendMessage("Error did not read from temperature sensor mcp9808", MSG_INFO);
+//         return 1;
+//     }
 
-    uint16_t msbint = temperature_bytes >> 8;
-    uint16_t lsbint = temperature_bytes & 0x00FF;
-    uint16_t temperature_bytes_swapped = (lsbint << 8) | msbint;
-    // create function to swap this
-    //     uint16_t swapBytes(uint16_t temperature_bytes) {
-    //     uint16_t msbint = temperature_bytes >> 8;
-    //     uint16_t lsbint = temperature_bytes & 0x00FF;
-    //     uint16_t temperature_bytes_swapped = (lsbint << 8) | msbint;
-    //     return temperature_bytes_swapped;
-    // }
+//     uint16_t msbint = temperature_bytes >> 8;
+//     uint16_t lsbint = temperature_bytes & 0x00FF;
+//     uint16_t temperature_bytes_swapped = (lsbint << 8) | msbint;
+//     // create function to swap this
+//     //     uint16_t swapBytes(uint16_t temperature_bytes) {
+//     //     uint16_t msbint = temperature_bytes >> 8;
+//     //     uint16_t lsbint = temperature_bytes & 0x00FF;
+//     //     uint16_t temperature_bytes_swapped = (lsbint << 8) | msbint;
+//     //     return temperature_bytes_swapped;
+//     // }
 
-    // std::string binarymsb = std::bitset<16>(msbint).to_string();
-    //debugOutput::sendMessage("Temperature as bits msb: " + binarymsb, MSG_INFO);
+//     // std::string binarymsb = std::bitset<16>(msbint).to_string();
+//     //debugOutput::sendMessage("Temperature as bits msb: " + binarymsb, MSG_INFO);
 
-    // std::string binarylsb = std::bitset<16>(lsbint).to_string();
-    // debugOutput::sendMessage("Temperature as bits lsb: " + binarylsb, MSG_INFO);
+//     // std::string binarylsb = std::bitset<16>(lsbint).to_string();
+//     // debugOutput::sendMessage("Temperature as bits lsb: " + binarylsb, MSG_INFO);
 
-    temperature_bytes = temperature_bytes_swapped;
-    uint16_t signBit = (temperature_bytes >> 12) & 0x01;   // Sign bit is at bit 12
-    uint16_t temperatureData = temperature_bytes & 0x0FFF; // Temperature data is bits 11-0
-    if ((temperatureData & 0x0800) != 0)
-    {
-        // Negative temperature
-        temperatureData = (~temperatureData & 0x0FFF) + 1; // Two's complement conversion
-        cTemp = -1.0 * temperatureData * 0.0625;
-    }
-    else
-    {
-        // Positive temperature
-        cTemp2 = temperatureData * 0.0625;
-    }
-    // std::string binary = std::bitset<16>(temperature_bytes).to_string();
-    // debugOutput::sendMessage("Temperature as bits: " + binary, MSG_INFO);
+//     temperature_bytes = temperature_bytes_swapped;
+//     uint16_t signBit = (temperature_bytes >> 12) & 0x01;   // Sign bit is at bit 12
+//     uint16_t temperatureData = temperature_bytes & 0x0FFF; // Temperature data is bits 11-0
+//     if ((temperatureData & 0x0800) != 0)
+//     {
+//         // Negative temperature
+//         temperatureData = (~temperatureData & 0x0FFF) + 1; // Two's complement conversion
+//         cTemp = -1.0 * temperatureData * 0.0625;
+//     }
+//     else
+//     {
+//         // Positive temperature
+//         cTemp2 = temperatureData * 0.0625;
+//     }
+//     // std::string binary = std::bitset<16>(temperature_bytes).to_string();
+//     // debugOutput::sendMessage("Temperature as bits: " + binary, MSG_INFO);
 
-    return cTemp2;
-}
+//     return cTemp2;
+// }

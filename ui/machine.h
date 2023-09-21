@@ -48,6 +48,7 @@ public:
     bool getCouponsEnabled();
     bool getShowTransactionHistory();
     bool isAelenPillarElseSoapStand();
+    bool isDispenseAreaBelowElseBesideScreen();
 
     void processRolePassword(QString password_input);
     QString getActiveRoleAsText();

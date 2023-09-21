@@ -43,6 +43,10 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
     dispenseIdleTimer->setInterval(1000);
     connect(dispenseIdleTimer, SIGNAL(timeout()), this, SLOT(onDispenseIdleTick()));
     this->isDispensing = false;
+
+    arrowAnimationStepTimer = new QTimer(this);
+    arrowAnimationStepTimer->setInterval(10);
+    connect(arrowAnimationStepTimer, SIGNAL(timeout()), this, SLOT(onArrowAnimationStepTimerTick()));
 }
 
 /*
@@ -67,10 +71,9 @@ void page_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
 
     this->isDispensing = false;
-    if (dispenseIdleTimer != nullptr)
-    {
-        dispenseIdleTimer->stop();
-    }
+
+    dispenseIdleTimer->stop();
+    arrowAnimationStepTimer->stop();
 
     if (msgBox_abort != nullptr)
     {
@@ -93,7 +96,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
 
     p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
-    
+
     p_page_idle->setTemplateTextToObject(ui->pushButton_problems);
     p_page_idle->setTemplateTextToObject(ui->label_to_refill);
     p_page_idle->setTemplateTextToObject(ui->label_instructions_container);
@@ -120,6 +123,8 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     transactionLogging += "\n 6: Station Unlocked - True";
 
+    animationStepForwardElseBackward = true;
+
     // important to set to nullptr, to check at timeout if it was initialized (displayed...) or not.
     msgBox_problems = nullptr;
     msgBox_abort = nullptr;
@@ -132,7 +137,6 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     previousDispenseStatus = "NO STATE";
 
-
     if (p_page_idle->thisMachine.getDispensersCount() == 1)
     {
         // single spout
@@ -143,13 +147,23 @@ void page_dispenser::showEvent(QShowEvent *event)
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH);
     }
 
+    // p_page_idle->addPictureToLabel(ui->label_indicate_active_spout, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_DOWN));
+
+    if (p_page_idle->thisMachine.isDispenseAreaBelowElseBesideScreen())
+    {
+        p_page_idle->addPictureToLabel(ui->label_indicate_active_spout, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_DOWN));
+    }
+    else
+    {
+        p_page_idle->addPictureToLabel(ui->label_indicate_active_spout, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_RIGHT));
+    }
+
     p_page_idle->addCustomerLogoToLabel(ui->label_logo);
     ui->label_logo->hide();
 
     p_page_idle->addPictureToLabel(ui->label_background_during_dispense_animation, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));
 
     p_page_idle->addPictureToLabel(ui->label_moving_bottle_fill_effect, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_FILL_ANIMATION));
-    
 
     ui->pushButton_abort->show();
     ui->label_press->show();
@@ -158,11 +172,13 @@ void page_dispenser::showEvent(QShowEvent *event)
     ui->label_finishTransactionMessage->hide();
     ui->label_background_during_dispense_animation->hide();
     ui->label_moving_bottle_fill_effect->hide();
+    ui->label_indicate_active_spout->show();
 
     ui->label_dispense_message->hide();
     ui->pushButton_problems->show();
 
     dispenseIdleTimer->start(1000);
+    arrowAnimationStepTimer->start();
     resetDispenseTimeout();
 
     p_page_idle->selectedProduct->resetVolumeDispensed();
@@ -240,8 +256,7 @@ void page_dispenser::dispensing_end_admin()
     else if ((p_page_idle->selectedProduct->getPaymentMethod() == PAYMENT_TAP_TCP) && p_page_idle->selectedProduct->getVolumeDispensedMl() >= MINIMUM_DISPENSE_VOLUME_ML)
     {
 
-        
-        QString base_text = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_finishTransactionMessage, "display_price" );
+        QString base_text = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_finishTransactionMessage, "display_price");
         ui->label_finishTransactionMessage->setText(base_text.arg(QString::number(current_price, 'f', 2))); // will replace %1 character in string by the provide text
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         if (CTROUTD != "")
@@ -310,23 +325,26 @@ void page_dispenser::fsmSendStopDispensing()
     p_page_idle->thisMachine.dfUtility->send_command_to_FSM(command);
 }
 
-// void page_dispenser::fsmSendPrice()
-// {
-//     qDebug() << "Send Price to fsm";
-//     std::string prefix = "$";
-//     QString command = QString::fromStdString(prefix);
-//     command.append(QString::number(this->p_page_idle->selectedProduct->getSelectedPriceCorrected()));
-//     p_page_idle->thisMachine.dfUtility->send_command_to_FSM(command);
-// }
+void page_dispenser::onArrowAnimationStepTimerTick()
+{
 
-// void page_dispenser::fsmSendPromo()
-// {
-//     qDebug() << "Send Promo to fsm";
-//     std::string prefix = "Promo:";
-//     QString command = QString::fromStdString(prefix);
-//     command.append(this->p_page_idle->selectedProduct->getPromoCode());
-//     p_page_idle->thisMachine.dfUtility->send_command_to_FSM(command);
-// }
+    arrow_animation_step_counter++;
+
+    if (arrow_animation_step_counter > 10)
+    {
+        arrow_animation_step_counter = 0;
+        animationStepForwardElseBackward = !animationStepForwardElseBackward;
+    }
+
+    if (animationStepForwardElseBackward)
+    {
+        ui->label_indicate_active_spout->move(ui->label_indicate_active_spout->x() + 1, ui->label_indicate_active_spout->y() + 1);
+    }
+    else
+    {
+        ui->label_indicate_active_spout->move(ui->label_indicate_active_spout->x() - 1, ui->label_indicate_active_spout->y() - 1);
+    }
+}
 
 void page_dispenser::onDispenseIdleTick()
 {
@@ -425,6 +443,7 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
     if (p_page_idle->selectedProduct->getVolumeDispensedMl() >= MINIMUM_DISPENSE_VOLUME_ML)
     {
 
+        ui->label_indicate_active_spout->hide();
         updatelabel_volume_dispensed_ml(p_page_idle->selectedProduct->getVolumeDispensedMl());
 
         double percentage = p_page_idle->selectedProduct->getVolumeDispensedMl() / (p_page_idle->selectedProduct->getVolumeOfSelectedSize()) * 100;
@@ -533,7 +552,6 @@ void page_dispenser::on_pushButton_abort_clicked()
         msgBox_abort->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 
         int ret = msgBox_abort->exec();
-        bool success;
         switch (ret)
         {
         case QMessageBox::Yes:
@@ -584,7 +602,6 @@ void page_dispenser::on_pushButton_problems_clicked()
     msgBox_problems->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 
     int ret = msgBox_problems->exec();
-    bool success;
     switch (ret)
     {
     case QMessageBox::Yes:

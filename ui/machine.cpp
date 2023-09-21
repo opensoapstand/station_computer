@@ -28,6 +28,19 @@ StateCoupon machine::getCouponState()
     return m_stateCoupon;
 }
 
+bool machine::isDispenseAreaBelowElseBesideScreen()
+{
+    // check in database if hardware_version starts with AP or SS
+    // get hardware_version from db_manager
+    // if starts with SS return false, if starts with ap reeturn true
+
+    if (m_hardware_version.startsWith("SS1"))
+    {
+        return false;
+    }
+    return true; 
+}
+
 bool machine::isAelenPillarElseSoapStand()
 {
     // check in database if hardware_version starts with AP or SS
@@ -236,11 +249,12 @@ void machine::getPrinterStatusFromDb(bool *isOnline, bool *hasPaper)
 }
 void machine::writeTemperatureToDb(double temperature_1, double temperature_2)
 {
-    qDebug() << "DB call: Add temperature record ";
+    // qDebug() << "DB call: Add temperature record ";
     double defaultTemperature2 = 0.0; // Default value for temperature2
     QString defaultAlert = "";        // Default alert message (can be adjusted as needed)
     m_db->addTemperature(getMachineId(), temperature_1, temperature_2, defaultAlert);
 }
+
 // void machine::writeTemperature2ToDb(double temperature2)
 // {
 //     qDebug() << "DB call: Add temperature2 record ";
@@ -262,8 +276,8 @@ void machine::writeTemperatureToDb(double temperature_1, double temperature_2)
 
 bool machine::isTemperatureTooHigh_1()
 {
-    qDebug() << "alert temperature: " << m_alert_temperature;
-    qDebug() << "current temperature: " << m_temperature;
+    // qDebug() << "alert temperature: " << m_alert_temperature;
+    // qDebug() << "current temperature: " << m_temperature;
     if (m_alert_temperature > 100.0)
     {
         return false;
@@ -275,55 +289,27 @@ void machine::fsmReceiveTemperature(double temperature_1, double temperature_2)
 {
     m_temperature = temperature_1;
     m_temperature2 = temperature_2;
-    qDebug() << "Temperature received from FSM in machine: " << m_temperature;
-    qDebug() << "Temperature 2 received from FSM in machine: " << m_temperature2;
+    // qDebug() << "Temperature received from FSM in machine: " << m_temperature;
+    // qDebug() << "Temperature 2 received from FSM in machine: " << m_temperature2;
 
     writeTemperatureToDb(m_temperature, m_temperature2);
 
     if (isTemperatureTooHigh_1())
     {
         // ui->label_printer_status->setText("Temperature= " + QString::number(temperature, 'f', 2) + " is too high")
-        qDebug() << "Temperature too hights afeifaf    debug test";
+        qDebug() << "Temperature 1 too high";
     }
 }
-// void machine::fsmReceiveTemperature2(double temperature2)
-// {
-//     m_temperature2 = temperature2;
-//     qDebug() << "Temperature 2 received from FSM in machine: " << m_temperature2;
-//     // ui->label_setting_temperature->setText("Temp="+temperature);
-
-//     writeTemperature2ToDb(m_temperature2);
-
-//     if(isTemperatureTooHigh()){
-//         // ui->label_printer_status->setText("Temperature= " + QString::number(temperature, 'f', 2) + " is too high")
-//         qDebug() << "Temperature 222222 too hights afeifaf    debug test";
-//     }
-// }
 
 double machine::getTemperature_1()
 {
     return m_temperature;
 }
-// double machine::getTemperature2(){
-//     return m_temperature2;
-// }
-
-// void machine::temperatureFromControllerFeedback(double temperature)
-// {
-//     m_temperature = temperature;
-//     if((m_db->getAlertTemperature()) < m_temperature){
-//         // ui->label_printer_status->setText("Temperature= " + QString::number(temperature, 'f', 2) + " is too high")
-//         qDebug() << "Temperature too hights afeifaf    debug test";
-//     }
-// }
 
 void machine::getTemperatureFromController()
 {
     dfUtility->send_command_to_FSM("getTemperature");
 }
-// void machine::getTemperature2FromController(){
-//     dfUtility->send_command_to_FSM("getTemperature2");
-// }
 
 bool machine::hasReceiptPrinter()
 {

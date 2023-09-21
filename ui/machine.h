@@ -62,6 +62,7 @@ public:
     QString getCustomerId();
 
     QString getTemplateFolder();
+    QString getTemplateName();
     QString getTemplatePathFromName(QString fileName);
     QString getDefaultTemplatePathFromName(QString fileName);
 

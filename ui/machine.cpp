@@ -139,6 +139,16 @@ QString machine::getTemplateFolder()
     return TEMPLATES_ROOT_PATH + template_name + "/";
 }
 
+QString machine::getTemplateName()
+{
+    QString template_name = m_template;
+    if (template_name == "")
+    {
+        template_name = "default";
+    }
+    return  template_name;
+}
+
 void machine::loadElementPropertiesFile()
 {
     QString json_path = getTemplatePathFromName(UI_ELEMENT_PROPERTIES_PATH);

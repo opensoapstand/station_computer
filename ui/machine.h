@@ -47,6 +47,8 @@ public:
     QString getMachineId();
     bool getCouponsEnabled();
     bool getShowTransactionHistory();
+    bool isAelenPillarElseSoapStand();
+    bool isDispenseAreaBelowElseBesideScreen();
 
     void processRolePassword(QString password_input);
     QString getActiveRoleAsText();
@@ -61,6 +63,7 @@ public:
     QString getCustomerId();
 
     QString getTemplateFolder();
+    QString getTemplateName();
     QString getTemplatePathFromName(QString fileName);
     QString getDefaultTemplatePathFromName(QString fileName);
 

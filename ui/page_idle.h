@@ -109,7 +109,6 @@ public:
     int _pollTemperatureTimerTimeoutSec;
 
     void checkReceiptPrinterStatus();
-
     void applyPropertiesToQWidget(QWidget* widget);
     void applyDynamicPropertiesFromTemplateToWidgetChildren(QWidget* widget);
 

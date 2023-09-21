@@ -1,8 +1,8 @@
 #include "page_maintenance_dispenser.h"
 #include "ui_page_maintenance_dispenser.h"
 #include "page_idle.h"
-// #include "/home/df-admin/drinkfill/fsm/components/pcb.cpp"
-//  #include "/home/df-admin/drinkfill/fsm/components/pcb.h"
+// #include "/home/df-admin/station_computer/fsm/components/pcb.cpp"
+//  #include "/home/df-admin/station_computer/fsm/components/pcb.h"
 
 #include <QInputDialog>
 #include <QCoreApplication>
@@ -274,7 +274,7 @@ void page_maintenance_dispenser::onDispenseTimerTick()
 void page_maintenance_dispenser::fsmReceiveTemperature(double temperature_1, double temperature_2)
 {
 
-    qDebug() << "Temperatures received from FSM. Sensor1: " << temperature_1 << " Sensor2: " << temperature_2;
+    // qDebug() << "Temperatures received from FSM. Sensor1: " << temperature_1 << " Sensor2: " << temperature_2;
     
     p_page_idle->thisMachine.fsmReceiveTemperature(temperature_1, temperature_2);
     ui->label_setting_temperature->setText( QString::number(temperature_1, 'f', 2));

@@ -11,7 +11,7 @@ echo 'Drinkfill file transfer menu. CAUTION:Will impact station functionality.'
 
 port_in_use=$(sudo ./rtunnel_print.sh 2>/dev/null)
 PS3="Choose option(digit + enter) (rtunnel port=$port_in_use) :"
-options=("Quit" "Station info" "AWS log in" "AWS run station operations" "upload to AWS home folder" "upload to AWS station folder" "upload production as version in AWS SoftwareStation" "upload stationsoperations.sh to aws home")
+options=("Quit" "Station info" "AWS log in" "AWS run station operations" "upload to AWS home folder" "upload to AWS station folder" "upload production as version in AWS SoftwareStation" "upload station_computer/admin/stationsoperations.sh to aws home")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -19,7 +19,7 @@ do
            ./status_services.sh
            ;;
 
-        "upload stationsoperations.sh to aws home")
+        "upload station_computer/admin/stationsoperations.sh to aws home")
 
             cd /home/df-admin/Downloads
             scp -r -i DrinkfillAWS.pem "/home/df-admin/station_computer/admin/stations_operations.sh" ubuntu@ec2-44-225-153-121.us-west-2.compute.amazonaws.com:/home/ubuntu

@@ -60,9 +60,8 @@
 #define DS2485Q_ADDRESS 0b1000000
 #define MCP3424T_ADDRESS 0b1101000
 #define ADC081C021_ADDRESS 0b01010100
-//#define TEMPERATURE_SENSOR_ADDRESS 0b00011000 
-#define TEMPERATURE_SENSOR_ADDRESS 0b00011000 
-#define TEMPERATURE_SENSOR_ADDRESS2 0b00011001 
+#define TEMPERATURE_SENSOR_1_ADDRESS 0b00011000 
+#define TEMPERATURE_SENSOR_2_ADDRESS 0b00011001 
 
 #define PUMP_START_DELAY_MILLIS 100
 #define PUMP_STOP_BEFORE_BACKTRACK_TIME_MILLIS 0
@@ -121,8 +120,7 @@ public:
     bool startPump(uint8_t slot);
     bool stopPump(uint8_t slot);
 
-    double getTemperature();  //temp sensor
-    double getTemperature2();  //temp sensor 2
+    double getTemperature(uint8_t temperatureSensorI2CAddress); 
     double cTemp;
     double cTemp2;
 

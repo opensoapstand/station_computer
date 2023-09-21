@@ -40,7 +40,7 @@
 page_idle::page_idle(QWidget *parent) : QWidget(parent),
                                         ui(new Ui::page_idle)
 {
-    
+
     // Background Set here; Inheritance on forms places image on all elements otherwise.
     ui->setupUi(this);
 
@@ -53,7 +53,7 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
 
     pollTemperatureTimer = new QTimer(this);
     pollTemperatureTimer->setInterval(1000);
-    connect(pollTemperatureTimer, SIGNAL(timeout()), this, SLOT(onPollTemperatureTimerTick())); 
+    connect(pollTemperatureTimer, SIGNAL(timeout()), this, SLOT(onPollTemperatureTimerTick()));
 
     for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
@@ -88,7 +88,7 @@ void page_idle::showEvent(QShowEvent *event)
     registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
     loadDynamicContent();
-   
+
     thisMachine.resetSessionId();
     thisMachine.dispenseButtonLightsAnimateState(true);
     thisMachine.setRole(UserRole::user);
@@ -102,7 +102,6 @@ void page_idle::showEvent(QShowEvent *event)
     setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
 #endif
     applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
-    
 
     QString styleSheet = getCSS(PAGE_IDLE_CSS);
     ui->pushButton_to_select_product_page->setStyleSheet(styleSheet);
@@ -110,26 +109,41 @@ void page_idle::showEvent(QShowEvent *event)
     ui->pushButton_test->setStyleSheet(styleSheet);
     ui->label_printer_status->setStyleSheet(styleSheet);
     ui->label_temperature_status->setStyleSheet(styleSheet);
-    
-    ui->label_show_temperature->setStyleSheet(styleSheet);
-    //setTemplateTextToObject(ui->label_show_temperature);
-    //  ui->label_show_temperature->setText( "33");
 
+    ui->label_show_temperature->setStyleSheet(styleSheet);
+    // setTemplateTextToObject(ui->label_show_temperature);
+    //   ui->label_show_temperature->setText( "33");
 
     QString base_text = getTemplateTextByElementNameAndPage(ui->label_show_temperature);
     ui->label_show_temperature->setText(base_text.arg(QString::number(thisMachine.getTemperature_1(), 'f', 2))); // will replace %1 character in string by the provide text
-       
-    if(thisMachine.getTemperature_1()>=24){
-        selectedProduct->setStatusText(SLOT_STATE_DISABLED); //to be used where I check themperature
-    }   
 
-        if(thisMachine.isAelenPillarElseSoapStand()==false){
+    if (thisMachine.getTemperature_1() >= 24)
+    {
+        // temperature too high --> disable all products.
+        for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+        {
+            // products[slot_index]->setStatusText("SLOT_STATE_DISABLED"); //
+            products[slot_index-1].setStatusText("SLOT_STATE_DISABLED"); //
+        //    p_page_idle->selectedProduct->setStatusText(SLOT_STATE_DISABLED); //to be used where I check themperature
+
+        }
+        qDebug() << "----------------------------temp high block all **-*-*-*-****-*-***-*";
+    }
+    else
+    {
+        qDebug() << "----------------------------temp 0K0K0K0K00K0K0K0K00K0K0K0K0K **-*-*-*-****-*-***-*";
+    }
+
+    if (thisMachine.isAelenPillarElseSoapStand() == false)
+    {
         ui->label_show_temperature->hide();
         ui->label_temperature_status->hide();
-        }else{
-        }
- 
-   ui->label_temperature_status->hide();
+    }
+    else
+    {
+    }
+
+    ui->label_temperature_status->hide();
     // bool needsReceiptPrinter = false;
     // for (int slot = 1; slot <= SLOT_COUNT; slot++)
     // {
@@ -225,9 +239,7 @@ void page_idle::showEvent(QShowEvent *event)
     qDebug() << "Video player. Is fullscreen? : " << videoWidget->isFullScreen();
 #endif
 
-
-    ui->label_printer_status->setText( QString::number( thisMachine.getTemperature_1(), 'f', 2));
-
+    ui->label_printer_status->setText(QString::number(thisMachine.getTemperature_1(), 'f', 2));
 }
 
 void page_idle::loadDynamicContent()
@@ -239,11 +251,10 @@ void page_idle::loadDynamicContent()
     {
         products[slot_index].loadProductProperties();
     }
-    loadTextsFromTemplateCsv(); // dynamic content (text by template)
-    loadTextsFromDefaultCsv();  // dynamic styling (css by template)
-    loadElementDynamicPropertiesFromTemplate();  // dynamic elements (position, visibility)
-    loadElementDynamicPropertiesFromDefaultTemplate();  // dynamic elements (position, visibility)
-    
+    loadTextsFromTemplateCsv();                        // dynamic content (text by template)
+    loadTextsFromDefaultCsv();                         // dynamic styling (css by template)
+    loadElementDynamicPropertiesFromTemplate();        // dynamic elements (position, visibility)
+    loadElementDynamicPropertiesFromDefaultTemplate(); // dynamic elements (position, visibility)
 }
 
 void page_idle::changeToIdleProductsIfSet()
@@ -287,52 +298,53 @@ void page_idle::hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createN
     pollTemperatureTimer->stop();
 }
 
-// periodical temperature check initiated 
+// periodical temperature check initiated
 void page_idle::onPollTemperatureTimerTick()
 {
     if (--_pollTemperatureTimerTimeoutSec >= 0)
     {
-
     }
     else
     {
 
         qDebug() << "Check temperature.";
         _pollTemperatureTimerTimeoutSec = PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS;
-        
+
         thisMachine.getTemperatureFromController();
         // hack, will not be ready when asked from controller. This basically displaying the "previous temperature".
-        //ui->label_printer_status->setText( QString::number( thisMachine.getTemperature_1(), 'f', 2));
-       
-        if (thisMachine.isTemperatureTooHigh_1()){
+        // ui->label_printer_status->setText( QString::number( thisMachine.getTemperature_1(), 'f', 2));
 
-            
-            QString temperature = QString::number( thisMachine.getTemperature_1(), 'f', 2);
-            
+        if (thisMachine.isTemperatureTooHigh_1())
+        {
+
+            QString temperature = QString::number(thisMachine.getTemperature_1(), 'f', 2);
+
             QString base = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_temperature_status, "temperature_too_high");
-               if(thisMachine.isAelenPillarElseSoapStand()==false){
-        ui->label_show_temperature->hide();
-        ui->label_temperature_status->hide();
-        }else{
-            ui->label_temperature_status->show();
-        }
+            if (thisMachine.isAelenPillarElseSoapStand() == false)
+            {
+                ui->label_show_temperature->hide();
+                ui->label_temperature_status->hide();
+            }
+            else
+            {
+                ui->label_temperature_status->show();
+            }
             ui->label_temperature_status->setText(base.arg(temperature));
             qDebug() << "Temperature too high";
-            
-    QString base_text = getTemplateTextByElementNameAndPage(ui->label_show_temperature);
-    ui->label_show_temperature->setText(base_text.arg(QString::number(thisMachine.getTemperature_1(), 'f', 2))); // will replace %1 character in string by the provide text
-        
-        }else{
+
+            QString base_text = getTemplateTextByElementNameAndPage(ui->label_show_temperature);
+            ui->label_show_temperature->setText(base_text.arg(QString::number(thisMachine.getTemperature_1(), 'f', 2))); // will replace %1 character in string by the provide text
+        }
+        else
+        {
 
             qDebug() << "Temperature ok";
             ui->label_temperature_status->hide();
-            
-    QString base_text = getTemplateTextByElementNameAndPage(ui->label_show_temperature);
-    ui->label_show_temperature->setText(base_text.arg(QString::number(thisMachine.getTemperature_1(), 'f', 2))); // will replace %1 character in string by the provide text
-        
+
+            QString base_text = getTemplateTextByElementNameAndPage(ui->label_show_temperature);
+            ui->label_show_temperature->setText(base_text.arg(QString::number(thisMachine.getTemperature_1(), 'f', 2))); // will replace %1 character in string by the provide text
         }
     }
-        
 }
 
 // periodical check to transition to other idle page type
@@ -354,7 +366,6 @@ void page_idle::checkReceiptPrinterStatus()
     this->p_page_maintenance_general->send_check_printer_status_command();
     ui->pushButton_to_select_product_page->hide(); // when printer needs to be restarted, it can take some time. Make sure nobody presses the button in that interval (to prevent crashes)
 }
-
 
 void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
 {
@@ -556,7 +567,6 @@ QString page_idle::getTemplateTextByPage(QWidget *page, QString identifier)
     return getTemplateText(searchString);
 }
 
-
 QString page_idle::getTemplateText(QString textName_to_find)
 {
 
@@ -588,13 +598,16 @@ QString page_idle::getTemplateText(QString textName_to_find)
     return retval;
 }
 
-void page_idle::applyDynamicPropertiesFromTemplateToWidgetChildren(QWidget* widget){
+void page_idle::applyDynamicPropertiesFromTemplateToWidgetChildren(QWidget *widget)
+{
     // in reality, send a page widget as argument. All the childeren will be checked. (i.e. buttons, labels,...)
-    QList<QObject *> allChildren = widget->findChildren<QObject *>(); 
-    foreach (QObject *child, allChildren) {
+    QList<QObject *> allChildren = widget->findChildren<QObject *>();
+    foreach (QObject *child, allChildren)
+    {
         QWidget *widget = qobject_cast<QWidget *>(child);
-        if (widget) {
-            // not all child element are widgets. 
+        if (widget)
+        {
+            // not all child element are widgets.
 
             QString combinedName = getCombinedElementPageAndName(widget);
             // qDebug() << combinedName;
@@ -603,7 +616,8 @@ void page_idle::applyDynamicPropertiesFromTemplateToWidgetChildren(QWidget* widg
     }
 }
 
-void page_idle::applyPropertiesToQWidget(QWidget* widget){
+void page_idle::applyPropertiesToQWidget(QWidget *widget)
+{
 
     // example of line in text file with properties:
     // page_idle->label_customer_logo,{"x":570, "y":1580, "width":351, "height":211,"isVisibleAtLoad":true}
@@ -616,7 +630,7 @@ void page_idle::applyPropertiesToQWidget(QWidget* widget){
 
     if (it != elementDynamicPropertiesMap_template.end())
     {
-        qDebug() << "element " << combinedName << "found in template. json string: " << it->second ;
+        qDebug() << "element " << combinedName << "found in template. json string: " << it->second;
         jsonString = it->second;
     }
     else
@@ -624,7 +638,7 @@ void page_idle::applyPropertiesToQWidget(QWidget* widget){
         it = elementDynamicPropertiesMap_default.find(combinedName);
         if (it != elementDynamicPropertiesMap_default.end())
         {
-            qDebug() << "element " << combinedName << "found in default. json string: " << it->second ;
+            qDebug() << "element " << combinedName << "found in default. json string: " << it->second;
             jsonString = it->second;
         }
         else
@@ -634,45 +648,51 @@ void page_idle::applyPropertiesToQWidget(QWidget* widget){
         }
     }
 
-    if (!valid){
+    if (!valid)
+    {
         return;
     }
-    
+
     QJsonObject jsonObject = df_util::parseJsonString(jsonString);
 
-    int x= widget->x();
+    int x = widget->x();
     int y = widget->y();
     int width = widget->width();
     int height = widget->height();
 
-    if (jsonObject.contains("x")) {
+    if (jsonObject.contains("x"))
+    {
         QJsonValue xValue = jsonObject.value("x");
         x = xValue.toInt();
         // qDebug() << "x found  " << x ;
     }
-    if (jsonObject.contains("y")) {
+    if (jsonObject.contains("y"))
+    {
         QJsonValue val = jsonObject.value("y");
         y = val.toInt();
         // qDebug() << "y found  " << y ;
     }
-    if (jsonObject.contains("width")) {
+    if (jsonObject.contains("width"))
+    {
         QJsonValue val = jsonObject.value("width");
         width = val.toInt();
         // qDebug() << "width found  " << width ;
     }
-    if (jsonObject.contains("height")) {
+    if (jsonObject.contains("height"))
+    {
         QJsonValue val = jsonObject.value("height");
         height = val.toInt();
         // qDebug() << "height found  " << height ;
     }
-    widget->setGeometry( x, y, width, height); 
+    widget->setGeometry(x, y, width, height);
 
-    if (jsonObject.contains("isVisibleAtLoad")) {
+    if (jsonObject.contains("isVisibleAtLoad"))
+    {
         QJsonValue val = jsonObject.value("isVisibleAtLoad");
         bool isVisible = val.toBool();
         // qDebug() << "visibility found  " << isVisible ;
 
-        widget->setVisible(isVisible); 
+        widget->setVisible(isVisible);
     }
 }
 
@@ -707,7 +727,6 @@ void page_idle::loadTextsFromTemplateCsv()
     QString csv_path = thisMachine.getTemplatePathFromName(UI_TEXTS_CSV_PATH);
     loadTextsFromCsv(csv_path, &textNameToTextMap_template);
 }
-
 
 void page_idle::loadTextsFromDefaultCsv()
 {
@@ -753,7 +772,6 @@ void page_idle::loadTextsFromCsv(QString csv_path, std::map<QString, QString> *d
     }
 }
 
-
 QStringList page_idle::getChildNames(QObject *parent)
 {
     QStringList childNames;
@@ -766,10 +784,10 @@ QStringList page_idle::getChildNames(QObject *parent)
 
     QList<QObject *> allChildren = parent->findChildren<QObject *>();
 
-    foreach (QObject *child, allChildren) {
+    foreach (QObject *child, allChildren)
+    {
         childNames.append(child->objectName());
     }
 
     return childNames;
 }
-

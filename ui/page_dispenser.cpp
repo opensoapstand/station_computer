@@ -582,8 +582,12 @@ void page_dispenser::on_pushButton_problems_clicked()
     msgBox_problems->setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
 
     QString payment = p_page_idle->selectedProduct->getPaymentMethod();
-
-    if (payment == "qr" || payment == PAYMENT_TAP_TCP)
+    QString chosenTemplate = p_page_idle->thisMachine.getTemplateName();
+    if(chosenTemplate == "good-filling"){
+        QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "shopify";
+        p_page_idle->setTextToObject(msgBox_problems, p_page_idle->getTemplateText(searchString));
+    }
+    else if (payment == "qr" || payment == PAYMENT_TAP_TCP)
     {
         QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "qr_tap";
         p_page_idle->setTextToObject(msgBox_problems, p_page_idle->getTemplateText(searchString));

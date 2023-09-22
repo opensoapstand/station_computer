@@ -61,6 +61,8 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
         products[slot_index].setMachine(&thisMachine);
         products[slot_index].setDb(g_database);
     }
+
+    thisMachine.setProducts(products);
 }
 
 /*
@@ -117,22 +119,22 @@ void page_idle::showEvent(QShowEvent *event)
     QString base_text = getTemplateTextByElementNameAndPage(ui->label_show_temperature);
     ui->label_show_temperature->setText(base_text.arg(QString::number(thisMachine.getTemperature_1(), 'f', 2))); // will replace %1 character in string by the provide text
 
-    if (thisMachine.getTemperature_1() >= 24)
-    {
-        // temperature too high --> disable all products.
-        for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
-        {
-            // products[slot_index]->setStatusText("SLOT_STATE_DISABLED"); //
-            products[slot_index-1].setStatusText("SLOT_STATE_DISABLED"); //
-        //    p_page_idle->selectedProduct->setStatusText(SLOT_STATE_DISABLED); //to be used where I check themperature
+    // if (thisMachine.getTemperature_1() >= 24)
+    // {
+    //     // temperature too high --> disable all products.
+    //     for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+    //     {
+    //         // products[slot_index]->setStatusText("SLOT_STATE_DISABLED"); //
+    //         products[slot_index-1].setStatusText("SLOT_STATE_DISABLED"); //
+    //     //    p_page_idle->selectedProduct->setStatusText(SLOT_STATE_DISABLED); //to be used where I check themperature
 
-        }
-        qDebug() << "----------------------------temp high block all **-*-*-*-****-*-***-*";
-    }
-    else
-    {
-        qDebug() << "----------------------------temp 0K0K0K0K00K0K0K0K00K0K0K0K0K **-*-*-*-****-*-***-*";
-    }
+    //     }
+    //     qDebug() << "----------------------------temp high block all **-*-*-*-****-*-***-*";
+    // }
+    // else
+    // {
+    //     qDebug() << "----------------------------temp 0K0K0K0K00K0K0K0K00K0K0K0K0K **-*-*-*-****-*-***-*";
+    // }
 
     if (thisMachine.isAelenPillarElseSoapStand() == false)
     {
@@ -299,53 +301,114 @@ void page_idle::hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createN
 }
 
 // periodical temperature check initiated
+
+
+
+
+// void page_idle::onPollTemperatureTimerTick()
+// {
+//     if (--_pollTemperatureTimerTimeoutSec >= 0)
+//     {
+//     }
+//     else
+//     {
+
+//         qDebug() << "Check temperature.";
+//         _pollTemperatureTimerTimeoutSec = PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS;
+
+//         thisMachine.getTemperatureFromController();
+//         // hack, will not be ready when asked from controller. This basically displaying the "previous temperature".
+//         // ui->label_printer_status->setText( QString::number( thisMachine.getTemperature_1(), 'f', 2));
+
+//         if (thisMachine.getTemperature_1() > 24)
+//         {
+//             // temperature too high --> disable all products.
+//             for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+//             {
+//                 products[slot_index].setSlotEnabled(false, "SLOT_STATE_DISABLED_COMING_SOON");
+//             }
+//             qDebug() << "----------------------------temp high block all **-*-*-*-****-*-***-*";
+//         }
+       
+//         if (thisMachine.isTemperatureTooHigh_1())
+//         {
+
+//             QString temperature = QString::number(thisMachine.getTemperature_1(), 'f', 2);
+
+//             QString base = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_temperature_status, "temperature_too_high");
+//             if (thisMachine.isAelenPillarElseSoapStand() == false)
+//             {
+//                 ui->label_show_temperature->hide();
+//                 ui->label_temperature_status->hide();
+//             }
+//             else
+//             {
+//                 ui->label_temperature_status->show();
+//             }
+//             ui->label_temperature_status->setText(base.arg(temperature));
+//             qDebug() << "Temperature too high";
+
+//             QString base_text = getTemplateTextByElementNameAndPage(ui->label_show_temperature);
+//             ui->label_show_temperature->setText(base_text.arg(QString::number(thisMachine.getTemperature_1(), 'f', 2))); // will replace %1 character in string by the provide text
+//         }
+//         else
+//         {
+
+//             qDebug() << "Temperature ok";
+//             ui->label_temperature_status->hide();
+
+//             QString base_text = getTemplateTextByElementNameAndPage(ui->label_show_temperature);
+//             ui->label_show_temperature->setText(base_text.arg(QString::number(thisMachine.getTemperature_1(), 'f', 2))); // will replace %1 character in string by the provide text
+//         }
+//     }
+//     //////////////////////
+// }
+
 void page_idle::onPollTemperatureTimerTick()
 {
-    if (--_pollTemperatureTimerTimeoutSec >= 0)
+    // Only poll temperature after every PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS seconds
+    if (--_pollTemperatureTimerTimeoutSec >= 0) 
+        return; 
+    
+    _pollTemperatureTimerTimeoutSec = PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS;
+    qDebug() << "Check temperature.";
+
+    thisMachine.getTemperatureFromController();
+
+    float currentTemperature = thisMachine.getTemperature_1();
+    bool isTemperatureHigh = thisMachine.isTemperatureTooHigh_1();
+
+    // Update UI elements with the current temperature
+    QString temperatureStr = QString::number(currentTemperature, 'f', 2);
+    QString base_text = getTemplateTextByElementNameAndPage(ui->label_show_temperature);
+    ui->label_show_temperature->setText(base_text.arg(temperatureStr));
+
+    // Toggle visibility of temperature status label
+    ui->label_temperature_status->setVisible(isTemperatureHigh && thisMachine.isAelenPillarElseSoapStand());
+    
+    if(isTemperatureHigh)
     {
+        // Disable all products if the temperature is too high
+        // for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+        // {
+        //     products[slot_index].setSlotEnabled(false, "SLOT_STATE_DISABLED_COMING_SOON");
+        // }
+        thisMachine.checkAndDisableProducts();// test if it works
+        qDebug() << "Temperature too high, block all slots.";
+        
+        // Update temperature status label
+        QString base = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_temperature_status, "temperature_too_high");
+        ui->label_temperature_status->setText(base.arg(temperatureStr));
+        
+        qDebug() << "Temperature too high";
     }
     else
     {
-
-        qDebug() << "Check temperature.";
-        _pollTemperatureTimerTimeoutSec = PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS;
-
-        thisMachine.getTemperatureFromController();
-        // hack, will not be ready when asked from controller. This basically displaying the "previous temperature".
-        // ui->label_printer_status->setText( QString::number( thisMachine.getTemperature_1(), 'f', 2));
-
-        if (thisMachine.isTemperatureTooHigh_1())
-        {
-
-            QString temperature = QString::number(thisMachine.getTemperature_1(), 'f', 2);
-
-            QString base = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_temperature_status, "temperature_too_high");
-            if (thisMachine.isAelenPillarElseSoapStand() == false)
-            {
-                ui->label_show_temperature->hide();
-                ui->label_temperature_status->hide();
-            }
-            else
-            {
-                ui->label_temperature_status->show();
-            }
-            ui->label_temperature_status->setText(base.arg(temperature));
-            qDebug() << "Temperature too high";
-
-            QString base_text = getTemplateTextByElementNameAndPage(ui->label_show_temperature);
-            ui->label_show_temperature->setText(base_text.arg(QString::number(thisMachine.getTemperature_1(), 'f', 2))); // will replace %1 character in string by the provide text
-        }
-        else
-        {
-
-            qDebug() << "Temperature ok";
-            ui->label_temperature_status->hide();
-
-            QString base_text = getTemplateTextByElementNameAndPage(ui->label_show_temperature);
-            ui->label_show_temperature->setText(base_text.arg(QString::number(thisMachine.getTemperature_1(), 'f', 2))); // will replace %1 character in string by the provide text
-        }
+        qDebug() << "Temperature ok";
     }
 }
+
+
 
 // periodical check to transition to other idle page type
 void page_idle::onIdlePageTypeSelectorTimerTick()

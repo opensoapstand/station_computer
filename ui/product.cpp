@@ -102,6 +102,12 @@ void product::setSlotEnabled(bool isEnabled)
     thisMachine->setSlotEnabled(getSlot(), isEnabled);
 }
 
+void product::setSlotEnabled(bool isEnabled, QString statusText)
+{
+    thisMachine->setSlotEnabled(getSlot(), isEnabled);
+    setStatusText(statusText);
+}
+
 bool product::getSlotEnabled()
 {
     return thisMachine->getSlotEnabled(getSlot());

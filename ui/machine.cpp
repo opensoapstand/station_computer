@@ -3,6 +3,7 @@
 #include "df_util.h" // lode added for settings
 #include "dbmanager.h"
 #include "machine.h"
+#include "product.h"
 
 machine::machine()
 {
@@ -26,6 +27,11 @@ void machine::setDb(DbManager *db)
 StateCoupon machine::getCouponState()
 {
     return m_stateCoupon;
+}
+
+void machine::setProducts(product* products)
+{
+    m_products = products;
 }
 
 bool machine::isAelenPillarElseSoapStand()
@@ -249,7 +255,35 @@ void machine::writeTemperatureToDb(double temperature_1, double temperature_2)
 //     qDebug() << "DB call: Add temperature 2 record ";
 //     m_db->addTemperature2(getMachineId(), temperature2, "");
 // }
+void machine::checkAndDisableProducts()
+{
+    if (isTemperatureTooHigh_1())
+    {
+            qDebug() << "333333333666666666Temperature too high for one hour, block all slots.";
+        if(!temperatureWasHigh)
+        {
+            temperatureWasHigh = true;
+            temperatureHighTime = QTime::currentTime(); // Record the time when temperature became too high
+        }
+        
+        QTime currentTime = QTime::currentTime();
+        int elapsedMinutes = temperatureHighTime.msecsTo(currentTime) / 15000; // Convert milliseconds to minutes 60000=60min
 
+        if (elapsedMinutes >= 60) // Check if one hour has passed
+        {
+            for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+            {
+                //QString slotStatus = p_page_idle->selectedProduct->getStatusText()
+                m_products[slot_index].setSlotEnabled(false, "SLOT_STATE_DISABLED_COMING_SOON");
+            }
+            qDebug() << "Temperature too high for one hour, block all slots.";
+        }
+    }
+    else
+    {
+        temperatureWasHigh = false; // Reset the flag and the time when the temperature goes back to normal
+    }
+}
 bool machine::isTemperatureTooHigh_1()
 {
     qDebug() << "alert temperature: " << m_alert_temperature;
@@ -467,7 +501,7 @@ void machine::setSlotEnabled(int slot, bool isEnabled)
 {
     // do this through product.cpp, as this should have been a part of products table
     QString column_name = QString("is_enabled_slot_%1").arg(slot);
-
+    m_is_enabled_slots[slot - 1] = isEnabled; //Global variable
     m_db->updateTableMachineWithInt(column_name, isEnabled);
 }
 

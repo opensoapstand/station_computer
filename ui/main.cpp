@@ -151,7 +151,6 @@ int main(int argc, char *argv[])
     qDebug() << "Check image paths.... (all paths resolved if nothing shows up).";
 
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_IDLE_BACKGROUND_PATH));
-    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_IDLE_BACKGROUND_PATH));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_IDLE_PRODUCTS_BACKGROUND_PATH));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_END_BACKGROUND_PATH));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_TRANSACTIONS_BACKGROUND_PATH));
@@ -188,6 +187,31 @@ int main(int argc, char *argv[])
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(ICON_TYPE_DEFAULT));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_HELP_BACKGROUND_GENERIC_WHITE));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_HELP_BACKGROUND_PATH));
+
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_SELECT_PRODUCT_BACKGROUND_PATH));
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_PRODUCT_BACKGROUND_PATH));
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_ORDER_OVERVIEW_PATH));
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH));
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH));
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_RIGHT));
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_DOWN));
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_QR_PAY_BACKGROUND_PATH));
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_MAINTENANCE_BACKGROUND_PATH));
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(ERROR_MESSAGE_PATH));
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_TAP_PAY));
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_TAP_PAY_SUCCESS));
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_TAP_PAY_FAIL));
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_AUTHORIZE_NOW));
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_TAP_GENERIC));
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_SEND_FEEDBACK_PATH));
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_INIT_BACKGROUND_IMAGE_PATH));
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(IMAGE_BUTTON_HELP));
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(THANK_YOU_FOR_YOUR_FEEDBACK));
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_ERROR_BACKGROUND_PATH));
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(KEYBOARD_IMAGE_PATH));
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(MACHINE_LOGO_PATH));
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_FILL_ANIMATION));
 
     // Page pathing references to function calls.
     p_page_help->setPage(p_page_select_product, p_page_product, p_page_idle, p_page_payment_qr, p_page_transactions, p_page_maintenance, p_page_sendFeedback);

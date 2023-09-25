@@ -204,7 +204,7 @@
     <string>Modify Remaining Stock</string>
    </property>
    <property name="text">
-    <string>Adjust</string>
+    <string>Set Manually</string>
    </property>
    <attribute name="buttonGroup">
     <string notr="true">buttonGroup_edit_product</string>
@@ -1471,7 +1471,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Volume Remaining</string>
+    <string>Volume Remaining (Estimated)</string>
    </property>
   </widget>
   <widget class="QLabel" name="labelText_volume_dispensed_since_restock">
@@ -1660,7 +1660,7 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_keypad"/>
   <buttongroup name="buttonGroup_edit_product"/>
+  <buttongroup name="buttonGroup_keypad"/>
  </buttongroups>
 </ui>

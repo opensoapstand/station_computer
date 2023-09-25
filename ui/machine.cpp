@@ -32,7 +32,9 @@ StateCoupon machine::getCouponState()
 void machine::setProducts(product* products)
 {
     m_products = products;
+}
 bool machine::isDispenseAreaBelowElseBesideScreen()
+
 {
     // check in database if hardware_version starts with AP or SS
     // get hardware_version from db_manager

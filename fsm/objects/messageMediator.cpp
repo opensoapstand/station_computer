@@ -564,23 +564,9 @@ DF_ERROR messageMediator::parseCommandString()
 
 void messageMediator::sendTemperatureData()
 {
-    //debugOutput::sendMessage("Temperature requested", MSG_INFO);
-         double temperature_1 = 666.0;
-         double temperature_2 = 666.0;
-         
-         string str_temperature_1;
-         string str_temperature_2;
-         // string str_temperature_1 = std::to_string(temperature);
-         // string str_temperature_2 = std::to_string(temperature);
-         
-         if (m_machine->control_pcb->isTemperatureSensorAvailable())
-         {
-            temperature_1 = m_machine->control_pcb->getTemperature();
-            // string tmp_temperature_1 = (temp_celcius_chars);
-            // str_temperature_1 =  std::string(tmp_temperature_1);
-            // debugOutput::sendMessage("Temperature in Celsius: " + str_temperature_1 , MSG_INFO);
-            //  m_pMessaging->sendMessageOverIP("temperature|" + to_int(temperature));
-         }
+   // debugOutput::sendMessage("Temperature requested", MSG_INFO);
+   double temperature_1 = 666.0;
+   double temperature_2 = 666.0;
 
    string str_temperature_1;
    string str_temperature_2;

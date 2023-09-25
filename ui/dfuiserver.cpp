@@ -18,14 +18,14 @@ void DfUiServer::startServer()
     }
     else
     {
-        qDebug() << "Server: Listening. Ready for fsm messages on port " << port << "...";
+        // qDebug() << "Server: Listening. Ready for fsm messages on port " << port << "...";
     }
 }
 
 void DfUiServer::closeServer()
 {
     this->close();
-    qDebug() << "Server: Stopped listening. Will not receive new fsm messages. ";
+    // qDebug() << "Server: Stopped listening. Will not receive new fsm messages. ";
 }
 
 void DfUiServer::resetTimerSlot()

@@ -32,6 +32,17 @@ StateCoupon machine::getCouponState()
 void machine::setProducts(product* products)
 {
     m_products = products;
+bool machine::isDispenseAreaBelowElseBesideScreen()
+{
+    // check in database if hardware_version starts with AP or SS
+    // get hardware_version from db_manager
+    // if starts with SS return false, if starts with ap reeturn true
+
+    if (m_hardware_version.startsWith("SS1"))
+    {
+        return false;
+    }
+    return true; 
 }
 
 bool machine::isAelenPillarElseSoapStand()
@@ -145,6 +156,16 @@ QString machine::getTemplateFolder()
     return TEMPLATES_ROOT_PATH + template_name + "/";
 }
 
+QString machine::getTemplateName()
+{
+    QString template_name = m_template;
+    if (template_name == "")
+    {
+        template_name = "default";
+    }
+    return  template_name;
+}
+
 void machine::loadElementPropertiesFile()
 {
     QString json_path = getTemplatePathFromName(UI_ELEMENT_PROPERTIES_PATH);
@@ -232,11 +253,12 @@ void machine::getPrinterStatusFromDb(bool *isOnline, bool *hasPaper)
 }
 void machine::writeTemperatureToDb(double temperature_1, double temperature_2)
 {
-    qDebug() << "DB call: Add temperature record ";
+    // qDebug() << "DB call: Add temperature record ";
     double defaultTemperature2 = 0.0; // Default value for temperature2
     QString defaultAlert = "";        // Default alert message (can be adjusted as needed)
     m_db->addTemperature(getMachineId(), temperature_1, temperature_2, defaultAlert);
 }
+
 // void machine::writeTemperature2ToDb(double temperature2)
 // {
 //     qDebug() << "DB call: Add temperature2 record ";
@@ -298,15 +320,15 @@ void machine::fsmReceiveTemperature(double temperature_1, double temperature_2)
 {
     m_temperature = temperature_1;
     m_temperature2 = temperature_2;
-    qDebug() << "Temperature received from FSM in machine: " << m_temperature;
-    qDebug() << "Temperature 2 received from FSM in machine: " << m_temperature2;
+    // qDebug() << "Temperature received from FSM in machine: " << m_temperature;
+    // qDebug() << "Temperature 2 received from FSM in machine: " << m_temperature2;
 
     writeTemperatureToDb(m_temperature, m_temperature2);
 
     if (isTemperatureTooHigh_1())
     {
         // ui->label_printer_status->setText("Temperature= " + QString::number(temperature, 'f', 2) + " is too high")
-        qDebug() << "Temperature too hights afeifaf    debug test";
+        qDebug() << "Temperature 1 too high";
     }
 }
 

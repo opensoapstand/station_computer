@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #######################################################################
-# created by Lode for Drinkfill.                                      #
+# created by Lode for Drinkfill / Aelen.                              #
 # 2023-03-23                                                          #
-# Place and run in Station. In /home/df-admin/station_computer/admin         #
+# Place and run in Station. In /home/df-admin/station_computer/admin  #
 #######################################################################
 
 sudo ./status_services.sh
@@ -58,7 +58,7 @@ make_options () {
 
 port_in_use=$(sudo ./rtunnel_print.sh 2>/dev/null)
 PS3="Choose option(digit + enter) (rtunnel port=$port_in_use) :"
-options=("Quit" "aws_operations" "AWS log in" "AWS run station operations" "soapstand_manager" "Station info" "Stop ui and controller" "(Re)start ui and controller" "run standalone controller" "Copy program binary files from drinkfill to production folder and run" "Create and run production data copied from drinkfill folder (without db!)" "Services: Soapstand (re)load from production (ui,controller,wificheck,transactioncheck)" "Setup aws port (rtunnel)" "make ui and fsm" "make ui and fsm and deploy binaries" "make ui" "make ui and deploy binaries" "make fsm" "make fsm and deploy binaries" "Production database operations" "check temperature" )
+options=("Quit" "aws_operations" "AWS log in" "AWS run station operations" "soapstand_manager" "Station info" "Stop ui and controller" "(Re)start ui and controller" "run standalone controller" "Copy program binary files from station_software git folder to production folder and run" "Create and run production data copied from station_software git folder (without db!)" "Services: Soapstand (re)load from production (ui,controller,wificheck,transactioncheck)" "Setup aws port (rtunnel)" "make ui and fsm" "make ui and fsm and deploy binaries" "make ui" "make ui and deploy binaries" "make fsm" "make fsm and deploy binaries" "Production database operations" "check temperature" )
 select opt in "${options[@]}"
 do
     case $opt in
@@ -84,7 +84,7 @@ do
              cmd=( ssh -tt -i DrinkfillAWS.pem ubuntu@ec2-44-225-153-121.us-west-2.compute.amazonaws.com "bash stations_operations.sh" )
             "${cmd[@]}"
             ;;
-        "Copy program binary files from drinkfill to production folder and run")
+        "Copy program binary files from station_software git folder to production folder and run")
             echo "Copy soapstand application to production folder"
             sudo systemctl stop ui_soapstand
             sudo systemctl stop controller_soapstand
@@ -95,8 +95,8 @@ do
             sudo systemctl start ui_soapstand.service
             sudo systemctl start controller_soapstand.service
             echo "done."
-        ;;
-        "Create and run production data copied from drinkfill folder (without db!)")
+            ;;
+        "Create and run production data copied from station_software git folder (without db!)")
             sudo ./create_and_run_production_data.sh
             echo "done."
             ;;

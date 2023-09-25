@@ -31,17 +31,11 @@ DbManager::DbManager()
 // DTOR
 DbManager::~DbManager()
 {
-    // closeDb();
 }
-
-// void DbManager::setPath(QString path)
-// {
-//     // m_dbPath2 = path;
-// }
 
 void DbManager::closeDb()
 {
-    qDebug() << "Close db";
+    // qDebug() << "Close db";
     // no problem, even if called hundred times after one other and the db was not open.
     QSqlDatabase::database("qt_sql_ui_connection").close();
     if (QSqlDatabase::contains("qt_sql_ui_connection"))
@@ -111,7 +105,7 @@ void DbManager::closeDb()
 
 QSqlDatabase DbManager::openDb(QString dbname)
 {
-    qDebug() << "Open db";
+    // qDebug() << "Open db";
     QSqlDatabase m_db = QSqlDatabase::addDatabase("QSQLITE", "qt_sql_ui_connection");
     QString p = dbname;
     if (m_db.isOpen())
@@ -715,14 +709,14 @@ void DbManager::addUserInteraction(QString session_id, QString role, QString pag
     closeDb();
 }
 
-
-QString DbManager::getHardwareVersion() {
+QString DbManager::getHardwareVersion()
+{
     QString hardwareVersion;
     // Your database code here
     // Populate hardwareVersion from the database
     return hardwareVersion;
 }
-void DbManager::addTemperature(QString machine_id, double temperature_1,double temperature_2, QString alert)
+void DbManager::addTemperature(QString machine_id, double temperature_1, double temperature_2, QString alert)
 {
 
     {

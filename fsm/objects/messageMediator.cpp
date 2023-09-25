@@ -417,7 +417,7 @@ DF_ERROR messageMediator::parseCommandString()
    string sCommand = getCommandString();
    char first_char = sCommand[0];
 
-   debugOutput::sendMessage("command length:" + to_string(sCommand.length()), MSG_INFO);
+   // debugOutput::sendMessage("command length:" + to_string(sCommand.length()), MSG_INFO);
 
    if (sCommand.find("pcabugfix") != string::npos)
    {
@@ -582,20 +582,27 @@ void messageMediator::sendTemperatureData()
             //  m_pMessaging->sendMessageOverIP("temperature|" + to_int(temperature));
          }
 
-         if (m_machine->control_pcb->isTemperatureSensor2Available())
-         {
-            temperature_2 = m_machine->control_pcb->getTemperature2();
-         }
-            char temp_celcius_chars[MAX_BUF];
-            snprintf(temp_celcius_chars, sizeof(temp_celcius_chars), "%.2f", temperature_1);
-             
-            str_temperature_1 =  temp_celcius_chars;
+   string str_temperature_1;
+   string str_temperature_2;
 
-            snprintf(temp_celcius_chars, sizeof(temp_celcius_chars), "%.2f", temperature_2);
-            str_temperature_2 =  temp_celcius_chars;
+   if (m_machine->control_pcb->isTemperatureSensorAvailable())
+   {
+      temperature_1 = m_machine->control_pcb->getTemperature(TEMPERATURE_SENSOR_1_ADDRESS);
+   }
 
-         sendMessageOverIP("temperature|" + str_temperature_1 + "|" + str_temperature_2);
+   if (m_machine->control_pcb->isTemperatureSensor2Available())
+   {
+      temperature_2 = m_machine->control_pcb->getTemperature(TEMPERATURE_SENSOR_2_ADDRESS);
+   }
+   char temp_celcius_chars[MAX_BUF];
+   snprintf(temp_celcius_chars, sizeof(temp_celcius_chars), "%.2f", temperature_1);
 
+   str_temperature_1 = temp_celcius_chars;
+
+   snprintf(temp_celcius_chars, sizeof(temp_celcius_chars), "%.2f", temperature_2);
+   str_temperature_2 = temp_celcius_chars;
+
+   sendMessageOverIP("temperature|" + str_temperature_1 + "|" + str_temperature_2);
 }
 void messageMediator::resetAction()
 {

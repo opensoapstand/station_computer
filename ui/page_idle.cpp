@@ -84,6 +84,14 @@ page_idle::~page_idle()
     delete ui;
 }
 
+ void page_idle::displayTemperature()
+    {
+        //  QString base_text = "Current Temperature: %1 °C"; //Assuming you have the base_text defined somewhere else or you can define it here.
+    QString base_text = getTemplateTextByElementNameAndPage(ui->label_show_temperature);
+    float temperature = thisMachine.getTemperature_1();
+    ui->label_show_temperature->setText(base_text.arg(QString::number(temperature, 'f', 1)));
+    }
+
 void page_idle::showEvent(QShowEvent *event)
 {
 
@@ -116,8 +124,12 @@ void page_idle::showEvent(QShowEvent *event)
     // setTemplateTextToObject(ui->label_show_temperature);
     //   ui->label_show_temperature->setText( "33");
 
-    QString base_text = getTemplateTextByElementNameAndPage(ui->label_show_temperature);
-    ui->label_show_temperature->setText(base_text.arg(QString::number(thisMachine.getTemperature_1(), 'f', 2))); // will replace %1 character in string by the provide text
+    // QString base_text = getTemplateTextByElementNameAndPage(ui->label_show_temperature);
+
+   
+    displayTemperature();
+    // ui->label_show_temperature->setText(base_text.arg(QString::number(thisMachine.getTemperature_1(), 'f', 2))); // will replace %1 character in string by the provide text
+    // ui->label_show_temperature->setText(""); // will replace %1 character in string by the provide text
 
     // if (thisMachine.getTemperature_1() >= 24)
     // {
@@ -379,9 +391,9 @@ void page_idle::onPollTemperatureTimerTick()
     bool isTemperatureHigh = thisMachine.isTemperatureTooHigh_1();
 
     // Update UI elements with the current temperature
-    QString temperatureStr = QString::number(currentTemperature, 'f', 2);
+    QString temperatureStr = QString::number(currentTemperature, 'f', 1);
     QString base_text = getTemplateTextByElementNameAndPage(ui->label_show_temperature);
-    ui->label_show_temperature->setText(base_text.arg(temperatureStr));
+   ui->label_show_temperature->setText(base_text.arg(temperatureStr));
 
     // Toggle visibility of temperature status label
     ui->label_temperature_status->setVisible(isTemperatureHigh && thisMachine.isAelenPillarElseSoapStand());
@@ -393,7 +405,7 @@ void page_idle::onPollTemperatureTimerTick()
         // {
         //     products[slot_index].setSlotEnabled(false, "SLOT_STATE_DISABLED_COMING_SOON");
         // }
-        thisMachine.checkAndDisableProducts();// test if it works
+        thisMachine.checkForHighTemperatureAndDisableProducts();// test if it works
         qDebug() << "Temperature too high, block all slots.";
         
         // Update temperature status label

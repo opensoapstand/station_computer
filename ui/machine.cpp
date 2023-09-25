@@ -255,11 +255,10 @@ void machine::writeTemperatureToDb(double temperature_1, double temperature_2)
 //     qDebug() << "DB call: Add temperature 2 record ";
 //     m_db->addTemperature2(getMachineId(), temperature2, "");
 // }
-void machine::checkAndDisableProducts()
+void machine::checkForHighTemperatureAndDisableProducts()
 {
     if (isTemperatureTooHigh_1())
     {
-            qDebug() << "333333333666666666Temperature too high for one hour, block all slots.";
         if(!temperatureWasHigh)
         {
             temperatureWasHigh = true;
@@ -267,16 +266,16 @@ void machine::checkAndDisableProducts()
         }
         
         QTime currentTime = QTime::currentTime();
-        int elapsedMinutes = temperatureHighTime.msecsTo(currentTime) / 15000; // Convert milliseconds to minutes 60000=60min
+        int elapsedMinutes = temperatureHighTime.msecsTo(currentTime) / 60000; // Convert milliseconds to minutes 60000=60min
 
-        if (elapsedMinutes >= 60) // Check if one hour has passed
+        if (elapsedMinutes >= 60) //60  Check if one hour has passed
         {
             for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
             {
                 //QString slotStatus = p_page_idle->selectedProduct->getStatusText()
                 m_products[slot_index].setSlotEnabled(false, "SLOT_STATE_DISABLED_COMING_SOON");
-            }
             qDebug() << "Temperature too high for one hour, block all slots.";
+            }
         }
     }
     else
@@ -286,8 +285,8 @@ void machine::checkAndDisableProducts()
 }
 bool machine::isTemperatureTooHigh_1()
 {
-    qDebug() << "alert temperature: " << m_alert_temperature;
-    qDebug() << "current temperature: " << m_temperature;
+   // qDebug() << "alert temperature: " << m_alert_temperature;
+    // qDebug() << "current temperature: " << m_temperature;
     if (m_alert_temperature > 100.0)
     {
         return false;
@@ -310,44 +309,19 @@ void machine::fsmReceiveTemperature(double temperature_1, double temperature_2)
         qDebug() << "Temperature too hights afeifaf    debug test";
     }
 }
-// void machine::fsmReceiveTemperature2(double temperature2)
-// {
-//     m_temperature2 = temperature2;
-//     qDebug() << "Temperature 2 received from FSM in machine: " << m_temperature2;
-//     // ui->label_setting_temperature->setText("Temp="+temperature);
 
-//     writeTemperature2ToDb(m_temperature2);
-
-//     if(isTemperatureTooHigh()){
-//         // ui->label_printer_status->setText("Temperature= " + QString::number(temperature, 'f', 2) + " is too high")
-//         qDebug() << "Temperature 222222 too hights afeifaf    debug test";
-//     }
-// }
 
 double machine::getTemperature_1()
 {
     return m_temperature;
 }
-// double machine::getTemperature2(){
-//     return m_temperature2;
-// }
 
-// void machine::temperatureFromControllerFeedback(double temperature)
-// {
-//     m_temperature = temperature;
-//     if((m_db->getAlertTemperature()) < m_temperature){
-//         // ui->label_printer_status->setText("Temperature= " + QString::number(temperature, 'f', 2) + " is too high")
-//         qDebug() << "Temperature too hights afeifaf    debug test";
-//     }
-// }
 
 void machine::getTemperatureFromController()
 {
     dfUtility->send_command_to_FSM("getTemperature");
 }
-// void machine::getTemperature2FromController(){
-//     dfUtility->send_command_to_FSM("getTemperature2");
-// }
+
 
 bool machine::hasReceiptPrinter()
 {

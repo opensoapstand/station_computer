@@ -32,7 +32,7 @@ class machine : public QObject
     Q_OBJECT
 
 public:
-    void checkAndDisableProducts();
+    void checkForHighTemperatureAndDisableProducts();
     machine();
     ~machine();
     void loadParametersFromDb();

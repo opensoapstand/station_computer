@@ -3,6 +3,7 @@
 
 #include "df_util.h"
 #include "dbmanager.h"
+#include "product.h"
 
 typedef enum UserRole
 {
@@ -24,11 +25,14 @@ typedef enum StateCoupon
     network_error
 } StateCoupon;
 
+class product; //  forward declaration.
+
 class machine : public QObject
 {
     Q_OBJECT
 
 public:
+    void checkForHighTemperatureAndDisableProducts();
     machine();
     ~machine();
     void loadParametersFromDb();
@@ -102,6 +106,8 @@ public:
     void setCouponConditions(QString couponConditions);
     std::map<QString , QString > getCouponConditions();
 
+
+    void setProducts(product* products);
     QString m_session_id;
 
     void setDiscountPercentageFraction(double percentageFraction);
@@ -155,6 +161,9 @@ public slots:
 signals:
 
 private:
+    product* m_products;
+    QTime temperatureHighTime;
+    bool temperatureWasHigh = false;
     StateCoupon m_stateCoupon;
     double m_discount_percentage_fraction = 0.0;
     double max_discount = 0.0;

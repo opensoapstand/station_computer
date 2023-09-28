@@ -8,7 +8,7 @@
 // TODO: Refactor to fit with dfuicommthread
 //#define START_FSM_FROM_UI //enabled by default (start controller from ui)
 
-#define UI_VERSION "2.0s"
+#define UI_VERSION "2.1"
 
 #define ENABLE_COUPON   // Petros stations have no coupon
 
@@ -54,7 +54,7 @@
 using namespace std;
 
 #define PAGE_IDLE_DELAY_BEFORE_ENTERING_IDLE_PRODUCTS 15
-#define PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS 6 //60
+#define PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS 60 //60
 #define PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS 6
 #define PAGE_IDLE_PRODUCTS_STEP_DISPLAY_TIME_SECONDS 1
 

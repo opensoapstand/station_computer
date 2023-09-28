@@ -142,9 +142,10 @@ int main(int argc, char *argv[])
     page_maintenance_general *p_page_maintenance_general = new page_maintenance_general();
     qDebug() << "All Pages created.";
 
-    DbManager testdb;
-    // p_page_idle->g_database.setPath(CONFIG_DB_PATH);
-    p_page_idle->g_database = &testdb;
+    DbManager db_config;
+    p_page_idle->g_database = &db_config;
+    
+    db_config.updateTableMachineWithText("software_version", UI_VERSION );
 
     p_page_idle->loadDynamicContent();
 

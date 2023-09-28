@@ -85,9 +85,9 @@ line-height: 29px;</string>
   <widget class="QLabel" name="label_invoice_price">
    <property name="geometry">
     <rect>
-     <x>749</x>
+     <x>709</x>
      <y>993</y>
-     <width>211</width>
+     <width>251</width>
      <height>80</height>
     </rect>
    </property>
@@ -1835,7 +1835,7 @@ outline: none;
     <rect>
      <x>130</x>
      <y>993</y>
-     <width>590</width>
+     <width>561</width>
      <height>90</height>
     </rect>
    </property>

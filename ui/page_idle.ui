@@ -153,10 +153,10 @@ text-transform: lowercase;</string>
   <widget class="QLabel" name="label_show_temperature">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>1840</y>
-     <width>311</width>
-     <height>71</height>
+     <x>0</x>
+     <y>1860</y>
+     <width>121</width>
+     <height>61</height>
     </rect>
    </property>
    <property name="text">

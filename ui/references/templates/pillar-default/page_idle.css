@@ -25,10 +25,10 @@ QLabel {
 }
 
 #label_show_temperature {
-    font-size: 49px;
+    font-size: 30px;
     font-weight: 700;
     line-height: 43px;
-    color: rgb(255, 255, 255);
+    color: gray;
     
     font-family: 'Lora';
     /* font-family: 'Vollkorn'; */

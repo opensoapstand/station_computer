@@ -3,6 +3,7 @@
 #include "df_util.h" // lode added for settings
 #include "dbmanager.h"
 #include "machine.h"
+#include "product.h"
 
 machine::machine()
 {
@@ -28,7 +29,12 @@ StateCoupon machine::getCouponState()
     return m_stateCoupon;
 }
 
+void machine::setProducts(product* products)
+{
+    m_products = products;
+}
 bool machine::isDispenseAreaBelowElseBesideScreen()
+
 {
     // check in database if hardware_version starts with AP or SS
     // get hardware_version from db_manager
@@ -273,10 +279,37 @@ void machine::writeTemperatureToDb(double temperature_1, double temperature_2)
 //     qDebug() << "DB call: Add temperature 2 record ";
 //     m_db->addTemperature2(getMachineId(), temperature2, "");
 // }
+void machine::checkForHighTemperatureAndDisableProducts()
+{
+    if (isTemperatureTooHigh_1())
+    {
+        if(!temperatureWasHigh)
+        {
+            temperatureWasHigh = true;
+            temperatureHighTime = QTime::currentTime(); // Record the time when temperature became too high
+        }
+        
+        QTime currentTime = QTime::currentTime();
+        int elapsedMinutes = temperatureHighTime.msecsTo(currentTime) / 60000; // Convert milliseconds to minutes 60000=60min
 
+        if (elapsedMinutes >= 60) //60  Check if one hour has passed
+        {
+            for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+            {
+                //QString slotStatus = p_page_idle->selectedProduct->getStatusText()
+                m_products[slot_index].setSlotEnabled(false, "SLOT_STATE_DISABLED_COMING_SOON");
+            qDebug() << "Temperature too high for one hour, block all slots.";
+            }
+        }
+    }
+    else
+    {
+        temperatureWasHigh = false; // Reset the flag and the time when the temperature goes back to normal
+    }
+}
 bool machine::isTemperatureTooHigh_1()
 {
-    // qDebug() << "alert temperature: " << m_alert_temperature;
+   // qDebug() << "alert temperature: " << m_alert_temperature;
     // qDebug() << "current temperature: " << m_temperature;
     if (m_alert_temperature > 100.0)
     {
@@ -301,15 +334,18 @@ void machine::fsmReceiveTemperature(double temperature_1, double temperature_2)
     }
 }
 
+
 double machine::getTemperature_1()
 {
     return m_temperature;
 }
 
+
 void machine::getTemperatureFromController()
 {
     dfUtility->send_command_to_FSM("getTemperature");
 }
+
 
 bool machine::hasReceiptPrinter()
 {
@@ -463,7 +499,7 @@ void machine::setSlotEnabled(int slot, bool isEnabled)
 {
     // do this through product.cpp, as this should have been a part of products table
     QString column_name = QString("is_enabled_slot_%1").arg(slot);
-
+    m_is_enabled_slots[slot - 1] = isEnabled; //Global variable
     m_db->updateTableMachineWithInt(column_name, isEnabled);
 }
 

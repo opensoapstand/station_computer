@@ -22,3 +22,4 @@
 # page_select_product->label_product_1_type,{"x":53, "y":814, "width":450, "height":46,"isVisibleAtLoad":true}
 # page_select_product->label_product_2_type,{"x":562, "y":814, "width":450, "height":46,"isVisibleAtLoad":false}
 page_dispenser->label_indicate_active_spout,{"x":460,"y":1700,"isVisibleAtLoad":true}
+page_idle->label_show_temperature,{"x":10000}

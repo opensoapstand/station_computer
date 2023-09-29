@@ -219,8 +219,9 @@ void page_tap_payment_serial::tap_serial_initiate()
     while (!paymentConnected)
     {
         paymentConnected = com.page_init();
+        sleep(1);
     }
-    sleep(3);
+    sleep(35);
     cout << "_----_-----__------_-----";
     /*logon packet to send*/
     cout << "Sending Logon packet..." << endl;

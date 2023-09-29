@@ -102,6 +102,7 @@ void page_qr_payment::showEvent(QShowEvent *event)
     ui->label_processing->setStyleSheet(styleSheet);
     ui->label_product_price->setStyleSheet(styleSheet);
     ui->label_product_information->setStyleSheet(styleSheet);
+    ui->label_gif->setStyleSheet(styleSheet);
 
     state_payment = s_init;
     double originalPrice = p_page_idle->selectedProduct->getBasePrice();
@@ -141,6 +142,7 @@ void page_qr_payment::showEvent(QShowEvent *event)
     ui->label_refresh_page->hide();
     ui->pushButton_refresh->raise(); // make sure refresh button is on top.
     ui->pushButton_previous_page->raise();
+    ui->label_gif->hide();
 
     setupQrOrder();
 }
@@ -326,10 +328,16 @@ void page_qr_payment::isQrProcessedCheckOnline()
             ui->label_product_information->hide();
             ui->label_product_price->hide();
             ui->label_steps->hide();
+            ui->label_gif->show();
+
 
             ui->label_processing->show();
             p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_scan, "finalize_transaction");
             p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_title, "almost_there");
+            QString image_path = p_page_idle->thisMachine.getTemplatePathFromName("soapstandspinner.gif");
+            QMovie *movie = new QMovie(image_path);
+            ui->label_gif->setMovie(movie);
+            movie->start();
         }
         else
         {

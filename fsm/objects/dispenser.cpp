@@ -66,7 +66,7 @@ dispenser::dispenser()
     previous_dispense_state = FLOW_STATE_UNAVAILABLE;
 }
 
-DF_ERROR dispenser::setup(machine* machine)
+DF_ERROR dispenser::setup(machine *machine)
 {
     // Set the pump PWM value to a nominal value
 
@@ -302,7 +302,7 @@ DF_ERROR dispenser::startDispense()
 
     this->the_pcb->flowSensorEnable(slot);
     this->the_pcb->resetFlowSensorTotalPulses(slot);
-    
+
     dispense_state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
     previous_dispense_state = FLOW_STATE_UNAVAILABLE;
 
@@ -363,7 +363,7 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
 DF_ERROR dispenser::stopDispense()
 {
     debugOutput::sendMessage("stop dispense actions...", MSG_INFO);
-  
+
     setAllDispenseButtonLightsOff();
 
     the_pcb->flowSensorsDisableAll();
@@ -882,7 +882,7 @@ void dispenser::loadSlotStateFromDb()
     {
         setSlotState(SLOT_STATE_AVAILABLE);
     }
-    debugOutput::sendMessage("Dispenser state loaded from db: " + std::string(getSlotStateAsString())  + "(db value: " + std::string(slotStateText) + ")", MSG_INFO);
+    debugOutput::sendMessage("Dispenser state loaded from db: " + std::string(getSlotStateAsString()) + "(db value: " + std::string(slotStateText) + ")", MSG_INFO);
 }
 
 void dispenser::loadEmptyContainerDetectionEnabledFromDb()
@@ -1109,8 +1109,7 @@ const char *dispenser::getSlotStateAsString()
 
 void dispenser::setSlotState(Slot_state state)
 {
-        slot_state = state;
-    
+    slot_state = state;
 }
 
 Slot_state dispenser::getSlotState()
@@ -1133,12 +1132,12 @@ void dispenser::updateSlotState()
         {
             slot_state = SLOT_STATE_PROBLEM_NEEDS_ATTENTION;
         }
-       
+
         if (getDispenseStatus() == FLOW_STATE_NOT_PUMPING_NOT_DISPENSING)
         {
             slot_state = SLOT_STATE_AVAILABLE;
         }
-       
+
         if (getDispenseStatus() == FLOW_STATE_DISPENSING)
         {
             slot_state = SLOT_STATE_AVAILABLE;
@@ -1148,7 +1147,8 @@ void dispenser::updateSlotState()
     case SLOT_STATE_AVAILABLE:
     {
 
-        if (getDispenseStatus() == FLOW_STATE_PRIMING_OR_EMPTY){
+        if (getDispenseStatus() == FLOW_STATE_PRIMING_OR_EMPTY)
+        {
             slot_state = SLOT_STATE_WARNING_PRIMING;
         }
         if (getDispenseStatus() == FLOW_STATE_EMPTY)
@@ -1159,7 +1159,7 @@ void dispenser::updateSlotState()
         {
             slot_state = SLOT_STATE_PROBLEM_NEEDS_ATTENTION;
         }
-       
+
         break;
     }
     case SLOT_STATE_AVAILABLE_LOW_STOCK:
@@ -1226,28 +1226,21 @@ void dispenser::updateDispenseStatus()
 {
     Time_val avg = getAveragedFlowRate(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS);
 
-    // if (dispense_state == FLOW_STATE_PRIME_FAIL_OR_EMPTY && avg.value < getProduct()->getThresholdFlow())
-    // {
-    //     // once failed, stay failed until proven otherwise by having a good flow.
-    //     dispense_state = FLOW_STATE_PRIME_FAIL_OR_EMPTY;
-    // }
-    // else if (dispense_state == FLOW_STATE_EMPTY && avg.value < getProduct()->getThresholdFlow())
-    // {
-    //     // once empty, stay empty until proven otherwise by having a good flow.
-    //     dispense_state = FLOW_STATE_EMPTY;
-    // }
-    // else
+    // debugOutput::sendMessage("minimummmmm: " + to_string(getProduct()->getThresholdFlow()), MSG_INFO);
+    // debugOutput::sendMessage("maximummmmm ml/s: " + to_string(getProduct()->getThresholdFlow_max_allowed()), MSG_INFO);
 
     if (!getDispenseButtonValue())
     {
         dispense_state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
     }
-    else if ((getButtonPressedCurrentPressMillis() < EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS) && avg.value < getProduct()->getThresholdFlow())
+    else if ((getButtonPressedCurrentPressMillis() < EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS) &&
+             (avg.value < getProduct()->getThresholdFlow() || avg.value >= getProduct()->getThresholdFlow_max_allowed()))
     {
-        // flow rate needs to be ramped up until stable.
+        // flow rate needs to be ramped up until stable.  (or ramped down in situations I can't imagine)
         dispense_state = FLOW_STATE_RAMP_UP;
     }
-    else if (avg.value >= getProduct()->getThresholdFlow())
+    // else if (avg.value >= getProduct()->getThresholdFlow() )
+    else if (avg.value >= getProduct()->getThresholdFlow() && avg.value < getProduct()->getThresholdFlow_max_allowed())
     {
         // button pressed (aka pumping)
         // init time long enough for valid data
@@ -1259,6 +1252,18 @@ void dispenser::updateDispenseStatus()
         // button pressed (aka pumping)
         // init time long enough for valid data
         // no flow detected
+        if (avg.value < getProduct()->getThresholdFlow())
+        {
+            debugOutput::sendMessage("Below threshold of minimum flow rate. minimum flow rate: " + to_string(getProduct()->getThresholdFlow()), MSG_INFO);
+        }
+        else if (avg.value >= getProduct()->getThresholdFlow_max_allowed())
+        {
+            debugOutput::sendMessage("Exceeds threshold of maximum flow rate. maximum flow rate: " + to_string(getProduct()->getThresholdFlow_max_allowed()), MSG_INFO);
+        }
+        else
+        {
+            debugOutput::sendMessage("Erroneous dispenser state: " + to_string(slot_state), MSG_INFO);
+        }
 
         // once it was dispensing, empty dispenser is detected immediatly if no product flows.
         // bugfix: if the button was release and repressed, the average was not correct at restart

@@ -331,7 +331,7 @@ void page_dispenser::fsmSendStartDispensing()
     QString command = preamble + delimiter + dispenseCommand + delimiter + priceCommand + delimiter + promoCommand + delimiter;
 
     qDebug() << "Send start command to FSM: " << command;
-    p_page_idle->thisMachine.dfUtility->send_command_to_FSM(command);
+    p_page_idle->thisMachine.dfUtility->send_command_to_FSM(command, true);
     this->isDispensing = true;
     qDebug() << "Dispensing started.";
 }
@@ -344,7 +344,7 @@ void page_dispenser::fsmSendStopDispensing()
     QString command = QString::number(p_page_idle->selectedProduct->getSlot());
     command.append(p_page_idle->selectedProduct->getSizeAsChar());
     command.append(SEND_DISPENSE_STOP);
-    p_page_idle->thisMachine.dfUtility->send_command_to_FSM(command);
+    p_page_idle->thisMachine.dfUtility->send_command_to_FSM(command, true);
 }
 
 void page_dispenser::onArrowAnimationStepTimerTick()
@@ -641,7 +641,7 @@ void page_dispenser::on_pushButton_problems_clicked()
     {
         // send repair command
         qDebug() << "Send repair command to fsm";
-        p_page_idle->thisMachine.dfUtility->send_command_to_FSM(SEND_REPAIR_PCA);
+        p_page_idle->thisMachine.dfUtility->send_command_to_FSM(SEND_REPAIR_PCA, true);
         break;
     }
     }

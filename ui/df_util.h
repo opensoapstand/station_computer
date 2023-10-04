@@ -165,14 +165,13 @@ public:
     void write_to_file_timestamped(QString basePath, QString data);
     void write_to_file(QString path, QString data);
 
-    void send_command_to_FSM(QString command);
-    void set_message_to_send_to_FSM(QString msg);
+    void send_command_to_FSM(QString command, bool isLoggingMessage);
 
     static QJsonObject parseJsonString(QString jsonString);
 
     bool m_IsSendingFSM;
 
-    QString send_msg;
+    // QString send_msg;
 
     QTcpSocket *tcpSocket = nullptr;
     QDataStream in;
@@ -185,7 +184,7 @@ protected:
 
 public slots:
     void displayError(QAbstractSocket::SocketError socketError);
-    void send_to_FSM();
+    void send_to_FSM(QString command, bool isLoggingMessage);
 
 private:
 };

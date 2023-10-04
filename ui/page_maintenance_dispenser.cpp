@@ -391,7 +391,7 @@ void page_maintenance_dispenser::autoDispenseStart(int size)
         dispenseTimer->start(100);
         update_volume_received_dispense_stats(0);
 
-        p_page_idle->thisMachine.dfUtility->send_command_to_FSM(command);
+        p_page_idle->thisMachine.dfUtility->send_command_to_FSM(command, true);
 
         pump_enabled = true;
     }
@@ -411,7 +411,7 @@ void page_maintenance_dispenser::dispense_test_start()
     dispenseTimer->start(100);
     update_volume_received_dispense_stats(0);
 
-    p_page_idle->thisMachine.dfUtility->send_command_to_FSM(command);
+    p_page_idle->thisMachine.dfUtility->send_command_to_FSM(command, true);
 
     pump_enabled = true;
 
@@ -437,7 +437,7 @@ void page_maintenance_dispenser::dispense_test_end(bool sendStopToController)
             QString command = QString::number(p_page_idle->selectedProduct->getSlot());
             command.append("t");
             command.append(SEND_DISPENSE_STOP);
-            p_page_idle->thisMachine.dfUtility->send_command_to_FSM(command);
+            p_page_idle->thisMachine.dfUtility->send_command_to_FSM(command, true);
         }
         else
         {

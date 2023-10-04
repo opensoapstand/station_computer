@@ -400,12 +400,7 @@ void page_idle::onPollTemperatureTimerTick()
     
     if(isTemperatureHigh)
     {
-        // Disable all products if the temperature is too high
-        // for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
-        // {
-        //     products[slot_index].setSlotEnabled(false, "SLOT_STATE_DISABLED_COMING_SOON");
-        // }
-        thisMachine.checkForHighTemperatureAndDisableProducts();// test if it works
+        thisMachine.checkForHighTemperatureAndDisableProducts();// todo test if it works
         qDebug() << "Temperature too high, block all slots.";
         
         // Update temperature status label

@@ -46,43 +46,49 @@ QByteArray DfUiCommThread::readyRead()
     // will write on server side window
     //    qDebug() << socketDescriptor << " Data in: " << Data;
 
-    qDebug() << "Process received message : " << Data;
-
     // socket->write(Data); // THIS CAUSES THE UI TO CRASH AT TIMES.... for now, we delete it. todo. send ack to controller.
 
     if (Data == "Transaction End")
     {
+        qDebug() << "Process received message : " << Data; // not every message gets a debug acknowledgement.
         emit transactionEndSignal();
     }
 
     else if (Data == "Reset Timer")
     {
+        qDebug() << "Process received message : " << Data; // not every message gets a debug acknowledgement.
         emit resetTimerSignal();
     }
     else if (Data == "No flow abort")
     {
+        qDebug() << "Process received message : " << Data; // not every message gets a debug acknowledgement.
         emit noFlowAbortSignal();
     }
     else if (Data == "Target Hit")
     {
+        qDebug() << "Process received message : " << Data; // not every message gets a debug acknowledgement.
         emit targetHitSignal();
     }
 
     else if (Data == "Init Ready")
     {
+        qDebug() << "Process received message : " << Data; // not every message gets a debug acknowledgement.
         emit initReadySignal();
     }
     else if (Data == "OK")
     {
+        qDebug() << "Process received message : " << Data; // not every message gets a debug acknowledgement.
         // emit initReadySignal();
         usleep(3000000);
     }
     else if (Data == "Dispense Button Pos Edge")
     {
+        qDebug() << "Process received message : " << Data; // not every message gets a debug acknowledgement.
         emit dispenseButtonPressedPosEdgeSignal();
     }
     else if (Data == "Dispense Button Neg Edge")
     {
+        qDebug() << "Process received message : " << Data; // not every message gets a debug acknowledgement.
         emit dispenseButtonPressedNegEdgeSignal();
     }
     else if (Data.startsWith("temperature|"))
@@ -98,27 +104,16 @@ QByteArray DfUiCommThread::readyRead()
         double temperature_2 = third_part.toDouble();
 
         emit temperatureSignal(temperature_1, temperature_2);
-        // emit temperature2Signal(temperature2.toDouble());
     }
-    // else if (strtol(Data, &pEnd, 10) || (Data[0] == '0' && Data[1] == '.'))
-    // old rudimentary way of sending dispensed volumen from fsm to ui
-    // {
-    //     double volume_dispensed = stod(Data.constData(), &sz);
-    //     emit updateVolumeSignal(volume_dispensed); // induced crash at cancel dispense.
-    // }
-
     else if (Data.contains("printerstatus"))
-
     {
         bool isOnline = Data.at(13) == '1';
         bool hasPaper = Data.at(14) == '1';
         emit printerStatusSignal(isOnline, hasPaper);
     }
-
     else if (Data.contains("dispenseupdate|"))
-
     {
-        // qDebug() << "dispenseupdatedata received: " << Data;
+        qDebug() << "Process received message : " << Data; // not every message gets a debug acknowledgement.
         int first_delim_pos = Data.indexOf('|');
         int second_delim_pos = Data.indexOf('|', first_delim_pos + 1);
         int third_delim_pos = Data.indexOf('|', second_delim_pos + 1);
@@ -136,25 +131,22 @@ QByteArray DfUiCommThread::readyRead()
         // qDebug() << "flowrate: " << QString::number(flowrate, 'f', 2);
         // qDebug() << "dispenseStatus: " << dispenseStatusString;
         emit updateVolumeSignal(volumeDispensed); // induced crash at cancel dispense.
-        emit dispenseRateSignal(flowrate); 
-        emit dispenseStatusSignal(dispenseStatusString); 
+        emit dispenseRateSignal(flowrate);
+        emit dispenseStatusSignal(dispenseStatusString);
     }
     else if (Data.contains("finalVolumeDispensed|"))
-
     {
-        // qDebug() << "dispenseupdatedata received: " << Data;
+        qDebug() << "Process received message : " << Data; // not every message gets a debug acknowledgement.
         int first_delim_pos = Data.indexOf('|');
         int second_delim_pos = Data.indexOf('|', first_delim_pos + 1);
 
         QByteArray first_part = Data.mid(0, first_delim_pos);
         QByteArray second_part = Data.mid(first_delim_pos + 1, second_delim_pos - first_delim_pos - 1);
-       
+
         double volumeDispensed = second_part.toDouble();
-    
-        emit updateFinalVolumeDispensedSignal(volumeDispensed); 
 
+        emit updateFinalVolumeDispensedSignal(volumeDispensed);
     }
-
     else
     {
         qDebug() << "Non actionable message from fsm received: " << Data;

@@ -42,7 +42,7 @@ public:
 
    DF_ERROR createThreads(pthread_t &kbThread, pthread_t &ipThread);
 
-   DF_ERROR sendMessageOverIP(string msg);
+   DF_ERROR sendMessageOverIP(string msg, bool isLoggingMessage);
    void setMachine(machine *machine);
    string getProcessString();
    DF_ERROR parseCommandString();

@@ -21,6 +21,8 @@
 #include "product.h"
 #include "dbmanager.h"
 
+#include <cstdlib> // For rand() function
+
 #include <QStringList>
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
@@ -55,6 +57,10 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     pollTemperatureTimer->setInterval(1000);
     connect(pollTemperatureTimer, SIGNAL(timeout()), this, SLOT(onPollTemperatureTimerTick()));
 
+    testForFrozenScreenTimer = new QTimer(this);
+    testForFrozenScreenTimer->setInterval(1000);
+    connect(testForFrozenScreenTimer, SIGNAL(timeout()), this, SLOT(onTestForFrozenScreenTick()));
+
     for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
         products[slot_index].setSlot(slot_index + 1);
@@ -63,6 +69,7 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     }
 
     thisMachine.setProducts(products);
+    stateScreenCheck = state_screen_check_not_initiated;
 }
 
 /*
@@ -84,13 +91,13 @@ page_idle::~page_idle()
     delete ui;
 }
 
- void page_idle::displayTemperature()
-    {
-        //  QString base_text = "Current Temperature: %1 °C"; //Assuming you have the base_text defined somewhere else or you can define it here.
+void page_idle::displayTemperature()
+{
+    //  QString base_text = "Current Temperature: %1 °C"; //Assuming you have the base_text defined somewhere else or you can define it here.
     QString base_text = getTemplateTextByElementNameAndPage(ui->label_show_temperature);
     float temperature = thisMachine.getTemperature_1();
     ui->label_show_temperature->setText(base_text.arg(QString::number(temperature, 'f', 1)));
-    }
+}
 
 void page_idle::showEvent(QShowEvent *event)
 {
@@ -121,32 +128,8 @@ void page_idle::showEvent(QShowEvent *event)
     ui->label_temperature_status->setStyleSheet(styleSheet);
 
     ui->label_show_temperature->setStyleSheet(styleSheet);
-    // setTemplateTextToObject(ui->label_show_temperature);
-    //   ui->label_show_temperature->setText( "33");
 
-    // QString base_text = getTemplateTextByElementNameAndPage(ui->label_show_temperature);
-
-   
     displayTemperature();
-    // ui->label_show_temperature->setText(base_text.arg(QString::number(thisMachine.getTemperature_1(), 'f', 2))); // will replace %1 character in string by the provide text
-    // ui->label_show_temperature->setText(""); // will replace %1 character in string by the provide text
-
-    // if (thisMachine.getTemperature_1() >= 24)
-    // {
-    //     // temperature too high --> disable all products.
-    //     for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
-    //     {
-    //         // products[slot_index]->setStatusText("SLOT_STATE_DISABLED"); //
-    //         products[slot_index-1].setStatusText("SLOT_STATE_DISABLED"); //
-    //     //    p_page_idle->selectedProduct->setStatusText(SLOT_STATE_DISABLED); //to be used where I check themperature
-
-    //     }
-    //     qDebug() << "----------------------------temp high block all **-*-*-*-****-*-***-*";
-    // }
-    // else
-    // {
-    //     qDebug() << "----------------------------temp 0K0K0K0K00K0K0K0K00K0K0K0K0K **-*-*-*-****-*-***-*";
-    // }
 
     if (thisMachine.isAelenPillarElseSoapStand() == false)
     {
@@ -158,27 +141,11 @@ void page_idle::showEvent(QShowEvent *event)
     }
 
     ui->label_temperature_status->hide();
-    // bool needsReceiptPrinter = false;
-    // for (int slot = 1; slot <= SLOT_COUNT; slot++)
-    // {
-    // QString paymentMethod = products[slot - 1].getPaymentMethod();
-    // products[slot - 1].setDiscountPercentageFraction(0.0);
-    // products[slot - 1].setPromoCode("");
-    // if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
-    // {
-    //     // needsReceiptPrinter = true;
-    //     qDebug() << "Needs receipt printer: " << paymentMethod;
-    //     break;
-    // }
 
-    // reset promovalue
-    // currentProductOrder->setDiscountPercentageFraction(0.0);
-    // currentProductOrder->setPromoCode("");
-    // }
-
-    // template text with argument demo
+    // template text with argument example
     // QString base_text = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_welcome_message, "testargument" );
     // ui->label_welcome_message->setText(base_text.arg("SoAp")); // will replace %1 character in string by the provide text
+
     setTemplateTextToObject(ui->label_welcome_message);
     addCustomerLogoToLabel(ui->label_customer_logo);
 
@@ -198,6 +165,9 @@ void page_idle::showEvent(QShowEvent *event)
 
     pollTemperatureTimer->start(1000);
     _pollTemperatureTimerTimeoutSec = PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS;
+
+    testForFrozenScreenTimer->start(1000);
+    _testForFrozenScreenTimerTimeoutSec = PAGE_IDLE_TEST_FOR_FROZEN_SCREEN_PERIOD_SECONDS;
 
 // #define PLAY_VIDEO
 #ifdef PLAY_VIDEO
@@ -310,15 +280,73 @@ void page_idle::hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createN
     this->pageTransition(this, pageToShow);
     idlePageTypeSelectorTimer->stop();
     pollTemperatureTimer->stop();
+    testForFrozenScreenTimer->stop();
+}
+
+void page_idle::onTestForFrozenScreenTick()
+{
+    // sometimes the screen is frozen. It is not a hardware issue.
+    // virtual mouse clicks also have no effect when frozen. 
+    // Nobody knows what causes it. Maybe a doubling up of the page? But no evidence of this is in any log.
+    // So, we perform periodically a virtual mouse click. If it is caught by the 'next page' button, that means all is fine. 
+    // If not, we will go to select products page and automatically revert after some seconds. I hope that by reloading idle page, the 'freezing issue' is solved.
+
+    // Only poll temperature after every PAGE_IDLE_TEST_FOR_FROZEN_SCREEN_PERIOD_SECONDS seconds
+    _testForFrozenScreenTimerTimeoutSec--;
+    if (_testForFrozenScreenTimerTimeoutSec >= 0)
+    {
+        return;
+    }
+    _testForFrozenScreenTimerTimeoutSec = PAGE_IDLE_TEST_FOR_FROZEN_SCREEN_PERIOD_SECONDS;
+
+    // we will test the previous cycle's outcome. If there is a fail, that means it will take at least one whole period that it's undetected (for the sake of simplicity of implementation)
+
+    if (stateScreenCheck == state_screen_check_not_initiated)
+    {
+    }
+    else if (stateScreenCheck == state_screen_check_clicked_and_succes)
+    {
+        stateScreenCheck = state_screen_check_not_initiated;
+    }
+    else if (stateScreenCheck == state_screen_check_clicked_and_wait)
+    {
+        // still in this state? This means we have a fail!
+        stateScreenCheck == state_screen_check_fail;
+
+        qDebug() << "ERROR: Idle Screen Not resposive to click test. (or program lost focus?!...). Will automatically go to 'select products page'. Screen freeze test is only active on idle page. If this is ennoying you while working in Ubuntu, put the program in maintenance mode. ";
+        this->hideCurrentPageAndShowProvided(p_pageSelectProduct, true); // will go to select products page and automatically revert after some seconds. I hope that by reloading idle page, the 'freezing issue' is solved.
+        return;                                            // we would create a monster if we continue, with multiple clicks and doubled up pages...
+    }
+
+    // prepare for next cycle
+    stateScreenCheck = state_screen_check_clicked_and_wait;
+
+    // TEST the function by every now and then not clicking. 
+    // std::srand(std::time(0)); // Seed the random number generator
+    // int randomNumber = std::rand() % 5;     // Generate a random number between 0 and 4
+    // bool randomBool = randomNumber > 2;
+
+    // // execute virtual click.
+    // if (randomBool)
+    // {
+    //     df_util::executeVirtualClick(200, 500);
+    // }
+    // else
+    // {
+    //     qDebug() << "Did not click. ";
+    // }
+
+    df_util::executeVirtualClick(200, 500);
+
 }
 
 // periodical temperature check initiated
 void page_idle::onPollTemperatureTimerTick()
 {
     // Only poll temperature after every PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS seconds
-    if (--_pollTemperatureTimerTimeoutSec >= 0) 
-        return; 
-    
+    if (--_pollTemperatureTimerTimeoutSec >= 0)
+        return;
+
     _pollTemperatureTimerTimeoutSec = PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS;
     // qDebug() << "Check temperature.";
 
@@ -330,20 +358,20 @@ void page_idle::onPollTemperatureTimerTick()
     // Update UI elements with the current temperature
     QString temperatureStr = QString::number(currentTemperature, 'f', 1);
     QString base_text = getTemplateTextByElementNameAndPage(ui->label_show_temperature);
-   ui->label_show_temperature->setText(base_text.arg(temperatureStr));
+    ui->label_show_temperature->setText(base_text.arg(temperatureStr));
 
     // Toggle visibility of temperature status label
     ui->label_temperature_status->setVisible(isTemperatureHigh && thisMachine.isAelenPillarElseSoapStand());
-    
-    if(isTemperatureHigh)
+
+    if (isTemperatureHigh)
     {
-        thisMachine.checkForHighTemperatureAndDisableProducts();// todo test if it works
+        thisMachine.checkForHighTemperatureAndDisableProducts(); // todo test if it works
         qDebug() << "Temperature too high, block all slots.";
-        
+
         // Update temperature status label
         QString base = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_temperature_status, "temperature_too_high");
         ui->label_temperature_status->setText(base.arg(temperatureStr));
-        
+
         qDebug() << "Temperature too high";
     }
     else
@@ -351,8 +379,6 @@ void page_idle::onPollTemperatureTimerTick()
         // qDebug() << "Temperature ok";
     }
 }
-
-
 
 // periodical check to transition to other idle page type
 void page_idle::onIdlePageTypeSelectorTimerTick()
@@ -405,7 +431,14 @@ void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
 
 void page_idle::on_pushButton_to_select_product_page_clicked()
 {
-    this->hideCurrentPageAndShowProvided(p_pageSelectProduct, true);
+    if (stateScreenCheck = state_screen_check_clicked_and_wait)
+    {
+        stateScreenCheck = state_screen_check_clicked_and_succes;
+    }
+    else
+    {
+        this->hideCurrentPageAndShowProvided(p_pageSelectProduct, true);
+    }
 }
 
 void page_idle::on_pushButton_test_clicked()

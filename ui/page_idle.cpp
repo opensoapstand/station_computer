@@ -427,11 +427,10 @@ void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
     ui->pushButton_to_select_product_page->show();
 }
 
-// void page_idle::
-
 void page_idle::on_pushButton_to_select_product_page_clicked()
 {
-    if (stateScreenCheck = state_screen_check_clicked_and_wait)
+    qDebug() << "Clicked on to_product_page button.";  // leave this for a while to investigate frozen screens in the field. 
+    if (stateScreenCheck == state_screen_check_clicked_and_wait)
     {
         stateScreenCheck = state_screen_check_clicked_and_succes;
     }
@@ -443,7 +442,7 @@ void page_idle::on_pushButton_to_select_product_page_clicked()
 
 void page_idle::on_pushButton_test_clicked()
 {
-    qDebug() << "test buttonproceeed clicked.. ";
+    qDebug() << "pushButton_test clicked.. ";
 }
 
 void page_idle::addCustomerLogoToLabel(QLabel *label)

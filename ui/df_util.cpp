@@ -184,8 +184,8 @@ void df_util::executeVirtualClick(int x, int y)
     QString error = process.readAllStandardError();
 
     // Handle output and error messages as needed
-    qDebug() << "Output:" << output;
-    qDebug() << "Error:" << error;
+    // qDebug() << "Output:" << output;
+    // qDebug() << "Error:" << error;
 
     // QString display = ":0";
     // QString command = QString("DISPLAY=%1 xdotool mousemove --sync %2 %3 click 1")
@@ -197,7 +197,7 @@ void df_util::executeVirtualClick(int x, int y)
     // QProcess::execute(command);
 
     
-    qDebug() << "Did the click.";
+    // qDebug() << "Did the click.";
 }
 
 

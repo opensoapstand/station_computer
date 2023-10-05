@@ -5,6 +5,8 @@
 #include "machine.h"
 #include "dbmanager.h"
 
+class machine; // forward declaration.
+
 class product : public QObject
 {
     Q_OBJECT
@@ -24,6 +26,7 @@ public:
     QString getAwsProductId();
     bool getSlotEnabled();
     void setSlotEnabled(bool isEnabled);
+    void setSlotEnabled(bool isEnabled, QString statusText);
     QString getStatusText();
     void setStatusText(QString status);
 

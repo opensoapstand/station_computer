@@ -1,6 +1,6 @@
 //***************************************
 //
-// page_tap_payment.cpp
+// page_payment_tap_tcp.cpp
 // GUI class while machine is processing
 // payment.
 //
@@ -13,7 +13,7 @@
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
-#include "page_tap_payment.h"
+#include "page_payment_tap_tcp.h"
 #include "ui_page_tap_payment.h"
 
 #include "page_product.h"
@@ -34,8 +34,8 @@ std::thread dataThread;
 int numberOfTapAttempts = 0;
 // CTOR
 
-page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
-                                                      ui(new Ui::page_tap_payment)
+page_payment_tap_tcp::page_payment_tap_tcp(QWidget *parent) : QWidget(parent),
+                                                      ui(new Ui::page_payment_tap_tcp)
 {
     // Fullscreen background setup
     ui->setupUi(this);
@@ -60,7 +60,7 @@ page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
     // ui->order_total_amount->hide();
 }
 
-void page_tap_payment::initiate_tap_setup()
+void page_payment_tap_tcp::initiate_tap_setup()
 {
     qDebug() << "InitializingTap payment";
     tap_payment = true;
@@ -91,7 +91,7 @@ void page_tap_payment::initiate_tap_setup()
         registerDevice(connectSocket());
     }
 }
-void page_tap_payment::stopPayTimers()
+void page_payment_tap_tcp::stopPayTimers()
 {
 
     if (checkPacketReceivedTimer != nullptr)
@@ -115,7 +115,7 @@ void page_tap_payment::stopPayTimers()
 /*
  * Page Tracking reference
  */
-void page_tap_payment::setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp)
+void page_payment_tap_tcp::setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp)
 {
     this->p_page_product = p_page_product;
     this->p_page_wifi_error = pageWifiError;
@@ -125,24 +125,24 @@ void page_tap_payment::setPage(page_product *p_page_product, page_error_wifi *pa
 }
 
 // DTOR
-page_tap_payment::~page_tap_payment()
+page_payment_tap_tcp::~page_payment_tap_tcp()
 {
     delete ui;
 }
 
-void page_tap_payment::on_pushButton_payment_bypass_clicked()
+void page_payment_tap_tcp::on_pushButton_payment_bypass_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_dispense);
 }
 
 /*Cancel any previous payment*/
-void page_tap_payment::cancelPayment()
+void page_payment_tap_tcp::cancelPayment()
 {
     // finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
     checkPacketReceivedTimer->stop();
 }
 
-void page_tap_payment::showEvent(QShowEvent *event)
+void page_payment_tap_tcp::showEvent(QShowEvent *event)
 {
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
@@ -172,19 +172,19 @@ void page_tap_payment::showEvent(QShowEvent *event)
     tapPaymentHandler();
 }
 
-void page_tap_payment::hideCurrentPageAndShowProvided(QWidget *pageToShow)
+void page_payment_tap_tcp::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
 
     resetPaymentPage();
     p_page_idle->pageTransition(this, pageToShow);
 }
 
-bool page_tap_payment::setpaymentProcess(bool status)
+bool page_payment_tap_tcp::setpaymentProcess(bool status)
 {
     return (paymentProcessing = status);
 }
 
-void page_tap_payment::tapPaymentHandler()
+void page_payment_tap_tcp::tapPaymentHandler()
 {
     ui->animated_Label->move(221, 327);
     QString image_path = p_page_idle->thisMachine.getTemplatePathFromName("tap.gif");
@@ -205,7 +205,7 @@ void page_tap_payment::tapPaymentHandler()
     startPaymentProcess();
 }
 
-void page_tap_payment::startPaymentProcess()
+void page_payment_tap_tcp::startPaymentProcess()
 {
     if (numberOfTapAttempts < 3)
     {
@@ -241,7 +241,7 @@ void page_tap_payment::startPaymentProcess()
     }
 }
 
-void page_tap_payment::check_packet_available()
+void page_payment_tap_tcp::check_packet_available()
 {
     std::map<std::string, std::string> xml_packet_dict;
     bool isPacketReceived;
@@ -252,7 +252,7 @@ void page_tap_payment::check_packet_available()
         authorized_transaction(xml_packet_dict);
     }
 }
-void page_tap_payment::check_card_tapped()
+void page_payment_tap_tcp::check_card_tapped()
 {
     std::map<std::string, std::string> xml_packet_dict_tapped;
     bool isPacketReceived;
@@ -290,7 +290,7 @@ void page_tap_payment::check_card_tapped()
     }
 }
 
-void page_tap_payment::authorized_transaction(std::map<std::string, std::string> responseObj)
+void page_payment_tap_tcp::authorized_transaction(std::map<std::string, std::string> responseObj)
 {
     stopPayTimers();
     QMovie *currentGif = ui->animated_Label->movie();
@@ -320,7 +320,7 @@ void page_tap_payment::authorized_transaction(std::map<std::string, std::string>
     }
 }
 
-bool page_tap_payment::exitConfirm()
+bool page_payment_tap_tcp::exitConfirm()
 {
     qDebug() << "In exit confirm";
     if (state_tap_payment == s_tap_payment_processing || state_tap_payment == s_tap_payment_done)
@@ -361,7 +361,7 @@ bool page_tap_payment::exitConfirm()
 }
 
 // Navigation: Back to Drink Size Selection
-void page_tap_payment::on_pushButton_previous_page_clicked()
+void page_payment_tap_tcp::on_pushButton_previous_page_clicked()
 {
     qDebug() << "In previous page button" << endl;
 
@@ -387,7 +387,7 @@ void page_tap_payment::on_pushButton_previous_page_clicked()
     }
 }
 
-void page_tap_payment::on_pushButton_to_idle_clicked()
+void page_payment_tap_tcp::on_pushButton_to_idle_clicked()
 {
     if (exitConfirm())
     {
@@ -395,11 +395,11 @@ void page_tap_payment::on_pushButton_to_idle_clicked()
     }
 }
 
-void page_tap_payment::idlePaymentTimeout()
+void page_payment_tap_tcp::idlePaymentTimeout()
 {
     hideCurrentPageAndShowProvided(p_page_idle);
 }
-void page_tap_payment::resetPaymentPage()
+void page_payment_tap_tcp::resetPaymentPage()
 {
     ui->label_title->hide();
 

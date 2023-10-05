@@ -21,7 +21,7 @@
 #include <cmath>
 
 #include "page_qr_payment.h"
-#include "page_tap_payment.h"
+#include "page_payment_tap_tcp.h"
 #include "page_select_product.h"
 #include "page_idle.h"
 #include <curl/curl.h>
@@ -54,12 +54,12 @@ page_product_overview::page_product_overview(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void page_product_overview::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_tap_payment *page_tap_payment, page_tap_payment_serial *page_tap_payment_serial, page_help *pageHelp, page_product *page_product)
+void page_product_overview::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,  page_payment_tap_serial *page_payment_tap_serial,page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product *page_product)
 {
     this->p_page_select_product = pageSelect;
     this->p_page_payment_qr = page_qr_payment;
-    this->p_page_payment_tap = page_tap_payment;
-    this->p_page_payment_tap_serial = page_tap_payment_serial;
+    this->p_page_payment_tap_tcp = page_payment_tap_tcp;
+    this->p_page_payment_tap_serial = page_payment_tap_serial;
     this->p_page_idle = pageIdle;
     this->p_page_dispense = page_dispenser;
     this->p_page_help = pageHelp;
@@ -510,7 +510,7 @@ void page_product_overview::on_pushButton_continue_clicked()
 
     QString paymentMethod = p_page_idle->selectedProduct->getPaymentMethod();
 
-    if (paymentMethod == "qr")
+    if (paymentMethod == PAYMENT_QR)
     {
         CURL *curl;
         CURLcode res;
@@ -544,7 +544,7 @@ void page_product_overview::on_pushButton_continue_clicked()
     }
     else if (paymentMethod == PAYMENT_TAP_TCP)
     {
-        hideCurrentPageAndShowProvided(p_page_payment_tap);
+        hideCurrentPageAndShowProvided(p_page_payment_tap_tcp);
     }
     else if (paymentMethod == PAYMENT_TAP_SERIAL)
     {

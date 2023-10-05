@@ -18,8 +18,8 @@
 
 #include "df_util.h"
 #include "page_idle.h"
-#include "page_tap_payment.h"
-#include "page_tap_payment_serial.h"
+#include "page_payment_tap_tcp.h"
+#include "page_payment_tap_serial.h"
 #include "dfuicommthread.h"
 #include "dbmanager.h"
 

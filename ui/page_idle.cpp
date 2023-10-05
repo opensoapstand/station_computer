@@ -431,14 +431,14 @@ void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
 
 void page_idle::on_pushButton_to_select_product_page_clicked()
 {
-    if (stateScreenCheck = state_screen_check_clicked_and_wait)
-    {
-        stateScreenCheck = state_screen_check_clicked_and_succes;
-    }
-    else
-    {
+    // if (stateScreenCheck = state_screen_check_clicked_and_wait)
+    // {
+    //     stateScreenCheck = state_screen_check_clicked_and_succes;
+    // }
+    // else
+    // {
         this->hideCurrentPageAndShowProvided(p_pageSelectProduct, true);
-    }
+    // }
 }
 
 void page_idle::on_pushButton_test_clicked()

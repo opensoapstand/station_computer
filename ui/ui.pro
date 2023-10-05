@@ -14,8 +14,8 @@ FORMS += \
     page_error_wifi.ui \
     page_idle.ui \
     page_qr_payment.ui \
-    page_tap_payment.ui \
-    page_tap_payment_serial.ui \
+    page_payment_tap_tcp.ui \
+    page_payment_tap_serial.ui \
     page_product.ui \
     page_select_product.ui \
     page_end.ui \
@@ -37,8 +37,8 @@ HEADERS += \
     page_idle.h \
     includefiles.h \
     page_qr_payment.h \
-    page_tap_payment.h \
-    page_tap_payment_serial.h \
+    page_payment_tap_tcp.h \
+    page_payment_tap_serial.h \
     page_product.h \
     posm/enums.h \
     posm/lrcgenerator.h \
@@ -75,8 +75,8 @@ SOURCES += \
     page_idle.cpp \
     main.cpp \
     page_qr_payment.cpp \
-    page_tap_payment.cpp \
-    page_tap_payment_serial.cpp \
+    page_payment_tap_tcp.cpp \
+    page_payment_tap_serial.cpp \
     page_product.cpp \
     posm/lrcgenerator.cpp \
     posm/mcommunication.cpp \

@@ -28,6 +28,8 @@ public:
 
     /* 3.1.1.2 Financial Transactions */
     std::vector<uint8_t> purchasePacket(std::string  amount);
+    std::vector<uint8_t> preAuthPacket(std::string  amount);
+    
     /* 3.1.2 PpPosCancelEvent (0D – 0001)*/
     std::vector<uint8_t> purchaseCancelPacket();
     /* 3.1.1.2.5 Forced controller reversal */

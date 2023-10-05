@@ -52,11 +52,11 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Payment page and completed payment
  */
-void page_dispenser::setPage(page_qr_payment *page_qr_payment, page_tap_payment *page_tap_payment, page_end *page_end, page_idle *pageIdle, page_sendFeedback *pageFeedback)
+void page_dispenser::setPage(page_qr_payment *page_qr_payment, page_payment_tap_serial *page_payment_tap_serial, page_payment_tap_tcp *page_payment_tap_tcp,  page_end *page_end, page_idle *pageIdle, page_sendFeedback *pageFeedback)
 {
     this->thanksPage = page_end;
     this->paymentPage = page_qr_payment;
-    this->p_page_payment_tap = page_tap_payment;
+    this->p_page_payment_tap_tcp = page_payment_tap_tcp;
     this->p_page_idle = pageIdle;
     this->feedbackPage = pageFeedback;
 }
@@ -205,6 +205,7 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     p_page_idle->selectedProduct->resetVolumeDispensed();
     updatelabel_volume_dispensed_ml(p_page_idle->selectedProduct->getVolumeDispensedMl());
+    paymentMethod = p_page_idle->selectedProduct->getPaymentMethod();
 
     fsmSendStartDispensing();
 }
@@ -238,6 +239,58 @@ void page_dispenser::updatelabel_volume_dispensed_ml(double dispensed)
     }
 }
 
+bool page_dispenser::sendToUX410()
+{
+    int waitForAck = 0;
+    while (waitForAck < 3)
+    {
+        cout << "Wait for ACK counter: " << waitForAck << endl;
+        qDebug() << "Wait for ACK counter: " << endl;
+        com.sendPacket(pktToSend, uint(pktToSend.size()));
+        std::cout << "sendtoUX410 Electronic Card Reader: " << paymentPacket.getSendPacket() << endl;
+
+        // read back what is responded
+        pktResponded = com.readForAck();
+        readPacket.packetReadFromUX(pktResponded);
+        pktResponded.clear();
+        waitForAck++;
+
+        cout << "Waiting for TAP" << endl;
+        cout << readPacket << endl;
+        if (readPacket.getAckOrNak() == communicationPacketField::ACK)
+        {
+            return true;
+        }
+        usleep(50000);
+    }
+    return false;
+}
+
+bool page_dispenser::waitForUX410()
+{
+    bool waitResponse = false;
+    while (!waitResponse)
+    {
+        //        QCoreApplication::processEvents();
+        // cout << readPacket << endl;
+        if (pktResponded[0] != 0x02)
+        {
+            pktResponded.clear();
+            pktResponded = com.readPacket();
+            usleep(10);
+        }
+        else
+        {
+            //  pktResponded = com.readPacket();
+            readPacket.packetReadFromUX(pktResponded);
+            std::cout << readPacket;
+            com.sendAck();
+            waitResponse = true;
+        }
+    }
+    return waitResponse;
+}
+
 /*
  * Page Tracking reference to Payment page and completed payment
  */
@@ -257,40 +310,59 @@ void page_dispenser::dispensing_end_admin()
     stream << std::fixed << std::setprecision(2) << price;
     qDebug() << "Minimum volume dispensed" << MINIMUM_DISPENSE_VOLUME_ML;
     qDebug() << "volume dispensed" << p_page_idle->selectedProduct->getVolumeDispensedMl();
-    if (p_page_idle->selectedProduct->getVolumeDispensedMl() < MINIMUM_DISPENSE_VOLUME_ML && (p_page_idle->selectedProduct->getPaymentMethod()) == PAYMENT_TAP_TCP)
+    if(p_page_idle->selectedProduct->getVolumeDispensedMl() < MINIMUM_DISPENSE_VOLUME_ML){
+        cancelPayment = true;
+    }
+    if (cancelPayment && (paymentMethod == PAYMENT_TAP_TCP || paymentMethod== PAYMENT_TAP_SERIAL))
     {
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_finishTransactionMessage, "no_pay");
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         std::map<std::string, std::string> response;
         qDebug() << "dispense end: tap payment No volume dispensed.";
         // REVERSE PAYMENT.
-        if (SAF_NUM != "")
-        {
-            std::cout << "Voiding transaction";
-            response = voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, SAF_NUM);
+        if(paymentMethod == PAYMENT_TAP_TCP){
+            if (SAF_NUM != "")
+                {
+                    std::cout << "Voiding transaction";
+                    response = voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, SAF_NUM);
+                }
+            else if (CTROUTD != "")
+                {
+                    response = voidTransaction(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, CTROUTD);
+                }
+            finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
         }
-        else if (CTROUTD != "")
-        {
-            response = voidTransaction(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, CTROUTD);
+        if(paymentMethod == PAYMENT_TAP_SERIAL){
+            com.page_init();
+            pktToSend = paymentPacket.reversePurchasePacket();
+            if (sendToUX410())
+            {
+                waitForUX410();
+                           qDebug() << "Payment Reversed" << endl;
+                pktResponded.clear();
+                com.flushSerial();
+            }
         }
-        finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
+
     }
-    else if ((p_page_idle->selectedProduct->getPaymentMethod() == PAYMENT_TAP_TCP) && p_page_idle->selectedProduct->getVolumeDispensedMl() >= MINIMUM_DISPENSE_VOLUME_ML)
+    else if (((paymentMethod == PAYMENT_TAP_TCP || paymentMethod== PAYMENT_TAP_SERIAL)))
     {
 
         QString base_text = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_finishTransactionMessage, "display_price");
         ui->label_finishTransactionMessage->setText(base_text.arg(QString::number(current_price, 'f', 2))); // will replace %1 character in string by the provide text
         p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
-        if (CTROUTD != "")
-        {
-            std::map<std::string, std::string> testResponse = capture(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, CTROUTD, stream.str());
-        }
-        else if (SAF_NUM != "")
-        {
+        if(paymentMethod == PAYMENT_TAP_TCP){
+             if (CTROUTD != "")
+                {
+                    std::map<std::string, std::string> testResponse = capture(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, CTROUTD, stream.str());
+                }
+            else if (SAF_NUM != "")
+                {
 
-            std::map<std::string, std::string> testResponse = editSaf(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, SAF_NUM, stream.str(), "ELIGIBLE");
+                    std::map<std::string, std::string> testResponse = editSaf(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, SAF_NUM, stream.str(), "ELIGIBLE");
+                }
+            finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
         }
-        finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
     }
 
     qDebug() << "Finished dispense admin handling";
@@ -559,9 +631,8 @@ void page_dispenser::on_pushButton_abort_clicked()
         msgBox_abort = new QMessageBox();
         msgBox_abort->setObjectName("msgBox_abort");
         msgBox_abort->setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
-        QString payment = p_page_idle->selectedProduct->getPaymentMethod();
 
-        if (payment == "qr" || payment == PAYMENT_TAP_TCP)
+        if (paymentMethod == PAYMENT_QR || paymentMethod == PAYMENT_TAP_TCP || paymentMethod== PAYMENT_TAP_SERIAL )
         {
             QString searchString = this->objectName() + "->" + msgBox_abort->objectName() + "->" + "qr_tap";
             p_page_idle->setTextToObject(msgBox_abort, p_page_idle->getTemplateText(searchString));
@@ -605,13 +676,12 @@ void page_dispenser::on_pushButton_problems_clicked()
     msgBox_problems->setObjectName("msgBox_problems");
     msgBox_problems->setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
 
-    QString payment = p_page_idle->selectedProduct->getPaymentMethod();
     QString chosenTemplate = p_page_idle->thisMachine.getTemplateName();
     if(chosenTemplate == "good-filling"){
         QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "shopify";
         p_page_idle->setTextToObject(msgBox_problems, p_page_idle->getTemplateText(searchString));
     }
-    else if (payment == "qr" || payment == PAYMENT_TAP_TCP)
+    else if (paymentMethod == "qr" || paymentMethod == PAYMENT_TAP_TCP || paymentMethod== PAYMENT_TAP_SERIAL)
     {
         QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "qr_tap";
         p_page_idle->setTextToObject(msgBox_problems, p_page_idle->getTemplateText(searchString));

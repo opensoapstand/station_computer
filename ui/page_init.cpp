@@ -151,12 +151,12 @@ void page_init::initiateTapPayment()
     
     if (paymentMethod == PAYMENT_TAP_TCP)
     {
-        page_tap_payment paymentObject;
+        page_payment_tap_tcp paymentObject;
         paymentObject.initiate_tap_setup();
     }
     else if (paymentMethod == PAYMENT_TAP_SERIAL)
     {
-        page_tap_payment_serial paymentSerialObject;
+        page_payment_tap_serial paymentSerialObject;
         paymentSerialObject.tap_serial_initiate();
     }
 

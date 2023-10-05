@@ -20,6 +20,7 @@
 #include "df_util.h"
 #include "includefiles.h"
 #include "page_idle.h"
+#include "page_payment_tap_serial.h"
 #include "product.h"
 #include "page_sendFeedback.h"
 #include "page_end.h"
@@ -30,8 +31,10 @@
 #include "posm/packetfromux410.h"
 #include "posm/transactionPackets.h"
 
+
 class page_qr_payment;
-class page_tap_payment;
+class page_payment_tap_tcp;
+class page_payment_tap_serial;
 class page_end;
 class page_idle;
 
@@ -51,7 +54,7 @@ public:
 
     // **** GUI ****
     explicit page_dispenser(QWidget *parent = nullptr);
-    void setPage(page_qr_payment* page_qr_payment, page_tap_payment* page_tap_payment, page_end* page_end, page_idle* pageIdle, page_sendFeedback* pageFeedback);
+    void setPage(page_qr_payment* page_qr_payment, page_payment_tap_serial* page_payment_tap_serial, page_payment_tap_tcp* page_payment_tap_tcp,  page_end* page_end, page_idle* pageIdle, page_sendFeedback* pageFeedback);
     ~page_dispenser();
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void showEvent(QShowEvent *event);
@@ -100,11 +103,14 @@ private slots:
 
 private:
     bool isDispensing = false;
+    bool cancelPayment = false;
+    QString paymentMethod = "";
     bool askForFeedbackAtEnd;
     // **** GUI *****
     Ui::page_dispenser *ui;
     page_qr_payment* paymentPage;
-    page_tap_payment* p_page_payment_tap;
+    page_payment_tap_tcp* p_page_payment_tap_tcp;
+    page_payment_tap_serial* p_page_payment_tap_serial;
     page_end* thanksPage;
     page_sendFeedback* feedbackPage;
     page_idle* p_page_idle;
@@ -125,9 +131,11 @@ private:
     // double volumeDispensed;
     // double targetVolume;
 
-
+    bool sendToUX410();
+    bool waitForUX410();
     mCommunication com;
     packetFromECR sendPacket;
+    packetFromUX410 readPacket;
     transactionPacket paymentPacket;
     std::vector<uint8_t> pktToSend;
     std::vector<uint8_t> pktResponded;

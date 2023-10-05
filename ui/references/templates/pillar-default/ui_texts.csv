@@ -63,8 +63,8 @@ page_qr_payment->pushButton_previous_page,←back
 page_qr_payment->label_title->pay_by_phone,Pay by Phone
 page_qr_payment->label_steps,<style>        li:{margin-top:10px; margin-left: 5px;}        </style>        <ol>        <li><span class='tab'></span>Scan QR code with phone camera<br></li>        <li><span class='tab'></span>Click to open the link that appears<br></li>        <li><span class='tab'></span>Follow payment instructions on phone<br></li>        <li><span class='tab'></span>The station will proceed after payment<br></li>        <li><span class='tab'></span>Refill your beverage!</li>        </ol>        <style>        li:{margin-top:10px;}        </style>        <ol>       
 
-# page_tap_payment
-page_tap_payment->pushButton_previous_page,←back
+# page_payment_tap_tcp
+page_payment_tap_tcp->pushButton_previous_page,←back
 
-# page_tap_payment_serial
-page_tap_payment_serial->pushButton_previous_page,←back
+# page_payment_tap_serial
+page_payment_tap_serial->pushButton_previous_page,←back

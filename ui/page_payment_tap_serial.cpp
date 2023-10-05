@@ -14,7 +14,7 @@
 //***************************************
 
 #include "page_payment_tap_serial.h"
-#include "ui_page_tap_payment_serial.h"
+#include "ui_page_payment_tap_serial.h"
 
 #include "page_product.h"
 #include "page_dispenser.h"

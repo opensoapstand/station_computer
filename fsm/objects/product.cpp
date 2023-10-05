@@ -143,7 +143,13 @@ void product::resetVolumeDispensed()
 }
 double product::getThresholdFlow()
 {
+    // minimum threshold to consider dispensing. 
     return m_nThresholdFlow;
+}
+double product::getThresholdFlow_max_allowed()
+{
+    // when using kegs, an empty keg results in pressurised CO2 or beergas being pushed through the flow sensor. That speeds up the flowsensor. 
+    return m_nThresholdFlow_maximum_allowed;
 }
 int product::getRetractionTimeMillis()
 {
@@ -828,8 +834,8 @@ bool product::reloadParametersFromDb()
             break;
             case DB_PRODUCTS_CALIBRATION_CONST:
             {
-                m_calibration_const = sqlite3_column_double(stmt, column_index);
-                debugOutput::sendMessage("DB_PRODUCTS_CALIBRATION_CONST:" + to_string(m_calibration_const), MSG_INFO);
+                m_nThresholdFlow_maximum_allowed = sqlite3_column_double(stmt, column_index);
+                debugOutput::sendMessage("DB_PRODUCTS_CALIBRATION_CONST (reused for maximum flow rate):" + to_string(m_nThresholdFlow_maximum_allowed), MSG_INFO);
             }
             break;
             case DB_PRODUCTS_VOLUME_PER_TICK:

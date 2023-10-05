@@ -8,7 +8,7 @@
 // TODO: Refactor to fit with dfuicommthread
 //#define START_FSM_FROM_UI //enabled by default (start controller from ui)
 
-#define UI_VERSION "2.0s"
+#define UI_VERSION "2.3"
 
 #define ENABLE_COUPON   // Petros stations have no coupon
 
@@ -87,12 +87,12 @@ using namespace std;
 #define PAGE_END_CSS                                    "page_end.css"
 #define PAGE_QR_PAYMENT_CSS                             "page_qr_payment.css"
 #define PAGE_ERROR_WIFI_CSS                             "page_error_wifi.css"
-#define PAGE_TAP_PAYMENT_CSS                            "page_tap_payment.css"
+#define PAGE_TAP_PAYMENT_CSS                            "page_payment_tap_tcp.css"
 #define PAGE_TRANSACTIONS_CSS                           "page_transactions.css"
 #define PAGE_MAINTENANCE_CSS                            "page_maintenance.css"
 #define PAGE_MAINTENANCE_DISPENSER_CSS                  "page_maintenance_dispenser.css"
 #define PAGE_IDLE_PRODUCTS_CSS                          "page_idle_products.css"
-#define PAGE_TAP_PAYMENT_SERIAL_CSS                     "page_tap_payment_serial.css"
+#define PAGE_TAP_PAYMENT_SERIAL_CSS                     "page_payment_tap_serial.css"
 
 
 

@@ -17,9 +17,21 @@
 #define PAYSELECT_H
 
 #include "df_util.h"
+#include <iostream>
+#include <string>
+#include <cmath>
+#include <curl/curl.h>
+#include <json.hpp>
+
 #include "page_dispenser.h"
 #include "page_productOverview.h"
-
+#include "page_payment_tap_serial.h"
+#include "page_payment_tap_tcp.h"
+#include "page_qr_payment.h"
+#include "page_select_product.h"
+#include "page_productOverview.h"
+#include "product.h"
+#include "page_idle.h"
 #include "page_error_wifi.h"
 #include "page_help.h"
 
@@ -30,6 +42,8 @@ class page_dispenser;
 class page_error_wifi;
 class page_help;
 class page_product_overview;
+class page_payment_tap_serial;
+class page_payment_tap_tcp;
 
 namespace Ui
 {
@@ -47,7 +61,7 @@ public:
     QLabel *orderSizeBackgroundLabels[4];
 
     explicit page_product(QWidget *parent = nullptr);
-    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, page_product_overview *page_Overview);
+    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,page_payment_tap_serial *page_payment_tap_serial,page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product_overview *page_Overview);
     ~page_product();
 
     void resizeEvent(QResizeEvent *event);
@@ -90,6 +104,8 @@ private:
     page_error_wifi *p_page_wifi_error;
     page_help *p_page_help;
     page_product_overview *p_page_overview;
+    page_payment_tap_tcp *p_page_payment_tap_tcp;
+    page_payment_tap_serial *p_page_payment_tap_serial;
 
 
 

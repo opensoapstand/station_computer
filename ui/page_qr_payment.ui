@@ -206,7 +206,7 @@ line-height: 29px;</string>
      <x>0</x>
      <y>390</y>
      <width>1080</width>
-     <height>111</height>
+     <height>130</height>
     </rect>
    </property>
    <property name="text">
@@ -214,6 +214,22 @@ line-height: 29px;</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_gif">
+   <property name="geometry">
+    <rect>
+     <x>365</x>
+     <y>960</y>
+     <width>350</width>
+     <height>350</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
   <zorder>pushButton_refresh</zorder>
@@ -226,6 +242,7 @@ line-height: 29px;</string>
   <zorder>label_title</zorder>
   <zorder>label_scan</zorder>
   <zorder>label_processing</zorder>
+  <zorder>label_gif</zorder>
  </widget>
  <resources/>
  <connections/>

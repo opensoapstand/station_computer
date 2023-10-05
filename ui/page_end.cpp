@@ -85,7 +85,7 @@ void page_end::showEvent(QShowEvent *event)
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_message, "hasReceiptPrinter");
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_message_2, "hasReceiptPrinter2");
     }
-    else if (paymentMethod == "qr" || paymentMethod == "tapTcp")
+    else if (paymentMethod == PAYMENT_QR || paymentMethod == PAYMENT_TAP_TCP)
     {
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_message, "qr");
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_message_2, "qr2");
@@ -102,7 +102,7 @@ void page_end::showEvent(QShowEvent *event)
     is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
     exitIsForceable = false;
 
-    if (paymentMethod == "qr")
+    if (paymentMethod == PAYMENT_QR)
     {
         sendDispenseEndToCloud();
     }

@@ -3,6 +3,7 @@
 #include "df_util.h" // lode added for settings
 #include "dbmanager.h"
 #include "machine.h"
+#include "product.h"
 
 machine::machine()
 {
@@ -28,7 +29,12 @@ StateCoupon machine::getCouponState()
     return m_stateCoupon;
 }
 
+void machine::setProducts(product *products)
+{
+    m_products = products;
+}
 bool machine::isDispenseAreaBelowElseBesideScreen()
+
 {
     // check in database if hardware_version starts with AP or SS
     // get hardware_version from db_manager
@@ -38,7 +44,7 @@ bool machine::isDispenseAreaBelowElseBesideScreen()
     {
         return false;
     }
-    return true; 
+    return true;
 }
 
 bool machine::isAelenPillarElseSoapStand()
@@ -46,7 +52,6 @@ bool machine::isAelenPillarElseSoapStand()
     // check in database if hardware_version starts with AP or SS
     // get hardware_version from db_manager
     // if starts with SS return false, if starts with ap reeturn true
-
 
     if (m_hardware_version.startsWith("AP"))
     {
@@ -195,7 +200,7 @@ QString machine::getTemplateName()
     {
         template_name = "default";
     }
-    return  template_name;
+    return template_name;
 }
 
 void machine::loadElementPropertiesFile()
@@ -291,25 +296,33 @@ void machine::writeTemperatureToDb(double temperature_1, double temperature_2)
     m_db->addTemperature(getMachineId(), temperature_1, temperature_2, defaultAlert);
 }
 
-// void machine::writeTemperature2ToDb(double temperature2)
-// {
-//     qDebug() << "DB call: Add temperature2 record ";
-//     double defaultTemperature = 0.0;  // Default value for temperature
-//     QString defaultAlert = "";         // Default alert message (can be adjusted as needed)
-//     m_db->addTemperature(getMachineId(), defaultTemperature, temperature2, defaultAlert);
-// }
-// void machine::writeTemperatureToDb(double temperature)
-// {
-//     qDebug() << "DB call: Add temperature record ";
-//     m_db->addTemperature(getMachineId(), temperature, "");
-// }
-// void machine::writeTemperature2ToDb(double temperature2)
-// {
-//     double defaultTemperature2 = 0.0;  // use a default value or an appropriate value you see fit
-//     qDebug() << "DB call: Add temperature 2 record ";
-//     m_db->addTemperature2(getMachineId(), temperature2, "");
-// }
+void machine::checkForHighTemperatureAndDisableProducts()
+{
+    if (isTemperatureTooHigh_1())
+    {
+        if (!temperatureWasHigh)
+        {
+            temperatureWasHigh = true;
+            temperatureHighTime = QTime::currentTime(); // Record the time when temperature became too high
+        }
 
+        QTime currentTime = QTime::currentTime();
+        int elapsedMinutes = temperatureHighTime.msecsTo(currentTime) / 60000; // Convert milliseconds to minutes 60000=60min
+
+        if (elapsedMinutes >= 60) // 60  Check if one hour has passed
+        {
+            for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+            {
+                qDebug() << "Temperature too high for one hour, block all slots.";
+                m_products[slot_index].setSlotEnabled(true, "SLOT_STATE_DISABLED_COMING_SOON");
+            }
+        }
+    }
+    else
+    {
+        temperatureWasHigh = false; // Reset the flag and the time when the temperature goes back to normal
+    }
+}
 bool machine::isTemperatureTooHigh_1()
 {
     // qDebug() << "alert temperature: " << m_alert_temperature;
@@ -499,7 +512,7 @@ void machine::setSlotEnabled(int slot, bool isEnabled)
 {
     // do this through product.cpp, as this should have been a part of products table
     QString column_name = QString("is_enabled_slot_%1").arg(slot);
-
+    m_is_enabled_slots[slot - 1] = isEnabled; // Global variable
     m_db->updateTableMachineWithInt(column_name, isEnabled);
 }
 

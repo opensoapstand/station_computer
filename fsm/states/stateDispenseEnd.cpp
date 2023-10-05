@@ -70,7 +70,7 @@ DF_ERROR stateDispenseEnd::onAction()
     if (productDispensers[slot_index].getIsDispenseTargetReached())
     {
         usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
-        m_pMessaging->sendMessageOverIP("Target Hit");
+        m_pMessaging->sendMessageOverIP("Target Hit", true); // send to UI
     }
 
     // bool empty_stock_detected = false;
@@ -125,7 +125,7 @@ DF_ERROR stateDispenseEnd::onAction()
     }
 
     m_state_requested = STATE_IDLE;
-    m_pMessaging->sendMessageOverIP("Transaction End"); // send to UI
+    m_pMessaging->sendMessageOverIP("Transaction End", true); // send to UI
 
     return e_ret;
 }
@@ -635,7 +635,7 @@ double stateDispenseEnd::getFinalPrice()
     debugOutput::sendMessage("Post dispense final price: " + to_string(price), MSG_INFO);
     double volume = productDispensers[slot_index].getVolumeDispensed();
     std::string message = "finalVolumeDispensed|" + std::to_string(volume) + "|";
-    m_pMessaging->sendMessageOverIP(message);
+    m_pMessaging->sendMessageOverIP(message, true); // send to UI
     return price;
 }
 

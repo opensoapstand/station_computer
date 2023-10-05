@@ -77,11 +77,11 @@ void machine::dispenseButtonLightsAnimateState(bool animateElseOff)
 {
     if (animateElseOff)
     {
-        dfUtility->send_command_to_FSM("DispenseButtonLights|ANIMATE");
+        dfUtility->send_command_to_FSM("DispenseButtonLights|ANIMATE", true);
     }
     else
     {
-        dfUtility->send_command_to_FSM("DispenseButtonLights|OFF");
+        dfUtility->send_command_to_FSM("DispenseButtonLights|OFF", true);
     }
 }
 
@@ -321,7 +321,7 @@ double machine::getTemperature_1()
 
 void machine::getTemperatureFromController()
 {
-    dfUtility->send_command_to_FSM("getTemperature");
+    dfUtility->send_command_to_FSM("getTemperature", false);
 }
 
 bool machine::hasReceiptPrinter()

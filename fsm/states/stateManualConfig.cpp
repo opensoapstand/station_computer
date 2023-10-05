@@ -66,7 +66,7 @@ DF_ERROR stateManualConfig::onAction()
       
       if (m_pMessaging->getAction() == ACTION_RESET)
       {
-         m_pMessaging->sendMessageOverIP("Init Ready");
+         m_pMessaging->sendMessageOverIP("Init Ready", true); // send to UI
          m_state_requested = STATE_IDLE;
       }else if ('0' == m_pMessaging->getAction() || ACTION_QUIT == m_pMessaging->getAction())
       {

@@ -63,6 +63,42 @@ bool machine::isAelenPillarElseSoapStand()
     return false; // default case
 }
 
+
+QString machine::setSlotCount(){
+//     //check hardwarenumber
+//     int slot_count;
+//     // if(m_hardware_version){
+//         switch(m_hardware_version){
+//             case "AP1":
+//             {
+//                 slot_count = 4;
+// break;
+//             }
+            
+//             case "AP1.1":
+//             {
+//                 slot_count = 8;
+//                 break;
+//             }
+//             default:
+//             {
+
+//                 break;
+//             }
+//         }
+//     // }
+//     cout << g_slotcount;
+//     return slot_count;
+}
+
+int machine::getSlotCount()
+{
+    // dispensers is the same as slots.
+
+    //return m_dispense_buttons_count % 1000;
+
+}
+
 void machine::setCouponState(StateCoupon state)
 {
     m_stateCoupon = state;
@@ -459,18 +495,6 @@ bool machine::slotNumberValidityCheck(int slot)
     return valid;
 }
 
-void machine::setSlotCount(){
-check hardwarenumber
-
-switch ()blhahbahbs
-
-if AP1:
-    slotcount=4
-    if AP2:
-    slotcount=6
-
-}
-
 void machine::setSlotEnabled(int slot, bool isEnabled)
 {
     // do this through product.cpp, as this should have been a part of products table
@@ -535,10 +559,8 @@ void machine::loadParametersFromDb()
     qDebug() << "Template folder from db : " << getTemplateFolder();
 }
 
-int machine::getDispensersCount()
-{
-    return m_dispense_buttons_count % 1000;
-}
+
+
 bool machine::getCouponsEnabled()
 {
     qDebug() << "coupons enabled>>> :: " << m_coupons_enabled;

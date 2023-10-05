@@ -88,10 +88,11 @@ void page_idle::showEvent(QShowEvent *event)
     registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
     loadDynamicContent();
-
+    thisMachine.getSlotCount();
     thisMachine.resetSessionId();
     thisMachine.dispenseButtonLightsAnimateState(true);
     thisMachine.setRole(UserRole::user);
+    // thisMachine.setSlotCount();
 
     // everything coupon is reset when idle page is reached.
     thisMachine.initCouponState();

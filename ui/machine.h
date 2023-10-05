@@ -77,7 +77,7 @@ public:
     void setSlotEnabled(int slot, bool isEnabled);
     QString getIdlePageType();
 
-    int getDispensersCount();
+    int getSlotCount();
 
     bool hasReceiptPrinter();
     void getPrinterStatusFromDb(bool *isOnline, bool *hasPaper);
@@ -103,6 +103,8 @@ public:
     std::map<QString , QString > getCouponConditions();
 
     QString m_session_id;
+
+    QString setSlotCount();
 
     void setDiscountPercentageFraction(double percentageFraction);
     double getDiscountPercentageFraction();

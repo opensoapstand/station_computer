@@ -45,7 +45,7 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
     this->isDispensing = false;
 
     arrowAnimationStepTimer = new QTimer(this);
-    arrowAnimationStepTimer->setInterval(10);
+    arrowAnimationStepTimer->setInterval(50);
     connect(arrowAnimationStepTimer, SIGNAL(timeout()), this, SLOT(onArrowAnimationStepTimerTick()));
 }
 
@@ -151,10 +151,32 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     if (p_page_idle->thisMachine.isDispenseAreaBelowElseBesideScreen())
     {
+        // show on bottom
         p_page_idle->addPictureToLabel(ui->label_indicate_active_spout, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_DOWN));
+        
+        // indicate spout position with arrow.
+        // ui->label_indicate_active_spout->move( (p_page_idle->selectedProduct->getSlot() -1) * 290 + 10, ui->label_indicate_active_spout->y()); // although it is well spaced out in theory, in reality, spout 2 and 3 are not clearly distinguished.
+        int x = 0;
+        switch(p_page_idle->selectedProduct->getSlot()){
+            case 1:
+                x=10;
+            break;
+            case 2:
+                x=250;
+            break;
+            case 3:
+                x=640;
+            break;
+            case 4:
+                x=880;
+            break;
+        }
+        ui->label_indicate_active_spout->move(x, ui->label_indicate_active_spout->y());
+        
     }
     else
     {
+        // show on side
         p_page_idle->addPictureToLabel(ui->label_indicate_active_spout, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_RIGHT));
     }
 
@@ -476,6 +498,7 @@ void page_dispenser::fsmReceiveDispenserStatus(QString status)
         {
             p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "out_of_stock");
             p_page_idle->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
+            p_page_idle->thisMachine.setSlotEnabled(p_page_idle->selectedProduct->getSlot(), false);
             ui->label_dispense_message->show();
         }
         else if (dispenseStatus == "SLOT_STATE_PROBLEM_NEEDS_ATTENTION")
@@ -490,6 +513,7 @@ void page_dispenser::fsmReceiveDispenserStatus(QString status)
             // normal status
             // ui->pushButton_problems->hide();
             ui->label_dispense_message->hide();
+            p_page_idle->thisMachine.setSlotEnabled(p_page_idle->selectedProduct->getSlot(), true);
         }
         else
         {

@@ -437,7 +437,7 @@ void page_idle::on_pushButton_to_select_product_page_clicked()
     else
     {
         this->hideCurrentPageAndShowProvided(p_pageSelectProduct, true);
-    // }
+    }
 }
 
 void page_idle::on_pushButton_test_clicked()

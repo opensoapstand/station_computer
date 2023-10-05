@@ -1,5 +1,5 @@
 #include "setup_Tap.h"
-#include "../page_tap_payment.h"
+#include "../page_payment_tap_tcp.h"
 
 bool xml_packet_received_complete;
 bool xml_card_tap_complete;

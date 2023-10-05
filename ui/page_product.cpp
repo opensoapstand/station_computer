@@ -16,18 +16,7 @@
 
 #include "page_product.h"
 #include "ui_page_product.h"
-#include <iostream>
-#include <string>
-#include <cmath>
 
-#include "page_qr_payment.h"
-#include "page_select_product.h"
-#include "page_productOverview.h"
-#include "product.h"
-
-#include "page_idle.h"
-#include <curl/curl.h>
-#include <json.hpp>
 
 using json = nlohmann::json;
 QString transactionLogging = "";
@@ -220,7 +209,7 @@ page_product::page_product(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void page_product::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, page_product_overview *page_Overview)
+void page_product::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,page_payment_tap_serial *page_payment_tap_serial,page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product_overview *page_Overview)
 {
     this->p_page_select_product = pageSelect;
     this->paymentPage = page_qr_payment;
@@ -229,6 +218,8 @@ void page_product::setPage(page_select_product *pageSelect, page_dispenser *page
     this->p_page_help = pageHelp;
     this->p_page_wifi_error = pageWifiError;
     this->p_page_overview = page_Overview;
+    this->p_page_payment_tap_serial = page_payment_tap_serial;
+    this->p_page_payment_tap_tcp = page_payment_tap_tcp;
 
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_PRODUCT_BACKGROUND_PATH);
 }

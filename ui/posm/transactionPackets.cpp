@@ -105,9 +105,7 @@ std::vector<uint8_t> transactionPacket::purchasePacket(std::string amount)
     //ETX is 0x03    
                                                //03
     packet.setPacketDataLen();                                  //00 0B
-    // packet.setPacketDataLenPur();                                  //00 0D
     packet.setPacketLRC();                                      //LRC
-    // packet.setPacketLRCPur();                                      //LRC
 
     return packet.getPacket();
 }
@@ -307,3 +305,37 @@ std::vector<uint8_t> transactionPacket::storeLength(std::vector<uint8_t> arr, ui
     return arr;
 }
 
+
+/*
+ * 3.1.1.2 Financial Transactions
+ *
+ * Description: The Pre-auth Transaction is used to Authorize the purchase of goods and services at the point of purchase.
+ *              The amount needs to be completed or captures after the successful dispense
+ *
+ * NOTE: The maximum amount is $9,999.99 as indicated by the maximum length of 6 digits for the transaction amount field.
+ *
+ * Input: Amount request for purchase
+ * Return: High Level ACK
+ * ------> • Reader is activated && Wait for Card tapped by user
+*/
+std::vector<uint8_t> transactionPacket::preAuthPacket(std::string amount)
+{
+    transactionAmount(TxnType::PreAuth,amount);
+    uint8_t dataPacket[7] = {};
+    /*copy the converted array*/
+    std::copy(std::begin(convertedAmount), std::end(convertedAmount), std::begin(dataPacket));
+
+    //STX is 0x02                                               //02
+    //parentID is fixed 0x02                                    //02
+    packet.setPacketClassID(communicationPacketField::ppPos);   //0D
+    packet.setPacketApiID(API_ID::PpPosDirectTxn);              //00 00
+
+    packet.setPacketData(dataPacket, sizeof (dataPacket));      //tagID(50) + dataPacket
+
+    //ETX is 0x03    
+                                               //03
+    packet.setPacketDataLen();                                  //00 0B
+    packet.setPacketLRC();                                      //LRC
+
+    return packet.getPacket();
+}

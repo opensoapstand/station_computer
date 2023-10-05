@@ -1,6 +1,6 @@
 //***************************************
 //
-// page_tap_payment_serial.h
+// page_payment_tap_serial.h
 // GUI class while machine is processing
 // payment.
 //
@@ -40,10 +40,10 @@ class page_product;
 class page_dispenser;
 class page_idle;
 class page_help;
-
+class page_error_wifi;
 namespace Ui
 {
-    class page_tap_payment_serial;
+    class page_payment_tap_serial;
 }
 
 typedef enum StatePaymentSerial
@@ -55,15 +55,15 @@ typedef enum StatePaymentSerial
 
 using namespace std;
 
-class page_tap_payment_serial : public QWidget
+class page_payment_tap_serial : public QWidget
 {
     Q_OBJECT
 
 public:
     // **** GUI Setup ****
-    explicit page_tap_payment_serial(QWidget *parent = nullptr);
+    explicit page_payment_tap_serial(QWidget *parent = nullptr);
     void setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp);
-    ~page_tap_payment_serial();
+    ~page_payment_tap_serial();
 
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
@@ -77,6 +77,7 @@ public:
     void batchClose();
 
     void sendCommand();
+
 
     string getTerminalID()
     {
@@ -92,7 +93,7 @@ public:
     {
         return merchantAddress;
     }
-    void tap_serial_initiate();
+    bool tap_serial_initiate();
 
     QTimer *readTimer;
     StatePaymentSerial state_payment;
@@ -109,7 +110,7 @@ private slots:
 
 private:
     // **** GUI ****
-    Ui::page_tap_payment_serial *ui;
+    Ui::page_payment_tap_serial *ui;
     page_product *p_page_product;
     page_dispenser *p_page_dispense;
     page_idle *p_page_idle;
@@ -155,7 +156,7 @@ private:
     bool getResponse() { return response; }
     bool tapSetupStarted = false;
 
-    QTimer *paymentEndTimer;
+    // QTimer *paymentEndTimer;
     void resetPaymentPage();
     int tmpCounter;
 };

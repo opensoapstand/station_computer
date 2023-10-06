@@ -291,7 +291,7 @@ bool machine::isTemperatureTooHigh_1()
 {
     // qDebug() << "alert temperature: " << m_alert_temperature;
     // qDebug() << "current temperature: " << m_temperature;
-    if (m_alert_temperature > 100.0)
+    if (m_alert_temperature > 100.0) // if higher than 100 we consider the value bogus (sensor broken, dummy value...)
     {
         return false;
     }

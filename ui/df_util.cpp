@@ -8,6 +8,7 @@
 #include <QJsonObject>
 #include <QJsonParseError>
 #include <QDebug>
+#include <QProcess>
 
 static QPointer<QFile> file_out = nullptr;
 
@@ -160,6 +161,45 @@ void df_util::send_command_to_FSM(QString command, bool isLoggingMessage)
     send_to_FSM(command, isLoggingMessage);
     m_IsSendingFSM = false;
 }
+
+void df_util::executeVirtualClick(int x, int y)
+{
+    QString display = ":0";
+    QString command = "xdotool click 1";
+
+    // Set DISPLAY environment variable
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    env.insert("DISPLAY", display);
+
+    // Run the xdotool command
+    QProcess process;
+    process.setProcessEnvironment(env);
+    process.start(command);
+
+    // Wait for the process to finish (optional)
+    process.waitForFinished(-1); // You can specify a timeout in milliseconds if needed
+
+    // Handle the output if necessary
+    QString output = process.readAllStandardOutput();
+    QString error = process.readAllStandardError();
+
+    // Handle output and error messages as needed
+    // qDebug() << "Output:" << output;
+    // qDebug() << "Error:" << error;
+
+    // QString display = ":0";
+    // QString command = QString("DISPLAY=%1 xdotool mousemove --sync %2 %3 click 1")
+    //                      .arg(display)
+    //                      .arg(x)
+    //                      .arg(y);
+
+    // // Run the xdotool command
+    // QProcess::execute(command);
+
+    
+    // qDebug() << "Did the click.";
+}
+
 
 void df_util::write_to_file_timestamped(QString basePath, QString data)
 {

@@ -63,6 +63,8 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
     // create a new log file daily
     QString log_file_base_path = "/home/df-admin/production/logging/ui/ui_%1.txt"; // https://stackoverflow.com/questions/4784155/how-to-format-a-qstring
     QString log_file_path = QString(log_file_base_path).arg(time_stamp_date);
+   
+
     QFile file(log_file_path);
     log_file = &file;
     if (!log_file->open(QFile::WriteOnly | QFile::Text | QFile::Append))
@@ -87,7 +89,48 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
 
 int main(int argc, char *argv[])
 {
+
     // set up logging
+
+    QString logging_controller_base_path = "/home/df-admin/production/logging/controller";
+    QString logging_wifi_base_path = "/home/df-admin/production/logging/wifi";
+    QString logging_transactions_base_path = "/home/df-admin/production/logging/transactions";
+    QString logging_ui_base_path = "/home/df-admin/production/logging/ui";
+
+    // // Check if the directory exists, create it if not
+    // QDir uidir(QFileInfo(logging_ui_base_path).absolutePath());
+    // if (!uidir.exists())
+    // {
+    //     uidir.mkpath(".");
+    // }
+
+    // Check logging_controller_base_path
+    QDir uidir(logging_ui_base_path);
+    if (!uidir.exists())
+    {
+        uidir.mkpath(".");
+    }
+    // Check logging_controller_base_path
+    QDir controllerDir(logging_controller_base_path);
+    if (!controllerDir.exists())
+    {
+        controllerDir.mkpath(".");
+    }
+
+    // Check logging_wifi_base_path
+    QDir wifiDir(logging_wifi_base_path);
+    if (!wifiDir.exists())
+    {
+        wifiDir.mkpath(".");
+    }
+
+    // Check logging_transactions_base_path
+    QDir transactionsDir(logging_transactions_base_path);
+    if (!transactionsDir.exists())
+    {
+        transactionsDir.mkpath(".");
+    }
+
     qInstallMessageHandler(myMessageHandler); // Install the handler
     QString title = QString("********** START SOAPSTAND UI v%1 *********************************").arg(QString(UI_VERSION));
 
@@ -144,8 +187,8 @@ int main(int argc, char *argv[])
 
     DbManager db_config;
     p_page_idle->g_database = &db_config;
-    
-    db_config.updateTableMachineWithText("software_version", UI_VERSION );
+
+    db_config.updateTableMachineWithText("software_version", UI_VERSION);
 
     p_page_idle->loadDynamicContent();
 
@@ -219,19 +262,19 @@ int main(int argc, char *argv[])
     p_page_transactions->setPage(p_page_idle);
     initPage->setPage(p_page_idle);
     p_page_maintenance_product->setPage(p_page_maintenance, p_page_idle, p_page_idle_products);
-    
+
     p_page_maintenance_general->setPage(p_page_maintenance, p_page_idle, p_page_idle_products);
     p_page_maintenance->setPage(p_page_idle, p_page_maintenance_product, p_page_maintenance_general, p_page_select_product, p_page_product);
     p_page_idle->setPage(p_page_select_product, p_page_maintenance, p_page_maintenance_general, p_page_idle_products, p_page_wifi_error);
     p_page_idle_products->setPage(p_page_idle, p_page_select_product);
     p_page_select_product->setPage(p_page_product, p_page_idle_products, p_page_idle, p_page_maintenance, p_page_help);
-    p_page_product->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr,p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_help, p_page_product_overview);
+    p_page_product->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_help, p_page_product_overview);
     p_page_payment_qr->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
     p_page_payment_tap_tcp->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
     p_page_payment_tap_serial->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
 
-    p_page_dispense->setPage(p_page_payment_qr, p_page_payment_tap_serial,p_page_payment_tap_tcp,p_page_end, p_page_idle, p_page_sendFeedback);
-    p_page_product_overview->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap_serial,p_page_payment_tap_tcp,p_page_help, p_page_product);
+    p_page_dispense->setPage(p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_end, p_page_idle, p_page_sendFeedback);
+    p_page_product_overview->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_help, p_page_product);
     p_page_sendFeedback->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_help, p_page_product, p_page_end);
     p_page_end->setPage(p_page_dispense, p_page_idle, p_page_payment_qr, p_page_sendFeedback);
     p_page_wifi_error->setPage(p_page_payment_qr, p_page_end, p_page_idle);

@@ -110,8 +110,6 @@ public:
     void setProducts(product* products);
     QString m_session_id;
 
-    QString setSlotCount();
-
     void setDiscountPercentageFraction(double percentageFraction);
     double getDiscountPercentageFraction();
     double getDiscountAmount(double price);

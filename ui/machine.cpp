@@ -68,40 +68,36 @@ bool machine::isAelenPillarElseSoapStand()
     return false; // default case
 }
 
-
-QString machine::setSlotCount(){
-//     //check hardwarenumber
-//     int slot_count;
-//     // if(m_hardware_version){
-//         switch(m_hardware_version){
-//             case "AP1":
-//             {
-//                 slot_count = 4;
-// break;
-//             }
-            
-//             case "AP1.1":
-//             {
-//                 slot_count = 8;
-//                 break;
-//             }
-//             default:
-//             {
-
-//                 break;
-//             }
-//         }
-//     // }
-//     cout << g_slotcount;
-//     return slot_count;
-}
-
 int machine::getSlotCount()
 {
+    //check hardwarenumber
+    int slot_count;
+    if (m_hardware_version.startsWith("AP")){
+        if(m_hardware_version == "AP1"){
+            slot_count = 4;
+        } 
+        else if (m_hardware_version == "AP1.1"){
+            slot_count = 4;
+        } else{
+            slot_count = 8;
+        }
+    }
+    else if (m_hardware_version.startsWith("SS"))
+    {
+        if(m_hardware_version == "SS1"){
+            slot_count = 4;
+        }
+        else if (m_hardware_version == "SS2"){
+            slot_count = 4;
+        } else{
+            slot_count = 8;
+        }
+    }
+    cout << g_slotcount;
+    return slot_count;
     // dispensers is the same as slots.
 
     //return m_dispense_buttons_count % 1000;
-
 }
 
 void machine::setCouponState(StateCoupon state)

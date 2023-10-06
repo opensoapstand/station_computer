@@ -106,7 +106,10 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
 
     ui->pushButton_setting_speed_pwm->hide();
     ui->label_setting_speed_pwm->hide();
-    ui->pushButton_setting_temperature->setVisible(false);
+    ui->pushButton_set_max_temperature->setVisible(false);
+    ui->label_setting_temperature->hide();
+    ui->label_setting_temperature_2->hide();
+    
     // ui->label_setting_temperature->setVisible(false);
     // double temperature = getTemperatureConfigure();
     // debugOutput::sendMessage("Temperature in Celsius: " + std::to_string(temperature), MSG_INFO);
@@ -257,10 +260,11 @@ void page_maintenance_dispenser::on_image_clicked()
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 }
 
-void page_maintenance_dispenser::on_pushButton_setting_temperature_clicked()
+void page_maintenance_dispenser::on_pushButton_set_max_temperature_clicked()
 {
     //    qDebug() << "Temperature button clicked" ;
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+
 }
 
 void page_maintenance_dispenser::onDispenseTimerTick()
@@ -276,12 +280,15 @@ void page_maintenance_dispenser::onDispenseTimerTick()
 
 void page_maintenance_dispenser::fsmReceiveTemperature(double temperature_1, double temperature_2)
 {
-
-    // qDebug() << "Temperatures received from FSM. Sensor1: " << temperature_1 << " Sensor2: " << temperature_2;
-
-    p_page_idle->thisMachine.fsmReceiveTemperature(temperature_1, temperature_2);
-    ui->label_setting_temperature->setText(QString::number(temperature_1, 'f', 2));
-    ui->label_setting_temperature_2->setText(QString::number(temperature_2, 'f', 2));
+    if (p_page_idle->thisMachine.isAelenPillarElseSoapStand()){
+        p_page_idle->thisMachine.fsmReceiveTemperature(temperature_1, temperature_2);
+        ui->label_setting_temperature->show();
+        ui->label_setting_temperature_2->show();
+        ui->label_setting_temperature->setText(QString::number(temperature_1, 'f', 2));
+        ui->label_setting_temperature_2->setText(QString::number(temperature_2, 'f', 2));
+    }else{
+        qDebug()<< "Received temperature. Discarded because this is not a Pillar machine.";
+    }
 }
 
 // void page_maintenance_dispenser::fsmReceiveTemperature2(double temperature2)
@@ -459,7 +466,7 @@ bool page_maintenance_dispenser::isDispenserPumpEnabledWarningBox()
         msgBox.setStandardButtons(QMessageBox::Ok);
         msgBox.exec();
     }
-    
+
     return is_pump_enabled_for_dispense;
 }
 

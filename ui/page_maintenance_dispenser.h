@@ -81,7 +81,7 @@ private slots:
     void onMaintainProductPageTimeoutTick();
     void onDispenseTimerTick();
     void on_pushButton_set_volume_remaining_clicked();
-    void on_pushButton_setting_temperature_clicked();
+    void on_pushButton_set_max_temperature_clicked();
     void on_pushButton_setting_speed_pwm_clicked();
     void on_pushButton_enable_pump_clicked();
     void on_buttonBack_clicked();

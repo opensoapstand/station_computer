@@ -59,17 +59,24 @@ void page_maintenance::showEvent(QShowEvent *event)
 {
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
-    
+
     p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
-    
+
     _page_maintenanceTimeoutSec = PAGE_MAINTENANCE_TIMEOUT_SECONDS;
     p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_MAINTENANCE_BACKGROUND_PATH); // delays the page loading significantly.
 
+    QString qr_manual_full_path = p_page_idle->thisMachine.getTemplatePathFromName(QR_MANUAL_PATH);
+    p_page_idle->addPictureToLabel(ui->label_qr_user_manual, qr_manual_full_path);
+
     QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_CSS);
+    // ui->label_qr_manual_description->setText("Scan  the qr code /n to see the manual");
     ui->pushButton_to_previous_page->setStyleSheet(styleSheet);
     ui->pushButton_general_settings->setStyleSheet(styleSheet);
     ui->label_title_maintenance_mode->setStyleSheet(styleSheet);
 
+    ui->label_qr_manual_description->setStyleSheet(styleSheet);
+    ui->label_qr_manual_description->setProperty("class", "label_qr");
+    qDebug() << "Setting QR label picture and style*/*/*/*///////////////////////******************////////////********";
     ui->label_machine_id->setProperty("class", "label_machine_ui");
     ui->label_machine_id->setStyleSheet(styleSheet);
 
@@ -79,12 +86,14 @@ void page_maintenance::showEvent(QShowEvent *event)
     ui->label_role->setProperty("class", "label_machine_ui");
     ui->label_role->setStyleSheet(styleSheet);
 
+    p_page_idle->setTemplateTextToObject(ui->label_qr_manual_description);
     p_page_idle->setTemplateTextToObject(ui->label_title_maintenance_mode);
     p_page_idle->setTemplateTextToObject(ui->pushButton_to_previous_page);
     p_page_idle->setTemplateTextToObject(ui->pushButton_general_settings);
 
     ui->label_machine_id->setText("Machine ID: " + p_page_idle->thisMachine.getMachineId());
-    
+    // ui->label_qr_user_manual->setText("QR");
+ 
     QString role_as_text = p_page_idle->thisMachine.getActiveRoleAsText();
     p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_role, role_as_text);
 
@@ -223,3 +232,8 @@ int getSelection()
 {
     return selection;
 }
+
+// void page_maintenance::on_label_qr_user_manual_linkActivated(const QString &link)
+// {
+
+// }

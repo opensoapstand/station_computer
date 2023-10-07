@@ -91,7 +91,7 @@ void page_maintenance::showEvent(QShowEvent *event)
     QString title = QString("Soapstand UI v%1").arg(UI_VERSION);
     ui->label_ui_version->setText(title);
 
-    for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+    for (uint8_t slot_index = 0; slot_index < p_page_idle-> thisMachine.getSlotCount(); slot_index++)
     {
         p_page_idle->setTemplateTextToObject(labels_product_position[slot_index]);
 

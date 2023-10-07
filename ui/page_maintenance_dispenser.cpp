@@ -325,7 +325,7 @@ void page_maintenance_dispenser::onMaintainProductPageTimeoutTick()
 void page_maintenance_dispenser::on_pushButton_enable_pump_clicked()
 {
     int slot = p_page_idle->selectedProduct->getSlot();
-    if (slot < 1 || slot > SLOT_COUNT)
+    if (slot < 1 || slot > p_page_idle-> thisMachine.getSlotCount())
     {
         qDebug() << "ASSERT ERROR: Invalid slot : " << QString::number(slot);
     }

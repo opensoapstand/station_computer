@@ -82,6 +82,7 @@ public:
     QString getIdlePageType();
 
     int getSlotCount();
+    bool compareSlotCountToMaxSlotCount(int slot_count);
 
     bool hasReceiptPrinter();
     void getPrinterStatusFromDb(bool *isOnline, bool *hasPaper);
@@ -173,9 +174,9 @@ private:
     UserRole active_role;
 
 
-    QString m_pump_id_slots[SLOT_COUNT];
-    int m_is_enabled_slots[SLOT_COUNT];
-    QString m_status_text_slots[SLOT_COUNT];
+    QString m_pump_id_slots[MAX_SLOT_COUNT];
+    int m_is_enabled_slots[MAX_SLOT_COUNT];
+    QString m_status_text_slots[MAX_SLOT_COUNT];
 };
 
 #endif // MACHINE_H

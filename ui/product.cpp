@@ -150,7 +150,7 @@ int product::getSlot()
 
 void product::setSlot(int slot)
 {
-    if (slot >= OPTION_SLOT_INVALID && slot <= SLOT_COUNT)
+    if (slot >= OPTION_SLOT_INVALID && slot <= thisMachine->getSlotCount())
     {
 
         m_dispenser_slot = slot;
@@ -181,7 +181,7 @@ void product::setBiggestEnabledSizeIndex()
 // SLOTS Section
 bool product::is_valid_size_selected()
 {
-    if (!(m_dispenser_slot >= OPTION_SLOT_INVALID && m_dispenser_slot <= SLOT_COUNT))
+    if (!(m_dispenser_slot >= OPTION_SLOT_INVALID && m_dispenser_slot <= thisMachine->getSlotCount()))
     {
         qInfo() << "ERROR: no slot set. " << m_dispenser_slot;
         return false;

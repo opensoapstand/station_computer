@@ -22,7 +22,6 @@
 #include "page_idle.h"
 #include "df_util.h"
 
-
 // CTOR
 page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
                                                             ui(new Ui::page_select_product)
@@ -105,7 +104,7 @@ void page_select_product::showEvent(QShowEvent *event)
 
     displayProducts();
 
-    for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+    for (int slot_index = 0; slot_index < p_page_idle-> thisMachine.getSlotCount(); slot_index++)
     {
         labels_product_overlay_text[slot_index]->setStyleSheet(styleSheet);
         labels_product_overlay_text[slot_index]->setProperty("class", "label_product_overlay_available"); // apply class BEFORE setStyleSheet!!
@@ -148,7 +147,7 @@ void page_select_product::displayProducts()
     QString product_name;
     QString product_status_text;
 
-    for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+    for (uint8_t slot_index = 0; slot_index < p_page_idle-> thisMachine.getSlotCount(); slot_index++)
     {
         QString styleSheet = p_page_idle->getCSS(PAGE_SELECT_PRODUCT_CSS);
 

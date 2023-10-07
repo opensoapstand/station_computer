@@ -75,7 +75,7 @@ public:
     product *getSelectedProduct();
     QStringList getChildNames(QObject *parent);
 
-    product products[SLOT_COUNT];
+    product products[MAX_SLOT_COUNT];
     product *selectedProduct;
 
     machine thisMachine;

@@ -11,7 +11,7 @@
 #define UI_VERSION "2.3"
 
 #define OPTION_SLOT_INVALID 0
-#define SLOT_COUNT 4  // number of slots
+#define MAX_SLOT_COUNT 20  // number of slots
 
 #define SIZES_COUNT 6
 #define MINIMUM_DISPENSE_VOLUME_ML 10.0

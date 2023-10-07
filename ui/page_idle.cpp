@@ -61,7 +61,7 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     testForFrozenScreenTimer->setInterval(1000);
     connect(testForFrozenScreenTimer, SIGNAL(timeout()), this, SLOT(onTestForFrozenScreenTick()));
 
-    for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+    for (int slot_index = 0; slot_index < thisMachine.getSlotCount(); slot_index++)
     {
         products[slot_index].setSlot(slot_index + 1);
         products[slot_index].setMachine(&thisMachine);
@@ -106,6 +106,7 @@ void page_idle::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
     loadDynamicContent();
     thisMachine.getSlotCount();
+    qDebug() << "slot count: " << thisMachine.getSlotCount();
     thisMachine.resetSessionId();
     thisMachine.dispenseButtonLightsAnimateState(true);
     thisMachine.setRole(UserRole::user);
@@ -232,7 +233,7 @@ void page_idle::loadDynamicContent()
     // load global machine data
     thisMachine.loadParametersFromDb();
     // load slot data
-    for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+    for (int slot_index = 0; slot_index < thisMachine.getSlotCount(); slot_index++)
     {
         products[slot_index].loadProductProperties();
     }

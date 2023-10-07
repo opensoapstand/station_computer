@@ -94,7 +94,7 @@ void page_idle_products::showEvent(QShowEvent *event)
     ui->pushButton_to_select_product_page->setStyleSheet(styleSheet);
     ui->label_title->setStyleSheet(styleSheet);
 
-    for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+    for (int slot_index = 0; slot_index < p_page_idle->thisMachine.getSlotCount(); slot_index++)
     {
         labels_product_picture[slot_index]->setProperty("class", "labels_product_picture");
         labels_product_type[slot_index]->setProperty("class", "labels_product_type");
@@ -133,7 +133,7 @@ void page_idle_products::displayProducts()
     QString product_name;
     QString product_status_text;
 
-    for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+    for (uint8_t slot_index = 0; slot_index < p_page_idle->thisMachine.getSlotCount(); slot_index++)
     {
         // display product picture
         p_page_idle->addPictureToLabel(labels_product_picture[slot_index], p_page_idle->products[slot_index].getProductPicturePath());
@@ -178,7 +178,7 @@ void page_idle_products::showAllLabelsAndButtons()
     displayPrinterStatus();
     ui->pushButton_to_select_product_page->show();
 
-    for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+    for (int slot_index = 0; slot_index < p_page_idle->thisMachine.getSlotCount(); slot_index++)
     {
         labels_selectProductOverlay[slot_index]->show(); // seems to do nothing
         labels_product_picture[slot_index]->show();
@@ -192,7 +192,7 @@ void page_idle_products::hideAllLabelAndButtons()
     ui->label_customer_logo->hide();
     ui->label_printer_status->hide();
 
-    for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+    for (int slot_index = 0; slot_index < p_page_idle->thisMachine.getSlotCount(); slot_index++)
     {
         labels_selectProductOverlay[slot_index]->hide(); // seems to do nothing
         labels_product_picture[slot_index]->hide();

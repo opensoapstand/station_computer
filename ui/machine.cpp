@@ -93,11 +93,22 @@ int machine::getSlotCount()
             slot_count = 8;
         }
     }
-    cout << g_slotcount;
+    // slot_count = 30;
+    // if(compareSlotCountToMaxSlotCount(slot_count)){
+    //     qDebug() << "ERROR - Slot Count: " << slot_count << " exceeded MAX_SLOT_COUNT: " << MAX_SLOT_COUNT << " threshold";
+    // }
     return slot_count;
     // dispensers is the same as slots.
 
     //return m_dispense_buttons_count % 1000;
+}
+
+bool machine::compareSlotCountToMaxSlotCount(int slot_count)
+{
+    // true = slot count exceeded max slot count
+    // false = slot count within max slot count threshold
+    bool slot_count_compare = (slot_count > MAX_SLOT_COUNT) ? true : false;
+    return slot_count_compare;
 }
 
 void machine::setCouponState(StateCoupon state)
@@ -307,7 +318,7 @@ void machine::checkForHighTemperatureAndDisableProducts()
 
         if (elapsedMinutes >= 60) // 60  Check if one hour has passed
         {
-            for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+            for (uint8_t slot_index = 0; slot_index < getSlotCount(); slot_index++)
             {
                 qDebug() << "Temperature too high for one hour, block all slots.";
                 m_products[slot_index].setSlotEnabled(true, "SLOT_STATE_DISABLED_COMING_SOON");
@@ -492,14 +503,14 @@ bool machine::slotNumberValidityCheck(int slot)
     {
         valid = false;
     }
-    if (slot > SLOT_COUNT)
+    if (slot > getSlotCount())
     {
         valid = false;
     }
     if (!valid)
     {
 
-        qDebug() << "Invalid slot! slots start from 1 and go up to " << SLOT_COUNT << " e.g. 1,2,3,4. Slot provided: " << slot;
+        qDebug() << "Invalid slot! slots start from 1 and go up to " << getSlotCount() << " e.g. 1,2,3,4. Slot provided: " << slot;
     }
     return valid;
 }

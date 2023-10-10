@@ -63,6 +63,7 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
 
     for (int slot_index = 0; slot_index < thisMachine.getSlotCount(); slot_index++)
     {
+        qDebug() << "chckckckckck" << slot_index;
         products[slot_index].setSlot(slot_index + 1);
         products[slot_index].setMachine(&thisMachine);
         products[slot_index].setDb(g_database);

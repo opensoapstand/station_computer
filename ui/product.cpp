@@ -46,7 +46,7 @@ void product::loadProductProperties()
 
 void product::loadProductPropertiesFromDb()
 {
-    qDebug() << "Open db: db load product properties";
+    qDebug() << "Open db: db load product properties for product in slot: " << getSlot();
     m_db->getAllProductProperties(getSlot(), &m_aws_product_id,
                                   &m_soapstand_product_serial,
                                   &m_size_unit,
@@ -150,9 +150,8 @@ int product::getSlot()
 
 void product::setSlot(int slot)
 {
-    if (slot >= OPTION_SLOT_INVALID && slot <= thisMachine->getSlotCount())
+    if (slot > 0 && slot <= thisMachine->getSlotCount())
     {
-
         m_dispenser_slot = slot;
     }
     else

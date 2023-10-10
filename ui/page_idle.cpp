@@ -106,7 +106,6 @@ void page_idle::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
     loadDynamicContent();
     thisMachine.getSlotCount();
-    qDebug() << "slot count: " << thisMachine.getSlotCount();
     thisMachine.resetSessionId();
     thisMachine.dispenseButtonLightsAnimateState(true);
     thisMachine.setRole(UserRole::user);

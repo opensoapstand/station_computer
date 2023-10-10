@@ -78,7 +78,8 @@ int machine::getSlotCount()
         } 
         else if (m_hardware_version == "AP1.1"){
             slot_count = 4;
-        } else{
+        } 
+        else{
             slot_count = 8;
         }
     }
@@ -89,14 +90,15 @@ int machine::getSlotCount()
         }
         else if (m_hardware_version == "SS2"){
             slot_count = 4;
-        } else{
+        } 
+        else{
             slot_count = 8;
         }
     }
-    // slot_count = 30;
-    // if(compareSlotCountToMaxSlotCount(slot_count)){
-    //     qDebug() << "ERROR - Slot Count: " << slot_count << " exceeded MAX_SLOT_COUNT: " << MAX_SLOT_COUNT << " threshold";
-    // }
+    qDebug() << "SLOT COUNT: " << slot_count;
+    if(compareSlotCountToMaxSlotCount(slot_count)){
+        qDebug() << "ERROR - Slot Count:" << slot_count << " exceeded MAX_SLOT_COUNT:" << MAX_SLOT_COUNT << "threshold";
+    }
     return slot_count;
     // dispensers is the same as slots.
 
@@ -105,10 +107,7 @@ int machine::getSlotCount()
 
 bool machine::compareSlotCountToMaxSlotCount(int slot_count)
 {
-    // true = slot count exceeded max slot count
-    // false = slot count within max slot count threshold
-    bool slot_count_compare = (slot_count > MAX_SLOT_COUNT) ? true : false;
-    return slot_count_compare;
+    return (slot_count > MAX_SLOT_COUNT);
 }
 
 void machine::setCouponState(StateCoupon state)

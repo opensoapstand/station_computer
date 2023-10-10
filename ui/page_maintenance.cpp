@@ -74,8 +74,8 @@ void page_maintenance::showEvent(QShowEvent *event)
     ui->pushButton_general_settings->setStyleSheet(styleSheet);
     ui->label_title_maintenance_mode->setStyleSheet(styleSheet);
 
-    ui->label_qr_manual_description->setStyleSheet(styleSheet);
     ui->label_qr_manual_description->setProperty("class", "label_qr");
+    ui->label_qr_manual_description->setStyleSheet(styleSheet);
     qDebug() << "Setting QR label picture and style*/*/*/*///////////////////////******************////////////********";
     ui->label_machine_id->setProperty("class", "label_machine_ui");
     ui->label_machine_id->setStyleSheet(styleSheet);

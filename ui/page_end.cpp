@@ -53,11 +53,11 @@ void page_end::showEvent(QShowEvent *event)
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
     
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_END_BACKGROUND_PATH);
-    p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+    p_page_idle->thisMachine.setBackgroundPictureFromTemplateToPage(this, PAGE_END_BACKGROUND_PATH);
+    p_page_idle->thisMachine.applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
 
-    QString styleSheet = p_page_idle->getCSS(PAGE_END_CSS);
-    p_page_idle->setTemplateTextToObject(ui->pushButton_contact);
+    QString styleSheet = p_page_idle->thisMachine.getCSS(PAGE_END_CSS);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->pushButton_contact);
 
     ui->pushButton_to_idle->setStyleSheet(styleSheet);
     ui->label_message->setStyleSheet(styleSheet);
@@ -76,24 +76,24 @@ void page_end::showEvent(QShowEvent *event)
     ui->pushButton_contact->raise();
     ui->label_customer_logo->hide();
 
-    p_page_idle->addCustomerLogoToLabel(ui->label_customer_logo);
+    p_page_idle->thisMachine.addCustomerLogoToLabel(ui->label_customer_logo);
 
     QString paymentMethod = p_page_idle->selectedProduct->getPaymentMethod();
 
     if (p_page_idle->thisMachine.hasReceiptPrinter())
     {
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_message, "hasReceiptPrinter");
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_message_2, "hasReceiptPrinter2");
+        p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->label_message, "hasReceiptPrinter");
+        p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->label_message_2, "hasReceiptPrinter2");
     }
     else if (paymentMethod == PAYMENT_QR || paymentMethod == PAYMENT_TAP_TCP)
     {
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_message, "qr");
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_message_2, "qr2");
+        p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->label_message, "qr");
+        p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->label_message_2, "qr2");
     }
     else
     {
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_message, "any_pay");
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_message_2, "any_pay2");
+        p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->label_message, "any_pay");
+        p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->label_message_2, "any_pay2");
     }
 
     is_in_state_thank_you = true;
@@ -114,7 +114,7 @@ void page_end::showEvent(QShowEvent *event)
     thankYouEndTimer->start();
 
     QString machine_logo_full_path = p_page_idle->thisMachine.getTemplatePathFromName(MACHINE_LOGO_PATH);
-    p_page_idle->addPictureToLabel(ui->label_manufacturer_logo, machine_logo_full_path);
+    p_page_idle->thisMachine.addPictureToLabel(ui->label_manufacturer_logo, machine_logo_full_path);
     ui->label_manufacturer_logo->setStyleSheet(styleSheet);
 
     // p_page_idle->setDiscountPercentage(0.0);
@@ -250,7 +250,7 @@ void page_end::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     // p_page_idle->setPromoCode("");
 
     thankYouEndTimer->stop();
-    p_page_idle->pageTransition(this, pageToShow);
+    p_page_idle->thisMachine.pageTransition(this, pageToShow);
 }
 
 void page_end::finishHandler()
@@ -268,7 +268,7 @@ void page_end::finishHandler()
     else
     {
 
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_message, "finish_transaction");
+        p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->label_message, "finish_transaction");
         ui->label_message_2->hide();
     }
 }

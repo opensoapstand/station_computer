@@ -80,16 +80,16 @@ void page_qr_payment::showEvent(QShowEvent *event)
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
-    p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+    p_page_idle->thisMachine.applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
     
-    // p_page_idle->setTemplateTextWithIdentifierToObject(ox2, "button_problems_message");
-    p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_title, "pay_by_phone");
-    p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_scan, "label_scan_1");
-    p_page_idle->setTemplateTextToObject(ui->label_steps);
-    p_page_idle->setTemplateTextToObject(ui->label_processing);
-    p_page_idle->setTemplateTextToObject(ui->pushButton_previous_page);
+    // p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ox2, "button_problems_message");
+    p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->label_title, "pay_by_phone");
+    p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->label_scan, "label_scan_1");
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->label_steps);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->label_processing);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->pushButton_previous_page);
 
-    QString styleSheet = p_page_idle->getCSS(PAGE_QR_PAYMENT_CSS);
+    QString styleSheet = p_page_idle->thisMachine.getCSS(PAGE_QR_PAYMENT_CSS);
 
     ui->pushButton_refresh->setProperty("class", "invisible_button");
 
@@ -114,15 +114,15 @@ void page_qr_payment::showEvent(QShowEvent *event)
 
     if (p_page_idle->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
     {
-        ui->label_product_information->setText(p_page_idle->selectedProduct->getProductName() + p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_information, "volume_up_to") + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
-        QString base_text = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_price, "custom_size");
+        ui->label_product_information->setText(p_page_idle->selectedProduct->getProductName() + p_page_idle->thisMachine.getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_information, "volume_up_to") + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
+        QString base_text = p_page_idle->thisMachine.getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_price, "custom_size");
         QString label_product_price_text = base_text.arg(price);
         ui->label_product_price->setText(label_product_price_text);
     }
     else
     {
         ui->label_product_information->setText(p_page_idle->selectedProduct->getProductName() + " " + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
-        QString base_text = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_price, "fixed_size");
+        QString base_text = p_page_idle->thisMachine.getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_price, "fixed_size");
         QString label_product_price_text = base_text.arg(price);
         ui->label_product_price->setText(label_product_price_text);
     }
@@ -131,7 +131,7 @@ void page_qr_payment::showEvent(QShowEvent *event)
     ui->label_product_information->show();
     ui->label_product_price->show();
 
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
+    p_page_idle->thisMachine.setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
 
     ui->label_steps->show();
     ui->label_processing->hide();
@@ -332,8 +332,8 @@ void page_qr_payment::isQrProcessedCheckOnline()
 
 
             ui->label_processing->show();
-            p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_scan, "finalize_transaction");
-            p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_title, "almost_there");
+            p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->label_scan, "finalize_transaction");
+            p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->label_title, "almost_there");
             QString image_path = p_page_idle->thisMachine.getTemplatePathFromName("soapstandspinner.gif");
             QMovie *movie = new QMovie(image_path);
             ui->label_gif->setMovie(movie);
@@ -397,14 +397,14 @@ bool page_qr_payment::exitConfirm()
     if (state_payment == s_payment_processing || state_payment == s_payment_done)
     {
         QString searchString = this->objectName() + "->msgBox_cancel->default";
-        p_page_idle->setTextToObject(&msgBox, p_page_idle->getTemplateText(searchString));
+        p_page_idle->thisMachine.setTextToObject(&msgBox, p_page_idle->thisMachine.getTemplateText(searchString));
     }
     else if (state_payment == s_init)
     {
         QString searchString = this->objectName() + "->msgBox_refund->default";
-        p_page_idle->setTextToObject(&msgBox, p_page_idle->getTemplateText(searchString));
+        p_page_idle->thisMachine.setTextToObject(&msgBox, p_page_idle->thisMachine.getTemplateText(searchString));
     }
-    QString styleSheet = p_page_idle->getCSS(PAGE_QR_PAYMENT_CSS);
+    QString styleSheet = p_page_idle->thisMachine.getCSS(PAGE_QR_PAYMENT_CSS);
     msgBox.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
     msgBox.setStyleSheet(styleSheet);
 
@@ -430,7 +430,7 @@ void page_qr_payment::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
 
     resetPaymentPage();
-    p_page_idle->pageTransition(this, pageToShow);
+    p_page_idle->thisMachine.pageTransition(this, pageToShow);
 }
 
 // Navigation: Back to Product Size Selection

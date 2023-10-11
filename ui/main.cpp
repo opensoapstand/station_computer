@@ -186,11 +186,22 @@ int main(int argc, char *argv[])
     qDebug() << "All Pages created.";
 
     DbManager db_config;
+    machine thisMachine;
+     product    products[MAX_SLOT_COUNT];
+
     p_page_idle->g_database = &db_config;
 
     db_config.updateTableMachineWithText("software_version", UI_VERSION);
+    thisMachine.setProducts(products);
+    thisMachine.setDb(&db_config);
+    thisMachine.initMachine();
+    thisMachine.loadDynamicContent();
 
-    p_page_idle->loadDynamicContent();
+
+
+  
+
+
 
     qDebug() << "Check image paths.... (all paths resolved if nothing shows up).";
 

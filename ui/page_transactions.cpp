@@ -42,7 +42,7 @@ page_transactions::~page_transactions()
 void page_transactions::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
         idleTimer->stop();
-        p_page_idle->pageTransition(this, pageToShow);
+        p_page_idle->thisMachine.pageTransition(this, pageToShow);
 }
 
 void page_transactions::showEvent(QShowEvent *event)
@@ -50,19 +50,19 @@ void page_transactions::showEvent(QShowEvent *event)
         p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
         QWidget::showEvent(event);
 
-        p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+        p_page_idle->thisMachine.applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
     
-        QString styleSheet = p_page_idle->getCSS(PAGE_TRANSACTIONS_CSS);
+        QString styleSheet = p_page_idle->thisMachine.getCSS(PAGE_TRANSACTIONS_CSS);
         ui->pushButton_back->setStyleSheet(styleSheet);
         ui->pushButton_print->setStyleSheet(styleSheet);
         ui->label_title->setStyleSheet(styleSheet);
         ui->list_transactions->setStyleSheet(styleSheet);
 
-        p_page_idle->setTemplateTextToObject(ui->label_title);
-        p_page_idle->setTemplateTextToObject(ui->pushButton_back);
-        p_page_idle->setTemplateTextToObject(ui->pushButton_print);
+        p_page_idle->thisMachine.setTemplateTextToObject(ui->label_title);
+        p_page_idle->thisMachine.setTemplateTextToObject(ui->pushButton_back);
+        p_page_idle->thisMachine.setTemplateTextToObject(ui->pushButton_print);
 
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TRANSACTIONS_BACKGROUND_PATH);
+        p_page_idle->thisMachine.setBackgroundPictureFromTemplateToPage(this, PAGE_TRANSACTIONS_BACKGROUND_PATH);
 
         idleTimer->start(1000);
         _idleTimeoutSec = 60;

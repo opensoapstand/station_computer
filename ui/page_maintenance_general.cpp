@@ -38,7 +38,7 @@ void page_maintenance_general::showEvent(QShowEvent *event)
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
-    p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+    p_page_idle->thisMachine.applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
     
     ui->checkBox_enable_empty_container->setText("Enable auto empty detection. (If disabled, will display sold out if less than " + QString::number(CONTAINER_EMPTY_THRESHOLD_ML) + "ml remaining)");
 
@@ -72,23 +72,23 @@ void page_maintenance_general::showEvent(QShowEvent *event)
     ui->label_machine_id->setText("Station id: " + p_page_idle->thisMachine.getMachineId());
 
 
-    p_page_idle->setTemplateTextToObject(ui->pushButton_back);
-    p_page_idle->setTemplateTextToObject(ui->label_connectivity);
-    p_page_idle->setTemplateTextToObject(ui->pushButton_wifi_networks);
-    p_page_idle->setTemplateTextToObject(ui->pushButton_network_status);
-    p_page_idle->setTemplateTextToObject(ui->pushButton_rtunnel_restart);
-    p_page_idle->setTemplateTextToObject(ui->label_receipt_printer);
-    p_page_idle->setTemplateTextToObject(ui->pushButton_printer_check_status);
-    p_page_idle->setTemplateTextToObject(ui->pushButton_printer_test_print);
-    p_page_idle->setTemplateTextToObject(ui->pushButton_minimize);
-    p_page_idle->setTemplateTextToObject(ui->label_settings);
-    p_page_idle->setTemplateTextToObject(ui->pushButton_restart_electronics);
-    p_page_idle->setTemplateTextToObject(ui->pushButton_restart_UI);
-    p_page_idle->setTemplateTextToObject(ui->pushButton_reboot);
-    p_page_idle->setTemplateTextToObject(ui->pushButton_shutdown);
-    p_page_idle->setTemplateTextToObject(ui->pushButton_reboot);
-    p_page_idle->setTemplateTextToObject(ui->label_feedback);
-    p_page_idle->setTemplateTextToObject(ui->label_status_feedback);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->pushButton_back);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->label_connectivity);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->pushButton_wifi_networks);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->pushButton_network_status);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->pushButton_rtunnel_restart);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->label_receipt_printer);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->pushButton_printer_check_status);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->pushButton_printer_test_print);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->pushButton_minimize);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->label_settings);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->pushButton_restart_electronics);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->pushButton_restart_UI);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->pushButton_reboot);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->pushButton_shutdown);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->pushButton_reboot);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->label_feedback);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->label_status_feedback);
 
     updateLabelValues();
 }
@@ -107,7 +107,7 @@ void page_maintenance_general::setPage(page_maintenance *pageMaintenance, page_i
 
 void page_maintenance_general::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
-    p_page_idle->pageTransition(this, pageToShow);
+    p_page_idle->thisMachine.pageTransition(this, pageToShow);
 }
 void page_maintenance_general::resizeEvent(QResizeEvent *event)
 {
@@ -116,7 +116,7 @@ void page_maintenance_general::resizeEvent(QResizeEvent *event)
 
 void page_maintenance_general::updateLabelValues()
 {
-    p_page_idle->loadDynamicContent();
+    p_page_idle->thisMachine.loadDynamicContent();
     ui->checkBox_enable_empty_container->setChecked(p_page_idle->thisMachine.getEmptyContainerDetectionEnabled());
     ui->checkBox_enable_pump_ramping->setChecked(p_page_idle->thisMachine.getPumpRampingEnabled());
 }

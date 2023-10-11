@@ -59,23 +59,15 @@ public:
     void setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products, page_error_wifi *p_page_error_wifi);
     ~page_idle();
     void showEvent(QShowEvent *event);
-
-    void addPictureToLabel(QLabel *label, QString picturePath);
-    void addPictureToButton(QPushButton *button, QString picturePath);
-    void addCustomerLogoToLabel(QLabel *label);
     void changeToIdleProductsIfSet();
-    void setBackgroundPictureFromTemplateToPage(QWidget *page, QString imageName);
-    void setBackgroundPictureToQWidget(QWidget *page, QString imageName);
 
-    void loadDynamicContent();
 
-    void pageTransition(QWidget *pageToHide, QWidget *pageToShow);
 
-    void setSelectedProduct(uint8_t slot);
-    product *getSelectedProduct();
-    QStringList getChildNames(QObject *parent);
 
-    product products[MAX_SLOT_COUNT];
+
+    
+
+
     product *selectedProduct;
 
     machine thisMachine;
@@ -93,20 +85,10 @@ public:
     QVideoWidget *videoWidget;
     QMediaPlayer *player;
 
-    QString getCSS(QString cssName);
-    void addCssClassToObject(QWidget *element, QString classname, QString css_file_name);
-    void setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier);
-    void setTemplateTextToObject(QWidget *p_element);
-    void setTextToObject(QWidget *p_element, QString text);
-    QString getCombinedElementPageAndName(QWidget *p_element);
-    QString getTemplateTextByElementNameAndPage(QWidget *p_element);
-    QString getTemplateTextByElementNameAndPageAndIdentifier(QWidget *p_element, QString identifier);
-    QString getTemplateTextByPage(QWidget *page, QString identifier);
-    QString getTemplateText(QString textName_to_find);
-    void loadTextsFromTemplateCsv();
-    void loadTextsFromDefaultCsv();
-    void loadElementDynamicPropertiesFromTemplate();
-    void loadElementDynamicPropertiesFromDefaultTemplate();
+
+
+
+
     void registerUserInteraction(QWidget *page);
 
     void loadTextsFromCsv(QString csv_path, std::map<QString, QString> *dictionary);
@@ -119,9 +101,10 @@ public:
     int _testForFrozenScreenTimerTimeoutSec;
 
     void checkReceiptPrinterStatus();
-    void applyPropertiesToQWidget(QWidget* widget);
-    void applyDynamicPropertiesFromTemplateToWidgetChildren(QWidget* widget);
+
     StateFrozenScreenDetect stateScreenCheck;
+
+    void hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createNewSessionId);
 
 private slots:
     void on_pushButton_to_select_product_page_clicked();
@@ -137,7 +120,6 @@ private:
     std::map<QString, QString> elementDynamicPropertiesMap_default;
     std::map<QString, QString> elementDynamicPropertiesMap_template;
 
-    void hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createNewSessionId);
 
     QString m_templatePath;
     Ui::page_idle *ui;

@@ -54,7 +54,7 @@ void page_maintenance_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToS
 {
     dispense_test_end(true);
     maintainProductPageEndTimer->stop();
-    p_page_idle->pageTransition(this, pageToShow);
+    p_page_idle->thisMachine.pageTransition(this, pageToShow);
 }
 
 void page_maintenance_dispenser::showEvent(QShowEvent *event)
@@ -64,20 +64,20 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     qDebug() << "Active Slot: " << QString::number(this->p_page_idle->selectedProduct->getSlot());
     QWidget::showEvent(event);
 
-    p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+    p_page_idle->thisMachine.applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
 
-    QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
+    QString styleSheet = p_page_idle->thisMachine.getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
 
-    p_page_idle->setTemplateTextToObject(ui->pushButton_to_previous_page);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->pushButton_to_previous_page);
 
-    p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_pump_enabled_status, "pump_off");
-    p_page_idle->setTemplateTextToObject(ui->label_calibration_instructions);
-    p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_enable_pump, "enable_pump");
+    p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->label_pump_enabled_status, "pump_off");
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->label_calibration_instructions);
+    p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->pushButton_enable_pump, "enable_pump");
 
-    p_page_idle->setTemplateTextToObject(ui->pushButton_set_restock_volume);
-    ui->pushButton_done->setText(p_page_idle->getTemplateTextByPage(this, "pushButton_keypad_done"));
-    ui->pushButton_cancel->setText(p_page_idle->getTemplateTextByPage(this, "pushButton_keypad_cancel"));
-    p_page_idle->setTemplateTextToObject(ui->pushButton_clear_problem);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->pushButton_set_restock_volume);
+    ui->pushButton_done->setText(p_page_idle->thisMachine.getTemplateTextByPage(this, "pushButton_keypad_done"));
+    ui->pushButton_cancel->setText(p_page_idle->thisMachine.getTemplateTextByPage(this, "pushButton_keypad_cancel"));
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->pushButton_clear_problem);
 
     ui->label_product_name->setStyleSheet(styleSheet);
     ui->label_product_picture->setStyleSheet(styleSheet);
@@ -102,7 +102,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     ui->pushButton_plu_custom->setEnabled(true);
 
     QString path = p_page_idle->selectedProduct->getProductPicturePath();
-    p_page_idle->addPictureToLabel(ui->label_product_picture, path);
+    p_page_idle->thisMachine.addPictureToLabel(ui->label_product_picture, path);
 
     ui->pushButton_setting_speed_pwm->hide();
     ui->label_setting_speed_pwm->hide();
@@ -140,7 +140,7 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
 {
     if (reloadFromDb)
     {
-        p_page_idle->loadDynamicContent();
+        p_page_idle->thisMachine.loadDynamicContent();
     }
 
     this->units_selected_product = this->p_page_idle->selectedProduct->getUnitsForSlot();
@@ -182,13 +182,13 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
 
     if (p_page_idle->selectedProduct->getSlotEnabled())
     {
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_set_status, "unavailable");
-        p_page_idle->addCssClassToObject(ui->pushButton_set_status, "pushButton_set_status_unavailable", PAGE_MAINTENANCE_DISPENSER_CSS);
+        p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->pushButton_set_status, "unavailable");
+        p_page_idle->thisMachine.addCssClassToObject(ui->pushButton_set_status, "pushButton_set_status_unavailable", PAGE_MAINTENANCE_DISPENSER_CSS);
     }
     else
     {
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_set_status, "available");
-        p_page_idle->addCssClassToObject(ui->pushButton_set_status, "pushButton_set_status_available", PAGE_MAINTENANCE_DISPENSER_CSS);
+        p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->pushButton_set_status, "available");
+        p_page_idle->thisMachine.addCssClassToObject(ui->pushButton_set_status, "pushButton_set_status_available", PAGE_MAINTENANCE_DISPENSER_CSS);
     }
 
     QString statusText = p_page_idle->selectedProduct->getStatusText();
@@ -211,39 +211,39 @@ void page_maintenance_dispenser::setStatusTextLabel(QLabel *label, QString statu
 
     if (statusText.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
     {
-        status_display_text = p_page_idle->getTemplateTextByPage(this, element_name + "->coming_soon");
+        status_display_text = p_page_idle->thisMachine.getTemplateTextByPage(this, element_name + "->coming_soon");
     }
     else if (statusText.compare("SLOT_STATE_DISABLED") == 0)
     {
-        status_display_text = p_page_idle->getTemplateTextByPage(this, element_name + "->not_enabled");
+        status_display_text = p_page_idle->thisMachine.getTemplateTextByPage(this, element_name + "->not_enabled");
     }
     else if (statusText.compare("SLOT_STATE_AVAILABLE") == 0)
     {
-        status_display_text = p_page_idle->getTemplateTextByPage(this, element_name + "->available");
+        status_display_text = p_page_idle->thisMachine.getTemplateTextByPage(this, element_name + "->available");
     }
     else if (statusText.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
     {
-        status_display_text = p_page_idle->getTemplateTextByPage(this, element_name + "->almost_empty");
+        status_display_text = p_page_idle->thisMachine.getTemplateTextByPage(this, element_name + "->almost_empty");
     }
     else if (statusText.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
     {
-        status_display_text = p_page_idle->getTemplateTextByPage(this, element_name + "->assistance");
+        status_display_text = p_page_idle->thisMachine.getTemplateTextByPage(this, element_name + "->assistance");
     }
     else if (statusText.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
     {
-        status_display_text = p_page_idle->getTemplateTextByPage(this, element_name + "->empty");
+        status_display_text = p_page_idle->thisMachine.getTemplateTextByPage(this, element_name + "->empty");
     }
     else if (statusText.compare("SLOT_STATE_DISABLED") == 0)
     {
-        status_display_text = p_page_idle->getTemplateTextByPage(this, element_name + "->disabled");
+        status_display_text = p_page_idle->thisMachine.getTemplateTextByPage(this, element_name + "->disabled");
     }
     else if (statusText.compare("SLOT_STATE_WARNING_PRIMING") == 0)
     {
-        status_display_text = p_page_idle->getTemplateTextByPage(this, element_name + "->priming");
+        status_display_text = p_page_idle->thisMachine.getTemplateTextByPage(this, element_name + "->priming");
     }
     else
     {
-        status_display_text = p_page_idle->getTemplateTextByPage(this, "status_text->default");
+        status_display_text = p_page_idle->thisMachine.getTemplateTextByPage(this, "status_text->default");
     }
     if (displayRawStatus)
     {
@@ -361,8 +361,8 @@ void page_maintenance_dispenser::autoDispenseStart(int size)
 {
     if (!isDispenserPumpEnabledWarningBox())
     {
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_enable_pump, "disable_pump");
-        p_page_idle->addCssClassToObject(ui->pushButton_enable_pump, "pump_disable", PAGE_MAINTENANCE_DISPENSER_CSS);
+        p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->pushButton_enable_pump, "disable_pump");
+        p_page_idle->thisMachine.addCssClassToObject(ui->pushButton_enable_pump, "pump_disable", PAGE_MAINTENANCE_DISPENSER_CSS);
         qDebug() << "Autofill small quantity pressed.";
         QString command = QString::number(this->p_page_idle->selectedProduct->getSlot());
 
@@ -420,9 +420,9 @@ void page_maintenance_dispenser::dispense_test_start()
 
     is_pump_enabled_for_dispense = true;
 
-    p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_pump_enabled_status, "pump_ready");
-    p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_enable_pump, "disable_pump");
-    p_page_idle->addCssClassToObject(ui->pushButton_enable_pump, "pump_disable", PAGE_MAINTENANCE_DISPENSER_CSS);
+    p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->label_pump_enabled_status, "pump_ready");
+    p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->pushButton_enable_pump, "disable_pump");
+    p_page_idle->thisMachine.addCssClassToObject(ui->pushButton_enable_pump, "pump_disable", PAGE_MAINTENANCE_DISPENSER_CSS);
 }
 
 void page_maintenance_dispenser::dispense_test_end(bool sendStopToController)
@@ -431,10 +431,10 @@ void page_maintenance_dispenser::dispense_test_end(bool sendStopToController)
     {
         dispenseTimer->stop();
         is_pump_enabled_for_dispense = false;
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_pump_enabled_status, "pump_off");
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_enable_pump, "enable_pump");
+        p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->label_pump_enabled_status, "pump_off");
+        p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->pushButton_enable_pump, "enable_pump");
 
-        p_page_idle->addCssClassToObject(ui->pushButton_enable_pump, "pump_enable", PAGE_MAINTENANCE_DISPENSER_CSS);
+        p_page_idle->thisMachine.addCssClassToObject(ui->pushButton_enable_pump, "pump_enable", PAGE_MAINTENANCE_DISPENSER_CSS);
 
         if (sendStopToController)
         {
@@ -462,7 +462,7 @@ bool page_maintenance_dispenser::isDispenserPumpEnabledWarningBox()
         msgBox.setWindowFlags(Qt::FramelessWindowHint);
         msgBox.setText("<p align=center>Not possible<br>while dispense pump<br>is enabled!</p>");
 
-        p_page_idle->addCssClassToObject(&msgBox, "msgBoxbutton msgBox", PAGE_MAINTENANCE_DISPENSER_CSS);
+        p_page_idle->thisMachine.addCssClassToObject(&msgBox, "msgBoxbutton msgBox", PAGE_MAINTENANCE_DISPENSER_CSS);
         msgBox.setStandardButtons(QMessageBox::Ok);
         msgBox.exec();
     }
@@ -583,7 +583,7 @@ void page_maintenance_dispenser::on_pushButton_restock_clicked()
 {
     if (!isDispenserPumpEnabledWarningBox())
     {
-        // QString styleSheet = p_page_idle->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
+        // QString styleSheet = p_page_idle->thisMachine.getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
 
         qDebug() << "refill clicked. slot: " << QString::number(this->p_page_idle->selectedProduct->getSlot());
         qDebug() << "refill clicked. size: " << QString::number(this->p_page_idle->selectedProduct->getRestockVolume());
@@ -595,7 +595,7 @@ void page_maintenance_dispenser::on_pushButton_restock_clicked()
         msgBox.setWindowFlags(Qt::FramelessWindowHint);
         msgBox.setText("<p align=center>Are you sure you want to restock the product?</p>");
 
-        p_page_idle->addCssClassToObject(&msgBox, "msgBoxbutton msgBox", PAGE_MAINTENANCE_DISPENSER_CSS);
+        p_page_idle->thisMachine.addCssClassToObject(&msgBox, "msgBoxbutton msgBox", PAGE_MAINTENANCE_DISPENSER_CSS);
 
         // msgBox.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
         // msgBox.setStyleSheet(styleSheet);
@@ -622,12 +622,12 @@ void page_maintenance_dispenser::on_pushButton_restock_clicked()
         if (success)
         {
             sendRestockToCloud();
-            p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_action_feedback, "success");
+            p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->label_action_feedback, "success");
             p_page_idle->selectedProduct->setStatusText("SLOT_STATE_AVAILABLE");
         }
         else
         {
-            p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_action_feedback, "error");
+            p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->label_action_feedback, "error");
         }
 
         updateProductLabelValues(true);
@@ -652,7 +652,7 @@ void page_maintenance_dispenser::on_pushButton_set_status_clicked()
 
             msgBox_set_availabilty.setText("<p align=center>Label product as 'coming soon' <br>(if no, it will be set as 'sold out')?</p>");
 
-            p_page_idle->addCssClassToObject(&msgBox_set_availabilty, "msgBoxbutton msgBox", PAGE_MAINTENANCE_DISPENSER_CSS);
+            p_page_idle->thisMachine.addCssClassToObject(&msgBox_set_availabilty, "msgBoxbutton msgBox", PAGE_MAINTENANCE_DISPENSER_CSS);
 
             msgBox_set_availabilty.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
             int ret2 = msgBox_set_availabilty.exec();
@@ -732,11 +732,11 @@ void page_maintenance_dispenser::on_pushButton_done_clicked()
             {
                 p_page_idle->selectedProduct->setPrice(SIZE_SMALL_INDEX, text_entered.toDouble());
                 ui->pushButton_price_small->setText("$" + QString::number(p_page_idle->selectedProduct->getBasePrice(SIZE_SMALL_INDEX)));
-                p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_title, "small");
+                p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->label_title, "small");
             }
             else if (activeEditField == "pushButton_price_medium")
             {
-                p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_title, "medium");
+                p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->label_title, "medium");
                 p_page_idle->selectedProduct->setPrice(SIZE_MEDIUM_INDEX, text_entered.toDouble());
                 ui->pushButton_price_medium->setText("$" + QString::number(p_page_idle->selectedProduct->getBasePrice(SIZE_MEDIUM_INDEX)));
             }
@@ -822,9 +822,9 @@ void page_maintenance_dispenser::on_pushButton_cancel_clicked()
     // ui->errorLabel->setText("");
     // text_entered = "";
     activeEditField = "";
-    ui->pushButton_cancel->setText(p_page_idle->getTemplateTextByPage(this, "pushButton_keypad_cancel"));
+    ui->pushButton_cancel->setText(p_page_idle->thisMachine.getTemplateTextByPage(this, "pushButton_keypad_cancel"));
 
-    //    p_page_idle->setTemplateTextToObject(ui->pushButton_cancel);
+    //    p_page_idle->thisMachine.setTemplateTextToObject(ui->pushButton_cancel);
 }
 
 // ****************************************************************
@@ -980,7 +980,7 @@ void page_maintenance_dispenser::on_pushButton_set_volume_remaining_clicked()
 {
     if (!isDispenserPumpEnabledWarningBox())
     {
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_title, "adjust_volume");
+        p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->label_title, "adjust_volume");
         ui->textEntry->setText(p_page_idle->selectedProduct->getVolumeRemainingCorrectUnits(false));
     }
 }
@@ -990,7 +990,7 @@ void page_maintenance_dispenser::on_pushButton_set_restock_volume_clicked()
     if (!isDispenserPumpEnabledWarningBox())
     {
         ui->textEntry->setText(p_page_idle->selectedProduct->getFullVolumeCorrectUnits(false));
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_title, "full_button");
+        p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->label_title, "full_button");
     }
 }
 
@@ -1103,7 +1103,7 @@ void page_maintenance_dispenser::update_changes_to_portal()
         QString feedback = QString::fromUtf8(readBuffer.c_str());
         qDebug() << "Pagemaintenancedispenser cURL success. Server feedback readbuffer: " << feedback;
         // ui->label_action_feedback->setText("Portal Update Succesfull");
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_action_feedback, "portal_success");
+        p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->label_action_feedback, "portal_success");
 
         // readbuffer is a string. "true" or "false"
         if (readBuffer == "true")

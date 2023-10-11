@@ -54,9 +54,9 @@ void page_help::showEvent(QShowEvent *event)
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
-    p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+    p_page_idle->thisMachine.applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
     
-    QString styleSheet = p_page_idle->getCSS(PAGE_HELP_CSS);
+    QString styleSheet = p_page_idle->thisMachine.getCSS(PAGE_HELP_CSS);
     ui->pushButton_to_idle->setProperty("class", "buttonNoBorder");
     ui->pushButton_to_transactions->setProperty("class", "buttonNoBorder");
     ui->pushButton_resetTimeout->setProperty("class", "buttonTransparent");
@@ -67,13 +67,13 @@ void page_help::showEvent(QShowEvent *event)
     ui->pushButton_to_maintenance->setStyleSheet(styleSheet);
     ui->pushButton_to_feedback->setStyleSheet(styleSheet);
 
-    p_page_idle->setTemplateTextToObject(ui->pushButton_to_transactions);
-    p_page_idle->setTemplateTextToObject(ui->pushButton_to_maintenance);
-    p_page_idle->setTemplateTextToObject(ui->pushButton_to_feedback);
-    p_page_idle->setTemplateTextToObject(ui->pushButton_to_idle);
-    ui->label_keyboardInfo->setText(p_page_idle->getTemplateTextByPage(this, "label_keyboardInfo")); //p_page_idle->setTemplateTextToObject(ui->label_keyboardInfo); // does not work because the parent is the keyboard, not the page.
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->pushButton_to_transactions);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->pushButton_to_maintenance);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->pushButton_to_feedback);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->pushButton_to_idle);
+    ui->label_keyboardInfo->setText(p_page_idle->thisMachine.getTemplateTextByPage(this, "label_keyboardInfo")); //p_page_idle->thisMachine.setTemplateTextToObject(ui->label_keyboardInfo); // does not work because the parent is the keyboard, not the page.
 
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_PATH);
+    p_page_idle->thisMachine.setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_PATH);
 
     help_text_html = p_page_idle->thisMachine.getHelpPageHtmlText();
     if (p_page_idle->thisMachine.getShowTransactionHistory())
@@ -95,7 +95,7 @@ void page_help::showEvent(QShowEvent *event)
 
         QString image_path = p_page_idle->thisMachine.getTemplatePathFromName(PAGE_HELP_BACKGROUND_GENERIC_WHITE);
         if (df_util::pathExists(image_path)){
-            p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_GENERIC_WHITE);
+            p_page_idle->thisMachine.setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_GENERIC_WHITE);
         }
     }
 
@@ -109,7 +109,7 @@ void page_help::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     helpIdleTimer->stop();
     ui->keyboard_3->hide();
-    p_page_idle->pageTransition(this, pageToShow);
+    p_page_idle->thisMachine.pageTransition(this, pageToShow);
 }
 
 void page_help::on_pushButton_to_idle_clicked()

@@ -10,10 +10,8 @@
 
 #define UI_VERSION "2.3"
 
-#define ENABLE_COUPON   // Petros stations have no coupon
-
 #define OPTION_SLOT_INVALID 0
-#define SLOT_COUNT 4  // number of products
+#define SLOT_COUNT 4  // number of slots
 
 #define SIZES_COUNT 6
 #define MINIMUM_DISPENSE_VOLUME_ML 10.0
@@ -55,6 +53,7 @@ using namespace std;
 
 #define PAGE_IDLE_DELAY_BEFORE_ENTERING_IDLE_PRODUCTS 15
 #define PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS 60 //60
+#define PAGE_IDLE_TEST_FOR_FROZEN_SCREEN_PERIOD_SECONDS 60 
 #define PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS 6
 #define PAGE_IDLE_PRODUCTS_STEP_DISPLAY_TIME_SECONDS 1
 
@@ -126,6 +125,7 @@ using namespace std;
 #define PAGE_ERROR_BACKGROUND_PATH                      "background_error_wifi.png"
 #define KEYBOARD_IMAGE_PATH                             "soapstand-keyboard.png"
 #define MACHINE_LOGO_PATH                               "machine_logo.png"
+#define QR_MANUAL_PATH                                  "qr_user_manual.png"
 #define PAGE_DISPENSE_FILL_ANIMATION                    "bottle_fill_for_animation.png"
 
 #define ICON_TYPE_CONCENTRATE_PATH                      "Soapstand_UI-concentrate-icon.png"
@@ -149,6 +149,7 @@ using namespace std;
 #define PAYMENT_TAP_SERIAL                              "tapSerial"
 #define PAYMENT_TAP_TCP                                 "tapTCP"
 #define PAYMENT_QR                                      "qr"
+
 class df_util : public QWidget
 {
     Q_OBJECT
@@ -172,6 +173,7 @@ public:
 
     bool m_IsSendingFSM;
 
+    static void executeVirtualClick(int x, int y);
     // QString send_msg;
 
     QTcpSocket *tcpSocket = nullptr;

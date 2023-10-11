@@ -37,6 +37,13 @@ class page_maintenance_general;
 class page_idle_products;
 class page_error_wifi;
 
+typedef enum StateFrozenScreenDetect{
+    state_screen_check_not_initiated,
+    state_screen_check_clicked_and_wait,
+    state_screen_check_clicked_and_succes,
+    state_screen_check_fail
+}StateFrozenScreenDetect;
+
 namespace Ui
 {
     class page_idle;
@@ -108,15 +115,19 @@ public:
     int _idlePageTypeSelectorTimerTimeoutSec;
     QTimer *pollTemperatureTimer;
     int _pollTemperatureTimerTimeoutSec;
+    QTimer *testForFrozenScreenTimer;
+    int _testForFrozenScreenTimerTimeoutSec;
 
     void checkReceiptPrinterStatus();
     void applyPropertiesToQWidget(QWidget* widget);
     void applyDynamicPropertiesFromTemplateToWidgetChildren(QWidget* widget);
+    StateFrozenScreenDetect stateScreenCheck;
 
 private slots:
     void on_pushButton_to_select_product_page_clicked();
     void onIdlePageTypeSelectorTimerTick();
     void onPollTemperatureTimerTick();
+    void onTestForFrozenScreenTick();
 
     void on_pushButton_test_clicked();
 

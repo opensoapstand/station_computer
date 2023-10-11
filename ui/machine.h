@@ -2,8 +2,8 @@
 #define MACHINE_H
 
 #include "df_util.h"
-#include "dbmanager.h"
 #include "product.h"
+#include "dbmanager.h"
 
 typedef enum UserRole
 {
@@ -25,7 +25,7 @@ typedef enum StateCoupon
     network_error
 } StateCoupon;
 
-class product; //  forward declaration.
+ class product; //  forward declaration.
 
 class machine : public QObject
 {
@@ -37,6 +37,7 @@ public:
     ~machine();
     void loadParametersFromDb();
     void setDb(DbManager *db);
+    void initMachine();
 
 
 
@@ -79,7 +80,7 @@ public:
 
     bool getSlotEnabled(int slot);
     void setSlotEnabled(int slot, bool isEnabled);
-    QString getIdlePageType();
+
 
     int getSlotCount();
     bool compareSlotCountToMaxSlotCount(int slot_count);
@@ -115,6 +116,38 @@ public:
     double getDiscountPercentageFraction();
     double getDiscountAmount(double price);
     double getPriceWithDiscount(double price);
+product* getProduct(int slot);
+    void loadDynamicContent();
+    QString getCSS(QString cssName);
+    void addCssClassToObject(QWidget *element, QString classname, QString css_file_name);
+    void setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier);
+    void setTemplateTextToObject(QWidget *p_element);
+    void setTextToObject(QWidget *p_element, QString text);
+    QString getCombinedElementPageAndName(QWidget *p_element);
+    QString getTemplateTextByElementNameAndPage(QWidget *p_element);
+    QString getTemplateTextByElementNameAndPageAndIdentifier(QWidget *p_element, QString identifier);
+    QString getTemplateTextByPage(QWidget *page, QString identifier);
+    QString getTemplateText(QString textName_to_find);
+    void loadTextsFromTemplateCsv();
+    void loadTextsFromDefaultCsv();
+    void loadElementDynamicPropertiesFromTemplate();
+    void loadElementDynamicPropertiesFromDefaultTemplate();
+
+    product *selectedProduct;
+        // QStringList getChildNames(QObject *parent);
+
+
+    void addPictureToLabel(QLabel *label, QString picturePath);
+    void addPictureToButton(QPushButton *button, QString picturePath);
+    void addCustomerLogoToLabel(QLabel *label);
+    void setBackgroundPictureFromTemplateToPage(QWidget *page, QString imageName);
+    void setBackgroundPictureToQWidget(QWidget *page, QString imageName);
+    void pageTransition(QWidget *pageToHide, QWidget *pageToShow);
+        void applyPropertiesToQWidget(QWidget* widget);
+    void applyDynamicPropertiesFromTemplateToWidgetChildren(QWidget* widget);
+
+    
+
 
     QString m_machine_id;
     QString m_soapstand_customer_id;
@@ -156,6 +189,12 @@ public:
     // QStringList getChildNames(QObject *parent);
 
     void loadElementPropertiesFile();
+        QString getIdlePageType();
+
+    void setSelectedProduct(uint8_t slot);
+    product *getSelectedProduct();
+
+    QStringList getChildNames(QObject *parent);
 
 public slots:
 
@@ -163,6 +202,7 @@ signals:
 
 private:
     product* m_products;
+    //
     QTime temperatureHighTime;
     bool temperatureWasHigh = false;
     StateCoupon m_stateCoupon;

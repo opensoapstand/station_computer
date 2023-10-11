@@ -147,9 +147,9 @@ void page_payment_tap_tcp::showEvent(QShowEvent *event)
     p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
-    p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+    p_page_idle->thisMachine.applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
     
-    QString styleSheet = p_page_idle->getCSS(PAGE_TAP_PAYMENT_CSS);
+    QString styleSheet = p_page_idle->thisMachine.getCSS(PAGE_TAP_PAYMENT_CSS);
 
     ui->pushButton_previous_page->setStyleSheet(styleSheet);
 
@@ -158,13 +158,13 @@ void page_payment_tap_tcp::showEvent(QShowEvent *event)
     ui->pushButton_to_idle->setStyleSheet(styleSheet);
     ui->pushButton_payment_bypass->setStyleSheet(styleSheet);
 
-    p_page_idle->setTemplateTextToObject(ui->pushButton_previous_page);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->pushButton_previous_page);
 
     ui->pushButton_payment_bypass->setEnabled(false);
 
     state_tap_payment = s_tap_init;
     ui->pushButton_payment_bypass->setEnabled(false);
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY);
+    p_page_idle->thisMachine.setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY);
     ui->productLabel->hide();
     ui->order_drink_amount->hide();
 
@@ -176,7 +176,7 @@ void page_payment_tap_tcp::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
 
     resetPaymentPage();
-    p_page_idle->pageTransition(this, pageToShow);
+    p_page_idle->thisMachine.pageTransition(this, pageToShow);
 }
 
 bool page_payment_tap_tcp::setpaymentProcess(bool status)
@@ -230,7 +230,7 @@ void page_payment_tap_tcp::startPaymentProcess()
         dataThread = std::thread(receiveAuthorizationThread, std::stoi(socketAddr));
         dataThread.detach();
         checkPacketReceivedTimer->start();
-        QString base_text = p_page_idle->getTemplateTextByElementNameAndPage(ui->preauthLabel);
+        QString base_text = p_page_idle->thisMachine.getTemplateTextByElementNameAndPage(ui->preauthLabel);
         ui->preauthLabel->setText(base_text.arg(p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true)));
         ui->order_total_amount->setText("$ " + QString::number(price, 'f', 2));
     }
@@ -264,9 +264,9 @@ void page_payment_tap_tcp::check_card_tapped()
 
     if (isPacketReceived && card_tap_status == "Success")
     {
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY);
+        p_page_idle->thisMachine.setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY);
         qDebug() << "Packet received true";
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_title, "processing");
+        p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->label_title, "processing");
 
         // ui->label_title->setText("Processing Payment");
         // ui->label_title->show();
@@ -299,14 +299,14 @@ void page_payment_tap_tcp::authorized_transaction(std::map<std::string, std::str
     if (responseObj["RESULT"] == "APPROVED")
     {
 
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
+        p_page_idle->thisMachine.setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
         CTROUTD = responseObj["CTROUTD"];
         AUTH_CODE = responseObj["AUTH_CODE"];
         hideCurrentPageAndShowProvided(p_page_dispense);
     }
     else if (responseObj["RESULT"] == "APPROVED/STORED")
     {
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
+        p_page_idle->thisMachine.setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
         CTROUTD = responseObj["CTROUTD"];
         AUTH_CODE = responseObj["AUTH_CODE"];
         SAF_NUM = responseObj["SAF_NUM"];
@@ -315,7 +315,7 @@ void page_payment_tap_tcp::authorized_transaction(std::map<std::string, std::str
     else if (responseObj["RESULT"] == "DECLINED")
     {
 
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_FAIL);
+        p_page_idle->thisMachine.setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_FAIL);
         startPaymentProcess();
     }
 }
@@ -328,9 +328,9 @@ bool page_payment_tap_tcp::exitConfirm()
         // ARE YOU SURE YOU WANT TO EXIT?
         QMessageBox msgBox;
         msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
-        p_page_idle->addCssClassToObject(&msgBox, "msgBoxbutton msgBox", PAGE_TAP_PAYMENT_CSS);
+        p_page_idle->thisMachine.addCssClassToObject(&msgBox, "msgBoxbutton msgBox", PAGE_TAP_PAYMENT_CSS);
         QString searchString = this->objectName() + "->msgBox_cancel";
-        p_page_idle->setTextToObject(&msgBox, p_page_idle->getTemplateText(searchString));
+        p_page_idle->thisMachine.setTextToObject(&msgBox, p_page_idle->thisMachine.getTemplateText(searchString));
     
         msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         int ret = msgBox.exec();

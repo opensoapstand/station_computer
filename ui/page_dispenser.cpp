@@ -87,7 +87,7 @@ void page_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToShow)
         msgBox_problems->deleteLater();
     }
 
-    p_page_idle->pageTransition(this, pageToShow);
+    p_page_idle->thisMachine.pageTransition(this, pageToShow);
 }
 void page_dispenser::showEvent(QShowEvent *event)
 {
@@ -95,16 +95,16 @@ void page_dispenser::showEvent(QShowEvent *event)
     qDebug() << "Selected slot: " << QString::number(p_page_idle->selectedProduct->getSlot());
     QWidget::showEvent(event);
 
-    p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+    p_page_idle->thisMachine.applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
 
-    p_page_idle->setTemplateTextToObject(ui->pushButton_problems);
-    p_page_idle->setTemplateTextToObject(ui->label_to_refill);
-    p_page_idle->setTemplateTextToObject(ui->label_instructions_container);
-    p_page_idle->setTemplateTextToObject(ui->label_press);
-    p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_abort, "abort");
-    p_page_idle->setTemplateTextToObject(ui->label_volume_dispensed);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->pushButton_problems);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->label_to_refill);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->label_instructions_container);
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->label_press);
+    p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->pushButton_abort, "abort");
+    p_page_idle->thisMachine.setTemplateTextToObject(ui->label_volume_dispensed);
 
-    QString styleSheet = p_page_idle->getCSS(PAGE_DISPENSER_CSS);
+    QString styleSheet = p_page_idle->thisMachine.getCSS(PAGE_DISPENSER_CSS);
     ui->pushButton_problems->setProperty("class", "normal");
     ui->label_volume_dispensed->setProperty("class", "normal");
     ui->pushButton_problems->setStyleSheet(styleSheet);
@@ -140,19 +140,19 @@ void page_dispenser::showEvent(QShowEvent *event)
     if (p_page_idle->thisMachine.getSlotCount() == 1)
     {
         // single spout
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
+        p_page_idle->thisMachine.setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
     }
     else
     {
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH);
+        p_page_idle->thisMachine.setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH);
     }
 
-    // p_page_idle->addPictureToLabel(ui->label_indicate_active_spout, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_DOWN));
+    // p_page_idle->thisMachine.addPictureToLabel(ui->label_indicate_active_spout, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_DOWN));
 
     if (p_page_idle->thisMachine.isDispenseAreaBelowElseBesideScreen())
     {
         // show on bottom
-        p_page_idle->addPictureToLabel(ui->label_indicate_active_spout, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_DOWN));
+        p_page_idle->thisMachine.addPictureToLabel(ui->label_indicate_active_spout, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_DOWN));
         
         // indicate spout position with arrow.
         // ui->label_indicate_active_spout->move( (p_page_idle->selectedProduct->getSlot() -1) * 290 + 10, ui->label_indicate_active_spout->y()); // although it is well spaced out in theory, in reality, spout 2 and 3 are not clearly distinguished.
@@ -177,15 +177,15 @@ void page_dispenser::showEvent(QShowEvent *event)
     else
     {
         // show on side
-        p_page_idle->addPictureToLabel(ui->label_indicate_active_spout, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_RIGHT));
+        p_page_idle->thisMachine.addPictureToLabel(ui->label_indicate_active_spout, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_RIGHT));
     }
 
-    p_page_idle->addCustomerLogoToLabel(ui->label_logo);
+    p_page_idle->thisMachine.addCustomerLogoToLabel(ui->label_logo);
     ui->label_logo->hide();
 
-    p_page_idle->addPictureToLabel(ui->label_background_during_dispense_animation, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));
+    p_page_idle->thisMachine.addPictureToLabel(ui->label_background_during_dispense_animation, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));
 
-    p_page_idle->addPictureToLabel(ui->label_moving_bottle_fill_effect, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_FILL_ANIMATION));
+    p_page_idle->thisMachine.addPictureToLabel(ui->label_moving_bottle_fill_effect, p_page_idle->thisMachine.getTemplatePathFromName(PAGE_DISPENSE_FILL_ANIMATION));
 
     ui->pushButton_abort->show();
     ui->label_press->show();
@@ -315,8 +315,8 @@ void page_dispenser::dispensing_end_admin()
     }
     if (cancelPayment && (paymentMethod == PAYMENT_TAP_TCP || paymentMethod== PAYMENT_TAP_SERIAL))
     {
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_finishTransactionMessage, "no_pay");
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
+        p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->label_finishTransactionMessage, "no_pay");
+        p_page_idle->thisMachine.setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         std::map<std::string, std::string> response;
         qDebug() << "dispense end: tap payment No volume dispensed.";
         // REVERSE PAYMENT.
@@ -348,9 +348,9 @@ void page_dispenser::dispensing_end_admin()
     else if (((paymentMethod == PAYMENT_TAP_TCP || paymentMethod== PAYMENT_TAP_SERIAL)))
     {
 
-        QString base_text = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_finishTransactionMessage, "display_price");
+        QString base_text = p_page_idle->thisMachine.getTemplateTextByElementNameAndPageAndIdentifier(ui->label_finishTransactionMessage, "display_price");
         ui->label_finishTransactionMessage->setText(base_text.arg(QString::number(current_price, 'f', 2))); // will replace %1 character in string by the provide text
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
+        p_page_idle->thisMachine.setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         if(paymentMethod == PAYMENT_TAP_TCP){
              if (CTROUTD != "")
                 {
@@ -490,26 +490,26 @@ void page_dispenser::fsmReceiveDispenserStatus(QString status)
 
         if (dispenseStatus == "SLOT_STATE_WARNING_PRIMING")
         {
-            p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "priming");
-            p_page_idle->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
+            p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "priming");
+            p_page_idle->thisMachine.addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
             ui->label_dispense_message->show();
         }
         else if (dispenseStatus == "SLOT_STATE_PROBLEM_EMPTY")
         {
-            p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "out_of_stock");
-            p_page_idle->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
+            p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "out_of_stock");
+            p_page_idle->thisMachine.addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
             p_page_idle->thisMachine.setSlotEnabled(p_page_idle->selectedProduct->getSlot(), false);
             ui->label_dispense_message->show();
         }
         else if (dispenseStatus == "SLOT_STATE_PROBLEM_NEEDS_ATTENTION")
         {
-            p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "needs_attention");
-            p_page_idle->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
+            p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "needs_attention");
+            p_page_idle->thisMachine.addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
             ui->label_dispense_message->show();
         }
         else if (dispenseStatus == "SLOT_STATE_AVAILABLE")
         {
-            p_page_idle->addCssClassToObject(ui->pushButton_problems, "normal", PAGE_DISPENSER_CSS);
+            p_page_idle->thisMachine.addCssClassToObject(ui->pushButton_problems, "normal", PAGE_DISPENSER_CSS);
             // normal status
             // ui->pushButton_problems->hide();
             ui->label_dispense_message->hide();
@@ -556,7 +556,7 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
         ui->label_to_refill->hide();
         ui->label_instructions_container->hide();
 
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->pushButton_abort, "complete");
+        p_page_idle->thisMachine.setTemplateTextWithIdentifierToObject(ui->pushButton_abort, "complete");
         ui->label_moving_bottle_fill_effect->show();
         ui->pushButton_abort->raise();
         ui->pushButton_problems->raise();
@@ -635,15 +635,15 @@ void page_dispenser::on_pushButton_abort_clicked()
         if (paymentMethod == PAYMENT_QR || paymentMethod == PAYMENT_TAP_TCP || paymentMethod== PAYMENT_TAP_SERIAL )
         {
             QString searchString = this->objectName() + "->" + msgBox_abort->objectName() + "->" + "qr_tap";
-            p_page_idle->setTextToObject(msgBox_abort, p_page_idle->getTemplateText(searchString));
+            p_page_idle->thisMachine.setTextToObject(msgBox_abort, p_page_idle->thisMachine.getTemplateText(searchString));
         }
         else
         {
             QString searchString = this->objectName() + "->" + msgBox_abort->objectName() + "->" + "default";
-            p_page_idle->setTextToObject(msgBox_abort, p_page_idle->getTemplateText(searchString));
+            p_page_idle->thisMachine.setTextToObject(msgBox_abort, p_page_idle->thisMachine.getTemplateText(searchString));
         }
 
-        p_page_idle->addCssClassToObject(msgBox_abort, "msgBoxbutton msgBox", PAGE_DISPENSER_CSS);
+        p_page_idle->thisMachine.addCssClassToObject(msgBox_abort, "msgBoxbutton msgBox", PAGE_DISPENSER_CSS);
         msgBox_abort->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 
         int ret = msgBox_abort->exec();
@@ -679,20 +679,20 @@ void page_dispenser::on_pushButton_problems_clicked()
     QString chosenTemplate = p_page_idle->thisMachine.getTemplateName();
     if(chosenTemplate == "good-filling"){
         QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "shopify";
-        p_page_idle->setTextToObject(msgBox_problems, p_page_idle->getTemplateText(searchString));
+        p_page_idle->thisMachine.setTextToObject(msgBox_problems, p_page_idle->thisMachine.getTemplateText(searchString));
     }
     else if (paymentMethod == "qr" || paymentMethod == PAYMENT_TAP_TCP || paymentMethod== PAYMENT_TAP_SERIAL)
     {
         QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "qr_tap";
-        p_page_idle->setTextToObject(msgBox_problems, p_page_idle->getTemplateText(searchString));
+        p_page_idle->thisMachine.setTextToObject(msgBox_problems, p_page_idle->thisMachine.getTemplateText(searchString));
     }
     else
     {
         QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "default";
-        p_page_idle->setTextToObject(msgBox_problems, p_page_idle->getTemplateText(searchString));
+        p_page_idle->thisMachine.setTextToObject(msgBox_problems, p_page_idle->thisMachine.getTemplateText(searchString));
     }
 
-    p_page_idle->addCssClassToObject(msgBox_problems, "msgBoxbutton msgBox", PAGE_DISPENSER_CSS);
+    p_page_idle->thisMachine.addCssClassToObject(msgBox_problems, "msgBoxbutton msgBox", PAGE_DISPENSER_CSS);
     msgBox_problems->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 
     int ret = msgBox_problems->exec();

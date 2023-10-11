@@ -73,7 +73,7 @@ page_dispenser->label_press,press and hold <br>the button
 page_dispenser->pushButton_problems,Tap here if you notice a problem.
 page_dispenser->pushButton_abort->abort,Cancel
 page_dispenser->pushButton_abort->complete,Complete
-page_dispenser->label_finishTransactionMessage->no_pay,Cancelling payment
+page_dispenser->label_finishTransactionMessage->no_pay,Please wait for some moments we are working on your refund
 page_dispenser->label_finishTransactionMessage->display_price,Capturing payment: $%1
 page_dispenser->label_dispense_message->priming,Please keep the button pressed.<br>for up to 15 seconds<br>before the product starts dispensing.
 page_dispenser->label_dispense_message->out_of_stock,It appears we're out of stock.
@@ -149,6 +149,7 @@ page_payment_tap_tcp->preauthLabel,You are being pre-authorized for maximum volu
 #################### page_payment_tap_serial
 page_payment_tap_serial->pushButton_previous_page,<- back
 page_payment_tap_serial->label_title->processing,Processing Payment
+page_payment_tap_serial->animated_Label->cancel,Please wait a moment to choose another product
 page_payment_tap_serial->msgBox_cancel,<p align=center><br><br>Cancel transaction and exit page?<br><br>It can take up to 30 seconds for dispensing to start after a payment is completed. <br></p>
 page_payment_tap_serial->preauthLabel,You are being pre-authorized for maximum volume %1 with amount of
 

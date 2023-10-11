@@ -173,6 +173,9 @@ color: #58595B;</string>
    <property name="text">
     <string/>
    </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
   </widget>
   <widget class="QLabel" name="preauthLabel">
    <property name="geometry">

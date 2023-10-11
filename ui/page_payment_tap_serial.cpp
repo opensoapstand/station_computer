@@ -35,16 +35,14 @@ page_payment_tap_serial::page_payment_tap_serial(QWidget *parent) : QWidget(pare
     ui->order_total_amount->hide();
 }
 
+
 void page_payment_tap_serial::stopPayTimers()
 {
-
-    if (readTimer != nullptr)
-    {
-        qDebug() << "cancel readTimer" << endl;
+    if (readTimer && readTimer->isActive()) {
+        qDebug() << "Cancel readTimer" << endl;
         readTimer->stop();
     }
 }
-
 /*
  * Page Tracking reference
  */
@@ -66,7 +64,7 @@ page_payment_tap_serial::~page_payment_tap_serial()
 
 void page_payment_tap_serial::on_pushButton_payment_bypass_clicked()
 {
-    hideCurrentPageAndShowProvided(p_page_dispense);
+    hideCurrentPageAndShowProvided(p_page_dispense,false);
 }
 
 /*Cancel any previous payment*/
@@ -75,6 +73,9 @@ void page_payment_tap_serial::cancelPayment()
     com.flushSerial();
     /*Cancel any previous payment*/
     pktToSend = paymentPacket.purchaseCancelPacket();
+    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_CANCEL);
+    p_page_idle->setTemplateTextWithIdentifierToObject(ui->animated_Label, "cancel");
+    
     if (sendToUX410())
     {
         waitForUX410();
@@ -91,7 +92,7 @@ void page_payment_tap_serial::on_pushButton_previous_page_clicked()
 
     if (exitConfirm())
     {
-        hideCurrentPageAndShowProvided(p_page_product);
+        hideCurrentPageAndShowProvided(p_page_product,true);
     }
 }
 
@@ -114,6 +115,8 @@ void page_payment_tap_serial::showEvent(QShowEvent *event)
     ui->pushButton_payment_bypass->setProperty("class", "invisible_button");
     ui->pushButton_to_idle->setStyleSheet(styleSheet);
     ui->pushButton_payment_bypass->setStyleSheet(styleSheet);
+    ui->animated_Label->setProperty("class", "animated_Label");
+    ui->animated_Label->setStyleSheet(styleSheet);
 
     p_page_idle->setTemplateTextToObject(ui->pushButton_previous_page);
 
@@ -149,6 +152,7 @@ bool page_payment_tap_serial::setpaymentProcess(bool status)
 {
     return (paymentProcessing = status);
 }
+
 
 bool page_payment_tap_serial::exitConfirm()
 {
@@ -190,32 +194,32 @@ void page_payment_tap_serial::on_pushButton_to_idle_clicked()
 {
     if (exitConfirm())
     {
-        hideCurrentPageAndShowProvided(p_page_help);
+        hideCurrentPageAndShowProvided(p_page_help,true);
     }
 }
 
-void page_payment_tap_serial::hideCurrentPageAndShowProvided(QWidget *pageToShow)
+void page_payment_tap_serial::hideCurrentPageAndShowProvided(QWidget *pageToShow, bool cancelTapPayment)
 {
-
-    resetPaymentPage();
+    resetPaymentPage(cancelTapPayment);
     p_page_idle->pageTransition(this, pageToShow);
 }
 
 void page_payment_tap_serial::idlePaymentTimeout()
 {
-    resetPaymentPage();
+    resetPaymentPage(true);
 }
 
-void page_payment_tap_serial::resetPaymentPage()
+void page_payment_tap_serial::resetPaymentPage(bool cancelTapPayment)
 {
     stopPayTimers();
-    readTimer->stop();
-    cancelPayment();
+    if(cancelTapPayment){
+        readTimer->stop();
+        cancelPayment();
+    }
 }
 
 bool page_payment_tap_serial::tap_serial_initiate()
 {
-
     while (!paymentConnected)
     {
         paymentConnected = com.page_init();
@@ -296,6 +300,7 @@ bool page_payment_tap_serial::tap_serial_initiate()
     com.flushSerial();
     /*Cancel any previous payment*/
     pktToSend = paymentPacket.purchaseCancelPacket();
+
     if (sendToUX410())
     {
         waitForUX410();
@@ -369,11 +374,12 @@ void page_payment_tap_serial::readTimer_loop()
     // response = getResponse();
     qDebug() << "Packet sent for payment";
     if (sendToUX410())
-    {
+    {   
         waitForUX410();
         while (!response)
         {
             response = getResponse();
+            
             QCoreApplication::processEvents();
             if (pktResponded[0] != 0x02)
             {
@@ -400,16 +406,20 @@ void page_payment_tap_serial::readTimer_loop()
 
                     if (pktResponded[19] == 0x41)
                     { // Host Response 41 = A "Approved"
+                        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
+
                         purchaseEnable = true;
                         approved = true;
                         cout << "Approval Packet 41" << endl;
                         paymentPktInfo.transactionID(readPacket.getPacket().data);
                         paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
                         response = true;
-                        hideCurrentPageAndShowProvided(p_page_dispense);
+                        hideCurrentPageAndShowProvided(p_page_dispense,false);
                     }
                     else if (pktResponded[19] == 0x44)
                     { // Host Response 44 = D "Declined"
+                        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_FAIL);
+
                         purchaseEnable = true;
                         approved = false;
                         cout << "Declined Packet 44" << endl;

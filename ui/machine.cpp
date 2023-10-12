@@ -4,6 +4,9 @@
 #include "dbmanager.h"
 #include "machine.h"
 #include "product.h"
+#include <QtWidgets>
+#include <map>
+#include <fstream>
 
 machine::machine()
 {
@@ -19,21 +22,39 @@ machine::~machine()
 {
 }
 
-void machine::initMachine(){
-    
-    
-    
-    qDebug() << "TESTTTTTTT" <<getSlotCount();
+void machine::initMachine()
+{
+    loadParametersFromDb();
+    qDebug() << "TESTTTTTTT" << getSlotCount();
     for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
     {
-        qDebug() << "chckckckckck" << slot_index;
+        qDebug() << "aWFEFW";
         m_products[slot_index].setSlot(slot_index + 1);
-        m_products[slot_index].setMachine(&thisMachine);
-        m_products[slot_index].setDb(g_database);
+        qDebug() << "bWWW";
+        m_products[slot_index].setMachine(this);
+        qDebug() << "CEFWEF";
+        m_products[slot_index].setDb(m_db);
+        qDebug() << "DWEFWFFFF";
+    }
+    loadDynamicContent();
+}
+
+void machine::loadDynamicContent()
+{
+    // load global machine data
+    loadParametersFromDb();
+
+    for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
+    {
+        m_products[slot_index].loadProductProperties();
     }
 
-    // thisMachine.setProducts(products);
+    loadTextsFromTemplateCsv();                        // dynamic content (text by template)
+    loadTextsFromDefaultCsv();                         // dynamic styling (css by template)
+    loadElementDynamicPropertiesFromTemplate();        // dynamic elements (position, visibility)
+    loadElementDynamicPropertiesFromDefaultTemplate(); // dynamic elements (position, visibility)
 }
+
 void machine::setDb(DbManager *db)
 {
     m_db = db;
@@ -44,18 +65,26 @@ StateCoupon machine::getCouponState()
     return m_stateCoupon;
 }
 
-product* getProduct(int slot){
-    if (slot == 0){
+product *machine::getProduct(int slot)
+{
+    if (slot == 0)
+    {
 
-    qDebug()<<"ERROR: slot numbers start from 1!!!";
+        qDebug() << "ERROR: slot numbers start from 1!!!";
     }
-    return &m_products[slot-1];
+    return &m_products[slot - 1];
+}
+
+void machine::setSelectedProduct(uint8_t slot)
+{
+    selectedProduct = &m_products[slot - 1];
 }
 
 void machine::setProducts(product *products)
 {
     m_products = products;
 }
+
 bool machine::isDispenseAreaBelowElseBesideScreen()
 
 {
@@ -93,39 +122,47 @@ bool machine::isAelenPillarElseSoapStand()
 
 int machine::getSlotCount()
 {
-    //check hardwarenumber
+    // check hardwarenumber
     int slot_count;
-    if (m_hardware_version.startsWith("AP")){
-        if(m_hardware_version == "AP1"){
+    if (m_hardware_version.startsWith("AP"))
+    {
+        if (m_hardware_version == "AP1")
+        {
             slot_count = 4;
-        } 
-        else if (m_hardware_version == "AP1.1"){
+        }
+        else if (m_hardware_version == "AP1.1")
+        {
             slot_count = 4;
-        } 
-        else{
+        }
+        else
+        {
             slot_count = 8;
         }
     }
     else if (m_hardware_version.startsWith("SS"))
     {
-        if(m_hardware_version == "SS1"){
+        if (m_hardware_version == "SS1")
+        {
             slot_count = 4;
         }
-        else if (m_hardware_version == "SS2"){
+        else if (m_hardware_version == "SS2")
+        {
             slot_count = 4;
-        } 
-        else{
+        }
+        else
+        {
             slot_count = 8;
         }
     }
     qDebug() << "SLOT COUNT: " << slot_count;
-    if(compareSlotCountToMaxSlotCount(slot_count)){
+    if (compareSlotCountToMaxSlotCount(slot_count))
+    {
         qDebug() << "ERROR - Slot Count:" << slot_count << " exceeded MAX_SLOT_COUNT:" << MAX_SLOT_COUNT << "threshold";
     }
     return slot_count;
     // dispensers is the same as slots.
 
-    //return m_dispense_buttons_count % 1000;
+    // return m_dispense_buttons_count % 1000;
 }
 
 bool machine::compareSlotCountToMaxSlotCount(int slot_count)
@@ -343,7 +380,8 @@ void machine::checkForHighTemperatureAndDisableProducts()
             for (uint8_t slot_index = 0; slot_index < getSlotCount(); slot_index++)
             {
                 qDebug() << "Temperature too high for one hour, block all slots.";
-                m_products[slot_index].setSlotEnabled(true, "SLOT_STATE_DISABLED_COMING_SOON");
+                setSlotEnabled(slot_index+ 1, true, "SLOT_STATE_DISABLED_COMING_SOON");
+                
             }
         }
     }
@@ -500,10 +538,15 @@ void machine::setRole(UserRole role)
     }
 }
 
-void machine::setStatusText(int slot, bool isSlotEnabled, QString status)
+void machine::setStatusText(int slot, QString status)
 {
     QString column = QString("status_text_slot_%1").arg(slot);
     m_db->updateTableMachineWithText(column, status);
+}
+
+void machine::setSlotEnabled(int slot, bool isEnabled, QString statusText){
+    setSlotEnabled(slot, isEnabled);
+    setStatusText(slot, statusText);
 }
 
 QString machine::getStatusText(int slot)
@@ -537,6 +580,8 @@ bool machine::slotNumberValidityCheck(int slot)
     return valid;
 }
 
+
+
 void machine::setSlotEnabled(int slot, bool isEnabled)
 {
     // do this through product.cpp, as this should have been a part of products table
@@ -555,23 +600,6 @@ bool machine::getSlotEnabled(int slot)
 QString machine::getHelpPageHtmlText()
 {
     return m_help_text_html;
-}
-
-
-
-void machine::loadDynamicContent()
-{
-    // load global machine data
-    loadParametersFromDb();
-    // load slot data
-    for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
-    {
-        m_products[slot_index].loadProductProperties();
-    }
-    loadTextsFromTemplateCsv();                        // dynamic content (text by template)
-    loadTextsFromDefaultCsv();                         // dynamic styling (css by template)
-    loadElementDynamicPropertiesFromTemplate();        // dynamic elements (position, visibility)
-    loadElementDynamicPropertiesFromDefaultTemplate(); // dynamic elements (position, visibility)
 }
 
 void machine::loadParametersFromDb()
@@ -613,17 +641,10 @@ void machine::loadParametersFromDb()
     qDebug() << "Template folder from db : " << getTemplateFolder();
 }
 
-
-
 // for products.cpp
 product *machine::getSelectedProduct()
 {
     return selectedProduct;
-}
-
-void machine::setSelectedProduct(uint8_t slot)
-{
-    selectedProduct = &products[slot - 1];
 }
 
 QString machine::getIdlePageType()
@@ -669,11 +690,6 @@ std::map<QString, QString> machine::getCouponConditions()
     myMap["m_max_dollar_amount_discount"] = m_max_dollar_amount_discount;
     return myMap;
 }
-
-
-
-
-
 
 void machine::addCustomerLogoToLabel(QLabel *label)
 {
@@ -838,7 +854,6 @@ QString machine::getTemplateTextByPage(QWidget *page, QString identifier)
 
 QString machine::getTemplateText(QString textName_to_find)
 {
-
     std::string key = textName_to_find.toStdString();
     auto it = textNameToTextMap_template.find(QString::fromStdString(key));
     QString retval;

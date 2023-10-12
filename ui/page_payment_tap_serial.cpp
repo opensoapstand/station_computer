@@ -360,10 +360,10 @@ bool page_payment_tap_serial::waitForUX410()
 
 void page_payment_tap_serial::readTimer_loop()
 {   
-    double originalPrice = p_page_idle->selectedProduct->getBasePrice();
-    if (p_page_idle->selectedProduct->getSizeAsChar() == 'c')
+    double originalPrice = p_page_idle->thisMachine.selectedProduct->getBasePrice();
+    if (p_page_idle->thisMachine.selectedProduct->getSizeAsChar() == 'c')
     {
-        originalPrice = p_page_idle->selectedProduct->getPriceCustom();
+        originalPrice = p_page_idle->thisMachine.selectedProduct->getPriceCustom();
     }
     pktToSend = paymentPacket.purchasePacket((QString::number(p_page_idle->thisMachine.getPriceWithDiscount(originalPrice), 'f', 2)).QString::toStdString());
     // response = getResponse();

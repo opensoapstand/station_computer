@@ -97,31 +97,31 @@ int product::getBiggestEnabledSizeIndex()
     return maxSize;
 }
 
-void product::setSlotEnabled(bool isEnabled)
-{
-    thisMachine->setSlotEnabled(getSlot(), isEnabled);
-}
+// void product::setSlotEnabled(bool isEnabled)
+// {
+//     thisMachine->setSlotEnabled(getSlot(), isEnabled);
+// }
 
-void product::setSlotEnabled(bool isEnabled, QString statusText)
-{
-    thisMachine->setSlotEnabled(getSlot(), isEnabled);
-    setStatusText(statusText);
-}
+// void product::setSlotEnabled(bool isEnabled, QString statusText)
+// {
+//     thisMachine->setSlotEnabled(getSlot(), isEnabled);
+//     setStatusText(statusText);
+// }
 
-bool product::getSlotEnabled()
-{
-    return thisMachine->getSlotEnabled(getSlot());
-}
+// bool product::getSlotEnabled()
+// {
+//     return thisMachine->getSlotEnabled(getSlot());
+// }
 
-void product::setStatusText(QString status)
-{
-    thisMachine->setStatusText(getSlot(), getSlotEnabled(), status);
-}
+// void product::setStatusText(QString status)
+// {
+//     thisMachine->setStatusText(getSlot(), getSlotEnabled(), status);
+// }
 
-QString product::getStatusText()
-{
-    return thisMachine->getStatusText(getSlot());
-}
+// QString product::getStatusText()
+// {
+//     return thisMachine->getStatusText(getSlot());
+// }
 
 bool product::toggleSizeEnabled(int size)
 {
@@ -150,14 +150,16 @@ int product::getSlot()
 
 void product::setSlot(int slot)
 {
-    if (slot > 0 && slot <= thisMachine->getSlotCount())
-    {
+    qInfo() << "JORDAN HELLO" ;
+    // if (slot > 0 && slot <= thisMachine->getSlotCount())
+    // {
         m_dispenser_slot = slot;
-    }
-    else
-    {
-        qInfo() << "OUT OF OPTION RANGE!" << slot;
-    }
+    // }
+    // else
+    // {
+    //     qInfo() << "OUT OF OPTION RANGE!" << slot;
+    // }
+    qInfo() << "JORDAN BYYYEEE" ;
 }
 
 int product::getSize()
@@ -180,11 +182,11 @@ void product::setBiggestEnabledSizeIndex()
 // SLOTS Section
 bool product::is_valid_size_selected()
 {
-    if (!(m_dispenser_slot >= OPTION_SLOT_INVALID && m_dispenser_slot <= thisMachine->getSlotCount()))
-    {
+    // if (!(m_dispenser_slot >= OPTION_SLOT_INVALID && m_dispenser_slot <= thisMachine->getSlotCount()))
+    // {
         qInfo() << "ERROR: no slot set. " << m_dispenser_slot;
         return false;
-    }
+    // }
     if (!(m_selected_size >= 0 && m_selected_size <= SIZES_COUNT))
     {
         qInfo() << "ERROR: no size set. " << m_selected_size;

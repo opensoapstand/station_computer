@@ -68,7 +68,7 @@ public:
     
 
 
-    product *selectedProduct;
+    // product *selectedProduct;
 
     machine thisMachine;
     DbManager *g_database;
@@ -91,7 +91,7 @@ public:
 
     void registerUserInteraction(QWidget *page);
 
-    void loadTextsFromCsv(QString csv_path, std::map<QString, QString> *dictionary);
+
 
     QTimer *idlePageTypeSelectorTimer;
     int _idlePageTypeSelectorTimerTimeoutSec;
@@ -115,13 +115,8 @@ private slots:
     void on_pushButton_test_clicked();
 
 private:
-    std::map<QString, QString> textNameToTextMap_template;
-    std::map<QString, QString> textNameToTextMap_default;
-    std::map<QString, QString> elementDynamicPropertiesMap_default;
-    std::map<QString, QString> elementDynamicPropertiesMap_template;
 
 
-    QString m_templatePath;
     Ui::page_idle *ui;
     page_select_product *p_pageSelectProduct;
     page_maintenance *p_page_maintenance;

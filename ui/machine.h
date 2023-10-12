@@ -25,7 +25,7 @@ typedef enum StateCoupon
     network_error
 } StateCoupon;
 
- class product; //  forward declaration.
+class product; //  forward declaration.
 
 class machine : public QObject
 {
@@ -39,12 +39,10 @@ public:
     void setDb(DbManager *db);
     void initMachine();
 
-
-
     void dispenseButtonLightsAnimateState(bool animateElseOff);
     bool slotNumberValidityCheck(int slot);
     QString getStatusText(int slot);
-    void setStatusText(int slot, bool isSlotEnabled, QString status);
+    void setStatusText(int slot, QString status);
     void loadProductPropertiesFromProductsFile(QString soapstand_product_number, QString *name, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui);
 
     QString getPumpId(int slot);
@@ -80,6 +78,7 @@ public:
 
     bool getSlotEnabled(int slot);
     void setSlotEnabled(int slot, bool isEnabled);
+    void setSlotEnabled(int slot, bool isEnabled, QString statusText);
 
 
     int getSlotCount();
@@ -88,7 +87,7 @@ public:
     bool hasReceiptPrinter();
     void getPrinterStatusFromDb(bool *isOnline, bool *hasPaper);
     void getTemperatureFromController();
-    // void getTemperature2FromController(); // not needed, all available tempertures are sent with one request to controller. 
+    // void getTemperature2FromController(); // not needed, all available tempertures are sent with one request to controller.
     void writeTemperatureToDb(double temperature_1, double temperature_2);
     // void writeTemperature2ToDb(double temperature2);
     double getTemperature_1();
@@ -106,17 +105,16 @@ public:
     QString getPromoCode();
 
     void setCouponConditions(QString couponConditions);
-    std::map<QString , QString > getCouponConditions();
+    std::map<QString, QString> getCouponConditions();
 
-
-    void setProducts(product* products);
+    void setProducts(product *products);
     QString m_session_id;
 
     void setDiscountPercentageFraction(double percentageFraction);
     double getDiscountPercentageFraction();
     double getDiscountAmount(double price);
     double getPriceWithDiscount(double price);
-product* getProduct(int slot);
+    product *getProduct(int slot);
     void loadDynamicContent();
     QString getCSS(QString cssName);
     void addCssClassToObject(QWidget *element, QString classname, QString css_file_name);
@@ -134,8 +132,7 @@ product* getProduct(int slot);
     void loadElementDynamicPropertiesFromDefaultTemplate();
 
     product *selectedProduct;
-        // QStringList getChildNames(QObject *parent);
-
+    // QStringList getChildNames(QObject *parent);
 
     void addPictureToLabel(QLabel *label, QString picturePath);
     void addPictureToButton(QPushButton *button, QString picturePath);
@@ -143,11 +140,8 @@ product* getProduct(int slot);
     void setBackgroundPictureFromTemplateToPage(QWidget *page, QString imageName);
     void setBackgroundPictureToQWidget(QWidget *page, QString imageName);
     void pageTransition(QWidget *pageToHide, QWidget *pageToShow);
-        void applyPropertiesToQWidget(QWidget* widget);
-    void applyDynamicPropertiesFromTemplateToWidgetChildren(QWidget* widget);
-
-    
-
+    void applyPropertiesToQWidget(QWidget *widget);
+    void applyDynamicPropertiesFromTemplateToWidgetChildren(QWidget *widget);
 
     QString m_machine_id;
     QString m_soapstand_customer_id;
@@ -189,20 +183,28 @@ product* getProduct(int slot);
     // QStringList getChildNames(QObject *parent);
 
     void loadElementPropertiesFile();
-        QString getIdlePageType();
+    QString getIdlePageType();
 
     void setSelectedProduct(uint8_t slot);
     product *getSelectedProduct();
 
     QStringList getChildNames(QObject *parent);
+        void loadTextsFromCsv(QString csv_path, std::map<QString, QString> *dictionary);
+
 
 public slots:
 
 signals:
 
 private:
-    product* m_products;
-    //
+    std::map<QString, QString> textNameToTextMap_template;
+    std::map<QString, QString> textNameToTextMap_default;
+    std::map<QString, QString> elementDynamicPropertiesMap_default;
+    std::map<QString, QString> elementDynamicPropertiesMap_template;
+    QString m_templatePath;
+
+    product *m_products;
+    
     QTime temperatureHighTime;
     bool temperatureWasHigh = false;
     StateCoupon m_stateCoupon;
@@ -212,7 +214,6 @@ private:
 
     DbManager *m_db;
     UserRole active_role;
-
 
     QString m_pump_id_slots[MAX_SLOT_COUNT];
     int m_is_enabled_slots[MAX_SLOT_COUNT];

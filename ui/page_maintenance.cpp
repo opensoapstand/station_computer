@@ -114,15 +114,15 @@ void page_maintenance::showEvent(QShowEvent *event)
         pushButtons_products[slot_index]->raise();
 
         labels_product_name[slot_index]->setText(p_page_idle->thisMachine.getProduct(slot_index+1)->getProductName());
-        int product_slot_enabled = p_page_idle->thisMachine.getProduct(slot_index+1)->getSlotEnabled();
+        int product_slot_enabled = p_page_idle->thisMachine.getSlotEnabled(slot_index+1);
 
-        QString product_status_text = p_page_idle->thisMachine.getProduct(slot_index+1)->getStatusText();
+        QString product_status_text = p_page_idle->thisMachine.getStatusText( slot_index+1);
         QString status_display_text = "";
         if (!(p_page_idle->thisMachine.getProduct(slot_index+1)->isProductVolumeInContainer()))
         {
             status_display_text = p_page_idle->thisMachine.getTemplateTextByPage(this, "status_text->auto_empty");
         }
-        else if (!p_page_idle->thisMachine.getProduct(slot_index+1)->getSlotEnabled())
+        else if (!p_page_idle->thisMachine.getSlotEnabled(slot_index+1))
         {
             status_display_text = p_page_idle->thisMachine.getTemplateTextByPage(this, "status_text->not_enabled");
         }

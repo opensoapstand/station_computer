@@ -12,7 +12,7 @@
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
-#include <map>
+
 #include "page_idle.h"
 #include "ui_page_idle.h"
 #include "page_idle_products.h"
@@ -60,7 +60,7 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     testForFrozenScreenTimer = new QTimer(this);
     testForFrozenScreenTimer->setInterval(1000);
     connect(testForFrozenScreenTimer, SIGNAL(timeout()), this, SLOT(onTestForFrozenScreenTick()));
-   
+
     // qDebug() << "TESTTTTTTT" << thisMachine.getSlotCount();
     // for (int slot_index = 0; slot_index < thisMachine.getSlotCount(); slot_index++)
     // {
@@ -228,9 +228,6 @@ void page_idle::showEvent(QShowEvent *event)
     ui->label_printer_status->setText(QString::number(thisMachine.getTemperature_1(), 'f', 2));
 }
 
-
-
-
 void page_idle::changeToIdleProductsIfSet()
 {
     if (thisMachine.getIdlePageType() == "static_products" || thisMachine.getIdlePageType() == "dynamic")
@@ -238,8 +235,6 @@ void page_idle::changeToIdleProductsIfSet()
         hideCurrentPageAndShowProvided(this->p_page_idle_products, false);
     }
 }
-
-
 
 void page_idle::registerUserInteraction(QWidget *page)
 {
@@ -249,13 +244,12 @@ void page_idle::registerUserInteraction(QWidget *page)
     g_database->addUserInteraction(thisMachine.getSessionId(), thisMachine.getActiveRoleAsText(), page_name, event);
 }
 
-
 void page_idle::onTestForFrozenScreenTick()
 {
     // sometimes the screen is frozen. It is not a hardware issue.
-    // virtual mouse clicks also have no effect when frozen. 
+    // virtual mouse clicks also have no effect when frozen.
     // Nobody knows what causes it. Maybe a doubling up of the page? But no evidence of this is in any log.
-    // So, we perform periodically a virtual mouse click. If it is caught by the 'next page' button, that means all is fine. 
+    // So, we perform periodically a virtual mouse click. If it is caught by the 'next page' button, that means all is fine.
     // If not, we will go to select products page and automatically revert after some seconds. I hope that by reloading idle page, the 'freezing issue' is solved.
 
     // Only poll temperature after every PAGE_IDLE_TEST_FOR_FROZEN_SCREEN_PERIOD_SECONDS seconds
@@ -282,13 +276,13 @@ void page_idle::onTestForFrozenScreenTick()
 
         qDebug() << "ERROR: Idle Screen Not resposive to click test. (or program lost focus?!...). Will automatically go to 'select products page'. Screen freeze test is only active on idle page. If this is ennoying you while working in Ubuntu, put the program in maintenance mode. ";
         hideCurrentPageAndShowProvided(p_pageSelectProduct, true); // will go to select products page and automatically revert after some seconds. I hope that by reloading idle page, the 'freezing issue' is solved.
-        return;                                            // we would create a monster if we continue, with multiple clicks and doubled up pages...
+        return;                                                    // we would create a monster if we continue, with multiple clicks and doubled up pages...
     }
 
     // prepare for next cycle
     stateScreenCheck = state_screen_check_clicked_and_wait;
 
-    // TEST the function by every now and then not clicking. 
+    // TEST the function by every now and then not clicking.
     // std::srand(std::time(0)); // Seed the random number generator
     // int randomNumber = std::rand() % 5;     // Generate a random number between 0 and 4
     // bool randomBool = randomNumber > 2;
@@ -304,7 +298,6 @@ void page_idle::onTestForFrozenScreenTick()
     // }
 
     df_util::executeVirtualClick(200, 500);
-
 }
 
 // periodical temperature check initiated
@@ -351,7 +344,7 @@ void page_idle::onPollTemperatureTimerTick()
 void page_idle::onIdlePageTypeSelectorTimerTick()
 {
     _idlePageTypeSelectorTimerTimeoutSec -= 1;
-    if ( _idlePageTypeSelectorTimerTimeoutSec >= 0)
+    if (_idlePageTypeSelectorTimerTimeoutSec >= 0)
     {
     }
     else
@@ -397,7 +390,7 @@ void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
 
 void page_idle::on_pushButton_to_select_product_page_clicked()
 {
-    qDebug() << "Clicked on to_product_page button.";  // leave this for a while to investigate frozen screens in the field. 
+    qDebug() << "Clicked on to_product_page button."; // leave this for a while to investigate frozen screens in the field.
     if (stateScreenCheck == state_screen_check_clicked_and_wait)
     {
         stateScreenCheck = state_screen_check_clicked_and_succes;
@@ -407,7 +400,6 @@ void page_idle::on_pushButton_to_select_product_page_clicked()
         this->hideCurrentPageAndShowProvided(p_pageSelectProduct, true);
     }
 }
-
 
 void page_idle::hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createNewSessionId)
 {

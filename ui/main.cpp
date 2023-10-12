@@ -194,7 +194,7 @@ int main(int argc, char *argv[])
     db_config.updateTableMachineWithText("software_version", UI_VERSION);
     thisMachine.setProducts(products);
     thisMachine.setDb(&db_config);
-    thisMachine.initMachine();
+    thisMachine.initMachine(); // first setDb
     thisMachine.loadDynamicContent();
 
 

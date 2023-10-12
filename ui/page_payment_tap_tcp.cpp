@@ -210,10 +210,10 @@ void page_payment_tap_tcp::startPaymentProcess()
     if (numberOfTapAttempts < 3)
     {
         numberOfTapAttempts += 1;
-        double price = p_page_idle->selectedProduct->getPriceCorrected();
-        if (p_page_idle->selectedProduct->getSizeAsChar() == 'c')
+        double price = p_page_idle->thisMachine.selectedProduct->getPriceCorrected();
+        if (p_page_idle->thisMachine.selectedProduct->getSizeAsChar() == 'c')
         {
-            price = p_page_idle->selectedProduct->getPriceCustom();
+            price = p_page_idle->thisMachine.selectedProduct->getPriceCustom();
         }
         price = p_page_idle->thisMachine.getPriceWithDiscount(price);
         std::ostringstream stream;
@@ -231,7 +231,7 @@ void page_payment_tap_tcp::startPaymentProcess()
         dataThread.detach();
         checkPacketReceivedTimer->start();
         QString base_text = p_page_idle->thisMachine.getTemplateTextByElementNameAndPage(ui->preauthLabel);
-        ui->preauthLabel->setText(base_text.arg(p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true)));
+        ui->preauthLabel->setText(base_text.arg(p_page_idle->thisMachine.selectedProduct->getSizeToVolumeWithCorrectUnits(true, true)));
         ui->order_total_amount->setText("$ " + QString::number(price, 'f', 2));
     }
     else

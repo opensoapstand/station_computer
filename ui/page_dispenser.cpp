@@ -315,8 +315,11 @@ void page_dispenser::dispensing_end_admin()
     }
     if (cancelPayment && (paymentMethod == PAYMENT_TAP_TCP || paymentMethod== PAYMENT_TAP_SERIAL))
     {
+        ui->label_indicate_active_spout->hide();
+        ui->label_to_refill->hide();
         p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_finishTransactionMessage, "no_pay");
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
+        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_CANCEL);
+
         std::map<std::string, std::string> response;
         qDebug() << "dispense end: tap payment No volume dispensed.";
         // REVERSE PAYMENT.

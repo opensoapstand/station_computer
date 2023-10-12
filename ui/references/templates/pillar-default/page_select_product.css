@@ -47,11 +47,21 @@ QLabel {
 
 .label_product_overlay_available {
     background-color: transparent;
-    color: #003840;
+    /* color: #a7a1a1; */
+    color: #ffffff;
+    font-size: 75px;
 }
-
+/* .label_product_overlay_available {
+    color: #ffffff;
+} */
 .label_product_overlay_unavailable {
-    background-color: rgba(0, 0, 0, 80);
+    font-size: 75px;
+    color: #ffffff;
+    background-color: rgba(64, 64, 64, 0.8); /* (x,x,x,0.9) is for 10% visibility */
+    border-radius: 20px; 
+    /* background-color: rgba(0, 0, 0, 80); */
+
+
 }
 
 .label_product_type {

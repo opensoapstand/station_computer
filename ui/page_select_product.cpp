@@ -107,8 +107,8 @@ void page_select_product::showEvent(QShowEvent *event)
 
     for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
     {
-        // labels_product_overlay_text[slot_index]->setProperty("class", "label_product_overlay_available"); // apply class BEFORE setStyleSheet!!
-        // labels_product_overlay_text[slot_index]->setStyleSheet(styleSheet);
+        labels_product_overlay_text[slot_index]->setStyleSheet(styleSheet);
+        labels_product_overlay_text[slot_index]->setProperty("class", "label_product_overlay_available"); // apply class BEFORE setStyleSheet!!
 
         labels_product_type[slot_index]->setProperty("class", "label_product_type");
         labels_product_type[slot_index]->setStyleSheet(styleSheet);
@@ -161,6 +161,11 @@ void page_select_product::displayProducts()
         if (!p_page_idle->products[slot_index].getSlotEnabled())
         {
             p_page_idle->addCssClassToObject(labels_product_overlay_text[slot_index], "label_product_overlay_unavailable", PAGE_SELECT_PRODUCT_CSS);
+
+        labels_product_overlay_text[slot_index]->setStyleSheet(styleSheet);
+              QString styleSheet = p_page_idle->getCSS(PAGE_SELECT_PRODUCT_CSS);
+        labels_product_overlay_text[slot_index]->setProperty("class", "label_product_overlay_unavailable"); // apply class BEFORE setStyleSheet!!
+
             // qDebug() << labels_product_picture[slot_index]->styleSheet();
         }
         else

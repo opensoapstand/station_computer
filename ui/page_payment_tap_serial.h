@@ -67,7 +67,7 @@ public:
 
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
-    void hideCurrentPageAndShowProvided(QWidget *pageToShow);
+    void hideCurrentPageAndShowProvided(QWidget *pageToShow,bool cancelTapPayment);
     bool exitConfirm();
 
     bool setpaymentProcess(bool status);
@@ -157,7 +157,7 @@ private:
     bool tapSetupStarted = false;
 
     // QTimer *paymentEndTimer;
-    void resetPaymentPage();
+    void resetPaymentPage(bool cancelTapPayment);
     int tmpCounter;
 };
 

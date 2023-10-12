@@ -61,8 +61,8 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     testForFrozenScreenTimer->setInterval(1000);
     connect(testForFrozenScreenTimer, SIGNAL(timeout()), this, SLOT(onTestForFrozenScreenTick()));
 
-    // qDebug() << "TESTTTTTTT" << thisMachine.getSlotCount();
-    // for (int slot_index = 0; slot_index < thisMachine.getSlotCount(); slot_index++)
+    // qDebug() << "TESTTTTTTT" << thisMachine->getSlotCount();
+    // for (int slot_index = 0; slot_index < thisMachine->getSlotCount(); slot_index++)
     // {
     //     qDebug() << "chckckckckck" << slot_index;
     //     products[slot_index].setSlot(slot_index + 1);
@@ -70,7 +70,7 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     //     products[slot_index].setDb(g_database);
     // }
 
-    // thisMachine.setProducts(products);
+    // thisMachine->setProducts(products);
     stateScreenCheck = state_screen_check_not_initiated;
 }
 
@@ -96,8 +96,8 @@ page_idle::~page_idle()
 void page_idle::displayTemperature()
 {
     //  QString base_text = "Current Temperature: %1 °C"; //Assuming you have the base_text defined somewhere else or you can define it here.
-    QString base_text = thisMachine.getTemplateTextByElementNameAndPage(ui->label_show_temperature);
-    float temperature = thisMachine.getTemperature_1();
+    QString base_text = thisMachine->getTemplateTextByElementNameAndPage(ui->label_show_temperature);
+    float temperature = thisMachine->getTemperature_1();
     ui->label_show_temperature->setText(base_text.arg(QString::number(temperature, 'f', 1)));
 }
 
@@ -110,23 +110,23 @@ void page_idle::showEvent(QShowEvent *event)
 
     registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
-    thisMachine.loadDynamicContent();
-    thisMachine.getSlotCount();
-    thisMachine.resetSessionId();
-    thisMachine.dispenseButtonLightsAnimateState(true);
-    thisMachine.setRole(UserRole::user);
-    // thisMachine.setSlotCount();
+    thisMachine->loadDynamicContent();
+    thisMachine->getSlotCount();
+    thisMachine->resetSessionId();
+    thisMachine->dispenseButtonLightsAnimateState(true);
+    thisMachine->setRole(UserRole::user);
+    // thisMachine->setSlotCount();
 
     // everything coupon is reset when idle page is reached.
-    thisMachine.initCouponState();
-    thisMachine.setSelectedProduct(1); // default selected product is necessary to deal with things if no product is chosen yet e.g. show transaction history
+    thisMachine->initCouponState();
+    thisMachine->setSelectedProduct(1); // default selected product is necessary to deal with things if no product is chosen yet e.g. show transaction history
 
 #ifndef PLAY_VIDEO
-    thisMachine.setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
+    thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
 #endif
-    thisMachine.applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+    thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
 
-    QString styleSheet = thisMachine.getCSS(PAGE_IDLE_CSS);
+    QString styleSheet = thisMachine->getCSS(PAGE_IDLE_CSS);
     ui->pushButton_to_select_product_page->setStyleSheet(styleSheet);
     ui->label_welcome_message->setStyleSheet(styleSheet);
     ui->pushButton_test->setStyleSheet(styleSheet);
@@ -137,7 +137,7 @@ void page_idle::showEvent(QShowEvent *event)
 
     displayTemperature();
 
-    if (thisMachine.isAelenPillarElseSoapStand() == false)
+    if (thisMachine->isAelenPillarElseSoapStand() == false)
     {
         ui->label_show_temperature->hide();
         ui->label_temperature_status->hide();
@@ -152,18 +152,18 @@ void page_idle::showEvent(QShowEvent *event)
     // QString base_text = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_welcome_message, "testargument" );
     // ui->label_welcome_message->setText(base_text.arg("SoAp")); // will replace %1 character in string by the provide text
 
-    thisMachine.setTemplateTextToObject(ui->label_welcome_message);
-    thisMachine.addCustomerLogoToLabel(ui->label_customer_logo);
+    thisMachine->setTemplateTextToObject(ui->label_welcome_message);
+    thisMachine->addCustomerLogoToLabel(ui->label_customer_logo);
 
     ui->label_printer_status->hide(); // always hide here, will show if enabled and has problems.
 
-    if (thisMachine.hasReceiptPrinter())
+    if (thisMachine->hasReceiptPrinter())
     {
         checkReceiptPrinterStatus();
     }
 
-    QString machine_logo_full_path = thisMachine.getTemplatePathFromName(MACHINE_LOGO_PATH);
-    thisMachine.addPictureToLabel(ui->label_manufacturer_logo, machine_logo_full_path);
+    QString machine_logo_full_path = thisMachine->getTemplatePathFromName(MACHINE_LOGO_PATH);
+    thisMachine->addPictureToLabel(ui->label_manufacturer_logo, machine_logo_full_path);
     ui->label_manufacturer_logo->setStyleSheet(styleSheet);
 
     idlePageTypeSelectorTimer->start(1000);
@@ -229,12 +229,12 @@ void page_idle::showEvent(QShowEvent *event)
     qDebug() << "Video player. Is fullscreen? : " << videoWidget->isFullScreen();
 #endif
 
-    ui->label_printer_status->setText(QString::number(thisMachine.getTemperature_1(), 'f', 2));
+    ui->label_printer_status->setText(QString::number(thisMachine->getTemperature_1(), 'f', 2));
 }
 
 void page_idle::changeToIdleProductsIfSet()
 {
-    if (thisMachine.getIdlePageType() == "static_products" || thisMachine.getIdlePageType() == "dynamic")
+    if (thisMachine->getIdlePageType() == "static_products" || thisMachine->getIdlePageType() == "dynamic")
     {
         hideCurrentPageAndShowProvided(this->p_page_idle_products, false);
     }
@@ -245,7 +245,7 @@ void page_idle::registerUserInteraction(QWidget *page)
     QString page_name = page->objectName();
     qDebug() << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< User entered: " + page_name + " >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
     QString event = "Entered Page";
-    g_database->addUserInteraction(thisMachine.getSessionId(), thisMachine.getActiveRoleAsText(), page_name, event);
+    g_database->addUserInteraction(thisMachine->getSessionId(), thisMachine->getActiveRoleAsText(), page_name, event);
 }
 
 void page_idle::onTestForFrozenScreenTick()
@@ -314,26 +314,26 @@ void page_idle::onPollTemperatureTimerTick()
     _pollTemperatureTimerTimeoutSec = PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS;
     // qDebug() << "Check temperature.";
 
-    thisMachine.getTemperatureFromController();
+    thisMachine->getTemperatureFromController();
 
-    float currentTemperature = thisMachine.getTemperature_1();
-    bool isTemperatureHigh = thisMachine.isTemperatureTooHigh_1();
+    float currentTemperature = thisMachine->getTemperature_1();
+    bool isTemperatureHigh = thisMachine->isTemperatureTooHigh_1();
 
     // Update UI elements with the current temperature
     QString temperatureStr = QString::number(currentTemperature, 'f', 1);
-    QString base_text = thisMachine.getTemplateTextByElementNameAndPage(ui->label_show_temperature);
+    QString base_text = thisMachine->getTemplateTextByElementNameAndPage(ui->label_show_temperature);
     ui->label_show_temperature->setText(base_text.arg(temperatureStr));
 
     // Toggle visibility of temperature status label
-    ui->label_temperature_status->setVisible(isTemperatureHigh && thisMachine.isAelenPillarElseSoapStand());
+    ui->label_temperature_status->setVisible(isTemperatureHigh && thisMachine->isAelenPillarElseSoapStand());
 
     if (isTemperatureHigh)
     {
-        thisMachine.checkForHighTemperatureAndDisableProducts(); // todo test if it works
+        thisMachine->checkForHighTemperatureAndDisableProducts(); // todo test if it works
         qDebug() << "Temperature too high, block all slots.";
 
         // Update temperature status label
-        QString base = thisMachine.getTemplateTextByElementNameAndPageAndIdentifier(ui->label_temperature_status, "temperature_too_high");
+        QString base = thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_temperature_status, "temperature_too_high");
         ui->label_temperature_status->setText(base.arg(temperatureStr));
 
         qDebug() << "Temperature too high";
@@ -372,14 +372,14 @@ void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
     if (!isOnline)
     {
         ui->label_printer_status->raise();
-        thisMachine.setTemplateTextWithIdentifierToObject(ui->label_printer_status, "offline");
+        thisMachine->setTemplateTextWithIdentifierToObject(ui->label_printer_status, "offline");
         ui->label_printer_status->show();
         // m_printer_isOnline_cached = false;
     }
     else if (!hasPaper)
     {
         ui->label_printer_status->raise();
-        thisMachine.setTemplateTextWithIdentifierToObject(ui->label_printer_status, "nopaper");
+        thisMachine->setTemplateTextWithIdentifierToObject(ui->label_printer_status, "nopaper");
         ui->label_printer_status->show();
         // m_printer_hasPaper_cached = false;
     }
@@ -411,10 +411,10 @@ void page_idle::hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createN
     // will only be relevant when user goes to select_products
     if (createNewSessionId)
     {
-        thisMachine.createSessionId();
+        thisMachine->createSessionId();
     }
 
-    thisMachine.pageTransition(this, pageToShow);
+    thisMachine->pageTransition(this, pageToShow);
     idlePageTypeSelectorTimer->stop();
     pollTemperatureTimer->stop();
     testForFrozenScreenTimer->stop();
@@ -426,7 +426,7 @@ void page_idle::on_pushButton_test_clicked()
 
 // void page_idle::addCustomerLogoToLabel(QLabel *label)
 // {
-//     QString id = thisMachine.getCustomerId();
+//     QString id = thisMachine->getCustomerId();
 //     QString logo_path = QString(CLIENT_LOGO_PATH).arg(id);
 //     addPictureToLabel(label, logo_path);
 // }
@@ -470,7 +470,7 @@ void page_idle::on_pushButton_test_clicked()
 
 // QString page_idle::getCSS(QString cssName)
 // {
-//     QString cssFilePath = thisMachine.getTemplatePathFromName(cssName);
+//     QString cssFilePath = thisMachine->getTemplatePathFromName(cssName);
 
 //     QFile cssFile(cssFilePath);
 //     QString styleSheet = "";
@@ -498,7 +498,7 @@ void page_idle::on_pushButton_test_clicked()
 //     // on Page: if called from showEvent: will scale to screen
 
 //     QString image_path = imageName;
-//     image_path = thisMachine.getTemplatePathFromName(imageName);
+//     image_path = thisMachine->getTemplatePathFromName(imageName);
 //     // qDebug()<< "background image path: " << image_path;
 //     setBackgroundPictureToQWidget(p_widget, image_path);
 // }
@@ -717,7 +717,7 @@ void page_idle::on_pushButton_test_clicked()
 // void page_idle::loadElementDynamicPropertiesFromDefaultTemplate()
 // {
 //     qDebug() << "Load dynamic properties from default template file";
-//     QString path = thisMachine.getDefaultTemplatePathFromName(UI_ELEMENT_PROPERTIES_PATH);
+//     QString path = thisMachine->getDefaultTemplatePathFromName(UI_ELEMENT_PROPERTIES_PATH);
 //     loadTextsFromCsv(path, &elementDynamicPropertiesMap_default);
 //     // Print the word-sentence mapping
 //     // for (const auto &pair : elementDynamicPropertiesMap_default)
@@ -729,7 +729,7 @@ void page_idle::on_pushButton_test_clicked()
 // void page_idle::loadElementDynamicPropertiesFromTemplate()
 // {
 //     qDebug() << "Load dynamic properties from template file";
-//     QString path = thisMachine.getTemplatePathFromName(UI_ELEMENT_PROPERTIES_PATH);
+//     QString path = thisMachine->getTemplatePathFromName(UI_ELEMENT_PROPERTIES_PATH);
 //     loadTextsFromCsv(path, &elementDynamicPropertiesMap_template);
 
 //     // Print the word-sentence mapping
@@ -742,14 +742,14 @@ void page_idle::on_pushButton_test_clicked()
 // void page_idle::loadTextsFromTemplateCsv()
 // {
 //     qDebug() << "Load dynamic texts from template csv";
-//     QString csv_path = thisMachine.getTemplatePathFromName(UI_TEXTS_CSV_PATH);
+//     QString csv_path = thisMachine->getTemplatePathFromName(UI_TEXTS_CSV_PATH);
 //     loadTextsFromCsv(csv_path, &textNameToTextMap_template);
 // }
 
 // void page_idle::loadTextsFromDefaultCsv()
 // {
 //     qDebug() << "Load dynamic texts from default csv";
-//     QString csv_default_template_path = thisMachine.getDefaultTemplatePathFromName(UI_TEXTS_CSV_PATH);
+//     QString csv_default_template_path = thisMachine->getDefaultTemplatePathFromName(UI_TEXTS_CSV_PATH);
 //     loadTextsFromCsv(csv_default_template_path, &textNameToTextMap_default);
 // }
 

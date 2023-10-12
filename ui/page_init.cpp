@@ -56,40 +56,45 @@ void page_init::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
     
     // template content
-    p_page_idle->thisMachine.loadDynamicContent();
+    qDebug() << "init 0 f3e";
+    // p_page_idle->thisMachine.loadDynamicContent();
+    // qDebug() << "init 1 f3e";
 
     p_page_idle->thisMachine.applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+    qDebug() << "init 2 f3e";
     
     p_page_idle->thisMachine.setBackgroundPictureFromTemplateToPage(this, PAGE_INIT_BACKGROUND_IMAGE_PATH);
+    qDebug() << "init 3 f3e";
 
-    initIdleTimer->start(1000);
-    paymentMethod = p_page_idle->thisMachine.getProduct(1)->getPaymentMethod(); // fixme --> takes payment product from one product for all products
-#ifdef START_FSM_FROM_UI
-    start_controller = true;
-#else
-    start_controller = false;
-#endif
+    // initIdleTimer->start(1000);
+    // paymentMethod = p_page_idle->thisMachine.getProduct(1)->getPaymentMethod(); // fixme --> takes payment product from one product for all products
+    // qDebug() << "init 4 f3e";
+// #ifdef START_FSM_FROM_UI
+//     start_controller = true;
+// #else
+//     start_controller = false;
+// #endif
 
-    if (start_controller)
-    {
-        system("DISPLAY=:0 xterm -hold  /release/fsm/controller &");
-        _initIdleTimeoutSec = 20;
-    }
-    else
-    {
+//     if (start_controller)
+//     {
+//         system("DISPLAY=:0 xterm -hold  /release/fsm/controller &");
+//         _initIdleTimeoutSec = 20;
+//     }
+//     else
+//     {
 
-        QString command = "Ping";
-        p_page_idle->thisMachine.dfUtility->send_command_to_FSM(command, true);
+//         QString command = "Ping";
+//         p_page_idle->thisMachine.dfUtility->send_command_to_FSM(command, true);
 
-        if (paymentMethod==PAYMENT_TAP_TCP || paymentMethod==PAYMENT_TAP_SERIAL)
-        {
-            // Thread setup for non-blocking tap payment initialization
-            // Using bind for non-static functions
-            auto bindFn = std::bind(&page_init::initiateTapPayment, this);
-            tapInitThread = std::thread(bindFn);
-            tapInitThread.detach();
-        }
-    }
+//         if (paymentMethod==PAYMENT_TAP_TCP || paymentMethod==PAYMENT_TAP_SERIAL)
+//         {
+//             // Thread setup for non-blocking tap payment initialization
+//             // Using bind for non-static functions
+//             auto bindFn = std::bind(&page_init::initiateTapPayment, this);
+//             tapInitThread = std::thread(bindFn);
+//             tapInitThread.detach();
+//         }
+//     }
 }
 
 void page_init::hideCurrentPageAndShowProvided(QWidget *pageToShow)

@@ -50,7 +50,7 @@ page_end::~page_end()
 
 void page_end::showEvent(QShowEvent *event)
 {
-    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+    p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
     
     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_END_BACKGROUND_PATH);

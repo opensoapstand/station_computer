@@ -130,7 +130,7 @@ bool product::toggleSizeEnabled(int size)
 
 bool product::setSizeEnabled(int size, bool enabled)
 {
-    QString sizeIndexToText[6] = { "Invalid", "small", "medium", "large", "custom", "test" };
+    QString sizeIndexToText[6] = {"Invalid", "small", "medium", "large", "custom", "test"};
     // m_sizeIndexIsEnabled[size] = enabled;
     QString column_name = QString("is_enabled_%1").arg(sizeIndexToText[size]);
     m_db->updateTableProductsWithInt(getSlot(), column_name, enabled);
@@ -150,16 +150,15 @@ int product::getSlot()
 
 void product::setSlot(int slot)
 {
-    qInfo() << "JORDAN HELLO" ;
-    // if (slot > 0 && slot <= thisMachine->getSlotCount())
-    // {
-        m_dispenser_slot = slot;
-    // }
-    // else
-    // {
-    //     qInfo() << "OUT OF OPTION RANGE!" << slot;
-    // }
-    qInfo() << "JORDAN BYYYEEE" ;
+    if (slot == 0)
+    {
+        qDebug() << "ERROR: 0 provided.  Slots start counting from 1. Not zero.";
+    }
+    if (slot > MAX_SLOT_COUNT)
+    {
+        qDebug() << "ERROR: Slot exceeds max slot count." << slot;
+    }
+    m_dispenser_slot = slot;
 }
 
 int product::getSize()
@@ -184,8 +183,8 @@ bool product::is_valid_size_selected()
 {
     // if (!(m_dispenser_slot >= OPTION_SLOT_INVALID && m_dispenser_slot <= thisMachine->getSlotCount()))
     // {
-        qInfo() << "ERROR: no slot set. " << m_dispenser_slot;
-        return false;
+    qInfo() << "ERROR: no slot set. " << m_dispenser_slot;
+    return false;
     // }
     if (!(m_selected_size >= 0 && m_selected_size <= SIZES_COUNT))
     {

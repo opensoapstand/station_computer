@@ -37,6 +37,7 @@ public:
     ~machine();
     void loadParametersFromDb();
     void setDb(DbManager *db);
+    DbManager* getDb();
     void initMachine();
 
     void dispenseButtonLightsAnimateState(bool animateElseOff);
@@ -52,6 +53,8 @@ public:
     bool getShowTransactionHistory();
     bool isAelenPillarElseSoapStand();
     bool isDispenseAreaBelowElseBesideScreen();
+
+    void registerUserInteraction(QWidget *page);
 
     void processRolePassword(QString password_input);
     QString getActiveRoleAsText();
@@ -79,7 +82,6 @@ public:
     bool getSlotEnabled(int slot);
     void setSlotEnabled(int slot, bool isEnabled);
     void setSlotEnabled(int slot, bool isEnabled, QString statusText);
-
 
     int getSlotCount();
     bool compareSlotCountToMaxSlotCount(int slot_count);
@@ -189,8 +191,7 @@ public:
     product *getSelectedProduct();
 
     QStringList getChildNames(QObject *parent);
-        void loadTextsFromCsv(QString csv_path, std::map<QString, QString> *dictionary);
-
+    void loadTextsFromCsv(QString csv_path, std::map<QString, QString> *dictionary);
 
 public slots:
 
@@ -204,7 +205,7 @@ private:
     QString m_templatePath;
 
     product *m_products;
-    
+
     QTime temperatureHighTime;
     bool temperatureWasHigh = false;
     StateCoupon m_stateCoupon;

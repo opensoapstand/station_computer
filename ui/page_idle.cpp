@@ -61,16 +61,6 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     testForFrozenScreenTimer->setInterval(1000);
     connect(testForFrozenScreenTimer, SIGNAL(timeout()), this, SLOT(onTestForFrozenScreenTick()));
 
-    // qDebug() << "TESTTTTTTT" << thisMachine->getSlotCount();
-    // for (int slot_index = 0; slot_index < thisMachine->getSlotCount(); slot_index++)
-    // {
-    //     qDebug() << "chckckckckck" << slot_index;
-    //     products[slot_index].setSlot(slot_index + 1);
-    //     products[slot_index].setMachine(&thisMachine);
-    //     products[slot_index].setDb(g_database);
-    // }
-
-    // thisMachine->setProducts(products);
     stateScreenCheck = state_screen_check_not_initiated;
 }
 
@@ -107,15 +97,13 @@ void page_idle::setMachine(machine* pmachine){
 
 void page_idle::showEvent(QShowEvent *event)
 {
-
-    registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+    thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
     thisMachine->loadDynamicContent();
     thisMachine->getSlotCount();
     thisMachine->resetSessionId();
     thisMachine->dispenseButtonLightsAnimateState(true);
     thisMachine->setRole(UserRole::user);
-    // thisMachine->setSlotCount();
 
     // everything coupon is reset when idle page is reached.
     thisMachine->initCouponState();
@@ -132,18 +120,13 @@ void page_idle::showEvent(QShowEvent *event)
     ui->pushButton_test->setStyleSheet(styleSheet);
     ui->label_printer_status->setStyleSheet(styleSheet);
     ui->label_temperature_status->setStyleSheet(styleSheet);
-
     ui->label_show_temperature->setStyleSheet(styleSheet);
-
     displayTemperature();
 
     if (thisMachine->isAelenPillarElseSoapStand() == false)
     {
         ui->label_show_temperature->hide();
         ui->label_temperature_status->hide();
-    }
-    else
-    {
     }
 
     ui->label_temperature_status->hide();
@@ -238,14 +221,6 @@ void page_idle::changeToIdleProductsIfSet()
     {
         hideCurrentPageAndShowProvided(this->p_page_idle_products, false);
     }
-}
-
-void page_idle::registerUserInteraction(QWidget *page)
-{
-    QString page_name = page->objectName();
-    qDebug() << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< User entered: " + page_name + " >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
-    QString event = "Entered Page";
-    g_database->addUserInteraction(thisMachine->getSessionId(), thisMachine->getActiveRoleAsText(), page_name, event);
 }
 
 void page_idle::onTestForFrozenScreenTick()

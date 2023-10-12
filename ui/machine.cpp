@@ -25,16 +25,12 @@ machine::~machine()
 void machine::initMachine()
 {
     loadParametersFromDb();
-    qDebug() << "TESTTTTTTT" << getSlotCount();
     for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
     {
-        qDebug() << "aWFEFW";
+        
         m_products[slot_index].setSlot(slot_index + 1);
-        qDebug() << "bWWW";
         m_products[slot_index].setMachine(this);
-        qDebug() << "CEFWEF";
         m_products[slot_index].setDb(m_db);
-        qDebug() << "DWEFWFFFF";
     }
     loadDynamicContent();
 }
@@ -53,6 +49,11 @@ void machine::loadDynamicContent()
     loadTextsFromDefaultCsv();                         // dynamic styling (css by template)
     loadElementDynamicPropertiesFromTemplate();        // dynamic elements (position, visibility)
     loadElementDynamicPropertiesFromDefaultTemplate(); // dynamic elements (position, visibility)
+}
+
+DbManager *machine::getDb()
+{
+    return m_db;
 }
 
 void machine::setDb(DbManager *db)
@@ -154,7 +155,6 @@ int machine::getSlotCount()
             slot_count = 8;
         }
     }
-    qDebug() << "SLOT COUNT: " << slot_count;
     if (compareSlotCountToMaxSlotCount(slot_count))
     {
         qDebug() << "ERROR - Slot Count:" << slot_count << " exceeded MAX_SLOT_COUNT:" << MAX_SLOT_COUNT << "threshold";
@@ -380,8 +380,7 @@ void machine::checkForHighTemperatureAndDisableProducts()
             for (uint8_t slot_index = 0; slot_index < getSlotCount(); slot_index++)
             {
                 qDebug() << "Temperature too high for one hour, block all slots.";
-                setSlotEnabled(slot_index+ 1, true, "SLOT_STATE_DISABLED_COMING_SOON");
-                
+                setSlotEnabled(slot_index + 1, true, "SLOT_STATE_DISABLED_COMING_SOON");
             }
         }
     }
@@ -544,7 +543,8 @@ void machine::setStatusText(int slot, QString status)
     m_db->updateTableMachineWithText(column, status);
 }
 
-void machine::setSlotEnabled(int slot, bool isEnabled, QString statusText){
+void machine::setSlotEnabled(int slot, bool isEnabled, QString statusText)
+{
     setSlotEnabled(slot, isEnabled);
     setStatusText(slot, statusText);
 }
@@ -559,6 +559,14 @@ QString machine::getPumpId(int slot)
 {
     slotNumberValidityCheck(slot);
     return m_pump_id_slots[slot - 1];
+}
+
+void machine::registerUserInteraction(QWidget *page)
+{
+    QString page_name = page->objectName();
+    qDebug() << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< User entered: " + page_name + " >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
+    QString event = "Entered Page";
+    m_db->addUserInteraction(getSessionId(), getActiveRoleAsText(), page_name, event);
 }
 
 bool machine::slotNumberValidityCheck(int slot)
@@ -579,8 +587,6 @@ bool machine::slotNumberValidityCheck(int slot)
     }
     return valid;
 }
-
-
 
 void machine::setSlotEnabled(int slot, bool isEnabled)
 {

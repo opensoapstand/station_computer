@@ -47,7 +47,7 @@ void page_transactions::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 
 void page_transactions::showEvent(QShowEvent *event)
 {
-        p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+        p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
         QWidget::showEvent(event);
 
         p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
@@ -95,7 +95,7 @@ void page_transactions::populateTransactionsTable()
 {
         transaction_count = TRANSACTION_HISTORY_COUNT;
         int retrieved_count;
-        p_page_idle->g_database->getRecentTransactions(recent_transactions, transaction_count, &retrieved_count);
+        p_page_idle->thisMachine->getDb()->getRecentTransactions(recent_transactions, transaction_count, &retrieved_count);
         transaction_count = retrieved_count;
         populateList();
 }

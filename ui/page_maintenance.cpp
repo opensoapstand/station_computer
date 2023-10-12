@@ -57,7 +57,7 @@ page_maintenance::~page_maintenance()
 
 void page_maintenance::showEvent(QShowEvent *event)
 {
-    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+    p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
     
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget

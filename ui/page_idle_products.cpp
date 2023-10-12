@@ -79,11 +79,11 @@ page_idle_products::~page_idle_products()
 
 void page_idle_products::showEvent(QShowEvent *event)
 {
-    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+    p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
-    
+
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
-    
+
     _backgroundChangeTimeLeftTenthsOfSec = PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS * 10;
     backgroundChangeTimer->start();
     active_background_index = 0;
@@ -106,7 +106,7 @@ void page_idle_products::showEvent(QShowEvent *event)
 
     ui->label_printer_status->setStyleSheet(styleSheet);
 
-    // we already checked this in p_page_idle the results from there. 
+    // we already checked this in p_page_idle the results from there.
     // if (p_page_idle->thisMachine->hasReceiptPrinter())
     // {
     //     p_page_idle->checkReceiptPrinterStatus();
@@ -136,12 +136,12 @@ void page_idle_products::displayProducts()
     for (uint8_t slot_index = 0; slot_index < p_page_idle->thisMachine->getSlotCount(); slot_index++)
     {
         // display product picture
-        p_page_idle->thisMachine->addPictureToLabel(labels_product_picture[slot_index], p_page_idle->thisMachine->getProduct(slot_index+1)->getProductPicturePath());
-        product_slot_enabled = p_page_idle->thisMachine->getSlotEnabled(slot_index+1);
-        product_status_text = p_page_idle->thisMachine->getStatusText(slot_index+1);
+        p_page_idle->thisMachine->addPictureToLabel(labels_product_picture[slot_index], p_page_idle->thisMachine->getProduct(slot_index + 1)->getProductPicturePath());
+        product_slot_enabled = p_page_idle->thisMachine->getSlotEnabled(slot_index + 1);
+        product_status_text = p_page_idle->thisMachine->getStatusText(slot_index + 1);
 
-        product_type = p_page_idle->thisMachine->getProduct(slot_index+1)->getProductType();
-        product_name = p_page_idle->thisMachine->getProduct(slot_index+1)->getProductName();
+        product_type = p_page_idle->thisMachine->getProduct(slot_index + 1)->getProductType();
+        product_name = p_page_idle->thisMachine->getProduct(slot_index + 1)->getProductName();
 
         labels_selectProductOverlay[slot_index]->raise();
         labels_product_overlay_text[slot_index]->raise();

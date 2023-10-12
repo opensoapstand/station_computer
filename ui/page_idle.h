@@ -72,7 +72,7 @@ public:
     // product *selectedProduct;
 
     machine* thisMachine;
-    DbManager *g_database;
+    // DbManager *g_database;
 
     
     DfUiCommThread *dfComm;
@@ -88,9 +88,6 @@ public:
 
 
 
-
-
-    void registerUserInteraction(QWidget *page);
 
 
 

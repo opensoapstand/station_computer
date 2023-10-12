@@ -79,7 +79,6 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
         line_out.append(time_stamp_time);
         line_out.append(" : ");
         line_out.append(msg);
-        // log_file->write(msg.toLatin1());
         log_file->write(line_out.toUtf8());
         log_file->write("\n");
         log_file->flush();
@@ -88,9 +87,7 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
 
 int main(int argc, char *argv[])
 {
-
     // set up logging
-
     QString logging_controller_base_path = "/home/df-admin/production/logging/controller";
     QString logging_wifi_base_path = "/home/df-admin/production/logging/wifi";
     QString logging_transactions_base_path = "/home/df-admin/production/logging/transactions";
@@ -187,10 +184,8 @@ int main(int argc, char *argv[])
     DbManager db_config;
     machine thisMachine;
     product products[MAX_SLOT_COUNT];
-
     p_page_idle->setMachine(&thisMachine);
-
-    p_page_idle->g_database = &db_config;
+    // p_page_idle->g_database = &db_config;
 
     db_config.updateTableMachineWithText("software_version", UI_VERSION);
     thisMachine.setProducts(products);
@@ -237,31 +232,8 @@ int main(int argc, char *argv[])
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(ICON_TYPE_DEFAULT));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_HELP_BACKGROUND_GENERIC_WHITE));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_HELP_BACKGROUND_PATH));
-
-    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_SELECT_PRODUCT_BACKGROUND_PATH));
-    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_PRODUCT_BACKGROUND_PATH));
-    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_ORDER_OVERVIEW_PATH));
-    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH));
-    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_RIGHT));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_DOWN));
-    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));
-    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_QR_PAY_BACKGROUND_PATH));
-    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_MAINTENANCE_BACKGROUND_PATH));
-    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(ERROR_MESSAGE_PATH));
-    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_TAP_PAY));
-    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_TAP_PAY_SUCCESS));
-    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_TAP_PAY_FAIL));
-    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_AUTHORIZE_NOW));
-    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_TAP_GENERIC));
-    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_SEND_FEEDBACK_PATH));
-    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_INIT_BACKGROUND_IMAGE_PATH));
-    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(IMAGE_BUTTON_HELP));
-    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(THANK_YOU_FOR_YOUR_FEEDBACK));
-    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_ERROR_BACKGROUND_PATH));
-    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(KEYBOARD_IMAGE_PATH));
-    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(MACHINE_LOGO_PATH));
-    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_DISPENSE_FILL_ANIMATION));
 
     // Page pathing references to function calls.
     p_page_help->setPage(p_page_select_product, p_page_product, p_page_idle, p_page_payment_qr, p_page_transactions, p_page_maintenance, p_page_sendFeedback);
@@ -294,7 +266,6 @@ int main(int argc, char *argv[])
     QObject::connect(&dfUiServer, &DfUiServer::controllerFinishedAck, p_page_end, &page_end::controllerFinishedTransaction);
     QObject::connect(&dfUiServer, &DfUiServer::printerStatus, p_page_maintenance_general, &page_maintenance_general::printerStatusFeedback);
     QObject::connect(&dfUiServer, &DfUiServer::printerStatus, p_page_idle, &page_idle::printerStatusFeedback);
-    // QObject::connect(&dfUiServer, &DfUiServer::printerStatus, p_page_idle_products, &page_idle_products::printerStatusFeedback);
     QObject::connect(&dfUiServer, &DfUiServer::pleaseReset, p_page_dispense, &page_dispenser::resetDispenseTimeout);
 
     QObject::connect(&dfUiServer, &DfUiServer::signalUpdateVolume, p_page_dispense, &page_dispenser::fsmReceivedVolumeDispensed);
@@ -312,10 +283,7 @@ int main(int argc, char *argv[])
     QObject::connect(&dfUiServer, &DfUiServer::targetHit, p_page_maintenance_product, &page_maintenance_dispenser::fsmReceiveTargetVolumeReached);
     QObject::connect(&dfUiServer, &DfUiServer::noFlowAbort, p_page_maintenance_product, &page_maintenance_dispenser::fsmReceiveNoFlowAbort);
     QObject::connect(&dfUiServer, &DfUiServer::temperatureSignal, p_page_maintenance_product, &page_maintenance_dispenser::fsmReceiveTemperature);
-    // QObject::connect(&dfUiServer, &DfUiServer::temperature2Signal, p_page_maintenance_product, &page_maintenance_dispenser::fsmReceiveTemperature2);
-
     QObject::connect(&dfUiServer, &DfUiServer::initReady, initPage, &page_init::initReadySlot);
-    // QObject::connect(&dfUiServer, &DfUiServer::MM, p_page_idle, &page_idle::MMSlot);
 
     return mainApp.exec();
 }

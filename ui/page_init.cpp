@@ -52,9 +52,9 @@ page_init::~page_init()
 
 void page_init::showEvent(QShowEvent *event)
 {
-    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+    p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
-    
+
     // template content
     // qDebug() << "init 0 f3e";
     p_page_idle->thisMachine->loadDynamicContent();
@@ -62,13 +62,14 @@ void page_init::showEvent(QShowEvent *event)
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
     // qDebug() << "init 2 f3e";
-    
+
     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_INIT_BACKGROUND_IMAGE_PATH);
-    qDebug() << "init 3 f3e";
+    // qDebug() << "init 3 f3e";
 
     initIdleTimer->start(1000);
     paymentMethod = p_page_idle->thisMachine->getProduct(1)->getPaymentMethod(); // fixme --> takes payment product from one product for all products
-    qDebug() << "init 4 f3e";
+    // qDebug() << "init 4 f3e";
+
 #ifdef START_FSM_FROM_UI
     start_controller = true;
 #else
@@ -82,11 +83,10 @@ void page_init::showEvent(QShowEvent *event)
     }
     else
     {
-
         QString command = "Ping";
         p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
 
-        if (paymentMethod==PAYMENT_TAP_TCP || paymentMethod==PAYMENT_TAP_SERIAL)
+        if (paymentMethod == PAYMENT_TAP_TCP || paymentMethod == PAYMENT_TAP_SERIAL)
         {
             // Thread setup for non-blocking tap payment initialization
             // Using bind for non-static functions
@@ -153,7 +153,7 @@ void page_init::initiateTapPayment()
     // Waiting for payment label setup
     QString waitingForPayment = p_page_idle->thisMachine->getTemplateText("page_init->label_fail_message->tap_payment");
     p_page_idle->thisMachine->setTextToObject(ui->label_fail_message, waitingForPayment);
-    
+
     if (paymentMethod == PAYMENT_TAP_TCP)
     {
         page_payment_tap_tcp paymentObject;

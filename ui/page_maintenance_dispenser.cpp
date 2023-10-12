@@ -59,7 +59,7 @@ void page_maintenance_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToS
 
 void page_maintenance_dispenser::showEvent(QShowEvent *event)
 {
-    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+    p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
 
     qDebug() << "Active Slot: " << QString::number(this->p_page_idle->thisMachine->selectedProduct->getSlot());
     QWidget::showEvent(event);

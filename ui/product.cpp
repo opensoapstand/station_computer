@@ -46,7 +46,7 @@ void product::loadProductProperties()
 
 void product::loadProductPropertiesFromDb()
 {
-    qDebug() << "Open db: db load product properties";
+    qDebug() << "Open db: db load product properties for product in slot: " << getSlot();
     m_db->getAllProductProperties(getSlot(), &m_aws_product_id,
                                   &m_soapstand_product_serial,
                                   &m_size_unit,
@@ -97,31 +97,31 @@ int product::getBiggestEnabledSizeIndex()
     return maxSize;
 }
 
-void product::setSlotEnabled(bool isEnabled)
-{
-    thisMachine->setSlotEnabled(getSlot(), isEnabled);
-}
+// void product::setSlotEnabled(bool isEnabled)
+// {
+//     thisMachine->setSlotEnabled(getSlot(), isEnabled);
+// }
 
-void product::setSlotEnabled(bool isEnabled, QString statusText)
-{
-    thisMachine->setSlotEnabled(getSlot(), isEnabled);
-    setStatusText(statusText);
-}
+// void product::setSlotEnabled(bool isEnabled, QString statusText)
+// {
+//     thisMachine->setSlotEnabled(getSlot(), isEnabled);
+//     setStatusText(statusText);
+// }
 
-bool product::getSlotEnabled()
-{
-    return thisMachine->getSlotEnabled(getSlot());
-}
+// bool product::getSlotEnabled()
+// {
+//     return thisMachine->getSlotEnabled(getSlot());
+// }
 
-void product::setStatusText(QString status)
-{
-    thisMachine->setStatusText(getSlot(), getSlotEnabled(), status);
-}
+// void product::setStatusText(QString status)
+// {
+//     thisMachine->setStatusText(getSlot(), getSlotEnabled(), status);
+// }
 
-QString product::getStatusText()
-{
-    return thisMachine->getStatusText(getSlot());
-}
+// QString product::getStatusText()
+// {
+//     return thisMachine->getStatusText(getSlot());
+// }
 
 bool product::toggleSizeEnabled(int size)
 {
@@ -130,7 +130,7 @@ bool product::toggleSizeEnabled(int size)
 
 bool product::setSizeEnabled(int size, bool enabled)
 {
-    QString sizeIndexToText[6] = { "Invalid", "small", "medium", "large", "custom", "test" };
+    QString sizeIndexToText[6] = {"Invalid", "small", "medium", "large", "custom", "test"};
     // m_sizeIndexIsEnabled[size] = enabled;
     QString column_name = QString("is_enabled_%1").arg(sizeIndexToText[size]);
     m_db->updateTableProductsWithInt(getSlot(), column_name, enabled);
@@ -150,15 +150,15 @@ int product::getSlot()
 
 void product::setSlot(int slot)
 {
-    if (slot >= OPTION_SLOT_INVALID && slot <= SLOT_COUNT)
+    if (slot == 0)
     {
-
-        m_dispenser_slot = slot;
+        qDebug() << "ERROR: 0 provided.  Slots start counting from 1. Not zero.";
     }
-    else
+    if (slot > MAX_SLOT_COUNT)
     {
-        qInfo() << "OUT OF OPTION RANGE!" << slot;
+        qDebug() << "ERROR: Slot exceeds max slot count." << slot;
     }
+    m_dispenser_slot = slot;
 }
 
 int product::getSize()
@@ -181,11 +181,11 @@ void product::setBiggestEnabledSizeIndex()
 // SLOTS Section
 bool product::is_valid_size_selected()
 {
-    if (!(m_dispenser_slot >= OPTION_SLOT_INVALID && m_dispenser_slot <= SLOT_COUNT))
-    {
-        qInfo() << "ERROR: no slot set. " << m_dispenser_slot;
-        return false;
-    }
+    // if (!(m_dispenser_slot >= OPTION_SLOT_INVALID && m_dispenser_slot <= thisMachine->getSlotCount()))
+    // {
+    qInfo() << "ERROR: no slot set. " << m_dispenser_slot;
+    return false;
+    // }
     if (!(m_selected_size >= 0 && m_selected_size <= SIZES_COUNT))
     {
         qInfo() << "ERROR: no size set. " << m_selected_size;

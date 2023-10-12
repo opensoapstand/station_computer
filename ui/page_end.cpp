@@ -50,14 +50,14 @@ page_end::~page_end()
 
 void page_end::showEvent(QShowEvent *event)
 {
-    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+    p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
     
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_END_BACKGROUND_PATH);
-    p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+    p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_END_BACKGROUND_PATH);
+    p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
 
-    QString styleSheet = p_page_idle->getCSS(PAGE_END_CSS);
-    p_page_idle->setTemplateTextToObject(ui->pushButton_contact);
+    QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_END_CSS);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_contact);
 
     ui->pushButton_to_idle->setStyleSheet(styleSheet);
     ui->label_message->setStyleSheet(styleSheet);
@@ -76,24 +76,24 @@ void page_end::showEvent(QShowEvent *event)
     ui->pushButton_contact->raise();
     ui->label_customer_logo->hide();
 
-    p_page_idle->addCustomerLogoToLabel(ui->label_customer_logo);
+    p_page_idle->thisMachine->addCustomerLogoToLabel(ui->label_customer_logo);
 
-    QString paymentMethod = p_page_idle->selectedProduct->getPaymentMethod();
+    QString paymentMethod = p_page_idle->thisMachine->selectedProduct->getPaymentMethod();
 
-    if (p_page_idle->thisMachine.hasReceiptPrinter())
+    if (p_page_idle->thisMachine->hasReceiptPrinter())
     {
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_message, "hasReceiptPrinter");
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_message_2, "hasReceiptPrinter2");
+        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "hasReceiptPrinter");
+        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "hasReceiptPrinter2");
     }
     else if (paymentMethod == PAYMENT_QR || paymentMethod == PAYMENT_TAP_TCP)
     {
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_message, "qr");
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_message_2, "qr2");
+        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "qr");
+        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "qr2");
     }
     else
     {
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_message, "any_pay");
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_message_2, "any_pay2");
+        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "any_pay");
+        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "any_pay2");
     }
 
     is_in_state_thank_you = true;
@@ -113,8 +113,8 @@ void page_end::showEvent(QShowEvent *event)
     _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
     thankYouEndTimer->start();
 
-    QString machine_logo_full_path = p_page_idle->thisMachine.getTemplatePathFromName(MACHINE_LOGO_PATH);
-    p_page_idle->addPictureToLabel(ui->label_manufacturer_logo, machine_logo_full_path);
+    QString machine_logo_full_path = p_page_idle->thisMachine->getTemplatePathFromName(MACHINE_LOGO_PATH);
+    p_page_idle->thisMachine->addPictureToLabel(ui->label_manufacturer_logo, machine_logo_full_path);
     ui->label_manufacturer_logo->setStyleSheet(styleSheet);
 
     // p_page_idle->setDiscountPercentage(0.0);
@@ -129,15 +129,15 @@ size_t WriteCallback2(char *contents, size_t size, size_t nmemb, void *userp)
 void page_end::fsmReceiveFinalDispensedVolume(double dispensed)
 {
     qDebug() << "Updated dispensed volume" << dispensed;
-    p_page_idle->selectedProduct->setVolumeDispensedMl(dispensed);
-    QString units = p_page_idle->selectedProduct->getUnitsForSlot();
-    QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->selectedProduct->getVolumeDispensedMl(), units, false, true);
+    p_page_idle->thisMachine->selectedProduct->setVolumeDispensedMl(dispensed);
+    QString units = p_page_idle->thisMachine->selectedProduct->getUnitsForSlot();
+    QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl(), units, false, true);
 
-    double price = p_page_idle->thisMachine.getPriceWithDiscount(p_page_idle->selectedProduct->getBasePrice());
+    double price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->selectedProduct->getBasePrice());
 
-    if (p_page_idle->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
+    if (p_page_idle->thisMachine->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
     {
-    price = p_page_idle->thisMachine.getPriceWithDiscount(p_page_idle->selectedProduct->getBasePrice()*p_page_idle->selectedProduct->getVolumeDispensedMl());
+    price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->selectedProduct->getBasePrice()*p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl());
     }
     ui->label_volume_dispensed_ml->setText(dispensed_correct_units + " ( $" + QString::number(price, 'f', 2) + " )");
     
@@ -147,11 +147,11 @@ void page_end::sendDispenseEndToCloud()
 {
     QString order_id = this->paymentPage->getOID();
 
-    QString units = p_page_idle->selectedProduct->getUnitsForSlot();
-    QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->selectedProduct->getVolumeDispensedMl(), units, false, false);
-    QString volume_remaining = p_page_idle->selectedProduct->getVolumeRemainingCorrectUnits(false);
-    QString soapstand_product_serial = p_page_idle->selectedProduct->getProductDrinkfillSerial();
-    QString promoCode = this->p_page_idle->thisMachine.getPromoCode();
+    QString units = p_page_idle->thisMachine->selectedProduct->getUnitsForSlot();
+    QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl(), units, false, false);
+    QString volume_remaining = p_page_idle->thisMachine->selectedProduct->getVolumeRemainingCorrectUnits(false);
+    QString soapstand_product_serial = p_page_idle->thisMachine->selectedProduct->getProductDrinkfillSerial();
+    QString promoCode = this->p_page_idle->thisMachine->getPromoCode();
     qDebug() << "Send data at finish of order : " << order_id << ". Total dispensed: " << dispensed_correct_units << "corrected units send to soapstandportal: " << dispensed_correct_units;
     if (dispensed_correct_units == 0)
     {
@@ -220,7 +220,7 @@ void page_end::controllerFinishedTransaction()
 void page_end::transactionToFile(char *curl_params)
 {
     QString data_out = curl_params;
-    p_page_idle->thisMachine.dfUtility->write_to_file(TRANSACTION_DISPENSE_END_OFFINE_PATH, data_out);
+    p_page_idle->thisMachine->dfUtility->write_to_file(TRANSACTION_DISPENSE_END_OFFINE_PATH, data_out);
 }
 
 void page_end::onThankyouTimeoutTick()
@@ -250,7 +250,7 @@ void page_end::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     // p_page_idle->setPromoCode("");
 
     thankYouEndTimer->stop();
-    p_page_idle->pageTransition(this, pageToShow);
+    p_page_idle->thisMachine->pageTransition(this, pageToShow);
 }
 
 void page_end::finishHandler()
@@ -268,7 +268,7 @@ void page_end::finishHandler()
     else
     {
 
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_message, "finish_transaction");
+        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "finish_transaction");
         ui->label_message_2->hide();
     }
 }

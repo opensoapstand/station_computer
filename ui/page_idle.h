@@ -60,6 +60,7 @@ public:
     ~page_idle();
     void showEvent(QShowEvent *event);
     void changeToIdleProductsIfSet();
+    void setMachine(machine* machine);
 
 
 
@@ -70,7 +71,7 @@ public:
 
     // product *selectedProduct;
 
-    machine thisMachine;
+    machine* thisMachine;
     DbManager *g_database;
 
     

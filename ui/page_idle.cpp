@@ -101,6 +101,10 @@ void page_idle::displayTemperature()
     ui->label_show_temperature->setText(base_text.arg(QString::number(temperature, 'f', 1)));
 }
 
+void page_idle::setMachine(machine* pmachine){
+    thisMachine = pmachine;
+}
+
 void page_idle::showEvent(QShowEvent *event)
 {
 

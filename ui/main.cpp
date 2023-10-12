@@ -63,7 +63,6 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
     // create a new log file daily
     QString log_file_base_path = "/home/df-admin/production/logging/ui/ui_%1.txt"; // https://stackoverflow.com/questions/4784155/how-to-format-a-qstring
     QString log_file_path = QString(log_file_base_path).arg(time_stamp_date);
-   
 
     QFile file(log_file_path);
     log_file = &file;
@@ -187,21 +186,17 @@ int main(int argc, char *argv[])
 
     DbManager db_config;
     machine thisMachine;
-     product    products[MAX_SLOT_COUNT];
+    product products[MAX_SLOT_COUNT];
 
-    p_page_idle->g_database = &db_config;
+    p_page_idle->setMachine(&thisMachine) :
+
+                                            p_page_idle->g_database = &db_config;
 
     db_config.updateTableMachineWithText("software_version", UI_VERSION);
     thisMachine.setProducts(products);
     thisMachine.setDb(&db_config);
     thisMachine.initMachine(); // first setDb
     thisMachine.loadDynamicContent();
-
-
-
-  
-
-
 
     qDebug() << "Check image paths.... (all paths resolved if nothing shows up).";
 

@@ -211,10 +211,6 @@ void machine::setDiscountPercentageFraction(double percentageFraction)
     m_discount_percentage_fraction = percentageFraction;
 }
 
-// void machine::setConditionalDiscount(const std::map<std::string, std::string>& dictionary){
-//     qDebug() <<
-// }
-
 double machine::getDiscountPercentageFraction()
 {
     return m_discount_percentage_fraction;
@@ -290,10 +286,6 @@ void machine::loadElementPropertiesFile()
     //     qDebug() << "Button text:" << button->text();
     // }
 }
-
-// void machine::setExternalPropertiesToWidget(QWidget tmp){
-
-// }
 
 void machine::loadProductPropertiesFromProductsFile(QString soapstand_product_number, QString *name, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui)
 {

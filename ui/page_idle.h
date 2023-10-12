@@ -27,10 +27,6 @@
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
 
-// #define CONFIG_DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
-// #define USAGE_DB_PATH_CLICKS "/release/db/sqlite/clicks.db"
-// #define USAGE_DB_PATH_TEMPERATURE "/release/db/sqlite/temperature.db"
-
 class page_maintenance;
 class page_select_product;
 class page_maintenance_general;
@@ -63,33 +59,16 @@ public:
     void setMachine(machine* machine);
 
 
-
-
-
-    
-
-
-    // product *selectedProduct;
-
-    machine* thisMachine;
-    // DbManager *g_database;
-
-    
-    DfUiCommThread *dfComm;
-
     void printerStatusFeedback(bool isOnline, bool hasPaper);
 
-    void MMSlot();
+    // void MMSlot();
+    machine* thisMachine;
+    DfUiCommThread *dfComm;
     bool m_transitioning = false;
 
     QLabel *video_label;
     QVideoWidget *videoWidget;
     QMediaPlayer *player;
-
-
-
-
-
 
     QTimer *idlePageTypeSelectorTimer;
     int _idlePageTypeSelectorTimerTimeoutSec;
@@ -99,9 +78,7 @@ public:
     int _testForFrozenScreenTimerTimeoutSec;
 
     void checkReceiptPrinterStatus();
-
     StateFrozenScreenDetect stateScreenCheck;
-
     void hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createNewSessionId);
 
 private slots:
@@ -109,23 +86,16 @@ private slots:
     void onIdlePageTypeSelectorTimerTick();
     void onPollTemperatureTimerTick();
     void onTestForFrozenScreenTick();
-
     void on_pushButton_test_clicked();
 
 private:
-
-
     Ui::page_idle *ui;
     page_select_product *p_pageSelectProduct;
     page_maintenance *p_page_maintenance;
     page_maintenance_general *p_page_maintenance_general;
     page_idle_products *p_page_idle_products;
     page_error_wifi *p_page_error_wifi;
-    // bool p1, p2, p3, p4;
     QString idle_page_type;
-
-    // bool m_printer_isOnline_cached = true;
-    // bool m_printer_hasPaper_cached = true;
 };
 
 #endif // IDLE_H

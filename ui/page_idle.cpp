@@ -260,22 +260,6 @@ void page_idle::onTestForFrozenScreenTick()
 
     // prepare for next cycle
     stateScreenCheck = state_screen_check_clicked_and_wait;
-
-    // TEST the function by every now and then not clicking.
-    // std::srand(std::time(0)); // Seed the random number generator
-    // int randomNumber = std::rand() % 5;     // Generate a random number between 0 and 4
-    // bool randomBool = randomNumber > 2;
-
-    // // execute virtual click.
-    // if (randomBool)
-    // {
-    //     df_util::executeVirtualClick(200, 500);
-    // }
-    // else
-    // {
-    //     qDebug() << "Did not click. ";
-    // }
-
     df_util::executeVirtualClick(200, 500);
 }
 
@@ -283,12 +267,11 @@ void page_idle::onTestForFrozenScreenTick()
 void page_idle::onPollTemperatureTimerTick()
 {
     // Only poll temperature after every PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS seconds
-    if (--_pollTemperatureTimerTimeoutSec >= 0)
+    if (--_pollTemperatureTimerTimeoutSec >= 0){
         return;
+    }
 
     _pollTemperatureTimerTimeoutSec = PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS;
-    // qDebug() << "Check temperature.";
-
     thisMachine->getTemperatureFromController();
 
     float currentTemperature = thisMachine->getTemperature_1();
@@ -328,7 +311,6 @@ void page_idle::onIdlePageTypeSelectorTimerTick()
     }
     else
     {
-
         changeToIdleProductsIfSet();
     }
 }
@@ -349,20 +331,16 @@ void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
         ui->label_printer_status->raise();
         thisMachine->setTemplateTextWithIdentifierToObject(ui->label_printer_status, "offline");
         ui->label_printer_status->show();
-        // m_printer_isOnline_cached = false;
     }
     else if (!hasPaper)
     {
         ui->label_printer_status->raise();
         thisMachine->setTemplateTextWithIdentifierToObject(ui->label_printer_status, "nopaper");
         ui->label_printer_status->show();
-        // m_printer_hasPaper_cached = false;
     }
     else
     {
         ui->label_printer_status->hide();
-        // m_printer_isOnline_cached = true;
-        // m_printer_hasPaper_cached = true;
     }
     ui->pushButton_to_select_product_page->show();
 }
@@ -394,6 +372,7 @@ void page_idle::hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createN
     pollTemperatureTimer->stop();
     testForFrozenScreenTimer->stop();
 }
+
 void page_idle::on_pushButton_test_clicked()
 {
     qDebug() << "pushButton_test clicked.. ";

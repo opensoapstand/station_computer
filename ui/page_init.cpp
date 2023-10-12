@@ -56,20 +56,13 @@ void page_init::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
 
     // template content
-    // qDebug() << "init 0 f3e";
     p_page_idle->thisMachine->loadDynamicContent();
-    // qDebug() << "init 1 f3e";
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
-    // qDebug() << "init 2 f3e";
-
     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_INIT_BACKGROUND_IMAGE_PATH);
-    // qDebug() << "init 3 f3e";
 
     initIdleTimer->start(1000);
     paymentMethod = p_page_idle->thisMachine->getProduct(1)->getPaymentMethod(); // fixme --> takes payment product from one product for all products
-    // qDebug() << "init 4 f3e";
-
 #ifdef START_FSM_FROM_UI
     start_controller = true;
 #else

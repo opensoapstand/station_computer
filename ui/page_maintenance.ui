@@ -202,7 +202,7 @@
    <property name="geometry">
     <rect>
      <x>220</x>
-     <y>1320</y>
+     <y>1290</y>
      <width>391</width>
      <height>50</height>
     </rect>
@@ -275,7 +275,7 @@
    <property name="geometry">
     <rect>
      <x>220</x>
-     <y>1370</y>
+     <y>1340</y>
      <width>351</width>
      <height>30</height>
     </rect>
@@ -365,7 +365,7 @@
    <property name="geometry">
     <rect>
      <x>220</x>
-     <y>1300</y>
+     <y>1270</y>
      <width>641</width>
      <height>16</height>
     </rect>
@@ -378,7 +378,7 @@
    <property name="geometry">
     <rect>
      <x>220</x>
-     <y>1410</y>
+     <y>1380</y>
      <width>351</width>
      <height>30</height>
     </rect>
@@ -390,8 +390,8 @@
   <widget class="QLabel" name="label_qr_user_manual">
    <property name="geometry">
     <rect>
-     <x>360</x>
-     <y>1530</y>
+     <x>620</x>
+     <y>1340</y>
      <width>350</width>
      <height>350</height>
     </rect>
@@ -403,8 +403,8 @@
   <widget class="QLabel" name="label_qr_manual_description">
    <property name="geometry">
     <rect>
-     <x>360</x>
-     <y>1480</y>
+     <x>620</x>
+     <y>1290</y>
      <width>350</width>
      <height>31</height>
     </rect>

@@ -85,10 +85,10 @@ private:
     page_product* p_page_product;
 
     // QResizeEvent *productSelection;
-    QPushButton* pushButtons_products[SLOT_COUNT];
-    QLabel* labels_product_status[SLOT_COUNT];
-    QLabel* labels_product_name[SLOT_COUNT];
-    QLabel* labels_product_position[SLOT_COUNT];
+    QPushButton* pushButtons_products[MAX_SLOT_COUNT];
+    QLabel* labels_product_status[MAX_SLOT_COUNT];
+    QLabel* labels_product_name[MAX_SLOT_COUNT];
+    QLabel* labels_product_position[MAX_SLOT_COUNT];
     int _page_maintenanceTimeoutSec;
     QTimer* page_maintenanceEndTimer;
 

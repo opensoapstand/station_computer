@@ -50,27 +50,27 @@ page_error_wifi::~page_error_wifi()
 void page_error_wifi::showEvent(QShowEvent *event)
 {
 
-    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+    p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
 
     QWidget::showEvent(event);
-    p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+    p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
     
-    QString styleSheet = p_page_idle->getCSS(PAGE_ERROR_WIFI_CSS);
+    QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_ERROR_WIFI_CSS);
     ui->label_error_message->setStyleSheet(styleSheet);
     ui->label_oops->setStyleSheet(styleSheet);
-    p_page_idle->setTemplateTextToObject(ui->label_oops);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->label_oops);
 
     ui->label_error_occured->setStyleSheet(styleSheet);
-    p_page_idle->setTemplateTextToObject(ui->label_error_occured);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->label_error_occured);
     ui->label_check_back->setStyleSheet(styleSheet);
-    p_page_idle->setTemplateTextToObject(ui->label_check_back);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->label_check_back);
     ui->pushButton_mainPage->setStyleSheet(styleSheet);
 
-    QString machine_logo_full_path = p_page_idle->thisMachine.getTemplatePathFromName(MACHINE_LOGO_PATH);
-    p_page_idle->addPictureToLabel(ui->label_logo_drinkfill, machine_logo_full_path);
+    QString machine_logo_full_path = p_page_idle->thisMachine->getTemplatePathFromName(MACHINE_LOGO_PATH);
+    p_page_idle->thisMachine->addPictureToLabel(ui->label_logo_drinkfill, machine_logo_full_path);
     ui->label_logo_drinkfill->setStyleSheet(styleSheet);
 
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_ERROR_BACKGROUND_PATH);
+    p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_ERROR_BACKGROUND_PATH);
 
     timeoutTimer->start(1000);
     _goTop_page_idleTimeoutSec = 10;
@@ -89,7 +89,7 @@ void page_error_wifi::exit_page()
     // }
     // p_page_idle->showFullScreen();
     // this->hide();
-    p_page_idle->pageTransition(this, p_page_idle);
+    p_page_idle->thisMachine->pageTransition(this, p_page_idle);
 }
 
 void page_error_wifi::onTimeOutTick()

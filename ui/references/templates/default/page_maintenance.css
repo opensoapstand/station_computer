@@ -4,8 +4,10 @@
 }
 
 .label_qr {
+   font-family: 'Brevia';
+   font-style: normal;
    font-size: 28px;
-   color: black;
+   color: #003840;
    text-align: center;
    qproperty-alignment: AlignCenter;
 }
@@ -97,6 +99,8 @@
    color: #003840;
 }
 
-
+.label_qr_user_manual{
+   border-radius: 20px;
+}
 
 

@@ -144,7 +144,7 @@ page_error_wifi->label_check_back,Please check back soon
 page_payment_tap_tcp->pushButton_previous_page,<- back
 page_payment_tap_tcp->label_title->processing,Processing Payment
 page_payment_tap_tcp->msgBox_cancel,<p align=center><br><br>Cancel transaction and exit page?<br><br>It can take up to 30 seconds for dispensing to start after a payment is completed. <br></p>
-page_payment_tap_tcp->preauthLabel,You are being pre-authorized for maximum volume %1 with amount of
+page_payment_tap_tcp->preauthLabel,Pre-authorization for the maximum volume %1 with amount
 
 #################### page_payment_tap_serial
 page_payment_tap_serial->pushButton_previous_page,<- back

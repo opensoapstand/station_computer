@@ -68,7 +68,6 @@
    <property name="font">
     <font>
      <family>Montserrat</family>
-     <pointsize>-1</pointsize>
      <weight>50</weight>
      <italic>false</italic>
      <bold>false</bold>
@@ -115,7 +114,6 @@
    <property name="font">
     <font>
      <family>Montserrat</family>
-     <pointsize>-1</pointsize>
      <weight>50</weight>
      <italic>false</italic>
      <bold>false</bold>
@@ -143,7 +141,6 @@
    <property name="font">
     <font>
      <family>Montserrat</family>
-     <pointsize>-1</pointsize>
      <weight>50</weight>
      <italic>false</italic>
      <bold>false</bold>
@@ -320,7 +317,7 @@
      <x>562</x>
      <y>1568</y>
      <width>450</width>
-     <height>71</height>
+     <height>111</height>
     </rect>
    </property>
    <property name="text">

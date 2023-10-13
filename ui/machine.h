@@ -2,6 +2,7 @@
 #define MACHINE_H
 
 #include "df_util.h"
+#include "product.h"
 #include "dbmanager.h"
 
 typedef enum UserRole
@@ -24,22 +25,25 @@ typedef enum StateCoupon
     network_error
 } StateCoupon;
 
+class product; //  forward declaration.
+
 class machine : public QObject
 {
     Q_OBJECT
 
 public:
+    void checkForHighTemperatureAndDisableProducts();
     machine();
     ~machine();
     void loadParametersFromDb();
     void setDb(DbManager *db);
-
-
+    DbManager* getDb();
+    void initMachine();
 
     void dispenseButtonLightsAnimateState(bool animateElseOff);
     bool slotNumberValidityCheck(int slot);
     QString getStatusText(int slot);
-    void setStatusText(int slot, bool isSlotEnabled, QString status);
+    void setStatusText(int slot, QString status);
     void loadProductPropertiesFromProductsFile(QString soapstand_product_number, QString *name, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui);
 
     QString getPumpId(int slot);
@@ -47,6 +51,10 @@ public:
     QString getMachineId();
     bool getCouponsEnabled();
     bool getShowTransactionHistory();
+    bool isAelenPillarElseSoapStand();
+    bool isDispenseAreaBelowElseBesideScreen();
+
+    void registerUserInteraction(QWidget *page);
 
     void processRolePassword(QString password_input);
     QString getActiveRoleAsText();
@@ -61,6 +69,7 @@ public:
     QString getCustomerId();
 
     QString getTemplateFolder();
+    QString getTemplateName();
     QString getTemplatePathFromName(QString fileName);
     QString getDefaultTemplatePathFromName(QString fileName);
 
@@ -72,14 +81,15 @@ public:
 
     bool getSlotEnabled(int slot);
     void setSlotEnabled(int slot, bool isEnabled);
-    QString getIdlePageType();
+    void setSlotEnabled(int slot, bool isEnabled, QString statusText);
 
-    int getDispensersCount();
+    int getSlotCount();
+    bool compareSlotCountToMaxSlotCount(int slot_count);
 
     bool hasReceiptPrinter();
     void getPrinterStatusFromDb(bool *isOnline, bool *hasPaper);
     void getTemperatureFromController();
-    // void getTemperature2FromController(); // not needed, all available tempertures are sent with one request to controller. 
+    // void getTemperature2FromController(); // not needed, all available tempertures are sent with one request to controller.
     void writeTemperatureToDb(double temperature_1, double temperature_2);
     // void writeTemperature2ToDb(double temperature2);
     double getTemperature_1();
@@ -97,14 +107,43 @@ public:
     QString getPromoCode();
 
     void setCouponConditions(QString couponConditions);
-    std::map<QString , QString > getCouponConditions();
+    std::map<QString, QString> getCouponConditions();
 
+    void setProducts(product *products);
     QString m_session_id;
 
     void setDiscountPercentageFraction(double percentageFraction);
     double getDiscountPercentageFraction();
     double getDiscountAmount(double price);
     double getPriceWithDiscount(double price);
+    product *getProduct(int slot);
+    void loadDynamicContent();
+    QString getCSS(QString cssName);
+    void addCssClassToObject(QWidget *element, QString classname, QString css_file_name);
+    void setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier);
+    void setTemplateTextToObject(QWidget *p_element);
+    void setTextToObject(QWidget *p_element, QString text);
+    QString getCombinedElementPageAndName(QWidget *p_element);
+    QString getTemplateTextByElementNameAndPage(QWidget *p_element);
+    QString getTemplateTextByElementNameAndPageAndIdentifier(QWidget *p_element, QString identifier);
+    QString getTemplateTextByPage(QWidget *page, QString identifier);
+    QString getTemplateText(QString textName_to_find);
+    void loadTextsFromTemplateCsv();
+    void loadTextsFromDefaultCsv();
+    void loadElementDynamicPropertiesFromTemplate();
+    void loadElementDynamicPropertiesFromDefaultTemplate();
+
+    product *selectedProduct;
+    // QStringList getChildNames(QObject *parent);
+
+    void addPictureToLabel(QLabel *label, QString picturePath);
+    void addPictureToButton(QPushButton *button, QString picturePath);
+    void addCustomerLogoToLabel(QLabel *label);
+    void setBackgroundPictureFromTemplateToPage(QWidget *page, QString imageName);
+    void setBackgroundPictureToQWidget(QWidget *page, QString imageName);
+    void pageTransition(QWidget *pageToHide, QWidget *pageToShow);
+    void applyPropertiesToQWidget(QWidget *widget);
+    void applyDynamicPropertiesFromTemplateToWidgetChildren(QWidget *widget);
 
     QString m_machine_id;
     QString m_soapstand_customer_id;
@@ -146,12 +185,29 @@ public:
     // QStringList getChildNames(QObject *parent);
 
     void loadElementPropertiesFile();
+    QString getIdlePageType();
+
+    void setSelectedProduct(uint8_t slot);
+    product *getSelectedProduct();
+
+    QStringList getChildNames(QObject *parent);
+    void loadTextsFromCsv(QString csv_path, std::map<QString, QString> *dictionary);
 
 public slots:
 
 signals:
 
 private:
+    std::map<QString, QString> textNameToTextMap_template;
+    std::map<QString, QString> textNameToTextMap_default;
+    std::map<QString, QString> elementDynamicPropertiesMap_default;
+    std::map<QString, QString> elementDynamicPropertiesMap_template;
+    QString m_templatePath;
+
+    product *m_products;
+
+    QTime temperatureHighTime;
+    bool temperatureWasHigh = false;
     StateCoupon m_stateCoupon;
     double m_discount_percentage_fraction = 0.0;
     double max_discount = 0.0;
@@ -160,10 +216,9 @@ private:
     DbManager *m_db;
     UserRole active_role;
 
-
-    QString m_pump_id_slots[SLOT_COUNT];
-    int m_is_enabled_slots[SLOT_COUNT];
-    QString m_status_text_slots[SLOT_COUNT];
+    QString m_pump_id_slots[MAX_SLOT_COUNT];
+    int m_is_enabled_slots[MAX_SLOT_COUNT];
+    QString m_status_text_slots[MAX_SLOT_COUNT];
 };
 
 #endif // MACHINE_H

@@ -42,33 +42,33 @@ page_transactions::~page_transactions()
 void page_transactions::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
         idleTimer->stop();
-        p_page_idle->pageTransition(this, pageToShow);
+        p_page_idle->thisMachine->pageTransition(this, pageToShow);
 }
 
 void page_transactions::showEvent(QShowEvent *event)
 {
-        p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+        p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
         QWidget::showEvent(event);
 
-        p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+        p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
     
-        QString styleSheet = p_page_idle->getCSS(PAGE_TRANSACTIONS_CSS);
+        QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_TRANSACTIONS_CSS);
         ui->pushButton_back->setStyleSheet(styleSheet);
         ui->pushButton_print->setStyleSheet(styleSheet);
         ui->label_title->setStyleSheet(styleSheet);
         ui->list_transactions->setStyleSheet(styleSheet);
 
-        p_page_idle->setTemplateTextToObject(ui->label_title);
-        p_page_idle->setTemplateTextToObject(ui->pushButton_back);
-        p_page_idle->setTemplateTextToObject(ui->pushButton_print);
+        p_page_idle->thisMachine->setTemplateTextToObject(ui->label_title);
+        p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_back);
+        p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_print);
 
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TRANSACTIONS_BACKGROUND_PATH);
+        p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TRANSACTIONS_BACKGROUND_PATH);
 
         idleTimer->start(1000);
         _idleTimeoutSec = 60;
         populateTransactionsTable();
 
-        if (p_page_idle->thisMachine.hasReceiptPrinter())
+        if (p_page_idle->thisMachine->hasReceiptPrinter())
         {
                 ui->pushButton_print->show();
         }
@@ -95,7 +95,7 @@ void page_transactions::populateTransactionsTable()
 {
         transaction_count = TRANSACTION_HISTORY_COUNT;
         int retrieved_count;
-        p_page_idle->g_database->getRecentTransactions(recent_transactions, transaction_count, &retrieved_count);
+        p_page_idle->thisMachine->getDb()->getRecentTransactions(recent_transactions, transaction_count, &retrieved_count);
         transaction_count = retrieved_count;
         populateList();
 }
@@ -122,7 +122,7 @@ void page_transactions::populateList()
                 QString features_ui;
                 QString ingredients_ui;
                 QString rowItem;
-                p_page_idle->thisMachine.loadProductPropertiesFromProductsFile(recent_transactions[i][4],
+                p_page_idle->thisMachine->loadProductPropertiesFromProductsFile(recent_transactions[i][4],
                                                                                &name,
                                                                                &name_ui,
                                                                                &product_type,
@@ -171,12 +171,12 @@ void page_transactions::on_pushButton_print_clicked(bool checked)
                         QString transactionIndex = recent_transactions[rowIndex - 1][0];
                         qDebug() << "Selected row: " << rowIndex << " with dispense index: " + transactionIndex << ". Send to receipt printer.";
 
-                        p_page_idle->thisMachine.dfUtility->send_command_to_FSM("Printer");
+                        p_page_idle->thisMachine->dfUtility->send_command_to_FSM("Printer", true);
                         usleep(50000);
                         QString command = "t" + transactionIndex;
-                        p_page_idle->thisMachine.dfUtility->send_command_to_FSM(command);
+                        p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
                         usleep(50000);
-                        p_page_idle->thisMachine.dfUtility->send_command_to_FSM("q");
+                        p_page_idle->thisMachine->dfUtility->send_command_to_FSM("q", true);
                 }
         }
         else

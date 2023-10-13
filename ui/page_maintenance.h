@@ -51,6 +51,7 @@ public:
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
 
 private slots:
+    // void on_label_qr_user_manual_linkActivated(const QString &link);
     void on_pushButton_to_previous_page_clicked();
     void on_pushButton_product_1_clicked();
     void on_pushButton_product_2_clicked();
@@ -84,10 +85,10 @@ private:
     page_product* p_page_product;
 
     // QResizeEvent *productSelection;
-    QPushButton* pushButtons_products[SLOT_COUNT];
-    QLabel* labels_product_status[SLOT_COUNT];
-    QLabel* labels_product_name[SLOT_COUNT];
-    QLabel* labels_product_position[SLOT_COUNT];
+    QPushButton* pushButtons_products[MAX_SLOT_COUNT];
+    QLabel* labels_product_status[MAX_SLOT_COUNT];
+    QLabel* labels_product_name[MAX_SLOT_COUNT];
+    QLabel* labels_product_position[MAX_SLOT_COUNT];
     int _page_maintenanceTimeoutSec;
     QTimer* page_maintenanceEndTimer;
 

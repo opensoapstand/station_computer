@@ -67,8 +67,8 @@ scp /home/df-admin/station_computer/ui/payment/private_key.der /home/df-admin/pr
 scp /home/df-admin/station_computer/ui/payment/public_key.txt /home/df-admin/production/admin/tap_payment
 
 
-# database gets copied from the backup folder. aka we do not copy the database from the drinkfill folder. 
+# database gets copied from the backup folder. aka we do not copy the database from the station_computer folder. 
 sudo -u df-admin rm -r /home/df-admin/production/db
 sudo -u df-admin scp -r $BKP_PATH/db /home/df-admin/production
 
-echo "Done. NOTE: the database was not copied from the drinkfill folder. It was preserved from the previous production folder. Copy the db manually from drinkfill if needed."
+echo "Done. NOTE: the database was not copied from the station_computer git folder. It was preserved from the previous production folder. Copy the db manually from station_computer folder if needed."

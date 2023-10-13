@@ -76,7 +76,7 @@ DF_ERROR stateManualPrinter::onAction()
 
       if (m_pMessaging->getAction() == ACTION_RESET)
       {
-         m_pMessaging->sendMessageOverIP("Init Ready");
+         m_pMessaging->sendMessageOverIP("Init Ready", true); // send to UI
          m_state_requested = STATE_IDLE;
       }
       else if ('0' == m_pMessaging->getAction() || ACTION_QUIT == m_pMessaging->getAction())
@@ -133,7 +133,7 @@ DF_ERROR stateManualPrinter::onAction()
       else if ('6' == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Test send OK to UI", MSG_INFO);
-         m_pMessaging->sendMessageOverIP("OK");
+         m_pMessaging->sendMessageOverIP("OK", true); // send to UI
       }
       else
       {
@@ -320,7 +320,7 @@ DF_ERROR stateManualPrinter::sendPrinterStatus()
    //    g_machine.pcb24VPowerSwitch(true);
    // }
 
-   m_pMessaging->sendMessageOverIP(statusString); // if commented out: Let's communicate by setting the db fields only
+   m_pMessaging->sendMessageOverIP(statusString, true); // send to UI // if commented out: Let's communicate by setting the db fields only
 }
 
 DF_ERROR stateManualPrinter::getPrinterStatus(bool *r_isOnline, bool *r_hasPaper)

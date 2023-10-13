@@ -43,6 +43,8 @@ QPushButton {
    text-align: center;
    color: #003840;
    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+   word-wrap: break-word;
+
 }
 
 #label_scan {
@@ -85,6 +87,7 @@ QPushButton {
    font-size: 36px;
    line-height: 51px;
    color: #003840;
+   word-wrap:break-word;
 }
 
 #pushButton_previous_page{ 
@@ -123,3 +126,16 @@ QLabel {
    font-style:light;
 
 }
+
+#label_gif{
+   font-family: 'Montserrat';
+   font-style: normal;
+   font-weight: 600;
+   font-size: 36px;
+   line-height: 40px;
+   color: #58595B;
+   padding: 3px;
+   text-align: center;
+   /* border:8px solid #248C8C; */
+}
+

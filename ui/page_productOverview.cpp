@@ -122,13 +122,33 @@ void page_product_overview::showEvent(QShowEvent *event)
     ui->pushButton_previous_page->setProperty("class", "buttonBGTransparent");
     ui->pushButton_previous_page->setStyleSheet(styleSheet);
     ui->pushButton_continue->setStyleSheet(styleSheet);
+    // p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "offline");
+    // p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "offline");
+
     ui->pushButton_continue->raise();
     ui->pushButton_to_help->setProperty("class", "buttonBGTransparent");
     ui->pushButton_to_help->setStyleSheet(styleSheet);
 
+
+    // if (proucts sdlect -> getpayment type == "qr/emailfree" && price == 0){
+    //     proc
+    // }else{
+
+    // }
+    double selectedPrice = p_page_idle->thisMachine->selectedProduct->getBasePrice();
+    double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
+    qDebug() << "!!!!!!TRIGGERED PAYMENT METHOD:" << p_page_idle->thisMachine->selectedProduct-> getPaymentMethod(); 
+    if(p_page_idle->thisMachine->selectedProduct->getPaymentMethod() == "qr/emailfree" && finalPrice == 0.0 ){
+        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_free");
+        qDebug() << "!!!!!!TRIGGERED FINAL PRICE:" << finalPrice; 
+    
+    }else{
+        qDebug() << "!!!!!!TRIGGERED nototaoieoit PRICE:" << finalPrice; 
+        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay");
+    }
+
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_select_product_page);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_discount_tag);
-    p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_continue);
 
     QString keyboard = KEYBOARD_IMAGE_PATH;
     QString keyboard_picture_path = p_page_idle->thisMachine->getTemplatePathFromName(KEYBOARD_IMAGE_PATH);

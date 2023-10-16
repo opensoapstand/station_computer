@@ -11,7 +11,6 @@
 #include <errno.h>
 #include <sys/stat.h>
 
-
 mCommunication::mCommunication(){
     fd = -1;
 }
@@ -24,7 +23,6 @@ bool mCommunication::page_init(){
     bool bRet = false;
   
     fd = open(MONERIS_PORT ,O_RDWR | O_NOCTTY| O_NDELAY);
-    std::cout << "FD" << fd << std::endl;
 
     /* O_RDWR Read/Write access to serial port           */
     /* O_NOCTTY - No terminal will control the process   */
@@ -32,6 +30,7 @@ bool mCommunication::page_init(){
     /* -the status of DCD line,Open() returns immediatly */
     if(fd == -1) {
         qDebug() << "Serial (mpos) Status: "<< "Failed";
+        perror("Error opening serial port");
         return bRet;
     }
     else {
@@ -54,7 +53,7 @@ bool mCommunication::page_init(){
         SerialPortSettings.c_iflag &= ~(ICANON | ECHO | ECHOE | ISIG);  /* Non Cannonical mode            */
         SerialPortSettings.c_oflag &= ~OPOST;/*No Output Processing*/
         SerialPortSettings.c_cc[VMIN]   =  1;                  // read doesn't block
-        SerialPortSettings.c_cc[VTIME]  =  5;                  // 0.5 seconds read timeout
+        SerialPortSettings.c_cc[VTIME]  =  10;                  // 1 seconds read timeout
         /* Make raw */
         cfmakeraw(&SerialPortSettings);
         if((tcsetattr(fd,TCSANOW,&SerialPortSettings)) != 0) {
@@ -75,7 +74,7 @@ std::vector<uint8_t> mCommunication::readPacket(){
     long int readSize = -1;
     long int readSize2 = -1;
     std::vector<uint8_t> pktRead;
-    //tcflush(fd, TCIOFLUSH);
+    // tcflush(fd, TCIOFLUSH);
     //tcflush(fd, TCIOFLUSH);
     
     readSize = read(fd, buffer, MAX_SIZE);
@@ -130,8 +129,6 @@ std::vector<uint8_t> mCommunication::readForAck()
             readSize = read(fd, buffer, 1);
             readcount++;
         }
-        
-        std::cout << "In read for ack";
         if (readSize != -1){
             break;
         }
@@ -154,7 +151,6 @@ std::vector<uint8_t> mCommunication::readForAck()
             // std::cout << buffer[i];
             pktRead.push_back(buffer[i]);
         }
-        // std::cout << pktRead[0];
     //    tcflush(fd, TCIOFLUSH);
         return pktRead;
     }

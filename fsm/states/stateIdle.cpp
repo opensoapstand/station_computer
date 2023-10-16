@@ -97,7 +97,7 @@ DF_ERROR stateIdle::onAction()
    //   double temperature = this->productDispensers[0].the_pcb->getTemperature();
    //   debugOutput::sendMessage("Temperature in Celsius: " + std::to_string(temperature), MSG_INFO);
    //   printf("Temperature polling from MCP9808: %.3f Celcius \n", temperature);
-   //   m_pMessaging->sendMessageOverIP("temperature|" + std::to_string(temperature));
+   //   m_pMessaging->sendMessageOverIP("temperature|" + std::to_string(temperature), true); // send to UI
 
    //   std::this_thread::sleep_for(std::chrono::seconds(5));  // Wait for 5 seconds
    // temperatureRefresh==0;
@@ -124,7 +124,7 @@ DF_ERROR stateIdle::onAction()
       }
       else if (m_pMessaging->getAction() == ACTION_RESET)
       {
-         m_pMessaging->sendMessageOverIP("Init Ready");
+         m_pMessaging->sendMessageOverIP("Init Ready", true); // send to UI
          debugOutput::sendMessage("Send msg to ui: Controller is ready.", MSG_INFO);
       }
       else if ('0' == m_pMessaging->getAction() || ACTION_QUIT == m_pMessaging->getAction())

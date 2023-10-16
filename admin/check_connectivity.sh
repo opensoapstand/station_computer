@@ -7,7 +7,7 @@ machineId=$(sqlite3 "$database_path" "$query")
 
 database_temperature="/home/df-admin/production/db/usage.db"
 getTemperature="Select temperature_1 from temperature ORDER BY time DESC LIMIT 1"
-temperatureValue=$(sqlite3 "$database_temperature" "$getTemperature")
+temperatureValue1=$(sqlite3 "$database_temperature" "$getTemperature")
 
 database_temperature2="/home/df-admin/production/db/usage.db"
 getTemperature2="Select temperature_2 from temperature ORDER BY time DESC LIMIT 1"

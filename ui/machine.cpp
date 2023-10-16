@@ -4,6 +4,9 @@
 #include "dbmanager.h"
 #include "machine.h"
 #include "product.h"
+#include <QtWidgets>
+#include <map>
+#include <fstream>
 
 machine::machine()
 {
@@ -19,6 +22,40 @@ machine::~machine()
 {
 }
 
+void machine::initMachine()
+{
+    loadParametersFromDb();
+    for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
+    {
+        
+        m_products[slot_index].setSlot(slot_index + 1);
+        m_products[slot_index].setMachine(this);
+        m_products[slot_index].setDb(m_db);
+    }
+    loadDynamicContent();
+}
+
+void machine::loadDynamicContent()
+{
+    // load global machine data
+    loadParametersFromDb();
+
+    for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
+    {
+        m_products[slot_index].loadProductProperties();
+    }
+
+    loadTextsFromTemplateCsv();                        // dynamic content (text by template)
+    loadTextsFromDefaultCsv();                         // dynamic styling (css by template)
+    loadElementDynamicPropertiesFromTemplate();        // dynamic elements (position, visibility)
+    loadElementDynamicPropertiesFromDefaultTemplate(); // dynamic elements (position, visibility)
+}
+
+DbManager *machine::getDb()
+{
+    return m_db;
+}
+
 void machine::setDb(DbManager *db)
 {
     m_db = db;
@@ -29,10 +66,26 @@ StateCoupon machine::getCouponState()
     return m_stateCoupon;
 }
 
+product *machine::getProduct(int slot)
+{
+    if (slot == 0)
+    {
+
+        qDebug() << "ERROR: slot numbers start from 1!!!";
+    }
+    return &m_products[slot - 1];
+}
+
+void machine::setSelectedProduct(uint8_t slot)
+{
+    selectedProduct = &m_products[slot - 1];
+}
+
 void machine::setProducts(product *products)
 {
     m_products = products;
 }
+
 bool machine::isDispenseAreaBelowElseBesideScreen()
 
 {
@@ -68,6 +121,55 @@ bool machine::isAelenPillarElseSoapStand()
     return false; // default case
 }
 
+int machine::getSlotCount()
+{
+    // check hardwarenumber
+    int slot_count;
+    if (m_hardware_version.startsWith("AP"))
+    {
+        if (m_hardware_version == "AP1")
+        {
+            slot_count = 4;
+        }
+        else if (m_hardware_version == "AP1.1")
+        {
+            slot_count = 4;
+        }
+        else
+        {
+            slot_count = 8;
+        }
+    }
+    else if (m_hardware_version.startsWith("SS"))
+    {
+        if (m_hardware_version == "SS1")
+        {
+            slot_count = 4;
+        }
+        else if (m_hardware_version == "SS2")
+        {
+            slot_count = 4;
+        }
+        else
+        {
+            slot_count = 8;
+        }
+    }
+    if (compareSlotCountToMaxSlotCount(slot_count))
+    {
+        qDebug() << "ERROR - Slot Count:" << slot_count << " exceeded MAX_SLOT_COUNT:" << MAX_SLOT_COUNT << "threshold";
+    }
+    return slot_count;
+    // dispensers is the same as slots.
+
+    // return m_dispense_buttons_count % 1000;
+}
+
+bool machine::compareSlotCountToMaxSlotCount(int slot_count)
+{
+    return (slot_count > MAX_SLOT_COUNT);
+}
+
 void machine::setCouponState(StateCoupon state)
 {
     m_stateCoupon = state;
@@ -77,11 +179,11 @@ void machine::dispenseButtonLightsAnimateState(bool animateElseOff)
 {
     if (animateElseOff)
     {
-        dfUtility->send_command_to_FSM("DispenseButtonLights|ANIMATE");
+        dfUtility->send_command_to_FSM("DispenseButtonLights|ANIMATE", true);
     }
     else
     {
-        dfUtility->send_command_to_FSM("DispenseButtonLights|OFF");
+        dfUtility->send_command_to_FSM("DispenseButtonLights|OFF", true);
     }
 }
 
@@ -108,10 +210,6 @@ void machine::setDiscountPercentageFraction(double percentageFraction)
     qDebug() << "Set discount percentage as a fraction. " << QString::number(percentageFraction, 'f', 3);
     m_discount_percentage_fraction = percentageFraction;
 }
-
-// void machine::setConditionalDiscount(const std::map<std::string, std::string>& dictionary){
-//     qDebug() <<
-// }
 
 double machine::getDiscountPercentageFraction()
 {
@@ -188,10 +286,6 @@ void machine::loadElementPropertiesFile()
     //     qDebug() << "Button text:" << button->text();
     // }
 }
-
-// void machine::setExternalPropertiesToWidget(QWidget tmp){
-
-// }
 
 void machine::loadProductPropertiesFromProductsFile(QString soapstand_product_number, QString *name, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui)
 {
@@ -275,10 +369,10 @@ void machine::checkForHighTemperatureAndDisableProducts()
 
         if (elapsedMinutes >= 60) // 60  Check if one hour has passed
         {
-            for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+            for (uint8_t slot_index = 0; slot_index < getSlotCount(); slot_index++)
             {
                 qDebug() << "Temperature too high for one hour, block all slots.";
-                m_products[slot_index].setSlotEnabled(true, "SLOT_STATE_DISABLED_COMING_SOON");
+                setSlotEnabled(slot_index + 1, true, "SLOT_STATE_DISABLED_COMING_SOON");
             }
         }
     }
@@ -291,7 +385,7 @@ bool machine::isTemperatureTooHigh_1()
 {
     // qDebug() << "alert temperature: " << m_alert_temperature;
     // qDebug() << "current temperature: " << m_temperature;
-    if (m_alert_temperature > 100.0)
+    if (m_alert_temperature > 100.0) // if higher than 100 we consider the value bogus (sensor broken, dummy value...)
     {
         return false;
     }
@@ -321,7 +415,7 @@ double machine::getTemperature_1()
 
 void machine::getTemperatureFromController()
 {
-    dfUtility->send_command_to_FSM("getTemperature");
+    dfUtility->send_command_to_FSM("getTemperature", false);
 }
 
 bool machine::hasReceiptPrinter()
@@ -435,10 +529,16 @@ void machine::setRole(UserRole role)
     }
 }
 
-void machine::setStatusText(int slot, bool isSlotEnabled, QString status)
+void machine::setStatusText(int slot, QString status)
 {
     QString column = QString("status_text_slot_%1").arg(slot);
     m_db->updateTableMachineWithText(column, status);
+}
+
+void machine::setSlotEnabled(int slot, bool isEnabled, QString statusText)
+{
+    setSlotEnabled(slot, isEnabled);
+    setStatusText(slot, statusText);
 }
 
 QString machine::getStatusText(int slot)
@@ -453,6 +553,14 @@ QString machine::getPumpId(int slot)
     return m_pump_id_slots[slot - 1];
 }
 
+void machine::registerUserInteraction(QWidget *page)
+{
+    QString page_name = page->objectName();
+    qDebug() << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< User entered: " + page_name + " >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
+    QString event = "Entered Page";
+    m_db->addUserInteraction(getSessionId(), getActiveRoleAsText(), page_name, event);
+}
+
 bool machine::slotNumberValidityCheck(int slot)
 {
     bool valid = true;
@@ -460,14 +568,14 @@ bool machine::slotNumberValidityCheck(int slot)
     {
         valid = false;
     }
-    if (slot > SLOT_COUNT)
+    if (slot > getSlotCount())
     {
         valid = false;
     }
     if (!valid)
     {
 
-        qDebug() << "Invalid slot! slots start from 1 and go up to " << SLOT_COUNT << " e.g. 1,2,3,4. Slot provided: " << slot;
+        qDebug() << "Invalid slot! slots start from 1 and go up to " << getSlotCount() << " e.g. 1,2,3,4. Slot provided: " << slot;
     }
     return valid;
 }
@@ -490,11 +598,6 @@ bool machine::getSlotEnabled(int slot)
 QString machine::getHelpPageHtmlText()
 {
     return m_help_text_html;
-}
-
-QString machine::getIdlePageType()
-{
-    return m_idle_page_type;
 }
 
 void machine::loadParametersFromDb()
@@ -536,15 +639,23 @@ void machine::loadParametersFromDb()
     qDebug() << "Template folder from db : " << getTemplateFolder();
 }
 
-int machine::getDispensersCount()
+// for products.cpp
+product *machine::getSelectedProduct()
 {
-    return m_dispense_buttons_count % 1000;
+    return selectedProduct;
 }
+
+QString machine::getIdlePageType()
+{
+    return m_idle_page_type;
+}
+
 bool machine::getCouponsEnabled()
 {
     qDebug() << "coupons enabled>>> :: " << m_coupons_enabled;
     return m_coupons_enabled == 1;
 }
+
 QString machine::getMachineId()
 {
     return m_machine_id;
@@ -576,4 +687,389 @@ std::map<QString, QString> machine::getCouponConditions()
     myMap["m_max_threshold_vol_ml_discount"] = m_max_threshold_vol_ml_discount;
     myMap["m_max_dollar_amount_discount"] = m_max_dollar_amount_discount;
     return myMap;
+}
+
+void machine::addCustomerLogoToLabel(QLabel *label)
+{
+    QString id = getCustomerId();
+    QString logo_path = QString(CLIENT_LOGO_PATH).arg(id);
+    addPictureToLabel(label, logo_path);
+}
+
+void machine::addPictureToButton(QPushButton *button, QString picturePath)
+{
+    QString p = selectedProduct->getProductPicturePath();
+    if (df_util::pathExists(p))
+    {
+        QPixmap im(p);
+        QIcon qi(im);
+        button->setIcon(qi);
+        button->setIconSize(QSize(271, 391));
+    }
+}
+
+void machine::addPictureToLabel(QLabel *label, QString picturePath)
+{
+    if (df_util::pathExists(picturePath))
+    {
+        QPixmap picture(picturePath);
+
+        int w = label->width();
+        int h = label->height();
+
+        // // set a scaled pixmap to a w x h window keeping its aspect ratio
+        label->setPixmap(picture.scaled(w, h, Qt::KeepAspectRatio));
+    }
+    else
+    {
+        qDebug() << "Can't add picture to label: " << label->objectName() << " " << picturePath;
+    }
+}
+
+void machine::addCssClassToObject(QWidget *element, QString classname, QString css_file_name)
+{
+    QString styleSheet = getCSS(css_file_name);
+    element->setProperty("class", classname);
+    element->setStyleSheet(styleSheet);
+}
+
+QString machine::getCSS(QString cssName)
+{
+    QString cssFilePath = getTemplatePathFromName(cssName);
+
+    QFile cssFile(cssFilePath);
+    QString styleSheet = "";
+    if (cssFile.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        styleSheet = QString::fromUtf8(cssFile.readAll());
+    }
+    else
+    {
+        qDebug() << "CSS file could not be opened." << cssFilePath;
+    }
+    return styleSheet;
+}
+
+void machine::pageTransition(QWidget *pageToHide, QWidget *pageToShow)
+{
+    // page transition effects are not part of QT but of the operating system! // search for ubuntu settings program to set transition animations to "off"
+    pageToShow->showFullScreen();
+    pageToHide->hide();
+}
+
+void machine::setBackgroundPictureFromTemplateToPage(QWidget *p_widget, QString imageName)
+{
+    // on Page: if called from setPage: will not scale
+    // on Page: if called from showEvent: will scale to screen
+
+    QString image_path = imageName;
+    image_path = getTemplatePathFromName(imageName);
+    // qDebug()<< "background image path: " << image_path;
+    setBackgroundPictureToQWidget(p_widget, image_path);
+}
+
+void machine::setBackgroundPictureToQWidget(QWidget *p_widget, QString image_path)
+{
+    QPixmap background(image_path);
+
+    // background = background.scaled(p_widget->size(), Qt::IgnoreAspectRatio);
+    QPalette palette;
+    palette.setBrush(QPalette::Background, background);
+    p_widget->setPalette(palette);
+    p_widget->repaint();
+    p_widget->update();
+}
+
+void machine::setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier)
+{
+    QString text = getTemplateTextByElementNameAndPageAndIdentifier(p_element, identifier);
+    setTextToObject(p_element, text);
+}
+
+QString machine::getTemplateTextByElementNameAndPageAndIdentifier(QWidget *p_element, QString identifier)
+{
+    // QString element_page_and_name = getTemplateTextByElementNameAndPage(p_element);
+    QString element_page_and_name = getCombinedElementPageAndName(p_element);
+
+    QString searchString = element_page_and_name + "->" + identifier;
+    return getTemplateText(searchString);
+}
+
+void machine::setTemplateTextToObject(QWidget *p_element)
+{
+    QString searchString = getTemplateTextByElementNameAndPage(p_element);
+    setTextToObject(p_element, searchString);
+}
+
+QString machine::getCombinedElementPageAndName(QWidget *p_element)
+{
+    QString elementName = p_element->objectName();
+    QWidget *parentWidget = p_element->parentWidget();
+
+    if (!parentWidget)
+    {
+        qDebug() << "No parent for the provided widget!! " << elementName;
+    }
+
+    QString pageName = parentWidget->objectName();
+
+    return pageName + "->" + elementName;
+}
+
+QString machine::getTemplateTextByElementNameAndPage(QWidget *p_element)
+{
+    QString pageName_elementName_combination = getCombinedElementPageAndName(p_element);
+    return getTemplateText(pageName_elementName_combination);
+}
+
+void machine::setTextToObject(QWidget *p_element, QString text)
+{
+    if (QLabel *label = qobject_cast<QLabel *>(p_element))
+    {
+        label->setText(text);
+    }
+    else if (QPushButton *button = qobject_cast<QPushButton *>(p_element))
+    {
+        button->setText(text);
+    }
+    else if (QMessageBox *msgBox = qobject_cast<QMessageBox *>(p_element))
+    {
+        msgBox->setText(text);
+    }
+    else
+    {
+        // Handle other types of elements if needed
+    }
+}
+
+// get a text that is not linked to an elements on a specific page by its identifier
+QString machine::getTemplateTextByPage(QWidget *page, QString identifier)
+{
+    QString pageName = page->objectName();
+    QString searchString = pageName + "->" + identifier;
+    return getTemplateText(searchString);
+}
+
+QString machine::getTemplateText(QString textName_to_find)
+{
+    std::string key = textName_to_find.toStdString();
+    auto it = textNameToTextMap_template.find(QString::fromStdString(key));
+    QString retval;
+    if (it != textNameToTextMap_template.end())
+    {
+        // std::cout << "Word found! Sentence: " << it->second ;
+        retval = it->second;
+    }
+    else
+    {
+        it = textNameToTextMap_default.find(QString::fromStdString(key));
+        if (it != textNameToTextMap_default.end())
+        {
+            retval = it->second;
+        }
+        else
+        {
+            qDebug() << "No template text value found for: " + textName_to_find;
+            retval = textName_to_find;
+        }
+    }
+
+    // \n values in the csv file get automatically escaped. We need to deescape them.
+    retval.replace("\\n", "\n");
+
+    return retval;
+}
+
+void machine::applyDynamicPropertiesFromTemplateToWidgetChildren(QWidget *widget)
+{
+    // in reality, send a page widget as argument. All the childeren will be checked. (i.e. buttons, labels,...)
+    QList<QObject *> allChildren = widget->findChildren<QObject *>();
+    foreach (QObject *child, allChildren)
+    {
+        QWidget *widget = qobject_cast<QWidget *>(child);
+        if (widget)
+        {
+            // not all child element are widgets.
+
+            QString combinedName = getCombinedElementPageAndName(widget);
+            // qDebug() << combinedName;
+            applyPropertiesToQWidget(widget);
+        }
+    }
+}
+
+void machine::applyPropertiesToQWidget(QWidget *widget)
+{
+
+    // example of line in text file with properties:
+    // machine->label_customer_logo,{"x":570, "y":1580, "width":351, "height":211,"isVisibleAtLoad":true}
+
+    QString combinedName = getCombinedElementPageAndName(widget);
+
+    auto it = elementDynamicPropertiesMap_template.find(combinedName);
+    QString jsonString;
+    bool valid = true;
+
+    if (it != elementDynamicPropertiesMap_template.end())
+    {
+        qDebug() << "element " << combinedName << "found in template. json string: " << it->second;
+        jsonString = it->second;
+    }
+    else
+    {
+        it = elementDynamicPropertiesMap_default.find(combinedName);
+        if (it != elementDynamicPropertiesMap_default.end())
+        {
+            qDebug() << "element " << combinedName << "found in default. json string: " << it->second;
+            jsonString = it->second;
+        }
+        else
+        {
+            // qDebug() << "No template text value found for: " + combinedName;
+            valid = false;
+        }
+    }
+
+    if (!valid)
+    {
+        return;
+    }
+
+    QJsonObject jsonObject = df_util::parseJsonString(jsonString);
+
+    int x = widget->x();
+    int y = widget->y();
+    int width = widget->width();
+    int height = widget->height();
+
+    if (jsonObject.contains("x"))
+    {
+        QJsonValue xValue = jsonObject.value("x");
+        x = xValue.toInt();
+        // qDebug() << "x found  " << x ;
+    }
+    if (jsonObject.contains("y"))
+    {
+        QJsonValue val = jsonObject.value("y");
+        y = val.toInt();
+        // qDebug() << "y found  " << y ;
+    }
+    if (jsonObject.contains("width"))
+    {
+        QJsonValue val = jsonObject.value("width");
+        width = val.toInt();
+        // qDebug() << "width found  " << width ;
+    }
+    if (jsonObject.contains("height"))
+    {
+        QJsonValue val = jsonObject.value("height");
+        height = val.toInt();
+        // qDebug() << "height found  " << height ;
+    }
+    widget->setGeometry(x, y, width, height);
+
+    if (jsonObject.contains("isVisibleAtLoad"))
+    {
+        QJsonValue val = jsonObject.value("isVisibleAtLoad");
+        bool isVisible = val.toBool();
+        // qDebug() << "visibility found  " << isVisible ;
+
+        widget->setVisible(isVisible);
+    }
+}
+
+void machine::loadElementDynamicPropertiesFromDefaultTemplate()
+{
+    qDebug() << "Load dynamic properties from default template file";
+    QString path = getDefaultTemplatePathFromName(UI_ELEMENT_PROPERTIES_PATH);
+    loadTextsFromCsv(path, &elementDynamicPropertiesMap_default);
+    // Print the word-sentence mapping
+    // for (const auto &pair : elementDynamicPropertiesMap_default)
+    // {
+    //     qDebug() << pair.first << ": " << pair.second;
+    // }
+}
+
+void machine::loadElementDynamicPropertiesFromTemplate()
+{
+    qDebug() << "Load dynamic properties from template file";
+    QString path = getTemplatePathFromName(UI_ELEMENT_PROPERTIES_PATH);
+    loadTextsFromCsv(path, &elementDynamicPropertiesMap_template);
+
+    // Print the word-sentence mapping
+    // for (const auto &pair : elementDynamicPropertiesMap_default)
+    // {
+    //     qDebug() << pair.first << ": " << pair.second;
+    // }
+}
+
+void machine::loadTextsFromTemplateCsv()
+{
+    qDebug() << "Load dynamic texts from template csv";
+    QString csv_path = getTemplatePathFromName(UI_TEXTS_CSV_PATH);
+    loadTextsFromCsv(csv_path, &textNameToTextMap_template);
+}
+
+void machine::loadTextsFromDefaultCsv()
+{
+    qDebug() << "Load dynamic texts from default csv";
+    QString csv_default_template_path = getDefaultTemplatePathFromName(UI_TEXTS_CSV_PATH);
+    loadTextsFromCsv(csv_default_template_path, &textNameToTextMap_default);
+}
+
+void machine::loadTextsFromCsv(QString csv_path, std::map<QString, QString> *dictionary)
+{
+    std::ifstream file(csv_path.toStdString());
+    if (file.is_open())
+    {
+        std::string line;
+        while (std::getline(file, line))
+        {
+            if (!line.empty() && line[0] != '#') // Skip empty lines and lines starting with '#'
+            {
+                // qDebug() << QString::fromStdString(line);
+
+                std::size_t delimiter_pos = line.find(','); // left of , is the element name, right is its text
+                if (delimiter_pos != std::string::npos)
+                {
+                    std::string word = line.substr(0, delimiter_pos);
+                    std::string sentence = line.substr(delimiter_pos + 1);
+                    QString qword = QString::fromStdString(word);
+                    QString qsentence = QString::fromStdString(sentence);
+                    (*dictionary)[qword] = qsentence;
+                }
+            }
+        }
+        file.close();
+
+        // Print the word-sentence mapping
+        // for (const auto &pair : *dictionary)
+        // {
+        //     qDebug() << pair.first << ": " << pair.second;
+        // }
+    }
+    else
+    {
+        qDebug() << "Texts file path could not be opened: " + csv_path;
+    }
+}
+
+QStringList machine::getChildNames(QObject *parent)
+{
+    QStringList childNames;
+
+    if (!parent)
+    {
+        qDebug() << "Invalid parent object.";
+        return childNames;
+    }
+
+    QList<QObject *> allChildren = parent->findChildren<QObject *>();
+
+    foreach (QObject *child, allChildren)
+    {
+        childNames.append(child->objectName());
+    }
+
+    return childNames;
 }

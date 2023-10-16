@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>page_tap_payment</class>
- <widget class="QWidget" name="page_tap_payment">
+ <class>page_payment_tap_tcp</class>
+ <widget class="QWidget" name="page_payment_tap_tcp">
   <property name="geometry">
    <rect>
     <x>0</x>

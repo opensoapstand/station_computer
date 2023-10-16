@@ -8,12 +8,10 @@
 // TODO: Refactor to fit with dfuicommthread
 //#define START_FSM_FROM_UI //enabled by default (start controller from ui)
 
-#define UI_VERSION "2.2.1"
-
-#define ENABLE_COUPON   // Petros stations have no coupon
+#define UI_VERSION "2.3"
 
 #define OPTION_SLOT_INVALID 0
-#define SLOT_COUNT 4  // number of products
+#define MAX_SLOT_COUNT 20  // number of slots
 
 #define SIZES_COUNT 6
 #define MINIMUM_DISPENSE_VOLUME_ML 10.0
@@ -55,6 +53,7 @@ using namespace std;
 
 #define PAGE_IDLE_DELAY_BEFORE_ENTERING_IDLE_PRODUCTS 15
 #define PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS 60 //60
+#define PAGE_IDLE_TEST_FOR_FROZEN_SCREEN_PERIOD_SECONDS 60 
 #define PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS 6
 #define PAGE_IDLE_PRODUCTS_STEP_DISPLAY_TIME_SECONDS 1
 
@@ -87,12 +86,12 @@ using namespace std;
 #define PAGE_END_CSS                                    "page_end.css"
 #define PAGE_QR_PAYMENT_CSS                             "page_qr_payment.css"
 #define PAGE_ERROR_WIFI_CSS                             "page_error_wifi.css"
-#define PAGE_TAP_PAYMENT_CSS                            "page_tap_payment.css"
+#define PAGE_TAP_PAYMENT_CSS                            "page_payment_tap_tcp.css"
 #define PAGE_TRANSACTIONS_CSS                           "page_transactions.css"
 #define PAGE_MAINTENANCE_CSS                            "page_maintenance.css"
 #define PAGE_MAINTENANCE_DISPENSER_CSS                  "page_maintenance_dispenser.css"
 #define PAGE_IDLE_PRODUCTS_CSS                          "page_idle_products.css"
-#define PAGE_TAP_PAYMENT_SERIAL_CSS                     "page_tap_payment_serial.css"
+#define PAGE_TAP_PAYMENT_SERIAL_CSS                     "page_payment_tap_serial.css"
 
 
 
@@ -113,9 +112,10 @@ using namespace std;
 #define PAGE_QR_PAY_BACKGROUND_PATH                     "background_qr.png"
 #define PAGE_MAINTENANCE_BACKGROUND_PATH                "background_maintenance.png"
 #define ERROR_MESSAGE_PATH                              "error_message.png"
-#define PAGE_TAP_PAY                                    "tapNow.png"
+#define PAGE_TAP_CANCEL                                  "tapCancel.png"
 #define PAGE_TAP_PAY_SUCCESS                            "paymentSuccess.png"
 #define PAGE_TAP_PAY_FAIL                               "paymentFailed.png"
+#define PAGE_TAP_PAY                                    "tapNow.png"
 #define PAGE_AUTHORIZE_NOW                              "authorizeNow.png"
 #define PAGE_TAP_GENERIC                                "genericTap.png"
 #define PAGE_SEND_FEEDBACK_PATH                         "background_sendfeedback.png"
@@ -125,6 +125,7 @@ using namespace std;
 #define PAGE_ERROR_BACKGROUND_PATH                      "background_error_wifi.png"
 #define KEYBOARD_IMAGE_PATH                             "soapstand-keyboard.png"
 #define MACHINE_LOGO_PATH                               "machine_logo.png"
+#define QR_MANUAL_PATH                                  "qr_user_manual.png"
 #define PAGE_DISPENSE_FILL_ANIMATION                    "bottle_fill_for_animation.png"
 
 #define ICON_TYPE_CONCENTRATE_PATH                      "Soapstand_UI-concentrate-icon.png"
@@ -148,6 +149,7 @@ using namespace std;
 #define PAYMENT_TAP_SERIAL                              "tapSerial"
 #define PAYMENT_TAP_TCP                                 "tapTCP"
 #define PAYMENT_QR                                      "qr"
+
 class df_util : public QWidget
 {
     Q_OBJECT
@@ -165,14 +167,14 @@ public:
     void write_to_file_timestamped(QString basePath, QString data);
     void write_to_file(QString path, QString data);
 
-    void send_command_to_FSM(QString command);
-    void set_message_to_send_to_FSM(QString msg);
+    void send_command_to_FSM(QString command, bool isLoggingMessage);
 
     static QJsonObject parseJsonString(QString jsonString);
 
     bool m_IsSendingFSM;
 
-    QString send_msg;
+    static void executeVirtualClick(int x, int y);
+    // QString send_msg;
 
     QTcpSocket *tcpSocket = nullptr;
     QDataStream in;
@@ -185,7 +187,7 @@ protected:
 
 public slots:
     void displayError(QAbstractSocket::SocketError socketError);
-    void send_to_FSM();
+    void send_to_FSM(QString command, bool isLoggingMessage);
 
 private:
 };

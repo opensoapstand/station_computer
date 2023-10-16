@@ -81,7 +81,7 @@ private slots:
     void onMaintainProductPageTimeoutTick();
     void onDispenseTimerTick();
     void on_pushButton_set_volume_remaining_clicked();
-    void on_pushButton_setting_temperature_clicked();
+    void on_pushButton_set_max_temperature_clicked();
     void on_pushButton_setting_speed_pwm_clicked();
     void on_pushButton_enable_pump_clicked();
     void on_buttonBack_clicked();
@@ -118,7 +118,7 @@ private:
     page_maintenance *p_page_maintenance;
     page_idle *p_page_idle;
 
-    bool pump_enabled = false;
+    bool is_pump_enabled_for_dispense = false;
 
     int _maintainProductPageTimeoutSec;
     float dispenserEnabledSecs;
@@ -130,6 +130,7 @@ private:
     uint16_t button_press_count;
 
     QString units_selected_product;
+    bool isDispenserPumpEnabledWarningBox();
 
     void sendRestockToCloud();
     void autoDispenseStart(int size);

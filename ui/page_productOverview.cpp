@@ -54,7 +54,7 @@ page_product_overview::page_product_overview(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void page_product_overview::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,  page_payment_tap_serial *page_payment_tap_serial,page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product *page_product)
+void page_product_overview::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,  page_payment_tap_serial *page_payment_tap_serial,page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product *page_product, page_email *page_email)
 {
     this->p_page_select_product = pageSelect;
     this->p_page_payment_qr = page_qr_payment;
@@ -65,6 +65,7 @@ void page_product_overview::setPage(page_select_product *pageSelect, page_dispen
     this->p_page_help = pageHelp;
     this->p_page_wifi_error = pageWifiError;
     this->p_page_product = page_product;
+    this->p_page_email = page_email; 
 
     ui->label_discount_tag->hide();
     ui->label_gif->hide();
@@ -129,23 +130,10 @@ void page_product_overview::showEvent(QShowEvent *event)
     ui->pushButton_to_help->setProperty("class", "buttonBGTransparent");
     ui->pushButton_to_help->setStyleSheet(styleSheet);
 
-
-    // if (proucts sdlect -> getpayment type == "qr/emailfree" && price == 0){
-    //     proc
-    // }else{
-
-    // }
     double selectedPrice = p_page_idle->thisMachine->selectedProduct->getBasePrice();
     double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
     qDebug() << "!!!!!!TRIGGERED PAYMENT METHOD:" << p_page_idle->thisMachine->selectedProduct-> getPaymentMethod(); 
-    if(p_page_idle->thisMachine->selectedProduct->getPaymentMethod() == "qr/emailfree" && finalPrice == 0.0 ){
-        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_free");
-        qDebug() << "!!!!!!TRIGGERED FINAL PRICE:" << finalPrice; 
-    
-    }else{
-        qDebug() << "!!!!!!TRIGGERED nototaoieoit PRICE:" << finalPrice; 
-        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay");
-    }
+   
 
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_select_product_page);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_discount_tag);
@@ -158,6 +146,19 @@ void page_product_overview::showEvent(QShowEvent *event)
     _selectIdleTimeoutSec = 400;
     selectIdleTimer->start(1000);
     reset_and_show_page_elements();
+    if(p_page_idle->thisMachine->selectedProduct->getPaymentMethod() == PAYMENT_QR_EMAIL_FREE && finalPrice == 0.0 ){
+        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_free");
+
+        ////////////////////////////////
+        hideCurrentPageAndShowProvided(p_page_email);
+
+        ////////////////////////////////
+        qDebug() << "!!!!!!TRIGGERED FINAL PRICE:" << finalPrice; 
+    
+    }else{
+        qDebug() << "!!!!!!TRIGGERED nototaoieoit PRICE:" << finalPrice; 
+        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay");
+    }
 }
 
 void page_product_overview::resizeEvent(QResizeEvent *event)
@@ -523,14 +524,21 @@ void page_product_overview::on_lineEdit_promo_codeInput_clicked()
 
 void page_product_overview::on_pushButton_continue_clicked()
 {
+    qDebug() << "!!!!!!!!!!!!!!!!EMAIL PAGE TRIGGERED!!!!!!!!!!!!!!!!!" ;
     qDebug() << "page_product_overview: Pay button";
+
 
     ui->pushButton_to_help->setEnabled(false);
     ui->pushButton_previous_page->setEnabled(false);
 
     QString paymentMethod = p_page_idle->thisMachine->selectedProduct->getPaymentMethod();
 
-    if (paymentMethod == PAYMENT_QR)
+    if (paymentMethod == PAYMENT_QR_EMAIL_FREE)
+    {
+        hideCurrentPageAndShowProvided(p_page_email);
+
+    }
+    else if (paymentMethod == PAYMENT_QR)
     {
         CURL *curl;
         CURLcode res;

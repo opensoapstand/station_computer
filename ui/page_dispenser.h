@@ -47,7 +47,6 @@ class page_dispenser : public QWidget
     Q_OBJECT
 
 public:
-
     QMessageBox* msgBox_problems;
     QMessageBox* msgBox_abort;
     // QMessageBox* msgBox;

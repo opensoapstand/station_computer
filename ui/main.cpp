@@ -27,6 +27,7 @@
 #include "page_dispenser.h"
 #include "page_error_wifi.h"
 #include "page_productOverview.h"
+#include "statusbar.h"
 
 #include "page_end.h"
 #include <QApplication>
@@ -169,6 +170,8 @@ int main(int argc, char *argv[])
     page_error_wifi *p_page_wifi_error = new page_error_wifi();
     qDebug() << "Constructor page_end";
     page_end *p_page_end = new page_end();
+    qDebug() << "Constructor statusbar";
+    statusbar *p_statusbar = new statusbar();
     qDebug() << "Constructor page_product_overview";
     page_product_overview *p_page_product_overview = new page_product_overview();
     qDebug() << "Constructor page_sendFeedback";
@@ -243,7 +246,7 @@ int main(int argc, char *argv[])
 
     p_page_maintenance_general->setPage(p_page_maintenance, p_page_idle, p_page_idle_products);
     p_page_maintenance->setPage(p_page_idle, p_page_maintenance_product, p_page_maintenance_general, p_page_select_product, p_page_product);
-    p_page_idle->setPage(p_page_select_product, p_page_maintenance, p_page_maintenance_general, p_page_idle_products, p_page_wifi_error);
+    p_page_idle->setPage(p_page_select_product, p_page_maintenance, p_page_maintenance_general, p_page_idle_products, p_page_wifi_error, p_statusbar);
     p_page_idle_products->setPage(p_page_idle, p_page_select_product);
     p_page_select_product->setPage(p_page_product, p_page_idle_products, p_page_idle, p_page_maintenance, p_page_help);
     p_page_product->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_help, p_page_product_overview);
@@ -255,6 +258,7 @@ int main(int argc, char *argv[])
     p_page_product_overview->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_help, p_page_product);
     p_page_sendFeedback->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_help, p_page_product, p_page_end);
     p_page_end->setPage(p_page_dispense, p_page_idle, p_page_payment_qr, p_page_sendFeedback);
+    p_statusbar->setPage(p_page_idle);
     p_page_wifi_error->setPage(p_page_payment_qr, p_page_end, p_page_idle);
 
     initPage->showFullScreen();

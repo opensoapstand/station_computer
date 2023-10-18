@@ -154,6 +154,11 @@ page_payment_tap_serial->msgBox_cancel,<p align=center><br><br>Cancel transactio
 page_payment_tap_serial->preauthLabel,You are being pre-authorized for maximum volume %1 with amount of
 
 
+#################### statusbar 
+statusbar->label_active_role->user, User
+statusbar->label_active_role->maintainer, Maintainer
+statusbar->label_active_role->admin, Administrator
+
 #################### page maintenance
 page_maintenance->status_text->auto_empty,Empty detected
 page_maintenance->status_text->almost_empty,Almost Empty

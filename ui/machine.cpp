@@ -27,7 +27,7 @@ void machine::initMachine()
     loadParametersFromDb();
     for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
     {
-        
+
         m_products[slot_index].setSlot(slot_index + 1);
         m_products[slot_index].setMachine(this);
         m_products[slot_index].setDb(m_db);
@@ -488,12 +488,13 @@ QString machine::getActiveRoleAsText()
 {
     switch (active_role)
     {
+        // DO NOT CHANGE TEXT, change in the templates ui_texts.csv if displaying the text needs to be different.
     case user:
-        return "User";
+        return "user";
     case maintainer:
-        return "Maintainer";
+        return "maintainer";
     case admin:
-        return "Admin";
+        return "admin";
     default:
         return "Unknown";
     }

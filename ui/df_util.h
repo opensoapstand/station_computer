@@ -52,6 +52,7 @@
 using namespace std;
 
 #define PAGE_IDLE_DELAY_BEFORE_ENTERING_IDLE_PRODUCTS 15
+#define STATUS_BAR_REFRESH_PERIOD_SECONDS 3
 #define PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS 60 //60
 #define PAGE_IDLE_TEST_FOR_FROZEN_SCREEN_PERIOD_SECONDS 60 
 #define PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS 6
@@ -78,6 +79,7 @@ using namespace std;
 #define CLIENT_LOGO_PATH                                "/home/df-admin/production/references/logos/%1_logo_white.png"
 #define PAGE_HELP_CSS                                   "page_help.css"
 #define PAGE_FEEDBACK_CSS                               "page_sendFeedback.css"
+#define STATUSBAR_CSS                                   "statusbar.css"
 #define PAGE_IDLE_CSS                                   "page_idle.css"
 #define PAGE_SELECT_PRODUCT_CSS                         "page_select_product.css"
 #define PAGE_PRODUCT_CSS                                "page_product.css"

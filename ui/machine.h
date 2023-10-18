@@ -89,15 +89,10 @@ public:
     bool hasReceiptPrinter();
     void getPrinterStatusFromDb(bool *isOnline, bool *hasPaper);
     void getTemperatureFromController();
-    // void getTemperature2FromController(); // not needed, all available tempertures are sent with one request to controller.
     void writeTemperatureToDb(double temperature_1, double temperature_2);
-    // void writeTemperature2ToDb(double temperature2);
     double getTemperature_1();
-    // double getTemperature2();
     bool isTemperatureTooHigh_1();
     void fsmReceiveTemperature(double temperature_1, double temperature_2);
-    // void fsmReceiveTemperature2(double temperature2);
-    // void temperatureFromControllerFeedback(double m_temperature);
 
     StateCoupon getCouponState();
     void setCouponState(StateCoupon state);

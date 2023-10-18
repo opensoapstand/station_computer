@@ -24,21 +24,24 @@
 #include "product.h"
 #include "machine.h"
 #include "page_maintenance_general.h"
+#include "statusbar.h"
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
 
+class statusbar; // Forward declaration if statusbar is defined elsewhere
 class page_maintenance;
 class page_select_product;
 class page_maintenance_general;
 class page_idle_products;
 class page_error_wifi;
 
-typedef enum StateFrozenScreenDetect{
+typedef enum StateFrozenScreenDetect
+{
     state_screen_check_not_initiated,
     state_screen_check_clicked_and_wait,
     state_screen_check_clicked_and_succes,
     state_screen_check_fail
-}StateFrozenScreenDetect;
+} StateFrozenScreenDetect;
 
 namespace Ui
 {
@@ -52,17 +55,16 @@ class page_idle : public QWidget
 public:
     void displayTemperature();
     explicit page_idle(QWidget *parent = nullptr);
-    void setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products, page_error_wifi *p_page_error_wifi);
+    void setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products, page_error_wifi *p_page_error_wifi, statusbar *p_statusbar);
     ~page_idle();
     void showEvent(QShowEvent *event);
     void changeToIdleProductsIfSet();
-    void setMachine(machine* machine);
-
+    void setMachine(machine *machine);
 
     void printerStatusFeedback(bool isOnline, bool hasPaper);
 
     // void MMSlot();
-    machine* thisMachine;
+    machine *thisMachine;
     DfUiCommThread *dfComm;
     bool m_transitioning = false;
 
@@ -81,6 +83,8 @@ public:
     StateFrozenScreenDetect stateScreenCheck;
     void hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createNewSessionId);
 
+    bool eventFilter(QObject *object, QEvent *event);
+
 private slots:
     void on_pushButton_to_select_product_page_clicked();
     void onIdlePageTypeSelectorTimerTick();
@@ -95,7 +99,12 @@ private:
     page_maintenance_general *p_page_maintenance_general;
     page_idle_products *p_page_idle_products;
     page_error_wifi *p_page_error_wifi;
+    statusbar *p_statusbar;
     QString idle_page_type;
+
+    bool tappingBlockedUntilPrinterReply;
+
+    QVBoxLayout *mainLayout; // Declare mainLayout as a private member variable
 };
 
 #endif // IDLE_H

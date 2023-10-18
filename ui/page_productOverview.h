@@ -8,7 +8,7 @@
 // payment page and page_idle page
 //
 // created: 05-04-2022
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
@@ -23,6 +23,7 @@
 #include "page_product.h"
 #include "page_payment_tap_serial.h"
 
+class statusbar;
 class page_select_product;
 class page_qr_payment;
 class page_payment_tap_tcp;

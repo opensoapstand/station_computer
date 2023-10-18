@@ -8,7 +8,7 @@
 // Product Page1
 //
 // created: 01-05-2023
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado & Udbhav Kansal & Daniel C.
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado & Udbhav Kansal & Daniel C.
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************

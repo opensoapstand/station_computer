@@ -9,7 +9,7 @@
 // payment page and page_idle page
 //
 // created: 05-04-2022
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
@@ -291,7 +291,7 @@ void page_product_overview::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 
     selectIdleTimer->stop();
     statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
-    
+
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
 }
 

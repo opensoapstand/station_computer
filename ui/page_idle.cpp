@@ -8,7 +8,7 @@
 // Product Page1
 //
 // created: 05-04-2022
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
@@ -102,8 +102,8 @@ void page_idle::showEvent(QShowEvent *event)
     thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
-    statusbarLayout->addWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page. 
-    statusbarLayout->setContentsMargins(0, 1860, 0, 0); // int left, int top, int right, int bottom);
+    // statusbarLayout->addWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page. 
+    // statusbarLayout->setContentsMargins(0, 1860, 0, 0); // int left, int top, int right, int bottom);
 
     thisMachine->loadDynamicContent();
     thisMachine->getSlotCount();

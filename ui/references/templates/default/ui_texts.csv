@@ -61,7 +61,7 @@ page_product_overview->label_total->non_custom_volume,Total
 page_product_overview->label_total->custom_volume,Price for maximum %1
 page_product_overview->lineEdit_promo_code->valid,Promo Code Valid
 page_product_overview->lineEdit_promo_code->invalid,Promo Code Invalid
-page_product_overview->lineEdit_promo_code->ineligible,Promo Code Not Eligible
+page_product_overview->lineEdit_promo_code->ineligible,Promo Code Not Eligible At This Station
 page_product_overview->lineEdit_promo_code->network_error,Network error, could not verify. Try again.
 page_product_overview->lineEdit_promo_code->invite,Tap here to enter promo code
 page_product_overview->label_selected_volume->custom_volume,Custom Volume<br>(maximum: %1)

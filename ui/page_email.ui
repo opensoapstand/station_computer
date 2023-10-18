@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>page_help</class>
- <widget class="QWidget" name="page_help">
+ <class>page_email</class>
+ <widget class="QWidget" name="page_email">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -16,53 +16,11 @@
   <property name="styleSheet">
    <string notr="true"/>
   </property>
-  <widget class="QPushButton" name="pushButton_resetTimeout">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>-6</y>
-     <width>1081</width>
-     <height>1931</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-image: url(/home/df-admin/production/references/background.png);</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_to_transactions">
-   <property name="geometry">
-    <rect>
-     <x>610</x>
-     <y>40</y>
-     <width>401</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>View Transactions</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_to_maintenance">
-   <property name="geometry">
-    <rect>
-     <x>810</x>
-     <y>1800</y>
-     <width>221</width>
-     <height>71</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Settings</string>
-   </property>
-  </widget>
   <widget class="QWidget" name="keyboard_3" native="true">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>1420</y>
+     <x>10</x>
+     <y>530</y>
      <width>1051</width>
      <height>441</height>
     </rect>
@@ -71,7 +29,7 @@
     <string notr="true">background-color:white;</string>
    </property>
    <layout class="QGridLayout" name="keyboard">
-    <item row="2" column="5">
+    <item row="0" column="5">
      <widget class="QPushButton" name="pushButton_198">
       <property name="maximumSize">
        <size>
@@ -87,7 +45,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="4" column="0">
+    <item row="2" column="0">
      <widget class="QPushButton" name="pushButton_219">
       <property name="maximumSize">
        <size>
@@ -103,7 +61,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="2" column="12">
+    <item row="0" column="12">
      <widget class="QPushButton" name="pushButton_205">
       <property name="maximumSize">
        <size>
@@ -119,7 +77,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="2" column="0">
+    <item row="0" column="0">
      <widget class="QPushButton" name="pushButton_193">
       <property name="maximumSize">
        <size>
@@ -135,7 +93,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="3" column="1">
+    <item row="1" column="1">
      <widget class="QPushButton" name="pushButton_207">
       <property name="maximumSize">
        <size>
@@ -151,7 +109,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="3" column="3">
+    <item row="1" column="3">
      <widget class="QPushButton" name="pushButton_209">
       <property name="maximumSize">
        <size>
@@ -167,7 +125,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="2" column="3">
+    <item row="0" column="3">
      <widget class="QPushButton" name="pushButton_196">
       <property name="maximumSize">
        <size>
@@ -183,7 +141,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="3" column="12">
+    <item row="1" column="12">
      <widget class="QPushButton" name="pushButton_218">
       <property name="maximumSize">
        <size>
@@ -199,7 +157,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="3" column="10">
+    <item row="1" column="10">
      <widget class="QPushButton" name="pushButton_216">
       <property name="maximumSize">
        <size>
@@ -215,7 +173,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="2" column="6">
+    <item row="0" column="6">
      <widget class="QPushButton" name="pushButton_199">
       <property name="maximumSize">
        <size>
@@ -231,7 +189,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="2" column="10">
+    <item row="0" column="10">
      <widget class="QPushButton" name="pushButton_203">
       <property name="maximumSize">
        <size>
@@ -247,7 +205,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="2" column="9">
+    <item row="0" column="9">
      <widget class="QPushButton" name="pushButton_202">
       <property name="maximumSize">
        <size>
@@ -263,7 +221,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="2" column="1">
+    <item row="0" column="1">
      <widget class="QPushButton" name="pushButton_194">
       <property name="maximumSize">
        <size>
@@ -279,7 +237,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="4" column="2">
+    <item row="2" column="2">
      <widget class="QPushButton" name="pushButton_221">
       <property name="maximumSize">
        <size>
@@ -295,7 +253,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="4" column="6">
+    <item row="2" column="6">
      <widget class="QPushButton" name="pushButton_225">
       <property name="maximumSize">
        <size>
@@ -311,7 +269,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="4" column="1">
+    <item row="2" column="1">
      <widget class="QPushButton" name="pushButton_220">
       <property name="maximumSize">
        <size>
@@ -327,7 +285,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="3" column="4">
+    <item row="1" column="4">
      <widget class="QPushButton" name="pushButton_210">
       <property name="maximumSize">
        <size>
@@ -343,14 +301,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="0" column="0" colspan="12">
-     <widget class="QLabel" name="label_keyboardInfo">
-      <property name="text">
-       <string>Enter password followed by the &quot;Done&quot; key to enter maintenance mode</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="4">
+    <item row="0" column="4">
      <widget class="QPushButton" name="pushButton_197">
       <property name="maximumSize">
        <size>
@@ -366,7 +317,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="4" column="8">
+    <item row="2" column="8">
      <widget class="QPushButton" name="pushButton_227">
       <property name="maximumSize">
        <size>
@@ -382,7 +333,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="3" column="2">
+    <item row="1" column="2">
      <widget class="QPushButton" name="pushButton_208">
       <property name="maximumSize">
        <size>
@@ -398,7 +349,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="3" column="9">
+    <item row="1" column="9">
      <widget class="QPushButton" name="pushButton_215">
       <property name="maximumSize">
        <size>
@@ -414,7 +365,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="4" column="7">
+    <item row="2" column="7">
      <widget class="QPushButton" name="pushButton_226">
       <property name="maximumSize">
        <size>
@@ -430,7 +381,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="2" column="11">
+    <item row="0" column="11">
      <widget class="QPushButton" name="pushButton_204">
       <property name="maximumSize">
        <size>
@@ -446,7 +397,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="3" column="5">
+    <item row="1" column="5">
      <widget class="QPushButton" name="pushButton_211">
       <property name="maximumSize">
        <size>
@@ -462,7 +413,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="4" column="5">
+    <item row="2" column="5">
      <widget class="QPushButton" name="pushButton_224">
       <property name="maximumSize">
        <size>
@@ -478,7 +429,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="3" column="11">
+    <item row="1" column="11">
      <widget class="QPushButton" name="pushButton_217">
       <property name="maximumSize">
        <size>
@@ -494,7 +445,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="7" column="2" colspan="9">
+    <item row="5" column="2" colspan="9">
      <widget class="QPushButton" name="pushButton_257">
       <property name="maximumSize">
        <size>
@@ -510,7 +461,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="4" column="9">
+    <item row="2" column="9">
      <widget class="QPushButton" name="pushButton_228">
       <property name="maximumSize">
        <size>
@@ -526,7 +477,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="5" column="4">
+    <item row="3" column="4">
      <widget class="QPushButton" name="pushButton_235">
       <property name="maximumSize">
        <size>
@@ -542,7 +493,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="6" column="5">
+    <item row="4" column="5">
      <widget class="QPushButton" name="pushButton_248">
       <property name="maximumSize">
        <size>
@@ -558,7 +509,23 @@
       </attribute>
      </widget>
     </item>
-    <item row="5" column="2">
+    <item row="2" column="10">
+     <widget class="QPushButton" name="pushButton_229">
+      <property name="maximumSize">
+       <size>
+        <width>50</width>
+        <height>50</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>{</string>
+      </property>
+      <attribute name="buttonGroup">
+       <string notr="true">buttonGroup</string>
+      </attribute>
+     </widget>
+    </item>
+    <item row="3" column="2">
      <widget class="QPushButton" name="pushButton_233">
       <property name="maximumSize">
        <size>
@@ -574,7 +541,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="6" column="12">
+    <item row="4" column="12">
      <widget class="QPushButton" name="pushButton_255">
       <property name="maximumSize">
        <size>
@@ -590,7 +557,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="5" column="8">
+    <item row="3" column="8">
      <widget class="QPushButton" name="pushButton_239">
       <property name="maximumSize">
        <size>
@@ -606,7 +573,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="6" column="0">
+    <item row="4" column="0">
      <widget class="QPushButton" name="pushButton_243">
       <property name="maximumSize">
        <size>
@@ -622,7 +589,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="6" column="3">
+    <item row="4" column="3">
      <widget class="QPushButton" name="pushButton_246">
       <property name="maximumSize">
        <size>
@@ -638,7 +605,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="6" column="6">
+    <item row="4" column="6">
      <widget class="QPushButton" name="pushButton_249">
       <property name="maximumSize">
        <size>
@@ -654,7 +621,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="6" column="4">
+    <item row="4" column="4">
      <widget class="QPushButton" name="pushButton_247">
       <property name="maximumSize">
        <size>
@@ -670,7 +637,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="5" column="10">
+    <item row="3" column="10">
      <widget class="QPushButton" name="pushButton_241">
       <property name="maximumSize">
        <size>
@@ -686,7 +653,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="6" column="8">
+    <item row="4" column="8">
      <widget class="QPushButton" name="pushButton_251">
       <property name="enabled">
        <bool>true</bool>
@@ -705,7 +672,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="6" column="1">
+    <item row="4" column="1">
      <widget class="QPushButton" name="pushButton_244">
       <property name="maximumSize">
        <size>
@@ -721,7 +688,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="5" column="9">
+    <item row="3" column="9">
      <widget class="QPushButton" name="pushButton_240">
       <property name="maximumSize">
        <size>
@@ -737,7 +704,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="5" column="5">
+    <item row="3" column="5">
      <widget class="QPushButton" name="pushButton_236">
       <property name="maximumSize">
        <size>
@@ -753,7 +720,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="4" column="11">
+    <item row="2" column="11">
      <widget class="QPushButton" name="pushButton_230">
       <property name="maximumSize">
        <size>
@@ -769,7 +736,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="5" column="11">
+    <item row="3" column="11">
      <widget class="QPushButton" name="pushButton_242">
       <property name="maximumSize">
        <size>
@@ -785,7 +752,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="5" column="7">
+    <item row="3" column="7">
      <widget class="QPushButton" name="pushButton_238">
       <property name="maximumSize">
        <size>
@@ -801,7 +768,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="5" column="3">
+    <item row="3" column="3">
      <widget class="QPushButton" name="pushButton_234">
       <property name="maximumSize">
        <size>
@@ -817,7 +784,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="5" column="1">
+    <item row="3" column="1">
      <widget class="QPushButton" name="pushButton_232">
       <property name="maximumSize">
        <size>
@@ -833,7 +800,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="5" column="6">
+    <item row="3" column="6">
      <widget class="QPushButton" name="pushButton_237">
       <property name="maximumSize">
        <size>
@@ -849,7 +816,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="7" column="12">
+    <item row="5" column="12">
      <widget class="QPushButton" name="pushButton_258">
       <property name="maximumSize">
        <size>
@@ -865,23 +832,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="7" column="0" colspan="2">
-     <widget class="QPushButton" name="pushButton_256">
-      <property name="maximumSize">
-       <size>
-        <width>87</width>
-        <height>50</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>Cancel</string>
-      </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
-     </widget>
-    </item>
-    <item row="6" column="11">
+    <item row="4" column="11">
      <widget class="QPushButton" name="pushButton_254">
       <property name="maximumSize">
        <size>
@@ -897,7 +848,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="4" column="3">
+    <item row="2" column="3">
      <widget class="QPushButton" name="pushButton_222">
       <property name="maximumSize">
        <size>
@@ -913,7 +864,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="6" column="2">
+    <item row="4" column="2">
      <widget class="QPushButton" name="pushButton_245">
       <property name="maximumSize">
        <size>
@@ -929,7 +880,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="4" column="4">
+    <item row="2" column="4">
      <widget class="QPushButton" name="pushButton_223">
       <property name="maximumSize">
        <size>
@@ -945,7 +896,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="5" column="0">
+    <item row="3" column="0">
      <widget class="QPushButton" name="pushButton_231">
       <property name="maximumSize">
        <size>
@@ -961,7 +912,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="6" column="10">
+    <item row="4" column="10">
      <widget class="QPushButton" name="pushButton_253">
       <property name="maximumSize">
        <size>
@@ -977,7 +928,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="6" column="9">
+    <item row="4" column="9">
      <widget class="QPushButton" name="pushButton_252">
       <property name="maximumSize">
        <size>
@@ -993,7 +944,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="3" column="8">
+    <item row="1" column="8">
      <widget class="QPushButton" name="pushButton_214">
       <property name="maximumSize">
        <size>
@@ -1009,7 +960,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="3" column="7">
+    <item row="1" column="7">
      <widget class="QPushButton" name="pushButton_213">
       <property name="maximumSize">
        <size>
@@ -1025,7 +976,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="3" column="0">
+    <item row="1" column="0">
      <widget class="QPushButton" name="pushButton_206">
       <property name="maximumSize">
        <size>
@@ -1041,7 +992,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="6" column="7">
+    <item row="4" column="7">
      <widget class="QPushButton" name="pushButton_250">
       <property name="maximumSize">
        <size>
@@ -1057,7 +1008,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="3" column="6">
+    <item row="1" column="6">
      <widget class="QPushButton" name="pushButton_212">
       <property name="maximumSize">
        <size>
@@ -1073,23 +1024,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="4" column="10">
-     <widget class="QPushButton" name="pushButton_229">
-      <property name="maximumSize">
-       <size>
-        <width>50</width>
-        <height>50</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>{</string>
-      </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
-     </widget>
-    </item>
-    <item row="2" column="7">
+    <item row="0" column="7">
      <widget class="QPushButton" name="pushButton_200">
       <property name="maximumSize">
        <size>
@@ -1105,7 +1040,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="2" column="8">
+    <item row="0" column="8">
      <widget class="QPushButton" name="pushButton_201">
       <property name="maximumSize">
        <size>
@@ -1121,7 +1056,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="2" column="2">
+    <item row="0" column="2">
      <widget class="QPushButton" name="pushButton_195">
       <property name="maximumSize">
        <size>
@@ -1137,33 +1072,7 @@
       </attribute>
      </widget>
     </item>
-    <item row="1" column="0" colspan="12">
-     <widget class="QLineEdit" name="keyboardTextEntry">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>50</height>
-       </size>
-      </property>
-      <property name="echoMode">
-       <enum>QLineEdit::Password</enum>
-      </property>
-     </widget>
-    </item>
    </layout>
-  </widget>
-  <widget class="QPushButton" name="pushButton_to_feedback">
-   <property name="geometry">
-    <rect>
-     <x>50</x>
-     <y>1800</y>
-     <width>221</width>
-     <height>71</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Settings</string>
-   </property>
   </widget>
   <widget class="QLabel" name="html_text_label">
    <property name="geometry">
@@ -1176,25 +1085,6 @@
    </property>
    <property name="text">
     <string/>
-   </property>
-  </widget>
-  <widget class="QTextBrowser" name="html_help_text">
-   <property name="geometry">
-    <rect>
-     <x>100</x>
-     <y>270</y>
-     <width>891</width>
-     <height>1191</height>
-    </rect>
-   </property>
-   <property name="sizeIncrement">
-    <size>
-     <width>800</width>
-     <height>0</height>
-    </size>
-   </property>
-   <property name="frameShape">
-    <enum>QFrame::NoFrame</enum>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_to_idle">
@@ -1210,14 +1100,43 @@
     <string>back</string>
    </property>
   </widget>
+  <widget class="QLineEdit" name="keyboardTextEntry">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>470</y>
+     <width>875</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>50</height>
+    </size>
+   </property>
+   <property name="echoMode">
+    <enum>QLineEdit::Password</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_email_title">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>200</y>
+     <width>871</width>
+     <height>131</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
   <zorder>html_text_label</zorder>
-  <zorder>pushButton_resetTimeout</zorder>
-  <zorder>pushButton_to_transactions</zorder>
-  <zorder>pushButton_to_maintenance</zorder>
-  <zorder>pushButton_to_feedback</zorder>
-  <zorder>html_help_text</zorder>
   <zorder>pushButton_to_idle</zorder>
   <zorder>keyboard_3</zorder>
+  <zorder>keyboardTextEntry</zorder>
+  <zorder>label_email_title</zorder>
  </widget>
  <resources/>
  <connections/>

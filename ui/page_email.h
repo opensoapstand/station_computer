@@ -48,13 +48,13 @@ private slots:
     void onHelpTimeoutTick();
     
 
-    void on_pushButton_to_transactions_clicked();
+    // void on_pushButton_to_transactions_clicked();
 
     void keyboardButtonPressed(int);
 
-    void on_pushButton_to_maintenance_clicked();
+    // void on_pushButton_to_maintenance_clicked();
 
-    void on_pushButton_to_feedback_clicked();
+    // void on_pushButton_to_feedback_clicked();
 
 private:
     void showEvent(QShowEvent *event);
@@ -69,6 +69,7 @@ private:
     QResizeEvent *helpResize;
     QString maintenance_pwd;
     QString help_text_html;
+    bool m_hasStartedTyping=false;
 };
 
 #endif // PAGE_EMAIL_H

@@ -249,7 +249,7 @@ int main(int argc, char *argv[])
     p_page_idle->setPage(p_page_select_product, p_page_maintenance, p_page_maintenance_general, p_page_idle_products, p_page_wifi_error, p_statusbar);
     p_page_idle_products->setPage(p_page_idle, p_page_select_product);
     p_page_select_product->setPage(p_page_product, p_page_idle_products, p_page_idle, p_page_maintenance, p_page_help, p_statusbar);
-    p_page_product->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_help, p_page_product_overview);
+    p_page_product->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_help, p_page_product_overview, p_statusbar);
     p_page_payment_qr->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
     p_page_payment_tap_tcp->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
     p_page_payment_tap_serial->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);

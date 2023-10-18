@@ -35,6 +35,7 @@
 #include "page_error_wifi.h"
 #include "page_help.h"
 
+class statusbar;
 class page_select_product;
 class page_qr_payment;
 class page_idle;
@@ -61,13 +62,13 @@ public:
     QLabel *orderSizeBackgroundLabels[4];
 
     explicit page_product(QWidget *parent = nullptr);
-    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,page_payment_tap_serial *page_payment_tap_serial,page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product_overview *page_Overview);
+    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_payment_tap_serial *page_payment_tap_serial, page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product_overview *page_Overview, statusbar *p_statusbar);
     ~page_product();
 
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
-    
+
 signals:
     void paymentTotal(string, string, string);
 
@@ -93,7 +94,6 @@ private:
     void reset_and_show_page_elements();
     void selectOnTick();
     int default_size;
-    
 
     std::string readBuffer;
     Ui::page_product *ui;
@@ -106,8 +106,7 @@ private:
     page_product_overview *p_page_overview;
     page_payment_tap_tcp *p_page_payment_tap_tcp;
     page_payment_tap_serial *p_page_payment_tap_serial;
-
-
+    statusbar *p_statusbar;
 
     QTimer *selectIdleTimer;
     int _selectIdleTimeoutSec;
@@ -115,6 +114,8 @@ private:
     QResizeEvent *page_productResize;
     QShowEvent *dispenseEvent;
     QShowEvent *wifiErrorEvent;
+
+    QVBoxLayout *statusbarLayout;
 };
 
 #endif // PAYSELECT_H

@@ -28,7 +28,7 @@
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
 
-class statusbar; // Forward declaration if statusbar is defined elsewhere
+class statusbar;
 class page_maintenance;
 class page_select_product;
 class page_maintenance_general;

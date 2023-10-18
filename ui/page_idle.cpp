@@ -75,9 +75,6 @@ void page_idle::setPage(page_select_product *p_page_select_product, page_mainten
     this->p_page_idle_products = p_page_idle_products;
     this->p_page_error_wifi = p_page_error_wifi;
     this->p_statusbar = p_statusbar;
-    
-    // statusbarLayout->setAlignment(Qt::AlignBottom); // Align at the bottom of the layout
-    // statusbarLayout->setContentsMargins(0, 200, 0, 0); // int left, int top, int right, int bottom);
 }
 
 // DTOR

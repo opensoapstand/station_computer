@@ -217,7 +217,7 @@ void page_idle::showEvent(QShowEvent *event)
 
 void page_idle::changeToIdleProductsIfSet()
 {
-    if (thisMachine->getIdlePageType() == "static_products" || thisMachine->getIdlePageType() == "dynamic")
+    if (thisMachine->getIdlePageType() == "static_products" || thisMachine->getIdlePageType() == "dynamic" || thisMachine->getIdlePageType() == "dynamic_products" )
     {
         hideCurrentPageAndShowProvided(this->p_page_idle_products, false);
     }

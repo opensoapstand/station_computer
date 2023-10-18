@@ -104,7 +104,8 @@ private:
 
     bool tappingBlockedUntilPrinterReply;
 
-    QVBoxLayout *mainLayout; // Declare mainLayout as a private member variable
+    QVBoxLayout *statusbarLayout; 
+    
 };
 
 #endif // IDLE_H

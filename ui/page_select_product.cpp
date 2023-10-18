@@ -61,19 +61,22 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
     productPageEndTimer = new QTimer(this);
     productPageEndTimer->setInterval(1000);
     connect(productPageEndTimer, SIGNAL(timeout()), this, SLOT(onProductPageTimeoutTick()));
+
+    statusbarLayout = new QVBoxLayout(this);
 }
 
 /*
  * Page Tracking reference
  */
-void page_select_product::setPage(page_product *p_page_product, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp)
+void page_select_product::setPage(page_product *p_page_product, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp, statusbar *p_statusbar)
 {
     this->p_page_product = p_page_product;
     this->p_page_idle = pageIdle;
     this->p_page_maintenance = pageMaintenance;
     this->p_page_help = pageHelp;
+    this->p_statusbar = p_statusbar;
+   
 }
-
 // DTOR
 page_select_product::~page_select_product()
 {
@@ -82,6 +85,12 @@ page_select_product::~page_select_product()
 
 void page_select_product::showEvent(QShowEvent *event)
 {
+    statusbarLayout->addWidget(p_statusbar); // with an index of 0.
+
+    //  statusbarLayout->setAlignment(Qt::AlignBottom); // Align at the bottom of the layout
+    // statusbarLayout->setContentsMargins(50, 50, 50, 50); // int left, int top, int right, int bottom);
+    statusbarLayout->setContentsMargins(0, 1860, 0, 0); // int left, int top, int right, int bottom);
+
 
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
@@ -121,14 +130,13 @@ void page_select_product::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_pick_soap);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_to_idle);
 
-    this->lower();
-
     maintenanceCounter = 0;
 
     productPageEndTimer->start(1000);
     _productPageTimeoutSec = 15;
-
-    this->raise();
+    
+    ui->pushButton_to_idle->raise();
+    
 }
 
 void page_select_product::resizeEvent(QResizeEvent *event)
@@ -154,7 +162,7 @@ void page_select_product::displayProducts()
         product_type = p_page_idle->thisMachine->getProduct(slot_index + 1)->getProductType();
         product_name = p_page_idle->thisMachine->getProduct(slot_index + 1)->getProductName();
 
-        if (!p_page_idle->thisMachine->getSlotEnabled(slot_index+1))
+        if (!p_page_idle->thisMachine->getSlotEnabled(slot_index + 1))
         {
             p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[slot_index], "label_product_overlay_unavailable", PAGE_SELECT_PRODUCT_CSS);
 
@@ -169,9 +177,9 @@ void page_select_product::displayProducts()
             p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[slot_index], "label_product_overlay_available", PAGE_SELECT_PRODUCT_CSS);
         }
 
-        product_status_text = p_page_idle->thisMachine->getStatusText( slot_index+1);
+        product_status_text = p_page_idle->thisMachine->getStatusText(slot_index + 1);
 
-        qDebug() << "Product: " << product_type << "At slot: " << (slot_index + 1) << ", enabled: " << p_page_idle->thisMachine->getSlotEnabled(slot_index+1) << " Status text: " << product_status_text;
+        qDebug() << "Product: " << product_type << "At slot: " << (slot_index + 1) << ", enabled: " << p_page_idle->thisMachine->getSlotEnabled(slot_index + 1) << " Status text: " << product_status_text;
 
         labels_product_name[slot_index]->setText(product_name);
 
@@ -248,11 +256,11 @@ void page_select_product::displayProducts()
         {
             labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
         }
-        else if (!p_page_idle->thisMachine->getSlotEnabled(slot_index+1))
+        else if (!p_page_idle->thisMachine->getSlotEnabled(slot_index + 1))
         {
             labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
         }
-        else if (!(p_page_idle->thisMachine->getProduct(slot_index+1)->isProductVolumeInContainer()))
+        else if (!(p_page_idle->thisMachine->getProduct(slot_index + 1)->isProductVolumeInContainer()))
         {
             labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->empty"));
         }
@@ -341,6 +349,7 @@ void page_select_product::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     productPageEndTimer->stop();
     qDebug() << "Exit select product page.";
     this->raise();
+    statusbarLayout->removeWidget(p_statusbar);
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
 }
 

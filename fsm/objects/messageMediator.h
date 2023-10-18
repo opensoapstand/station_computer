@@ -70,7 +70,7 @@ public:
       return m_requestedDiscountPrice;
    }
 
-   string getPromoCode()
+   string getCouponCode()
    {
       return m_promoCode;
    }

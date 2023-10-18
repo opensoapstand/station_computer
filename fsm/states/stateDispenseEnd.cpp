@@ -297,7 +297,7 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
     std::string units = productDispensers[slot_index].getProduct()->getDisplayUnits();
     std::string readBuffer;
     std::string volume_remaining_units_converted_string;
-    std::string coupon = m_pMessaging->getPromoCode();
+    std::string coupon = m_pMessaging->getCouponCode();
     std::string button_press_duration = to_string(productDispensers[slot_index].getButtonPressedTotalMillis());
     std::string dispense_button_count = to_string(productDispensers[slot_index].getDispenseButtonPressesDuringDispensing());
     std::string soapstand_product_serial = (productDispensers[slot_index].getProduct()->getSoapstandProductSerial());
@@ -775,7 +775,7 @@ DF_ERROR stateDispenseEnd::setup_and_print_receipt()
 
     machine tmp;
     // receipt_cost = m_pMessaging->getRequestedPrice();
-    string promoCode = m_pMessaging->getPromoCode();
+    string promoCode = m_pMessaging->getCouponCode();
     debugOutput::sendMessage("Price changed to " + receipt_cost, MSG_INFO);
     tmp.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, now, units, paymentMethod, plu, promoCode, true);
 }

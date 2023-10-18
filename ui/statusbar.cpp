@@ -34,7 +34,6 @@ void statusbar::showEvent(QShowEvent *event)
 
     // this->setStyleSheet("QWidget { background-color: red; }");
     refresh();
-    
 }
 
 // void statusbar::hideCurrentPageAndShowProvided(QWidget *pageToShow)
@@ -57,7 +56,14 @@ void statusbar::refresh()
     this->p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_active_role, this->p_page_idle->thisMachine->getActiveRoleAsText());
 
     // statusbar->label_active_role->user, User statusbar->label_active_role->maintainer, Maintainer statusbar->label_active_role->admin, Administrator
+
+    if (this->p_page_idle->thisMachine->getCouponState() == enabled_valid_active){
+        // this->p_page_idle->
+        ui->label_coupon_code->setText(this->p_page_idle->thisMachine->getCouponCode());
+    }
+
 }
+
 void statusbar::on_pushButton_hide_clicked()
 {
     qDebug() << "Statusbar button clicked.";

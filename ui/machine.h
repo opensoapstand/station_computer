@@ -98,8 +98,8 @@ public:
     void setCouponState(StateCoupon state);
     void initCouponState();
 
-    void setPromoCode(QString promoCode);
-    QString getPromoCode();
+    void setCouponCode(QString promoCode);
+    QString getCouponCode();
 
     void setCouponConditions(QString couponConditions);
     std::map<QString, QString> getCouponConditions();

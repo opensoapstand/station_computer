@@ -419,7 +419,7 @@ void page_product_overview::apply_promo_code(QString promocode)
                         qDebug() << "Backend coupon response: Valid. Discount percentage: " << new_percent;
                         new_percent = coupon_obj["discount_amount"];
 
-                        p_page_idle->thisMachine->setPromoCode(promocode);
+                        p_page_idle->thisMachine->setCouponCode(promocode);
                         p_page_idle->thisMachine->setDiscountPercentageFraction((new_percent * 1.0) / 100);
 
                         p_page_idle->thisMachine->setCouponState(enabled_valid_active);

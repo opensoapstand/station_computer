@@ -61,10 +61,7 @@ void machine::setDb(DbManager *db)
     m_db = db;
 }
 
-StateCoupon machine::getCouponState()
-{
-    return m_stateCoupon;
-}
+
 
 product *machine::getProduct(int slot)
 {
@@ -170,11 +167,6 @@ bool machine::compareSlotCountToMaxSlotCount(int slot_count)
     return (slot_count > MAX_SLOT_COUNT);
 }
 
-void machine::setCouponState(StateCoupon state)
-{
-    m_stateCoupon = state;
-}
-
 void machine::dispenseButtonLightsAnimateState(bool animateElseOff)
 {
     if (animateElseOff)
@@ -185,6 +177,15 @@ void machine::dispenseButtonLightsAnimateState(bool animateElseOff)
     {
         dfUtility->send_command_to_FSM("DispenseButtonLights|OFF", true);
     }
+}
+
+void machine::setCouponState(StateCoupon state)
+{
+    m_stateCoupon = state;
+}
+StateCoupon machine::getCouponState()
+{
+    return m_stateCoupon;
 }
 
 void machine::initCouponState()
@@ -200,7 +201,7 @@ void machine::initCouponState()
     }
 
     setDiscountPercentageFraction(0.0);
-    setPromoCode("");
+    setCouponCode("");
     m_max_dollar_amount_discount = "0.0";
 }
 
@@ -231,12 +232,12 @@ double machine::getPriceWithDiscount(double price)
     return (price - result);
 }
 
-QString machine::getPromoCode()
+QString machine::getCouponCode()
 {
     return m_promoCode;
 }
 
-void machine::setPromoCode(QString promoCode)
+void machine::setCouponCode(QString promoCode)
 {
     qDebug() << "Set Promo Code: " << promoCode;
     m_promoCode = promoCode;

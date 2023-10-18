@@ -71,7 +71,7 @@ public:
     void fsmReceiveNoFlowAbort();
     
     // QString getMostRecentDispensed();
-    // QString getPromoCodeUsed();
+    // QString getCouponCodeUsed();
     // void startDispensing();
     void force_finish_dispensing();
     QString getStartDispensingCommand();

@@ -25,6 +25,7 @@ class page_idle;
 class page_maintenance;
 class page_help;
 class page_idle_products;
+class statusbar;
 
 namespace Ui {
 class page_select_product;
@@ -36,7 +37,7 @@ class page_select_product : public QWidget
 
 public:
     explicit page_select_product(QWidget *parent = nullptr);
-    void setPage(page_product *p_page_product, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp);
+    void setPage(page_product *p_page_product, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp, statusbar *p_statusbar);
     ~page_select_product();
     
     void select_product(int slot);
@@ -76,18 +77,16 @@ private:
     // productPage_2 *selection_PageTwo;
     page_product *p_page_product;
     page_idle* p_page_idle;
+    page_maintenance* p_page_maintenance;
+    page_help* p_page_help;
+    statusbar* p_statusbar;
 
     QResizeEvent *productResize;
-
     int _productPageTimeoutSec;
     QTimer* productPageEndTimer;
 
-    page_maintenance* p_page_maintenance;
-
-    page_help* p_page_help;
-
     int maintenanceCounter;
-
+    QVBoxLayout *statusbarLayout; 
 };
 
 #endif // page_select_product_H

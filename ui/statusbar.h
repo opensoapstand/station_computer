@@ -23,6 +23,7 @@ public:
     // void hide();
     void refresh();
 
+
 private slots:
     void on_pushButton_hide_clicked();
     void onRefreshTimerTick();

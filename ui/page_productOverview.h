@@ -57,7 +57,7 @@ public:
     QLabel *orderSizeBackgroundLabels[4];
 
     explicit page_product_overview(QWidget *parent = nullptr);
-    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,  page_payment_tap_serial *page_payment_tap_serial,page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product *page_product);
+    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,  page_payment_tap_serial *page_payment_tap_serial,page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product *page_product, statusbar * statusbar);
     ~page_product_overview();
 
     void resizeEvent(QResizeEvent *event);
@@ -105,6 +105,7 @@ private:
     page_error_wifi *p_page_wifi_error;
     page_help *p_page_help;
     page_product *p_page_product;
+    statusbar *p_statusbar;
 
     QTimer *selectIdleTimer;
     int _selectIdleTimeoutSec;
@@ -112,6 +113,7 @@ private:
     QResizeEvent *page_product_overviewResize;
     QShowEvent *dispenseEvent;
     QShowEvent *wifiErrorEvent;
+    QVBoxLayout *statusbarLayout;
 };
 
 #endif // PAYSELECT_H

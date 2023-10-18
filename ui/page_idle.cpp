@@ -98,15 +98,12 @@ void page_idle::setMachine(machine *pmachine)
 
 void page_idle::showEvent(QShowEvent *event)
 {
-    statusbarLayout->addWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page. 
-    statusbarLayout->setContentsMargins(0, 1860, 0, 0); // int left, int top, int right, int bottom);
 
     thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
-    // Set up the main layout (QVBoxLayout)
-    ////// this->p_statusbar->showFullScreen();
-    // this->p_statusbar->show();
+    statusbarLayout->addWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page. 
+    statusbarLayout->setContentsMargins(0, 1860, 0, 0); // int left, int top, int right, int bottom);
 
     thisMachine->loadDynamicContent();
     thisMachine->getSlotCount();
@@ -438,7 +435,7 @@ void page_idle::hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createN
         idlePageTypeSelectorTimer->stop();
         pollTemperatureTimer->stop();
         testForFrozenScreenTimer->stop();
-        statusbarLayout->removeWidget(p_statusbar);
+        statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
     }
 }
 

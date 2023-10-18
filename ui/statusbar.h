@@ -20,11 +20,11 @@ public:
     void showEvent(QShowEvent *event);
     void exit_page();
     // void hideCurrentPageAndShowProvided(QWidget *pageToShow);
-    void hide();
+    // void hide();
     void refresh();
 
 private slots:
-    void on_pushButton_clicked();
+    void on_pushButton_hide_clicked();
     void onRefreshTimerTick();
 
 private:

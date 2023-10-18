@@ -29,6 +29,12 @@ void statusbar::showEvent(QShowEvent *event)
 
     QString styleSheet = p_page_idle->thisMachine->getCSS(STATUSBAR_CSS);
     ui->label_active_role->setStyleSheet(styleSheet);
+
+    this->p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_hide);
+
+    // this->setStyleSheet("QWidget { background-color: red; }");
+    refresh();
+    
 }
 
 // void statusbar::hideCurrentPageAndShowProvided(QWidget *pageToShow)
@@ -36,10 +42,10 @@ void statusbar::showEvent(QShowEvent *event)
 //     p_page_idle->thisMachine->pageTransition(this, pageToShow);
 // }
 
-void statusbar::hide()
-{
-    this->hide();
-}
+// void statusbar::hide()
+// {
+
+// }
 
 void statusbar::setPage(page_idle *pageIdle)
 {
@@ -52,10 +58,11 @@ void statusbar::refresh()
 
     // statusbar->label_active_role->user, User statusbar->label_active_role->maintainer, Maintainer statusbar->label_active_role->admin, Administrator
 }
-void statusbar::on_pushButton_clicked()
+void statusbar::on_pushButton_hide_clicked()
 {
     qDebug() << "Statusbar button clicked.";
-    // this->hide();
+    this->hide();
+    // ui->pushButton_hide->hide();
 }
 
 void statusbar::onRefreshTimerTick()

@@ -106,7 +106,7 @@ void page_idle::showEvent(QShowEvent *event)
     // Set up the main layout (QVBoxLayout)
 
     ////// this->p_statusbar->showFullScreen();
-    ////// this->p_statusbar->show();
+    this->p_statusbar->show();
 
     thisMachine->loadDynamicContent();
     thisMachine->getSlotCount();
@@ -129,6 +129,7 @@ void page_idle::showEvent(QShowEvent *event)
 
     ui->label_welcome_message->setStyleSheet(styleSheet);
     ui->pushButton_test->setStyleSheet(styleSheet);
+    ui->pushButton_test->hide();
     ui->label_printer_status->setStyleSheet(styleSheet);
     ui->label_temperature_status->setStyleSheet(styleSheet);
     ui->label_show_temperature->setStyleSheet(styleSheet);
@@ -235,7 +236,7 @@ void page_idle::showEvent(QShowEvent *event)
 bool page_idle::eventFilter(QObject *object, QEvent *event)
 {
 
-    qDebug() << "global event trigger......" << event->type();
+    // qDebug() << "global event trigger......" << event->type();
 
     if (object == this) // for 'this' widget.  (e.g. if a button from another widget is pressed, it will not pass)
     {
@@ -267,7 +268,7 @@ bool page_idle::eventFilter(QObject *object, QEvent *event)
         }
         else
         {
-            qDebug() << "other event.... ";
+            // qDebug() << "other event.... ";
         }
     }
     // return false; // Event not handled, continue processing

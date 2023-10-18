@@ -158,6 +158,7 @@ page_payment_tap_serial->preauthLabel,You are being pre-authorized for maximum v
 statusbar->label_active_role->user, User
 statusbar->label_active_role->maintainer, Maintainer
 statusbar->label_active_role->admin, Administrator
+statusbar->pushButton_hide,Hide
 
 #################### page maintenance
 page_maintenance->status_text->auto_empty,Empty detected
@@ -176,9 +177,9 @@ page_maintenance->label_product_1_position,P1
 page_maintenance->label_product_2_position,P2
 page_maintenance->label_product_3_position,P3
 page_maintenance->label_product_4_position,P4
-page_maintenance->label_role->User,Logged in as User. Use the machine as a customer.
-page_maintenance->label_role->Maintainer,Logged in as Maintainer. Swap out products and perform basic maintenance and tests.
-page_maintenance->label_role->Admin,Logged in as Administrator. Full rights.
+page_maintenance->label_role->user,Logged in as User. Use the machine as a customer.
+page_maintenance->label_role->maintainer,Logged in as Maintainer. Swap out products and perform basic maintenance and tests.
+page_maintenance->label_role->admin,Logged in as Administrator. Full rights.
 page_maintenance->label_role->Unknown,Logged in as: Unknown status. 
 page_maintenance->label_qr_manual_description,Scan for user manual 
 

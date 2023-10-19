@@ -29,8 +29,9 @@ void statusbar::showEvent(QShowEvent *event)
 
     QString styleSheet = p_page_idle->thisMachine->getCSS(STATUSBAR_CSS);
     ui->label_active_role->setStyleSheet(styleSheet);
+    ui->label_coupon_code->setStyleSheet(styleSheet);
 
-    this->p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_hide);
+    // this->p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_hide);
 
     // this->setStyleSheet("QWidget { background-color: red; }");
     refresh();
@@ -55,13 +56,17 @@ void statusbar::refresh()
 {
     this->p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_active_role, this->p_page_idle->thisMachine->getActiveRoleAsText());
 
-    // statusbar->label_active_role->user, User statusbar->label_active_role->maintainer, Maintainer statusbar->label_active_role->admin, Administrator
-
-    if (this->p_page_idle->thisMachine->getCouponState() == enabled_valid_active){
-        // this->p_page_idle->
-        ui->label_coupon_code->setText(this->p_page_idle->thisMachine->getCouponCode());
+    if (this->p_page_idle->thisMachine->getCouponState() == enabled_valid_active)
+    {
+        QString coupon_code = this->p_page_idle->thisMachine->getCouponCode();
+        QString coupon_status_text = this->p_page_idle->thisMachine->getTemplateTextByElementNameAndPage(ui->label_coupon_code);
+        ui->label_coupon_code->setText(coupon_status_text.arg(coupon_code));
+        ui->label_coupon_code->show();
     }
-
+    else
+    {
+        ui->label_coupon_code->hide();
+    }
 }
 
 void statusbar::on_pushButton_hide_clicked()

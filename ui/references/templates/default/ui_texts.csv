@@ -159,6 +159,7 @@ statusbar->label_active_role->user, User
 statusbar->label_active_role->maintainer, Maintainer
 statusbar->label_active_role->admin, Administrator
 statusbar->pushButton_hide,Hide
+statusbar->label_coupon_code,Active coupon: %1
 
 #################### page maintenance
 page_maintenance->status_text->auto_empty,Empty detected

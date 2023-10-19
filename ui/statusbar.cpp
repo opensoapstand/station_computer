@@ -22,6 +22,11 @@ statusbar::~statusbar()
     delete ui;
 }
 
+void statusbar::setVisibility(bool isVisible){
+    is_statusbar_visible = isVisible;
+    refresh();
+}
+
 void statusbar::showEvent(QShowEvent *event)
 {
     qDebug() << "Statusbar show.";
@@ -73,7 +78,7 @@ void statusbar::refresh()
     }
     else
     {
-        // this->hide();
+        this->hide();
     }
 }
 

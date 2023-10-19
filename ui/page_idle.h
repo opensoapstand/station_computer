@@ -53,7 +53,7 @@ class page_idle : public QWidget
     Q_OBJECT
 
 public:
-    void displayTemperature();
+    void refreshTemperature();
     explicit page_idle(QWidget *parent = nullptr);
     void setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products, page_error_wifi *p_page_error_wifi, statusbar *p_statusbar);
     ~page_idle();

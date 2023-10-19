@@ -359,14 +359,14 @@ void machine::checkForHighTemperatureAndDisableProducts()
 {
     if (isTemperatureTooHigh_1())
     {
-        if (!temperatureWasHigh)
+        if (!isTemperatureTooHigh)
         {
-            temperatureWasHigh = true;
-            temperatureHighTime = QTime::currentTime(); // Record the time when temperature became too high
+            isTemperatureTooHigh = true;
+            temperatureTooHighStartMillis = QTime::currentTime(); // Record the time when temperature became too high
         }
 
         QTime currentTime = QTime::currentTime();
-        int elapsedMinutes = temperatureHighTime.msecsTo(currentTime) / 60000; // Convert milliseconds to minutes 60000=60min
+        int elapsedMinutes = temperatureTooHighStartMillis.msecsTo(currentTime) / 60000; // Convert milliseconds to minutes 60000=60min
 
         if (elapsedMinutes >= 60) // 60  Check if one hour has passed
         {
@@ -379,7 +379,7 @@ void machine::checkForHighTemperatureAndDisableProducts()
     }
     else
     {
-        temperatureWasHigh = false; // Reset the flag and the time when the temperature goes back to normal
+        isTemperatureTooHigh = false; // Reset the flag and the time when the temperature goes back to normal
     }
 }
 bool machine::isTemperatureTooHigh_1()

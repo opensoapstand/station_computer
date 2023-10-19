@@ -32,7 +32,7 @@ QLabel {
    border: none;
    }
 
-#label_temperature_status {
+#label_temperature_warning {
       font-family: 'Brevia';
       font-style: normal;
       font-weight: 100;

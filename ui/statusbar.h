@@ -22,7 +22,7 @@ public:
     // void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     // void hide();
     void refresh();
-    bool is_statusbar_visible;
+    void setVisibility(bool isVisible);
 
 
 private slots:
@@ -30,6 +30,7 @@ private slots:
     void onRefreshTimerTick();
 
 private:
+    bool is_statusbar_visible;
     Ui::statusbar *ui;
     page_idle* p_page_idle;
     

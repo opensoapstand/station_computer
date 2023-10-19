@@ -63,9 +63,6 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     statusbarLayout = new QVBoxLayout(this);
 }
 
-/*
- * Navigation to Product item
- */
 void page_idle::setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products, page_error_wifi *p_page_error_wifi, statusbar *p_statusbar)
 {
     // Chained to KB Listener
@@ -83,14 +80,6 @@ page_idle::~page_idle()
     delete ui;
 }
 
-void page_idle::displayTemperature()
-{
-    //  QString base_text = "Current Temperature: %1 °C"; //Assuming you have the base_text defined somewhere else or you can define it here.
-    QString base_text = thisMachine->getTemplateTextByElementNameAndPage(ui->label_show_temperature);
-    float temperature = thisMachine->getTemperature_1();
-    ui->label_show_temperature->setText(base_text.arg(QString::number(temperature, 'f', 1)));
-}
-
 void page_idle::setMachine(machine *pmachine)
 {
     thisMachine = pmachine;
@@ -101,15 +90,15 @@ void page_idle::showEvent(QShowEvent *event)
     thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
-    // statusbarLayout->addWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page. 
-    // statusbarLayout->setContentsMargins(0, 1860, 0, 0); // int left, int top, int right, int bottom);
+    p_statusbar->setVisibility(true);
+    statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
+    statusbarLayout->setContentsMargins(0, 1860, 0, 0); // int left, int top, int right, int bottom);
 
     thisMachine->loadDynamicContent();
     thisMachine->getSlotCount();
     thisMachine->resetSessionId();
     thisMachine->dispenseButtonLightsAnimateState(true);
     thisMachine->setRole(UserRole::user);
-
 
     // everything coupon is reset when idle page is reached.
     thisMachine->initCouponState();
@@ -128,17 +117,17 @@ void page_idle::showEvent(QShowEvent *event)
     ui->pushButton_test->setStyleSheet(styleSheet);
     ui->pushButton_test->hide();
     ui->label_printer_status->setStyleSheet(styleSheet);
-    ui->label_temperature_status->setStyleSheet(styleSheet);
+    ui->label_temperature_warning->setStyleSheet(styleSheet);
     ui->label_show_temperature->setStyleSheet(styleSheet);
-    displayTemperature();
+    refreshTemperature();
 
     if (thisMachine->isAelenPillarElseSoapStand() == false)
     {
         ui->label_show_temperature->hide();
-        ui->label_temperature_status->hide();
+        ui->label_temperature_warning->hide();
     }
 
-    ui->label_temperature_status->hide();
+    ui->label_temperature_warning->hide();
 
     // template text with argument example
     // QString base_text = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_welcome_message, "testargument" );
@@ -326,6 +315,40 @@ void page_idle::onTestForFrozenScreenTick()
     }
 }
 
+void page_idle::refreshTemperature()
+{
+    //  QString base_text = "Current Temperature: %1 °C"; //Assuming you have the base_text defined somewhere else or you can define it here.
+    if (thisMachine->isAelenPillarElseSoapStand())
+    {
+        QString base_text = thisMachine->getTemplateTextByElementNameAndPage(ui->label_show_temperature);
+        float temperature = thisMachine->getTemperature_1();
+        QString temperatureStr = QString::number(temperature, 'f', 1);
+
+        ui->label_show_temperature->setText(base_text.arg(temperatureStr));
+        ui->label_show_temperature->show();
+
+        if (thisMachine->isTemperatureTooHigh_1())
+        {
+            thisMachine->checkForHighTemperatureAndDisableProducts(); // todo test if it works
+            qDebug() << "Temperature too high, disable all slots.";
+
+            // Update temperature status label
+            QString base = thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_temperature_warning, "temperature_too_high");
+            ui->label_temperature_warning->setText(base.arg(temperatureStr));
+            ui->label_temperature_warning->show();
+        }
+        else
+        {
+            ui->label_temperature_warning->hide();
+        }
+    }
+    else
+    {
+        ui->label_temperature_warning->hide();
+        ui->label_show_temperature->hide();
+    }
+}
+
 // periodical temperature check initiated
 void page_idle::onPollTemperatureTimerTick()
 {
@@ -336,28 +359,7 @@ void page_idle::onPollTemperatureTimerTick()
     }
 
     _pollTemperatureTimerTimeoutSec = PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS;
-    thisMachine->getTemperatureFromController();
-
-    float currentTemperature = thisMachine->getTemperature_1();
-    bool isTemperatureHigh = thisMachine->isTemperatureTooHigh_1();
-
-    // Update UI elements with the current temperature
-    QString temperatureStr = QString::number(currentTemperature, 'f', 1);
-    QString base_text = thisMachine->getTemplateTextByElementNameAndPage(ui->label_show_temperature);
-    ui->label_show_temperature->setText(base_text.arg(temperatureStr));
-
-    // Toggle visibility of temperature status label
-    ui->label_temperature_status->setVisible(isTemperatureHigh && thisMachine->isAelenPillarElseSoapStand());
-
-    if (isTemperatureHigh)
-    {
-        thisMachine->checkForHighTemperatureAndDisableProducts(); // todo test if it works
-        qDebug() << "Temperature too high, disable all slots.";
-
-        // Update temperature status label
-        QString base = thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_temperature_status, "temperature_too_high");
-        ui->label_temperature_status->setText(base.arg(temperatureStr));
-    }
+    refreshTemperature();
 }
 
 // periodical check to transition to other idle page type

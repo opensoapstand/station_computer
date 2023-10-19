@@ -201,8 +201,8 @@ private:
 
     product *m_products;
 
-    QTime temperatureHighTime;
-    bool temperatureWasHigh = false;
+    QTime temperatureTooHighStartMillis;
+    bool isTemperatureTooHigh = false;
     StateCoupon m_stateCoupon;
     double m_discount_percentage_fraction = 0.0;
     double max_discount = 0.0;

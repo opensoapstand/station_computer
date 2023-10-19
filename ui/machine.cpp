@@ -884,6 +884,8 @@ QString machine::getTemplateText(QString textName_to_find)
 
 void machine::applyDynamicPropertiesFromTemplateToWidgetChildren(QWidget *widget)
 {
+    // Template engine can set properties of a widget (like position, visibility,...) from a text file
+    
     // in reality, send a page widget as argument. All the childeren will be checked. (i.e. buttons, labels,...)
     QList<QObject *> allChildren = widget->findChildren<QObject *>();
     foreach (QObject *child, allChildren)

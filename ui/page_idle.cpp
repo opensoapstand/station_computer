@@ -89,63 +89,49 @@ void page_idle::showEvent(QShowEvent *event)
 {
     thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
+    thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+
+    this->installEventFilter(this); // catches all events.
 
     p_statusbar->setVisibility(true);
     statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
     statusbarLayout->setContentsMargins(0, 1860, 0, 0); // int left, int top, int right, int bottom);
 
     thisMachine->loadDynamicContent();
-    thisMachine->getSlotCount();
+    
     thisMachine->resetSessionId();
     thisMachine->dispenseButtonLightsAnimateState(true);
     thisMachine->setRole(UserRole::user);
-
-    // everything coupon is reset when idle page is reached.
-    thisMachine->initCouponState();
+    thisMachine->initCouponState();     // everything coupon is reset when idle page is reached.
     thisMachine->setSelectedProduct(1); // default selected product is necessary to deal with things if no product is chosen yet e.g. show transaction history
 
-#ifndef PLAY_VIDEO
     thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
-#endif
-    thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
 
     QString styleSheet = thisMachine->getCSS(PAGE_IDLE_CSS);
-    // ui->pushButton_to_select_product_page->setStyleSheet(styleSheet);
     ui->pushButton_to_select_product_page->hide(); // disable the button.
-
     ui->label_welcome_message->setStyleSheet(styleSheet);
     ui->pushButton_test->setStyleSheet(styleSheet);
     ui->pushButton_test->hide();
+
+    thisMachine->setTemplateTextToObject(ui->label_welcome_message);
+    thisMachine->addCustomerLogoToLabel(ui->label_customer_logo);
+    QString machine_logo_full_path = thisMachine->getTemplatePathFromName(MACHINE_LOGO_PATH);
+    thisMachine->addPictureToLabel(ui->label_manufacturer_logo, machine_logo_full_path);
+    ui->label_manufacturer_logo->setStyleSheet(styleSheet);
     ui->label_printer_status->setStyleSheet(styleSheet);
     ui->label_temperature_warning->setStyleSheet(styleSheet);
     ui->label_show_temperature->setStyleSheet(styleSheet);
-    refreshTemperature();
 
-    if (thisMachine->isAelenPillarElseSoapStand() == false)
-    {
-        ui->label_show_temperature->hide();
-        ui->label_temperature_warning->hide();
-    }
-
-    ui->label_temperature_warning->hide();
+    // ui->pushButton_to_select_product_page->setStyleSheet(styleSheet);
+    // ui->pushButton_test->raise();
 
     // template text with argument example
     // QString base_text = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_welcome_message, "testargument" );
     // ui->label_welcome_message->setText(base_text.arg("SoAp")); // will replace %1 character in string by the provide text
+    // ui->pushButton_to_select_product_page->raise();
 
-    thisMachine->setTemplateTextToObject(ui->label_welcome_message);
-    thisMachine->addCustomerLogoToLabel(ui->label_customer_logo);
-
-    ui->label_printer_status->hide(); // always hide here, will show if enabled and has problems.
-
-    if (thisMachine->hasReceiptPrinter())
-    {
-        checkReceiptPrinterStatus();
-    }
-
-    QString machine_logo_full_path = thisMachine->getTemplatePathFromName(MACHINE_LOGO_PATH);
-    thisMachine->addPictureToLabel(ui->label_manufacturer_logo, machine_logo_full_path);
-    ui->label_manufacturer_logo->setStyleSheet(styleSheet);
+    checkReceiptPrinterStatus(); // checks also for printer enabled in db.
+    refreshTemperature();
 
     idlePageTypeSelectorTimer->start(1000);
     _idlePageTypeSelectorTimerTimeoutSec = PAGE_IDLE_DELAY_BEFORE_ENTERING_IDLE_PRODUCTS;
@@ -209,24 +195,17 @@ void page_idle::showEvent(QShowEvent *event)
 #endif
     qDebug() << "Video player. Is fullscreen? : " << videoWidget->isFullScreen();
 #endif
-
-    ui->label_printer_status->setText(QString::number(thisMachine->getTemperature_1(), 'f', 2));
-
-    ui->pushButton_test->raise();
-    // ui->pushButton_to_select_product_page->raise();
-    this->installEventFilter(this);
-
-    tappingBlockedUntilPrinterReply = false;
 }
 
 bool page_idle::eventFilter(QObject *object, QEvent *event)
 {
-
+    // catches all events
     // qDebug() << "global event trigger......" << event->type();
 
     if (object == this) // for 'this' widget.  (e.g. if a button from another widget is pressed, it will not pass)
     {
-        qDebug() << "Event trigger for idle_page widget" << event->type();
+        // catches all events on this widget
+        // qDebug() << "Event trigger for idle_page widget" << event->type();
         if (event->type() == QEvent::TouchBegin ||
             event->type() == QEvent::TouchUpdate ||
             event->type() == QEvent::TouchEnd)
@@ -377,10 +356,16 @@ void page_idle::onIdlePageTypeSelectorTimerTick()
 
 void page_idle::checkReceiptPrinterStatus()
 {
-    qDebug() << "Check receipt printer functionality.";
-    this->p_page_maintenance_general->send_check_printer_status_command();
-    // ui->pushButton_to_select_product_page->hide(); // when printer needs to be restarted, it can take some time. Make sure nobody presses the button in that interval (to prevent crashes)
-    tappingBlockedUntilPrinterReply = true;
+    ui->label_printer_status->hide(); // always hide here, will show if enabled and has problems.
+    tappingBlockedUntilPrinterReply = false;
+
+    if (thisMachine->hasReceiptPrinter())
+    {
+        qDebug() << "Check receipt printer functionality.";
+        this->p_page_maintenance_general->send_check_printer_status_command();
+        // ui->pushButton_to_select_product_page->hide(); // when printer needs to be restarted, it can take some time. Make sure nobody presses the button in that interval (to prevent crashes)
+        tappingBlockedUntilPrinterReply = true;
+    }
 }
 
 void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
@@ -409,6 +394,9 @@ void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
 
 void page_idle::on_pushButton_to_select_product_page_clicked()
 {
+
+    // Handled by catching a global click event on the widget.
+
     //     qDebug() << "Clicked on to_product_page button."; // leave this for a while to investigate frozen screens in the field.
     //     if (stateScreenCheck == state_screen_check_clicked_and_wait)
     //     {
@@ -445,389 +433,3 @@ void page_idle::on_pushButton_test_clicked()
 {
     qDebug() << "pushButton_test clicked.. ";
 }
-
-// void page_idle::addCustomerLogoToLabel(QLabel *label)
-// {
-//     QString id = thisMachine->getCustomerId();
-//     QString logo_path = QString(CLIENT_LOGO_PATH).arg(id);
-//     addPictureToLabel(label, logo_path);
-// }
-
-// void page_idle::addPictureToButton(QPushButton *button, QString picturePath)
-// {
-//     QString p = selectedProduct->getProductPicturePath();
-//     if (df_util::pathExists(p))
-//     {
-//         QPixmap im(p);
-//         QIcon qi(im);
-//         button->setIcon(qi);
-//         button->setIconSize(QSize(271, 391));
-//     }
-// }
-
-// void page_idle::addPictureToLabel(QLabel *label, QString picturePath)
-// {
-//     if (df_util::pathExists(picturePath))
-//     {
-//         QPixmap picture(picturePath);
-
-//         int w = label->width();
-//         int h = label->height();
-
-//         // // set a scaled pixmap to a w x h window keeping its aspect ratio
-//         label->setPixmap(picture.scaled(w, h, Qt::KeepAspectRatio));
-//     }
-//     else
-//     {
-//         qDebug() << "Can't add picture to label: " << label->objectName() << " " << picturePath;
-//     }
-// }
-
-// void page_idle::addCssClassToObject(QWidget *element, QString classname, QString css_file_name)
-// {
-//     QString styleSheet = getCSS(css_file_name);
-//     element->setProperty("class", classname);
-//     element->setStyleSheet(styleSheet);
-// }
-
-// QString page_idle::getCSS(QString cssName)
-// {
-//     QString cssFilePath = thisMachine->getTemplatePathFromName(cssName);
-
-//     QFile cssFile(cssFilePath);
-//     QString styleSheet = "";
-//     if (cssFile.open(QIODevice::ReadOnly | QIODevice::Text))
-//     {
-//         styleSheet = QString::fromUtf8(cssFile.readAll());
-//     }
-//     else
-//     {
-//         qDebug() << "CSS file could not be opened." << cssFilePath;
-//     }
-//     return styleSheet;
-// }
-
-// void page_idle::pageTransition(QWidget *pageToHide, QWidget *pageToShow)
-// {
-//     // page transition effects are not part of QT but of the operating system! // search for ubuntu settings program to set transition animations to "off"
-//     pageToShow->showFullScreen();
-//     pageToHide->hide();
-// }
-
-// void page_idle::setBackgroundPictureFromTemplateToPage(QWidget *p_widget, QString imageName)
-// {
-//     // on Page: if called from setPage: will not scale
-//     // on Page: if called from showEvent: will scale to screen
-
-//     QString image_path = imageName;
-//     image_path = thisMachine->getTemplatePathFromName(imageName);
-//     // qDebug()<< "background image path: " << image_path;
-//     setBackgroundPictureToQWidget(p_widget, image_path);
-// }
-
-// void page_idle::setBackgroundPictureToQWidget(QWidget *p_widget, QString image_path)
-// {
-//     QPixmap background(image_path);
-
-//     // background = background.scaled(p_widget->size(), Qt::IgnoreAspectRatio);
-//     QPalette palette;
-//     palette.setBrush(QPalette::Background, background);
-//     p_widget->setPalette(palette);
-//     p_widget->repaint();
-//     p_widget->update();
-// }
-
-// void page_idle::setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier)
-// {
-//     QString text = getTemplateTextByElementNameAndPageAndIdentifier(p_element, identifier);
-//     setTextToObject(p_element, text);
-// }
-
-// QString page_idle::getTemplateTextByElementNameAndPageAndIdentifier(QWidget *p_element, QString identifier)
-// {
-//     // QString element_page_and_name = getTemplateTextByElementNameAndPage(p_element);
-//     QString element_page_and_name = getCombinedElementPageAndName(p_element);
-
-//     QString searchString = element_page_and_name + "->" + identifier;
-//     return getTemplateText(searchString);
-// }
-
-// void page_idle::setTemplateTextToObject(QWidget *p_element)
-// {
-//     QString searchString = getTemplateTextByElementNameAndPage(p_element);
-//     setTextToObject(p_element, searchString);
-// }
-
-// QString page_idle::getCombinedElementPageAndName(QWidget *p_element)
-// {
-//     QString elementName = p_element->objectName();
-//     QWidget *parentWidget = p_element->parentWidget();
-
-//     if (!parentWidget)
-//     {
-//         qDebug() << "No parent for the provided widget!! " << elementName;
-//     }
-
-//     QString pageName = parentWidget->objectName();
-
-//     return pageName + "->" + elementName;
-// }
-
-// QString page_idle::getTemplateTextByElementNameAndPage(QWidget *p_element)
-// {
-//     QString pageName_elementName_combination = getCombinedElementPageAndName(p_element);
-//     return getTemplateText(pageName_elementName_combination);
-// }
-
-// void page_idle::setTextToObject(QWidget *p_element, QString text)
-// {
-//     if (QLabel *label = qobject_cast<QLabel *>(p_element))
-//     {
-//         label->setText(text);
-//     }
-//     else if (QPushButton *button = qobject_cast<QPushButton *>(p_element))
-//     {
-//         button->setText(text);
-//     }
-//     else if (QMessageBox *msgBox = qobject_cast<QMessageBox *>(p_element))
-//     {
-//         msgBox->setText(text);
-//     }
-//     else
-//     {
-//         // Handle other types of elements if needed
-//     }
-// }
-
-// // get a text that is not linked to an elements on a specific page by its identifier
-// QString page_idle::getTemplateTextByPage(QWidget *page, QString identifier)
-// {
-//     QString pageName = page->objectName();
-//     QString searchString = pageName + "->" + identifier;
-//     return getTemplateText(searchString);
-// }
-
-// QString page_idle::getTemplateText(QString textName_to_find)
-// {
-
-//     std::string key = textName_to_find.toStdString();
-//     auto it = textNameToTextMap_template.find(QString::fromStdString(key));
-//     QString retval;
-//     if (it != textNameToTextMap_template.end())
-//     {
-//         // std::cout << "Word found! Sentence: " << it->second ;
-//         retval = it->second;
-//     }
-//     else
-//     {
-//         it = textNameToTextMap_default.find(QString::fromStdString(key));
-//         if (it != textNameToTextMap_default.end())
-//         {
-//             retval = it->second;
-//         }
-//         else
-//         {
-//             qDebug() << "No template text value found for: " + textName_to_find;
-//             retval = textName_to_find;
-//         }
-//     }
-
-//     // \n values in the csv file get automatically escaped. We need to deescape them.
-//     retval.replace("\\n", "\n");
-
-//     return retval;
-// }
-
-// void page_idle::applyDynamicPropertiesFromTemplateToWidgetChildren(QWidget *widget)
-// {
-//     // in reality, send a page widget as argument. All the childeren will be checked. (i.e. buttons, labels,...)
-//     QList<QObject *> allChildren = widget->findChildren<QObject *>();
-//     foreach (QObject *child, allChildren)
-//     {
-//         QWidget *widget = qobject_cast<QWidget *>(child);
-//         if (widget)
-//         {
-//             // not all child element are widgets.
-
-//             QString combinedName = getCombinedElementPageAndName(widget);
-//             // qDebug() << combinedName;
-//             applyPropertiesToQWidget(widget);
-//         }
-//     }
-// }
-
-// void page_idle::applyPropertiesToQWidget(QWidget *widget)
-// {
-
-//     // example of line in text file with properties:
-//     // page_idle->label_customer_logo,{"x":570, "y":1580, "width":351, "height":211,"isVisibleAtLoad":true}
-
-//     QString combinedName = getCombinedElementPageAndName(widget);
-
-//     auto it = elementDynamicPropertiesMap_template.find(combinedName);
-//     QString jsonString;
-//     bool valid = true;
-
-//     if (it != elementDynamicPropertiesMap_template.end())
-//     {
-//         qDebug() << "element " << combinedName << "found in template. json string: " << it->second;
-//         jsonString = it->second;
-//     }
-//     else
-//     {
-//         it = elementDynamicPropertiesMap_default.find(combinedName);
-//         if (it != elementDynamicPropertiesMap_default.end())
-//         {
-//             qDebug() << "element " << combinedName << "found in default. json string: " << it->second;
-//             jsonString = it->second;
-//         }
-//         else
-//         {
-//             // qDebug() << "No template text value found for: " + combinedName;
-//             valid = false;
-//         }
-//     }
-
-//     if (!valid)
-//     {
-//         return;
-//     }
-
-//     QJsonObject jsonObject = df_util::parseJsonString(jsonString);
-
-//     int x = widget->x();
-//     int y = widget->y();
-//     int width = widget->width();
-//     int height = widget->height();
-
-//     if (jsonObject.contains("x"))
-//     {
-//         QJsonValue xValue = jsonObject.value("x");
-//         x = xValue.toInt();
-//         // qDebug() << "x found  " << x ;
-//     }
-//     if (jsonObject.contains("y"))
-//     {
-//         QJsonValue val = jsonObject.value("y");
-//         y = val.toInt();
-//         // qDebug() << "y found  " << y ;
-//     }
-//     if (jsonObject.contains("width"))
-//     {
-//         QJsonValue val = jsonObject.value("width");
-//         width = val.toInt();
-//         // qDebug() << "width found  " << width ;
-//     }
-//     if (jsonObject.contains("height"))
-//     {
-//         QJsonValue val = jsonObject.value("height");
-//         height = val.toInt();
-//         // qDebug() << "height found  " << height ;
-//     }
-//     widget->setGeometry(x, y, width, height);
-
-//     if (jsonObject.contains("isVisibleAtLoad"))
-//     {
-//         QJsonValue val = jsonObject.value("isVisibleAtLoad");
-//         bool isVisible = val.toBool();
-//         // qDebug() << "visibility found  " << isVisible ;
-
-//         widget->setVisible(isVisible);
-//     }
-// }
-
-// void page_idle::loadElementDynamicPropertiesFromDefaultTemplate()
-// {
-//     qDebug() << "Load dynamic properties from default template file";
-//     QString path = thisMachine->getDefaultTemplatePathFromName(UI_ELEMENT_PROPERTIES_PATH);
-//     loadTextsFromCsv(path, &elementDynamicPropertiesMap_default);
-//     // Print the word-sentence mapping
-//     // for (const auto &pair : elementDynamicPropertiesMap_default)
-//     // {
-//     //     qDebug() << pair.first << ": " << pair.second;
-//     // }
-// }
-
-// void page_idle::loadElementDynamicPropertiesFromTemplate()
-// {
-//     qDebug() << "Load dynamic properties from template file";
-//     QString path = thisMachine->getTemplatePathFromName(UI_ELEMENT_PROPERTIES_PATH);
-//     loadTextsFromCsv(path, &elementDynamicPropertiesMap_template);
-
-//     // Print the word-sentence mapping
-//     // for (const auto &pair : elementDynamicPropertiesMap_default)
-//     // {
-//     //     qDebug() << pair.first << ": " << pair.second;
-//     // }
-// }
-
-// void page_idle::loadTextsFromTemplateCsv()
-// {
-//     qDebug() << "Load dynamic texts from template csv";
-//     QString csv_path = thisMachine->getTemplatePathFromName(UI_TEXTS_CSV_PATH);
-//     loadTextsFromCsv(csv_path, &textNameToTextMap_template);
-// }
-
-// void page_idle::loadTextsFromDefaultCsv()
-// {
-//     qDebug() << "Load dynamic texts from default csv";
-//     QString csv_default_template_path = thisMachine->getDefaultTemplatePathFromName(UI_TEXTS_CSV_PATH);
-//     loadTextsFromCsv(csv_default_template_path, &textNameToTextMap_default);
-// }
-
-// void page_idle::loadTextsFromCsv(QString csv_path, std::map<QString, QString> *dictionary)
-// {
-//     std::ifstream file(csv_path.toStdString());
-//     if (file.is_open())
-//     {
-//         std::string line;
-//         while (std::getline(file, line))
-//         {
-//             if (!line.empty() && line[0] != '#') // Skip empty lines and lines starting with '#'
-//             {
-//                 // qDebug() << QString::fromStdString(line);
-
-//                 std::size_t delimiter_pos = line.find(','); // left of , is the element name, right is its text
-//                 if (delimiter_pos != std::string::npos)
-//                 {
-//                     std::string word = line.substr(0, delimiter_pos);
-//                     std::string sentence = line.substr(delimiter_pos + 1);
-//                     QString qword = QString::fromStdString(word);
-//                     QString qsentence = QString::fromStdString(sentence);
-//                     (*dictionary)[qword] = qsentence;
-//                 }
-//             }
-//         }
-//         file.close();
-
-//         // Print the word-sentence mapping
-//         // for (const auto &pair : *dictionary)
-//         // {
-//         //     qDebug() << pair.first << ": " << pair.second;
-//         // }
-//     }
-//     else
-//     {
-//         qDebug() << "Texts file path could not be opened: " + csv_path;
-//     }
-// }
-
-// QStringList page_idle::getChildNames(QObject *parent)
-// {
-//     QStringList childNames;
-
-//     if (!parent)
-//     {
-//         qDebug() << "Invalid parent object.";
-//         return childNames;
-//     }
-
-//     QList<QObject *> allChildren = parent->findChildren<QObject *>();
-
-//     foreach (QObject *child, allChildren)
-//     {
-//         childNames.append(child->objectName());
-//     }
-
-//     return childNames;
-// }

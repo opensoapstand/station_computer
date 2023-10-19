@@ -91,6 +91,8 @@ void page_select_product::showEvent(QShowEvent *event)
     // statusbarLayout->setContentsMargins(50, 50, 50, 50); // int left, int top, int right, int bottom);
     statusbarLayout->setContentsMargins(0, 1860, 0, 0); // int left, int top, int right, int bottom);
 
+    
+    p_statusbar->is_statusbar_visible = true;
 
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);

@@ -14,6 +14,7 @@ statusbar::statusbar(QWidget *parent) : QWidget(parent),
 
     refreshTimer->start(1000);
     _refreshTimerTimeoutSec = STATUS_BAR_REFRESH_PERIOD_SECONDS;
+    is_statusbar_visible = false;
 }
 
 statusbar::~statusbar()
@@ -31,9 +32,7 @@ void statusbar::showEvent(QShowEvent *event)
     ui->label_active_role->setStyleSheet(styleSheet);
     ui->label_coupon_code->setStyleSheet(styleSheet);
 
-    // this->p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_hide);
-
-    // this->setStyleSheet("QWidget { background-color: red; }");
+    
     refresh();
 }
 
@@ -52,27 +51,38 @@ void statusbar::setPage(page_idle *pageIdle)
     this->p_page_idle = pageIdle;
     qDebug() << "Statusbar set page. ";
 }
+
 void statusbar::refresh()
 {
-    this->p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_active_role, this->p_page_idle->thisMachine->getActiveRoleAsText());
 
-    if (this->p_page_idle->thisMachine->getCouponState() == enabled_valid_active)
+    if (is_statusbar_visible)
     {
-        QString coupon_code = this->p_page_idle->thisMachine->getCouponCode();
-        QString coupon_status_text = this->p_page_idle->thisMachine->getTemplateTextByElementNameAndPage(ui->label_coupon_code);
-        ui->label_coupon_code->setText(coupon_status_text.arg(coupon_code));
-        ui->label_coupon_code->show();
+        this->show();
+        this->p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_active_role, this->p_page_idle->thisMachine->getActiveRoleAsText());
+        if (this->p_page_idle->thisMachine->getCouponState() == enabled_valid_active)
+        {
+            QString coupon_code = this->p_page_idle->thisMachine->getCouponCode();
+            QString coupon_status_text = this->p_page_idle->thisMachine->getTemplateTextByElementNameAndPage(ui->label_coupon_code);
+            ui->label_coupon_code->setText(coupon_status_text.arg(coupon_code));
+            ui->label_coupon_code->show();
+        }
+        else
+        {
+            ui->label_coupon_code->hide();
+        }
     }
     else
     {
-        ui->label_coupon_code->hide();
+        // this->hide();
     }
 }
 
 void statusbar::on_pushButton_hide_clicked()
 {
     qDebug() << "Statusbar button clicked.";
-    this->hide();
+    is_statusbar_visible = false;
+    refresh();
+
     // ui->pushButton_hide->hide();
 }
 

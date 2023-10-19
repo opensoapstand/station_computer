@@ -22,6 +22,7 @@ public:
     // void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     // void hide();
     void refresh();
+    bool is_statusbar_visible;
 
 
 private slots:

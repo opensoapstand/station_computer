@@ -98,7 +98,6 @@ void page_idle::setMachine(machine *pmachine)
 
 void page_idle::showEvent(QShowEvent *event)
 {
-
     thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
@@ -110,6 +109,7 @@ void page_idle::showEvent(QShowEvent *event)
     thisMachine->resetSessionId();
     thisMachine->dispenseButtonLightsAnimateState(true);
     thisMachine->setRole(UserRole::user);
+
 
     // everything coupon is reset when idle page is reached.
     thisMachine->initCouponState();
@@ -352,7 +352,7 @@ void page_idle::onPollTemperatureTimerTick()
     if (isTemperatureHigh)
     {
         thisMachine->checkForHighTemperatureAndDisableProducts(); // todo test if it works
-        qDebug() << "Temperature too high, block all slots.";
+        qDebug() << "Temperature too high, disable all slots.";
 
         // Update temperature status label
         QString base = thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_temperature_status, "temperature_too_high");

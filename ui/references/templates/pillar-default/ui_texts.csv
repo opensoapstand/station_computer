@@ -74,4 +74,5 @@ page_payment_tap_serial->pushButton_previous_page,←back
 page_email->pushButton_to_product_overview,←back
 page_email->label_email_title,To dispense free sample<br>Please kindly enter your email address
 page_email->keyboardTextEntry->email_placeholder,Please enter your email address
+page_email->keyboardTextEntry->invalid,Incorrect email address, please enter valid email address
 page_email->pushButton_continue, Submit email for free dispense!

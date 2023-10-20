@@ -88,6 +88,8 @@ void page_email::showEvent(QShowEvent *event)
     ui->keyboard_3->show();
     foreach (QAbstractButton *button, ui->buttonGroup->buttons())
     {
+        button->setProperty("class", "button");
+        button->setStyleSheet(styleSheet);
         if (button->text() == "Space" || button->text() == "Done" || button->text() == "Cancel" || button->text() == "Clear" || button->text() == "Backspace"){
         }
         else
@@ -126,7 +128,10 @@ void page_email::on_pushButton_continue_clicked()
         qDebug() << "EMAIL CORRECT: continue with free sample dispense";
         hideCurrentPageAndShowProvided(p_page_dispenser);
     }else{
-        ui->keyboardTextEntry->setText("Incorrect email address, please enter valid email address");
+        p_page_idle->thisMachine->addCssClassToObject(ui->keyboardTextEntry, "enteredEmail_invalid", PAGE_EMAIL_CSS);
+        QString email_input_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "keyboardTextEntry->invalid");
+        ui->keyboardTextEntry->setText(email_input_text);
+        ui->keyboardTextEntry->show();
         m_hasStartedTyping = false;
     }
 }
@@ -163,6 +168,7 @@ void page_email::keyboardButtonPressed(int buttonID)
     if (!m_hasStartedTyping){
         m_hasStartedTyping = true;
         ui->keyboardTextEntry->clear();
+        p_page_idle->thisMachine->addCssClassToObject(ui->keyboardTextEntry, "keyboardTextEntry", PAGE_EMAIL_CSS);
     }
     if (buttonText == "CAPS")
     {
@@ -170,7 +176,6 @@ void page_email::keyboardButtonPressed(int buttonID)
         {
             if (button->text() == "Space" || button->text() == "Done" || button->text() == "Cancel" || button->text() == "Clear" || button->text() == "Backspace")
             {
-                // qDebug() << "doing nothing";
             }
             else
             {

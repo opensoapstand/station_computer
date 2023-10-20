@@ -41,7 +41,8 @@ public:
     void initMachine();
 
     void resetUserState();
-    
+    bool isSessionLocked();
+
     void dispenseButtonLightsAnimateState(bool animateElseOff);
     bool slotNumberValidityCheck(int slot);
     QString getStatusText(int slot);

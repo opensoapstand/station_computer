@@ -162,8 +162,10 @@ void page_idle_products::hideCurrentPageAndShowProvided(QWidget *pageToShow, boo
 {
     if (createNewSessionId)
     {
-        // the moment there is a user interaction to go to select product , a new session ID is created.
-        p_page_idle->thisMachine->createSessionId();
+        if (!p_page_idle->thisMachine->isSessionLocked())
+        {
+            p_page_idle->thisMachine->createSessionId();
+        }
     }
 
     backgroundChangeTimer->stop();

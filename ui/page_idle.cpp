@@ -107,10 +107,14 @@ void page_idle::showEvent(QShowEvent *event)
 
     thisMachine->dispenseButtonLightsAnimateState(true);
 
-    // thisMachine->resetSessionId();
-    if (thisMachine->getCouponState() == StateCoupon::no_state)
+    if (!thisMachine->isSessionLocked())
     {
-        thisMachine->initCouponState(); // everything coupon is reset 
+        thisMachine->resetSessionId();
+    }
+
+    if (thisMachine->getCouponState() == StateCoupon::no_state) // at startup
+    {
+        thisMachine->initCouponState();
     }
 
     thisMachine->setSelectedProduct(1); // default selected product is necessary to deal with things if no product is chosen yet e.g. show transaction history
@@ -453,7 +457,10 @@ void page_idle::hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createN
 
         if (createNewSessionId)
         {
-            thisMachine->createSessionId();
+            if (!thisMachine->isSessionLocked())
+            {
+                thisMachine->createSessionId();
+            }
         }
 
         thisMachine->pageTransition(this, pageToShow);

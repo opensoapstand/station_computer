@@ -480,6 +480,19 @@ QString machine::getSessionId()
     return m_session_id;
 }
 
+bool machine::isSessionLocked(){
+    bool sessionActive = false;
+    if (getRole() != UserRole::user)
+    {
+        sessionActive = true;
+    }
+    if (getCouponState() == enabled_valid_active)
+    {
+        sessionActive = true;
+    }
+    return sessionActive;
+}
+
 void machine::resetSessionId()
 {
     m_session_id = "";

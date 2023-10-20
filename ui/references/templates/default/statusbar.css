@@ -15,15 +15,15 @@ QLabel {
 
    font-family: 'Brevia';
    font-style: normal;
-   font-weight: 30;
-   background-color: #5E8580;
-   font-size: 12px;
+   font-weight: 20;
+   font-size: 16px;
+   color: #003840;
+   background-color: #FFFFFF;
+   border: 1px;
    text-align: center;
-   line-height: auto;
-   /* qproperty-alignment: AlignCenter; */
-   border-radius: 30px;
-   color: white;
+   /* border-radius: 5px; */
    border: none;
+   qproperty-alignment: AlignCenter;
 }
 
 .normal {

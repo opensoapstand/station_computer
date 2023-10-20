@@ -97,17 +97,19 @@ void page_idle::showEvent(QShowEvent *event)
 
     this->installEventFilter(this); // catches all events.
 
-    p_statusbar->autoSetVisibility();
+    // p_statusbar->autoSetVisibility();
+    p_statusbar->refresh();
 
     statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
     statusbarLayout->setContentsMargins(0, 1860, 0, 0); // int left, int top, int right, int bottom);
 
     thisMachine->loadDynamicContent();
 
-    thisMachine->resetSessionId();
     thisMachine->dispenseButtonLightsAnimateState(true);
     
-    thisMachine->initCouponState();     // everything coupon is reset when idle page is reached.
+    // thisMachine->resetSessionId();
+    // thisMachine->initCouponState();     // everything coupon is reset when idle page is reached.
+  
     thisMachine->setSelectedProduct(1); // default selected product is necessary to deal with things if no product is chosen yet e.g. show transaction history
 
     thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
@@ -318,7 +320,10 @@ void page_idle::onUserRoleTimeOutTimerTick()
         p_statusbar->setRoleTimeOutTrailingText( "");
         thisMachine->setRole(UserRole::user);
         
-        p_statusbar->autoSetVisibility();
+        thisMachine->resetSessionId();
+        thisMachine->initCouponState();     // everything coupon is reset when idle page is reached.
+        
+        // p_statusbar->autoSetVisibility();
         p_statusbar->refresh();
         
         _userRoleTimeOutTimerSec = PAGE_IDLE_USER_ROLE_TIMEOUT_SECONDS;

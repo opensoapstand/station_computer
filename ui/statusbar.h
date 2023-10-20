@@ -28,12 +28,11 @@ public:
 void autoSetVisibility();
     void setVisibility(bool isVisible);
 
-
 private slots:
     void on_pushButton_hide_clicked();
     void onRefreshTimerTick();
 
-    void on_pushButton_active_role_clicked();
+    // void on_pushButton_active_role_clicked();
 
 private:
     bool is_statusbar_visible;

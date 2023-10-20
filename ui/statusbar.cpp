@@ -30,6 +30,11 @@ void statusbar::autoSetVisibility()
     {
         isVisible = true;
     }
+    if (this->p_page_idle->thisMachine->getCouponState() == enabled_valid_active)
+    {
+        isVisible = true;
+    }
+
     setVisibility(isVisible);
 }
 
@@ -46,12 +51,15 @@ void statusbar::showEvent(QShowEvent *event)
 
     QString styleSheet = p_page_idle->thisMachine->getCSS(STATUSBAR_CSS);
     ui->label_active_role->setStyleSheet(styleSheet);
-    // ui->pushButton_active_role->setStyleSheet(styleSheet);
-     p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_active_role, "normal", STATUSBAR_CSS);
+    ui->label_session_id->setStyleSheet(styleSheet);
     ui->label_coupon_code->setStyleSheet(styleSheet);
 
-    setRoleTimeOutTrailingText(""); // reset count down. 
-    autoSetVisibility();
+    // ui->pushButton_active_role->setStyleSheet(styleSheet);
+    // p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_active_role, "normal", STATUSBAR_CSS);
+    p_page_idle->thisMachine->addCssClassToObject(ui->label_active_role, "normal", STATUSBAR_CSS);
+
+    setRoleTimeOutTrailingText(""); // reset count down.
+
     refresh();
 }
 
@@ -75,21 +83,30 @@ void statusbar::setRoleTimeOutTrailingText(QString text)
 {
     roleTimeOutTrailingText = text;
     // ui->pushButton_active_role
-    if (text == ""){
-    p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_active_role, "normal", STATUSBAR_CSS);
-
-    }else{
-    p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_active_role, "alert", STATUSBAR_CSS);
-
+    if (text == "")
+    {
+        // p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_active_role, "normal", STATUSBAR_CSS);
+        p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_hide, "normal", STATUSBAR_CSS);
+    }
+    else
+    {
+        // p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_active_role, "alert", STATUSBAR_CSS);
+        p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_hide, "alert", STATUSBAR_CSS);
     }
 }
 
 void statusbar::refresh()
 {
+    autoSetVisibility();
+
     if (is_statusbar_visible)
     {
         this->show();
-        // this->p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_active_role, this->p_page_idle->thisMachine->getActiveRoleAsText());
+
+        this->p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_active_role, this->p_page_idle->thisMachine->getActiveRoleAsText());
+        QString base = p_page_idle->thisMachine->getTemplateTextByElementNameAndPage(ui->pushButton_hide);
+        ui->pushButton_hide->setText(base.arg(roleTimeOutTrailingText));
+
         if (this->p_page_idle->thisMachine->getCouponState() == enabled_valid_active)
         {
             QString coupon_code = this->p_page_idle->thisMachine->getCouponCode();
@@ -102,9 +119,8 @@ void statusbar::refresh()
             ui->label_coupon_code->hide();
         }
 
-        QString role_as_text = p_page_idle->thisMachine->getActiveRoleAsText();
-        QString base = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->pushButton_active_role, role_as_text);
-        ui->pushButton_active_role->setText(base.arg(roleTimeOutTrailingText));
+        ui->label_session_id->setText(p_page_idle->thisMachine->getSessionId());
+
     }
     else
     {
@@ -114,11 +130,9 @@ void statusbar::refresh()
 
 void statusbar::on_pushButton_hide_clicked()
 {
-    qDebug() << "Statusbar button clicked.";
-    is_statusbar_visible = false;
-    refresh();
+    p_page_idle->thisMachine->setRole(UserRole::user);
 
-    // ui->pushButton_hide->hide();
+    refresh();
 }
 
 void statusbar::onRefreshTimerTick()
@@ -136,15 +150,15 @@ void statusbar::onRefreshTimerTick()
         _refreshTimerTimeoutSec = STATUS_BAR_REFRESH_PERIOD_SECONDS;
     }
 }
-void statusbar::on_pushButton_active_role_clicked()
-{
-    if (p_page_idle->thisMachine->getRole() == UserRole::user)
-    {
-    }
-    else
-    {
-        p_page_idle->thisMachine->setRole(UserRole::user);
-    }
-    autoSetVisibility();
-    refresh();
-}
+// void statusbar::on_pushButton_active_role_clicked()
+// {
+//     if (p_page_idle->thisMachine->getRole() == UserRole::user)
+//     {
+//     }
+//     else
+//     {
+//         p_page_idle->thisMachine->setRole(UserRole::user);
+//     }
+//     autoSetVisibility();
+//     refresh();
+// }

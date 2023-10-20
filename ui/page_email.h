@@ -22,6 +22,7 @@
 class page_dispenser;
 class page_idle;
 class page_help;
+class page_product_overview;
 
 namespace Ui {
 class page_email;
@@ -34,7 +35,7 @@ class page_email : public QWidget
 public:
     explicit page_email(QWidget *parent = nullptr);
 
-    void setPage(page_dispenser *page_dispenser, page_idle* pageIdle, page_help *p_page_help);
+    void setPage(page_dispenser *page_dispenser, page_idle* pageIdle, page_help *p_page_help, page_product_overview *p_page_product_overview);
     ~page_email();
     QTimer* helpIdleTimer;
 
@@ -43,11 +44,11 @@ public:
 private slots:
     // **** Navigation ****
     // void on_pushButton_previous_page_clicked();
-    void on_pushButton_to_idle_clicked();
+    void on_pushButton_to_product_overview_clicked();
     void on_pushButton_resetTimeout_clicked();
     void onHelpTimeoutTick();
-    
-
+    void on_pushButton_continue_clicked();
+    void on_pushButton_to_help_clicked();
     // void on_pushButton_to_transactions_clicked();
 
     void keyboardButtonPressed(int);
@@ -55,7 +56,7 @@ private slots:
     // void on_pushButton_to_maintenance_clicked();
 
     // void on_pushButton_to_feedback_clicked();
-
+    bool emailValid(QString email);
 private:
     void showEvent(QShowEvent *event);
 
@@ -63,6 +64,7 @@ private:
     page_dispenser* p_page_dispenser;
     page_help* p_page_help;
     page_idle* p_page_idle;
+    page_product_overview* p_page_product_overview;
 
     int _helpIdleTimeoutSec;
 

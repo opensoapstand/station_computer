@@ -68,7 +68,7 @@ public:
     void cancelTimers();
 
     void apply_promo_code(QString promocode);
-
+    void check_to_page_email();
     bool m_readyToSendCoupon; 
 
 signals:

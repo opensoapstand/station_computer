@@ -19,7 +19,7 @@
   <widget class="QWidget" name="keyboard_3" native="true">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>20</x>
      <y>530</y>
      <width>1051</width>
      <height>441</height>
@@ -816,22 +816,6 @@
       </attribute>
      </widget>
     </item>
-    <item row="5" column="12">
-     <widget class="QPushButton" name="pushButton_258">
-      <property name="maximumSize">
-       <size>
-        <width>87</width>
-        <height>50</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>Done</string>
-      </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
-     </widget>
-    </item>
     <item row="4" column="11">
      <widget class="QPushButton" name="pushButton_254">
       <property name="maximumSize">
@@ -1074,20 +1058,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QLabel" name="html_text_label">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>270</y>
-     <width>800</width>
-     <height>1231</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_to_idle">
+  <widget class="QPushButton" name="pushButton_to_product_overview">
    <property name="geometry">
     <rect>
      <x>70</x>
@@ -1132,11 +1103,65 @@
     <string>TextLabel</string>
    </property>
   </widget>
-  <zorder>html_text_label</zorder>
-  <zorder>pushButton_to_idle</zorder>
+  <widget class="QPushButton" name="pushButton_continue">
+   <property name="geometry">
+    <rect>
+     <x>188</x>
+     <y>1070</y>
+     <width>740</width>
+     <height>92</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Montserrat</family>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_to_help">
+   <property name="geometry">
+    <rect>
+     <x>446</x>
+     <y>1727</y>
+     <width>211</width>
+     <height>191</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_help">
+   <property name="geometry">
+    <rect>
+     <x>478</x>
+     <y>1773</y>
+     <width>125</width>
+     <height>125</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <zorder>pushButton_to_product_overview</zorder>
   <zorder>keyboard_3</zorder>
   <zorder>keyboardTextEntry</zorder>
   <zorder>label_email_title</zorder>
+  <zorder>pushButton_continue</zorder>
+  <zorder>pushButton_to_help</zorder>
+  <zorder>label_help</zorder>
  </widget>
  <resources/>
  <connections/>

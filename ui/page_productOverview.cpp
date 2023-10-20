@@ -141,18 +141,7 @@ void page_product_overview::showEvent(QShowEvent *event)
     _selectIdleTimeoutSec = 400;
     selectIdleTimer->start(1000);
     reset_and_show_page_elements();
-
-    double selectedPrice = p_page_idle->thisMachine->selectedProduct->getBasePrice();
-    double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
-    qDebug() << "!!!!!!TRIGGERED PAYMENT METHOD:" << p_page_idle->thisMachine->selectedProduct-> getPaymentMethod(); 
-    if(p_page_idle->thisMachine->selectedProduct->getPaymentMethod() == PAYMENT_QR_EMAIL_FREE && finalPrice == 0.0 ){
-        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_free");
-        qDebug() << "!!!!!!TRIGGERED FINAL PRICE:" << finalPrice; 
-    
-    }else{
-        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay");
-        qDebug() << "!!!!!!TRIGGERED nototaoieoit PRICE:" << finalPrice; 
-    }
+    check_to_page_email();
 }
 
 void page_product_overview::resizeEvent(QResizeEvent *event)
@@ -238,6 +227,7 @@ void page_product_overview::reset_and_show_page_elements()
         ui->label_discount_tag->show();
         ui->lineEdit_promo_code->show();
         ui->pushButton_promo_input->show();
+        check_to_page_email();
     }
     break;
     case (disabled):
@@ -524,7 +514,9 @@ void page_product_overview::on_pushButton_continue_clicked()
     ui->pushButton_previous_page->setEnabled(false);
 
     QString paymentMethod = p_page_idle->thisMachine->selectedProduct->getPaymentMethod();
-    if (paymentMethod == PAYMENT_QR_EMAIL_FREE)
+    double selectedPrice = p_page_idle->thisMachine->selectedProduct->getBasePrice();
+    double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
+    if (paymentMethod == PAYMENT_QR_EMAIL_FREE && finalPrice == 0.0 )
     {
         hideCurrentPageAndShowProvided(p_page_email);
 
@@ -588,4 +580,14 @@ void page_product_overview::return_to_selectProductPage()
 void page_product_overview::on_pushButton_select_product_page_clicked()
 {
     this->return_to_selectProductPage();
+}
+
+void page_product_overview::check_to_page_email(){
+    double selectedPrice = p_page_idle->thisMachine->selectedProduct->getBasePrice();
+    double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
+    if(p_page_idle->thisMachine->selectedProduct->getPaymentMethod() == PAYMENT_QR_EMAIL_FREE && finalPrice == 0.0 ){
+        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_free");
+    }else{
+        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay");
+    }
 }

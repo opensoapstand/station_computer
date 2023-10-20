@@ -1,4 +1,9 @@
-#pushButton_to_idle{
+QPushButton { 
+    background: transparent;
+    border: none;
+}
+
+#pushButton_to_product_overview{
    text-align: left;
    color: #221F20;
    font-family: 'EuropaNuova-Regular';
@@ -9,6 +14,20 @@
    qproperty-alignment: AlignCenter;
    text-align: left;
    border: none;
+}
+
+#pushButton_continue{
+    font-family: 'EuropaNuova-Regular';
+    font-style: normal;
+    font-weight: 400;
+    background-color: #221F20;
+    font-size: 47px;
+    text-align: center;
+    line-height: auto;
+    qproperty-alignment: AlignCenter;
+    border-radius: 25px;
+    color: #FFFFFF;
+    border: 1px solid #221F20;
 }
 
 #label_email_title{

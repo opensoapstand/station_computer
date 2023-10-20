@@ -21,7 +21,7 @@
 #include "dfuicommthread.h"
 #include "dbmanager.h"
 #include "page_maintenance.h"
-#include "product.h"
+#include "dispenser_slot.h"
 #include "machine.h"
 #include "page_maintenance_general.h"
 #include "statusbar.h"

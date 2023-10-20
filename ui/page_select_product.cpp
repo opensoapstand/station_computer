@@ -157,9 +157,9 @@ void page_select_product::displayProducts()
 
         // display product picture
 
-        p_page_idle->thisMachine->addPictureToLabel(labels_product_picture[slot_index], p_page_idle->thisMachine->getProduct(slot_index + 1)->getProductPicturePath());
-        product_type = p_page_idle->thisMachine->getProduct(slot_index + 1)->getProductType();
-        product_name = p_page_idle->thisMachine->getProduct(slot_index + 1)->getProductName();
+        p_page_idle->thisMachine->addPictureToLabel(labels_product_picture[slot_index], p_page_idle->thisMachine->getSlotByPosition(slot_index + 1)->getProductPicturePath());
+        product_type = p_page_idle->thisMachine->getSlotByPosition(slot_index + 1)->getProductType();
+        product_name = p_page_idle->thisMachine->getSlotByPosition(slot_index + 1)->getProductName();
 
         if (!p_page_idle->thisMachine->getSlotEnabled(slot_index + 1))
         {
@@ -259,7 +259,7 @@ void page_select_product::displayProducts()
         {
             labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
         }
-        else if (!(p_page_idle->thisMachine->getProduct(slot_index + 1)->isProductVolumeInContainer()))
+        else if (!(p_page_idle->thisMachine->getSlotByPosition(slot_index + 1)->isProductVolumeInContainer()))
         {
             labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->empty"));
         }
@@ -294,7 +294,7 @@ void page_select_product::select_product(int slot)
     if (p_page_idle->thisMachine->getSlotEnabled(slot))
     {
         qDebug() << "Selected slot: " << slot;
-        p_page_idle->thisMachine->setSelectedProduct(slot);
+        p_page_idle->thisMachine->setSelectedSlot(slot);
         hideCurrentPageAndShowProvided(p_page_product);
     }
     else

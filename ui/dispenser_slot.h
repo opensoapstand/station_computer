@@ -7,15 +7,15 @@
 
 class machine; // forward declaration.
 
-class product : public QObject
+class dispenser_slot : public QObject
 {
     Q_OBJECT
 
 public:
-    product();
-    product(const product &other);
-    ~product();
-    product &operator=(const product &other);
+    dispenser_slot();
+    dispenser_slot(const dispenser_slot &other);
+    ~dispenser_slot();
+    dispenser_slot &operator=(const dispenser_slot &other);
     void setMachine(machine *machine);
     void setDb(DbManager* db);
 

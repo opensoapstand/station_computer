@@ -18,7 +18,7 @@
 #include "page_idle_products.h"
 #include "page_maintenance.h"
 #include "page_maintenance_general.h"
-#include "product.h"
+#include "dispenser_slot.h"
 #include "dbmanager.h"
 #include "statusbar.h"
 
@@ -113,7 +113,7 @@ void page_idle::showEvent(QShowEvent *event)
         thisMachine->initCouponState(); // everything coupon is reset 
     }
 
-    thisMachine->setSelectedProduct(1); // default selected product is necessary to deal with things if no product is chosen yet e.g. show transaction history
+    thisMachine->setSelectedSlot(1); // default selected product is necessary to deal with things if no product is chosen yet e.g. show transaction history
 
     thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
 

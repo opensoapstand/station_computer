@@ -21,7 +21,7 @@
 #include "includefiles.h"
 #include "page_idle.h"
 #include "page_payment_tap_serial.h"
-#include "product.h"
+#include "dispenser_slot.h"
 #include "page_sendFeedback.h"
 #include "page_end.h"
 #include "payment/commands.h"
@@ -117,7 +117,7 @@ private:
     uint16_t arrow_animation_step_counter;
     bool animationStepForwardElseBackward;
 
-    product* selectedProduct;
+    dispenser_slot* selectedSlot;
 
     // XXX: Remove when interrupts and flowsensors work.
 

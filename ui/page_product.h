@@ -30,7 +30,7 @@
 #include "page_qr_payment.h"
 #include "page_select_product.h"
 #include "page_productOverview.h"
-#include "product.h"
+#include "dispenser_slot.h"
 #include "page_idle.h"
 #include "page_error_wifi.h"
 #include "page_help.h"

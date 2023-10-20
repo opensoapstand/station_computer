@@ -186,12 +186,12 @@ int main(int argc, char *argv[])
 
     DbManager db_config;
     machine thisMachine;
-    product products[MAX_SLOT_COUNT];
+    dispenser_slot dispenser_slots[MAX_SLOT_COUNT];
     p_page_idle->setMachine(&thisMachine);
     // p_page_idle->g_database = &db_config;
 
     db_config.updateTableMachineWithText("software_version", UI_VERSION);
-    thisMachine.setProducts(products);
+    thisMachine.setSlots(dispenser_slots);
     thisMachine.setDb(&db_config);
     thisMachine.initMachine(); // first setDb
     thisMachine.loadDynamicContent();

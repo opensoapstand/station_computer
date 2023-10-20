@@ -65,7 +65,7 @@ HEADERS += \
     page_help.h \
     page_sendFeedback.h  \
     page_transactions.h \
-    product.h \
+    dispenser_slot.h \
     page_idle_products.h \
     machine.h \
     statusbar.h
@@ -104,7 +104,7 @@ SOURCES += \
     page_help.cpp \
     ../library/qr/qrcodegen.cpp \
     page_transactions.cpp \
-    product.cpp \
+    dispenser_slot.cpp \
     page_idle_products.cpp \
     machine.cpp \
     statusbar.cpp

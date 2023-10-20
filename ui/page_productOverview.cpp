@@ -168,12 +168,12 @@ void page_product_overview::reset_and_show_page_elements()
     qDebug() << "Reset and show page elements";
 
     QString bitmap_location;
-    p_page_idle->thisMachine->addPictureToLabel(ui->label_product_photo, p_page_idle->thisMachine->selectedProduct->getProductPicturePath());
-    ui->label_selected_price->setText("$" + QString::number(p_page_idle->thisMachine->selectedProduct->getBasePrice(), 'f', 2));
+    p_page_idle->thisMachine->addPictureToLabel(ui->label_product_photo, p_page_idle->thisMachine->selectedSlot->getProductPicturePath());
+    ui->label_selected_price->setText("$" + QString::number(p_page_idle->thisMachine->selectedSlot->getBasePrice(), 'f', 2));
     QString full_path = p_page_idle->thisMachine->getTemplatePathFromName(IMAGE_BUTTON_HELP);
     p_page_idle->thisMachine->addPictureToLabel(ui->label_help, full_path);
 
-    ui->label_invoice_name->setText(p_page_idle->thisMachine->selectedProduct->getProductName());
+    ui->label_invoice_name->setText(p_page_idle->thisMachine->selectedSlot->getProductName());
 
     // by default hide all coupon and discount elements.
     ui->promoKeyboard->hide();
@@ -308,19 +308,19 @@ size_t WriteCallback_coupon1(char *contents, size_t size, size_t nmemb, void *us
 
 void page_product_overview::updatePriceLabel()
 {
-    QString selected_volume = p_page_idle->thisMachine->selectedProduct->getSizeToVolumeWithCorrectUnits(p_page_idle->thisMachine->selectedProduct->getSize(), true, true);
+    QString selected_volume = p_page_idle->thisMachine->selectedSlot->getSizeToVolumeWithCorrectUnits(p_page_idle->thisMachine->selectedSlot->getSize(), true, true);
 
-    if (p_page_idle->thisMachine->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
+    if (p_page_idle->thisMachine->selectedSlot->getSize() == SIZE_CUSTOM_INDEX)
     {
         QString base = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_selected_volume, "custom_volume");
         ui->label_selected_volume->setText(base.arg(selected_volume));
 
-        double selectedPrice = p_page_idle->thisMachine->selectedProduct->getBasePrice();
+        double selectedPrice = p_page_idle->thisMachine->selectedSlot->getBasePrice();
         double selectedPriceCorrected = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
         double discount = p_page_idle->thisMachine->getDiscountAmount(selectedPrice);
         double discountFraction = p_page_idle->thisMachine->getDiscountPercentageFraction();
 
-        QString units = p_page_idle->thisMachine->selectedProduct->getUnitsForSlot();
+        QString units = p_page_idle->thisMachine->selectedSlot->getUnitsForSlot();
         if (units == "ml")
         {
             units = "100ml";
@@ -328,7 +328,7 @@ void page_product_overview::updatePriceLabel()
         }
         else if (units == "g")
         {
-            if (p_page_idle->thisMachine->selectedProduct->getVolumeBySize(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
+            if (p_page_idle->thisMachine->selectedSlot->getVolumeBySize(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
             {
                 units = "100g";
                 selectedPrice = selectedPrice * 100;
@@ -362,7 +362,7 @@ void page_product_overview::updatePriceLabel()
         // The label_invoice_price total displays the discounted total even when the user goes back to the select_product page.
         // It's intended behaviour so user doesnt have to retype the promo-code
         // promo codes get reset when going to idle page.
-        double selectedPrice = p_page_idle->thisMachine->selectedProduct->getBasePrice();
+        double selectedPrice = p_page_idle->thisMachine->selectedSlot->getBasePrice();
         double selectedPriceCorrected = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
         double discountFraction = p_page_idle->thisMachine->getDiscountPercentageFraction();
         double discountAmount = selectedPrice - selectedPriceCorrected;
@@ -385,7 +385,7 @@ void page_product_overview::apply_promo_code(QString promocode)
     CURLcode res;
     long http_code = 0;
     QString machine_id = p_page_idle->thisMachine->getMachineId();
-    QString product_serial = p_page_idle->thisMachine->selectedProduct->getProductDrinkfillSerial();
+    QString product_serial = p_page_idle->thisMachine->selectedSlot->getProductDrinkfillSerial();
     // csuccess
     p_page_idle->thisMachine->setCouponState(enabled_invalid_input);
 
@@ -518,7 +518,7 @@ void page_product_overview::on_pushButton_continue_clicked()
     ui->pushButton_to_help->setEnabled(false);
     ui->pushButton_previous_page->setEnabled(false);
 
-    QString paymentMethod = p_page_idle->thisMachine->selectedProduct->getPaymentMethod();
+    QString paymentMethod = p_page_idle->thisMachine->selectedSlot->getPaymentMethod();
 
     if (paymentMethod == PAYMENT_QR)
     {

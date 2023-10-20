@@ -92,7 +92,7 @@ void page_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 void page_dispenser::showEvent(QShowEvent *event)
 {
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
-    qDebug() << "Selected slot: " << QString::number(p_page_idle->thisMachine->selectedProduct->getSlot());
+    qDebug() << "Selected slot: " << QString::number(p_page_idle->thisMachine->selectedSlot->getSlot());
     QWidget::showEvent(event);
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
@@ -155,9 +155,9 @@ void page_dispenser::showEvent(QShowEvent *event)
         p_page_idle->thisMachine->addPictureToLabel(ui->label_indicate_active_spout, p_page_idle->thisMachine->getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_DOWN));
 
         // indicate spout position with arrow.
-        // ui->label_indicate_active_spout->move( (p_page_idle->thisMachine->selectedProduct->getSlot() -1) * 290 + 10, ui->label_indicate_active_spout->y()); // although it is well spaced out in theory, in reality, spout 2 and 3 are not clearly distinguished.
+        // ui->label_indicate_active_spout->move( (p_page_idle->thisMachine->selectedSlot->getSlot() -1) * 290 + 10, ui->label_indicate_active_spout->y()); // although it is well spaced out in theory, in reality, spout 2 and 3 are not clearly distinguished.
         int x = 0;
-        switch (p_page_idle->thisMachine->selectedProduct->getSlot())
+        switch (p_page_idle->thisMachine->selectedSlot->getSlot())
         {
         case 1:
             x = 10;
@@ -203,9 +203,9 @@ void page_dispenser::showEvent(QShowEvent *event)
     arrowAnimationStepTimer->start();
     resetDispenseTimeout();
 
-    p_page_idle->thisMachine->selectedProduct->resetVolumeDispensed();
-    updatelabel_volume_dispensed_ml(p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl());
-    paymentMethod = p_page_idle->thisMachine->selectedProduct->getPaymentMethod();
+    p_page_idle->thisMachine->selectedSlot->resetVolumeDispensed();
+    updatelabel_volume_dispensed_ml(p_page_idle->thisMachine->selectedSlot->getVolumeDispensedMl());
+    paymentMethod = p_page_idle->thisMachine->selectedSlot->getPaymentMethod();
 
     fsmSendStartDispensing();
 }
@@ -213,7 +213,7 @@ void page_dispenser::showEvent(QShowEvent *event)
 void page_dispenser::updatelabel_volume_dispensed_ml(double dispensed)
 {
     QString dispensedVolumeUnitsCorrected;
-    QString units = p_page_idle->thisMachine->selectedProduct->getUnitsForSlot();
+    QString units = p_page_idle->thisMachine->selectedSlot->getUnitsForSlot();
 
     if (units == "oz")
     {
@@ -224,18 +224,18 @@ void page_dispenser::updatelabel_volume_dispensed_ml(double dispensed)
         dispensedVolumeUnitsCorrected = QString::number(ceil(dispensed));
     }
 
-    if (p_page_idle->thisMachine->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
+    if (p_page_idle->thisMachine->selectedSlot->getSize() == SIZE_CUSTOM_INDEX)
     {
 
-        double unitprice = (p_page_idle->thisMachine->selectedProduct->getBasePrice());
+        double unitprice = (p_page_idle->thisMachine->selectedSlot->getBasePrice());
         current_price = p_page_idle->thisMachine->getPriceWithDiscount(dispensed * unitprice);
         ui->label_volume_dispensed_ml->setText(dispensedVolumeUnitsCorrected + " " + units + " ( $" + QString::number(current_price, 'f', 2) + " )");
     }
     else
     {
-        QString totalVolume = p_page_idle->thisMachine->selectedProduct->getSizeToVolumeWithCorrectUnits(p_page_idle->thisMachine->selectedProduct->getSize(), true, true);
+        QString totalVolume = p_page_idle->thisMachine->selectedSlot->getSizeToVolumeWithCorrectUnits(p_page_idle->thisMachine->selectedSlot->getSize(), true, true);
         ui->label_volume_dispensed_ml->setText(dispensedVolumeUnitsCorrected + " " + units + "/ " + totalVolume);
-        current_price = p_page_idle->thisMachine->selectedProduct->getBasePrice();
+        current_price = p_page_idle->thisMachine->selectedSlot->getBasePrice();
     }
 }
 
@@ -309,8 +309,8 @@ void page_dispenser::dispensing_end_admin()
     std::ostringstream stream;
     stream << std::fixed << std::setprecision(2) << price;
     qDebug() << "Minimum volume dispensed" << MINIMUM_DISPENSE_VOLUME_ML;
-    qDebug() << "volume dispensed" << p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl();
-    if (p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl() < MINIMUM_DISPENSE_VOLUME_ML)
+    qDebug() << "volume dispensed" << p_page_idle->thisMachine->selectedSlot->getVolumeDispensedMl();
+    if (p_page_idle->thisMachine->selectedSlot->getVolumeDispensedMl() < MINIMUM_DISPENSE_VOLUME_ML)
     {
         cancelPayment = true;
     }
@@ -392,8 +392,8 @@ void page_dispenser::force_finish_dispensing()
 QString page_dispenser::getStartDispensingCommand()
 {
     // build up command that will be sent to fsm
-    QString command = QString::number(p_page_idle->thisMachine->selectedProduct->getSlot());
-    command.append(p_page_idle->thisMachine->selectedProduct->getSizeAsChar());
+    QString command = QString::number(p_page_idle->thisMachine->selectedSlot->getSlot());
+    command.append(p_page_idle->thisMachine->selectedSlot->getSizeAsChar());
     command.append(SEND_DISPENSE_START);
     return command;
 }
@@ -401,7 +401,7 @@ QString page_dispenser::getStartDispensingCommand()
 void page_dispenser::fsmSendStartDispensing()
 {
     QString dispenseCommand = getStartDispensingCommand();
-    QString priceCommand = QString::number(p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->selectedProduct->getBasePrice()));
+    QString priceCommand = QString::number(p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->selectedSlot->getBasePrice()));
     QString promoCommand = p_page_idle->thisMachine->getCouponCode();
 
     QString delimiter = QString("|");
@@ -419,8 +419,8 @@ void page_dispenser::fsmSendStopDispensing()
     qDebug() << "Send STOP dispensing to fsm";
     this->isDispensing = false;
 
-    QString command = QString::number(p_page_idle->thisMachine->selectedProduct->getSlot());
-    command.append(p_page_idle->thisMachine->selectedProduct->getSizeAsChar());
+    QString command = QString::number(p_page_idle->thisMachine->selectedSlot->getSlot());
+    command.append(p_page_idle->thisMachine->selectedSlot->getSizeAsChar());
     command.append(SEND_DISPENSE_STOP);
     p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
 }
@@ -465,7 +465,7 @@ void page_dispenser::resetDispenseTimeout(void)
 
 // QString page_dispenser::getMostRecentDispensed()
 // {
-//     QString units = p_page_idle->thisMachine->selectedProduct->getUnitsForSelectedSlot();
+//     QString units = p_page_idle->thisMachine->selectedSlot->getUnitsForSelectedSlot();
 
 //     return df_util::getConvertedStringVolumeFromMl(volumeDispensed, units, false, false);
 // }
@@ -504,8 +504,8 @@ void page_dispenser::fsmReceiveDispenserStatus(QString status)
         {
             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "out_of_stock");
             p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
-            // p_page_idle->thisMachine->setSlotEnabled(p_page_idle->thisMachine->selectedProduct->getSlot(), false);
-            p_page_idle->thisMachine->setSlotEnabled(p_page_idle->thisMachine->getSelectedProduct()->getSlot(), false);
+            // p_page_idle->thisMachine->setSlotEnabled(p_page_idle->thisMachine->selectedSlot->getSlot(), false);
+            p_page_idle->thisMachine->setSlotEnabled(p_page_idle->thisMachine->getSelectedSlot()->getSlot(), false);
             ui->label_dispense_message->show();
         }
         else if (dispenseStatus == "SLOT_STATE_PROBLEM_NEEDS_ATTENTION")
@@ -520,8 +520,8 @@ void page_dispenser::fsmReceiveDispenserStatus(QString status)
             // normal status
             // ui->pushButton_problems->hide();
             ui->label_dispense_message->hide();
-            // p_page_idle->thisMachine->setSlotEnabled(p_page_idle->thisMachine->selectedProduct->getSlot(), true);
-            p_page_idle->thisMachine->setSlotEnabled(p_page_idle->thisMachine->getSelectedProduct()->getSlot(), true);
+            // p_page_idle->thisMachine->setSlotEnabled(p_page_idle->thisMachine->selectedSlot->getSlot(), true);
+            p_page_idle->thisMachine->setSlotEnabled(p_page_idle->thisMachine->getSelectedSlot()->getSlot(), true);
         }
         else
         {
@@ -534,23 +534,23 @@ void page_dispenser::fsmReceiveDispenserStatus(QString status)
 void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
 {
 
-    if (p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl() != dispensed)
+    if (p_page_idle->thisMachine->selectedSlot->getVolumeDispensedMl() != dispensed)
     {
         // only reset idle timer if volume has changed.
         resetDispenseTimeout();
     }
-    p_page_idle->thisMachine->selectedProduct->setVolumeDispensedMl(dispensed);
+    p_page_idle->thisMachine->selectedSlot->setVolumeDispensedMl(dispensed);
 
     // volumeDispensed = dispensed;
-    qDebug() << "Signal: dispensed " << dispensed << " of " << p_page_idle->thisMachine->selectedProduct->getVolumeOfSelectedSize();
+    qDebug() << "Signal: dispensed " << dispensed << " of " << p_page_idle->thisMachine->selectedSlot->getVolumeOfSelectedSize();
 
-    if (p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl() >= MINIMUM_DISPENSE_VOLUME_ML)
+    if (p_page_idle->thisMachine->selectedSlot->getVolumeDispensedMl() >= MINIMUM_DISPENSE_VOLUME_ML)
     {
 
         ui->label_indicate_active_spout->hide();
-        updatelabel_volume_dispensed_ml(p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl());
+        updatelabel_volume_dispensed_ml(p_page_idle->thisMachine->selectedSlot->getVolumeDispensedMl());
 
-        double percentage = p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl() / (p_page_idle->thisMachine->selectedProduct->getVolumeOfSelectedSize()) * 100;
+        double percentage = p_page_idle->thisMachine->selectedSlot->getVolumeDispensedMl() / (p_page_idle->thisMachine->selectedSlot->getVolumeOfSelectedSize()) * 100;
         if (isFull)
         {
             percentage = 100;
@@ -589,7 +589,7 @@ void page_dispenser::fsmReceiveTargetVolumeReached()
     {
         qDebug() << "Target reached from controller.";
         this->isDispensing = false;
-        updateVolumeDisplayed(p_page_idle->thisMachine->selectedProduct->getVolumeOfSelectedSize(), true); // make sure the fill bottle graphics are completed
+        updateVolumeDisplayed(p_page_idle->thisMachine->selectedSlot->getVolumeOfSelectedSize(), true); // make sure the fill bottle graphics are completed
         transactionLogging += "\n 8: Target Reached - True";
         dispensing_end_admin();
     }
@@ -634,7 +634,7 @@ void page_dispenser::on_pushButton_abort_clicked()
     qDebug() << "Pressed button abort/complete";
 
     transactionLogging += "\n 7: Complete Button - True";
-    if (p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl() < MINIMUM_DISPENSE_VOLUME_ML)
+    if (p_page_idle->thisMachine->selectedSlot->getVolumeDispensedMl() < MINIMUM_DISPENSE_VOLUME_ML)
     {
         msgBox_abort = new QMessageBox();
         msgBox_abort->setObjectName("msgBox_abort");

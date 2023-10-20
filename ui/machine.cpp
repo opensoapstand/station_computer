@@ -1,9 +1,7 @@
-
-
 #include "df_util.h" // lode added for settings
 #include "dbmanager.h"
 #include "machine.h"
-#include "product.h"
+#include "dispenser_slot.h"
 #include <QtWidgets>
 #include <map>
 #include <fstream>
@@ -28,9 +26,9 @@ void machine::initMachine()
     for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
     {
 
-        m_products[slot_index].setSlot(slot_index + 1);
-        m_products[slot_index].setMachine(this);
-        m_products[slot_index].setDb(m_db);
+        m_slots[slot_index].setSlot(slot_index + 1);
+        m_slots[slot_index].setMachine(this);
+        m_slots[slot_index].setDb(m_db);
     }
     loadDynamicContent();
 }
@@ -42,7 +40,7 @@ void machine::loadDynamicContent()
 
     for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
     {
-        m_products[slot_index].loadProductProperties();
+        m_slots[slot_index].loadProductProperties();
     }
 
     loadTextsFromTemplateCsv();                        // dynamic content (text by template)
@@ -61,24 +59,25 @@ void machine::setDb(DbManager *db)
     m_db = db;
 }
 
-product *machine::getProduct(int slot)
+dispenser_slot *machine::getSlotByPosition(int slotPosition)
 {
-    if (slot == 0)
+    // slotPosition starts at 1
+    if (slotPosition == 0)
     {
 
         qDebug() << "ERROR: slot numbers start from 1!!!";
     }
-    return &m_products[slot - 1];
+    return &m_slots[slotPosition - 1];
 }
 
-void machine::setSelectedProduct(uint8_t slot)
+void machine::setSlots(dispenser_slot *slotss)
 {
-    selectedProduct = &m_products[slot - 1];
+    m_slots = slotss; // slots is a TYPE in QT. so we can't use it as a variable name 
 }
 
-void machine::setProducts(product *products)
+void machine::setSelectedSlot(uint8_t slot)
 {
-    m_products = products;
+    selectedSlot = &m_slots[slot - 1];
 }
 
 bool machine::isDispenseAreaBelowElseBesideScreen()
@@ -594,7 +593,7 @@ bool machine::slotNumberValidityCheck(int slot)
 
 void machine::setSlotEnabled(int slot, bool isEnabled)
 {
-    // do this through product.cpp, as this should have been a part of products table
+    // do this through dispenser_slot.cpp, as this should have been a part of products table
     QString column_name = QString("is_enabled_slot_%1").arg(slot);
     m_is_enabled_slots[slot - 1] = isEnabled; // Global variable
     m_db->updateTableMachineWithInt(column_name, isEnabled);
@@ -602,7 +601,7 @@ void machine::setSlotEnabled(int slot, bool isEnabled)
 
 bool machine::getSlotEnabled(int slot)
 {
-    // this should have been part of the products table. But it isn't. We access this from the product.cpp class.
+    // this should have been part of the products table. But it isn't. We access this from the dispenser_slot.cpp class.
     slotNumberValidityCheck(slot);
     return (m_is_enabled_slots[slot - 1] == 1);
 }
@@ -652,9 +651,9 @@ void machine::loadParametersFromDb()
 }
 
 // for products.cpp
-product *machine::getSelectedProduct()
+dispenser_slot *machine::getSelectedSlot()
 {
-    return selectedProduct;
+    return selectedSlot;
 }
 
 QString machine::getIdlePageType()
@@ -710,7 +709,7 @@ void machine::addCustomerLogoToLabel(QLabel *label)
 
 void machine::addPictureToButton(QPushButton *button, QString picturePath)
 {
-    QString p = selectedProduct->getProductPicturePath();
+    QString p = selectedSlot->getProductPicturePath();
     if (df_util::pathExists(p))
     {
         QPixmap im(p);

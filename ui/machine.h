@@ -2,7 +2,7 @@
 #define MACHINE_H
 
 #include "df_util.h"
-#include "product.h"
+#include "dispenser_slot.h"
 #include "dbmanager.h"
 
 typedef enum UserRole
@@ -25,23 +25,23 @@ typedef enum StateCoupon
     network_error
 } StateCoupon;
 
-class product; //  forward declaration.
+class dispenser_slot; //  forward declaration.
 
 class machine : public QObject
 {
     Q_OBJECT
 
 public:
-    void checkForHighTemperatureAndDisableProducts();
     machine();
     ~machine();
     void loadParametersFromDb();
     void setDb(DbManager *db);
     DbManager* getDb();
     void initMachine();
-
-    void resetUserState();
     
+    QString getIdlePageType();
+    
+    void checkForHighTemperatureAndDisableProducts();
     void dispenseButtonLightsAnimateState(bool animateElseOff);
     bool slotNumberValidityCheck(int slot);
     QString getStatusText(int slot);
@@ -65,6 +65,7 @@ public:
     bool isAllowedAsAdmin();
     bool isAllowedAsMaintainer();
 
+    void resetUserState();
     void createSessionId();
     void resetSessionId();
     QString getSessionId();
@@ -82,12 +83,15 @@ public:
     bool getPumpRampingEnabled();
     QString getHelpPageHtmlText();
 
+    dispenser_slot *getSlotByPosition(int slotPosition);
     bool getSlotEnabled(int slot);
     void setSlotEnabled(int slot, bool isEnabled);
     void setSlotEnabled(int slot, bool isEnabled, QString statusText);
-
     int getSlotCount();
-    bool compareSlotCountToMaxSlotCount(int slot_count);
+    void setSlots(dispenser_slot *slotss);
+    bool compareSlotCountToMaxSlotCount(int slot_count); 
+    void setSelectedSlot(uint8_t slot);
+    dispenser_slot *getSelectedSlot();
 
     bool hasReceiptPrinter();
     void getPrinterStatusFromDb(bool *isOnline, bool *hasPaper);
@@ -100,21 +104,17 @@ public:
     StateCoupon getCouponState();
     void setCouponState(StateCoupon state);
     void initCouponState();
-
     void setCouponCode(QString promoCode);
     QString getCouponCode();
-
     void setCouponConditions(QString couponConditions);
     std::map<QString, QString> getCouponConditions();
-
-    void setProducts(product *products);
-    QString m_session_id;
 
     void setDiscountPercentageFraction(double percentageFraction);
     double getDiscountPercentageFraction();
     double getDiscountAmount(double price);
     double getPriceWithDiscount(double price);
-    product *getProduct(int slot);
+
+    QStringList getChildNames(QObject *parent);
     void loadDynamicContent();
     QString getCSS(QString cssName);
     void addCssClassToObject(QWidget *element, QString classname, QString css_file_name);
@@ -130,9 +130,6 @@ public:
     void loadTextsFromDefaultCsv();
     void loadElementDynamicPropertiesFromTemplate();
     void loadElementDynamicPropertiesFromDefaultTemplate();
-
-    product *selectedProduct;
-    // QStringList getChildNames(QObject *parent);
 
     void addPictureToLabel(QLabel *label, QString picturePath);
     void addPictureToButton(QPushButton *button, QString picturePath);
@@ -180,15 +177,11 @@ public:
     df_util *dfUtility;
 
     QJsonObject m_propertiesObject;
-    // QStringList getChildNames(QObject *parent);
-
     void loadElementPropertiesFile();
-    QString getIdlePageType();
-
-    void setSelectedProduct(uint8_t slot);
-    product *getSelectedProduct();
-
-    QStringList getChildNames(QObject *parent);
+    
+    QString m_session_id;
+    dispenser_slot *selectedSlot;
+ 
     void loadTextsFromCsv(QString csv_path, std::map<QString, QString> *dictionary);
 
 public slots:
@@ -202,7 +195,7 @@ private:
     std::map<QString, QString> elementDynamicPropertiesMap_template;
     QString m_templatePath;
 
-    product *m_products;
+    dispenser_slot *m_slots;
 
     QTime temperatureTooHighStartMillis;
     bool isTemperatureTooHigh = false;

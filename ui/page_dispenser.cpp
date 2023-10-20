@@ -326,13 +326,16 @@ void page_dispenser::dispensing_end_admin()
         // REVERSE PAYMENT.
         if (paymentMethod == PAYMENT_TAP_TCP)
         {
+            qDebug() << "MAC_LABEL" << QString::fromStdString(MAC_LABEL);
             if (SAF_NUM != "")
             {
                 std::cout << "Voiding transaction";
+                qDebug() << "SAF_NUM" << QString::fromStdString(SAF_NUM);
                 response = voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, SAF_NUM);
             }
             else if (CTROUTD != "")
-            {
+            {   
+                qDebug() << "CTROUTD" << QString::fromStdString(CTROUTD);
                 response = voidTransaction(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, CTROUTD);
             }
             finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
@@ -360,11 +363,12 @@ void page_dispenser::dispensing_end_admin()
         {
             if (CTROUTD != "")
             {
+                qDebug() << "CTROUTD" << QString::fromStdString(CTROUTD);
                 std::map<std::string, std::string> testResponse = capture(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, CTROUTD, stream.str());
             }
             else if (SAF_NUM != "")
             {
-
+                qDebug() << "SAF_NUM" << QString::fromStdString(SAF_NUM);
                 std::map<std::string, std::string> testResponse = editSaf(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, SAF_NUM, stream.str(), "ELIGIBLE");
             }
             finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);

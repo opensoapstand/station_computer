@@ -27,6 +27,7 @@
 #include "page_dispenser.h"
 #include "page_error_wifi.h"
 #include "page_productOverview.h"
+#include "page_email.h"
 
 #include "page_end.h"
 #include <QApplication>
@@ -179,6 +180,8 @@ int main(int argc, char *argv[])
     page_maintenance_dispenser *p_page_maintenance_product = new page_maintenance_dispenser();
     qDebug() << "Constructor page_maintenance_general";
     page_maintenance_general *p_page_maintenance_general = new page_maintenance_general();
+    qDebug() << "Constructor page_email";
+    page_email *p_page_email = new page_email();
     qDebug() << "All Pages created.";
 
     DbManager db_config;
@@ -250,9 +253,11 @@ int main(int argc, char *argv[])
     p_page_payment_qr->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
     p_page_payment_tap_tcp->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
     p_page_payment_tap_serial->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
+    p_page_email->setPage(p_page_dispense, p_page_idle, p_page_help, p_page_product_overview);
+
 
     p_page_dispense->setPage(p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_end, p_page_idle, p_page_sendFeedback);
-    p_page_product_overview->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_help, p_page_product);
+    p_page_product_overview->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_help, p_page_product, p_page_email);
     p_page_sendFeedback->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_help, p_page_product, p_page_end);
     p_page_end->setPage(p_page_dispense, p_page_idle, p_page_payment_qr, p_page_sendFeedback);
     p_page_wifi_error->setPage(p_page_payment_qr, p_page_end, p_page_idle);

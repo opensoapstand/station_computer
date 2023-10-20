@@ -15,6 +15,8 @@ echo "Copy soapstand services from production"
 sudo scp /home/df-admin/production/admin/controller_soapstand.service /etc/systemd/system
 sudo scp /home/df-admin/production/admin/ui_soapstand.service /etc/systemd/system
 sudo scp /home/df-admin/production/admin/check_connectivity.service /etc/systemd/system
+sudo scp /home/df-admin/production/admin/enableIPForward.service /etc/systemd/system
+
 
  #missing Transactions 
 # could be done as a service: run python ~/production/admin/missingTransactions.py hourly
@@ -33,6 +35,7 @@ echo "Enable services at startup"
 sudo systemctl enable ui_soapstand.service
 sudo systemctl enable controller_soapstand.service
 sudo systemctl enable check_connectivity.service
+
 
 echo "Start soapstand services"
 # start service

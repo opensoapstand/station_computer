@@ -58,7 +58,7 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     testForFrozenScreenTimer = new QTimer(this);
     testForFrozenScreenTimer->setInterval(1000);
     connect(testForFrozenScreenTimer, SIGNAL(timeout()), this, SLOT(onTestForFrozenScreenTick()));
-  
+
     userRoleTimeOutTimer = new QTimer(this);
     userRoleTimeOutTimer->setInterval(1000);
     connect(userRoleTimeOutTimer, SIGNAL(timeout()), this, SLOT(onUserRoleTimeOutTimerTick()));
@@ -106,10 +106,13 @@ void page_idle::showEvent(QShowEvent *event)
     thisMachine->loadDynamicContent();
 
     thisMachine->dispenseButtonLightsAnimateState(true);
-    
+
     // thisMachine->resetSessionId();
-    // thisMachine->initCouponState();     // everything coupon is reset when idle page is reached.
-  
+    if (thisMachine->getCouponState() == StateCoupon::no_state)
+    {
+        thisMachine->initCouponState(); // everything coupon is reset 
+    }
+
     thisMachine->setSelectedProduct(1); // default selected product is necessary to deal with things if no product is chosen yet e.g. show transaction history
 
     thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
@@ -310,22 +313,18 @@ void page_idle::onUserRoleTimeOutTimerTick()
     if (_userRoleTimeOutTimerSec >= 0)
     {
         // set colour in red
-        p_statusbar->setRoleTimeOutTrailingText(  "(" + QString::number(_userRoleTimeOutTimerSec) +"s)");
+        p_statusbar->setRoleTimeOutTrailingText("(" + QString::number(_userRoleTimeOutTimerSec) + "s)");
         p_statusbar->refresh();
-        
-        return;
-    }else{
-        userRoleTimeOutTimer->stop();
 
-        p_statusbar->setRoleTimeOutTrailingText( "");
-        thisMachine->setRole(UserRole::user);
-        
-        thisMachine->resetSessionId();
-        thisMachine->initCouponState();     // everything coupon is reset when idle page is reached.
-        
-        // p_statusbar->autoSetVisibility();
+        return;
+    }
+    else
+    {
+        userRoleTimeOutTimer->stop();
+        p_statusbar->setRoleTimeOutTrailingText("");
+        thisMachine->resetUserState();
         p_statusbar->refresh();
-        
+
         _userRoleTimeOutTimerSec = PAGE_IDLE_USER_ROLE_TIMEOUT_SECONDS;
     }
 }

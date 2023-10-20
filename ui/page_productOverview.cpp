@@ -265,7 +265,7 @@ void page_product_overview::reset_and_show_page_elements()
 
     default:
     {
-        qDebug() << "Coupon state: Invalid";
+        qDebug() << "Coupon state: Invalid" << p_page_idle->thisMachine->getCouponState();
     }
     break;
     }

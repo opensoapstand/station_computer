@@ -40,6 +40,8 @@ public:
     DbManager* getDb();
     void initMachine();
 
+    void resetUserState();
+    
     void dispenseButtonLightsAnimateState(bool animateElseOff);
     bool slotNumberValidityCheck(int slot);
     QString getStatusText(int slot);

@@ -61,8 +61,6 @@ void machine::setDb(DbManager *db)
     m_db = db;
 }
 
-
-
 product *machine::getProduct(int slot)
 {
     if (slot == 0)
@@ -177,6 +175,13 @@ void machine::dispenseButtonLightsAnimateState(bool animateElseOff)
     {
         dfUtility->send_command_to_FSM("DispenseButtonLights|OFF", true);
     }
+}
+
+void machine::resetUserState()
+{
+    setRole(UserRole::user);
+    resetSessionId();  // fixme! bug! if manually exited, will not reset session id.
+    initCouponState(); // everything coupon is reset when idle page is reached.
 }
 
 void machine::setCouponState(StateCoupon state)
@@ -494,7 +499,8 @@ void machine::setRole(UserRole role)
     }
 }
 
-UserRole machine::getRole(){
+UserRole machine::getRole()
+{
     return active_role;
 }
 
@@ -889,7 +895,7 @@ QString machine::getTemplateText(QString textName_to_find)
 void machine::applyDynamicPropertiesFromTemplateToWidgetChildren(QWidget *widget)
 {
     // Template engine can set properties of a widget (like position, visibility,...) from a text file
-    
+
     // in reality, send a page widget as argument. All the childeren will be checked. (i.e. buttons, labels,...)
     QList<QObject *> allChildren = widget->findChildren<QObject *>();
     foreach (QObject *child, allChildren)

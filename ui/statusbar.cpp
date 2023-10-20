@@ -120,7 +120,6 @@ void statusbar::refresh()
         }
 
         ui->label_session_id->setText(p_page_idle->thisMachine->getSessionId());
-
     }
     else
     {
@@ -130,7 +129,9 @@ void statusbar::refresh()
 
 void statusbar::on_pushButton_hide_clicked()
 {
-    p_page_idle->thisMachine->setRole(UserRole::user);
+    qDebug() << "Statusbar: reset and hide! ";
+
+    p_page_idle->thisMachine->resetUserState();
 
     refresh();
 }

@@ -15,6 +15,7 @@ statusbar::statusbar(QWidget *parent) : QWidget(parent),
     refreshTimer->start(1000);
     _refreshTimerTimeoutSec = STATUS_BAR_REFRESH_PERIOD_SECONDS;
     is_statusbar_visible = false;
+    roleTimeOutTrailingText = "";
 }
 
 statusbar::~statusbar()
@@ -22,9 +23,19 @@ statusbar::~statusbar()
     delete ui;
 }
 
-void statusbar::setVisibility(bool isVisible){
+void statusbar::autoSetVisibility()
+{
+    bool isVisible = false;
+    if (p_page_idle->thisMachine->getRole() != UserRole::user)
+    {
+        isVisible = true;
+    }
+    setVisibility(isVisible);
+}
+
+void statusbar::setVisibility(bool isVisible)
+{
     is_statusbar_visible = isVisible;
-    refresh();
 }
 
 void statusbar::showEvent(QShowEvent *event)
@@ -35,9 +46,12 @@ void statusbar::showEvent(QShowEvent *event)
 
     QString styleSheet = p_page_idle->thisMachine->getCSS(STATUSBAR_CSS);
     ui->label_active_role->setStyleSheet(styleSheet);
+    // ui->pushButton_active_role->setStyleSheet(styleSheet);
+     p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_active_role, "normal", STATUSBAR_CSS);
     ui->label_coupon_code->setStyleSheet(styleSheet);
 
-    
+    setRoleTimeOutTrailingText(""); // reset count down. 
+    autoSetVisibility();
     refresh();
 }
 
@@ -57,13 +71,25 @@ void statusbar::setPage(page_idle *pageIdle)
     qDebug() << "Statusbar set page. ";
 }
 
+void statusbar::setRoleTimeOutTrailingText(QString text)
+{
+    roleTimeOutTrailingText = text;
+    // ui->pushButton_active_role
+    if (text == ""){
+    p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_active_role, "normal", STATUSBAR_CSS);
+
+    }else{
+    p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_active_role, "alert", STATUSBAR_CSS);
+
+    }
+}
+
 void statusbar::refresh()
 {
-
     if (is_statusbar_visible)
     {
         this->show();
-        this->p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_active_role, this->p_page_idle->thisMachine->getActiveRoleAsText());
+        // this->p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_active_role, this->p_page_idle->thisMachine->getActiveRoleAsText());
         if (this->p_page_idle->thisMachine->getCouponState() == enabled_valid_active)
         {
             QString coupon_code = this->p_page_idle->thisMachine->getCouponCode();
@@ -75,6 +101,10 @@ void statusbar::refresh()
         {
             ui->label_coupon_code->hide();
         }
+
+        QString role_as_text = p_page_idle->thisMachine->getActiveRoleAsText();
+        QString base = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->pushButton_active_role, role_as_text);
+        ui->pushButton_active_role->setText(base.arg(roleTimeOutTrailingText));
     }
     else
     {
@@ -105,4 +135,16 @@ void statusbar::onRefreshTimerTick()
 
         _refreshTimerTimeoutSec = STATUS_BAR_REFRESH_PERIOD_SECONDS;
     }
+}
+void statusbar::on_pushButton_active_role_clicked()
+{
+    if (p_page_idle->thisMachine->getRole() == UserRole::user)
+    {
+    }
+    else
+    {
+        p_page_idle->thisMachine->setRole(UserRole::user);
+    }
+    autoSetVisibility();
+    refresh();
 }

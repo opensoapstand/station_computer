@@ -485,11 +485,24 @@ void machine::createSessionId()
     m_session_id = time;
 }
 
+void machine::setRole(UserRole role)
+{
+    if (active_role != role)
+    {
+        active_role = role;
+        qDebug() << "Role set as: " << getActiveRoleAsText();
+    }
+}
+
+UserRole machine::getRole(){
+    return active_role;
+}
+
 QString machine::getActiveRoleAsText()
 {
     switch (active_role)
     {
-        // DO NOT CHANGE TEXT, change in the templates ui_texts.csv if displaying the text needs to be different.
+        // WARNING: DO NOT CHANGE TEXT, change in the templates ui_texts.csv if displaying the text needs to be different.
     case user:
         return "user";
     case maintainer:
@@ -520,15 +533,6 @@ bool machine::isAllowedAsMaintainer()
         allowed = true;
     }
     return allowed;
-}
-
-void machine::setRole(UserRole role)
-{
-    if (active_role != role)
-    {
-        active_role = role;
-        qDebug() << "Role set as: " << getActiveRoleAsText();
-    }
 }
 
 void machine::setStatusText(int slot, QString status)

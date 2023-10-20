@@ -55,7 +55,7 @@ void page_help::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
-    
+
     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_HELP_CSS);
     ui->pushButton_to_idle->setProperty("class", "buttonNoBorder");
     ui->pushButton_to_transactions->setProperty("class", "buttonNoBorder");
@@ -71,7 +71,7 @@ void page_help::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_to_maintenance);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_to_feedback);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_to_idle);
-    ui->label_keyboardInfo->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "label_keyboardInfo")); //p_page_idle->thisMachine->setTemplateTextToObject(ui->label_keyboardInfo); // does not work because the parent is the keyboard, not the page.
+    ui->label_keyboardInfo->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "label_keyboardInfo")); // p_page_idle->thisMachine->setTemplateTextToObject(ui->label_keyboardInfo); // does not work because the parent is the keyboard, not the page.
 
     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_PATH);
 
@@ -84,8 +84,9 @@ void page_help::showEvent(QShowEvent *event)
     {
         ui->pushButton_to_transactions->hide();
     }
-    
-    if (help_text_html != ""){
+
+    if (help_text_html != "")
+    {
 
         ui->html_help_text->setHtml(help_text_html);
     }
@@ -94,7 +95,8 @@ void page_help::showEvent(QShowEvent *event)
         ui->html_help_text->hide();
 
         QString image_path = p_page_idle->thisMachine->getTemplatePathFromName(PAGE_HELP_BACKGROUND_GENERIC_WHITE);
-        if (df_util::pathExists(image_path)){
+        if (df_util::pathExists(image_path))
+        {
             p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_GENERIC_WHITE);
         }
     }
@@ -142,7 +144,17 @@ void page_help::on_pushButton_to_transactions_clicked()
 void page_help::on_pushButton_to_maintenance_clicked()
 {
     _helpIdleTimeoutSec = 60;
-    ui->keyboard_3->show();
+
+    if (p_page_idle->thisMachine->isAllowedAsMaintainer())
+    {
+        // if already logged in, go straight to maintenance mode.
+        hideCurrentPageAndShowProvided(p_page_maintenance);
+    }
+    else
+    {
+        // provide keyboard if not yet logged in. 
+        ui->keyboard_3->show();
+    }
 }
 
 void page_help::keyboardButtonPressed(int buttonID)
@@ -198,21 +210,24 @@ void page_help::keyboardButtonPressed(int buttonID)
         qDebug() << "DONE CLICKED";
         QString textEntry = ui->keyboardTextEntry->text();
 
-        // if role was already set, do not check pwd. 
-        if (!p_page_idle->thisMachine->isAllowedAsMaintainer()){
+        // if role was already set, do not check pwd.
+        if (!p_page_idle->thisMachine->isAllowedAsMaintainer())
+        {
             p_page_idle->thisMachine->processRolePassword(textEntry);
-            
-            if (p_page_idle->thisMachine->isAllowedAsMaintainer()){
+
+            if (p_page_idle->thisMachine->isAllowedAsMaintainer())
+            {
                 hideCurrentPageAndShowProvided(p_page_maintenance);
-            }else{
+            }
+            else
+            {
                 ui->keyboardTextEntry->setText("");
-            
             }
         }
 
-        if (p_page_idle->thisMachine->isAllowedAsMaintainer()){
+        if (p_page_idle->thisMachine->isAllowedAsMaintainer())
+        {
             hideCurrentPageAndShowProvided(p_page_maintenance);
-
         }
         // int compareResult_user = QString::compare(textEntry, p_page_idle->thisMachine->getMaintenanceAdminPassword(false), Qt::CaseInsensitive);
         // int compareResult_admin = QString::compare(textEntry, p_page_idle->thisMachine->getMaintenanceAdminPassword(true), Qt::CaseInsensitive);

@@ -58,6 +58,10 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     testForFrozenScreenTimer = new QTimer(this);
     testForFrozenScreenTimer->setInterval(1000);
     connect(testForFrozenScreenTimer, SIGNAL(timeout()), this, SLOT(onTestForFrozenScreenTick()));
+  
+    userRoleTimeOutTimer = new QTimer(this);
+    userRoleTimeOutTimer->setInterval(1000);
+    connect(userRoleTimeOutTimer, SIGNAL(timeout()), this, SLOT(onUserRoleTimeOutTimerTick()));
 
     stateScreenCheck = state_screen_check_not_initiated;
     statusbarLayout = new QVBoxLayout(this);
@@ -93,15 +97,16 @@ void page_idle::showEvent(QShowEvent *event)
 
     this->installEventFilter(this); // catches all events.
 
-    p_statusbar->setVisibility(true);
+    p_statusbar->autoSetVisibility();
+
     statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
     statusbarLayout->setContentsMargins(0, 1860, 0, 0); // int left, int top, int right, int bottom);
 
     thisMachine->loadDynamicContent();
-    
+
     thisMachine->resetSessionId();
     thisMachine->dispenseButtonLightsAnimateState(true);
-    thisMachine->setRole(UserRole::user);
+    
     thisMachine->initCouponState();     // everything coupon is reset when idle page is reached.
     thisMachine->setSelectedProduct(1); // default selected product is necessary to deal with things if no product is chosen yet e.g. show transaction history
 
@@ -141,6 +146,9 @@ void page_idle::showEvent(QShowEvent *event)
 
     testForFrozenScreenTimer->start(1000);
     _testForFrozenScreenTimerTimeoutSec = PAGE_IDLE_TEST_FOR_FROZEN_SCREEN_PERIOD_SECONDS;
+
+    userRoleTimeOutTimer->start(1000);
+    _userRoleTimeOutTimerSec = PAGE_IDLE_USER_ROLE_TIMEOUT_SECONDS;
 
 // #define PLAY_VIDEO
 #ifdef PLAY_VIDEO
@@ -294,6 +302,29 @@ void page_idle::onTestForFrozenScreenTick()
     }
 }
 
+void page_idle::onUserRoleTimeOutTimerTick()
+{
+    _userRoleTimeOutTimerSec--;
+    if (_userRoleTimeOutTimerSec >= 0)
+    {
+        // set colour in red
+        p_statusbar->setRoleTimeOutTrailingText(  "(" + QString::number(_userRoleTimeOutTimerSec) +"s)");
+        p_statusbar->refresh();
+        
+        return;
+    }else{
+        userRoleTimeOutTimer->stop();
+
+        p_statusbar->setRoleTimeOutTrailingText( "");
+        thisMachine->setRole(UserRole::user);
+        
+        p_statusbar->autoSetVisibility();
+        p_statusbar->refresh();
+        
+        _userRoleTimeOutTimerSec = PAGE_IDLE_USER_ROLE_TIMEOUT_SECONDS;
+    }
+}
+
 void page_idle::refreshTemperature()
 {
     //  QString base_text = "Current Temperature: %1 °C"; //Assuming you have the base_text defined somewhere else or you can define it here.
@@ -425,6 +456,7 @@ void page_idle::hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createN
         idlePageTypeSelectorTimer->stop();
         pollTemperatureTimer->stop();
         testForFrozenScreenTimer->stop();
+        userRoleTimeOutTimer->stop();
         statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
     }
 }

@@ -58,6 +58,7 @@ public:
 
     void processRolePassword(QString password_input);
     QString getActiveRoleAsText();
+    UserRole getRole();
     void setRole(UserRole role);
     bool isAllowedAsAdmin();
     bool isAllowedAsMaintainer();

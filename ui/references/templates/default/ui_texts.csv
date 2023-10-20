@@ -158,6 +158,9 @@ page_payment_tap_serial->preauthLabel,You are being pre-authorized for maximum v
 statusbar->label_active_role->user, User
 statusbar->label_active_role->maintainer, Maintainer
 statusbar->label_active_role->admin, Administrator
+statusbar->pushButton_active_role->user, User%1
+statusbar->pushButton_active_role->maintainer, Maintainer%1
+statusbar->pushButton_active_role->admin, Administrator%1
 statusbar->pushButton_hide,Hide
 statusbar->label_coupon_code,Active coupon: %1
 

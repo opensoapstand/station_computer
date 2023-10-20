@@ -78,6 +78,8 @@ public:
     int _pollTemperatureTimerTimeoutSec;
     QTimer *testForFrozenScreenTimer;
     int _testForFrozenScreenTimerTimeoutSec;
+    QTimer *userRoleTimeOutTimer;
+    int _userRoleTimeOutTimerSec;
 
     void checkReceiptPrinterStatus();
     StateFrozenScreenDetect stateScreenCheck;
@@ -91,6 +93,7 @@ private slots:
     void onPollTemperatureTimerTick();
     void onTestForFrozenScreenTick();
     void on_pushButton_test_clicked();
+    void onUserRoleTimeOutTimerTick();
 
 private:
     Ui::page_idle *ui;

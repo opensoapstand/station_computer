@@ -55,7 +55,7 @@ page_product_overview::page_product_overview(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void page_product_overview::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_payment_tap_serial *page_payment_tap_serial, page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product *page_product, statusbar *statusbar)
+void page_product_overview::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,  page_payment_tap_serial *page_payment_tap_serial,page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product *page_product, page_email *page_email, statusbar *statusbar)
 {
     this->p_page_select_product = pageSelect;
     this->p_page_payment_qr = page_qr_payment;
@@ -67,6 +67,7 @@ void page_product_overview::setPage(page_select_product *pageSelect, page_dispen
     this->p_page_wifi_error = pageWifiError;
     this->p_page_product = page_product;
     this->p_statusbar = statusbar;
+    this->p_page_email = page_email; 
 
     ui->label_discount_tag->hide();
     ui->label_gif->hide();
@@ -128,13 +129,15 @@ void page_product_overview::showEvent(QShowEvent *event)
     ui->pushButton_previous_page->setProperty("class", "buttonBGTransparent");
     ui->pushButton_previous_page->setStyleSheet(styleSheet);
     ui->pushButton_continue->setStyleSheet(styleSheet);
+    // p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "offline");
+    // p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "offline");
+
     ui->pushButton_continue->raise();
     ui->pushButton_to_help->setProperty("class", "buttonBGTransparent");
     ui->pushButton_to_help->setStyleSheet(styleSheet);
 
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_select_product_page);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_discount_tag);
-    p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_continue);
 
     QString keyboard = KEYBOARD_IMAGE_PATH;
     QString keyboard_picture_path = p_page_idle->thisMachine->getTemplatePathFromName(KEYBOARD_IMAGE_PATH);
@@ -144,6 +147,7 @@ void page_product_overview::showEvent(QShowEvent *event)
     _selectIdleTimeoutSec = 400;
     selectIdleTimer->start(1000);
     reset_and_show_page_elements();
+    check_to_page_email();
 }
 
 void page_product_overview::resizeEvent(QResizeEvent *event)
@@ -229,6 +233,7 @@ void page_product_overview::reset_and_show_page_elements()
         ui->label_discount_tag->show();
         ui->lineEdit_promo_code->show();
         ui->pushButton_promo_input->show();
+        check_to_page_email();
     }
     break;
     case (disabled):
@@ -519,8 +524,14 @@ void page_product_overview::on_pushButton_continue_clicked()
     ui->pushButton_previous_page->setEnabled(false);
 
     QString paymentMethod = p_page_idle->thisMachine->selectedProduct->getPaymentMethod();
+    double selectedPrice = p_page_idle->thisMachine->selectedProduct->getBasePrice();
+    double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
+    if (paymentMethod == PAYMENT_QR_EMAIL_FREE && finalPrice == 0.0 )
+    {
+        hideCurrentPageAndShowProvided(p_page_email);
 
-    if (paymentMethod == PAYMENT_QR)
+    }
+    else if (paymentMethod == PAYMENT_QR)
     {
         CURL *curl;
         CURLcode res;
@@ -579,4 +590,14 @@ void page_product_overview::return_to_selectProductPage()
 void page_product_overview::on_pushButton_select_product_page_clicked()
 {
     this->return_to_selectProductPage();
+}
+
+void page_product_overview::check_to_page_email(){
+    double selectedPrice = p_page_idle->thisMachine->selectedProduct->getBasePrice();
+    double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
+    if(p_page_idle->thisMachine->selectedProduct->getPaymentMethod() == PAYMENT_QR_EMAIL_FREE && finalPrice == 0.0 ){
+        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_free");
+    }else{
+        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay");
+    }
 }

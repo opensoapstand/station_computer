@@ -95,6 +95,7 @@ using namespace std;
 #define PAGE_MAINTENANCE_DISPENSER_CSS                  "page_maintenance_dispenser.css"
 #define PAGE_IDLE_PRODUCTS_CSS                          "page_idle_products.css"
 #define PAGE_TAP_PAYMENT_SERIAL_CSS                     "page_payment_tap_serial.css"
+#define PAGE_EMAIL_CSS                                  "page_email.css"
 
 
 
@@ -149,6 +150,7 @@ using namespace std;
 #define SEND_REPAIR_PCA "pcabugfix"
 #define SEND_DISPENSE_AUTOFILL "a"
 
+#define PAYMENT_QR_EMAIL_FREE                              "qr/emailfree"
 #define PAYMENT_TAP_SERIAL                              "tapSerial"
 #define PAYMENT_TAP_TCP                                 "tapTCP"
 #define PAYMENT_QR                                      "qr"

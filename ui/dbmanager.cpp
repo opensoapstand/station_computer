@@ -682,18 +682,23 @@ void DbManager::emailEmpty(int slot)
 
 void DbManager::addUserInteraction(QString session_id, QString role, QString page, QString event)
 {
+    addUserInteraction(session_id, role, page, event, "");
+}
+void DbManager::addUserInteraction(QString session_id, QString role, QString page, QString event, QString data)
+{
 
     {
         QSqlDatabase db = openDb(USAGE_DB_PATH);
         QSqlQuery qry(db);
 
         QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
-        qry.prepare("INSERT INTO events (time,session_id,access_level,page,event) VALUES (:time,:session_id,:access_level,:page,:event);");
+        qry.prepare("INSERT INTO events (time,session_id,access_level,page,event, data) VALUES (:time,:session_id,:access_level,:page,:event,:data);");
         qry.bindValue(":time", time);
         qry.bindValue(":session_id", session_id);
         qry.bindValue(":access_level", role);
         qry.bindValue(":page", page);
         qry.bindValue(":event", event);
+        qry.bindValue(":data", data);
 
         bool success;
         success = qry.exec();

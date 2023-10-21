@@ -106,22 +106,22 @@ void page_qr_payment::showEvent(QShowEvent *event)
 
     state_payment = s_init;
     double originalPrice = p_page_idle->thisMachine->selectedSlot->getBasePrice();
-    if (p_page_idle->thisMachine->selectedSlot->getSizeAsChar() == 'c')
+    if (p_page_idle->thisMachine->selectedSlot->getSelectedSizeAsChar() == 'c')
     {
         originalPrice = p_page_idle->thisMachine->selectedSlot->getPriceCustom();
     }
     QString price = QString::number(p_page_idle->thisMachine->getPriceWithDiscount(originalPrice), 'f', 2);
 
-    if (p_page_idle->thisMachine->selectedSlot->getSize() == SIZE_CUSTOM_INDEX)
+    if (p_page_idle->thisMachine->selectedSlot->getSelectedSize() == SIZE_CUSTOM_INDEX)
     {
-        ui->label_product_information->setText(p_page_idle->thisMachine->selectedSlot->getProductName() + p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_information, "volume_up_to") + p_page_idle->thisMachine->selectedSlot->getSizeToVolumeWithCorrectUnits(true, true));
+        ui->label_product_information->setText(p_page_idle->thisMachine->selectedSlot->getProductName() + p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_information, "volume_up_to") + p_page_idle->thisMachine->selectedSlot->getSizeAsVolumeWithCorrectUnits(true, true));
         QString base_text = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_price, "custom_size");
         QString label_product_price_text = base_text.arg(price);
         ui->label_product_price->setText(label_product_price_text);
     }
     else
     {
-        ui->label_product_information->setText(p_page_idle->thisMachine->selectedSlot->getProductName() + " " + p_page_idle->thisMachine->selectedSlot->getSizeToVolumeWithCorrectUnits(true, true));
+        ui->label_product_information->setText(p_page_idle->thisMachine->selectedSlot->getProductName() + " " + p_page_idle->thisMachine->selectedSlot->getSizeAsVolumeWithCorrectUnits(true, true));
         QString base_text = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_price, "fixed_size");
         QString label_product_price_text = base_text.arg(price);
         ui->label_product_price->setText(label_product_price_text);
@@ -205,8 +205,8 @@ bool page_qr_payment::createOrderIdAndSendToBackend()
     QString productUnits = p_page_idle->thisMachine->selectedSlot->getUnitsForSlot();
     QString productId = p_page_idle->thisMachine->selectedSlot->getAwsProductId();
     QString contents = p_page_idle->thisMachine->selectedSlot->getProductName();
-    QString quantity_requested = p_page_idle->thisMachine->selectedSlot->getSizeToVolumeWithCorrectUnits(false, false);
-    char drinkSize = p_page_idle->thisMachine->selectedSlot->getSizeAsChar();
+    QString quantity_requested = p_page_idle->thisMachine->selectedSlot->getSizeAsVolumeWithCorrectUnits(false, false);
+    char drinkSize = p_page_idle->thisMachine->selectedSlot->getSelectedSizeAsChar();
     double originalPrice = p_page_idle->thisMachine->selectedSlot->getBasePrice();
     if (drinkSize == 'c')
     {

@@ -152,10 +152,10 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
     ui->pushButton_price_large->setText("$" + QString::number(p_page_idle->thisMachine->selectedSlot->getBasePrice(SIZE_LARGE_INDEX)));
     ui->pushButton_price_custom->setText("$" + QString::number(p_page_idle->thisMachine->selectedSlot->getBasePrice(SIZE_CUSTOM_INDEX)));
 
-    ui->pushButton_target_volume_small->setText(p_page_idle->thisMachine->selectedSlot->getSizeToVolumeWithCorrectUnits(SIZE_SMALL_INDEX, false, true));
-    ui->pushButton_target_volume_medium->setText(p_page_idle->thisMachine->selectedSlot->getSizeToVolumeWithCorrectUnits(SIZE_MEDIUM_INDEX, false, true));
-    ui->pushButton_target_volume_large->setText(p_page_idle->thisMachine->selectedSlot->getSizeToVolumeWithCorrectUnits(SIZE_LARGE_INDEX, false, true));
-    ui->pushButton_target_volume_custom->setText(p_page_idle->thisMachine->selectedSlot->getSizeToVolumeWithCorrectUnits(SIZE_CUSTOM_INDEX, false, true));
+    ui->pushButton_target_volume_small->setText(p_page_idle->thisMachine->selectedSlot->getSizeAsVolumeWithCorrectUnits(SIZE_SMALL_INDEX, false, true));
+    ui->pushButton_target_volume_medium->setText(p_page_idle->thisMachine->selectedSlot->getSizeAsVolumeWithCorrectUnits(SIZE_MEDIUM_INDEX, false, true));
+    ui->pushButton_target_volume_large->setText(p_page_idle->thisMachine->selectedSlot->getSizeAsVolumeWithCorrectUnits(SIZE_LARGE_INDEX, false, true));
+    ui->pushButton_target_volume_custom->setText(p_page_idle->thisMachine->selectedSlot->getSizeAsVolumeWithCorrectUnits(SIZE_CUSTOM_INDEX, false, true));
 
     ui->checkBox_enable_small->setChecked(p_page_idle->thisMachine->selectedSlot->getSizeEnabled(SIZE_SMALL_INDEX));
     ui->checkBox_enable_medium->setChecked(p_page_idle->thisMachine->selectedSlot->getSizeEnabled(SIZE_MEDIUM_INDEX));
@@ -759,19 +759,19 @@ void page_maintenance_dispenser::on_pushButton_done_clicked()
             }
             else if (activeEditField == "pushButton_target_volume_small")
             {
-                p_page_idle->thisMachine->selectedSlot->setSizeToVolumeForSlot(text_entered, SIZE_SMALL_INDEX);
+                p_page_idle->thisMachine->selectedSlot->configureVolumeToSizeForSlot(text_entered, SIZE_SMALL_INDEX);
             }
             else if (activeEditField == "pushButton_target_volume_medium")
             {
-                p_page_idle->thisMachine->selectedSlot->setSizeToVolumeForSlot(text_entered, SIZE_MEDIUM_INDEX);
+                p_page_idle->thisMachine->selectedSlot->configureVolumeToSizeForSlot(text_entered, SIZE_MEDIUM_INDEX);
             }
             else if (activeEditField == "pushButton_target_volume_large")
             {
-                p_page_idle->thisMachine->selectedSlot->setSizeToVolumeForSlot(text_entered, SIZE_LARGE_INDEX);
+                p_page_idle->thisMachine->selectedSlot->configureVolumeToSizeForSlot(text_entered, SIZE_LARGE_INDEX);
             }
             else if (activeEditField == "pushButton_target_volume_custom")
             {
-                p_page_idle->thisMachine->selectedSlot->setSizeToVolumeForSlot(text_entered, SIZE_CUSTOM_INDEX);
+                p_page_idle->thisMachine->selectedSlot->configureVolumeToSizeForSlot(text_entered, SIZE_CUSTOM_INDEX);
             }
             else if (activeEditField == "pushButton_plu_small")
             {
@@ -907,7 +907,7 @@ void page_maintenance_dispenser::on_pushButton_target_volume_small_clicked()
 {
     if (!isDispenserPumpEnabledWarningBox())
     {
-        ui->textEntry->setText(p_page_idle->thisMachine->selectedSlot->getSizeToVolumeWithCorrectUnits(SIZE_SMALL_INDEX, false, false));
+        ui->textEntry->setText(p_page_idle->thisMachine->selectedSlot->getSizeAsVolumeWithCorrectUnits(SIZE_SMALL_INDEX, false, false));
     }
 }
 
@@ -915,7 +915,7 @@ void page_maintenance_dispenser::on_pushButton_target_volume_medium_clicked()
 {
     if (!isDispenserPumpEnabledWarningBox())
     {
-        ui->textEntry->setText(p_page_idle->thisMachine->selectedSlot->getSizeToVolumeWithCorrectUnits(SIZE_MEDIUM_INDEX, false, false));
+        ui->textEntry->setText(p_page_idle->thisMachine->selectedSlot->getSizeAsVolumeWithCorrectUnits(SIZE_MEDIUM_INDEX, false, false));
     }
 }
 
@@ -923,7 +923,7 @@ void page_maintenance_dispenser::on_pushButton_target_volume_large_clicked()
 {
     if (!isDispenserPumpEnabledWarningBox())
     {
-        ui->textEntry->setText(p_page_idle->thisMachine->selectedSlot->getSizeToVolumeWithCorrectUnits(SIZE_LARGE_INDEX, false, false));
+        ui->textEntry->setText(p_page_idle->thisMachine->selectedSlot->getSizeAsVolumeWithCorrectUnits(SIZE_LARGE_INDEX, false, false));
     }
 }
 
@@ -931,7 +931,7 @@ void page_maintenance_dispenser::on_pushButton_target_volume_custom_clicked()
 {
     if (!isDispenserPumpEnabledWarningBox())
     {
-        ui->textEntry->setText(p_page_idle->thisMachine->selectedSlot->getSizeToVolumeWithCorrectUnits(SIZE_CUSTOM_INDEX, false, false));
+        ui->textEntry->setText(p_page_idle->thisMachine->selectedSlot->getSizeAsVolumeWithCorrectUnits(SIZE_CUSTOM_INDEX, false, false));
     }
 }
 
@@ -1077,9 +1077,9 @@ void page_maintenance_dispenser::update_changes_to_portal()
                           "&price_medium=" + QString::number(p_page_idle->thisMachine->selectedSlot->getBasePrice(SIZE_MEDIUM_INDEX)) +
                           "&price_large=" + QString::number(p_page_idle->thisMachine->selectedSlot->getBasePrice(SIZE_LARGE_INDEX)) +
                           "&price_custom=" + QString::number(p_page_idle->thisMachine->selectedSlot->getBasePrice(SIZE_CUSTOM_INDEX)) +
-                          "&size_small=" + p_page_idle->thisMachine->selectedSlot->getSizeToVolumeWithCorrectUnits(SIZE_SMALL_INDEX, false, false) +
-                          "&size_medium=" + p_page_idle->thisMachine->selectedSlot->getSizeToVolumeWithCorrectUnits(SIZE_MEDIUM_INDEX, false, false) +
-                          "&size_large=" + p_page_idle->thisMachine->selectedSlot->getSizeToVolumeWithCorrectUnits(SIZE_LARGE_INDEX, false, false);
+                          "&size_small=" + p_page_idle->thisMachine->selectedSlot->getSizeAsVolumeWithCorrectUnits(SIZE_SMALL_INDEX, false, false) +
+                          "&size_medium=" + p_page_idle->thisMachine->selectedSlot->getSizeAsVolumeWithCorrectUnits(SIZE_MEDIUM_INDEX, false, false) +
+                          "&size_large=" + p_page_idle->thisMachine->selectedSlot->getSizeAsVolumeWithCorrectUnits(SIZE_LARGE_INDEX, false, false);
     curl_param_array2 = curl_params.toLocal8Bit();
 
     curl2 = curl_easy_init();

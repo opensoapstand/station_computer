@@ -308,9 +308,9 @@ size_t WriteCallback_coupon1(char *contents, size_t size, size_t nmemb, void *us
 
 void page_product_overview::updatePriceLabel()
 {
-    QString selected_volume = p_page_idle->thisMachine->selectedSlot->getSizeToVolumeWithCorrectUnits(p_page_idle->thisMachine->selectedSlot->getSize(), true, true);
+    QString selected_volume = p_page_idle->thisMachine->selectedSlot->getSizeAsVolumeWithCorrectUnits(p_page_idle->thisMachine->selectedSlot->getSelectedSize(), true, true);
 
-    if (p_page_idle->thisMachine->selectedSlot->getSize() == SIZE_CUSTOM_INDEX)
+    if (p_page_idle->thisMachine->selectedSlot->getSelectedSize() == SIZE_CUSTOM_INDEX)
     {
         QString base = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_selected_volume, "custom_volume");
         ui->label_selected_volume->setText(base.arg(selected_volume));

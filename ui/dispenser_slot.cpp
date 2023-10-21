@@ -69,7 +69,7 @@ void dispenser_slot::loadProductPropertiesFromDb()
                                   &m_price_custom_discount, m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
 }
 
-char dispenser_slot::getSizeAsChar()
+char dispenser_slot::getSelectedSizeAsChar()
 {
     // ! = invalid.
     // t  test to fsm, but should become c for custom. we're so ready for it.
@@ -161,13 +161,13 @@ void dispenser_slot::setSlot(int slot)
     m_dispenser_slot = slot;
 }
 
-int dispenser_slot::getSize()
+int dispenser_slot::getSelectedSize()
 {
     // e.g. SIZE_SMALL_INDEX
     return m_selected_size;
 }
 
-void dispenser_slot::setSize(int sizeIndex)
+void dispenser_slot::setSelectedSize(int sizeIndex)
 {
     qDebug() << "Set size index: " << sizeIndex;
     m_selected_size = sizeIndex;
@@ -175,7 +175,7 @@ void dispenser_slot::setSize(int sizeIndex)
 
 void dispenser_slot::setBiggestEnabledSizeIndex()
 {
-    setSize(getBiggestEnabledSizeIndex());
+    setSelectedSize(getBiggestEnabledSizeIndex());
 }
 
 // SLOTS Section
@@ -217,7 +217,7 @@ double dispenser_slot::getBasePrice(int sizeIndex)
 
 double dispenser_slot::getBasePrice()
 {
-    return getBasePrice(getSize());
+    return getBasePrice(getSelectedSize());
 }
 
 double dispenser_slot::getPriceCorrected()
@@ -225,7 +225,7 @@ double dispenser_slot::getPriceCorrected()
     double price;
     if (is_valid_size_selected())
     {
-        price = getBasePrice(getSize()) * (1.0 - thisMachine->getDiscountPercentageFraction());
+        price = getBasePrice(getSelectedSize()) * (1.0 - thisMachine->getDiscountPercentageFraction());
     }
     else
     {
@@ -241,7 +241,7 @@ double dispenser_slot::getPriceCustom()
     double price;
     if (is_valid_size_selected())
     {
-        price = getBasePrice(getSize()) * (1.0 - m_discount_percentage_fraction) * getVolumeOfSelectedSize();
+        price = getBasePrice(getSelectedSize()) * (1.0 - m_discount_percentage_fraction) * getVolumeOfSelectedSize();
     }
     else
     {
@@ -284,7 +284,7 @@ double dispenser_slot::getVolumeOfSelectedSize()
     double volume;
     if (is_valid_size_selected())
     {
-        volume = getVolumeBySize(getSize());
+        volume = getVolumeBySize(getSelectedSize());
     }
     else
     {
@@ -320,7 +320,7 @@ void dispenser_slot::setVolumePerTickForSlot(QString volumePerTickInput)
     m_db->updateTableProductsWithDouble(getSlot(), "volume_per_tick", ml_per_tick, 2);
 }
 
-void dispenser_slot::setSizeToVolumeForSlot(QString volumeInput, int size)
+void dispenser_slot::configureVolumeToSizeForSlot(QString volumeInput, int size)
 {
     double volume = inputTextToMlConvertUnits(volumeInput);
     QString volume_columns[5] = {"invalid_size", "size_small", "size_medium", "size_large", "size_custom_max"};
@@ -376,7 +376,7 @@ QString dispenser_slot::getTotalDispensedCorrectUnits()
     return volume_as_string;
 }
 
-QString dispenser_slot::getSizeToVolumeWithCorrectUnits(int size, bool roundValue, bool addUnits)
+QString dispenser_slot::getSizeAsVolumeWithCorrectUnits(int size, bool roundValue, bool addUnits)
 {
     QString volume_as_string;
     double v;
@@ -487,9 +487,9 @@ void dispenser_slot::setFullVolumeCorrectUnits(QString inputFullValue)
     m_db->updateTableProductsWithDouble(getSlot(), "volume_full", full_volume, 0);
 }
 
-QString dispenser_slot::getSizeToVolumeWithCorrectUnits(bool round, bool addUnits)
+QString dispenser_slot::getSizeAsVolumeWithCorrectUnits(bool round, bool addUnits)
 {
-    return getSizeToVolumeWithCorrectUnits(getSize(), round, addUnits);
+    return getSizeAsVolumeWithCorrectUnits(getSelectedSize(), round, addUnits);
 }
 
 void dispenser_slot::setPaymentMethod(QString paymentMethod)

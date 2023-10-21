@@ -224,7 +224,7 @@ void page_dispenser::updatelabel_volume_dispensed_ml(double dispensed)
         dispensedVolumeUnitsCorrected = QString::number(ceil(dispensed));
     }
 
-    if (p_page_idle->thisMachine->selectedSlot->getSize() == SIZE_CUSTOM_INDEX)
+    if (p_page_idle->thisMachine->selectedSlot->getSelectedSize() == SIZE_CUSTOM_INDEX)
     {
 
         double unitprice = (p_page_idle->thisMachine->selectedSlot->getBasePrice());
@@ -233,7 +233,7 @@ void page_dispenser::updatelabel_volume_dispensed_ml(double dispensed)
     }
     else
     {
-        QString totalVolume = p_page_idle->thisMachine->selectedSlot->getSizeToVolumeWithCorrectUnits(p_page_idle->thisMachine->selectedSlot->getSize(), true, true);
+        QString totalVolume = p_page_idle->thisMachine->selectedSlot->getSizeAsVolumeWithCorrectUnits(p_page_idle->thisMachine->selectedSlot->getSelectedSize(), true, true);
         ui->label_volume_dispensed_ml->setText(dispensedVolumeUnitsCorrected + " " + units + "/ " + totalVolume);
         current_price = p_page_idle->thisMachine->selectedSlot->getBasePrice();
     }
@@ -393,7 +393,7 @@ QString page_dispenser::getStartDispensingCommand()
 {
     // build up command that will be sent to fsm
     QString command = QString::number(p_page_idle->thisMachine->selectedSlot->getSlot());
-    command.append(p_page_idle->thisMachine->selectedSlot->getSizeAsChar());
+    command.append(p_page_idle->thisMachine->selectedSlot->getSelectedSizeAsChar());
     command.append(SEND_DISPENSE_START);
     return command;
 }
@@ -420,7 +420,7 @@ void page_dispenser::fsmSendStopDispensing()
     this->isDispensing = false;
 
     QString command = QString::number(p_page_idle->thisMachine->selectedSlot->getSlot());
-    command.append(p_page_idle->thisMachine->selectedSlot->getSizeAsChar());
+    command.append(p_page_idle->thisMachine->selectedSlot->getSelectedSizeAsChar());
     command.append(SEND_DISPENSE_STOP);
     p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
 }

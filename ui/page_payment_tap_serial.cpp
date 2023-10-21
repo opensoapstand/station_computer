@@ -366,7 +366,7 @@ bool page_payment_tap_serial::waitForUX410()
 void page_payment_tap_serial::readTimer_loop()
 {   
     double originalPrice = p_page_idle->thisMachine->selectedSlot->getBasePrice();
-    if (p_page_idle->thisMachine->selectedSlot->getSizeAsChar() == 'c')
+    if (p_page_idle->thisMachine->selectedSlot->getSelectedSizeAsChar() == 'c')
     {
         originalPrice = p_page_idle->thisMachine->selectedSlot->getPriceCustom();
     }

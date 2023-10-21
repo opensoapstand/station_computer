@@ -135,7 +135,7 @@ void page_end::fsmReceiveFinalDispensedVolume(double dispensed)
 
     double price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->selectedSlot->getBasePrice());
 
-    if (p_page_idle->thisMachine->selectedSlot->getSize() == SIZE_CUSTOM_INDEX)
+    if (p_page_idle->thisMachine->selectedSlot->getSelectedSize() == SIZE_CUSTOM_INDEX)
     {
     price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->selectedSlot->getBasePrice()*p_page_idle->thisMachine->selectedSlot->getVolumeDispensedMl());
     }

@@ -498,7 +498,7 @@ void page_product::reset_and_show_page_elements()
             else
             {
                 orderSizeLabelsPrice[i]->setText("$" + QString::number(price, 'f', 2));
-                orderSizeLabelsVolume[i]->setText(p_page_idle->thisMachine->selectedSlot->getSizeToVolumeWithCorrectUnits(product_sizes[i], true, true));
+                orderSizeLabelsVolume[i]->setText(p_page_idle->thisMachine->selectedSlot->getSizeAsVolumeWithCorrectUnits(product_sizes[i], true, true));
             }
             orderSizeButtons[i]->raise();
         }
@@ -554,14 +554,14 @@ void page_product::on_pushButton_to_help_clicked()
 void page_product::on_pushButton_order_custom_clicked()
 {
     qDebug() << "Button custom clicked ";
-    p_page_idle->thisMachine->selectedSlot->setSize(SIZE_CUSTOM_INDEX);
+    p_page_idle->thisMachine->selectedSlot->setSelectedSize(SIZE_CUSTOM_INDEX);
     hideCurrentPageAndShowProvided(p_page_overview);
 }
 
 void page_product::on_pushButton_order_medium_clicked()
 {
     qDebug() << "Button medium clicked";
-    p_page_idle->thisMachine->selectedSlot->setSize(SIZE_MEDIUM_INDEX);
+    p_page_idle->thisMachine->selectedSlot->setSelectedSize(SIZE_MEDIUM_INDEX);
     hideCurrentPageAndShowProvided(p_page_overview);
 }
 
@@ -569,7 +569,7 @@ void page_product::on_pushButton_order_medium_clicked()
 void page_product::on_pushButton_order_small_clicked()
 {
     qDebug() << "Button small clicked";
-    p_page_idle->thisMachine->selectedSlot->setSize(SIZE_SMALL_INDEX);
+    p_page_idle->thisMachine->selectedSlot->setSelectedSize(SIZE_SMALL_INDEX);
     hideCurrentPageAndShowProvided(p_page_overview);
 }
 
@@ -577,7 +577,7 @@ void page_product::on_pushButton_order_small_clicked()
 void page_product::on_pushButton_order_big_clicked()
 {
     qDebug() << "Button big clicked";
-    p_page_idle->thisMachine->selectedSlot->setSize(SIZE_LARGE_INDEX);
+    p_page_idle->thisMachine->selectedSlot->setSelectedSize(SIZE_LARGE_INDEX);
     hideCurrentPageAndShowProvided(p_page_overview);
 }
 
@@ -595,7 +595,7 @@ void page_product::on_pushButton_previous_page_clicked()
 void page_product::on_pushButton_continue_clicked()
 {
     // which size is enabled? select that size
-    p_page_idle->thisMachine->selectedSlot->setSize(default_size);
+    p_page_idle->thisMachine->selectedSlot->setSelectedSize(default_size);
     hideCurrentPageAndShowProvided(p_page_overview);
 }
 

@@ -22,7 +22,8 @@ public:
     // Setters and Getters
     void setSlot(int slot);
     int getSlot();
-    void setCouponCode(QString promoCode);
+
+    // void setCouponCode(QString promoCode);
     QString getAwsProductId();
     // bool getSlotEnabled();
     // void setSlotEnabled(bool isEnabled);
@@ -32,93 +33,89 @@ public:
 
     QString getFullVolumeCorrectUnits(bool addUnits);
 
-    void setVolumeRemainingUserInput(QString volumeRemainingAsUserText);
-    void setVolumeRemaining(double volume_as_ml);
+    void setVolumeRemainingUserInput(QString volumeRemainingAsUserText); //productt
+    void setVolumeRemaining(double volume_as_ml); //productt
 
-    bool restock();
+    bool restock(); //productt
 
-    QString getVolumeRemainingCorrectUnits(bool addUnits);
-    QString getTotalDispensedCorrectUnits();
-    QString getVolumeDispensedSinceRestockCorrectUnits();
+    QString getVolumeRemainingCorrectUnits(bool addUnits); //productt
+    QString getTotalDispensedCorrectUnits(); //productt
+    QString getVolumeDispensedSinceRestockCorrectUnits(); //productt
 
-    double getVolumeDispensedMl();
-    void setVolumeDispensedMl(double volumeMl);
-    void resetVolumeDispensed();
+    double getVolumeDispensedMl(); //productt
+    void setVolumeDispensedMl(double volumeMl); //productt
+    void resetVolumeDispensed(); //productt
 
-    void setFullVolumeCorrectUnits(QString inputFullValue);
-    void getCustomDiscountDetails(bool *large_volume_discount_is_enabled, double *min_volume_for_discount, double *discount_price_per_liter);
+    void setFullVolumeCorrectUnits(QString inputFullValue); //productt
+    void getCustomDiscountDetails(bool *large_volume_discount_is_enabled, double *min_volume_for_discount, double *discount_price_per_liter); //productt
 
-    QString getPlu(int sizeIndex);
-    void setPlu(int sizeIndex, QString plu);
-    bool is_valid_size_selected();
+    QString getPlu(int sizeIndex); //productt
+    void setPlu(int sizeIndex, QString plu); //productt
+    bool is_valid_size_selected(); //productt
 
-    QString getProductName();
-    QString getProductType();
-    QString getProductDrinkfillSerial();
+    QString getProductName(); //productt
+    QString getProductType(); //productt
+    QString getProductDrinkfillSerial(); //productt
 
-    void loadProductProperties();
-    void loadProductPropertiesFromDb();
-    bool isProductVolumeInContainer();
-    QString getProductDescription();
-    QString getProductIngredients();
-    QString getProductFeatures();
-    QString getLastRestockDate();
+    void loadProductProperties(); //productt
+    void loadProductPropertiesFromDb(); //productt
+    bool isProductVolumeInContainer(); //productt
+    QString getProductDescription(); //productt
+    QString getProductIngredients(); //productt
+    QString getProductFeatures(); //productt
+    QString getLastRestockDate(); //productt
 
     
-    void setSize(int sizeIndex);
-    int getSize();
-    char getSizeAsChar();
+    void setSelectedSize(int sizeIndex); //productt
+    int getSelectedSize(); //productt
+    char getSelectedSizeAsChar(); //productt
     
-    bool toggleSizeEnabled(int size);
-    bool getSizeEnabled(int size);
-    bool setSizeEnabled(int size, bool enabled);
-    int getBiggestEnabledSizeIndex();
-    void setBiggestEnabledSizeIndex();
+    bool toggleSizeEnabled(int size); //productt
+    bool getSizeEnabled(int size); //productt
+    bool setSizeEnabled(int size, bool enabled); //productt
+    int getBiggestEnabledSizeIndex(); //productt
+    void setBiggestEnabledSizeIndex(); //productt
 
     QString getProductPicturePath();
 
-    double getVolumeOfSelectedSize();
-    double getVolumeBySize(int size);
+    double getVolumeOfSelectedSize(); //productt
+    double getVolumeBySize(int size); //productt
 
-    double getRestockVolume();
+    double getRestockVolume(); //productt
 
-    void setSizeToVolumeForSlot(QString volumeInput, int size);
-    QString getVolumePerTickAsStringForSlot();
-    double getVolumePerTickForSlot();
-    void setVolumePerTickForSlot(QString volumePerTickInput);
+    void configureVolumeToSizeForSlot(QString volumeInput, int size); //productt
+    QString getVolumePerTickAsStringForSlot(); //productt
+    double getVolumePerTickForSlot(); //productt
+    void setVolumePerTickForSlot(QString volumePerTickInput); //productt
 
-    double inputTextToMlConvertUnits(QString inputValueAsText);
+    double inputTextToMlConvertUnits(QString inputValueAsText); // ----> df_util!
 
-    QString getUnitsForSlot();
-    QString getSizeToVolume(QString units);
+    QString getUnitsForSlot(); //productt
+    QString getSizeAsVolume(QString units); //productt
 
-    QString getSizeToVolumeWithCorrectUnits(bool round, bool addUnits);
-    QString getSizeToVolumeWithCorrectUnits(int size, bool roundValue, bool addUnits);
+    QString getSizeAsVolumeWithCorrectUnits(bool round, bool addUnits); //productt
+    QString getSizeAsVolumeWithCorrectUnits(int size, bool roundValue, bool addUnits); //productt
 
-    double getBasePrice(int sizeIndex);
+    double getBasePrice(int sizeIndex); //productt
 
-    void setPrice(int size, double price);
-    double getPriceCorrected();
-    double getPriceCustom();
+    void setPrice(int size, double price); //productt
+    double getPriceCorrected(); //productt
+    double getPriceCustom(); //productt
 
-    double getBasePrice();
+    double getBasePrice(); //productt
 
-    int getDispenseSpeedPercentage();
-    void setDispenseSpeedPercentage(int percentage);
+    int getDispenseSpeedPercentage(); //productt
+    void setDispenseSpeedPercentage(int percentage); //productt
 
-    QString getPaymentMethod();
-    void setPaymentMethod(QString paymentMethod);
-
-    // double getDiscountPercentageFraction();
-    // QString getCouponCode();
+    QString getPaymentMethod(); // ---> machine?! productt
+    void setPaymentMethod(QString paymentMethod); //  ---> machine? or productt
 
 public slots:
-    // void setDiscountPercentageFraction(double percentageFraction);
 
 signals:
-    void orderSlotChange(int newOpt);
-    void priceChange(double newPrice);
-    void sizeChange(double newSize);
+    // void orderSlotChange(int newOpt);
+    // void priceChange(double newPrice);
+    // void sizeChange(double newSize);
 
 private:
     machine *thisMachine;

@@ -211,7 +211,7 @@ void page_payment_tap_tcp::startPaymentProcess()
     {
         numberOfTapAttempts += 1;
         double price = p_page_idle->thisMachine->selectedSlot->getPriceCorrected();
-        if (p_page_idle->thisMachine->selectedSlot->getSizeAsChar() == 'c')
+        if (p_page_idle->thisMachine->selectedSlot->getSelectedSizeAsChar() == 'c')
         {
             price = p_page_idle->thisMachine->selectedSlot->getPriceCustom();
         }
@@ -231,7 +231,7 @@ void page_payment_tap_tcp::startPaymentProcess()
         dataThread.detach();
         checkPacketReceivedTimer->start();
         QString base_text = p_page_idle->thisMachine->getTemplateTextByElementNameAndPage(ui->preauthLabel);
-        ui->preauthLabel->setText(base_text.arg(p_page_idle->thisMachine->selectedSlot->getSizeToVolumeWithCorrectUnits(true, true)));
+        ui->preauthLabel->setText(base_text.arg(p_page_idle->thisMachine->selectedSlot->getSizeAsVolumeWithCorrectUnits(true, true)));
         ui->order_total_amount->setText("$ " + QString::number(price, 'f', 2));
     }
     else

@@ -22,6 +22,7 @@
 #include "page_help.h"
 #include "page_product.h"
 #include "page_payment_tap_serial.h"
+#include "page_email.h"
 
 class page_select_product;
 class page_qr_payment;
@@ -32,6 +33,7 @@ class page_dispenser;
 class page_error_wifi;
 class page_help;
 class page_product;
+class page_email;
 
 // typedef enum UserRole
 // {
@@ -57,7 +59,7 @@ public:
     QLabel *orderSizeBackgroundLabels[4];
 
     explicit page_product_overview(QWidget *parent = nullptr);
-    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,  page_payment_tap_serial *page_payment_tap_serial,page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product *page_product);
+    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,  page_payment_tap_serial *page_payment_tap_serial,page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product *page_product, page_email *page_email);
     ~page_product_overview();
 
     void resizeEvent(QResizeEvent *event);
@@ -66,7 +68,7 @@ public:
     void cancelTimers();
 
     void apply_promo_code(QString promocode);
-
+    void check_to_page_email();
     bool m_readyToSendCoupon; 
 
 signals:
@@ -105,6 +107,7 @@ private:
     page_error_wifi *p_page_wifi_error;
     page_help *p_page_help;
     page_product *p_page_product;
+    page_email* p_page_email;
 
     QTimer *selectIdleTimer;
     int _selectIdleTimeoutSec;

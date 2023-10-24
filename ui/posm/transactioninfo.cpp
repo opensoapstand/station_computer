@@ -228,7 +228,7 @@ void transactionInfo::makeReceipt(string terminalID, string merchantName, string
     merchantReceipt.flush();
     qDebug() << "db open25" ;
     
-    // db.updatePaymentsDb(QString::fromStdString(purchaseDate.substr(0,8)), QString::fromStdString(purchaseDate.substr(9)), QString::fromStdString(txnType), QString::fromStdString(purchaseAmount), QString::fromStdString(lastFourChar), QString::fromStdString(ref), QString::fromStdString(getTransactionInfo(TXN_FIDs::APPROVAL_CODE)), QString::fromStdString(cardType), QString::fromStdString(getTransactionInfo(TXN_FIDs::TXN_FINAL_DISP)), QString::fromStdString(getTransactionInfo(TXN_FIDs::ISO_CODE)), QString::fromStdString(getTransactionInfo(TXN_FIDs::HOST_CODE)), QString::fromStdString(getTransactionInfo(TXN_FIDs::TVR_AFTER_ARPC)));
+//     db.updatePaymentsDb(QString::fromStdString(purchaseDate.substr(0,8)), QString::fromStdString(purchaseDate.substr(9)), QString::fromStdString(txnType), QString::fromStdString(purchaseAmount), QString::fromStdString(lastFourChar), QString::fromStdString(ref), QString::fromStdString(getTransactionInfo(TXN_FIDs::APPROVAL_CODE)), QString::fromStdString(cardType), QString::fromStdString(getTransactionInfo(TXN_FIDs::TXN_FINAL_DISP)), QString::fromStdString(getTransactionInfo(TXN_FIDs::ISO_CODE)), QString::fromStdString(getTransactionInfo(TXN_FIDs::HOST_CODE)), QString::fromStdString(getTransactionInfo(TXN_FIDs::TVR_AFTER_ARPC)));
 
 
 //    logData.reconnectDatabase();

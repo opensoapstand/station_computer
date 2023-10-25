@@ -5,7 +5,7 @@
 // completed and route back to page_idle
 //
 // created: 05-04-2022
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
@@ -151,7 +151,7 @@ void page_end::sendDispenseEndToCloud()
     QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl(), units, false, false);
     QString volume_remaining = p_page_idle->thisMachine->selectedProduct->getVolumeRemainingCorrectUnits(false);
     QString soapstand_product_serial = p_page_idle->thisMachine->selectedProduct->getProductDrinkfillSerial();
-    QString promoCode = this->p_page_idle->thisMachine->getPromoCode();
+    QString promoCode = this->p_page_idle->thisMachine->getCouponCode();
     qDebug() << "Send data at finish of order : " << order_id << ". Total dispensed: " << dispensed_correct_units << "corrected units send to soapstandportal: " << dispensed_correct_units;
     if (dispensed_correct_units == 0)
     {
@@ -247,7 +247,7 @@ void page_end::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
 
     is_in_state_thank_you = false;
-    // p_page_idle->setPromoCode("");
+    // p_page_idle->setCouponCode("");
 
     thankYouEndTimer->stop();
     p_page_idle->thisMachine->pageTransition(this, pageToShow);

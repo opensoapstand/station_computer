@@ -406,7 +406,7 @@ void page_dispenser::fsmSendStartDispensing()
 {
     QString dispenseCommand = getStartDispensingCommand();
     QString priceCommand = QString::number(p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->selectedProduct->getBasePrice()));
-    QString promoCommand = p_page_idle->thisMachine->getPromoCode();
+    QString promoCommand = p_page_idle->thisMachine->getCouponCode();
 
     QString delimiter = QString("|");
     QString preamble = "Order";
@@ -474,9 +474,9 @@ void page_dispenser::resetDispenseTimeout(void)
 //     return df_util::getConvertedStringVolumeFromMl(volumeDispensed, units, false, false);
 // }
 
-// QString page_dispenser::getPromoCodeUsed()
+// QString page_dispenser::getCouponCodeUsed()
 // {
-//     QString promoCode = p_page_idle->getPromoCode();
+//     QString promoCode = p_page_idle->getCouponCode();
 
 //     return promoCode;
 // }

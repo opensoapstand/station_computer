@@ -40,6 +40,9 @@ public:
     DbManager* getDb();
     void initMachine();
 
+    void resetUserState();
+    bool isSessionLocked();
+
     void dispenseButtonLightsAnimateState(bool animateElseOff);
     bool slotNumberValidityCheck(int slot);
     QString getStatusText(int slot);
@@ -58,6 +61,7 @@ public:
 
     void processRolePassword(QString password_input);
     QString getActiveRoleAsText();
+    UserRole getRole();
     void setRole(UserRole role);
     bool isAllowedAsAdmin();
     bool isAllowedAsMaintainer();
@@ -89,22 +93,17 @@ public:
     bool hasReceiptPrinter();
     void getPrinterStatusFromDb(bool *isOnline, bool *hasPaper);
     void getTemperatureFromController();
-    // void getTemperature2FromController(); // not needed, all available tempertures are sent with one request to controller.
     void writeTemperatureToDb(double temperature_1, double temperature_2);
-    // void writeTemperature2ToDb(double temperature2);
     double getTemperature_1();
-    // double getTemperature2();
     bool isTemperatureTooHigh_1();
     void fsmReceiveTemperature(double temperature_1, double temperature_2);
-    // void fsmReceiveTemperature2(double temperature2);
-    // void temperatureFromControllerFeedback(double m_temperature);
 
     StateCoupon getCouponState();
     void setCouponState(StateCoupon state);
     void initCouponState();
 
-    void setPromoCode(QString promoCode);
-    QString getPromoCode();
+    void setCouponCode(QString promoCode);
+    QString getCouponCode();
 
     void setCouponConditions(QString couponConditions);
     std::map<QString, QString> getCouponConditions();
@@ -212,8 +211,8 @@ private:
 
     product *m_products;
 
-    QTime temperatureHighTime;
-    bool temperatureWasHigh = false;
+    QTime temperatureTooHighStartMillis;
+    bool isTemperatureTooHigh = false;
     StateCoupon m_stateCoupon;
     double m_discount_percentage_fraction = 0.0;
     double max_discount = 0.0;

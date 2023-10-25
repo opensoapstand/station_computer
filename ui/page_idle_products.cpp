@@ -8,7 +8,7 @@
 // Product Page1
 //
 // created: 01-05-2023
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado & Udbhav Kansal & Daniel C.
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado & Udbhav Kansal & Daniel C.
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
@@ -162,8 +162,10 @@ void page_idle_products::hideCurrentPageAndShowProvided(QWidget *pageToShow, boo
 {
     if (createNewSessionId)
     {
-        // the moment there is a user interaction to go to select product , a new session ID is created.
-        p_page_idle->thisMachine->createSessionId();
+        if (!p_page_idle->thisMachine->isSessionLocked())
+        {
+            p_page_idle->thisMachine->createSessionId();
+        }
     }
 
     backgroundChangeTimer->stop();

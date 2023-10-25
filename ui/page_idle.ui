@@ -82,9 +82,9 @@ text-transform: lowercase;</string>
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>30</y>
-     <width>121</width>
-     <height>91</height>
+     <y>480</y>
+     <width>161</width>
+     <height>131</height>
     </rect>
    </property>
    <property name="text">
@@ -137,7 +137,7 @@ text-transform: lowercase;</string>
     </rect>
    </property>
   </widget>
-  <widget class="QLabel" name="label_temperature_status">
+  <widget class="QLabel" name="label_temperature_warning">
    <property name="geometry">
     <rect>
      <x>49</x>
@@ -172,7 +172,7 @@ text-transform: lowercase;</string>
   <zorder>media_player</zorder>
   <zorder>video_player</zorder>
   <zorder>label_printer_status</zorder>
-  <zorder>label_temperature_status</zorder>
+  <zorder>label_temperature_warning</zorder>
   <zorder>label_show_temperature</zorder>
  </widget>
  <resources/>

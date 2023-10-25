@@ -63,11 +63,6 @@ void machine::setDb(DbManager *db)
     m_db = db;
 }
 
-StateCoupon machine::getCouponState()
-{
-    return m_stateCoupon;
-}
-
 product *machine::getProduct(int slot)
 {
     if (slot == 0)
@@ -177,11 +172,6 @@ bool machine::compareSlotCountToMaxSlotCount(int slot_count)
     return (slot_count > MAX_SLOT_COUNT);
 }
 
-void machine::setCouponState(StateCoupon state)
-{
-    m_stateCoupon = state;
-}
-
 void machine::dispenseButtonLightsAnimateState(bool animateElseOff)
 {
     if (animateElseOff)
@@ -192,6 +182,22 @@ void machine::dispenseButtonLightsAnimateState(bool animateElseOff)
     {
         dfUtility->send_command_to_FSM("DispenseButtonLights|OFF", true);
     }
+}
+
+void machine::resetUserState()
+{
+    setRole(UserRole::user);
+    resetSessionId();  // fixme! bug! if manually exited, will not reset session id.
+    initCouponState(); // everything coupon is reset when idle page is reached.
+}
+
+void machine::setCouponState(StateCoupon state)
+{
+    m_stateCoupon = state;
+}
+StateCoupon machine::getCouponState()
+{
+    return m_stateCoupon;
 }
 
 void machine::initCouponState()
@@ -207,7 +213,7 @@ void machine::initCouponState()
     }
 
     setDiscountPercentageFraction(0.0);
-    setPromoCode("");
+    setCouponCode("");
     m_max_dollar_amount_discount = "0.0";
 }
 
@@ -238,12 +244,12 @@ double machine::getPriceWithDiscount(double price)
     return (price - result);
 }
 
-QString machine::getPromoCode()
+QString machine::getCouponCode()
 {
     return m_promoCode;
 }
 
-void machine::setPromoCode(QString promoCode)
+void machine::setCouponCode(QString promoCode)
 {
     qDebug() << "Set Promo Code: " << promoCode;
     m_promoCode = promoCode;
@@ -406,14 +412,14 @@ void machine::checkForHighTemperatureAndDisableProducts()
 {
     if (isTemperatureTooHigh_1())
     {
-        if (!temperatureWasHigh)
+        if (!isTemperatureTooHigh)
         {
-            temperatureWasHigh = true;
-            temperatureHighTime = QTime::currentTime(); // Record the time when temperature became too high
+            isTemperatureTooHigh = true;
+            temperatureTooHighStartMillis = QTime::currentTime(); // Record the time when temperature became too high
         }
 
         QTime currentTime = QTime::currentTime();
-        int elapsedMinutes = temperatureHighTime.msecsTo(currentTime) / 60000; // Convert milliseconds to minutes 60000=60min
+        int elapsedMinutes = temperatureTooHighStartMillis.msecsTo(currentTime) / 60000; // Convert milliseconds to minutes 60000=60min
 
         if (elapsedMinutes >= 60) // 60  Check if one hour has passed
         {
@@ -426,7 +432,7 @@ void machine::checkForHighTemperatureAndDisableProducts()
     }
     else
     {
-        temperatureWasHigh = false; // Reset the flag and the time when the temperature goes back to normal
+        isTemperatureTooHigh = false; // Reset the flag and the time when the temperature goes back to normal
     }
 }
 bool machine::isTemperatureTooHigh_1()
@@ -522,6 +528,19 @@ QString machine::getSessionId()
     return m_session_id;
 }
 
+bool machine::isSessionLocked(){
+    bool sessionActive = false;
+    if (getRole() != UserRole::user)
+    {
+        sessionActive = true;
+    }
+    if (getCouponState() == enabled_valid_active)
+    {
+        sessionActive = true;
+    }
+    return sessionActive;
+}
+
 void machine::resetSessionId()
 {
     m_session_id = "";
@@ -532,16 +551,31 @@ void machine::createSessionId()
     m_session_id = time;
 }
 
+void machine::setRole(UserRole role)
+{
+    if (active_role != role)
+    {
+        active_role = role;
+        qDebug() << "Role set as: " << getActiveRoleAsText();
+    }
+}
+
+UserRole machine::getRole()
+{
+    return active_role;
+}
+
 QString machine::getActiveRoleAsText()
 {
     switch (active_role)
     {
+        // WARNING: DO NOT CHANGE TEXT, change in the templates ui_texts.csv if displaying the text needs to be different.
     case user:
-        return "User";
+        return "user";
     case maintainer:
-        return "Maintainer";
+        return "maintainer";
     case admin:
-        return "Admin";
+        return "admin";
     default:
         return "Unknown";
     }
@@ -566,15 +600,6 @@ bool machine::isAllowedAsMaintainer()
         allowed = true;
     }
     return allowed;
-}
-
-void machine::setRole(UserRole role)
-{
-    if (active_role != role)
-    {
-        active_role = role;
-        qDebug() << "Role set as: " << getActiveRoleAsText();
-    }
 }
 
 void machine::setStatusText(int slot, QString status)
@@ -938,6 +963,8 @@ QString machine::getTemplateText(QString textName_to_find)
 
 void machine::applyDynamicPropertiesFromTemplateToWidgetChildren(QWidget *widget)
 {
+    // Template engine can set properties of a widget (like position, visibility,...) from a text file
+
     // in reality, send a page widget as argument. All the childeren will be checked. (i.e. buttons, labels,...)
     QList<QObject *> allChildren = widget->findChildren<QObject *>();
     foreach (QObject *child, allChildren)

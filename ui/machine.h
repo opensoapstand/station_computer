@@ -66,12 +66,12 @@ public:
     void resetSessionId();
     QString getSessionId();
 
-    QString getCustomerId();
+    QString getClientId();
 
     QString getTemplateFolder();
     QString getTemplateName();
     QString getTemplatePathFromName(QString fileName);
-    QString getDefaultTemplatePathFromName(QString fileName);
+    // QString getDefaultTemplatePathFromName(QString fileName);
 
     bool getEmptyContainerDetectionEnabled();
     void setEmptyContainerDetectionEnabled(bool isEnabled);
@@ -129,16 +129,20 @@ public:
     QString getTemplateTextByPage(QWidget *page, QString identifier);
     QString getTemplateText(QString textName_to_find);
     void loadTextsFromTemplateCsv();
+    void loadTextsFromDefaultHardwareCsv();
     void loadTextsFromDefaultCsv();
     void loadElementDynamicPropertiesFromTemplate();
+    void loadElementDynamicPropertiesFromDefaultHardwareTemplate();
     void loadElementDynamicPropertiesFromDefaultTemplate();
+
+    QString getHardwareMajorVersion();
 
     product *selectedProduct;
     // QStringList getChildNames(QObject *parent);
 
     void addPictureToLabel(QLabel *label, QString picturePath);
     void addPictureToButton(QPushButton *button, QString picturePath);
-    void addCustomerLogoToLabel(QLabel *label);
+    void addClientLogoToLabel(QLabel *label);
     void setBackgroundPictureFromTemplateToPage(QWidget *page, QString imageName);
     void setBackgroundPictureToQWidget(QWidget *page, QString imageName);
     void pageTransition(QWidget *pageToHide, QWidget *pageToShow);
@@ -146,7 +150,7 @@ public:
     void applyDynamicPropertiesFromTemplateToWidgetChildren(QWidget *widget);
 
     QString m_machine_id;
-    QString m_soapstand_customer_id;
+    QString m_client_id;
     QString m_template;
     QString m_location;
     QString m_controller_type;
@@ -199,9 +203,11 @@ signals:
 
 private:
     std::map<QString, QString> textNameToTextMap_template;
+    std::map<QString, QString> textNameToTextMap_default_hardware;
     std::map<QString, QString> textNameToTextMap_default;
-    std::map<QString, QString> elementDynamicPropertiesMap_default;
     std::map<QString, QString> elementDynamicPropertiesMap_template;
+    std::map<QString, QString> elementDynamicPropertiesMap_default_hardware;
+    std::map<QString, QString> elementDynamicPropertiesMap_default;
     QString m_templatePath;
 
     product *m_products;

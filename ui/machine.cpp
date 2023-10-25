@@ -27,7 +27,7 @@ void machine::initMachine()
     loadParametersFromDb();
     for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
     {
-        
+
         m_products[slot_index].setSlot(slot_index + 1);
         m_products[slot_index].setMachine(this);
         m_products[slot_index].setDb(m_db);
@@ -45,10 +45,12 @@ void machine::loadDynamicContent()
         m_products[slot_index].loadProductProperties();
     }
 
-    loadTextsFromTemplateCsv();                        // dynamic content (text by template)
-    loadTextsFromDefaultCsv();                         // dynamic styling (css by template)
-    loadElementDynamicPropertiesFromTemplate();        // dynamic elements (position, visibility)
-    loadElementDynamicPropertiesFromDefaultTemplate(); // dynamic elements (position, visibility)
+    loadTextsFromTemplateCsv();                                // dynamic content (text by template)
+    loadTextsFromDefaultHardwareCsv();                         // dynamic styling (css by template)
+    loadTextsFromDefaultCsv();                                 // dynamic styling (css by template)
+    loadElementDynamicPropertiesFromTemplate();                // dynamic elements (position, visibility)
+    loadElementDynamicPropertiesFromDefaultHardwareTemplate(); // dynamic elements (position, visibility)
+    loadElementDynamicPropertiesFromDefaultTemplate();         // dynamic elements (position, visibility)
 }
 
 DbManager *machine::getDb()
@@ -119,6 +121,11 @@ bool machine::isAelenPillarElseSoapStand()
         qDebug() << "ASSERT ERROR: Unknown Hardware version:  " << m_hardware_version;
     }
     return false; // default case
+}
+
+QString machine::getHardwareMajorVersion()
+{
+    return m_hardware_version.left(3);
 }
 
 int machine::getSlotCount()
@@ -242,32 +249,9 @@ void machine::setPromoCode(QString promoCode)
     m_promoCode = promoCode;
 }
 
-QString machine::getTemplateFolder()
-{
-    QString template_name = m_template;
-    if (template_name == "")
-    {
-        template_name = "default";
-    }
-    else
-    {
-    }
-    return TEMPLATES_ROOT_PATH + template_name + "/";
-}
-
-QString machine::getTemplateName()
-{
-    QString template_name = m_template;
-    if (template_name == "")
-    {
-        template_name = "default";
-    }
-    return template_name;
-}
-
 void machine::loadElementPropertiesFile()
 {
-    QString json_path = getTemplatePathFromName(UI_ELEMENT_PROPERTIES_PATH);
+    QString json_path = getTemplatePathFromName(UI_ELEMENT_PROPERTIES_NAME);
     QFile file(json_path);
     if (file.open(QIODevice::ReadOnly))
     {
@@ -319,27 +303,91 @@ void machine::loadProductPropertiesFromProductsFile(QString soapstand_product_nu
     file.close();
 }
 
+QString machine::getTemplateFolder()
+{
+
+    // check for exact template folder.
+    // if it doesn't exist, check for hardware default template folder.
+    // if it doesn't exist, check for default template folder.
+
+    QString template_name = m_template;
+    if (template_name.isEmpty())
+    {
+        QString hardware_specific_template = QString(TEMPLATES_ROOT_PATH) + QString(TEMPLATES_DEFAULT_NAME) + "_" + getHardwareMajorVersion();
+        if (!df_util::pathExists(hardware_specific_template))
+        {
+
+            template_name = QString(TEMPLATES_DEFAULT_NAME);
+        }
+        else
+        {
+            template_name = QString(TEMPLATES_DEFAULT_NAME) + "_" + getHardwareMajorVersion();
+        }
+    }
+
+    return QString(TEMPLATES_ROOT_PATH) + template_name + "/";
+}
+
 QString machine::getTemplatePathFromName(QString fileName)
 {
-    QString image_path = getTemplateFolder() + fileName;
+    // will try to find the file in specif template, default_hardware and default in this sequence. Return path from first found
 
-    if (!df_util::pathExists(image_path))
+    QString filePath = getTemplateFolder() + fileName; // this checks just for the existence of the most relevant template folder
+
+    if (!df_util::pathExists(filePath))
     {
-        QString image_default_path = getDefaultTemplatePathFromName(fileName);
-        if (!df_util::pathExists(image_default_path))
+        qDebug() << "File not found in template folder : " + filePath;
+        // check if file exist in hardware specific default template
+        // e.g.  // "/home/df-admin/production/references/templates/default_SS2/page_idle.css"
+        filePath = QString(TEMPLATES_ROOT_PATH) + QString(TEMPLATES_DEFAULT_NAME) + "_" + getHardwareMajorVersion() + "/" + fileName;
+
+        if (!df_util::pathExists(filePath))
         {
-            qDebug() << "File not found in template folder and not in default template folder (will use path anyways...): " + image_default_path;
+            qDebug() << "File not found in default hardware folder : " + filePath;
+            // check if file exists in default template
+            filePath = QString(TEMPLATES_ROOT_PATH) + QString(TEMPLATES_DEFAULT_NAME) + "/" + fileName;
+            if (!df_util::pathExists(filePath))
+            {
+                qDebug() << "File not found in template folder and not in default hardware folder and not in default template folder (will use path anyways...): " + fileName;
+            }
         }
-        image_path = image_default_path;
     }
-    return image_path;
+    return filePath;
 }
 
-QString machine::getDefaultTemplatePathFromName(QString fileName)
-{
-    QString template_root_path = TEMPLATES_ROOT_PATH;
-    return template_root_path + TEMPLATES_DEFAULT_NAME + "/" + fileName;
-}
+// QString machine::getHardwareDefaultTemplatePathFromName(QString fileName)
+// {
+
+//     return TEMPLATES_ROOT_PATH + "default_" + getHardwareMajorVersion + "/" + fileName;
+// }
+
+// QString machine::getDefaultTemplatePathFromName(QString fileName)
+// {
+//     // last resort super default.
+//     return TEMPLATES_ROOT_PATH + TEMPLATES_DEFAULT_NAME + "/" + fileName;
+// }
+
+// QString machine::getTemplatePathFromName(QString fileName)
+// {
+//     QString image_path = getTemplateFolder() + fileName;
+
+//     if (!df_util::pathExists(image_path))
+//     {
+//         QString image_default_path = getDefaultTemplatePathFromName(fileName);
+//         if (!df_util::pathExists(image_default_path))
+//         {
+//             qDebug() << "File not found in template folder and not in default template folder (will use path anyways...): " + image_default_path;
+//         }
+//         image_path = image_default_path;
+//     }
+//     return image_path;
+// }
+
+// QString machine::getDefaultTemplatePathFromName(QString fileName)
+// {
+//     QString template_root_path = TEMPLATES_ROOT_PATH;
+//     return template_root_path + TEMPLATES_DEFAULT_NAME + "/" + fileName;
+// }
 
 void machine::getPrinterStatusFromDb(bool *isOnline, bool *hasPaper)
 {
@@ -606,7 +654,7 @@ void machine::loadParametersFromDb()
 
     m_db->getAllMachineProperties(
         &m_machine_id,
-        &m_soapstand_customer_id,
+        &m_client_id,
         &m_template,
         &m_location,
         &m_controller_type,
@@ -661,14 +709,14 @@ QString machine::getMachineId()
     return m_machine_id;
 }
 
-QString machine::getCustomerId()
+QString machine::getClientId()
 {
-    QString id = m_soapstand_customer_id;
-    if (m_soapstand_customer_id.at(0) != 'C')
+    QString id = m_client_id;
+    if (m_client_id.at(0) != 'C')
     {
-        qDebug() << "WARNING: invalid customer ID. Should be with a format like C-1, C-374, ... . Provided id: " << id;
+        qDebug() << "WARNING: invalid client ID. Should be with a format like C-1, C-374, ... . Provided id: " << id;
     }
-    return m_soapstand_customer_id;
+    return m_client_id;
 }
 
 void machine::setCouponConditions(QString couponConditions)
@@ -689,9 +737,9 @@ std::map<QString, QString> machine::getCouponConditions()
     return myMap;
 }
 
-void machine::addCustomerLogoToLabel(QLabel *label)
+void machine::addClientLogoToLabel(QLabel *label)
 {
-    QString id = getCustomerId();
+    QString id = getClientId();
     QString logo_path = QString(CLIENT_LOGO_PATH).arg(id);
     addPictureToLabel(label, logo_path);
 }
@@ -862,15 +910,23 @@ QString machine::getTemplateText(QString textName_to_find)
     }
     else
     {
-        it = textNameToTextMap_default.find(QString::fromStdString(key));
-        if (it != textNameToTextMap_default.end())
+        it = textNameToTextMap_default_hardware.find(QString::fromStdString(key));
+        if (it != textNameToTextMap_default_hardware.end())
         {
             retval = it->second;
         }
         else
         {
-            qDebug() << "No template text value found for: " + textName_to_find;
-            retval = textName_to_find;
+            it = textNameToTextMap_default.find(QString::fromStdString(key));
+            if (it != textNameToTextMap_default.end())
+            {
+                retval = it->second;
+            }
+            else
+            {
+                qDebug() << "No template text value found for: " + textName_to_find;
+                retval = textName_to_find;
+            }
         }
     }
 
@@ -902,7 +958,7 @@ void machine::applyPropertiesToQWidget(QWidget *widget)
 {
 
     // example of line in text file with properties:
-    // machine->label_customer_logo,{"x":570, "y":1580, "width":351, "height":211,"isVisibleAtLoad":true}
+    // machine->label_client_logo,{"x":570, "y":1580, "width":351, "height":211,"isVisibleAtLoad":true}
 
     QString combinedName = getCombinedElementPageAndName(widget);
 
@@ -917,16 +973,26 @@ void machine::applyPropertiesToQWidget(QWidget *widget)
     }
     else
     {
-        it = elementDynamicPropertiesMap_default.find(combinedName);
-        if (it != elementDynamicPropertiesMap_default.end())
+
+        it = elementDynamicPropertiesMap_default_hardware.find(combinedName);
+        if (it != elementDynamicPropertiesMap_default_hardware.end())
         {
-            qDebug() << "element " << combinedName << "found in default. json string: " << it->second;
+            qDebug() << "element " << combinedName << "found in default hardware. json string: " << it->second;
             jsonString = it->second;
         }
         else
         {
-            // qDebug() << "No template text value found for: " + combinedName;
-            valid = false;
+            it = elementDynamicPropertiesMap_default.find(combinedName);
+            if (it != elementDynamicPropertiesMap_default.end())
+            {
+                qDebug() << "element " << combinedName << "found in default. json string: " << it->second;
+                jsonString = it->second;
+            }
+            else
+            {
+                // qDebug() << "No template text value found for: " + combinedName;
+                valid = false;
+            }
         }
     }
 
@@ -978,24 +1044,23 @@ void machine::applyPropertiesToQWidget(QWidget *widget)
     }
 }
 
-void machine::loadElementDynamicPropertiesFromDefaultTemplate()
-{
-    qDebug() << "Load dynamic properties from default template file";
-    QString path = getDefaultTemplatePathFromName(UI_ELEMENT_PROPERTIES_PATH);
-    loadTextsFromCsv(path, &elementDynamicPropertiesMap_default);
-    // Print the word-sentence mapping
-    // for (const auto &pair : elementDynamicPropertiesMap_default)
-    // {
-    //     qDebug() << pair.first << ": " << pair.second;
-    // }
-}
-
 void machine::loadElementDynamicPropertiesFromTemplate()
 {
     qDebug() << "Load dynamic properties from template file";
-    QString path = getTemplatePathFromName(UI_ELEMENT_PROPERTIES_PATH);
+    QString path = QString(TEMPLATES_ROOT_PATH) + m_template + "/" + QString(UI_ELEMENT_PROPERTIES_NAME);
     loadTextsFromCsv(path, &elementDynamicPropertiesMap_template);
-
+}
+void machine::loadElementDynamicPropertiesFromDefaultHardwareTemplate()
+{
+    qDebug() << "Load dynamic properties from default hardware template file";
+    QString path = QString(TEMPLATES_ROOT_PATH) + QString(TEMPLATES_DEFAULT_NAME) + "_" + getHardwareMajorVersion() + "/" + QString(UI_ELEMENT_PROPERTIES_NAME);
+    loadTextsFromCsv(path, &elementDynamicPropertiesMap_default_hardware);
+}
+void machine::loadElementDynamicPropertiesFromDefaultTemplate()
+{
+    qDebug() << "Load dynamic properties from default template file";
+    QString path = QString(TEMPLATES_ROOT_PATH) + QString(TEMPLATES_DEFAULT_NAME) + "/" + QString(UI_ELEMENT_PROPERTIES_NAME);
+    loadTextsFromCsv(path, &elementDynamicPropertiesMap_default);
     // Print the word-sentence mapping
     // for (const auto &pair : elementDynamicPropertiesMap_default)
     // {
@@ -1006,15 +1071,23 @@ void machine::loadElementDynamicPropertiesFromTemplate()
 void machine::loadTextsFromTemplateCsv()
 {
     qDebug() << "Load dynamic texts from template csv";
-    QString csv_path = getTemplatePathFromName(UI_TEXTS_CSV_PATH);
-    loadTextsFromCsv(csv_path, &textNameToTextMap_template);
+    QString path = QString(TEMPLATES_ROOT_PATH) + m_template + "/" + QString(UI_TEXTS_CSV_NAME);
+    loadTextsFromCsv(path, &textNameToTextMap_template);
+}
+
+void machine::loadTextsFromDefaultHardwareCsv()
+{
+    qDebug() << "Load dynamic texts from default hardware csv";
+    QString path = QString(TEMPLATES_ROOT_PATH) + QString(TEMPLATES_DEFAULT_NAME) + "_" + getHardwareMajorVersion() + "/" + QString(UI_TEXTS_CSV_NAME);
+    loadTextsFromCsv(path, &textNameToTextMap_default_hardware);
 }
 
 void machine::loadTextsFromDefaultCsv()
 {
     qDebug() << "Load dynamic texts from default csv";
-    QString csv_default_template_path = getDefaultTemplatePathFromName(UI_TEXTS_CSV_PATH);
-    loadTextsFromCsv(csv_default_template_path, &textNameToTextMap_default);
+    // QString csv_default_hardware_template_path = TEMPLATES_ROOT_PATH + TEMPLATES_DEFAULT_NAME + "_" + getHardwareMajorVersion + "/" + UI_TEXTS_CSV_NAME;
+    QString path = QString(TEMPLATES_ROOT_PATH) + QString(TEMPLATES_DEFAULT_NAME) + "/" + QString(UI_TEXTS_CSV_NAME);
+    loadTextsFromCsv(path, &textNameToTextMap_default);
 }
 
 void machine::loadTextsFromCsv(QString csv_path, std::map<QString, QString> *dictionary)

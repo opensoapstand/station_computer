@@ -112,7 +112,7 @@ void page_idle_products::showEvent(QShowEvent *event)
     //     p_page_idle->checkReceiptPrinterStatus();
     // }
 
-    p_page_idle->thisMachine->addCustomerLogoToLabel(ui->label_customer_logo);
+    p_page_idle->thisMachine->addClientLogoToLabel(ui->label_client_logo);
 
     changeBackground();
     displayProducts();
@@ -174,7 +174,7 @@ void page_idle_products::hideCurrentPageAndShowProvided(QWidget *pageToShow, boo
 void page_idle_products::showAllLabelsAndButtons()
 {
     ui->label_title->show();
-    ui->label_customer_logo->show();
+    ui->label_client_logo->show();
 
     displayPrinterStatus();
     ui->pushButton_to_select_product_page->show();
@@ -190,7 +190,7 @@ void page_idle_products::showAllLabelsAndButtons()
 void page_idle_products::hideAllLabelAndButtons()
 {
     ui->label_title->hide();
-    ui->label_customer_logo->hide();
+    ui->label_client_logo->hide();
     ui->label_printer_status->hide();
 
     for (int slot_index = 0; slot_index < p_page_idle->thisMachine->getSlotCount(); slot_index++)

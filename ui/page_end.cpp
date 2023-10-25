@@ -74,9 +74,9 @@ void page_end::showEvent(QShowEvent *event)
     ui->pushButton_to_idle->setEnabled(true);
     ui->pushButton_to_idle->raise();
     ui->pushButton_contact->raise();
-    ui->label_customer_logo->hide();
+    ui->label_client_logo->hide();
 
-    p_page_idle->thisMachine->addCustomerLogoToLabel(ui->label_customer_logo);
+    p_page_idle->thisMachine->addClientLogoToLabel(ui->label_client_logo);
 
     QString paymentMethod = p_page_idle->thisMachine->selectedProduct->getPaymentMethod();
 

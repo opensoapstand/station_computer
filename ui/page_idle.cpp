@@ -136,7 +136,7 @@ void page_idle::showEvent(QShowEvent *event)
     // ui->label_welcome_message->setText(base_text.arg("SoAp")); // will replace %1 character in string by the provide text
 
     thisMachine->setTemplateTextToObject(ui->label_welcome_message);
-    thisMachine->addCustomerLogoToLabel(ui->label_customer_logo);
+    thisMachine->addClientLogoToLabel(ui->label_client_logo);
 
     ui->label_printer_status->hide(); // always hide here, will show if enabled and has problems.
 

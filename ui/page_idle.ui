@@ -52,7 +52,7 @@ text-transform: lowercase;</string>
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="label_customer_logo">
+  <widget class="QLabel" name="label_client_logo">
    <property name="geometry">
     <rect>
      <x>370</x>
@@ -165,7 +165,7 @@ text-transform: lowercase;</string>
   </widget>
   <zorder>pushButton_to_select_product_page</zorder>
   <zorder>savedBottles_label</zorder>
-  <zorder>label_customer_logo</zorder>
+  <zorder>label_client_logo</zorder>
   <zorder>label_welcome_message</zorder>
   <zorder>pushButton_test</zorder>
   <zorder>label_manufacturer_logo</zorder>

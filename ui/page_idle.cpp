@@ -128,9 +128,9 @@ void page_idle::showEvent(QShowEvent *event)
     ui->pushButton_test->hide();
 
     thisMachine->setTemplateTextToObject(ui->label_welcome_message);
-    thisMachine->addCustomerLogoToLabel(ui->label_customer_logo);
-    QString machine_logo_full_path = thisMachine->getTemplatePathFromName(MACHINE_LOGO_PATH);
-    thisMachine->addPictureToLabel(ui->label_manufacturer_logo, machine_logo_full_path);
+    thisMachine->addClientLogoToLabel(ui->label_client_logo);
+    // QString machine_logo_full_path = thisMachine->getTemplatePathFromName(MACHINE_LOGO_PATH);
+    // thisMachine->addPictureToLabel(ui->label_manufacturer_logo, machine_logo_full_path);
     ui->label_manufacturer_logo->setStyleSheet(styleSheet);
     ui->label_printer_status->setStyleSheet(styleSheet);
     ui->label_temperature_warning->setStyleSheet(styleSheet);

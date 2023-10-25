@@ -144,8 +144,19 @@ void page_idle::showEvent(QShowEvent *event)
     // ui->label_welcome_message->setText(base_text.arg("SoAp")); // will replace %1 character in string by the provide text
     // ui->pushButton_to_select_product_page->raise();
 
-    checkReceiptPrinterStatus(); // checks also for printer enabled in db.
-    refreshTemperature();
+    thisMachine->setTemplateTextToObject(ui->label_welcome_message);
+    thisMachine->addClientLogoToLabel(ui->label_client_logo);
+
+    ui->label_printer_status->hide(); // always hide here, will show if enabled and has problems.
+
+    if (thisMachine->hasReceiptPrinter())
+    {
+        checkReceiptPrinterStatus();
+    }
+
+    QString machine_logo_full_path = thisMachine->getTemplatePathFromName(MACHINE_LOGO_PATH);
+    thisMachine->addPictureToLabel(ui->label_manufacturer_logo, machine_logo_full_path);
+    ui->label_manufacturer_logo->setStyleSheet(styleSheet);
 
     idlePageTypeSelectorTimer->start(1000);
     _idlePageTypeSelectorTimerTimeoutSec = PAGE_IDLE_DELAY_BEFORE_ENTERING_IDLE_PRODUCTS;

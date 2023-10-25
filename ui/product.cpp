@@ -183,8 +183,8 @@ bool product::is_valid_size_selected()
 {
     // if (!(m_dispenser_slot >= OPTION_SLOT_INVALID && m_dispenser_slot <= thisMachine->getSlotCount()))
     // {
-    qInfo() << "ERROR: no slot set. " << m_dispenser_slot;
-    return false;
+    // qInfo() << "ERROR: no slot set. " << m_dispenser_slot;
+    // return false;
     // }
     if (!(m_selected_size >= 0 && m_selected_size <= SIZES_COUNT))
     {

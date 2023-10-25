@@ -56,7 +56,7 @@ public:
 
     // void select_product(int slot);
     void displayProducts();
-    void addCustomerLogoToLabel(QLabel *label);
+    void addClientLogoToLabel(QLabel *label);
     void setBackgroundPictureFromTemplateToPage(QWidget *page, QString imageName);
     int setStepTimerFromFileName(QString fileName, int defaultTimeMillis);
 

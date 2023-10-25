@@ -24,6 +24,7 @@ FORMS += \
     page_maintenance_dispenser.ui \
     page_init.ui \
     page_help.ui \
+    page_email.ui \
     keyboard.ui \
     page_sendFeedback.ui \
     page_transactions.ui \
@@ -63,6 +64,7 @@ HEADERS += \
     page_error_wifi.h \
     page_init.h \
     page_help.h \
+    page_email.h \
     page_sendFeedback.h  \
     page_transactions.h \
     product.h \
@@ -102,6 +104,7 @@ SOURCES += \
     page_maintenance_general.cpp \
     page_init.cpp \
     page_help.cpp \
+    page_email.cpp \
     ../library/qr/qrcodegen.cpp \
     page_transactions.cpp \
     product.cpp \

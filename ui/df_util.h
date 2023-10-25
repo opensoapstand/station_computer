@@ -26,8 +26,8 @@
 #define USAGE_DB_PATH "/home/df-admin/production/db/usage.db"
 
 #define PRODUCT_DETAILS_TSV_PATH "/home/df-admin/production/references/products/product_details.tsv"  // https://docs.google.com/spreadsheets/d/17WR2gRyPIDIlGKBy1YKFAqN-Hyw_3VOJ6JCmfcAtjVk/edit#gid=169583479 download as .tsv file
-#define UI_TEXTS_CSV_PATH "ui_texts.csv" 
-#define UI_ELEMENT_PROPERTIES_PATH "ui_element_properties.txt" 
+#define UI_TEXTS_CSV_NAME "ui_texts.csv" 
+#define UI_ELEMENT_PROPERTIES_NAME "ui_element_properties.txt" 
 #define CSV_PRODUCT_COL_ID 0
 #define CSV_PRODUCT_COL_NAME 1
 #define CSV_PRODUCT_COL_TYPE 2
@@ -95,6 +95,7 @@ using namespace std;
 #define PAGE_MAINTENANCE_DISPENSER_CSS                  "page_maintenance_dispenser.css"
 #define PAGE_IDLE_PRODUCTS_CSS                          "page_idle_products.css"
 #define PAGE_TAP_PAYMENT_SERIAL_CSS                     "page_payment_tap_serial.css"
+#define PAGE_EMAIL_CSS                                  "page_email.css"
 
 
 
@@ -149,6 +150,7 @@ using namespace std;
 #define SEND_REPAIR_PCA "pcabugfix"
 #define SEND_DISPENSE_AUTOFILL "a"
 
+#define PAYMENT_QR_EMAIL_FREE                              "qr/emailfree"
 #define PAYMENT_TAP_SERIAL                              "tapSerial"
 #define PAYMENT_TAP_TCP                                 "tapTCP"
 #define PAYMENT_QR                                      "qr"

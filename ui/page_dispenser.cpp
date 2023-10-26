@@ -180,7 +180,7 @@ void page_dispenser::showEvent(QShowEvent *event)
         p_page_idle->thisMachine->addPictureToLabel(ui->label_indicate_active_spout, p_page_idle->thisMachine->getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_RIGHT));
     }
 
-    p_page_idle->thisMachine->addCustomerLogoToLabel(ui->label_logo);
+    p_page_idle->thisMachine->addClientLogoToLabel(ui->label_logo);
     ui->label_logo->hide();
 
     p_page_idle->thisMachine->addPictureToLabel(ui->label_background_during_dispense_animation, p_page_idle->thisMachine->getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));
@@ -326,13 +326,16 @@ void page_dispenser::dispensing_end_admin()
         // REVERSE PAYMENT.
         if (paymentMethod == PAYMENT_TAP_TCP)
         {
+            qDebug() << "MAC_LABEL" << QString::fromStdString(MAC_LABEL);
             if (SAF_NUM != "")
             {
                 std::cout << "Voiding transaction";
+                qDebug() << "SAF_NUM" << QString::fromStdString(SAF_NUM);
                 response = voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, SAF_NUM);
             }
             else if (CTROUTD != "")
-            {
+            {   
+                qDebug() << "CTROUTD" << QString::fromStdString(CTROUTD);
                 response = voidTransaction(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, CTROUTD);
             }
             finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
@@ -360,11 +363,12 @@ void page_dispenser::dispensing_end_admin()
         {
             if (CTROUTD != "")
             {
+                qDebug() << "CTROUTD" << QString::fromStdString(CTROUTD);
                 std::map<std::string, std::string> testResponse = capture(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, CTROUTD, stream.str());
             }
             else if (SAF_NUM != "")
             {
-
+                qDebug() << "SAF_NUM" << QString::fromStdString(SAF_NUM);
                 std::map<std::string, std::string> testResponse = editSaf(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, SAF_NUM, stream.str(), "ELIGIBLE");
             }
             finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
@@ -402,7 +406,7 @@ void page_dispenser::fsmSendStartDispensing()
 {
     QString dispenseCommand = getStartDispensingCommand();
     QString priceCommand = QString::number(p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->selectedProduct->getBasePrice()));
-    QString promoCommand = p_page_idle->thisMachine->getPromoCode();
+    QString promoCommand = p_page_idle->thisMachine->getCouponCode();
 
     QString delimiter = QString("|");
     QString preamble = "Order";
@@ -470,9 +474,9 @@ void page_dispenser::resetDispenseTimeout(void)
 //     return df_util::getConvertedStringVolumeFromMl(volumeDispensed, units, false, false);
 // }
 
-// QString page_dispenser::getPromoCodeUsed()
+// QString page_dispenser::getCouponCodeUsed()
 // {
-//     QString promoCode = p_page_idle->getPromoCode();
+//     QString promoCode = p_page_idle->getCouponCode();
 
 //     return promoCode;
 // }
@@ -684,8 +688,8 @@ void page_dispenser::on_pushButton_problems_clicked()
     msgBox_problems->setObjectName("msgBox_problems");
     msgBox_problems->setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
 
-    QString chosenTemplate = p_page_idle->thisMachine->getTemplateName();
-    if (chosenTemplate == "good-filling")
+    QString client_id = p_page_idle->thisMachine->getClientId();
+    if (client_id == "C-1") // good-filling
     {
         QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "shopify";
         p_page_idle->thisMachine->setTextToObject(msgBox_problems, p_page_idle->thisMachine->getTemplateText(searchString));

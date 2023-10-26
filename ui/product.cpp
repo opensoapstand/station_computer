@@ -183,8 +183,8 @@ bool product::is_valid_size_selected()
 {
     // if (!(m_dispenser_slot >= OPTION_SLOT_INVALID && m_dispenser_slot <= thisMachine->getSlotCount()))
     // {
-    qInfo() << "ERROR: no slot set. " << m_dispenser_slot;
-    return false;
+    // qInfo() << "ERROR: no slot set. " << m_dispenser_slot;
+    // return false;
     // }
     if (!(m_selected_size >= 0 && m_selected_size <= SIZES_COUNT))
     {
@@ -211,7 +211,7 @@ QString product::getLastRestockDate()
     return m_lastRestockDate;
 }
 
-// QString product::getPromoCode()
+// QString product::getCouponCode()
 // {
 //     return m_promoCode;
 // }
@@ -222,7 +222,7 @@ QString product::getLastRestockDate()
 //     m_discount_percentage_fraction = percentageFraction;
 // }
 
-// void product::setPromoCode(QString promoCode)
+// void product::setCouponCode(QString promoCode)
 // {
 //     qDebug() << "Set Promo Code: " << promoCode;
 //     m_promoCode = promoCode;

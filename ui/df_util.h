@@ -26,8 +26,8 @@
 #define USAGE_DB_PATH "/home/df-admin/production/db/usage.db"
 
 #define PRODUCT_DETAILS_TSV_PATH "/home/df-admin/production/references/products/product_details.tsv"  // https://docs.google.com/spreadsheets/d/17WR2gRyPIDIlGKBy1YKFAqN-Hyw_3VOJ6JCmfcAtjVk/edit#gid=169583479 download as .tsv file
-#define UI_TEXTS_CSV_PATH "ui_texts.csv" 
-#define UI_ELEMENT_PROPERTIES_PATH "ui_element_properties.txt" 
+#define UI_TEXTS_CSV_NAME "ui_texts.csv" 
+#define UI_ELEMENT_PROPERTIES_NAME "ui_element_properties.txt" 
 #define CSV_PRODUCT_COL_ID 0
 #define CSV_PRODUCT_COL_NAME 1
 #define CSV_PRODUCT_COL_TYPE 2
@@ -52,8 +52,10 @@
 using namespace std;
 
 #define PAGE_IDLE_DELAY_BEFORE_ENTERING_IDLE_PRODUCTS 15
+#define STATUS_BAR_REFRESH_PERIOD_SECONDS 3
 #define PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS 60 //60
 #define PAGE_IDLE_TEST_FOR_FROZEN_SCREEN_PERIOD_SECONDS 60 
+#define PAGE_IDLE_USER_ROLE_TIMEOUT_SECONDS 5 
 #define PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS 6
 #define PAGE_IDLE_PRODUCTS_STEP_DISPLAY_TIME_SECONDS 1
 
@@ -78,6 +80,7 @@ using namespace std;
 #define CLIENT_LOGO_PATH                                "/home/df-admin/production/references/logos/%1_logo_white.png"
 #define PAGE_HELP_CSS                                   "page_help.css"
 #define PAGE_FEEDBACK_CSS                               "page_sendFeedback.css"
+#define STATUSBAR_CSS                                   "statusbar.css"
 #define PAGE_IDLE_CSS                                   "page_idle.css"
 #define PAGE_SELECT_PRODUCT_CSS                         "page_select_product.css"
 #define PAGE_PRODUCT_CSS                                "page_product.css"

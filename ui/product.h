@@ -22,7 +22,7 @@ public:
     // Setters and Getters
     void setSlot(int slot);
     int getSlot();
-    void setPromoCode(QString promoCode);
+    void setCouponCode(QString promoCode);
     QString getAwsProductId();
     // bool getSlotEnabled();
     // void setSlotEnabled(bool isEnabled);
@@ -110,7 +110,7 @@ public:
     void setPaymentMethod(QString paymentMethod);
 
     // double getDiscountPercentageFraction();
-    // QString getPromoCode();
+    // QString getCouponCode();
 
 public slots:
     // void setDiscountPercentageFraction(double percentageFraction);

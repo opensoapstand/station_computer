@@ -9,7 +9,7 @@
 // payment page and page_idle page
 //
 // created: 05-04-2022
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
@@ -49,12 +49,13 @@ page_product_overview::page_product_overview(QWidget *parent) : QWidget(parent),
     connect(ui->buttonGroup, SIGNAL(buttonPressed(int)), this, SLOT(keyboardButtonPressed(int)));
 
     ui->label_gif->hide();
+    statusbarLayout = new QVBoxLayout(this);
 }
 
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void page_product_overview::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,  page_payment_tap_serial *page_payment_tap_serial,page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product *page_product, page_email *page_email)
+void page_product_overview::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,  page_payment_tap_serial *page_payment_tap_serial,page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product *page_product, page_email *page_email, statusbar *statusbar)
 {
     this->p_page_select_product = pageSelect;
     this->p_page_payment_qr = page_qr_payment;
@@ -65,6 +66,7 @@ void page_product_overview::setPage(page_select_product *pageSelect, page_dispen
     this->p_page_help = pageHelp;
     this->p_page_wifi_error = pageWifiError;
     this->p_page_product = page_product;
+    this->p_statusbar = statusbar;
     this->p_page_email = page_email; 
 
     ui->label_discount_tag->hide();
@@ -90,8 +92,12 @@ void page_product_overview::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
+    statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
+    statusbarLayout->setContentsMargins(0, 1860, 0, 0); // int left, int top, int right, int bottom);
+
+
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
-    
+
     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_PRODUCT_OVERVIEW_CSS);
     ui->pushButton_promo_input->setStyleSheet(styleSheet);
     ui->lineEdit_promo_code->setProperty("class", "promoCode");
@@ -261,10 +267,10 @@ void page_product_overview::reset_and_show_page_elements()
         ui->pushButton_promo_input->show();
     }
     break;
-    
+
     default:
     {
-        qDebug() << "Coupon state: Invalid";
+        qDebug() << "Coupon state: Invalid" << p_page_idle->thisMachine->getCouponState();
     }
     break;
     }
@@ -289,6 +295,8 @@ void page_product_overview::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     }
 
     selectIdleTimer->stop();
+    statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
+
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
 }
 
@@ -385,7 +393,7 @@ void page_product_overview::apply_promo_code(QString promocode)
     QString product_serial = p_page_idle->thisMachine->selectedProduct->getProductDrinkfillSerial();
     // csuccess
     p_page_idle->thisMachine->setCouponState(enabled_invalid_input);
-    
+
     if (promocode != "")
     {
         ui->label_gif->show();
@@ -398,7 +406,7 @@ void page_product_overview::apply_promo_code(QString promocode)
                 p_page_idle->thisMachine->setCouponState(network_error);
                 return;
             }
-            curl_easy_setopt(curl, CURLOPT_URL, ("https://soapstandportal.com/api/coupon/find/" + promocode+"/"+machine_id+"/"+product_serial).toUtf8().constData());
+            curl_easy_setopt(curl, CURLOPT_URL, ("https://soapstandportal.com/api/coupon/find/" + promocode + "/" + machine_id + "/" + product_serial).toUtf8().constData());
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback_coupon1);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
             res = curl_easy_perform(curl);
@@ -424,7 +432,7 @@ void page_product_overview::apply_promo_code(QString promocode)
                         qDebug() << "Backend coupon response: Valid. Discount percentage: " << new_percent;
                         new_percent = coupon_obj["discount_amount"];
 
-                        p_page_idle->thisMachine->setPromoCode(promocode);
+                        p_page_idle->thisMachine->setCouponCode(promocode);
                         p_page_idle->thisMachine->setDiscountPercentageFraction((new_percent * 1.0) / 100);
 
                         p_page_idle->thisMachine->setCouponState(enabled_valid_active);
@@ -438,10 +446,12 @@ void page_product_overview::apply_promo_code(QString promocode)
                 else
                 {
                     qDebug() << "Backend coupon response: http 200 response ";
-                    if(myQString=="Not Eligible"){
+                    if (myQString == "Not Eligible")
+                    {
                         p_page_idle->thisMachine->setCouponState(enabled_not_eligible);
                     }
-                    else{
+                    else
+                    {
                         p_page_idle->thisMachine->setCouponState(enabled_invalid_input);
                     }
                 }

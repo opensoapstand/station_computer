@@ -65,6 +65,8 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
 
     stateScreenCheck = state_screen_check_not_initiated;
     statusbarLayout = new QVBoxLayout(this);
+
+    tappingBlockedUntilPrinterReply = false; 
 }
 
 void page_idle::setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products, page_error_wifi *p_page_error_wifi, statusbar *p_statusbar)
@@ -253,9 +255,11 @@ bool page_idle::eventFilter(QObject *object, QEvent *event)
             if (stateScreenCheck == state_screen_check_clicked_and_wait)
             {
                 stateScreenCheck = state_screen_check_clicked_and_succes;
+                qDebug() << "Mouse Clicked in idle page (can be virtual): Frozen screen test. Will not proceed."; // leave this for a while to investigate frozen screens in the field.
             }
             else
             {
+                qDebug() << "Mouse Clicked in idle page (can be virtual): Go to page select products"; // leave this for a while to investigate frozen screens in the field.
                 this->hideCurrentPageAndShowProvided(p_pageSelectProduct, true);
             }
         }
@@ -480,6 +484,8 @@ void page_idle::hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createN
         testForFrozenScreenTimer->stop();
         userRoleTimeOutTimer->stop();
         statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
+    }else{
+        qDebug() << "Tapping blocked until receipt printer reply. ";
     }
 }
 

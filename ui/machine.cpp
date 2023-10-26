@@ -545,10 +545,12 @@ void machine::resetSessionId()
 {
     m_session_id = "";
 }
+
 void machine::createSessionId()
 {
     QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
     m_session_id = time;
+    qDebug() << "Create Session id: " << m_session_id;
 }
 
 void machine::setRole(UserRole role)

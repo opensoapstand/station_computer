@@ -30,6 +30,8 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     helpIdleTimer->setInterval(1000);
     connect(helpIdleTimer, SIGNAL(timeout()), this, SLOT(onHelpTimeoutTick()));
     connect(ui->buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(keyboardButtonPressed(int)));
+
+    statusbarLayout = new QVBoxLayout(this);
 }
 
 // DTOR
@@ -37,7 +39,7 @@ page_help::~page_help()
 {
     delete ui;
 }
-void page_help::setPage(page_select_product *pageSelect, page_product *page_product, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_transactions *pageTransactions, page_maintenance *pageMaintenance, page_sendFeedback *pageFeedback)
+void page_help::setPage(page_select_product *pageSelect, page_product *page_product, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_transactions *pageTransactions, page_maintenance *pageMaintenance, page_sendFeedback *pageFeedback, statusbar *p_statusbar)
 {
     this->p_page_idle = pageIdle;
     this->p_page_feedback = pageFeedback;
@@ -46,6 +48,7 @@ void page_help::setPage(page_select_product *pageSelect, page_product *page_prod
     this->p_page_select_product = pageSelect;
     this->p_page_transactions = pageTransactions;
     this->p_page_maintenance = pageMaintenance;
+    this->p_statusbar = p_statusbar;
 }
 
 void page_help::showEvent(QShowEvent *event)
@@ -53,6 +56,9 @@ void page_help::showEvent(QShowEvent *event)
 
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
+
+    statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
+    statusbarLayout->setContentsMargins(0, 1860, 0, 0); // int left, int top, int right, int bottom);
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
 
@@ -112,6 +118,8 @@ void page_help::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     helpIdleTimer->stop();
     ui->keyboard_3->hide();
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
+    statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
+
 }
 
 void page_help::on_pushButton_to_idle_clicked()

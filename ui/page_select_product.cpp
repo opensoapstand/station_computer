@@ -103,6 +103,7 @@ void page_select_product::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->addPictureToLabel(ui->label_help, full_path);
 
     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_SELECT_PRODUCT_CSS);
+    ui->label_help->setStyleSheet(styleSheet);
     ui->pushButton_to_maintenance->setStyleSheet(styleSheet);
     ui->pushButton_help_page->setStyleSheet(styleSheet);
     ui->pushButton_to_idle->setStyleSheet(styleSheet);

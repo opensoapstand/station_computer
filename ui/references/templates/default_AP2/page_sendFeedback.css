@@ -1,0 +1,159 @@
+.buttonTransparent{
+   background-color: transparent;
+   border: 0px;
+}
+
+.labelMailFeedback, .labelThankyouFeedback{
+   font-family: 'EuropaNuova-ExtraBold';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 43px;
+   line-height: 99px;
+   /* letter-spacing: 1.5px; */
+   color: #58595B;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   border: none;
+}
+.labelThankyouFeedback{
+   color: #FFFFFF;
+}
+.checkBoxLabelStyling{
+   font-family: 'EuropaNuova-ExtraBold';
+   font-style: normal;
+   font-weight: 400;
+   font-size: 32px;
+   line-height: 99px;
+   /* letter-spacing: 1.5px; */
+   color: #FFFFFF;
+   text-align: left;
+   /* qproperty-alignment: AlignCenter; */
+   border: none;
+   wordWrap:true;
+   background-color: #221F20;
+   padding: 10px;
+}
+
+#textEdit_custom_message{
+   font-family: 'EuropaNuova-ExtraBold';
+   font-style: normal;
+   font-weight: 400;
+   font-size: 28px;
+   line-height: 44px;
+   color: #58595B;
+   /* border-color:#58595B; */
+}
+
+#pushButton_help_page{
+   background-color: transparent; 
+   border: 0px ;
+}
+
+#label_select_problem{      /*selector not to make a class*/
+   font-family: 'EuropaNuova-ExtraBold';
+   font-style: normal;
+   font-weight: 400;
+   font-size: 58px;
+   line-height: 99px;
+   /* letter-spacing: 1.5px; */
+   color: #221F20;
+   text-align: center;
+   border: none;
+   qproperty-alignment: AlignCenter;
+}
+
+#pushButton_to_idle{
+   background-color: transparent; 
+   border: 0px;
+}
+
+#label_problem_options{
+   background-color: #221F20;
+   border-radius: 30px;
+}
+
+#label_still_cant_find{
+   font-family: 'EuropaNuova-ExtraBold';
+   font-style: normal;
+   font-weight: 400;
+   font-size: 43px;
+   line-height: 99px;
+   /* letter-spacing: 1.5px; */
+   color: #58595B;
+   text-align: center;
+   /* qproperty-alignment: AlignCenter; */
+   border: none
+}
+
+#label_enter_feedback{
+   font-family: 'EuropaNuova-Regular';
+   font-style: normal;
+   font-weight: 400;
+   font-size: 20px;
+   line-height: 99px;
+   /* letter-spacing: 1.5px; */
+   background-color: #221F20;
+   color: #FFFFFF;
+   text-align: left;
+   border-radius: none;
+}
+
+QLabel { 
+   color:#555555; 
+   text-align: center;
+   border: 1px; 
+}
+
+QPushButton {
+   font-family: 'EuropaNuova-Regular';
+   font-style: normal;
+   font-weight: 400;
+   font-size: 35px;
+   line-height: 99px;
+   /* letter-spacing: 1.5px; */
+   background-color: #221F20;
+   color: #FFFFFF;
+   text-align: center;
+   border-radius: 30px;
+   padding: 10px;
+   border: 5px inset #58595B;
+}
+
+QString {
+   font-family: 'EuropaNuova-Regular';
+   font-style: normal;
+   font-weight: 400;
+   font-size: 35px;
+   line-height: 99px;
+   /* letter-spacing: 1.5px; */
+   background-color: #221F20;
+   color: #FFFFFF;
+   text-align: center;
+   border-radius: 30px;
+   padding: 10px;
+   border: 5px inset #58595B;
+}
+
+QLineEdit {
+   font-family: 'EuropaNuova-Regular', sans-serif;
+   font-style: normal;
+   font-weight: 400;
+   font-size: 32px;
+   line-height: 99px;
+   /* letter-spacing: 1.5px; */
+   color: #221F20;
+   border: none;
+}
+
+.buttonPreviousPage{
+   font-family: 'EuropaNuova-Regular';
+   font-style: normal;
+   font-weight: 700;
+   font-size: 35px;
+   color: #221F20;
+   text-align: left;
+   /* qproperty-alignment: AlignCenter;  */
+   border: none;
+   background: transparent;
+   padding: 0px !important;
+}

@@ -29,17 +29,19 @@ page_end::page_end(QWidget *parent) : QWidget(parent),
     connect(thankYouEndTimer, SIGNAL(timeout()), this, SLOT(onThankyouTimeoutTick()));
 
     is_in_state_thank_you = false;
+    statusbarLayout = new QVBoxLayout(this);
 }
 
 /*
  * Page Tracking reference
  */
-void page_end::setPage(page_dispenser *page_dispenser, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_sendFeedback *page_sendFeedback)
+void page_end::setPage(page_dispenser *page_dispenser, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_sendFeedback *page_sendFeedback, statusbar *p_statusbar)
 {
     this->p_page_idle = pageIdle;
     this->p_page_dispense = page_dispenser;
     this->paymentPage = page_qr_payment;
     this->p_page_sendFeedback = page_sendFeedback;
+    this->p_statusbar = p_statusbar;
 }
 
 // DTOR
@@ -52,7 +54,10 @@ void page_end::showEvent(QShowEvent *event)
 {
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
-    
+
+    statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
+    statusbarLayout->setContentsMargins(0, 1860, 0, 0); // int left, int top, int right, int bottom);
+
     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_END_BACKGROUND_PATH);
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
 
@@ -250,6 +255,7 @@ void page_end::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     // p_page_idle->setCouponCode("");
 
     thankYouEndTimer->stop();
+    statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
 }
 

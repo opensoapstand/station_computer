@@ -33,6 +33,7 @@ page_payment_tap_serial::page_payment_tap_serial(QWidget *parent) : QWidget(pare
     ui->pushButton_payment_bypass->setEnabled(false);
     ui->label_title->hide();
     ui->order_total_amount->hide();
+    statusbarLayout = new QVBoxLayout(this);
 }
 
 
@@ -46,7 +47,7 @@ void page_payment_tap_serial::stopPayTimers()
 /*
  * Page Tracking reference
  */
-void page_payment_tap_serial::setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp)
+void page_payment_tap_serial::setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp, statusbar *p_statusbar)
 {
     tmpCounter = 0;
     this->p_page_product = p_page_product;
@@ -54,6 +55,7 @@ void page_payment_tap_serial::setPage(page_product *p_page_product, page_error_w
     this->p_page_dispense = page_dispenser;
     this->p_page_idle = pageIdle;
     this->p_page_help = pageHelp;
+    this->p_statusbar = p_statusbar;
 }
 
 // DTOR
@@ -104,6 +106,9 @@ void page_payment_tap_serial::showEvent(QShowEvent *event)
 {
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
+
+    statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
+    statusbarLayout->setContentsMargins(0, 1860, 0, 0); // int left, int top, int right, int bottom);
     
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
     
@@ -201,6 +206,7 @@ void page_payment_tap_serial::on_pushButton_to_idle_clicked()
 void page_payment_tap_serial::hideCurrentPageAndShowProvided(QWidget *pageToShow, bool cancelTapPayment)
 {
     resetPaymentPage(cancelTapPayment);
+    statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
 }
 

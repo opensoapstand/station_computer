@@ -31,6 +31,8 @@ page_email::page_email(QWidget *parent) : QWidget(parent),
     helpIdleTimer->setInterval(1000);
     connect(helpIdleTimer, SIGNAL(timeout()), this, SLOT(onHelpTimeoutTick()));
     connect(ui->buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(keyboardButtonPressed(int)));
+
+    statusbarLayout = new QVBoxLayout(this);
 }
 
 // DTOR
@@ -39,12 +41,13 @@ page_email::~page_email()
     delete ui;
 }
 
-void page_email::setPage(page_dispenser *page_dispenser, page_idle *pageIdle, page_help *page_help, page_product_overview *page_product_overview)
+void page_email::setPage(page_dispenser *page_dispenser, page_idle *pageIdle, page_help *page_help, page_product_overview *page_product_overview, statusbar *p_statusbar)
 {
     this->p_page_idle = pageIdle;
     this->p_page_dispenser = page_dispenser;
     this->p_page_help = page_help;
     this->p_page_product_overview = page_product_overview;
+    this->p_statusbar = p_statusbar;
 }
 
 void page_email::showEvent(QShowEvent *event)
@@ -53,6 +56,9 @@ void page_email::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
+    statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
+    statusbarLayout->setContentsMargins(0, 1860, 0, 0); // int left, int top, int right, int bottom);
+    
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
     
     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_EMAIL_CSS);
@@ -107,6 +113,8 @@ void page_email::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     helpIdleTimer->stop();
     ui->keyboard_3->hide();
+    statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
+
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
 }
 

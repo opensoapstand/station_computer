@@ -47,6 +47,8 @@ page_maintenance::page_maintenance(QWidget *parent) : QWidget(parent),
     labels_product_position[1] = ui->label_product_2_position;
     labels_product_position[2] = ui->label_product_3_position;
     labels_product_position[3] = ui->label_product_4_position;
+
+    statusbarLayout = new QVBoxLayout(this);
 }
 
 // DTOR
@@ -59,6 +61,9 @@ void page_maintenance::showEvent(QShowEvent *event)
 {
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
+
+    statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
+    statusbarLayout->setContentsMargins(0, 1860, 0, 0); // int left, int top, int right, int bottom);
     
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
     
@@ -166,18 +171,20 @@ void page_maintenance::showEvent(QShowEvent *event)
 /*
  * Page Tracking reference
  */
-void page_maintenance::setPage(page_idle *pageIdle, page_maintenance_dispenser *p_pageMaintenanceDispenser, page_maintenance_general *p_pageMaintenanceGeneral, page_select_product *p_page_product, page_product *pagePaySelect)
+void page_maintenance::setPage(page_idle *pageIdle, page_maintenance_dispenser *p_pageMaintenanceDispenser, page_maintenance_general *p_pageMaintenanceGeneral, page_select_product *p_page_product, page_product *pagePaySelect, statusbar *p_statusbar)
 {
     this->p_page_idle = pageIdle;
     this->p_page_maintenance_product = p_pageMaintenanceDispenser;
     this->p_page_maintenance_general = p_pageMaintenanceGeneral;
     this->p_pageSelectProduct = p_page_product;
-    this->p_page_product = pagePaySelect;
+    this->p_page_product = pagePaySelect; 
+    this->p_statusbar = p_statusbar;
 }
 
 void page_maintenance::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     page_maintenanceEndTimer->stop();
+    statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
 }
 

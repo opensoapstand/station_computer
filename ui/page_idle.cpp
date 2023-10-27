@@ -65,6 +65,8 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
 
     stateScreenCheck = state_screen_check_not_initiated;
     statusbarLayout = new QVBoxLayout(this);
+
+    tappingBlockedUntilPrinterReply = false; 
 }
 
 void page_idle::setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products, page_error_wifi *p_page_error_wifi, statusbar *p_statusbar)
@@ -107,10 +109,14 @@ void page_idle::showEvent(QShowEvent *event)
 
     thisMachine->dispenseButtonLightsAnimateState(true);
 
-    // thisMachine->resetSessionId();
-    if (thisMachine->getCouponState() == StateCoupon::no_state)
+    if (!thisMachine->isSessionLocked())
     {
-        thisMachine->initCouponState(); // everything coupon is reset 
+        thisMachine->resetSessionId();
+    }
+
+    if (thisMachine->getCouponState() == StateCoupon::no_state) // at startup
+    {
+        thisMachine->initCouponState();
     }
 
     thisMachine->setSelectedSlot(1); // default selected product is necessary to deal with things if no product is chosen yet e.g. show transaction history
@@ -124,9 +130,9 @@ void page_idle::showEvent(QShowEvent *event)
     ui->pushButton_test->hide();
 
     thisMachine->setTemplateTextToObject(ui->label_welcome_message);
-    thisMachine->addCustomerLogoToLabel(ui->label_customer_logo);
-    QString machine_logo_full_path = thisMachine->getTemplatePathFromName(MACHINE_LOGO_PATH);
-    thisMachine->addPictureToLabel(ui->label_manufacturer_logo, machine_logo_full_path);
+    thisMachine->addClientLogoToLabel(ui->label_client_logo);
+    // QString machine_logo_full_path = thisMachine->getTemplatePathFromName(MACHINE_LOGO_PATH);
+    // thisMachine->addPictureToLabel(ui->label_manufacturer_logo, machine_logo_full_path);
     ui->label_manufacturer_logo->setStyleSheet(styleSheet);
     ui->label_printer_status->setStyleSheet(styleSheet);
     ui->label_temperature_warning->setStyleSheet(styleSheet);
@@ -140,8 +146,19 @@ void page_idle::showEvent(QShowEvent *event)
     // ui->label_welcome_message->setText(base_text.arg("SoAp")); // will replace %1 character in string by the provide text
     // ui->pushButton_to_select_product_page->raise();
 
-    checkReceiptPrinterStatus(); // checks also for printer enabled in db.
-    refreshTemperature();
+    thisMachine->setTemplateTextToObject(ui->label_welcome_message);
+    thisMachine->addClientLogoToLabel(ui->label_client_logo);
+
+    ui->label_printer_status->hide(); // always hide here, will show if enabled and has problems.
+
+    if (thisMachine->hasReceiptPrinter())
+    {
+        checkReceiptPrinterStatus();
+    }
+
+    QString machine_logo_full_path = thisMachine->getTemplatePathFromName(MACHINE_LOGO_PATH);
+    thisMachine->addPictureToLabel(ui->label_manufacturer_logo, machine_logo_full_path);
+    ui->label_manufacturer_logo->setStyleSheet(styleSheet);
 
     idlePageTypeSelectorTimer->start(1000);
     _idlePageTypeSelectorTimerTimeoutSec = PAGE_IDLE_DELAY_BEFORE_ENTERING_IDLE_PRODUCTS;
@@ -238,9 +255,11 @@ bool page_idle::eventFilter(QObject *object, QEvent *event)
             if (stateScreenCheck == state_screen_check_clicked_and_wait)
             {
                 stateScreenCheck = state_screen_check_clicked_and_succes;
+                qDebug() << "Mouse Clicked in idle page (can be virtual): Frozen screen test. Will not proceed."; // leave this for a while to investigate frozen screens in the field.
             }
             else
             {
+                qDebug() << "Mouse Clicked in idle page (can be virtual): Go to page select products"; // leave this for a while to investigate frozen screens in the field.
                 this->hideCurrentPageAndShowProvided(p_pageSelectProduct, true);
             }
         }
@@ -453,7 +472,10 @@ void page_idle::hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createN
 
         if (createNewSessionId)
         {
-            thisMachine->createSessionId();
+            if (!thisMachine->isSessionLocked())
+            {
+                thisMachine->createSessionId();
+            }
         }
 
         thisMachine->pageTransition(this, pageToShow);
@@ -462,6 +484,8 @@ void page_idle::hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createN
         testForFrozenScreenTimer->stop();
         userRoleTimeOutTimer->stop();
         statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
+    }else{
+        qDebug() << "Tapping blocked until receipt printer reply. ";
     }
 }
 

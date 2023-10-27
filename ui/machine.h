@@ -34,7 +34,7 @@ class machine : public QObject
 public:
     machine();
     ~machine();
-    void loadParametersFromDb();
+    void loadMachineParameterFromDb();
     void setDb(DbManager *db);
     DbManager* getDb();
     void initMachine();
@@ -42,6 +42,9 @@ public:
     QString getIdlePageType();
     
     void checkForHighTemperatureAndDisableProducts();
+
+    bool isSessionLocked();
+
     void dispenseButtonLightsAnimateState(bool animateElseOff);
     bool slotNumberValidityCheck(int slot);
     QString getStatusText(int slot);
@@ -70,12 +73,12 @@ public:
     void resetSessionId();
     QString getSessionId();
 
-    QString getCustomerId();
+    QString getClientId();
 
     QString getTemplateFolder();
     QString getTemplateName();
     QString getTemplatePathFromName(QString fileName);
-    QString getDefaultTemplatePathFromName(QString fileName);
+    // QString getDefaultTemplatePathFromName(QString fileName);
 
     bool getEmptyContainerDetectionEnabled();
     void setEmptyContainerDetectionEnabled(bool isEnabled);
@@ -90,8 +93,11 @@ public:
     int getSlotCount();
     void setSlots(dispenser_slot *slotss);
     bool compareSlotCountToMaxSlotCount(int slot_count); 
-    void setSelectedSlot(uint8_t slot);
+    // void setSelectedSlot(uint8_t slot);
     dispenser_slot *getSelectedSlot();
+
+    void setSelectedProduct(int pnumber);
+    dispenser_slot *getSelectedProduct();
 
     bool hasReceiptPrinter();
     void getPrinterStatusFromDb(bool *isOnline, bool *hasPaper);
@@ -127,13 +133,17 @@ public:
     QString getTemplateTextByPage(QWidget *page, QString identifier);
     QString getTemplateText(QString textName_to_find);
     void loadTextsFromTemplateCsv();
+    void loadTextsFromDefaultHardwareCsv();
     void loadTextsFromDefaultCsv();
     void loadElementDynamicPropertiesFromTemplate();
+    void loadElementDynamicPropertiesFromDefaultHardwareTemplate();
     void loadElementDynamicPropertiesFromDefaultTemplate();
+
+    QString getHardwareMajorVersion();
 
     void addPictureToLabel(QLabel *label, QString picturePath);
     void addPictureToButton(QPushButton *button, QString picturePath);
-    void addCustomerLogoToLabel(QLabel *label);
+    void addClientLogoToLabel(QLabel *label);
     void setBackgroundPictureFromTemplateToPage(QWidget *page, QString imageName);
     void setBackgroundPictureToQWidget(QWidget *page, QString imageName);
     void pageTransition(QWidget *pageToHide, QWidget *pageToShow);
@@ -141,7 +151,7 @@ public:
     void applyDynamicPropertiesFromTemplateToWidgetChildren(QWidget *widget);
 
     QString m_machine_id;
-    QString m_soapstand_customer_id;
+    QString m_client_id;
     QString m_template;
     QString m_location;
     QString m_controller_type;
@@ -180,22 +190,30 @@ public:
     void loadElementPropertiesFile();
     
     QString m_session_id;
-    dispenser_slot *selectedSlot;
  
     void loadTextsFromCsv(QString csv_path, std::map<QString, QString> *dictionary);
+
+    void getAllUsedPNumbersFromSlots();
+
 
 public slots:
 
 signals:
 
 private:
+    dispenser_slot *selectedSlot; // deprecated, derived from selectedProduct. 
+    pnumberproduct *m_selectedProduct; 
+
     std::map<QString, QString> textNameToTextMap_template;
+    std::map<QString, QString> textNameToTextMap_default_hardware;
     std::map<QString, QString> textNameToTextMap_default;
-    std::map<QString, QString> elementDynamicPropertiesMap_default;
     std::map<QString, QString> elementDynamicPropertiesMap_template;
+    std::map<QString, QString> elementDynamicPropertiesMap_default_hardware;
+    std::map<QString, QString> elementDynamicPropertiesMap_default;
     QString m_templatePath;
 
     dispenser_slot *m_slots;
+    pnumberproduct m_pnumberproducts[HIGHEST_PNUMBER_COUNT];
 
     QTime temperatureTooHighStartMillis;
     bool isTemperatureTooHigh = false;

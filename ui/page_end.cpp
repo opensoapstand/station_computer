@@ -74,11 +74,11 @@ void page_end::showEvent(QShowEvent *event)
     ui->pushButton_to_idle->setEnabled(true);
     ui->pushButton_to_idle->raise();
     ui->pushButton_contact->raise();
-    ui->label_customer_logo->hide();
+    ui->label_client_logo->hide();
 
-    p_page_idle->thisMachine->addCustomerLogoToLabel(ui->label_customer_logo);
+    p_page_idle->thisMachine->addClientLogoToLabel(ui->label_client_logo);
 
-    QString paymentMethod = p_page_idle->thisMachine->selectedSlot->getPaymentMethod();
+    QString paymentMethod = p_page_idle->thisMachine->getSelectedProduct()->getPaymentMethod();
 
     if (p_page_idle->thisMachine->hasReceiptPrinter())
     {
@@ -129,15 +129,15 @@ size_t WriteCallback2(char *contents, size_t size, size_t nmemb, void *userp)
 void page_end::fsmReceiveFinalDispensedVolume(double dispensed)
 {
     qDebug() << "Updated dispensed volume" << dispensed;
-    p_page_idle->thisMachine->selectedSlot->setVolumeDispensedMl(dispensed);
-    QString units = p_page_idle->thisMachine->selectedSlot->getUnitsForSlot();
-    QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->thisMachine->selectedSlot->getVolumeDispensedMl(), units, false, true);
+    p_page_idle->thisMachine->getSelectedProduct()->setVolumeDispensedMl(dispensed);
+    QString units = p_page_idle->thisMachine->getSelectedProduct()->getUnitsForSlot();
+    QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl(), units, false, true);
 
-    double price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->selectedSlot->getBasePrice());
+    double price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->getSelectedProduct()->getBasePrice());
 
-    if (p_page_idle->thisMachine->selectedSlot->getSelectedSize() == SIZE_CUSTOM_INDEX)
+    if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize() == SIZE_CUSTOM_INDEX)
     {
-    price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->selectedSlot->getBasePrice()*p_page_idle->thisMachine->selectedSlot->getVolumeDispensedMl());
+    price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->getSelectedProduct()->getBasePrice()*p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl());
     }
     ui->label_volume_dispensed_ml->setText(dispensed_correct_units + " ( $" + QString::number(price, 'f', 2) + " )");
     
@@ -147,10 +147,10 @@ void page_end::sendDispenseEndToCloud()
 {
     QString order_id = this->paymentPage->getOID();
 
-    QString units = p_page_idle->thisMachine->selectedSlot->getUnitsForSlot();
-    QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->thisMachine->selectedSlot->getVolumeDispensedMl(), units, false, false);
-    QString volume_remaining = p_page_idle->thisMachine->selectedSlot->getVolumeRemainingCorrectUnits(false);
-    QString soapstand_product_serial = p_page_idle->thisMachine->selectedSlot->getProductDrinkfillSerial();
+    QString units = p_page_idle->thisMachine->getSelectedProduct()->getUnitsForSlot();
+    QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl(), units, false, false);
+    QString volume_remaining = p_page_idle->thisMachine->getSelectedProduct()->getVolumeRemainingCorrectUnits(false);
+    QString soapstand_product_serial = p_page_idle->thisMachine->getSelectedProduct()->getProductDrinkfillSerial();
     QString promoCode = this->p_page_idle->thisMachine->getCouponCode();
     qDebug() << "Send data at finish of order : " << order_id << ". Total dispensed: " << dispensed_correct_units << "corrected units send to soapstandportal: " << dispensed_correct_units;
     if (dispensed_correct_units == 0)

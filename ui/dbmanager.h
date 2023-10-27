@@ -40,6 +40,14 @@ public:
 
     void addTemperature(QString machine_id, double temperature_1, double temperature_2, QString alert);
     void addUserInteraction(QString session_id, QString role, QString page, QString event);
+    void addUserInteraction(QString session_id, QString role, QString page, QString event, QString data);
+
+    void getAllSlotProperties(int slot,
+                                         int *basePNumber,
+                                         QVector<int> *additivesPNumbers,
+                                         bool *is_enabled,
+                                         QString *status_text);
+
     void getAllProductProperties(int slot,
                                  QString *productId,
                                  QString *soapstand_product_serial,

@@ -15,6 +15,8 @@
 #include "dbmanager.h"
 #include "df_util.h" // lode added for settings
 
+#include <QVector>
+
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -245,6 +247,49 @@ bool DbManager::addPageClick(const QString &page)
     return true;
 }
 
+void DbManager::getAllSlotProperties(int slot,
+                                         int *basePNumber,
+                                         QVector<int> *additivesPNumbers,
+                                         bool *is_enabled,
+                                         QString *status_text)
+
+{
+    qDebug() << "Open db: load all slot properties for slot: " << slot << "From: " << CONFIG_DB_PATH;
+    {
+        QSqlDatabase db = openDb(CONFIG_DB_PATH);
+        QSqlQuery qry(db);
+        qry.prepare("SELECT slot_id, base_P-number, additives_P-numbers, is_enabled, status_text FROM slots WHERE slot_id=:slot");
+        qry.bindValue(":slot", slot);
+        bool success;
+        success = qry.exec();
+
+        if (!success)
+        {
+            qDebug() << "Open db: Attempted to load all slot properties for slot: " << slot;
+            qDebug() << "Did not execute sql. "
+                     << qry.lastError() << " | " << qry.lastQuery();
+            // success = false;
+        }
+
+        QString additivesAsString;
+        while (qry.next())
+        {
+            *basePNumber = qry.value(0).toInt();
+            additivesAsString = qry.value(1).toString();
+            *is_enabled = qry.value(2).toInt();
+            *status_text = qry.value(3).toString();
+        }
+        qry.finish();
+
+        QStringList stringList = additivesAsString.split(",");
+        foreach (QString num, stringList)
+        {
+            additivesPNumbers.append(num.toInt());
+        }
+    }
+    closeDb();
+}
+
 /*
 productId
 soapstand_product_serial
@@ -353,9 +398,10 @@ price_custom_discount
 void DbManager::getAllProductProperties(int slot,
                                         QString *productId,
                                         QString *soapstand_product_serial,
+                                        QVector<int> * m_additivesPNumbers,
+                                        QVector<double> * &m_additivesRatios,
                                         QString *size_unit,
-                                        QString *currency,
-                                        QString *payment,
+                                      
                                         QString *name_receipt,
                                         int *concentrate_multiplier,
                                         int *dispense_speed,
@@ -380,7 +426,7 @@ void DbManager::getAllProductProperties(int slot,
         QSqlDatabase db = openDb(CONFIG_DB_PATH);
         QSqlQuery qry(db);
         // qry.prepare("SELECT soapstand_product_serial, size_unit, payment, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_max,price_small,price_medium, price_large,price_custom FROM products WHERE slot=:slot");
-        qry.prepare("SELECT productId, soapstand_product_serial, slot, name, size_unit, currency, payment, name_receipt, concentrate_multiplier, dispense_speed, threshold_flow, retraction_time, calibration_const, volume_per_tick, last_restock, volume_full, volume_remaining, volume_dispensed_since_restock, volume_dispensed_total, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_min, size_custom_max, price_small, price_medium, price_large, price_custom, plu_small, plu_medium, plu_large, plu_custom, pid_small, pid_medium, pid_large, pid_custom, flavour, image_url, type, ingredients, features, description, is_enabled_custom_discount, size_custom_discount, price_custom_discount FROM products WHERE slot=:slot");
+        qry.prepare("SELECT productId, soapstand_product_serial, additives_pnumbers, additives_ratios, slot, name, size_unit, name_receipt, concentrate_multiplier, dispense_speed, threshold_flow, retraction_time, calibration_const, volume_per_tick, last_restock, volume_full, volume_remaining, volume_dispensed_since_restock, volume_dispensed_total, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_min, size_custom_max, price_small, price_medium, price_large, price_custom, plu_small, plu_medium, plu_large, plu_custom, pid_small, pid_medium, pid_large, pid_custom, flavour, image_url, type, ingredients, features, description, is_enabled_custom_discount, size_custom_discount, price_custom_discount FROM products WHERE slot=:slot");
         qry.bindValue(":slot", slot);
         bool success;
         success = qry.exec();
@@ -393,13 +439,18 @@ void DbManager::getAllProductProperties(int slot,
             // success = false;
         }
 
+
+        QString additives_pnumbers;
+        QString additives_ratios;
+// qDeleteAll(list);
+// list.clear();
         while (qry.next())
         {
             *productId = qry.value(0).toString();
             *soapstand_product_serial = qry.value(1).toString();
-            *size_unit = qry.value(4).toString();
-            *currency = qry.value(5).toString();
-            *payment = qry.value(6).toString();
+            additives_pnumbers = qry.value(2).toString();
+            additives_ratios = qry.value(3).toString();
+            *size_unit = qry.value(6).toString();
             *name_receipt = qry.value(7).toString();
             *concentrate_multiplier = qry.value(8).toInt();
             *dispense_speed = qry.value(9).toInt();
@@ -682,18 +733,23 @@ void DbManager::emailEmpty(int slot)
 
 void DbManager::addUserInteraction(QString session_id, QString role, QString page, QString event)
 {
+    addUserInteraction(session_id, role, page, event, "");
+}
+void DbManager::addUserInteraction(QString session_id, QString role, QString page, QString event, QString data)
+{
 
     {
         QSqlDatabase db = openDb(USAGE_DB_PATH);
         QSqlQuery qry(db);
 
         QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
-        qry.prepare("INSERT INTO events (time,session_id,access_level,page,event) VALUES (:time,:session_id,:access_level,:page,:event);");
+        qry.prepare("INSERT INTO events (time,session_id,access_level,page,event, data) VALUES (:time,:session_id,:access_level,:page,:event,:data);");
         qry.bindValue(":time", time);
         qry.bindValue(":session_id", session_id);
         qry.bindValue(":access_level", role);
         qry.bindValue(":page", page);
         qry.bindValue(":event", event);
+        qry.bindValue(":data", data);
 
         bool success;
         success = qry.exec();

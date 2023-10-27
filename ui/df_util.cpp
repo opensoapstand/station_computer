@@ -20,6 +20,34 @@ void df_util::warnIfPathDoesNotExist(QString path)
     }
 }
 
+QVector<int> splitQStringToQVectorInt(QString commaSeparatedNoSpaces)
+{
+    // data is commaSeparatedNoSpaces. e.g. "34,112,442,444" --> {34,112,442,444}
+    // qDeleteAll(list);
+    // list.clear();
+    QVector<int> intslist;
+    QStringList stringList = commaSeparatedNoSpaces.split(",");
+    foreach (QString num, stringList)
+    {
+        intslist.append(num.toInt());
+    }
+    return intslist;
+}
+
+QVector<double> splitQStringToQVectorDouble(QString commaSeparatedNoSpaces)
+{
+    // data is commaSeparatedNoSpaces. e.g. "34,112,442,444" --> {34,112,442,444}
+    // qDeleteAll(list);
+    // list.clear();
+    QVector<double> doubleslist;
+    QStringList stringList = commaSeparatedNoSpaces.split(",");
+    foreach (QString num, stringList)
+    {
+        intslist.append(num.toFloat());
+    }
+    return doublesList;
+}
+
 bool df_util::pathExists(QString path)
 {
     // check if path exists and if yes: Is it a file and no directory?
@@ -196,10 +224,8 @@ void df_util::executeVirtualClick(int x, int y)
     // // Run the xdotool command
     // QProcess::execute(command);
 
-    
     // qDebug() << "Did the click.";
 }
-
 
 void df_util::write_to_file_timestamped(QString basePath, QString data)
 {

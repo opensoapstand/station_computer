@@ -8,7 +8,7 @@
 // TODO: Refactor to fit with dfuicommthread
 //#define START_FSM_FROM_UI //enabled by default (start controller from ui)
 
-#define UI_VERSION "2.3"
+#define UI_VERSION "3"
 
 #define OPTION_SLOT_INVALID 0
 #define MAX_SLOT_COUNT 20  // number of slots
@@ -21,13 +21,15 @@
 #define SIZE_LARGE_INDEX 3
 #define SIZE_CUSTOM_INDEX 4
 #define SIZE_TEST_INDEX 5
+#define ADDITIVES_PER_SLOT_COUNT_MAX 10
+#define HIGHEST_PNUMBER_COUNT 1000 // WARNING: this is not the amount of pnumber loaded in the machine, but the amount of pnumbers existing. in this array, even if we only have 10 pnumbers loaded, P-88 will reside at index 88
 
 #define CONFIG_DB_PATH "/home/df-admin/production/db/configuration.db"
 #define USAGE_DB_PATH "/home/df-admin/production/db/usage.db"
 
 #define PRODUCT_DETAILS_TSV_PATH "/home/df-admin/production/references/products/product_details.tsv"  // https://docs.google.com/spreadsheets/d/17WR2gRyPIDIlGKBy1YKFAqN-Hyw_3VOJ6JCmfcAtjVk/edit#gid=169583479 download as .tsv file
-#define UI_TEXTS_CSV_PATH "ui_texts.csv" 
-#define UI_ELEMENT_PROPERTIES_PATH "ui_element_properties.txt" 
+#define UI_TEXTS_CSV_NAME "ui_texts.csv" 
+#define UI_ELEMENT_PROPERTIES_NAME "ui_element_properties.txt" 
 #define CSV_PRODUCT_COL_ID 0
 #define CSV_PRODUCT_COL_NAME 1
 #define CSV_PRODUCT_COL_TYPE 2
@@ -95,6 +97,7 @@ using namespace std;
 #define PAGE_MAINTENANCE_DISPENSER_CSS                  "page_maintenance_dispenser.css"
 #define PAGE_IDLE_PRODUCTS_CSS                          "page_idle_products.css"
 #define PAGE_TAP_PAYMENT_SERIAL_CSS                     "page_payment_tap_serial.css"
+#define PAGE_EMAIL_CSS                                  "page_email.css"
 
 
 
@@ -149,6 +152,7 @@ using namespace std;
 #define SEND_REPAIR_PCA "pcabugfix"
 #define SEND_DISPENSE_AUTOFILL "a"
 
+#define PAYMENT_QR_EMAIL_FREE                              "qr/emailfree"
 #define PAYMENT_TAP_SERIAL                              "tapSerial"
 #define PAYMENT_TAP_TCP                                 "tapTCP"
 #define PAYMENT_QR                                      "qr"

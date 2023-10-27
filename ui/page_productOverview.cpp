@@ -55,7 +55,7 @@ page_product_overview::page_product_overview(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void page_product_overview::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_payment_tap_serial *page_payment_tap_serial, page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product *page_product, statusbar *statusbar)
+void page_product_overview::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,  page_payment_tap_serial *page_payment_tap_serial,page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product *page_product, page_email *page_email, statusbar *statusbar)
 {
     this->p_page_select_product = pageSelect;
     this->p_page_payment_qr = page_qr_payment;
@@ -67,6 +67,7 @@ void page_product_overview::setPage(page_select_product *pageSelect, page_dispen
     this->p_page_wifi_error = pageWifiError;
     this->p_page_product = page_product;
     this->p_statusbar = statusbar;
+    this->p_page_email = page_email; 
 
     ui->label_discount_tag->hide();
     ui->label_gif->hide();
@@ -128,13 +129,15 @@ void page_product_overview::showEvent(QShowEvent *event)
     ui->pushButton_previous_page->setProperty("class", "buttonBGTransparent");
     ui->pushButton_previous_page->setStyleSheet(styleSheet);
     ui->pushButton_continue->setStyleSheet(styleSheet);
+    // p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "offline");
+    // p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "offline");
+
     ui->pushButton_continue->raise();
     ui->pushButton_to_help->setProperty("class", "buttonBGTransparent");
     ui->pushButton_to_help->setStyleSheet(styleSheet);
 
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_select_product_page);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_discount_tag);
-    p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_continue);
 
     QString keyboard = KEYBOARD_IMAGE_PATH;
     QString keyboard_picture_path = p_page_idle->thisMachine->getTemplatePathFromName(KEYBOARD_IMAGE_PATH);
@@ -144,6 +147,7 @@ void page_product_overview::showEvent(QShowEvent *event)
     _selectIdleTimeoutSec = 400;
     selectIdleTimer->start(1000);
     reset_and_show_page_elements();
+    check_to_page_email();
 }
 
 void page_product_overview::resizeEvent(QResizeEvent *event)
@@ -168,12 +172,12 @@ void page_product_overview::reset_and_show_page_elements()
     qDebug() << "Reset and show page elements";
 
     QString bitmap_location;
-    p_page_idle->thisMachine->addPictureToLabel(ui->label_product_photo, p_page_idle->thisMachine->selectedSlot->getProductPicturePath());
-    ui->label_selected_price->setText("$" + QString::number(p_page_idle->thisMachine->selectedSlot->getBasePrice(), 'f', 2));
+    p_page_idle->thisMachine->addPictureToLabel(ui->label_product_photo, p_page_idle->thisMachine->getSelectedProduct()->getProductPicturePath());
+    ui->label_selected_price->setText("$" + QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePrice(), 'f', 2));
     QString full_path = p_page_idle->thisMachine->getTemplatePathFromName(IMAGE_BUTTON_HELP);
     p_page_idle->thisMachine->addPictureToLabel(ui->label_help, full_path);
 
-    ui->label_invoice_name->setText(p_page_idle->thisMachine->selectedSlot->getProductName());
+    ui->label_invoice_name->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductName());
 
     // by default hide all coupon and discount elements.
     ui->promoKeyboard->hide();
@@ -229,6 +233,7 @@ void page_product_overview::reset_and_show_page_elements()
         ui->label_discount_tag->show();
         ui->lineEdit_promo_code->show();
         ui->pushButton_promo_input->show();
+        check_to_page_email();
     }
     break;
     case (disabled):
@@ -308,19 +313,19 @@ size_t WriteCallback_coupon1(char *contents, size_t size, size_t nmemb, void *us
 
 void page_product_overview::updatePriceLabel()
 {
-    QString selected_volume = p_page_idle->thisMachine->selectedSlot->getSizeAsVolumeWithCorrectUnits(p_page_idle->thisMachine->selectedSlot->getSelectedSize(), true, true);
+    QString selected_volume = p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize(), true, true);
 
-    if (p_page_idle->thisMachine->selectedSlot->getSelectedSize() == SIZE_CUSTOM_INDEX)
+    if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize() == SIZE_CUSTOM_INDEX)
     {
         QString base = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_selected_volume, "custom_volume");
         ui->label_selected_volume->setText(base.arg(selected_volume));
 
-        double selectedPrice = p_page_idle->thisMachine->selectedSlot->getBasePrice();
+        double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePrice();
         double selectedPriceCorrected = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
         double discount = p_page_idle->thisMachine->getDiscountAmount(selectedPrice);
         double discountFraction = p_page_idle->thisMachine->getDiscountPercentageFraction();
 
-        QString units = p_page_idle->thisMachine->selectedSlot->getUnitsForSlot();
+        QString units = p_page_idle->thisMachine->getSelectedProduct()->getUnitsForSlot();
         if (units == "ml")
         {
             units = "100ml";
@@ -328,7 +333,7 @@ void page_product_overview::updatePriceLabel()
         }
         else if (units == "g")
         {
-            if (p_page_idle->thisMachine->selectedSlot->getVolumeBySize(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
+            if (p_page_idle->thisMachine->getSelectedProduct()->getVolumeBySize(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
             {
                 units = "100g";
                 selectedPrice = selectedPrice * 100;
@@ -362,7 +367,7 @@ void page_product_overview::updatePriceLabel()
         // The label_invoice_price total displays the discounted total even when the user goes back to the select_product page.
         // It's intended behaviour so user doesnt have to retype the promo-code
         // promo codes get reset when going to idle page.
-        double selectedPrice = p_page_idle->thisMachine->selectedSlot->getBasePrice();
+        double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePrice();
         double selectedPriceCorrected = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
         double discountFraction = p_page_idle->thisMachine->getDiscountPercentageFraction();
         double discountAmount = selectedPrice - selectedPriceCorrected;
@@ -385,7 +390,7 @@ void page_product_overview::apply_promo_code(QString promocode)
     CURLcode res;
     long http_code = 0;
     QString machine_id = p_page_idle->thisMachine->getMachineId();
-    QString product_serial = p_page_idle->thisMachine->selectedSlot->getProductDrinkfillSerial();
+    QString product_serial = p_page_idle->thisMachine->getSelectedProduct()->)->getProductDrinkfillSerial();
     // csuccess
     p_page_idle->thisMachine->setCouponState(enabled_invalid_input);
 
@@ -518,9 +523,15 @@ void page_product_overview::on_pushButton_continue_clicked()
     ui->pushButton_to_help->setEnabled(false);
     ui->pushButton_previous_page->setEnabled(false);
 
-    QString paymentMethod = p_page_idle->thisMachine->selectedSlot->getPaymentMethod();
+    QString paymentMethod = p_page_idle->thisMachine->getSelectedProduct()->getPaymentMethod();
+    double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePrice();
+    double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
+    if (paymentMethod == PAYMENT_QR_EMAIL_FREE && finalPrice == 0.0 )
+    {
+        hideCurrentPageAndShowProvided(p_page_email);
 
-    if (paymentMethod == PAYMENT_QR)
+    }
+    else if (paymentMethod == PAYMENT_QR)
     {
         CURL *curl;
         CURLcode res;
@@ -579,4 +590,14 @@ void page_product_overview::return_to_selectProductPage()
 void page_product_overview::on_pushButton_select_product_page_clicked()
 {
     this->return_to_selectProductPage();
+}
+
+void page_product_overview::check_to_page_email(){
+    double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePrice();
+    double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
+    if(p_page_idle->thisMachine->getSelectedProduct()->getPaymentMethod() == PAYMENT_QR_EMAIL_FREE && finalPrice == 0.0 ){
+        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_free");
+    }else{
+        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay");
+    }
 }

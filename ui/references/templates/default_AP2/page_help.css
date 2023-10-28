@@ -17,19 +17,6 @@
    /* qproperty-alignment: AlignCenter; */
 }
 
-#pushButton_to_idle{
-   text-align: left;
-   color: #221F20;
-   font-family: 'EuropaNuova-Regular';
-   font-style: normal;
-   font-weight: 700;
-   font-size: 35px;
-   color: #221F20;
-   qproperty-alignment: AlignCenter;
-   text-align: left;
-   border: none;
-}
-
 QPushButton {
    font-family: 'EuropaNuova-ExtraBold';
    font-style: normal;
@@ -40,6 +27,28 @@ QPushButton {
    border: 2px solid white;
    text-align: center;
    border-radius: 20px;  
+}
+
+#pushButton_to_transactions{
+   text-align: right;
+   font-family: 'EuropaNuova-Regular';
+   font-style: normal;
+   font-weight: 700;
+   font-size: 35px;
+   color: #221F20;
+   qproperty-alignment: AlignCenter;
+   border: none;
+}
+
+#pushButton_to_idle{
+   text-align: left;
+   font-family: 'EuropaNuova-Regular';
+   font-style: normal;
+   font-weight: 700;
+   font-size: 35px;
+   color: #221F20;
+   qproperty-alignment: AlignCenter;
+   border: none;
 }
 
 /* QPushButton#pushButton_refresh {

@@ -100,10 +100,16 @@ void page_select_product::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
 
     QString full_path = p_page_idle->thisMachine->getTemplatePathFromName(IMAGE_BUTTON_HELP);
-    p_page_idle->thisMachine->addPictureToLabel(ui->label_help, full_path);
+    // QString full_path;
+    // if(p_page_idle->thisMachine->m_template == "default_AP2"){
+    //     qDebug() << "@@@@@@@@@@@@@@@@@@@USING SVG for help icon@@@@@@@@@@@@@@@@@@@@@@";
+    //     full_path = p_page_idle->thisMachine->getTemplatePathFromName(IMAGE_BUTTON_HELP_AP2);
+    // }else{
+    //     full_path = p_page_idle->thisMachine->getTemplatePathFromName(IMAGE_BUTTON_HELP);
+    // }
 
+    p_page_idle->thisMachine->addPictureToLabel(ui->label_help, full_path);
     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_SELECT_PRODUCT_CSS);
-    ui->label_help->setStyleSheet(styleSheet);
     ui->pushButton_to_maintenance->setStyleSheet(styleSheet);
     ui->pushButton_help_page->setStyleSheet(styleSheet);
     ui->pushButton_to_idle->setStyleSheet(styleSheet);

@@ -72,14 +72,6 @@ void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser 
     this->p_page_product = page_product;
     this->p_statusbar = p_statusbar;
 
-    p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_SEND_FEEDBACK_PATH);
-    p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
-
-    QString full_path = p_page_idle->thisMachine->getTemplatePathFromName(IMAGE_BUTTON_HELP);
-    p_page_idle->thisMachine->addPictureToLabel(ui->label_help, full_path);
-
-    full_path = p_page_idle->thisMachine->getTemplatePathFromName(THANK_YOU_FOR_YOUR_FEEDBACK);
-    p_page_idle->thisMachine->addPictureToLabel(ui->label_thank_you_image, full_path);
 }
 
 // DTOR
@@ -113,6 +105,15 @@ void page_sendFeedback::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_thanks_for_feedback);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_send);
 
+    p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_SEND_FEEDBACK_PATH);
+    p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
+
+    QString full_path = p_page_idle->thisMachine->getTemplatePathFromName(IMAGE_BUTTON_HELP);
+    p_page_idle->thisMachine->addPictureToLabel(ui->label_help, full_path);
+
+    full_path = p_page_idle->thisMachine->getTemplatePathFromName(THANK_YOU_FOR_YOUR_FEEDBACK);
+    p_page_idle->thisMachine->addPictureToLabel(ui->label_thank_you_image, full_path);
+    
     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_FEEDBACK_CSS);
 
     ui->pushButton_send->setStyleSheet(styleSheet);

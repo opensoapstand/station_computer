@@ -15,11 +15,6 @@ QLabel {
     border: none;
 }
 
-#label_help{
-    background: yellow;
-    border-radius: 50%;
-}
-
 #label_pick_soap {
     font-weight: 700;
     font-style: normal;

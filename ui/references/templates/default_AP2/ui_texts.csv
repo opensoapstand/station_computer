@@ -47,6 +47,7 @@ page_end->pushButton_contact,Feedback
 
 # page_help
 page_help->pushButton_to_idle,←back
+page_help->pushButton_to_transactions,transactions→
 
 # page_sendFeedback
 page_sendFeedback->pushButton_previous_page,←back

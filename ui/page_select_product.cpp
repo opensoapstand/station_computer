@@ -157,9 +157,9 @@ void page_select_product::displayProducts()
 
         // display product picture
 
-        p_page_idle->thisMachine->addPictureToLabel(labels_product_picture[slot_index], p_page_idle->thisMachine->getSlotByPosition(slot_index + 1)->getProductPicturePath());
-        product_type = p_page_idle->thisMachine->getSlotByPosition(slot_index + 1)->getProductType();
-        product_name = p_page_idle->thisMachine->getSlotByPosition(slot_index + 1)->getProductName();
+        p_page_idle->thisMachine->addPictureToLabel(labels_product_picture[slot_index], p_page_idle->thisMachine->getProductByOption(slot_index + 1)->getProductPicturePath());
+        product_type = p_page_idle->thisMachine->getProductByOption(slot_index + 1)->getProductType();
+        product_name = p_page_idle->thisMachine->getProductByOption(slot_index + 1)->getProductName();
 
         if (!p_page_idle->thisMachine->getSlotEnabled(slot_index + 1))
         {
@@ -259,8 +259,9 @@ void page_select_product::displayProducts()
         {
             labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
         }
-        else if (!(p_page_idle->thisMachine->getSlotByPosition(slot_index + 1)->isProductVolumeInContainer()))
+        else if (!(p_page_idle->thisMachine->isProductVolumeInContainer(p_page_idle->thisMachine->getProductByOption(slot_index+1)->getPNumber())))
         {
+
             labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->empty"));
         }
         else if (product_status_text.compare("SLOT_STATE_AVAILABLE") == 0)
@@ -288,19 +289,21 @@ void page_select_product::displayProducts()
     }
 }
 
-void page_select_product::select_product(int slot)
+void page_select_product::select_product(int option)
 {
 
-    if (p_page_idle->thisMachine->getSlotEnabled(slot))
-    {
-        qDebug() << "Selected slot: " << slot;
-        p_page_idle->thisMachine->setSelectedSlot(slot);
-        hideCurrentPageAndShowProvided(p_page_product);
-    }
-    else
-    {
-        qDebug() << "Invalid choice. Slot not enabled: " << slot;
-    }
+    // if (p_page_idle->thisMachine->getSlotEnabled(slot))
+    // {
+    //     qDebug() << "Selected slot: " << slot;
+    //     p_page_idle->thisMachine->setSelectedSlot(slot);
+    //     hideCurrentPageAndShowProvided(p_page_product);
+    // }
+    // else
+    // {
+    //     qDebug() << "Invalid choice. Slot not enabled: " << slot;
+    // }
+
+    p_page_idle->thisMachine->setSelectedProductByOption(option);
 }
 
 // FIXME: This is terrible...no time to make array reference to hold button press functions

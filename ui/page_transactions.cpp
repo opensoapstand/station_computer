@@ -51,7 +51,7 @@ void page_transactions::showEvent(QShowEvent *event)
         QWidget::showEvent(event);
 
         p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
-    
+
         QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_TRANSACTIONS_CSS);
         ui->pushButton_back->setStyleSheet(styleSheet);
         ui->pushButton_print->setStyleSheet(styleSheet);
@@ -122,13 +122,17 @@ void page_transactions::populateList()
                 QString features_ui;
                 QString ingredients_ui;
                 QString rowItem;
-                p_page_idle->thisMachine->loadProductPropertiesFromProductsFile(recent_transactions[i][4],
-                                                                               &name,
-                                                                               &name_ui,
-                                                                               &product_type,
-                                                                               &description_ui,
-                                                                               &features_ui,
-                                                                               &ingredients_ui);
+
+                int pnumber = p_page_idle->thisMachine->getProductByPNumber(0)->convertPNotationToPNumber(recent_transactions[i][4]);
+
+                p_page_idle->thisMachine->getProductByPNumber(pnumber)->getProductProperties(
+                                                                                             &name,
+                                                                                             &name_ui,
+                                                                                             &product_type,
+                                                                                             &description_ui,
+                                                                                             &features_ui,
+                                                                                             &ingredients_ui);
+
                 for (int j = 1; j < 4; j++)
                 {
                         rowItem += recent_transactions[i][j].rightJustified(8, ' ') + "\t";

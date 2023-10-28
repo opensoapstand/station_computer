@@ -62,7 +62,7 @@ void page_init::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_INIT_BACKGROUND_IMAGE_PATH);
 
     initIdleTimer->start(1000);
-    paymentMethod = p_page_idle->thisMachine->getSlotByPosition(1)->getPaymentMethod(); // fixme --> takes payment product from one product for all products
+    paymentMethod = p_page_idle->thisMachine->getProductByOption(1)->getPaymentMethod(); // fixme --> takes payment product from one product for all products
 #ifdef START_FSM_FROM_UI
     start_controller = true;
 #else

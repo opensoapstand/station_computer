@@ -7,7 +7,7 @@
 // Ctor
 dispenser_slot::dispenser_slot()
 {
-    m_discount_percentage_fraction = 0.0;
+
     m_promoCode = "";
 }
 
@@ -30,23 +30,22 @@ void dispenser_slot::setDb(DbManager *db)
 // {
 //     thisMachine = machine;
 // }
-QVector<int> getAllPNumbers(){
-    QVector<int> pnumbers;
+QVector<int> dispenser_slot::getAllPNumbers()
+{
+    // QVector<int> pnumbers;
     QVector<int> pnumbers(m_additivesPNumbers);
     pnumbers.append(m_basePNumber);
     return pnumbers;
 }
 
-void loadSlotParametersFromDb()
+void dispenser_slot::loadSlotParametersFromDb()
 {
     m_db->getAllSlotProperties(getSlotId(),
-                                        *m_basePNumber,
-                                        *m_additivesPNumbers,
-                                        *m_is_enabled,
-                                        *m_status_text);
+                               &m_basePNumber,
+                               &m_additivesPNumbers,
+                               &m_is_enabled,
+                               &m_status_text);
 }
-
-
 
 // void dispenser_slot::setSlotEnabled(bool isEnabled)
 // {
@@ -90,15 +89,4 @@ void dispenser_slot::setSlot(int slot)
         qDebug() << "ERROR: Slot exceeds max slot count." << slot;
     }
     m_dispenser_slot = slot;
-}
-
-void dispenser_slot::setPaymentMethod(QString paymentMethod)
-{
-    qDebug() << "Open db: set payment method";
-    m_db->updateTableProductsWithText(getSlotId(), "payment", paymentMethod);
-}
-
-QString dispenser_slot::getPaymentMethod()
-{
-    return m_payment;
 }

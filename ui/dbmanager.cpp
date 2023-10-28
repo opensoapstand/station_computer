@@ -248,12 +248,15 @@ bool DbManager::addPageClick(const QString &page)
 }
 
 void DbManager::getAllSlotProperties(int slot,
-                                         int *basePNumber,
-                                         QVector<int> *additivesPNumbers,
-                                         bool *is_enabled,
-                                         QString *status_text)
+                                     int *basePNumber,
+                                     QVector<int> *additivesPNumbers,
+                                     bool *is_enabled,
+                                     QString *status_text)
 
 {
+
+    // WARNING: consider using having arguments sent to function "by reference" instead of pointers. At least, chatgpt suggests that it's safer.
+
     qDebug() << "Open db: load all slot properties for slot: " << slot << "From: " << CONFIG_DB_PATH;
     {
         QSqlDatabase db = openDb(CONFIG_DB_PATH);
@@ -284,7 +287,7 @@ void DbManager::getAllSlotProperties(int slot,
         QStringList stringList = additivesAsString.split(",");
         foreach (QString num, stringList)
         {
-            additivesPNumbers.append(num.toInt());
+            additivesPNumbers->append(num.toInt());
         }
     }
     closeDb();
@@ -398,10 +401,11 @@ price_custom_discount
 void DbManager::getAllProductProperties(int slot,
                                         QString *productId,
                                         QString *soapstand_product_serial,
-                                        QVector<int> * m_additivesPNumbers,
-                                        QVector<double> * &m_additivesRatios,
+                                        QVector<int> *m_additivesPNumbers,
+                                        QVector<double> *m_additivesRatios,
                                         QString *size_unit,
-                                      
+                                        QString *m_currency_deprecated, //_dummy_deprecated
+                                        QString *m_payment_deprecated,  //_deprecated,
                                         QString *name_receipt,
                                         int *concentrate_multiplier,
                                         int *dispense_speed,
@@ -418,6 +422,30 @@ void DbManager::getAllProductProperties(int slot,
                                         double *size_custom_discount,
                                         double *price_custom_discount,
                                         bool *isSizeEnabled, double *prices, double *volumes, QString *PLUs, QString *PIDs)
+    // void getAllProductProperties(int slot,
+    //                              QString *productId,
+    //                              QString *soapstand_product_serial,
+    //                              QVector<int> *m_additivesPNumbers,
+    //                              QVector<double> *m_additivesRatios,
+    //                              QString *size_unit,
+    //                              QString *name_receipt,
+    //                              QString *m_currency_deprecated, //_dummy_deprecated
+    //                              QString *m_payment_deprecated,  //_deprecated,
+    //                              int *concentrate_multiplier,
+    //                              int *dispense_speed,
+    //                              double *threshold_flow,
+    //                              int *retraction_time,
+    //                              double *calibration_const,
+    //                              double *volume_per_tick,
+    //                              QString *last_restock,
+    //                              double *volume_full,
+    //                              double *volume_remaining,
+    //                              double *volume_dispensed_since_restock,
+    //                              double *volume_dispensed_total,
+    //                              int *is_enabled_custom_discount,
+    //                              double *size_custom_discount,
+    //                              double *price_custom_discount,
+    //                              bool *isSizeEnabled, double *prices, double *volumes, QString *PLUs, QString *PIDs);
 
 {
     // qDebug() << "Open db";
@@ -439,11 +467,9 @@ void DbManager::getAllProductProperties(int slot,
             // success = false;
         }
 
-
         QString additives_pnumbers;
         QString additives_ratios;
-// qDeleteAll(list);
-// list.clear();
+
         while (qry.next())
         {
             *productId = qry.value(0).toString();
@@ -473,7 +499,7 @@ void DbManager::getAllProductProperties(int slot,
             volumes[2] = qry.value(24).toDouble();
             volumes[3] = qry.value(25).toDouble();
             // size custom min
-            volumes[4] = qry.value(27).toDouble();
+            volumes[4] = qry.value(27).toDouble(); // size custom max.
 
             prices[1] = qry.value(28).toDouble();
             prices[2] = qry.value(29).toDouble();

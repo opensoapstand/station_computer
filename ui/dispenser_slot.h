@@ -17,7 +17,9 @@ public:
     ~dispenser_slot();
     dispenser_slot &operator=(const dispenser_slot &other);
     // void setMachine(machine *machine);
-    void setDb(DbManager* db);
+    void setDb(DbManager *db);
+
+    QVector<int> getAllPNumbers();
 
     void loadSlotParametersFromDb();
 
@@ -28,7 +30,7 @@ public:
     // void setBasePNumber(int);
     void getBasePNumber(int);
     int getAdditivesPNumbersCount();
-    int* getAdditivesPNumbers();
+    int *getAdditivesPNumbers();
 
     // void setCouponCode(QString promoCode);
     // bool getSlotEnabled();
@@ -36,9 +38,6 @@ public:
     // void setSlotEnabled(bool isEnabled, QString statusText);
     // QString getStatusText();
     // void setStatusText(QString status);
-
-    QString getPaymentMethod(); // ---> machine?! productt
-    void setPaymentMethod(QString paymentMethod); //  ---> machine? or productt
 
 public slots:
 
@@ -49,28 +48,22 @@ signals:
 
 private:
     machine *thisMachine;
-    DbManager* m_db;
+    DbManager *m_db;
 
     int slot;
 
     int m_basePNumber;
     QVector<int> m_additivesPNumbers; // int m_additivesPNumbers[ADDITIVES_PER_SLOT_COUNT_MAX];
-    *m_is_enabled;
-    *m_status_text;
+    bool m_is_enabled;
+    QString m_status_text;
 
-
-
-    QString m_payment;  // --> machine?!
-    QString m_currency; // --> machine
-
-
+    // QString m_payment;  // --> machine?!
+    // QString m_currency; // --> machine
 
     int m_dispenser_slot;
     // double overruledPrice;
-    double m_discount_percentage_fraction;
-    QString m_promoCode;
 
-  
+    QString m_promoCode;
 };
 
 #endif // PRODUCT_H

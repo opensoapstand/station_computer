@@ -5,7 +5,6 @@
 
 pnumberproduct::pnumberproduct()
 {
-
 }
 
 void pnumberproduct::setDb(DbManager *db)
@@ -17,43 +16,93 @@ void pnumberproduct::loadProductProperties()
 {
     qDebug() << "Load pnumberproduct properties from db and csv";
     loadProductPropertiesFromDb();
-    thisMachine->loadProductPropertiesFromProductsFile(getProductDrinkfillSerial(),
-                                                       &m_name,
-                                                       &m_name_ui,
-                                                       &m_product_type,
-                                                       &m_description_ui,
-                                                       &m_features_ui,
-                                                       &m_ingredients_ui);
+    loadProductPropertiesFromProductsFile();
 }
 
-void pnumberproduct::setPNumber(int PNumber){
+QString pnumberproduct::convertPNumberToPNotation(int pnumber)
+{
+    return "P-" + QString::number(pnumber);
+}
+
+int pnumberproduct::convertPNotationToPNumber(QString PNumberNotation)
+{
+    QString pnumber_as_string = PNumberNotation.mid(2);
+    return pnumber_as_string.toInt();
+}
+
+void pnumberproduct::getProductProperties(QString *name, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui)
+{
+    *name = m_name;
+    *name_ui = m_name_ui;
+    *product_type = m_product_type;
+    *description_ui = m_description_ui;
+    *ingredients_ui = m_ingredients_ui;
+}
+
+void pnumberproduct::loadProductPropertiesFromProductsFile()
+{
+    QFile file(PRODUCT_DETAILS_TSV_PATH);
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        qDebug() << "ERROR: Opening product details file. Expect unexpected behaviour now! ";
+        return;
+    }
+
+    QTextStream in(&file);
+    qDebug() << "Load csv file with product properties";
+    while (!in.atEnd())
+    {
+        QString line = in.readLine();
+
+        QStringList fields = line.split("\t");
+        QString PNumberNotation = convertPNumberToPNotation(getPNumber());
+        int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], PNumberNotation, Qt::CaseSensitive);
+        if (compareResult == 0)
+        {
+            // qDebug() << "compare result is 0";
+            m_name = fields[CSV_PRODUCT_COL_NAME];
+            m_name_ui = fields[CSV_PRODUCT_COL_NAME_UI];
+            m_product_type = fields[CSV_PRODUCT_COL_TYPE];
+            m_description_ui = fields[CSV_PRODUCT_COL_DESCRIPTION_UI];
+            m_features_ui = fields[CSV_PRODUCT_COL_FEATURES_UI];
+            m_ingredients_ui = fields[CSV_PRODUCT_COL_INGREDIENTS_UI];
+            break;
+        }
+    }
+    file.close();
+}
+
+void pnumberproduct::setPNumber(int PNumber)
+{
     m_PNumber = PNumber;
-
 }
 
-int pnumberproduct::getPNumber(){
+int pnumberproduct::getPNumber()
+{
     return m_PNumber;
 }
 
-int pnumberproduct::getBasePNumber(){
+int pnumberproduct::getBasePNumber()
+{
     return m_basePNumber;
 }
 
-QVector<int> pnumberproduct::getAdditivesPNumbers(){
+QVector<int> pnumberproduct::getAdditivesPNumbers()
+{
     return m_additivesPNumbers;
 }
-    
-    
+
 void pnumberproduct::loadProductPropertiesFromDb()
 {
     qDebug() << "Open db: db load pnumberproduct properties for pnumberproduct in slot: " << getPNumber();
-    m_db->getAllProductProperties(getPNumber(), &m_aws_product_id,
+    m_db->getAllProductProperties(getPNumber(),
+                                  &m_aws_product_id,
                                   &m_soapstand_product_serial,
                                   &m_additivesPNumbers,
                                   &m_additivesRatios,
                                   &m_size_unit,
-                                  &m_currency_dummy_deprecated,
-                                  &m_payment_deprecated,
+                                  &m_currency_deprecated, //_dummy_deprecated
+                                  &m_payment_deprecated,  //_deprecated,
                                   &m_name_receipt,
                                   &m_concentrate_multiplier,
                                   &m_dispense_speed,
@@ -68,11 +117,11 @@ void pnumberproduct::loadProductPropertiesFromDb()
                                   &m_volume_dispensed_total,
                                   &m_is_enabled_custom_discount,
                                   &m_size_custom_discount,
-                                  &m_price_custom_discount, 
+                                  &m_price_custom_discount,
                                   m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
 }
 
-///////////////////////////////////////////// SIZE 
+///////////////////////////////////////////// SIZE
 /////////////////////////////////////////////
 /////////////////////////////////////////////
 
@@ -122,7 +171,6 @@ int pnumberproduct::getBiggestEnabledSizeIndex()
     }
     return maxSize;
 }
-
 
 int pnumberproduct::getSelectedSize()
 {
@@ -178,12 +226,9 @@ double pnumberproduct::getVolumeBySize(int size)
     return m_sizeIndexVolumes[size];
 }
 
-
-
-///////////////////////////////////////////// PRICE 
+///////////////////////////////////////////// PRICE
 /////////////////////////////////////////////
 /////////////////////////////////////////////
-
 
 void pnumberproduct::setPrice(int size, double price)
 {
@@ -200,48 +245,14 @@ double pnumberproduct::getBasePrice(int sizeIndex)
     return m_sizeIndexPrices[sizeIndex];
 }
 
-double pnumberproduct::getBasePrice()
+double pnumberproduct::getBasePriceSelectedSize()
 {
     return getBasePrice(getSelectedSize());
 }
 
-double pnumberproduct::getPriceCorrected()
-{
-    double price;
-    if (is_valid_size_selected())
-    {
-        price = getBasePrice(getSelectedSize()) * (1.0 - thisMachine->getDiscountPercentageFraction());
-    }
-    else
-    {
-
-        qInfo() << "ERROR: no size set";
-        price = 66.6;
-    }
-    return price;
-}
-
-double pnumberproduct::getPriceCustom()
-{
-    double price;
-    if (is_valid_size_selected())
-    {
-        price = getBasePrice(getSelectedSize()) * (1.0 - m_discount_percentage_fraction) * getVolumeOfSelectedSize();
-    }
-    else
-    {
-        qInfo() << "ERROR: no size set";
-        price = 66.6;
-    }
-    return price;
-}
-
-
-///////////////////////////////////////////// DISPENSE 
+///////////////////////////////////////////// DISPENSE
 /////////////////////////////////////////////
 /////////////////////////////////////////////
-
-
 
 void pnumberproduct::resetVolumeDispensed()
 {
@@ -260,8 +271,6 @@ void pnumberproduct::setVolumeDispensedMl(double volumeMl)
     this->DispensedVolumeMl = volumeMl;
 }
 
-
-
 double pnumberproduct::inputTextToMlConvertUnits(QString inputValueAsText)
 {
     if (getUnitsForSlot() == "oz")
@@ -274,15 +283,9 @@ double pnumberproduct::inputTextToMlConvertUnits(QString inputValueAsText)
     }
 }
 
-
-
-
-///////////////////////////////////////////// GENERAL 
+///////////////////////////////////////////// GENERAL
 /////////////////////////////////////////////
 /////////////////////////////////////////////
-
-
-
 
 void pnumberproduct::getCustomDiscountDetails(bool *large_volume_discount_is_enabled, double *min_volume_for_discount, double *discount_price_per_liter)
 {
@@ -362,6 +365,10 @@ void pnumberproduct::setVolumeRemaining(double volume_as_ml)
     m_db->updateTableProductsWithDouble(getPNumber(), "volume_remaining", volume_as_ml, 0);
 }
 
+double pnumberproduct::getVolumeRemaining(){
+    return m_volume_remaining;
+}
+
 QString pnumberproduct::getVolumeRemainingCorrectUnits(bool addUnits)
 {
     QString units = getUnitsForSlot();
@@ -397,22 +404,9 @@ QString pnumberproduct::getSizeAsVolumeWithCorrectUnits(int size, bool roundValu
     return volume_as_string;
 }
 
-
 QString pnumberproduct::getProductDrinkfillSerial()
 {
     return m_soapstand_product_serial;
-}
-
-bool pnumberproduct::isProductVolumeInContainer()
-{
-
-    bool retval = true;
-
-    if (!thisMachine->getEmptyContainerDetectionEnabled())
-    {
-        retval = m_volume_remaining > CONTAINER_EMPTY_THRESHOLD_ML;
-    }
-    return retval;
 }
 
 
@@ -495,4 +489,15 @@ void pnumberproduct::setDispenseSpeedPercentage(int percentage)
 
     qInfo() << "Open db: pwm speed set";
     m_db->updateTableProductsWithInt(getPNumber(), "dispense_speed", pwm);
+}
+
+void pnumberproduct::setPaymentMethod(QString paymentMethod)
+{
+    qDebug() << "Open db: set payment method";
+    m_db->updateTableProductsWithText(getSlotId(), "payment", paymentMethod);
+}
+
+QString pnumberproduct::getPaymentMethod()
+{
+    return m_payment_deprecated;
 }

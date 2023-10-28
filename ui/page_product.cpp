@@ -417,7 +417,7 @@ void page_product::reset_and_show_page_elements()
             p_page_idle->thisMachine->addCssClassToObject(orderSizeButtons[i], "orderSizeButtons", PAGE_PRODUCT_CSS);
             p_page_idle->thisMachine->addCssClassToObject(orderSizeLabelsPrice[i], "orderSizeLabelsPrice", PAGE_PRODUCT_CSS);
 
-            double price = p_page_idle->thisMachine->getSelectedProduct()->)->getBasePrice(product_sizes[i]);
+            double price = p_page_idle->thisMachine->getSelectedProduct()->getBasePrice(product_sizes[i]);
 
             // if there is only one product size available, the continue button will show, it will then load this default size
             default_size = product_sizes[i];
@@ -443,7 +443,7 @@ void page_product::reset_and_show_page_elements()
                 orderSizeLabelsVolume[i]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "custom_volume"));
 
                 QString units = p_page_idle->thisMachine->getSelectedProduct()->getUnitsForSlot();
-                QString units_discount_indication = p_page_idle->thisMachine->getSelectedProduct()->)->getUnitsForSlot();
+                QString units_discount_indication = p_page_idle->thisMachine->getSelectedProduct()->getUnitsForSlot();
                 if (units == "ml")
                 {
                     units = "100ml";

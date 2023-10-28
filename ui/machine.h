@@ -3,6 +3,7 @@
 
 #include "df_util.h"
 #include "dispenser_slot.h"
+#include "pnumberproduct.h"
 #include "dbmanager.h"
 
 typedef enum UserRole
@@ -36,11 +37,11 @@ public:
     ~machine();
     void loadMachineParameterFromDb();
     void setDb(DbManager *db);
-    DbManager* getDb();
+    DbManager *getDb();
     void initMachine();
-    
+
     QString getIdlePageType();
-    
+
     void checkForHighTemperatureAndDisableProducts();
 
     bool isSessionLocked();
@@ -49,9 +50,10 @@ public:
     bool slotNumberValidityCheck(int slot);
     QString getStatusText(int slot);
     void setStatusText(int slot, QString status);
-    void loadProductPropertiesFromProductsFile(QString soapstand_product_number, QString *name, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui);
 
     QString getPumpId(int slot);
+
+    double getPriceCorrected(int pnumber);
 
     QString getMachineId();
     bool getCouponsEnabled();
@@ -86,18 +88,23 @@ public:
     bool getPumpRampingEnabled();
     QString getHelpPageHtmlText();
 
-    dispenser_slot *getSlotByPosition(int slotPosition);
+    // dispenser_slot *getSlotByPosition(int slotPosition);
     bool getSlotEnabled(int slot);
     void setSlotEnabled(int slot, bool isEnabled);
     void setSlotEnabled(int slot, bool isEnabled, QString statusText);
     int getSlotCount();
     void setSlots(dispenser_slot *slotss);
-    bool compareSlotCountToMaxSlotCount(int slot_count); 
+    bool compareSlotCountToMaxSlotCount(int slot_count);
     // void setSelectedSlot(uint8_t slot);
     dispenser_slot *getSelectedSlot();
 
+    void setProductToOption(int productOption, int PNumber);
+    void setSelectedProductByOption(int productOption);
+    pnumberproduct *getProductByOption(int productOption);
+    pnumberproduct *getProductByPNumber(int PNumber);
+
     void setSelectedProduct(int pnumber);
-    dispenser_slot *getSelectedProduct();
+    pnumberproduct *getSelectedProduct();
 
     bool hasReceiptPrinter();
     void getPrinterStatusFromDb(bool *isOnline, bool *hasPaper);
@@ -117,6 +124,7 @@ public:
 
     void setDiscountPercentageFraction(double percentageFraction);
     double getDiscountPercentageFraction();
+    double getPriceCorrectedForSelectedSize(int pnumber, bool maximumVolumeForCustom);
     double getDiscountAmount(double price);
     double getPriceWithDiscount(double price);
 
@@ -149,6 +157,8 @@ public:
     void pageTransition(QWidget *pageToHide, QWidget *pageToShow);
     void applyPropertiesToQWidget(QWidget *widget);
     void applyDynamicPropertiesFromTemplateToWidgetChildren(QWidget *widget);
+
+    bool isProductVolumeInContainer(int pnumber);
 
     QString m_machine_id;
     QString m_client_id;
@@ -188,21 +198,23 @@ public:
 
     QJsonObject m_propertiesObject;
     void loadElementPropertiesFile();
-    
+
     QString m_session_id;
- 
+
     void loadTextsFromCsv(QString csv_path, std::map<QString, QString> *dictionary);
 
-    void getAllUsedPNumbersFromSlots();
-
+    QVector<int> getAllUsedPNumbersFromSlots();
 
 public slots:
 
 signals:
 
 private:
-    dispenser_slot *selectedSlot; // deprecated, derived from selectedProduct. 
-    pnumberproduct *m_selectedProduct; 
+    dispenser_slot *selectedSlot; // deprecated, derived from selectedProduct.
+    pnumberproduct *m_selectedProduct;
+    QVector<int> productSelectionOptions;
+    dispenser_slot *m_slots;
+    pnumberproduct m_pnumberproducts[HIGHEST_PNUMBER_COUNT];
 
     std::map<QString, QString> textNameToTextMap_template;
     std::map<QString, QString> textNameToTextMap_default_hardware;
@@ -212,13 +224,11 @@ private:
     std::map<QString, QString> elementDynamicPropertiesMap_default;
     QString m_templatePath;
 
-    dispenser_slot *m_slots;
-    pnumberproduct m_pnumberproducts[HIGHEST_PNUMBER_COUNT];
-
     QTime temperatureTooHighStartMillis;
     bool isTemperatureTooHigh = false;
     StateCoupon m_stateCoupon;
     double m_discount_percentage_fraction = 0.0;
+
     double max_discount = 0.0;
     QString m_promoCode;
 

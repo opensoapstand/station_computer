@@ -16,10 +16,16 @@ public:
     int getPNumber();
 
     int getBasePNumber();
-    QVector getAdditivesPNumbers();
+    QVector<int> getAdditivesPNumbers();
+
+    void loadProductPropertiesFromProductsFile();
+    void getProductProperties(QString *name, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui);
 
     void loadProductPropertiesFromDb(); // productt
     void loadProductProperties();       // productt
+
+    QString convertPNumberToPNotation(int pnumber);
+    int convertPNotationToPNumber(QString PNumberNotation);
 
     double inputTextToMlConvertUnits(QString inputValueAsText);
 
@@ -29,7 +35,7 @@ public:
 
     void setVolumeRemainingUserInput(QString volumeRemainingAsUserText); // productt
     void setVolumeRemaining(double volume_as_ml);                        // productt
-    bool restock(); // productt
+    bool restock();                                                      // productt
 
     QString getVolumeRemainingCorrectUnits(bool addUnits); // productt
     QString getTotalDispensedCorrectUnits();               // productt
@@ -49,7 +55,7 @@ public:
     QString getProductType();            // productt
     QString getProductDrinkfillSerial(); // productt
 
-    bool isProductVolumeInContainer(); // productt
+
     QString getProductDescription();   // productt
     QString getProductIngredients();   // productt
     QString getProductFeatures();      // productt
@@ -83,24 +89,28 @@ public:
     QString getSizeAsVolumeWithCorrectUnits(bool round, bool addUnits);                // productt
     QString getSizeAsVolumeWithCorrectUnits(int size, bool roundValue, bool addUnits); // productt
 
-    double getBasePrice(int sizeIndex);    // productt
-    void setPrice(int size, double price); // productt
-    double getPriceCorrected();            // productt
-    double getPriceCustom();               // productt
-    double getBasePrice();                 // productt
-    void getCustomDiscountDetails(bool *large_volume_discount_is_enabled, double *min_volume_for_discount, double *discount_price_per_liter); //productt
+    double getBasePrice(int sizeIndex);                                                                                                       // productt
+    void setPrice(int size, double price);                                                                                                    // productt
+                                                                                                       // productt
+    double getPriceCustom();                                                                                                                  // productt
+    double getBasePriceSelectedSize();                                                                                                                    // productt
+    void getCustomDiscountDetails(bool *large_volume_discount_is_enabled, double *min_volume_for_discount, double *discount_price_per_liter); // productt
 
     int getDispenseSpeedPercentage();                // productt
     void setDispenseSpeedPercentage(int percentage); // productt
 
+    QString getPaymentMethod();                   // ---> machine?! productt
+    void setPaymentMethod(QString paymentMethod); //  ---> machine? or productt
+
+    double getVolumeRemaining(int pnumber);
+
+
 private:
     int m_PNumber;
     int m_basePNumber;
-    bool m_isBaseProduct; // 100%, no additives. 
+    bool m_isBaseProduct; // 100%, no additives.
     QVector<int> m_additivesPNumbers;
-    QVector<int> m_additivesRatios;
-
-
+    QVector<double> m_additivesRatios;
 
     int m_selected_size;
     double DispensedVolumeMl;

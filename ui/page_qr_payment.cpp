@@ -105,12 +105,16 @@ void page_qr_payment::showEvent(QShowEvent *event)
     ui->label_gif->setStyleSheet(styleSheet);
 
     state_payment = s_init;
-    double originalPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePrice();
-    if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar() == 'c')
-    {
-        originalPrice = p_page_idle->thisMachine->getSelectedProduct()->getPriceCustom();
-    }
-    QString price = QString::number(p_page_idle->thisMachine->getPriceWithDiscount(originalPrice), 'f', 2);
+    // double originalPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
+    // if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar() == 'c')
+    // {
+    //     originalPrice = p_page_idle->thisMachine->getSelectedProduct()->getPriceCustom();
+    // }
+    // QString price = QString::number(p_page_idle->thisMachine->getPriceWithDiscount(originalPrice), 'f', 2);
+
+    int pnumber_selected = p_page_idle->thisMachine->getSelectedProduct()->getPNumber();
+    double price = p_page_idle->thisMachine->getPriceCorrectedForSelectedSize(pnumber_selected, true);
+
 
     if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize() == SIZE_CUSTOM_INDEX)
     {
@@ -206,12 +210,12 @@ bool page_qr_payment::createOrderIdAndSendToBackend()
     QString productId = p_page_idle->thisMachine->getSelectedProduct()->getAwsProductId();
     QString contents = p_page_idle->thisMachine->getSelectedProduct()->getProductName();
     QString quantity_requested = p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(false, false);
-    char drinkSize = p_page_idle->thisMachine->getSelectedProduct()->)->getSelectedSizeAsChar();
-    double originalPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePrice();
-    if (drinkSize == 'c')
-    {
-        originalPrice = p_page_idle->thisMachine->getSelectedProduct()->getPriceCustom();
-    }
+    char drinkSize = p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar();
+    double originalPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
+    // if (drinkSize == 'c')
+    // {
+    //     originalPrice = p_page_idle->thisMachine->getSelectedProduct()->getPriceCustom();
+    // }
 
     QString price = QString::number(p_page_idle->thisMachine->getPriceWithDiscount(originalPrice), 'f', 2);
 

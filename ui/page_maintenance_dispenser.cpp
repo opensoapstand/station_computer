@@ -149,7 +149,7 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
 
     ui->pushButton_price_small->setText("$" + QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePrice(SIZE_SMALL_INDEX)));
     ui->pushButton_price_medium->setText("$" + QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePrice(SIZE_MEDIUM_INDEX)));
-    ui->pushButton_price_large->setText("$" + QString::number(p_page_idle->thisMachine->getSelectedProduct()t()t()t()->getBasePrice(SIZE_LARGE_INDEX)));
+    ui->pushButton_price_large->setText("$" + QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePrice(SIZE_LARGE_INDEX)));
     ui->pushButton_price_custom->setText("$" + QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePrice(SIZE_CUSTOM_INDEX)));
 
     ui->pushButton_target_volume_small->setText(p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(SIZE_SMALL_INDEX, false, true));
@@ -160,7 +160,7 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
     ui->checkBox_enable_small->setChecked(p_page_idle->thisMachine->getSelectedProduct()->getSizeEnabled(SIZE_SMALL_INDEX));
     ui->checkBox_enable_medium->setChecked(p_page_idle->thisMachine->getSelectedProduct()->getSizeEnabled(SIZE_MEDIUM_INDEX));
     ui->checkBox_enable_large->setChecked(p_page_idle->thisMachine->getSelectedProduct()->getSizeEnabled(SIZE_LARGE_INDEX));
-    ui->checkBox_enable_custom->setChecked(p_page_idle->thisMachine->getSelectedProduct()t()->getSizeEnabled(SIZE_CUSTOM_INDEX));
+    ui->checkBox_enable_custom->setChecked(p_page_idle->thisMachine->getSelectedProduct()->getSizeEnabled(SIZE_CUSTOM_INDEX));
 
     ui->label_restock_volume->setText(p_page_idle->thisMachine->getSelectedProduct()->getFullVolumeCorrectUnits(true));
 
@@ -744,7 +744,7 @@ void page_maintenance_dispenser::on_pushButton_done_clicked()
             else if (activeEditField == "pushButton_price_medium")
             {
                 p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_title, "medium");
-                p_page_idle->thisMachine->getSelectedProduct()->)->setPrice(SIZE_MEDIUM_INDEX, text_entered.toDouble());
+                p_page_idle->thisMachine->getSelectedProduct()->setPrice(SIZE_MEDIUM_INDEX, text_entered.toDouble());
                 ui->pushButton_price_medium->setText("$" + QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePrice(SIZE_MEDIUM_INDEX)));
             }
             else if (activeEditField == "pushButton_price_large")
@@ -763,7 +763,7 @@ void page_maintenance_dispenser::on_pushButton_done_clicked()
             }
             else if (activeEditField == "pushButton_target_volume_medium")
             {
-                p_page_idle->thisMachine->getSelectedProduct()->)->configureVolumeToSizeForSlot(text_entered, SIZE_MEDIUM_INDEX);
+                p_page_idle->thisMachine->getSelectedProduct()->configureVolumeToSizeForSlot(text_entered, SIZE_MEDIUM_INDEX);
             }
             else if (activeEditField == "pushButton_target_volume_large")
             {
@@ -791,7 +791,7 @@ void page_maintenance_dispenser::on_pushButton_done_clicked()
             }
             else if (activeEditField == "pushButton_volume_per_tick")
             {
-                p_page_idle->thisMachine->getSelectedProduct()->)->setVolumePerTickForSlot(text_entered);
+                p_page_idle->thisMachine->getSelectedProduct()->setVolumePerTickForSlot(text_entered);
             }
             else if (activeEditField == "pushButton_set_restock_volume")
             {
@@ -939,7 +939,7 @@ void page_maintenance_dispenser::on_pushButton_plu_small_clicked()
 {
     if (!isDispenserPumpEnabledWarningBox())
     {
-        ui->textEntry->setText(p_page_idle->thisMachine->getSelectedProduct()->)->getPlu(SIZE_SMALL_INDEX));
+        ui->textEntry->setText(p_page_idle->thisMachine->getSelectedProduct()->getPlu(SIZE_SMALL_INDEX));
     }
 }
 
@@ -1130,7 +1130,7 @@ void page_maintenance_dispenser::on_checkBox_enable_small_clicked()
 
 void page_maintenance_dispenser::on_checkBox_enable_medium_clicked()
 {
-    p_page_idle->thisMachine->getSelectedProduct()->)->toggleSizeEnabled(SIZE_MEDIUM_INDEX);
+    p_page_idle->thisMachine->getSelectedProduct()->toggleSizeEnabled(SIZE_MEDIUM_INDEX);
     updateProductLabelValues(true);
 }
 

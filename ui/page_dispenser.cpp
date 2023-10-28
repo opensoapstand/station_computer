@@ -92,7 +92,7 @@ void page_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 void page_dispenser::showEvent(QShowEvent *event)
 {
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
-    qDebug() << "Selected slot: " << QString::number(p_page_idle->thisMachine->getSelectedProduct()->getSlotId());
+    qDebug() << "Selected product: " << QString::number(p_page_idle->thisMachine->getSelectedProduct()->getPNumber());
     QWidget::showEvent(event);
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
@@ -227,15 +227,15 @@ void page_dispenser::updatelabel_volume_dispensed_ml(double dispensed)
     if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize() == SIZE_CUSTOM_INDEX)
     {
 
-        double unitprice = (p_page_idle->thisMachine->getSelectedProduct()->getBasePrice());
+        double unitprice = (p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize());
         current_price = p_page_idle->thisMachine->getPriceWithDiscount(dispensed * unitprice);
         ui->label_volume_dispensed_ml->setText(dispensedVolumeUnitsCorrected + " " + units + " ( $" + QString::number(current_price, 'f', 2) + " )");
     }
     else
     {
-        QString totalVolume = p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(p_page_idle->thisMachine->getSelectedSlot()->getSelectedSize(), true, true);
+        QString totalVolume = p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize(), true, true);
         ui->label_volume_dispensed_ml->setText(dispensedVolumeUnitsCorrected + " " + units + "/ " + totalVolume);
-        current_price = p_page_idle->thisMachine->getSelectedProduct()->getBasePrice();
+        current_price = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
     }
 }
 
@@ -405,7 +405,7 @@ QString page_dispenser::getStartDispensingCommand()
 void page_dispenser::fsmSendStartDispensing()
 {
     QString dispenseCommand = getStartDispensingCommand();
-    QString priceCommand = QString::number(p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->getSelectedProduct()->getBasePrice()));
+    QString priceCommand = QString::number(p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize()));
     QString promoCommand = p_page_idle->thisMachine->getCouponCode();
 
     QString delimiter = QString("|");
@@ -554,7 +554,7 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
         ui->label_indicate_active_spout->hide();
         updatelabel_volume_dispensed_ml(p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl());
 
-        double percentage = p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl() / (p_page_idle->thisMachine->getSelectedSlot()->getVolumeOfSelectedSize()) * 100;
+        double percentage = p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl() / (p_page_idle->thisMachine->getSelectedProduct()->getVolumeOfSelectedSize()) * 100;
         if (isFull)
         {
             percentage = 100;

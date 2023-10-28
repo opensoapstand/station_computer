@@ -173,7 +173,7 @@ void page_product_overview::reset_and_show_page_elements()
 
     QString bitmap_location;
     p_page_idle->thisMachine->addPictureToLabel(ui->label_product_photo, p_page_idle->thisMachine->getSelectedProduct()->getProductPicturePath());
-    ui->label_selected_price->setText("$" + QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePrice(), 'f', 2));
+    ui->label_selected_price->setText("$" + QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize(), 'f', 2));
     QString full_path = p_page_idle->thisMachine->getTemplatePathFromName(IMAGE_BUTTON_HELP);
     p_page_idle->thisMachine->addPictureToLabel(ui->label_help, full_path);
 
@@ -320,7 +320,7 @@ void page_product_overview::updatePriceLabel()
         QString base = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_selected_volume, "custom_volume");
         ui->label_selected_volume->setText(base.arg(selected_volume));
 
-        double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePrice();
+        double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
         double selectedPriceCorrected = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
         double discount = p_page_idle->thisMachine->getDiscountAmount(selectedPrice);
         double discountFraction = p_page_idle->thisMachine->getDiscountPercentageFraction();
@@ -367,7 +367,7 @@ void page_product_overview::updatePriceLabel()
         // The label_invoice_price total displays the discounted total even when the user goes back to the select_product page.
         // It's intended behaviour so user doesnt have to retype the promo-code
         // promo codes get reset when going to idle page.
-        double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePrice();
+        double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
         double selectedPriceCorrected = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
         double discountFraction = p_page_idle->thisMachine->getDiscountPercentageFraction();
         double discountAmount = selectedPrice - selectedPriceCorrected;
@@ -390,7 +390,7 @@ void page_product_overview::apply_promo_code(QString promocode)
     CURLcode res;
     long http_code = 0;
     QString machine_id = p_page_idle->thisMachine->getMachineId();
-    QString product_serial = p_page_idle->thisMachine->getSelectedProduct()->)->getProductDrinkfillSerial();
+    QString product_serial = p_page_idle->thisMachine->getSelectedProduct()->getProductDrinkfillSerial();
     // csuccess
     p_page_idle->thisMachine->setCouponState(enabled_invalid_input);
 
@@ -524,7 +524,7 @@ void page_product_overview::on_pushButton_continue_clicked()
     ui->pushButton_previous_page->setEnabled(false);
 
     QString paymentMethod = p_page_idle->thisMachine->getSelectedProduct()->getPaymentMethod();
-    double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePrice();
+    double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
     double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
     if (paymentMethod == PAYMENT_QR_EMAIL_FREE && finalPrice == 0.0 )
     {
@@ -593,7 +593,7 @@ void page_product_overview::on_pushButton_select_product_page_clicked()
 }
 
 void page_product_overview::check_to_page_email(){
-    double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePrice();
+    double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
     double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
     if(p_page_idle->thisMachine->getSelectedProduct()->getPaymentMethod() == PAYMENT_QR_EMAIL_FREE && finalPrice == 0.0 ){
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_free");

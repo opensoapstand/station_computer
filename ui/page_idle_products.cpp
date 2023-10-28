@@ -136,12 +136,12 @@ void page_idle_products::displayProducts()
     for (uint8_t slot_index = 0; slot_index < p_page_idle->thisMachine->getSlotCount(); slot_index++)
     {
         // display product picture
-        p_page_idle->thisMachine->addPictureToLabel(labels_product_picture[slot_index], p_page_idle->thisMachine->getSlotByPosition(slot_index + 1)->getProductPicturePath());
+        p_page_idle->thisMachine->addPictureToLabel(labels_product_picture[slot_index], p_page_idle->thisMachine->getProductByOption(slot_index + 1)->getProductPicturePath());
         product_slot_enabled = p_page_idle->thisMachine->getSlotEnabled(slot_index + 1);
         product_status_text = p_page_idle->thisMachine->getStatusText(slot_index + 1);
 
-        product_type = p_page_idle->thisMachine->getSlotByPosition(slot_index + 1)->getProductType();
-        product_name = p_page_idle->thisMachine->getSlotByPosition(slot_index + 1)->getProductName();
+        product_type = p_page_idle->thisMachine->getProductByOption(slot_index + 1)->getProductType();
+        product_name = p_page_idle->thisMachine->getProductByOption(slot_index + 1)->getProductName();
 
         labels_selectProductOverlay[slot_index]->raise();
         labels_product_overlay_text[slot_index]->raise();

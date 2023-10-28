@@ -43,9 +43,9 @@ QVector<double> splitQStringToQVectorDouble(QString commaSeparatedNoSpaces)
     QStringList stringList = commaSeparatedNoSpaces.split(",");
     foreach (QString num, stringList)
     {
-        intslist.append(num.toFloat());
+        doubleslist.append(num.toFloat());
     }
-    return doublesList;
+    return doubleslist;
 }
 
 bool df_util::pathExists(QString path)

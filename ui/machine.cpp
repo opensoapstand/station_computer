@@ -18,6 +18,7 @@ machine::machine()
 
     // IPC Networking
     dfUtility = new df_util();
+    productSelectionOptions.resize(PRODUCT_SELECTION_OPTIONS_MAX);
 }
 
 // Dtor
@@ -33,7 +34,6 @@ void machine::initMachine()
     for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
     {
         m_slots[slot_index].setSlot(slot_index + 1);
-        // m_slots[slot_index].setMachine(this);
         m_slots[slot_index].setDb(m_db);
         m_slots[slot_index].loadSlotParametersFromDb();
     }
@@ -41,38 +41,52 @@ void machine::initMachine()
     QVector<int> all_pnumbers = getAllUsedPNumbersFromSlots();
 
     // get all PNumbers (all the products) defined in dispensers.
-    for (int i = 0; i < all_pnumbers.size(); ++i) {
-        int num = uniquePNumbers[i];
-    }
+    // for (int i = 0; i < all_pnumbers.size(); ++i)
+    // {
+    //     int num = uniquePNumbers[i];
+    // }
 
     // TODO: For now, the index of a product in an array is its P-number.  e.g. P-6 is tangerine dish saop. Its object resides in m_pnumberproducts[6]
-    for (int pnumber_index = 0; pnumber_index < getTotalPNumbersCount(); pnumber_index++)
+    for (int pnumber_index = 0; pnumber_index < all_pnumbers.size(); pnumber_index++)
     {
         // m_pnumberproducts[pnumber_index].GET IT DONE;
         m_pnumberproducts[all_pnumbers[pnumber_index]].setDb(m_db);
-        m_pnumberproducts[all_pnumbers[pnumber_index]].loadProductParametersFromDb();
+        m_pnumberproducts[all_pnumbers[pnumber_index]].loadProductPropertiesFromDb();
     }
 
     loadDynamicContent(); // part of it is redundant of what's been done here, but not everything. So, do it again.
 }
 
-QVector<int> machine::getAllUsedPNumbersFromSlots(QVector<int> pnumbers)
+QVector<int> machine::getAllUsedPNumbersFromSlots()
 {
-    QSet<int> uniquePNumbers; // Use a QSet to store unique pnumbers
+    QSet<int> uniquePNumbers; // Use a QSet to store unique pnumbers (i.e. no value can appear twice)
+
     // collect all pnumbers used in slots
     for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
     {
         QVector<int> slotpnumbers = m_slots[slot_index].getAllPNumbers();
         // Add unique pnumbers from the current slot to the QSet
-        for (int i = 0; i < slotPNumbers.size(); ++i)
+        for (int i = 0; i < slotpnumbers.size(); ++i)
         {
-            uniquePNumbers.insert(slotPNumbers[i]);
+            uniquePNumbers.insert(slotpnumbers[i]);
         }
     }
 
-    // Convert the QSet back to a QVector if needed
-    return uniquePNumbers.toList();
-    
+    // Convert the QSet to a QVector
+    return QVector<int>::fromList(uniquePNumbers.toList());
+}
+
+
+
+bool machine::isProductVolumeInContainer(int pnumber)
+{
+    bool retval = true;
+
+    if (getEmptyContainerDetectionEnabled())
+    {
+        retval = m_pnumberproducts[pnumber].getVolumeRemaining() > CONTAINER_EMPTY_THRESHOLD_ML;
+    }
+    return retval;
 }
 
 void machine::loadDynamicContent()
@@ -83,9 +97,11 @@ void machine::loadDynamicContent()
     {
         m_slots[slot_index].loadSlotParametersFromDb();
     }
-    for (int pnumber_index = 0; pnumber_index < getTotalPNumbersCount(); pnumber_index++)
+
+    QVector<int> all_pnumbers = getAllUsedPNumbersFromSlots();
+    for (int pnumber_index = 0; pnumber_index < all_pnumbers.size(); pnumber_index++)
     {
-        m_slots[pnumber_index].loadProductParametersFromDb();
+        m_pnumberproducts[all_pnumbers[pnumber_index]].loadProductPropertiesFromDb();
     }
 
     loadTextsFromTemplateCsv();                                // dynamic content (text by template)
@@ -106,16 +122,77 @@ void machine::setDb(DbManager *db)
     m_db = db;
 }
 
-dispenser_slot *machine::getSlotByPosition(int slotPosition)
+void machine::setProductToOption(int productOption, int PNumber)
 {
     // slotPosition starts at 1
-    if (slotPosition == 0)
+    if (productOption == 0)
     {
 
-        qDebug() << "ERROR: slot numbers start from 1!!!";
+        qDebug() << "ERROR: option  numbers start from 1!!!";
     }
-    return &m_slots[slotPosition - 1];
+    productSelectionOptions[productOption] = PNumber;
 }
+
+pnumberproduct *machine::getProductByPNumber(int PNumber)
+{
+    return &m_pnumberproducts[PNumber];
+}
+
+pnumberproduct *machine::getProductByOption(int productOption)
+{
+    // options are selectable products by the customer. (they must be indexed. e.g. first page: option 1 to four)
+    // option start counting from 1?!
+    // slotPosition starts at 1
+    if (productOption == 0)
+    {
+
+        qDebug() << "ERROR:  option numbering start from 1!!!";
+    }
+    int pnumber = productSelectionOptions[productOption];
+    return &m_pnumberproducts[pnumber];
+}
+
+void machine::setSelectedProductByOption(int productOption)
+{
+    int pnumber = productSelectionOptions[productOption];
+    m_selectedProduct = &m_pnumberproducts[pnumber];
+}
+
+dispenser_slot *machine::getSelectedSlot()
+{
+    // check base product from selected product. if not a base product,
+    // check slot of base product.
+
+    int base_pnumber = m_selectedProduct->getBasePNumber(); // if this is not a mix, it will return the main p number.
+                                                            // check in slots/dispensers where the base_pnumber resides.
+
+    // for
+    qDebug() << "TODODOTOODOTODO ERROR:  get slot of product.";
+
+    // return selectedSlot;
+}
+
+pnumberproduct *machine::getSelectedProduct()
+{
+    return m_selectedProduct;
+}
+
+void machine::setSelectedProduct(int pnumber)
+{
+    // pnumber is the index. Clever... until you have one million options....
+    m_selectedProduct = &m_pnumberproducts[pnumber];
+}
+
+// dispenser_slot *machine::getSlotByPosition(int slotPosition)
+// {
+//     // slotPosition starts at 1
+//     if (slotPosition == 0)
+//     {
+
+//         qDebug() << "ERROR: slot numbers start from 1!!!";
+//     }
+//     return &m_slots[slotPosition - 1];
+// }
 
 void machine::setSlots(dispenser_slot *slotss)
 {
@@ -126,11 +203,6 @@ void machine::setSlots(dispenser_slot *slotss)
 // {
 //     selectedSlot = &m_slots[slot - 1];
 // }
-pnumberproduct machine::getSelectedProduct(int pnumber)
-{
-    // pnumber is the index. Clever... until you have one million options....
-    return m_pnumberproducts[pnumber];
-}
 
 bool machine::isDispenseAreaBelowElseBesideScreen()
 {
@@ -262,7 +334,7 @@ void machine::initCouponState()
 
     setDiscountPercentageFraction(0.0);
     setCouponCode("");
-    m_max_dollar_amount_discount = "0.0";
+    m_max_dollar_amount_discount = "666.0";
 }
 
 void machine::setDiscountPercentageFraction(double percentageFraction)
@@ -285,11 +357,38 @@ double machine::getDiscountAmount(double price)
 
 double machine::getPriceWithDiscount(double price)
 {
+    // will take a base price.
+    // there is a maximum absolute number of discount available.
+    // will return discounted price
     double discount = price * m_discount_percentage_fraction;
-    qDebug() << m_max_dollar_amount_discount;
     max_discount = m_max_dollar_amount_discount.toDouble();
-    double result = (max_discount == 0.0) ? discount : std::min(max_discount, discount);
-    return (price - result);
+    double resulting_discount = (max_discount == 0.0) ? discount : std::min(max_discount, discount); // if discount > max_discount, take max_discount
+    return (price - resulting_discount);
+}
+
+double machine::getPriceCorrectedForSelectedSize(int pnumber, bool maximumVolumeForCustom)
+{
+    double price;
+    QVector<int> all_pnumbers = getAllUsedPNumbersFromSlots();
+    pnumberproduct* product = getProductByPNumber(all_pnumbers[pnumber]);
+    if (product->is_valid_size_selected())
+    {
+        price = product->getBasePrice(product->getSelectedSize());
+
+        if (maximumVolumeForCustom && (product->getSelectedSize() == SIZE_CUSTOM_INDEX))
+        {
+            // price is per ml for custom size, so, we multiply it by the maximum amount of dispensed volume if
+            price *= product->getVolumeBySize(SIZE_CUSTOM_INDEX); // e.g. 0.01 $/ml --> max 2000ml --> 20$
+        }
+
+        price = getPriceWithDiscount(price);
+    }
+    else
+    {
+        qDebug() << "ERROR: no size set";
+        price = 66.6;
+    }
+    return price;
 }
 
 QString machine::getCouponCode()
@@ -323,38 +422,6 @@ void machine::loadElementPropertiesFile()
     // foreach (QPushButton *button, buttonList) {
     //     qDebug() << "Button text:" << button->text();
     // }
-}
-
-void machine::loadProductPropertiesFromProductsFile(QString soapstand_product_number, QString *name, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui)
-{
-    QFile file(PRODUCT_DETAILS_TSV_PATH);
-    if (!file.open(QIODevice::ReadOnly))
-    {
-        qDebug() << "ERROR: Opening product details file. Expect unexpected behaviour now! ";
-        return;
-    }
-
-    QTextStream in(&file);
-    qDebug() << "Load csv file with product properties";
-    while (!in.atEnd())
-    {
-        QString line = in.readLine();
-
-        QStringList fields = line.split("\t");
-        int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], soapstand_product_number, Qt::CaseSensitive);
-        if (compareResult == 0)
-        {
-            // qDebug() << "compare result is 0";
-            *name = fields[CSV_PRODUCT_COL_NAME];
-            *name_ui = fields[CSV_PRODUCT_COL_NAME_UI];
-            *product_type = fields[CSV_PRODUCT_COL_TYPE];
-            *description_ui = fields[CSV_PRODUCT_COL_DESCRIPTION_UI];
-            *features_ui = fields[CSV_PRODUCT_COL_FEATURES_UI];
-            *ingredients_ui = fields[CSV_PRODUCT_COL_INGREDIENTS_UI];
-            break;
-        }
-    }
-    file.close();
 }
 
 QString machine::getTemplateFolder()
@@ -763,25 +830,6 @@ void machine::loadMachineParameterFromDb()
     qDebug() << "Template folder from db : " << getTemplateFolder();
 }
 
-// for products.cpp
-pnumberproduct *machine::getSelectedProduct()
-{
-    return m_selectedProduct;
-}
-
-dispenser_slot *machine::getSelectedSlot()
-{
-    // check base product from selected product. if not a base product, 
-    // check slot of base product. 
-
-    int base_pnumber = m_selectedProduct->getBasePNumber(); // if this is not a mix, it will return the main p number.
-    // check in slots/dispensers where the base_pnumber resides.
-
-    for 
-
-    // return selectedSlot;
-}
-
 QString machine::getIdlePageType()
 {
     return m_idle_page_type;
@@ -835,10 +883,10 @@ void machine::addClientLogoToLabel(QLabel *label)
 
 void machine::addPictureToButton(QPushButton *button, QString picturePath)
 {
-    QString p = selectedSlot->getProductPicturePath();
-    if (df_util::pathExists(p))
+    // QString p = selectedSlot->getProductPicturePath();
+    if (df_util::pathExists(picturePath))
     {
-        QPixmap im(p);
+        QPixmap im(picturePath);
         QIcon qi(im);
         button->setIcon(qi);
         button->setIconSize(QSize(271, 391));

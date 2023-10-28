@@ -43,18 +43,20 @@ public:
     void addUserInteraction(QString session_id, QString role, QString page, QString event, QString data);
 
     void getAllSlotProperties(int slot,
-                                         int *basePNumber,
-                                         QVector<int> *additivesPNumbers,
-                                         bool *is_enabled,
-                                         QString *status_text);
+                              int *basePNumber,
+                              QVector<int> *additivesPNumbers,
+                              bool *is_enabled,
+                              QString *status_text);
 
     void getAllProductProperties(int slot,
                                  QString *productId,
                                  QString *soapstand_product_serial,
+                                 QVector<int> *m_additivesPNumbers,
+                                 QVector<double> *m_additivesRatios,
                                  QString *size_unit,
-                                 QString *currency,
-                                 QString *payment,
                                  QString *name_receipt,
+                                 QString *m_currency_deprecated, //_dummy_deprecated
+                                 QString *m_payment_deprecated,  //_deprecated,
                                  int *concentrate_multiplier,
                                  int *dispense_speed,
                                  double *threshold_flow,
@@ -102,7 +104,7 @@ public:
                                  int *is_enabled_slots,
                                  QString *status_text_slots,
                                  double *alert_temperature);
-         QString getHardwareVersion();
+    QString getHardwareVersion();
     // QString m_dbPath2;
 
 private:

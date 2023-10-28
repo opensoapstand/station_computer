@@ -365,12 +365,14 @@ bool page_payment_tap_serial::waitForUX410()
 
 void page_payment_tap_serial::readTimer_loop()
 {   
-    double originalPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePrice();
-    if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar() == 'c')
-    {
-        originalPrice = p_page_idle->thisMachine->getSelectedProduct()->getPriceCustom();
-    }
-    pktToSend = paymentPacket.purchasePacket((QString::number(p_page_idle->thisMachine->getPriceWithDiscount(originalPrice), 'f', 2)).QString::toStdString());
+    // double originalPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
+    // if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar() == 'c')
+    // {
+    //     originalPrice = p_page_idle->thisMachine->getSelectedProduct()->getPriceCustom();
+    // }
+
+    int pnumber_selected = p_page_idle->thisMachine->getSelectedProduct()->getPNumber();
+    pktToSend = paymentPacket.purchasePacket((QString::number(p_page_idle->thisMachine->getPriceCorrectedForSelectedSize(pnumber_selected, true), 'f', 2)).QString::toStdString());
     // response = getResponse();
     qDebug() << "Packet sent for payment";
     if (sendToUX410())

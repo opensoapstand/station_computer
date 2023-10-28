@@ -210,12 +210,13 @@ void page_payment_tap_tcp::startPaymentProcess()
     if (numberOfTapAttempts < 3)
     {
         numberOfTapAttempts += 1;
-        double price = p_page_idle->thisMachine->getSelectedProduct()->getPriceCorrected();
-        if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar() == 'c')
-        {
-            price = p_page_idle->thisMachine->getSelectedProduct()->getPriceCustom();
-        }
-        price = p_page_idle->thisMachine->getPriceWithDiscount(price);
+        int pnumber_selected = p_page_idle->thisMachine->getSelectedProduct()->getPNumber();
+        double price = p_page_idle->thisMachine->getPriceCorrectedForSelectedSize(pnumber_selected, true);
+        // if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar() == 'c')
+        // {
+        //     price = p_page_idle->thisMachine->getSelectedProduct()->getPriceCustom();
+        // }
+        //price = p_page_idle->thisMachine->getPriceWithDiscount(price);
         std::ostringstream stream;
         stream << std::fixed << std::setprecision(2) << price;
         std::string authCommand = authorizationCommand(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, stream.str());

@@ -119,7 +119,7 @@ void page_idle::showEvent(QShowEvent *event)
         thisMachine->initCouponState();
     }
 
-    thisMachine->setSelectedSlot(1); // default selected product is necessary to deal with things if no product is chosen yet e.g. show transaction history
+    thisMachine->setSelectedProduct(0); // default selected product is necessary to deal with things if no product is chosen yet e.g. show transaction history
 
     thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
 

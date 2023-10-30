@@ -64,7 +64,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
 {
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
-    statusbarLayout->setContentsMargins(0, 1860, 0, 0); // int left, int top, int right, int bottom);
+    statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
     qDebug() << "Active Slot: " << QString::number(this->p_page_idle->thisMachine->selectedProduct->getSlot());
     QWidget::showEvent(event);
 

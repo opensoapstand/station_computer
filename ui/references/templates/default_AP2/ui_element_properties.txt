@@ -34,3 +34,5 @@ page_email->label_help,{"x": 940, "y": 35, "width": 75, "height": 75}
 page_email->pushButton_to_help,{"x": 940, "y": 35, "width": 75, "height": 75}
 page_sendFeedback->label_help,{"x": 940, "y": 35, "width": 75, "height": 75}
 page_sendFeedback->pushButton_help_page,{"x": 940, "y": 35, "width": 75, "height": 75}
+
+statusbar->statusbar,{"width": 75, "height": 75}

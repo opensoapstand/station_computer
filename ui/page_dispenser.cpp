@@ -23,12 +23,13 @@
 #include "payment/commands.h"
 
 extern QString transactionLogging;
-extern std::string CTROUTD;
+// extern std::string CTROUTD;
 extern std::string MAC_KEY;
 extern std::string MAC_LABEL;
 extern std::string AUTH_CODE;
-extern std::string SAF_NUM;
+// extern std::string SAF_NUM;
 extern std::string socketAddr;
+extern std::map<std::string, std::string> tapPaymentObject;
 double current_price;
 // CTOR
 page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
@@ -327,16 +328,16 @@ void page_dispenser::dispensing_end_admin()
         if (paymentMethod == PAYMENT_TAP_TCP)
         {
             qDebug() << "MAC_LABEL" << QString::fromStdString(MAC_LABEL);
-            if (SAF_NUM != "")
+            if (tapPaymentObject.find("SAF_NUM") != tapPaymentObject.end())
             {
                 std::cout << "Voiding transaction";
-                qDebug() << "SAF_NUM" << QString::fromStdString(SAF_NUM);
-                response = voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, SAF_NUM);
+                qDebug() << "SAF_NUM" << QString::fromStdString(tapPaymentObject["SAF_NUM"]);
+                response = voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["SAF_NUM"]);
             }
-            else if (CTROUTD != "")
+            else if (tapPaymentObject.find("CTROUTD") != tapPaymentObject.end())
             {   
-                qDebug() << "CTROUTD" << QString::fromStdString(CTROUTD);
-                response = voidTransaction(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, CTROUTD);
+                qDebug() << "CTROUTD" << QString::fromStdString(tapPaymentObject["CTROUTD"]);
+                response = voidTransaction(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["CTROUTD"]);
             }
             finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
         }
@@ -361,16 +362,22 @@ void page_dispenser::dispensing_end_admin()
         p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
         if (paymentMethod == PAYMENT_TAP_TCP)
         {
-            if (CTROUTD != "")
+            if (tapPaymentObject.find("CTROUTD") != tapPaymentObject.end())
             {
-                qDebug() << "CTROUTD" << QString::fromStdString(CTROUTD);
-                std::map<std::string, std::string> testResponse = capture(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, CTROUTD, stream.str());
+                qDebug() << "CTROUTD" << QString::fromStdString(tapPaymentObject["CTROUTD"]);
+                std::map<std::string, std::string> testResponse = capture(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["CTROUTD"], stream.str());
+                // tapPaymentObject["AMOUNT"] = stream.str();
             }
-            else if (SAF_NUM != "")
+            else if (tapPaymentObject.find("SAF_NUM") != tapPaymentObject.end())
             {
-                qDebug() << "SAF_NUM" << QString::fromStdString(SAF_NUM);
-                std::map<std::string, std::string> testResponse = editSaf(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, SAF_NUM, stream.str(), "ELIGIBLE");
+                qDebug() << "SAF_NUM" << QString::fromStdString(tapPaymentObject["SAF_NUM"]);
+                std::map<std::string, std::string> testResponse = editSaf(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["SAF_NUM"], stream.str(), "ELIGIBLE");
+                // tapPaymentObject["AMOUNT"] = stream.str();
             }
+            // tapPaymentObject["STATUS"] = std::string("CAPTURED";
+
+            p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
+
             finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
         }
     }

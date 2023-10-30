@@ -812,3 +812,7 @@ void DbManager::getPrinterStatus(bool *isOnline, bool *hasPaper)
     }
     closeDb();
 }
+
+void setPaymentTransaction(const std::map<std::string, std::string> paymentObject){
+    qDebug() << "Payment Obj";
+}   

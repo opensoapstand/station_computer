@@ -211,7 +211,7 @@ QString product::getLastRestockDate()
     return m_lastRestockDate;
 }
 
-// QString product::getPromoCode()
+// QString product::getCouponCode()
 // {
 //     return m_promoCode;
 // }
@@ -222,7 +222,7 @@ QString product::getLastRestockDate()
 //     m_discount_percentage_fraction = percentageFraction;
 // }
 
-// void product::setPromoCode(QString promoCode)
+// void product::setCouponCode(QString promoCode)
 // {
 //     qDebug() << "Set Promo Code: " << promoCode;
 //     m_promoCode = promoCode;

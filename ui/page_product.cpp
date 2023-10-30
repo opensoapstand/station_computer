@@ -9,14 +9,13 @@
 // payment page and page_idle page
 //
 // created: 05-04-2022
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "page_product.h"
 #include "ui_page_product.h"
-
 
 using json = nlohmann::json;
 QString transactionLogging = "";
@@ -133,19 +132,18 @@ uint16_t orderSizePriceLabels_xy_dynamic_ui_small_custom_available[8][2] = {
 };
 
 uint16_t orderSizeVolumeLabels_xy_dynamic_ui_large_custom_available[8][2] = {
-    {1, 1}, // S vol
+    {1, 1},      // S vol
     {1, 1},      // M vol
-    {710, 1000},      // L vol
+    {710, 1000}, // L vol
     {570, 1110}  // custom col
 };
 
 uint16_t orderSizePriceLabels_xy_dynamic_ui_large_custom_available[8][2] = {
-    {1, 1}, // S price
+    {1, 1},      // S price
     {1, 1},      // M price
-    {710, 1040},      // L price
+    {710, 1040}, // L price
     {560, 1160}  // custom price
 };
-
 
 uint16_t orderSizeVolumeLabels_xy_dynamic_ui_small_available[8][2] = {
     {605, 1150}, // S vol
@@ -204,12 +202,13 @@ page_product::page_product(QWidget *parent) : QWidget(parent),
     connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
 
     transactionLogging = "";
+    statusbarLayout = new QVBoxLayout(this);
 }
 
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void page_product::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,page_payment_tap_serial *page_payment_tap_serial,page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product_overview *page_Overview)
+void page_product::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_payment_tap_serial *page_payment_tap_serial, page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product_overview *page_Overview, statusbar *p_statusbar)
 {
     this->p_page_select_product = pageSelect;
     this->paymentPage = page_qr_payment;
@@ -220,8 +219,8 @@ void page_product::setPage(page_select_product *pageSelect, page_dispenser *page
     this->p_page_overview = page_Overview;
     this->p_page_payment_tap_serial = page_payment_tap_serial;
     this->p_page_payment_tap_tcp = page_payment_tap_tcp;
-
-    p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_PRODUCT_BACKGROUND_PATH);
+    this->p_statusbar = p_statusbar;
+    this->p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_PRODUCT_BACKGROUND_PATH);
 }
 
 // DTOR
@@ -236,8 +235,11 @@ void page_product::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
 
+    statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
+    statusbarLayout->setContentsMargins(0, 1860, 0, 0); // int left, int top, int right, int bottom);
+
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
-    
+
     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_PRODUCT_CSS);
 
     ui->label_product_title->setProperty("class", "title");
@@ -363,7 +365,7 @@ void page_product::reset_and_show_page_elements()
         xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_small_custom_available;
         xy_size_labels_price = orderSizePriceLabels_xy_dynamic_ui_small_custom_available;
     }
-     else if (available_sizes_signature == 12)
+    else if (available_sizes_signature == 12)
     {
         xywh_size_buttons = orderSizeButtons_xywh_dynamic_ui_large_custom_available;
         xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_large_custom_available;
@@ -538,6 +540,9 @@ void page_product::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 
     selectIdleTimer->stop();
     this->stopSelectTimers();
+
+    statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
+
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
 }
 

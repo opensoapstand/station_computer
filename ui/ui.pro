@@ -29,7 +29,8 @@ FORMS += \
     page_sendFeedback.ui \
     page_transactions.ui \
     page_maintenance_general.ui \
-    page_idle_products.ui
+    page_idle_products.ui \
+    statusbar.ui
 
 HEADERS += \
     dfuicommthread.h \
@@ -68,7 +69,8 @@ HEADERS += \
     page_transactions.h \
     product.h \
     page_idle_products.h \
-    machine.h
+    machine.h \
+    statusbar.h
 
 SOURCES += \
     dfuicommthread.cpp \
@@ -107,7 +109,8 @@ SOURCES += \
     page_transactions.cpp \
     product.cpp \
     page_idle_products.cpp \
-    machine.cpp
+    machine.cpp \
+    statusbar.cpp
 
 RESOURCES += \
     src.qrc

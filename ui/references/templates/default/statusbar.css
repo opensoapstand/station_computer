@@ -1,30 +1,47 @@
-
-QPushButton { 
-
-   background-color: transparent; 
-   border: 0px }
+QPushButton {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 20;
+   font-size: 16px;
+   color: #003840;
+   background-color: #FFFFFF;
+   border: 1px;
+   text-align: center;
+   border-radius: 5px;
+   border: none;
+}
 
 QLabel {
 
    font-family: 'Brevia';
    font-style: normal;
-   font-weight: 700;
-   font-size: 85px;
-   line-height: 99px;
+   font-weight: 20;
+   font-size: 16px;
+   color: #003840;
+   background-color: #FFFFFF;
+   border: 1px;
    text-align: center;
-   color: #FFFFFF;
+   /* border-radius: 5px; */
+   border: none;
    qproperty-alignment: AlignCenter;
-   }
+}
 
-#label_printer_status {
+.normal {
+   background-color: #c0c4c3;
+}
+.alert {
+   background-color: #b77b04;
+}
+
+/* 
+#label_active_role {
    font-family: 'Brevia';
    font-style: normal;
-   font-weight: 100;
+   font-weight: 20;
    background-color: #5E8580;
-   font-size: 42px;
+   font-size: 12px;
    text-align: center;
    line-height: auto;
-   /* qproperty-alignment: AlignCenter; */
    border-radius: 20px;
    color: white;
    border: none;
@@ -38,7 +55,6 @@ QLabel {
       font-size: 84px;
       text-align: center;
       line-height: auto;
-      /* qproperty-alignment: AlignCenter; */
       border-radius: 20px;
       color: rgb(189, 18, 18);
       border: none;
@@ -48,5 +64,4 @@ QLabel {
 
    background-color: transparent; 
    border: 0px;
-   }
-      
+   } */

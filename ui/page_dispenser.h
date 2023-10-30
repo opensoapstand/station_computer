@@ -9,7 +9,7 @@
 // thankyou page
 //
 // created: 05-04-2022
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
@@ -47,7 +47,6 @@ class page_dispenser : public QWidget
     Q_OBJECT
 
 public:
-
     QMessageBox* msgBox_problems;
     QMessageBox* msgBox_abort;
     // QMessageBox* msgBox;
@@ -72,7 +71,7 @@ public:
     void fsmReceiveNoFlowAbort();
     
     // QString getMostRecentDispensed();
-    // QString getPromoCodeUsed();
+    // QString getCouponCodeUsed();
     // void startDispensing();
     void force_finish_dispensing();
     QString getStartDispensingCommand();

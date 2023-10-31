@@ -203,6 +203,9 @@ void page_payment_tap_tcp::tapPaymentHandler()
     lastTransactionId = std::stoi(configMap["INVOICE"]);
 
     startSession(socket, MAC_LABEL, MAC_KEY, lastTransactionId + 1);
+    tapPaymentObject["SESSION_ID"] = std::to_string(lastTransactionId);
+    tapPaymentObject["MAC_LABEL"] = MAC_LABEL;
+
     startPaymentProcess();
 }
 
@@ -310,7 +313,7 @@ void page_payment_tap_tcp::authorized_transaction(std::map<std::string, std::str
         tapPaymentObject["TIME"] = responseObj["TRANS_TIME"];
         tapPaymentObject["CARD_NUMBER"] = responseObj["ACCT_NUM"];
         tapPaymentObject["CARD_TYPE"] = responseObj["PAYMENT_MEDIA"];
-        tapPaymentObject["status"] = "Authorized";
+        tapPaymentObject["STATUS"] = "Authorized";
         hideCurrentPageAndShowProvided(p_page_dispense);
     }
     else if (responseObj["RESULT"] == "APPROVED/STORED")
@@ -327,7 +330,7 @@ void page_payment_tap_tcp::authorized_transaction(std::map<std::string, std::str
         tapPaymentObject["TIME"] = responseObj["TRANS_TIME"];
         tapPaymentObject["CARD_NUMBER"] = responseObj["ACCT_NUM"];
         tapPaymentObject["CARD_TYPE"] = responseObj["PAYMENT_MEDIA"];
-        tapPaymentObject["status"] = "Authorized Offline";
+        tapPaymentObject["STATUS"] = "Authorized Offline";
         hideCurrentPageAndShowProvided(p_page_dispense);
     }
     else if (responseObj["RESULT"] == "DECLINED")

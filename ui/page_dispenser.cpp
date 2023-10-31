@@ -327,17 +327,18 @@ void page_dispenser::dispensing_end_admin()
         // REVERSE PAYMENT.
         if (paymentMethod == PAYMENT_TAP_TCP)
         {
-            qDebug() << "MAC_LABEL" << QString::fromStdString(MAC_LABEL);
             if (tapPaymentObject.find("SAF_NUM") != tapPaymentObject.end())
             {
                 std::cout << "Voiding transaction";
                 qDebug() << "SAF_NUM" << QString::fromStdString(tapPaymentObject["SAF_NUM"]);
+                tapPaymentObject["CTROUT_SAF"] = tapPaymentObject["SAF_NUM"];
                 response = voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["SAF_NUM"]);
             }
             else if (tapPaymentObject.find("CTROUTD") != tapPaymentObject.end())
             {   
                 qDebug() << "CTROUTD" << QString::fromStdString(tapPaymentObject["CTROUTD"]);
                 response = voidTransaction(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["CTROUTD"]);
+                tapPaymentObject["CTROUT_SAF"] = tapPaymentObject["CTROUTD"];
             }
             finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
         }
@@ -365,16 +366,18 @@ void page_dispenser::dispensing_end_admin()
             if (tapPaymentObject.find("CTROUTD") != tapPaymentObject.end())
             {
                 qDebug() << "CTROUTD" << QString::fromStdString(tapPaymentObject["CTROUTD"]);
+                tapPaymentObject["CTROUT_SAF"] = tapPaymentObject["CTROUTD"];
                 std::map<std::string, std::string> testResponse = capture(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["CTROUTD"], stream.str());
                 // tapPaymentObject["AMOUNT"] = stream.str();
             }
             else if (tapPaymentObject.find("SAF_NUM") != tapPaymentObject.end())
             {
                 qDebug() << "SAF_NUM" << QString::fromStdString(tapPaymentObject["SAF_NUM"]);
+                tapPaymentObject["CTROUT_SAF"] = tapPaymentObject["SAF_NUM"];
                 std::map<std::string, std::string> testResponse = editSaf(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["SAF_NUM"], stream.str(), "ELIGIBLE");
                 // tapPaymentObject["AMOUNT"] = stream.str();
             }
-            // tapPaymentObject["STATUS"] = std::string("CAPTURED";
+            tapPaymentObject["STATUS"] = "CAPTURED";
 
             p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
 

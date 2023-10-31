@@ -813,6 +813,31 @@ void DbManager::getPrinterStatus(bool *isOnline, bool *hasPaper)
     closeDb();
 }
 
-void setPaymentTransaction(const std::map<std::string, std::string> paymentObject){
-    qDebug() << "Payment Obj";
+void DbManager::setPaymentTransaction(const std::map<std::string, std::string>& paymentObject){
+    {
+        QSqlDatabase db = openDb(USAGE_DB_PATH);
+        QSqlQuery qry(db);
+       qry.prepare("INSERT INTO payments (session_id,date,time,mac_label,amount,auth_code,ctrout_saf,card_number,card_type,status) VALUES (:session_id,:date,:time,:mac_label,:amount,:auth_code,:ctrout_saf,:card_number,:card_type,:status);");
+        qry.bindValue(":session_id", QVariant::fromValue(QString::fromStdString(paymentObject.at("SESSION_ID"))));
+        qry.bindValue(":date", QVariant::fromValue(QString::fromStdString(paymentObject.at("DATE"))));
+        qry.bindValue(":time", QVariant::fromValue(QString::fromStdString(paymentObject.at("TIME"))));
+        qry.bindValue(":mac_label", QVariant::fromValue(QString::fromStdString(paymentObject.at("MAC_LABEL"))));
+        qry.bindValue(":amount", QVariant::fromValue(QString::fromStdString(paymentObject.at("AMOUNT"))));
+        qry.bindValue(":auth_code", QVariant::fromValue(QString::fromStdString(paymentObject.at("AUTH_CODE"))));
+        qry.bindValue(":ctrout_saf", QVariant::fromValue(QString::fromStdString(paymentObject.at("CTROUTD_SAF"))));
+        qry.bindValue(":card_number", QVariant::fromValue(QString::fromStdString(paymentObject.at("CARD_NUMBER"))));
+        qry.bindValue(":card_type", QVariant::fromValue(QString::fromStdString(paymentObject.at("CARD_TYPE"))));
+        qry.bindValue(":status", QVariant::fromValue(QString::fromStdString(paymentObject.at("STATUS"))));
+        bool success;
+        success = qry.exec();
+
+        if (!success)
+        {
+            qDebug() << "Failed to write user interaction. error type: " << qry.lastError().type() << "Error message:" << qry.lastError().text();
+            qDebug() << "Error message:" << qry.lastError().text();
+            qDebug() << "Query:" << qry.lastQuery();
+        }
+        qry.finish();
+        }
+    closeDb();
 }   

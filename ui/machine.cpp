@@ -31,6 +31,7 @@ void machine::initMachine()
     loadMachineParameterFromDb(); // load here because we need parameters already at init
 
     // ASSUMES that there is always slot_id's starting from 1 to the set slot count.
+    qDebug() << "sapi prut";
     for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
     {
         m_slots[slot_index].setSlot(slot_index + 1);
@@ -39,6 +40,11 @@ void machine::initMachine()
     }
 
     QVector<int> all_pnumbers = getAllUsedPNumbersFromSlots();
+    qDebug() << "sapi prut";
+    for (int i = 0; i < all_pnumbers.size(); ++i)
+    {
+        qDebug() << all_pnumbers[i];
+    }
 
     // get all PNumbers (all the products) defined in dispensers.
     // for (int i = 0; i < all_pnumbers.size(); ++i)
@@ -64,10 +70,12 @@ QVector<int> machine::getAllUsedPNumbersFromSlots()
     // collect all pnumbers used in slots
     for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
     {
+        qDebug() << "SLOTf:::" << (slot_index+1);
         QVector<int> slotpnumbers = m_slots[slot_index].getAllPNumbers();
         // Add unique pnumbers from the current slot to the QSet
         for (int i = 0; i < slotpnumbers.size(); ++i)
         {
+            qDebug() << "pnumber: " << slotpnumbers[i];
             uniquePNumbers.insert(slotpnumbers[i]);
         }
     }
@@ -75,8 +83,6 @@ QVector<int> machine::getAllUsedPNumbersFromSlots()
     // Convert the QSet to a QVector
     return QVector<int>::fromList(uniquePNumbers.toList());
 }
-
-
 
 bool machine::isProductVolumeInContainer(int pnumber)
 {
@@ -257,6 +263,12 @@ int machine::getSlotCount()
         {
             slot_count = 4;
         }
+        else if (m_hardware_version == "AP2")
+        {
+            // get slot count dynamically from slots (number of records, check also with slot id, to make sure there are no 'gaps' (e.g. 1,2,3,4,5  instead of 1,4,5,6,7))
+
+            slot_count = m_dispense_buttons_count % 1000;
+        }
         else
         {
             slot_count = 8;
@@ -370,7 +382,7 @@ double machine::getPriceCorrectedForSelectedSize(int pnumber, bool maximumVolume
 {
     double price;
     QVector<int> all_pnumbers = getAllUsedPNumbersFromSlots();
-    pnumberproduct* product = getProductByPNumber(all_pnumbers[pnumber]);
+    pnumberproduct *product = getProductByPNumber(all_pnumbers[pnumber]);
     if (product->is_valid_size_selected())
     {
         price = product->getBasePrice(product->getSelectedSize());

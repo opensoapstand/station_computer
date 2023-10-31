@@ -261,8 +261,9 @@ void DbManager::getAllSlotProperties(int slot,
     {
         QSqlDatabase db = openDb(CONFIG_DB_PATH);
         QSqlQuery qry(db);
-        qry.prepare("SELECT slot_id, base_P-number, additives_P-numbers, is_enabled, status_text FROM slots WHERE slot_id=:slot");
+        qry.prepare("SELECT slot_id, 'base_P-number', 'additives_P-numbers', is_enabled, status_text FROM slots WHERE slot_id=:slot");
         qry.bindValue(":slot", slot);
+        // qry.prepare(QString("SELECT 'slot_id,base_P-number', 'additives_P-numbers', is_enabled, status_text FROM slots WHERE slot_id=%1").arg(QString::number(slot)));
         bool success;
         success = qry.exec();
 

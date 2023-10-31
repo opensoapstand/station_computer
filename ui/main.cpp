@@ -87,6 +87,14 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
     }
 }
 
+void makeDirIfNotExists(QString dirPath){
+    QDir pathAsQDir(dirPath);
+    if (!pathAsQDir.exists())
+    {
+        pathAsQDir.mkpath(".");
+    } 
+}
+
 int main(int argc, char *argv[])
 {
     // set up logging
@@ -94,44 +102,15 @@ int main(int argc, char *argv[])
     QString logging_wifi_base_path = "/home/df-admin/production/logging/wifi";
     QString logging_transactions_base_path = "/home/df-admin/production/logging/transactions";
     QString logging_ui_base_path = "/home/df-admin/production/logging/ui";
-
-    // // Check if the directory exists, create it if not
     // QDir uidir(QFileInfo(logging_ui_base_path).absolutePath());
-    // if (!uidir.exists())
-    // {
-    //     uidir.mkpath(".");
-    // }
 
-    // Check logging_controller_base_path
-    QDir uidir(logging_ui_base_path);
-    if (!uidir.exists())
-    {
-        uidir.mkpath(".");
-    }
-    // Check logging_controller_base_path
-    QDir controllerDir(logging_controller_base_path);
-    if (!controllerDir.exists())
-    {
-        controllerDir.mkpath(".");
-    }
-
-    // Check logging_wifi_base_path
-    QDir wifiDir(logging_wifi_base_path);
-    if (!wifiDir.exists())
-    {
-        wifiDir.mkpath(".");
-    }
-
-    // Check logging_transactions_base_path
-    QDir transactionsDir(logging_transactions_base_path);
-    if (!transactionsDir.exists())
-    {
-        transactionsDir.mkpath(".");
-    }
+    makeDirIfNotExists(logging_ui_base_path);
+    makeDirIfNotExists(logging_controller_base_path);
+    makeDirIfNotExists(logging_wifi_base_path);
+    makeDirIfNotExists(logging_transactions_base_path);
 
     qInstallMessageHandler(myMessageHandler); // Install the handler
     QString title = QString("********** START SOAPSTAND UI v%1 *********************************").arg(QString(UI_VERSION));
-
     qDebug() << "***************************************************************************";
     qDebug() << title;
     qDebug() << "***************************************************************************";
@@ -154,7 +133,6 @@ int main(int argc, char *argv[])
     page_idle_products *p_page_idle_products = new page_idle_products();
     qDebug() << "Constructor page_transactions";
     page_transactions *p_page_transactions = new page_transactions();
-
     qDebug() << "Constructor page_select_product";
     page_select_product *p_page_select_product = new page_select_product();
     qDebug() << "Constructor page_product";
@@ -191,7 +169,6 @@ int main(int argc, char *argv[])
     machine thisMachine;
     dispenser_slot dispenser_slots[MAX_SLOT_COUNT];
     p_page_idle->setMachine(&thisMachine);
-    // p_page_idle->g_database = &db_config;
 
     db_config.updateTableMachineWithText("software_version", UI_VERSION);
     thisMachine.setSlots(dispenser_slots);
@@ -257,7 +234,6 @@ int main(int argc, char *argv[])
     p_page_payment_tap_tcp->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
     p_page_payment_tap_serial->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
     p_page_email->setPage(p_page_dispense, p_page_idle, p_page_help, p_page_product_overview);
-
 
     p_page_dispense->setPage(p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_end, p_page_idle, p_page_sendFeedback);
     p_page_product_overview->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_help, p_page_product, p_page_email, p_statusbar);

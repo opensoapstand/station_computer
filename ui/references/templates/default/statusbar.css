@@ -3,12 +3,16 @@ QPushButton {
    font-style: normal;
    font-weight: 20;
    font-size: 16px;
-   color: #003840;
-   background-color: #FFFFFF;
-   border: 1px;
+   color: #E2B985;
+   background-color: #5E5E5E;
+   border: 2px solid #2B2B2B;
    text-align: center;
    border-radius: 5px;
-   border: none;
+}
+
+#pushButton_hide{
+   font-style: normal;
+   font-weight: 600;
 }
 
 QLabel {
@@ -16,21 +20,31 @@ QLabel {
    font-style: normal;
    font-weight: 20;
    font-size: 16px;
-   color: #003840;
-   background-color: #FFFFFF;
-   border: 1px;
+   color: #E2B985;
+   background-color: #5E5E5E;
+   border: 2px solid #2B2B2B;
    text-align: center;
-   /* border-radius: 5px; */
-   border: none;
+   border-radius: 5px;
    qproperty-alignment: AlignCenter;
 }
 
-.normal {
-   background-color: #c0c4c3;
+#label_active_role{
+   font-style: normal;
+   font-weight: 600;
+ }
+
+ #statusbar_bg{
+   background-color: #404040;
+   border-radius: 0px;
+   border: none;
 }
-.alert {
-   background-color: #b77b04;
-}
+ 
+ .normal {
+    background-color: #5E5E5E;
+ }
+ .alert {
+    background-color: #BC8439;
+ }
 
 /* 
 #label_active_role {

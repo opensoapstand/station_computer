@@ -25,6 +25,7 @@ page_maintenance_general::page_maintenance_general(QWidget *parent) : QWidget(pa
     this->setPalette(palette);
 
     connect(ui->buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(keyboardButtonPressed(int)));
+    statusbarLayout = new QVBoxLayout(this);
 }
 
 // DTOR
@@ -37,6 +38,9 @@ void page_maintenance_general::showEvent(QShowEvent *event)
 {
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
+
+    statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
+    statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
     
@@ -96,17 +100,19 @@ void page_maintenance_general::showEvent(QShowEvent *event)
 /*
  * Page Tracking reference
  */
-void page_maintenance_general::setPage(page_maintenance *pageMaintenance, page_idle *pageIdle, page_idle_products *p_page_idle_products)
+void page_maintenance_general::setPage(page_maintenance *pageMaintenance, page_idle *pageIdle, page_idle_products *p_page_idle_products, statusbar *p_statusbar)
 {
 
     this->p_page_maintenance = pageMaintenance;
     this->p_page_idle = pageIdle;
+    this->p_statusbar = p_statusbar; 
 
     ui->pushButton_minimize->setStyleSheet("QPushButton {}"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
 }
 
 void page_maintenance_general::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
+    statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
 }
 void page_maintenance_general::resizeEvent(QResizeEvent *event)

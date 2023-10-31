@@ -35,7 +35,7 @@ class page_email : public QWidget
 public:
     explicit page_email(QWidget *parent = nullptr);
 
-    void setPage(page_dispenser *page_dispenser, page_idle* pageIdle, page_help *p_page_help, page_product_overview *p_page_product_overview);
+    void setPage(page_dispenser *page_dispenser, page_idle* pageIdle, page_help *p_page_help, page_product_overview *p_page_product_overview, statusbar *p_statusbar);
     ~page_email();
     QTimer* helpIdleTimer;
 
@@ -65,13 +65,14 @@ private:
     page_help* p_page_help;
     page_idle* p_page_idle;
     page_product_overview* p_page_product_overview;
-
+    statusbar *p_statusbar;
     int _helpIdleTimeoutSec;
 
     QResizeEvent *helpResize;
     QString maintenance_pwd;
     QString help_text_html;
     bool m_hasStartedTyping=false;
+    QVBoxLayout *statusbarLayout;
 };
 
 #endif // PAGE_EMAIL_H

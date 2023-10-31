@@ -102,7 +102,7 @@ public:
     QString getPaymentMethod();                   // ---> machine?! productt
     void setPaymentMethod(QString paymentMethod); //  ---> machine? or productt
 
-    double getVolumeRemaining(int pnumber);
+    double getVolumeRemaining();
 
 
 private:

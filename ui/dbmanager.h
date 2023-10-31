@@ -22,12 +22,12 @@ public:
     bool updateTableMachineWithDouble(QString column, double value, int precision);
     bool updateTableMachineWithText(QString column, QString value);
 
-    bool updateTableProductsWithText(int slot, QString column, QString value);
-    bool updateTableProductsWithInt(int slot, QString column, int value);
-    bool updateTableProductsWithDouble(int slot, QString column, double value, int precision);
+    bool updateTableProductsWithText(int pnumber, QString column, QString value);
+    bool updateTableProductsWithInt(int pnumber, QString column, int value);
+    bool updateTableProductsWithDouble(int pnumber, QString column, double value, int precision);
 
     bool addPageClick(const QString &page);
-    void emailEmpty(int slot);
+    // void emailEmpty(int slot);
     uint32_t getNumberOfRows(QString table);
 
     bool getRecentTransactions(QString values[][5], int count, int *count_retreived);
@@ -48,7 +48,7 @@ public:
                               bool *is_enabled,
                               QString *status_text);
 
-    void getAllProductProperties(int slot,
+    void getAllProductProperties(int pnumber,
                                  QString *productId,
                                  QString *soapstand_product_serial,
                                  QVector<int> *m_additivesPNumbers,

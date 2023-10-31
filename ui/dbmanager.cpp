@@ -223,21 +223,21 @@ bool DbManager::updateTableMachineWithText(QString column, QString value)
     return executeQuery(sql_text);
 }
 
-bool DbManager::updateTableProductsWithInt(int slot, QString column, int value)
+bool DbManager::updateTableProductsWithInt(int pnumber, QString column, int value)
 {
 
-    return updateTableProductsWithText(slot, column, QString::number(value));
+    return updateTableProductsWithText(pnumber, column, QString::number(value));
 }
 
-bool DbManager::updateTableProductsWithDouble(int slot, QString column, double value, int precision)
+bool DbManager::updateTableProductsWithDouble(int pnumber, QString column, double value, int precision)
 {
 
-    return updateTableProductsWithText(slot, column, QString::number(value, 'f', precision));
+    return updateTableProductsWithText(pnumber, column, QString::number(value, 'f', precision));
 }
 
-bool DbManager::updateTableProductsWithText(int slot, QString column, QString value)
+bool DbManager::updateTableProductsWithText(int pnumber, QString column, QString value)
 {
-    QString sql_text = QString("UPDATE products SET %1='%2' WHERE slot=%3").arg(column, value, QString::number(slot));
+    QString sql_text = QString("UPDATE products SET %1='%2' WHERE pnumber=%3").arg(column, value, QString::number(pnumber));
     return executeQuery(sql_text);
 }
 
@@ -398,7 +398,7 @@ price_custom_discount
 // void DbManager::getAllProductProperties(int slot, QString* soapstand_product_serial, QString* size_unit, QString* payment, int* concentrate_multiplier, int* dispense_speed, bool *isSizeEnabled, double* prices, double* volumes, QString* PLUs, QString* PIDs)
 //   string table_products_columns[TABLE_PRODUCTS_COLUMN_COUNT] = {"productId", "soapstand_product_serial", "slot", "name", "size_unit", "currency", "payment", "name_receipt", "concentrate_multiplier", "dispense_speed", "threshold_flow", "retraction_time", "calibration_const", "volume_per_tick", "last_restock", "volume_full", "volume_remaining", "volume_dispensed_since_restock", "volume_dispensed_total", "is_enabled_small", "is_enabled_medium", "is_enabled_large", "is_enabled_custom", "size_small", "size_medium", "size_large", "size_custom_min", "size_custom_max", "price_small", "price_medium", "price_large", "price_custom", "plu_small", "plu_medium", "plu_large", "plu_custom", "pid_small", "pid_medium", "pid_large", "pid_custom", "flavour", "image_url", "type", "ingredients", "features", "description", "is_enabled_custom_discount", "size_custom_discount", "price_custom_discount"};
 //  (productId, soapstand_product_serial, slot, name, size_unit, currency, payment, name_receipt, concentrate_multiplier, dispense_speed, threshold_flow, retraction_time, calibration_const, volume_per_tick, last_restock, volume_full, volume_remaining, volume_dispensed_since_restock, volume_dispensed_total, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_min, size_custom_max, price_small, price_medium, price_large, price_custom, plu_small, plu_medium, plu_large, plu_custom, pid_small, pid_medium, pid_large, pid_custom, flavour, image_url, type, ingredients, features, description, is_enabled_custom_discount, size_custom_discount, price_custom_discount)
-void DbManager::getAllProductProperties(int slot,
+void DbManager::getAllProductProperties(int pnumber,
                                         QString *productId,
                                         QString *soapstand_product_serial,
                                         QVector<int> *m_additivesPNumbers,
@@ -449,19 +449,19 @@ void DbManager::getAllProductProperties(int slot,
 
 {
     // qDebug() << "Open db";
-    qDebug() << "Open db: load all product properties for slot: " << slot << "From: " << CONFIG_DB_PATH;
+    qDebug() << "Open db: load all product properties for pnumber: " << pnumber << "From: " << CONFIG_DB_PATH;
     {
         QSqlDatabase db = openDb(CONFIG_DB_PATH);
         QSqlQuery qry(db);
-        // qry.prepare("SELECT soapstand_product_serial, size_unit, payment, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_max,price_small,price_medium, price_large,price_custom FROM products WHERE slot=:slot");
-        qry.prepare("SELECT productId, soapstand_product_serial, additives_pnumbers, additives_ratios, slot, name, size_unit, name_receipt, concentrate_multiplier, dispense_speed, threshold_flow, retraction_time, calibration_const, volume_per_tick, last_restock, volume_full, volume_remaining, volume_dispensed_since_restock, volume_dispensed_total, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_min, size_custom_max, price_small, price_medium, price_large, price_custom, plu_small, plu_medium, plu_large, plu_custom, pid_small, pid_medium, pid_large, pid_custom, flavour, image_url, type, ingredients, features, description, is_enabled_custom_discount, size_custom_discount, price_custom_discount FROM products WHERE slot=:slot");
-        qry.bindValue(":slot", slot);
+        // qry.prepare("SELECT soapstand_product_serial, size_unit, payment, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_max,price_small,price_medium, price_large,price_custom FROM products WHERE pnumber=:pnumber");
+        qry.prepare("SELECT productId, soapstand_product_serial, additives_pnumbers, additives_ratios, slot, name, size_unit, name_receipt, concentrate_multiplier, dispense_speed, threshold_flow, retraction_time, calibration_const, volume_per_tick, last_restock, volume_full, volume_remaining, volume_dispensed_since_restock, volume_dispensed_total, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_min, size_custom_max, price_small, price_medium, price_large, price_custom, plu_small, plu_medium, plu_large, plu_custom, pid_small, pid_medium, pid_large, pid_custom, flavour, image_url, type, ingredients, features, description, is_enabled_custom_discount, size_custom_discount, price_custom_discount FROM products WHERE soapstand_product_serial=:pnumber");
+        qry.bindValue(":pnumber", pnumber);
         bool success;
         success = qry.exec();
 
         if (!success)
         {
-            qDebug() << "Open db: Attempted to load all product properties for slot: " << slot;
+            qDebug() << "Open db: Attempted to load all product properties for pnumber: " << pnumber;
             qDebug() << "Did not execute sql. "
                      << qry.lastError() << " | " << qry.lastQuery();
             // success = false;
@@ -746,8 +746,8 @@ uint32_t DbManager::getNumberOfRows(QString table)
     return row_count;
 }
 
-void DbManager::emailEmpty(int slot)
-{
+// void DbManager::emailEmpty(int slot)
+// {
     // QString mt_product = getProductName(slot);
     // QString email_subject = mt_product + " has sold out!";
     // QString email_body = mt_product + " has sold out";
@@ -755,7 +755,7 @@ void DbManager::emailEmpty(int slot)
     // QString email = "echo '" + email_body + "' | mail -s '" + email_subject + "' -a 'From: Stongs Soapstand <hello@drinkfill.com>' " + email_recipients + " | screen -d -m";
 
     // system(email.toStdString().c_str());
-}
+// }
 
 void DbManager::addUserInteraction(QString session_id, QString role, QString page, QString event)
 {

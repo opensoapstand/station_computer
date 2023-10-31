@@ -372,7 +372,7 @@ double pnumberproduct::getVolumeRemaining(){
 QString pnumberproduct::getVolumeRemainingCorrectUnits(bool addUnits)
 {
     QString units = getUnitsForSlot();
-    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(m_volume_remaining, units, false, addUnits);
+    QString volume_as_string = df_util::getConvertedStringVolumeFromMl(getVolumeRemaining(), units, false, addUnits);
 
     return volume_as_string;
 }
@@ -494,7 +494,7 @@ void pnumberproduct::setDispenseSpeedPercentage(int percentage)
 void pnumberproduct::setPaymentMethod(QString paymentMethod)
 {
     qDebug() << "Open db: set payment method";
-    m_db->updateTableProductsWithText(getSlotId(), "payment", paymentMethod);
+    m_db->updateTableProductsWithText(getPNumber(), "payment", paymentMethod);
 }
 
 QString pnumberproduct::getPaymentMethod()

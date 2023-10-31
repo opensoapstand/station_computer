@@ -48,18 +48,21 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
     arrowAnimationStepTimer = new QTimer(this);
     arrowAnimationStepTimer->setInterval(50);
     connect(arrowAnimationStepTimer, SIGNAL(timeout()), this, SLOT(onArrowAnimationStepTimerTick()));
+    statusbarLayout = new QVBoxLayout(this);
+
 }
 
 /*
  * Page Tracking reference to Payment page and completed payment
  */
-void page_dispenser::setPage(page_qr_payment *page_qr_payment, page_payment_tap_serial *page_payment_tap_serial, page_payment_tap_tcp *page_payment_tap_tcp, page_end *page_end, page_idle *pageIdle, page_sendFeedback *pageFeedback)
+void page_dispenser::setPage(page_qr_payment *page_qr_payment, page_payment_tap_serial *page_payment_tap_serial, page_payment_tap_tcp *page_payment_tap_tcp, page_end *page_end, page_idle *pageIdle, page_sendFeedback *pageFeedback, statusbar *p_statusbar)
 {
     this->thanksPage = page_end;
     this->paymentPage = page_qr_payment;
     this->p_page_payment_tap_tcp = page_payment_tap_tcp;
     this->p_page_idle = pageIdle;
     this->feedbackPage = pageFeedback;
+    this->p_statusbar = p_statusbar;
 }
 
 // DTOR
@@ -87,6 +90,7 @@ void page_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToShow)
         msgBox_problems->hide();
         msgBox_problems->deleteLater();
     }
+    statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
 
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
 }
@@ -95,6 +99,9 @@ void page_dispenser::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     qDebug() << "Selected slot: " << QString::number(p_page_idle->thisMachine->selectedProduct->getSlot());
     QWidget::showEvent(event);
+
+    statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
+    statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
 

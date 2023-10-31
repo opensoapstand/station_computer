@@ -1,0 +1,61 @@
+QPushButton {
+    background-color: transparent;
+    border: 0px
+}
+
+QLabel {
+    font-family: 'EuropaNuova';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 85px;
+    line-height: 99px;
+    text-align: center;
+    color: #FFFFFF;
+    qproperty-alignment: AlignCenter;
+}
+
+#label_welcome_message {
+    font-size: 80px;
+    font-weight: 700;
+    line-height: 43px;
+    color: white;
+    font-family: 'Lora';
+    /* font-family: 'Vollkorn'; */
+    qproperty-alignment: AlignCenter;
+}
+
+#label_show_temperature {
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 43px;
+    color: gray;
+    
+    font-family: 'Lora';
+    /* font-family: 'Vollkorn'; */
+    qproperty-alignment: AlignCenter;
+}
+
+#label_printer_status {
+    font-family: 'EuropaNuova';
+    font-style: normal;
+    font-weight: 100;
+    background-color: #5E8580;
+    font-size: 42px;
+    text-align: center;
+    line-height: auto;
+    /* qproperty-alignment: AlignCenter; */
+    border-radius: 20px;
+    color: white;
+    border: none;
+}
+
+#pushButton_to_select_product_page {
+
+    background-color: transparent;
+    border: 0px;
+}
+
+#label_manufacturer_logo {
+    qproperty-alignment: AlignCenter;
+    text-align: center;
+}

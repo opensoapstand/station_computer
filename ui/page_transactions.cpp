@@ -10,6 +10,7 @@ page_transactions::page_transactions(QWidget *parent) : QWidget(parent),
         connect(idleTimer, SIGNAL(timeout()), this, SLOT(onIdleTimeoutTick()));
 
         transaction_count = TRANSACTION_HISTORY_COUNT;
+        statusbarLayout = new QVBoxLayout(this);
 
         // // set up back button
         // QFont font;
@@ -29,9 +30,10 @@ page_transactions::page_transactions(QWidget *parent) : QWidget(parent),
         // ui->pushButton_print->setFont(font);
 }
 
-void page_transactions::setPage(page_idle *pageIdle)
+void page_transactions::setPage(page_idle *pageIdle, statusbar *p_statusbar)
 {
         this->p_page_idle = pageIdle;
+        this->p_statusbar = p_statusbar; 
 }
 
 page_transactions::~page_transactions()
@@ -43,12 +45,16 @@ void page_transactions::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
         idleTimer->stop();
         p_page_idle->thisMachine->pageTransition(this, pageToShow);
+        statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
 }
 
 void page_transactions::showEvent(QShowEvent *event)
 {
         p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
         QWidget::showEvent(event);
+
+        statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
+        statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
 
         p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
     

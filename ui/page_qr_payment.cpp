@@ -41,18 +41,21 @@ page_qr_payment::page_qr_payment(QWidget *parent) : QWidget(parent),
     connect(showErrorTimer, SIGNAL(timeout()), this, SLOT(showErrorTimerPage()));
 
     state_payment = s_init;
+    statusbarLayout = new QVBoxLayout(this);
+
 }
 
 /*
  * Page Tracking reference
  */
-void page_qr_payment::setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp)
+void page_qr_payment::setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp, statusbar *p_statusbar)
 {
     this->p_page_product = p_page_product;
     this->p_page_wifi_error = pageWifiError;
     this->p_page_dispense = page_dispenser;
     this->p_page_idle = pageIdle;
     this->p_page_help = pageHelp;
+    this->p_statusbar = p_statusbar;
 }
 
 // DTOR
@@ -79,7 +82,8 @@ void page_qr_payment::showEvent(QShowEvent *event)
 
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
-
+    statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
+    statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
     
     // p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ox2, "button_problems_message");
@@ -430,6 +434,7 @@ void page_qr_payment::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
 
     resetPaymentPage();
+    statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
 }
 

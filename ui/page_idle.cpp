@@ -103,7 +103,7 @@ void page_idle::showEvent(QShowEvent *event)
     p_statusbar->refresh();
 
     statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
-    statusbarLayout->setContentsMargins(0, 1860, 0, 0); // int left, int top, int right, int bottom);
+    statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
 
     thisMachine->loadDynamicContent();
 

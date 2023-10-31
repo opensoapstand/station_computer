@@ -89,7 +89,7 @@ void page_select_product::showEvent(QShowEvent *event)
 
     //  statusbarLayout->setAlignment(Qt::AlignBottom); // Align at the bottom of the layout
     // statusbarLayout->setContentsMargins(50, 50, 50, 50); // int left, int top, int right, int bottom);
-    statusbarLayout->setContentsMargins(0, 1860, 0, 0); // int left, int top, int right, int bottom);
+    statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
 
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
@@ -100,8 +100,8 @@ void page_select_product::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
 
     QString full_path = p_page_idle->thisMachine->getTemplatePathFromName(IMAGE_BUTTON_HELP);
-    p_page_idle->thisMachine->addPictureToLabel(ui->label_help, full_path);
 
+    p_page_idle->thisMachine->addPictureToLabel(ui->label_help, full_path);
     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_SELECT_PRODUCT_CSS);
     ui->pushButton_to_maintenance->setStyleSheet(styleSheet);
     ui->pushButton_help_page->setStyleSheet(styleSheet);

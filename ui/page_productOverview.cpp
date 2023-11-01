@@ -29,10 +29,11 @@
 #include <QMovie>
 using json = nlohmann::json;
 std::string CTROUTD = "";
+std::string SAF_NUM = "";
 std::string MAC_KEY = "";
 std::string MAC_LABEL = "";
 std::string AUTH_CODE = "";
-std::string SAF_NUM = "";
+std::map<std::string, std::string> tapPaymentObject;
 std::string socketAddr;
 
 // CTOR

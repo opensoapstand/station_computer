@@ -80,6 +80,9 @@ public:
     int _testForFrozenScreenTimerTimeoutSec;
     QTimer *userRoleTimeOutTimer;
     int _userRoleTimeOutTimerSec;
+    QTimer *rebootNightlyTimeOutTimer;
+    QTime *currentTime;
+    int _rebootNightlyTimeOutTimerSec;
 
     void checkReceiptPrinterStatus();
     StateFrozenScreenDetect stateScreenCheck;
@@ -94,6 +97,7 @@ private slots:
     void onTestForFrozenScreenTick();
     void on_pushButton_test_clicked();
     void onUserRoleTimeOutTimerTick();
+    void onRebootNightlyTimeOutTimerTick();
 
 private:
     Ui::page_idle *ui;

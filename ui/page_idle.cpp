@@ -66,6 +66,11 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     stateScreenCheck = state_screen_check_not_initiated;
     statusbarLayout = new QVBoxLayout(this);
 
+    rebootNightlyTimeOutTimer = new QTimer(this);
+    rebootNightlyTimeOutTimer->setInterval(1000);
+    connect(rebootNightlyTimeOutTimer, SIGNAL(timeout()), this, SLOT(onRebootNightlyTimeOutTimerTick()));
+    // thisMachine->setRebootState(initial_state);
+
     tappingBlockedUntilPrinterReply = false; 
 }
 
@@ -78,6 +83,8 @@ void page_idle::setPage(page_select_product *p_page_select_product, page_mainten
     this->p_page_idle_products = p_page_idle_products;
     this->p_page_error_wifi = p_page_error_wifi;
     this->p_statusbar = p_statusbar;
+
+    thisMachine->setRebootState(wait_for_trigger);
 }
 
 // DTOR
@@ -171,6 +178,12 @@ void page_idle::showEvent(QShowEvent *event)
 
     userRoleTimeOutTimer->start(1000);
     _userRoleTimeOutTimerSec = PAGE_IDLE_USER_ROLE_TIMEOUT_SECONDS;
+
+    qDebug() << "!@##@!@@@@@ reboot nightly timer 1";
+    rebootNightlyTimeOutTimer->start(1000);
+    qDebug() << "!@##@!@@@@@ reboot nightly timer 2";
+    _rebootNightlyTimeOutTimerSec = PAGE_IDLE_REBOOT_NIGHTLY_TIMEOUT_SECONDS;
+    qDebug() << "!@##@!@@@@@ reboot nightly timer 3";
 
 // #define PLAY_VIDEO
 #ifdef PLAY_VIDEO
@@ -346,6 +359,53 @@ void page_idle::onUserRoleTimeOutTimerTick()
 
         _userRoleTimeOutTimerSec = PAGE_IDLE_USER_ROLE_TIMEOUT_SECONDS;
     }
+}
+
+void page_idle::onRebootNightlyTimeOutTimerTick(){
+    _rebootNightlyTimeOutTimerSec--;
+    if (_rebootNightlyTimeOutTimerSec >= 0)
+    {
+        // do nothing 
+        return;
+    }
+    else
+    {
+        //qDebug() << "!!!!!!!!!!!!!!!!!!!!!!!Reboot Nightly Timer: ";
+        _rebootNightlyTimeOutTimerSec = PAGE_IDLE_REBOOT_NIGHTLY_TIMEOUT_SECONDS;
+    
+        switch(thisMachine->getRebootState()){
+            case wait_for_trigger:
+            {
+                //check if time is passed set time (midnight e.g.)
+                QTime currentTime = QTime::currentTime();
+                int millisecondsUntilMidnight = currentTime.msecsTo(QTime(0, 0));
+                qDebug() << "!!!!!!!!!!!!!!!! current time:" << currentTime.toString("hh:mm:ss.zzz");
+                qDebug() << "!!!!!!!!!!!!!!!! milli seconds until midnight:" << millisecondsUntilMidnight;
+                // if (passedmidnight){
+                //     thisMachine->setRebootState(triggered_wait_for_delay);
+                //     delaytime_seconds = 300
+                // }
+            }
+            break;
+            case triggered_wait_for_delay:
+            {
+                // delaytime_seconds--;
+                // if (delaytime_seconds =< 0){
+
+                // }
+                // show  button with time 
+            }
+            break;
+            case user_cancelled_reboot:
+            {
+                // thisMachine->setRebootState(triggered_wait_for_delay);
+            }
+            break;
+
+        }
+    
+    }
+
 }
 
 void page_idle::refreshTemperature()

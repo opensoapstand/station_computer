@@ -30,10 +30,14 @@ void dispenser_slot::setDb(DbManager *db)
 // {
 //     thisMachine = machine;
 // }
+QVector<int> dispenser_slot::getDispensePNumbers()
+{
+    return m_dispensePNumbers;
+}
+
 QVector<int> dispenser_slot::getAllPNumbers()
 {
-    // QVector<int> pnumbers;
-    QVector<int> pnumbers(m_additivesPNumbers);
+    QVector<int> pnumbers(m_additivePNumbers);
     pnumbers.append(m_basePNumber);
     return pnumbers;
 }
@@ -41,8 +45,9 @@ QVector<int> dispenser_slot::getAllPNumbers()
 void dispenser_slot::loadSlotParametersFromDb()
 {
     m_db->getAllSlotProperties(getSlotId(),
+                               &m_dispensePNumbers,
                                &m_basePNumber,
-                               &m_additivesPNumbers,
+                               &m_additivePNumbers,
                                &m_is_enabled,
                                &m_status_text);
 }

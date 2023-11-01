@@ -248,6 +248,7 @@ bool DbManager::addPageClick(const QString &page)
 }
 
 void DbManager::getAllSlotProperties(int slot,
+                                     QVector<int> *dispensePNumbers,
                                      int *basePNumber,
                                      QVector<int> *additivesPNumbers,
                                      bool *is_enabled,
@@ -261,7 +262,7 @@ void DbManager::getAllSlotProperties(int slot,
     {
         QSqlDatabase db = openDb(CONFIG_DB_PATH);
         QSqlQuery qry(db);
-        qry.prepare("SELECT slot_id, 'base_P-number', 'additives_P-numbers', is_enabled, status_text FROM slots WHERE slot_id=:slot");
+        qry.prepare("SELECT dispense_pnumbers, base_pnumber, additive_pnumbers, is_enabled, status_text FROM slots WHERE slot_id=:slot");
         qry.bindValue(":slot", slot);
         // qry.prepare(QString("SELECT 'slot_id,base_P-number', 'additives_P-numbers', is_enabled, status_text FROM slots WHERE slot_id=%1").arg(QString::number(slot)));
         bool success;
@@ -276,20 +277,38 @@ void DbManager::getAllSlotProperties(int slot,
         }
 
         QString additivesAsString;
+        QString dispensePNumbersAsString;
         while (qry.next())
         {
-            *basePNumber = qry.value(0).toInt();
-            additivesAsString = qry.value(1).toString();
-            *is_enabled = qry.value(2).toInt();
-            *status_text = qry.value(3).toString();
+            dispensePNumbersAsString = qry.value(0).toString();
+            *basePNumber = qry.value(1).toInt();
+            additivesAsString = qry.value(2).toString();
+            *is_enabled = qry.value(3).toInt();
+            *status_text = qry.value(4).toString();
         }
         qry.finish();
 
-        QStringList stringList = additivesAsString.split(",");
+        // qDebug()<< "********f*f*f*f*f*f"<<dispensePNumbersAsString;
+
+        // qDebug() << "base:  " << *basePNumber;
+        // qDebug() << "raw additives string:  " << additivesAsString;
+        // qDebug() << "isenabled:  " << *is_enabled;
+        // qDebug() << "statustext:  " << *status_text;
+        QStringList stringList = dispensePNumbersAsString.split(",");
         foreach (QString num, stringList)
         {
-            additivesPNumbers->append(num.toInt());
+            // additivesPNumbers->append(num.toInt());
+            // qDebug()<< "==================" << num;
         }
+        df_util::csvQStringToQVector(additivesAsString, *additivesPNumbers);
+        df_util::csvQStringToQVector(dispensePNumbersAsString, *dispensePNumbers);
+
+       
+        // QStringList stringList = additivesAsString.split(",");
+        // foreach (QString num, stringList)
+        // {
+        //     additivesPNumbers->append(num.toInt());
+        // }
     }
     closeDb();
 }
@@ -402,8 +421,8 @@ price_custom_discount
 void DbManager::getAllProductProperties(int pnumber,
                                         QString *productId,
                                         QString *soapstand_product_serial,
-                                        QVector<int> *m_additivesPNumbers,
-                                        QVector<double> *m_additivesRatios,
+                                        QVector<int> *m_mixPNumbers,
+                                        QVector<double> *m_mixRatios,
                                         QString *size_unit,
                                         QString *m_currency_deprecated, //_dummy_deprecated
                                         QString *m_payment_deprecated,  //_deprecated,
@@ -426,8 +445,8 @@ void DbManager::getAllProductProperties(int pnumber,
     // void getAllProductProperties(int slot,
     //                              QString *productId,
     //                              QString *soapstand_product_serial,
-    //                              QVector<int> *m_additivesPNumbers,
-    //                              QVector<double> *m_additivesRatios,
+    //                              QVector<int> *m_mixPNumbers,
+    //                              QVector<double> *m_mixRatios,
     //                              QString *size_unit,
     //                              QString *name_receipt,
     //                              QString *m_currency_deprecated, //_dummy_deprecated
@@ -455,7 +474,7 @@ void DbManager::getAllProductProperties(int pnumber,
         QSqlDatabase db = openDb(CONFIG_DB_PATH);
         QSqlQuery qry(db);
         // qry.prepare("SELECT soapstand_product_serial, size_unit, payment, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_max,price_small,price_medium, price_large,price_custom FROM products WHERE pnumber=:pnumber");
-        qry.prepare("SELECT productId, soapstand_product_serial, additives_pnumbers, additives_ratios, slot, name, size_unit, name_receipt, concentrate_multiplier, dispense_speed, threshold_flow, retraction_time, calibration_const, volume_per_tick, last_restock, volume_full, volume_remaining, volume_dispensed_since_restock, volume_dispensed_total, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_min, size_custom_max, price_small, price_medium, price_large, price_custom, plu_small, plu_medium, plu_large, plu_custom, pid_small, pid_medium, pid_large, pid_custom, flavour, image_url, type, ingredients, features, description, is_enabled_custom_discount, size_custom_discount, price_custom_discount FROM products WHERE soapstand_product_serial=:pnumber");
+        qry.prepare("SELECT productId, soapstand_product_serial, mix_pnumbers, mix_ratios, slot, name, size_unit, name_receipt, concentrate_multiplier, dispense_speed, threshold_flow, retraction_time, calibration_const, volume_per_tick, last_restock, volume_full, volume_remaining, volume_dispensed_since_restock, volume_dispensed_total, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_min, size_custom_max, price_small, price_medium, price_large, price_custom, plu_small, plu_medium, plu_large, plu_custom, pid_small, pid_medium, pid_large, pid_custom, flavour, image_url, type, ingredients, features, description, is_enabled_custom_discount, size_custom_discount, price_custom_discount FROM products WHERE soapstand_product_serial=:pnumber");
         qry.bindValue(":pnumber", pnumber);
         bool success;
         success = qry.exec();
@@ -468,15 +487,15 @@ void DbManager::getAllProductProperties(int pnumber,
             // success = false;
         }
 
-        QString additives_pnumbers;
-        QString additives_ratios;
+        QString mix_pnumbers;
+        QString mix_ratios;
 
         while (qry.next())
         {
             *productId = qry.value(0).toString();
             *soapstand_product_serial = qry.value(1).toString();
-            additives_pnumbers = qry.value(2).toString();
-            additives_ratios = qry.value(3).toString();
+            mix_pnumbers = qry.value(2).toString();
+            mix_ratios = qry.value(3).toString();
             *size_unit = qry.value(6).toString();
             *name_receipt = qry.value(7).toString();
             *concentrate_multiplier = qry.value(8).toInt();
@@ -525,11 +544,11 @@ void DbManager::getAllProductProperties(int pnumber,
     }
     closeDb();
 
-    for (int i = 0; i < 4; i++)
-    {
+    // for (int i = 0; i < 4; i++)
+    // {
 
-        qDebug() << prices[i];
-    }
+    //     qDebug() << prices[i];
+    // }
 }
 
 /*

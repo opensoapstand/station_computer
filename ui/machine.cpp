@@ -19,6 +19,12 @@ machine::machine()
     // IPC Networking
     dfUtility = new df_util();
     productSelectionOptions.resize(PRODUCT_SELECTION_OPTIONS_MAX);
+
+    // initializing array, containing all existing pnumbers
+    for (int pnumber_index = 0; pnumber_index < HIGHEST_PNUMBER_COUNT; pnumber_index++)
+    {
+        m_pnumberproducts[pnumber_index].setPNumber(pnumber_index);
+    }
 }
 
 // Dtor
@@ -39,28 +45,71 @@ void machine::initMachine()
         m_slots[slot_index].loadSlotParametersFromDb();
     }
 
-    QVector<int> all_pnumbers = getAllUsedPNumbersFromSlots();
+    QVector<int> all_dispense_pnumbers = getAllDispensePNumbersFromSlots();
     qDebug() << "sapi prut";
-    for (int i = 0; i < all_pnumbers.size(); ++i)
+    for (int i = 0; i < all_dispense_pnumbers.size(); ++i)
     {
-        qDebug() << all_pnumbers[i];
+        qDebug() << all_dispense_pnumbers[i];
     }
 
     // get all PNumbers (all the products) defined in dispensers.
-    // for (int i = 0; i < all_pnumbers.size(); ++i)
+    // for (int i = 0; i < all_dispense_pnumbers.size(); ++i)
     // {
     //     int num = uniquePNumbers[i];
     // }
 
     // TODO: For now, the index of a product in an array is its P-number.  e.g. P-6 is tangerine dish saop. Its object resides in m_pnumberproducts[6]
-    for (int pnumber_index = 0; pnumber_index < all_pnumbers.size(); pnumber_index++)
+    for (int pnumber_index = 0; pnumber_index < all_dispense_pnumbers.size(); pnumber_index++)
     {
+        qDebug() << "machine: load product properties for pnumber:" << (all_dispense_pnumbers[pnumber_index]);
         // m_pnumberproducts[pnumber_index].GET IT DONE;
-        m_pnumberproducts[all_pnumbers[pnumber_index]].setDb(m_db);
-        m_pnumberproducts[all_pnumbers[pnumber_index]].loadProductPropertiesFromDb();
+        m_pnumberproducts[all_dispense_pnumbers[pnumber_index]].setDb(m_db);
+        m_pnumberproducts[all_dispense_pnumbers[pnumber_index]].loadProductProperties();
     }
 
     loadDynamicContent(); // part of it is redundant of what's been done here, but not everything. So, do it again.
+}
+
+void machine::loadDynamicContent()
+{
+    // load global machine data
+    loadMachineParameterFromDb();
+    for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
+    {
+        m_slots[slot_index].loadSlotParametersFromDb();
+    }
+
+    QVector<int> all_dispense_pnumbers = getAllDispensePNumbersFromSlots();
+    for (int pnumber_index = 0; pnumber_index < all_dispense_pnumbers.size(); pnumber_index++)
+    {
+        m_pnumberproducts[all_dispense_pnumbers[pnumber_index]].loadProductProperties();
+    }
+
+    loadTextsFromTemplateCsv();                                // dynamic content (text by template)
+    loadTextsFromDefaultHardwareCsv();                         // dynamic styling (css by template)
+    loadTextsFromDefaultCsv();                                 // dynamic styling (css by template)
+    loadElementDynamicPropertiesFromTemplate();                // dynamic elements (position, visibility)
+    loadElementDynamicPropertiesFromDefaultHardwareTemplate(); // dynamic elements (position, visibility)
+    loadElementDynamicPropertiesFromDefaultTemplate();         // dynamic elements (position, visibility)
+}
+
+QSet<int> uniquePNumbers; // Use a QSet to store unique pnumbers (i.e. no value can appear twice)
+QVector<int> machine::getAllDispensePNumbersFromSlots()
+{
+
+    // collect all pnumbers used in slots
+    for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
+    {
+        QVector<int> slotpnumbers = m_slots[slot_index].getDispensePNumbers();
+        // Add unique pnumbers from the current slot to the QSet
+        for (int i = 0; i < slotpnumbers.size(); ++i)
+        {
+            qDebug() << "Dispense product at slot " << (slot_index + 1) << ": pnumber: " << slotpnumbers[i];
+            uniquePNumbers.insert(slotpnumbers[i]);
+        }
+    }
+    // Convert the QSet to a QVector
+    return QVector<int>::fromList(uniquePNumbers.toList());
 }
 
 QVector<int> machine::getAllUsedPNumbersFromSlots()
@@ -70,12 +119,12 @@ QVector<int> machine::getAllUsedPNumbersFromSlots()
     // collect all pnumbers used in slots
     for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
     {
-        qDebug() << "SLOTf:::" << (slot_index+1);
+        // qDebug() << "SLOTf:::" << (slot_index+1);
         QVector<int> slotpnumbers = m_slots[slot_index].getAllPNumbers();
         // Add unique pnumbers from the current slot to the QSet
         for (int i = 0; i < slotpnumbers.size(); ++i)
         {
-            qDebug() << "pnumber: " << slotpnumbers[i];
+            // qDebug() << "pnumber: " << slotpnumbers[i];
             uniquePNumbers.insert(slotpnumbers[i]);
         }
     }
@@ -93,29 +142,6 @@ bool machine::isProductVolumeInContainer(int pnumber)
         retval = m_pnumberproducts[pnumber].getVolumeRemaining() > CONTAINER_EMPTY_THRESHOLD_ML;
     }
     return retval;
-}
-
-void machine::loadDynamicContent()
-{
-    // load global machine data
-    loadMachineParameterFromDb();
-    for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
-    {
-        m_slots[slot_index].loadSlotParametersFromDb();
-    }
-
-    QVector<int> all_pnumbers = getAllUsedPNumbersFromSlots();
-    for (int pnumber_index = 0; pnumber_index < all_pnumbers.size(); pnumber_index++)
-    {
-        m_pnumberproducts[all_pnumbers[pnumber_index]].loadProductPropertiesFromDb();
-    }
-
-    loadTextsFromTemplateCsv();                                // dynamic content (text by template)
-    loadTextsFromDefaultHardwareCsv();                         // dynamic styling (css by template)
-    loadTextsFromDefaultCsv();                                 // dynamic styling (css by template)
-    loadElementDynamicPropertiesFromTemplate();                // dynamic elements (position, visibility)
-    loadElementDynamicPropertiesFromDefaultHardwareTemplate(); // dynamic elements (position, visibility)
-    loadElementDynamicPropertiesFromDefaultTemplate();         // dynamic elements (position, visibility)
 }
 
 DbManager *machine::getDb()
@@ -266,8 +292,8 @@ int machine::getSlotCount()
         else if (m_hardware_version == "AP2")
         {
             // get slot count dynamically from slots (number of records, check also with slot id, to make sure there are no 'gaps' (e.g. 1,2,3,4,5  instead of 1,4,5,6,7))
-
             slot_count = m_dispense_buttons_count % 1000;
+            // qDebug() << "Slot dispensers Count for AP2:" << slot_count;
         }
         else
         {

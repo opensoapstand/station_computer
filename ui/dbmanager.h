@@ -43,6 +43,7 @@ public:
     void addUserInteraction(QString session_id, QString role, QString page, QString event, QString data);
 
     void getAllSlotProperties(int slot,
+                              QVector<int> *dispensePNumbers,
                               int *basePNumber,
                               QVector<int> *additivesPNumbers,
                               bool *is_enabled,
@@ -51,8 +52,8 @@ public:
     void getAllProductProperties(int pnumber,
                                  QString *productId,
                                  QString *soapstand_product_serial,
-                                 QVector<int> *m_additivesPNumbers,
-                                 QVector<double> *m_additivesRatios,
+                                 QVector<int> *m_mixPNumbers,
+                                 QVector<double> *m_mixRatios,
                                  QString *size_unit,
                                  QString *name_receipt,
                                  QString *m_currency_deprecated, //_dummy_deprecated

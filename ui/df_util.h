@@ -5,6 +5,8 @@
 #include "dfuicommthread.h"
 #include "dfuiserver.h"
 
+#include <QVector>
+
 // TODO: Refactor to fit with dfuicommthread
 //#define START_FSM_FROM_UI //enabled by default (start controller from ui)
 
@@ -171,6 +173,7 @@ public:
     static double convertOzToMl(double vol_oz);
     static char sizeIndexToChar(int size_index);
     static QString getConvertedStringVolumeFromMl(double volumeMilliLiter, QString units, bool roundNumber, bool addUnits);
+    static void csvQStringToQVector(const QString& csvList, QVector<int>& returnIntList);
     
     void write_to_file_timestamped(QString basePath, QString data);
     void write_to_file(QString path, QString data);
@@ -178,7 +181,6 @@ public:
     void send_command_to_FSM(QString command, bool isLoggingMessage);
 
     static QJsonObject parseJsonString(QString jsonString);
-
     bool m_IsSendingFSM;
 
     static void executeVirtualClick(int x, int y);

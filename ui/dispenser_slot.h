@@ -20,6 +20,7 @@ public:
     void setDb(DbManager *db);
 
     QVector<int> getAllPNumbers();
+    QVector<int> getDispensePNumbers();
 
     void loadSlotParametersFromDb();
 
@@ -53,7 +54,8 @@ private:
     int slot;
 
     int m_basePNumber;
-    QVector<int> m_additivesPNumbers; // int m_additivesPNumbers[ADDITIVES_PER_SLOT_COUNT_MAX];
+    QVector<int> m_dispensePNumbers; 
+    QVector<int> m_additivePNumbers; // int m_mixPNumbers[ADDITIVES_PER_SLOT_COUNT_MAX];
     bool m_is_enabled;
     QString m_status_text;
 

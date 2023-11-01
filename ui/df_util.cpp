@@ -48,6 +48,13 @@ QVector<double> splitQStringToQVectorDouble(QString commaSeparatedNoSpaces)
     return doubleslist;
 }
 
+void df_util::csvQStringToQVector(const QString& csvList, QVector<int>& returnIntList) {
+    // call as csvQStringToQVector(myQString, myQVector)
+    QStringList stringList = csvList.split(",");
+    foreach (QString num, stringList) {
+        returnIntList.append(num.toInt());
+    }
+}
 bool df_util::pathExists(QString path)
 {
     // check if path exists and if yes: Is it a file and no directory?

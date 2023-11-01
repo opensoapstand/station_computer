@@ -89,17 +89,17 @@ int pnumberproduct::getBasePNumber()
 
 QVector<int> pnumberproduct::getAdditivesPNumbers()
 {
-    return m_additivesPNumbers;
+    return m_mixPNumbers;
 }
 
 void pnumberproduct::loadProductPropertiesFromDb()
 {
-    qDebug() << "Open db: db load pnumberproduct properties for pnumberproduct in slot: " << getPNumber();
+    qDebug() << "Open db: db load pnumberproduct properties for pnumberproduct for pnumber: " << getPNumber();
     m_db->getAllProductProperties(getPNumber(),
                                   &m_aws_product_id,
                                   &m_soapstand_product_serial,
-                                  &m_additivesPNumbers,
-                                  &m_additivesRatios,
+                                  &m_mixPNumbers,
+                                  &m_mixRatios,
                                   &m_size_unit,
                                   &m_currency_deprecated, //_dummy_deprecated
                                   &m_payment_deprecated,  //_deprecated,

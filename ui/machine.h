@@ -204,6 +204,7 @@ public:
     void loadTextsFromCsv(QString csv_path, std::map<QString, QString> *dictionary);
 
     QVector<int> getAllUsedPNumbersFromSlots();
+    QVector<int> getAllDispensePNumbersFromSlots();
 
 public slots:
 

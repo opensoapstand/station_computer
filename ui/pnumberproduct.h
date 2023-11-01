@@ -109,8 +109,8 @@ private:
     int m_PNumber;
     int m_basePNumber;
     bool m_isBaseProduct; // 100%, no additives.
-    QVector<int> m_additivesPNumbers;
-    QVector<double> m_additivesRatios;
+    QVector<int> m_mixPNumbers;
+    QVector<double> m_mixRatios;
 
     int m_selected_size;
     double DispensedVolumeMl;

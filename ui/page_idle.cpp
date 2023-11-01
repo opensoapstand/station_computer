@@ -251,11 +251,11 @@ bool page_idle::eventFilter(QObject *object, QEvent *event)
             //     emit pageChangeRequested();
             //     return true; // Event handled, stop further processing
             // }
-            qDebug() << "Mouse Clicked in idle page (can be virtual)"; // leave this for a while to investigate frozen screens in the field.
+            // qDebug() << "Mouse Clicked in idle page (can be virtual)"; // leave this for a while to investigate frozen screens in the field.
             if (stateScreenCheck == state_screen_check_clicked_and_wait)
             {
                 stateScreenCheck = state_screen_check_clicked_and_succes;
-                qDebug() << "Mouse Clicked in idle page (can be virtual): Frozen screen test. Will not proceed."; // leave this for a while to investigate frozen screens in the field.
+                // qDebug() << "Mouse Clicked in idle page (can be virtual): Frozen screen test. Will not proceed."; // leave this for a while to investigate frozen screens in the field.
             }
             else
             {

@@ -320,9 +320,9 @@ void page_dispenser::dispensing_end_admin()
     qDebug() << "volume dispensed" << p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl();
     if (p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl() < MINIMUM_DISPENSE_VOLUME_ML)
     {
-        cancelPayment = true;
+        this->cancelPayment = true;
     }
-    if (cancelPayment && (paymentMethod == PAYMENT_TAP_TCP || paymentMethod == PAYMENT_TAP_SERIAL))
+    if (this->cancelPayment && (paymentMethod == PAYMENT_TAP_TCP || paymentMethod == PAYMENT_TAP_SERIAL))
     {
         ui->label_indicate_active_spout->hide();
         ui->label_to_refill->hide();

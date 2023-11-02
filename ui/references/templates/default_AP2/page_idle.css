@@ -59,3 +59,67 @@ QLabel {
     qproperty-alignment: AlignCenter;
     text-align: center;
 }
+
+QMessageBox {
+    font-size: 24px;
+    font-weight: bold;
+    font-style: normal;
+    font-family: 'EuropaNuova-Regular';
+    background: green;
+ }
+ 
+ QMessageBox QPushButton {
+    border: 1px solid white;
+    background: blue;
+    font-size: 24px;
+    min-width: 150px;
+    min-height: 30px;
+    qproperty-alignment: AlignLeft;
+    margin: 0 auto;
+    font-family: 'EuropaNuova-Regular';
+ }
+
+ QMessageBox QPushButton:hover { background-color: #777777; }
+ 
+ QLabel {
+    /*this label controls the color of the checkbox */
+    font-family:'EuropaNuova-Regular';
+    font-size:36px;
+    color: #58595b;
+    font-style:light;
+    /* padding: 10px 20px 10px 0px; */
+    width: 1000px;
+ }
+
+/* QMessageBox{
+    min-height: 1000px;
+    border: 1px solid white;
+    qproperty-alignment: AlignCenter;
+    text-align: center;
+}
+
+QMessageBox.msgBox{
+    min-width: 7000px;
+    height: 500px;
+    font-weight: bold;
+    font-style: normal;
+    font-family: 'EuropaNuova-Regular';
+    background: red;
+}
+
+QMessageBox QLabel{
+    color: yellowgreen;
+    background: blue;
+    padding: 25px;
+    font-size: 24px;
+    text-align: left;
+}
+
+QMessageBox QPushButton{
+    border: 1px solid white;
+    font-size: 24px;
+    min-width: 150px;
+    min-height: 30px;
+    text-align: center;
+} */
+

@@ -83,7 +83,7 @@ public:
     QTimer *rebootNightlyTimeOutTimer;
     QTime *currentTime;
     int _rebootNightlyTimeOutTimerSec;
-
+    
     void checkReceiptPrinterStatus();
     StateFrozenScreenDetect stateScreenCheck;
     void hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createNewSessionId);

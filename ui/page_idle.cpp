@@ -14,6 +14,7 @@
 //***************************************
 
 #include "page_idle.h"
+#include "machine.h"
 #include "ui_page_idle.h"
 #include "page_idle_products.h"
 #include "page_maintenance.h"
@@ -116,9 +117,9 @@ void page_idle::showEvent(QShowEvent *event)
 
     thisMachine->dispenseButtonLightsAnimateState(true);
 
-    if (!thisMachine->isSessionLocked())
+    if (!thisMachine->isSessionLocked()) 
     {
-        thisMachine->resetSessionId();
+      thisMachine->resetSessionId();
     }
 
     if (thisMachine->getCouponState() == StateCoupon::no_state) // at startup
@@ -179,11 +180,9 @@ void page_idle::showEvent(QShowEvent *event)
     userRoleTimeOutTimer->start(1000);
     _userRoleTimeOutTimerSec = PAGE_IDLE_USER_ROLE_TIMEOUT_SECONDS;
 
-    qDebug() << "!@##@!@@@@@ reboot nightly timer 1";
+    qDebug() << "================== Reboot Nightly Timer Activated ================== ";
     rebootNightlyTimeOutTimer->start(1000);
-    qDebug() << "!@##@!@@@@@ reboot nightly timer 2";
     _rebootNightlyTimeOutTimerSec = PAGE_IDLE_REBOOT_NIGHTLY_TIMEOUT_SECONDS;
-    qDebug() << "!@##@!@@@@@ reboot nightly timer 3";
 
 // #define PLAY_VIDEO
 #ifdef PLAY_VIDEO
@@ -365,40 +364,60 @@ void page_idle::onRebootNightlyTimeOutTimerTick(){
     _rebootNightlyTimeOutTimerSec--;
     if (_rebootNightlyTimeOutTimerSec >= 0)
     {
-        // do nothing 
         return;
     }
     else
     {
-        //qDebug() << "!!!!!!!!!!!!!!!!!!!!!!!Reboot Nightly Timer: ";
         _rebootNightlyTimeOutTimerSec = PAGE_IDLE_REBOOT_NIGHTLY_TIMEOUT_SECONDS;
-    
+        QTime currentTime = QTime::currentTime();
+        // int millisecondsUntilSetTime = currentTime.msecsTo(QTime(23, 55));
+        int millisecondsUntilSetTime = QTime(23, 55).msecsTo(QTime(23, 55));
+        int delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
+        qDebug() << "!!!!!!!!!!!!!!!! milli seconds until midnight:" << millisecondsUntilSetTime;
         switch(thisMachine->getRebootState()){
             case wait_for_trigger:
             {
-                //check if time is passed set time (midnight e.g.)
-                QTime currentTime = QTime::currentTime();
-                int millisecondsUntilMidnight = currentTime.msecsTo(QTime(0, 0));
-                qDebug() << "!!!!!!!!!!!!!!!! current time:" << currentTime.toString("hh:mm:ss.zzz");
-                qDebug() << "!!!!!!!!!!!!!!!! milli seconds until midnight:" << millisecondsUntilMidnight;
-                // if (passedmidnight){
-                //     thisMachine->setRebootState(triggered_wait_for_delay);
-                //     delaytime_seconds = 300
-                // }
+                qDebug() << "================== WAIT FOR TRIGGER =======================";
+                if (millisecondsUntilSetTime <= 0){
+                    thisMachine->setRebootState(triggered_wait_for_delay);
+                }
             }
             break;
             case triggered_wait_for_delay:
             {
-                // delaytime_seconds--;
-                // if (delaytime_seconds =< 0){
-
-                // }
-                // show  button with time 
+                qDebug() << "================== TRIGGERED WAIT FOR DELAY =======================";
+                if(millisecondsUntilSetTime <= 0){
+                    qDebug() << "Reboot Nightly Timmer: Rebooting in" << delaytime_seconds  << "seconds...";
+                    //popup with option to cancel reboot; freeze idle page
+                    QMessageBox msgBox;
+                    msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
+                    QString styleSheet = thisMachine->getCSS(PAGE_IDLE_CSS);
+                    QString searchString = this->objectName() + "->msgBox_reboot->default";
+                    thisMachine->setTextToObject(&msgBox, thisMachine->getTemplateText(searchString));
+                    // QString base = msgBox.text();
+                    // QString seconds = QString::number(delaytime_seconds);
+                    // msgBox.setText(base.arg(seconds));
+                    // msgBox.setText("System will be rebooted in <br>".arg(delaytime_seconds));
+                    msgBox.setStyleSheet(styleSheet);
+                    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+                    int ret = msgBox.exec();
+                    delaytime_seconds--;
+                    if(msgBox.exec() == QMessageBox::No){
+                        thisMachine->setRebootState(user_cancelled_reboot);
+                    }
+                }else{
+                    //reboot system here
+                    thisMachine->setRebootState(wait_for_trigger);
+                    delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
+                }
             }
             break;
             case user_cancelled_reboot:
             {
-                // thisMachine->setRebootState(triggered_wait_for_delay);
+                qDebug() << "================== USER CANCELLED REBOOT =======================";
+                if(millisecondsUntilSetTime > 0){
+                    thisMachine->setRebootState(wait_for_trigger);
+                }
             }
             break;
 

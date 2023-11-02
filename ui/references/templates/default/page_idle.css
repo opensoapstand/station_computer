@@ -49,4 +49,18 @@ QLabel {
    background-color: transparent; 
    border: 0px;
    }
+
+QMessageBox {
+   min-width: 7000px;
+   font-size: 24px;
+   font-weight: bold;
+   font-style: normal;
+   font-family: 'Montserrat';
+}
+
+QMessageBox.msgBoxbutton QPushButton {
+   font-size: 24px;
+   min-width: 300px;
+   min-height: 300px;
+}
       

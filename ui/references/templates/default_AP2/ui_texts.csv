@@ -20,6 +20,7 @@ page_idle->label_printer_status->nopaper,Assistance needed<br>Receipt Printer em
 page_idle->label_show_temperature->temperature,Temperature is..
 #page_idle->label_show_temperature,Temperature: %1
 page_idle->label_show_temperature,%1°C
+page_idle->msgBox_reboot->default,<p align=center>System will be rebooted in<br></p>
 
 #page_select_product
 page_select_product->label_pick_soap,Discover our Beverages

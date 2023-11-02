@@ -19,8 +19,12 @@ public:
     // void setMachine(machine *machine);
     void setDb(DbManager *db);
 
+
     QVector<int> getAllPNumbers();
     QVector<int> getDispensePNumbers();
+    int getBasePNumber();
+    QVector<int> getAdditivePNumbers();
+    // int getAdditivesPNumbersCount();
 
     void loadSlotParametersFromDb();
 
@@ -29,9 +33,8 @@ public:
     int getSlotId();
 
     // void setBasePNumber(int);
-    void getBasePNumber(int);
-    int getAdditivesPNumbersCount();
-    int *getAdditivesPNumbers();
+    // void getBasePNumber(int);
+    // int *getAdditivesPNumbers();
 
     // void setCouponCode(QString promoCode);
     // bool getSlotEnabled();
@@ -54,7 +57,7 @@ private:
     int slot;
 
     int m_basePNumber;
-    QVector<int> m_dispensePNumbers; 
+    QVector<int> m_dispensePNumbers;
     QVector<int> m_additivePNumbers; // int m_mixPNumbers[ADDITIVES_PER_SLOT_COUNT_MAX];
     bool m_is_enabled;
     QString m_status_text;

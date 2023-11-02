@@ -52,8 +52,8 @@ public:
     void getAllProductProperties(int pnumber,
                                  QString *productId,
                                  QString *soapstand_product_serial,
-                                 QVector<int> *m_mixPNumbers,
-                                 QVector<double> *m_mixRatios,
+                                 QVector<int> &mixPNumbers,
+                                 QVector<double> &mixRatios,
                                  QString *size_unit,
                                  QString *name_receipt,
                                  QString *m_currency_deprecated, //_dummy_deprecated

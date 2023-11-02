@@ -48,13 +48,24 @@ QVector<double> splitQStringToQVectorDouble(QString commaSeparatedNoSpaces)
     return doubleslist;
 }
 
-void df_util::csvQStringToQVector(const QString& csvList, QVector<int>& returnIntList) {
-    // call as csvQStringToQVector(myQString, myQVector)
+void df_util::csvQStringToQVectorInt(const QString& csvList, QVector<int>& returnIntList) {
+    // call as csvQStringToQVectorInt(myQString, myQVector)
+    returnIntList.clear();
     QStringList stringList = csvList.split(",");
     foreach (QString num, stringList) {
         returnIntList.append(num.toInt());
     }
 }
+
+void df_util::csvQStringToQVectorDouble(const QString& csvList, QVector<double>& returnDoubleList) {
+    // call as csvQStringToQVectorInt(myQString, myQVector)
+    returnDoubleList.clear();
+    QStringList stringList = csvList.split(",");
+    foreach (QString num, stringList) {
+        returnDoubleList.append(num.toDouble());
+    }
+}
+
 bool df_util::pathExists(QString path)
 {
     // check if path exists and if yes: Is it a file and no directory?

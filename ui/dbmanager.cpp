@@ -300,10 +300,9 @@ void DbManager::getAllSlotProperties(int slot,
             // additivesPNumbers->append(num.toInt());
             // qDebug()<< "==================" << num;
         }
-        df_util::csvQStringToQVector(additivesAsString, *additivesPNumbers);
-        df_util::csvQStringToQVector(dispensePNumbersAsString, *dispensePNumbers);
+        df_util::csvQStringToQVectorInt(additivesAsString, *additivesPNumbers);
+        df_util::csvQStringToQVectorInt(dispensePNumbersAsString, *dispensePNumbers);
 
-       
         // QStringList stringList = additivesAsString.split(",");
         // foreach (QString num, stringList)
         // {
@@ -414,34 +413,6 @@ price_custom_discount
 47	size_custom_discount
 48	price_custom_discount
 
- */
-// void DbManager::getAllProductProperties(int slot, QString* soapstand_product_serial, QString* size_unit, QString* payment, int* concentrate_multiplier, int* dispense_speed, bool *isSizeEnabled, double* prices, double* volumes, QString* PLUs, QString* PIDs)
-//   string table_products_columns[TABLE_PRODUCTS_COLUMN_COUNT] = {"productId", "soapstand_product_serial", "slot", "name", "size_unit", "currency", "payment", "name_receipt", "concentrate_multiplier", "dispense_speed", "threshold_flow", "retraction_time", "calibration_const", "volume_per_tick", "last_restock", "volume_full", "volume_remaining", "volume_dispensed_since_restock", "volume_dispensed_total", "is_enabled_small", "is_enabled_medium", "is_enabled_large", "is_enabled_custom", "size_small", "size_medium", "size_large", "size_custom_min", "size_custom_max", "price_small", "price_medium", "price_large", "price_custom", "plu_small", "plu_medium", "plu_large", "plu_custom", "pid_small", "pid_medium", "pid_large", "pid_custom", "flavour", "image_url", "type", "ingredients", "features", "description", "is_enabled_custom_discount", "size_custom_discount", "price_custom_discount"};
-//  (productId, soapstand_product_serial, slot, name, size_unit, currency, payment, name_receipt, concentrate_multiplier, dispense_speed, threshold_flow, retraction_time, calibration_const, volume_per_tick, last_restock, volume_full, volume_remaining, volume_dispensed_since_restock, volume_dispensed_total, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_min, size_custom_max, price_small, price_medium, price_large, price_custom, plu_small, plu_medium, plu_large, plu_custom, pid_small, pid_medium, pid_large, pid_custom, flavour, image_url, type, ingredients, features, description, is_enabled_custom_discount, size_custom_discount, price_custom_discount)
-void DbManager::getAllProductProperties(int pnumber,
-                                        QString *productId,
-                                        QString *soapstand_product_serial,
-                                        QVector<int> *m_mixPNumbers,
-                                        QVector<double> *m_mixRatios,
-                                        QString *size_unit,
-                                        QString *m_currency_deprecated, //_dummy_deprecated
-                                        QString *m_payment_deprecated,  //_deprecated,
-                                        QString *name_receipt,
-                                        int *concentrate_multiplier,
-                                        int *dispense_speed,
-                                        double *threshold_flow,
-                                        int *retraction_time,
-                                        double *calibration_const,
-                                        double *volume_per_tick,
-                                        QString *last_restock,
-                                        double *volume_full,
-                                        double *volume_remaining,
-                                        double *volume_dispensed_since_restock,
-                                        double *volume_dispensed_total,
-                                        int *is_enabled_custom_discount,
-                                        double *size_custom_discount,
-                                        double *price_custom_discount,
-                                        bool *isSizeEnabled, double *prices, double *volumes, QString *PLUs, QString *PIDs)
     // void getAllProductProperties(int slot,
     //                              QString *productId,
     //                              QString *soapstand_product_serial,
@@ -466,8 +437,38 @@ void DbManager::getAllProductProperties(int pnumber,
     //                              double *size_custom_discount,
     //                              double *price_custom_discount,
     //                              bool *isSizeEnabled, double *prices, double *volumes, QString *PLUs, QString *PIDs);
+ */
+// void DbManager::getAllProductProperties(int slot, QString* soapstand_product_serial, QString* size_unit, QString* payment, int* concentrate_multiplier, int* dispense_speed, bool *isSizeEnabled, double* prices, double* volumes, QString* PLUs, QString* PIDs)
+//   string table_products_columns[TABLE_PRODUCTS_COLUMN_COUNT] = {"productId", "soapstand_product_serial", "slot", "name", "size_unit", "currency", "payment", "name_receipt", "concentrate_multiplier", "dispense_speed", "threshold_flow", "retraction_time", "calibration_const", "volume_per_tick", "last_restock", "volume_full", "volume_remaining", "volume_dispensed_since_restock", "volume_dispensed_total", "is_enabled_small", "is_enabled_medium", "is_enabled_large", "is_enabled_custom", "size_small", "size_medium", "size_large", "size_custom_min", "size_custom_max", "price_small", "price_medium", "price_large", "price_custom", "plu_small", "plu_medium", "plu_large", "plu_custom", "pid_small", "pid_medium", "pid_large", "pid_custom", "flavour", "image_url", "type", "ingredients", "features", "description", "is_enabled_custom_discount", "size_custom_discount", "price_custom_discount"};
+//  (productId, soapstand_product_serial, slot, name, size_unit, currency, payment, name_receipt, concentrate_multiplier, dispense_speed, threshold_flow, retraction_time, calibration_const, volume_per_tick, last_restock, volume_full, volume_remaining, volume_dispensed_since_restock, volume_dispensed_total, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_min, size_custom_max, price_small, price_medium, price_large, price_custom, plu_small, plu_medium, plu_large, plu_custom, pid_small, pid_medium, pid_large, pid_custom, flavour, image_url, type, ingredients, features, description, is_enabled_custom_discount, size_custom_discount, price_custom_discount)
+void DbManager::getAllProductProperties(int pnumber,
+                                        QString *productId,
+                                        QString *soapstand_product_serial,
+                                        QVector<int> &mixPNumbers,
+                                        QVector<double> &mixRatios,
+                                        QString *size_unit,
+                                        QString *m_currency_deprecated, //_dummy_deprecated
+                                        QString *m_payment_deprecated,  //_deprecated,
+                                        QString *name_receipt,
+                                        int *concentrate_multiplier,
+                                        int *dispense_speed,
+                                        double *threshold_flow,
+                                        int *retraction_time,
+                                        double *calibration_const,
+                                        double *volume_per_tick,
+                                        QString *last_restock,
+                                        double *volume_full,
+                                        double *volume_remaining,
+                                        double *volume_dispensed_since_restock,
+                                        double *volume_dispensed_total,
+                                        int *is_enabled_custom_discount,
+                                        double *size_custom_discount,
+                                        double *price_custom_discount,
+                                        bool *isSizeEnabled, double *prices, double *volumes, QString *PLUs, QString *PIDs)
 
 {
+    QString mix_pnumbers_str;
+    QString mix_ratios_str;
     // qDebug() << "Open db";
     qDebug() << "Open db: load all product properties for pnumber: " << pnumber << "From: " << CONFIG_DB_PATH;
     {
@@ -485,17 +486,15 @@ void DbManager::getAllProductProperties(int pnumber,
             qDebug() << "Did not execute sql. "
                      << qry.lastError() << " | " << qry.lastQuery();
             // success = false;
+            return;
         }
-
-        QString mix_pnumbers;
-        QString mix_ratios;
 
         while (qry.next())
         {
             *productId = qry.value(0).toString();
             *soapstand_product_serial = qry.value(1).toString();
-            mix_pnumbers = qry.value(2).toString();
-            mix_ratios = qry.value(3).toString();
+            mix_pnumbers_str = qry.value(2).toString();
+            mix_ratios_str = qry.value(3).toString();
             *size_unit = qry.value(6).toString();
             *name_receipt = qry.value(7).toString();
             *concentrate_multiplier = qry.value(8).toInt();
@@ -540,15 +539,14 @@ void DbManager::getAllProductProperties(int pnumber,
             *size_custom_discount = qry.value(47).toDouble();
             *price_custom_discount = qry.value(48).toDouble();
         }
+
         qry.finish();
     }
     closeDb();
 
-    // for (int i = 0; i < 4; i++)
-    // {
+    df_util::csvQStringToQVectorInt(mix_pnumbers_str, mixPNumbers);
+    df_util::csvQStringToQVectorDouble(mix_ratios_str, mixRatios);
 
-    //     qDebug() << prices[i];
-    // }
 }
 
 /*
@@ -768,13 +766,13 @@ uint32_t DbManager::getNumberOfRows(QString table)
 
 // void DbManager::emailEmpty(int slot)
 // {
-    // QString mt_product = getProductName(slot);
-    // QString email_subject = mt_product + " has sold out!";
-    // QString email_body = mt_product + " has sold out";
-    // QString email_recipients = "paddy@drinkfill.com";
-    // QString email = "echo '" + email_body + "' | mail -s '" + email_subject + "' -a 'From: Stongs Soapstand <hello@drinkfill.com>' " + email_recipients + " | screen -d -m";
+// QString mt_product = getProductName(slot);
+// QString email_subject = mt_product + " has sold out!";
+// QString email_body = mt_product + " has sold out";
+// QString email_recipients = "paddy@drinkfill.com";
+// QString email = "echo '" + email_body + "' | mail -s '" + email_subject + "' -a 'From: Stongs Soapstand <hello@drinkfill.com>' " + email_recipients + " | screen -d -m";
 
-    // system(email.toStdString().c_str());
+// system(email.toStdString().c_str());
 // }
 
 void DbManager::addUserInteraction(QString session_id, QString role, QString page, QString event)

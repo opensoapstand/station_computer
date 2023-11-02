@@ -75,7 +75,6 @@ void page_select_product::setPage(page_product *p_page_product, page_idle_produc
     this->p_page_maintenance = pageMaintenance;
     this->p_page_help = pageHelp;
     this->p_statusbar = p_statusbar;
-   
 }
 // DTOR
 page_select_product::~page_select_product()
@@ -93,7 +92,6 @@ void page_select_product::showEvent(QShowEvent *event)
 
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
-
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
 
     p_page_idle->thisMachine->dispenseButtonLightsAnimateState(false);
@@ -110,20 +108,20 @@ void page_select_product::showEvent(QShowEvent *event)
 
     displayProducts();
 
-    for (int slot_index = 0; slot_index < p_page_idle->thisMachine->getSlotCount(); slot_index++)
+    for (int option_index = 0; option_index < p_page_idle->thisMachine->getOptionCount(); option_index++)
     {
-        labels_product_overlay_text[slot_index]->setStyleSheet(styleSheet);
-        labels_product_overlay_text[slot_index]->setProperty("class", "label_product_overlay_available"); // apply class BEFORE setStyleSheet!!
+        labels_product_overlay_text[option_index]->setStyleSheet(styleSheet);
+        labels_product_overlay_text[option_index]->setProperty("class", "label_product_overlay_available"); // apply class BEFORE setStyleSheet!!
 
-        labels_product_type[slot_index]->setProperty("class", "label_product_type");
-        labels_product_type[slot_index]->setStyleSheet(styleSheet);
-        labels_product_picture[slot_index]->setProperty("class", "label_product_photo");
-        labels_product_picture[slot_index]->setStyleSheet(styleSheet);
-        // p_page_idle->thisMachine->addCssClassToObject(labels_product_picture[slot_index], "label_product_overlay_unavailable", PAGE_SELECT_PRODUCT_CSS);
-        labels_product_name[slot_index]->setProperty("class", "label_product_name");
-        labels_product_name[slot_index]->setStyleSheet(styleSheet);
-        pushButtons_product_select[slot_index]->setProperty("class", "PushButton_selection");
-        pushButtons_product_select[slot_index]->setStyleSheet(styleSheet);
+        labels_product_type[option_index]->setProperty("class", "label_product_type");
+        labels_product_type[option_index]->setStyleSheet(styleSheet);
+        labels_product_picture[option_index]->setProperty("class", "label_product_photo");
+        labels_product_picture[option_index]->setStyleSheet(styleSheet);
+        // p_page_idle->thisMachine->addCssClassToObject(labels_product_picture[option_index], "label_product_overlay_unavailable", PAGE_SELECT_PRODUCT_CSS);
+        labels_product_name[option_index]->setProperty("class", "label_product_name");
+        labels_product_name[option_index]->setStyleSheet(styleSheet);
+        pushButtons_product_select[option_index]->setProperty("class", "PushButton_selection");
+        pushButtons_product_select[option_index]->setStyleSheet(styleSheet);
     }
 
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_pick_soap);
@@ -133,9 +131,8 @@ void page_select_product::showEvent(QShowEvent *event)
 
     productPageEndTimer->start(1000);
     _productPageTimeoutSec = 15;
-    
+
     ui->pushButton_to_idle->raise();
-    
 }
 
 void page_select_product::resizeEvent(QResizeEvent *event)
@@ -151,36 +148,37 @@ void page_select_product::displayProducts()
     QString product_name;
     QString product_status_text;
 
-    for (uint8_t slot_index = 0; slot_index < p_page_idle->thisMachine->getSlotCount(); slot_index++)
+    for (uint8_t option_index = 0; option_index < p_page_idle->thisMachine->getOptionCount(); option_index++)
     {
+        qDebug() << "Page select. Set up option: " << option_index + 1;
         QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_SELECT_PRODUCT_CSS);
 
         // display product picture
 
-        p_page_idle->thisMachine->addPictureToLabel(labels_product_picture[slot_index], p_page_idle->thisMachine->getProductByOption(slot_index + 1)->getProductPicturePath());
-        product_type = p_page_idle->thisMachine->getProductByOption(slot_index + 1)->getProductType();
-        product_name = p_page_idle->thisMachine->getProductByOption(slot_index + 1)->getProductName();
+        p_page_idle->thisMachine->addPictureToLabel(labels_product_picture[option_index], p_page_idle->thisMachine->getProductByOption(option_index + 1)->getProductPicturePath());
+        product_type = p_page_idle->thisMachine->getProductByOption(option_index + 1)->getProductType();
+        product_name = p_page_idle->thisMachine->getProductByOption(option_index + 1)->getProductName();
 
-        if (!p_page_idle->thisMachine->getSlotEnabled(slot_index + 1))
+        if (!p_page_idle->thisMachine->getIsOptionAvailable(option_index + 1))
         {
-            p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[slot_index], "label_product_overlay_unavailable", PAGE_SELECT_PRODUCT_CSS);
+            p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[option_index], "label_product_overlay_unavailable", PAGE_SELECT_PRODUCT_CSS);
 
-            labels_product_overlay_text[slot_index]->setStyleSheet(styleSheet);
+            labels_product_overlay_text[option_index]->setStyleSheet(styleSheet);
             QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_SELECT_PRODUCT_CSS);
-            labels_product_overlay_text[slot_index]->setProperty("class", "label_product_overlay_unavailable"); // apply class BEFORE setStyleSheet!!
+            labels_product_overlay_text[option_index]->setProperty("class", "label_product_overlay_unavailable"); // apply class BEFORE setStyleSheet!!
 
-            // qDebug() << labels_product_picture[slot_index]->styleSheet();
+            // qDebug() << labels_product_picture[option_index]->styleSheet();
         }
         else
         {
-            p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[slot_index], "label_product_overlay_available", PAGE_SELECT_PRODUCT_CSS);
+            p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[option_index], "label_product_overlay_available", PAGE_SELECT_PRODUCT_CSS);
         }
 
-        product_status_text = p_page_idle->thisMachine->getStatusText(slot_index + 1);
+        product_status_text = p_page_idle->thisMachine->getStatusText(option_index + 1);
 
-        qDebug() << "Product: " << product_type << "At slot: " << (slot_index + 1) << ", enabled: " << p_page_idle->thisMachine->getSlotEnabled(slot_index + 1) << " Status text: " << product_status_text;
+        qDebug() << "Product: " << product_type << "At Option: " << (option_index + 1) << ", enabled: " << p_page_idle->thisMachine->getIsOptionAvailable(option_index + 1) << " Status text: " << product_status_text;
 
-        labels_product_name[slot_index]->setText(product_name);
+        labels_product_name[option_index]->setText(product_name);
 
         // display product type icon  picture
         QString icon_path = "not found";
@@ -237,73 +235,71 @@ void page_select_product::displayProducts()
             qDebug() << "Icon for product type not found : " << type_text << " Set to default. ";
         }
         QString product_type_icon_path = p_page_idle->thisMachine->getTemplatePathFromName(icon_path);
-        p_page_idle->thisMachine->addPictureToLabel(labels_product_icon[slot_index], product_type_icon_path);
+        p_page_idle->thisMachine->addPictureToLabel(labels_product_icon[option_index], product_type_icon_path);
 
-        // labels_product_icon[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "no_text"));
+        // labels_product_icon[option_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "no_text"));
 
-        //  labels_selectProductOverlay[slot_index]->raise();
-        labels_product_overlay_text[slot_index]->raise();
-        pushButtons_product_select[slot_index]->raise();
-        labels_product_icon[slot_index]->setText("");
-        labels_product_icon[slot_index]->raise();
+        //  labels_selectProductOverlay[option_index]->raise();
+        labels_product_overlay_text[option_index]->raise();
+        pushButtons_product_select[option_index]->raise();
+        labels_product_icon[option_index]->setText("");
+        labels_product_icon[option_index]->raise();
 
         if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
         {
-            labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->coming_soon"));
+            labels_product_overlay_text[option_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->coming_soon"));
         }
         else if (product_status_text.compare("SLOT_STATE_DISABLED") == 0)
         {
-            labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
+            labels_product_overlay_text[option_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
         }
-        else if (!p_page_idle->thisMachine->getSlotEnabled(slot_index + 1))
+        else if (!p_page_idle->thisMachine->getIsOptionAvailable(option_index + 1))
         {
-            labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
+            labels_product_overlay_text[option_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
         }
-        else if (!(p_page_idle->thisMachine->isProductVolumeInContainer(p_page_idle->thisMachine->getProductByOption(slot_index+1)->getPNumber())))
+        else if (!(p_page_idle->thisMachine->isProductVolumeInContainer(p_page_idle->thisMachine->getProductByOption(option_index + 1)->getPNumber())))
         {
 
-            labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->empty"));
+            labels_product_overlay_text[option_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->empty"));
         }
         else if (product_status_text.compare("SLOT_STATE_AVAILABLE") == 0)
         {
-            labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->available"));
+            labels_product_overlay_text[option_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->available"));
         }
         else if (product_status_text.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
         {
-            labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->almost_empty"));
+            labels_product_overlay_text[option_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->almost_empty"));
         }
         else if (product_status_text.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
         {
-            labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->empty"));
+            labels_product_overlay_text[option_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->empty"));
         }
         else if (product_status_text.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
         {
-            labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->assistance"));
+            labels_product_overlay_text[option_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->assistance"));
         }
         else
         {
-            labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->default"));
+            labels_product_overlay_text[option_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->default"));
         }
 
-        labels_product_type[slot_index]->setText(type_text);
+        labels_product_type[option_index]->setText(type_text);
     }
 }
 
 void page_select_product::select_product(int option)
 {
+    if (p_page_idle->thisMachine->getIsOptionAvailable(option))
+    {
+        p_page_idle->thisMachine->setSelectedProductByOption(option);
+        p_page_idle->thisMachine->setSelectedSlotFromSelectedProduct();
 
-    // if (p_page_idle->thisMachine->getSlotEnabled(slot))
-    // {
-    //     qDebug() << "Selected slot: " << slot;
-    //     p_page_idle->thisMachine->setSelectedSlot(slot);
-    //     hideCurrentPageAndShowProvided(p_page_product);
-    // }
-    // else
-    // {
-    //     qDebug() << "Invalid choice. Slot not enabled: " << slot;
-    // }
-
-    p_page_idle->thisMachine->setSelectedProductByOption(option);
+        hideCurrentPageAndShowProvided(p_page_product);
+    }
+    else
+    {
+        qDebug() << "Invalid choice. Option not available: " << option;
+    }
 }
 
 // FIXME: This is terrible...no time to make array reference to hold button press functions

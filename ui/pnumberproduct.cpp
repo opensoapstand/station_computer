@@ -14,7 +14,7 @@ void pnumberproduct::setDb(DbManager *db)
 
 void pnumberproduct::loadProductProperties()
 {
-    qDebug() << "Load pnumberproduct properties from db and csv";
+    qDebug() << "pnumber: " << getPNumber() << " Load properties from db and csv";
     loadProductPropertiesFromDb();
     loadProductPropertiesFromProductsFile();
 }
@@ -82,12 +82,17 @@ int pnumberproduct::getPNumber()
     return m_PNumber;
 }
 
-int pnumberproduct::getBasePNumber()
+int pnumberproduct::getFirstMixPNumberOrPNumberAsBasePNumber()
 {
-    return m_basePNumber;
+    // base p-number return the pnumber if no mixing set, or else returns the first mixpnumber of the list. 
+    if (m_mixPNumbers.size()>0){
+        return m_mixPNumbers[0];
+    }else{
+        return m_PNumber;
+    }
 }
 
-QVector<int> pnumberproduct::getAdditivesPNumbers()
+QVector<int> pnumberproduct::getMixPNumbers()
 {
     return m_mixPNumbers;
 }
@@ -98,8 +103,8 @@ void pnumberproduct::loadProductPropertiesFromDb()
     m_db->getAllProductProperties(getPNumber(),
                                   &m_aws_product_id,
                                   &m_soapstand_product_serial,
-                                  &m_mixPNumbers,
-                                  &m_mixRatios,
+                                  m_mixPNumbers,
+                                  m_mixRatios,
                                   &m_size_unit,
                                   &m_currency_deprecated, //_dummy_deprecated
                                   &m_payment_deprecated,  //_deprecated,
@@ -365,7 +370,8 @@ void pnumberproduct::setVolumeRemaining(double volume_as_ml)
     m_db->updateTableProductsWithDouble(getPNumber(), "volume_remaining", volume_as_ml, 0);
 }
 
-double pnumberproduct::getVolumeRemaining(){
+double pnumberproduct::getVolumeRemaining()
+{
     return m_volume_remaining;
 }
 
@@ -409,8 +415,6 @@ QString pnumberproduct::getProductDrinkfillSerial()
     return m_soapstand_product_serial;
 }
 
-
-
 QString pnumberproduct::getProductIngredients()
 {
     return m_ingredients_ui;
@@ -437,7 +441,17 @@ QString pnumberproduct::getProductType()
 
 QString pnumberproduct::getProductPicturePath()
 {
-    return QString(PRODUCT_PICTURES_ROOT_PATH).arg(m_soapstand_product_serial);
+    QString pnumber = m_soapstand_product_serial;
+    qDebug()<< "pnumber before p nodted " << pnumber;
+
+    // Check if serial starts with "P-"
+    if (!pnumber.startsWith("P-"))
+    {
+        // Add "P-" prefix if it's missing
+        pnumber.prepend("P-");
+    }
+    qDebug()<< "pnumber P- notated " << pnumber;
+    return QString(PRODUCT_PICTURES_ROOT_PATH).arg(pnumber);
 }
 
 QString pnumberproduct::getPlu(int sizeIndex)

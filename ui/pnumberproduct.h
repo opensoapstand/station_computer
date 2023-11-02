@@ -15,8 +15,8 @@ public:
     void setPNumber(int PNumber);
     int getPNumber();
 
-    int getBasePNumber();
-    QVector<int> getAdditivesPNumbers();
+    int getFirstMixPNumberOrPNumberAsBasePNumber();
+    QVector<int> getMixPNumbers();
 
     void loadProductPropertiesFromProductsFile();
     void getProductProperties(QString *name, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui);

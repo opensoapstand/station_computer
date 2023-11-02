@@ -94,15 +94,23 @@ public:
     void setSlotEnabled(int slot, bool isEnabled, QString statusText);
     int getSlotCount();
     void setSlots(dispenser_slot *slotss);
-    bool compareSlotCountToMaxSlotCount(int slot_count);
-    // void setSelectedSlot(uint8_t slot);
+    bool isSlotCountBiggerThanMaxSlotCount(int slot_count);
+
+    void setSelectedSlotFromSelectedProduct();
+    int getSlotFromBasePNumber(int base_pnumber);
     dispenser_slot *getSelectedSlot();
 
+    void initProductOptions(const QVector<int> &pnumbersToBeSetAsOptions);
+    bool getIsOptionAvailable(int productOption);
     void setProductToOption(int productOption, int PNumber);
+    int clearOptions();
+    int getOptionCount();
+
+
     void setSelectedProductByOption(int productOption);
     pnumberproduct *getProductByOption(int productOption);
-    pnumberproduct *getProductByPNumber(int PNumber);
 
+    pnumberproduct *getProductByPNumber(int PNumber);
     void setSelectedProduct(int pnumber);
     pnumberproduct *getSelectedProduct();
 

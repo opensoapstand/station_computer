@@ -24,7 +24,7 @@
 #define SIZE_CUSTOM_INDEX 4
 #define SIZE_TEST_INDEX 5
 #define ADDITIVES_PER_SLOT_COUNT_MAX 10
-#define PRODUCT_SELECTION_OPTIONS_MAX 50  // the offered selection of product to the user
+#define PRODUCT_SELECTION_OPTIONS_MAX 4  // the offered selection of product to the user
 #define HIGHEST_PNUMBER_COUNT 1000 // WARNING: this is not the amount of pnumber loaded in the machine, but the amount of pnumbers existing. in this array, even if we only have 10 pnumbers loaded, P-88 will reside at index 88
 
 #define CONFIG_DB_PATH "/home/df-admin/production/db/configuration.db"
@@ -173,7 +173,8 @@ public:
     static double convertOzToMl(double vol_oz);
     static char sizeIndexToChar(int size_index);
     static QString getConvertedStringVolumeFromMl(double volumeMilliLiter, QString units, bool roundNumber, bool addUnits);
-    static void csvQStringToQVector(const QString& csvList, QVector<int>& returnIntList);
+    static void csvQStringToQVectorInt(const QString& csvList, QVector<int>& returnIntList);
+    static void csvQStringToQVectorDouble(const QString& csvList, QVector<double>& returnDoubleList);
     
     void write_to_file_timestamped(QString basePath, QString data);
     void write_to_file(QString path, QString data);

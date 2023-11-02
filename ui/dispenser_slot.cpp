@@ -34,10 +34,27 @@ QVector<int> dispenser_slot::getDispensePNumbers()
 {
     return m_dispensePNumbers;
 }
+QVector<int> dispenser_slot::getAdditivePNumbers()
+{
+    return m_additivePNumbers;
+}
+
+int dispenser_slot::getBasePNumber()
+{
+    return m_basePNumber;
+}
 
 QVector<int> dispenser_slot::getAllPNumbers()
 {
-    QVector<int> pnumbers(m_additivePNumbers);
+
+    QVector<int> pnumbers(m_dispensePNumbers);
+
+    // Copy elements from m_additivePNumbers
+    for (int i = 0; i < m_additivePNumbers.size(); ++i)
+    {
+        pnumbers.append(m_additivePNumbers[i]);
+    }
+
     pnumbers.append(m_basePNumber);
     return pnumbers;
 }

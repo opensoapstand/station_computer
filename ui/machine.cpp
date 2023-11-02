@@ -37,7 +37,6 @@ void machine::initMachine()
     loadMachineParameterFromDb(); // load here because we need parameters already at init
 
     // ASSUMES that there is always slot_id's starting from 1 to the set slot count.
-    qDebug() << "sapi prut";
     for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
     {
         m_slots[slot_index].setSlot(slot_index + 1);
@@ -45,26 +44,16 @@ void machine::initMachine()
         m_slots[slot_index].loadSlotParametersFromDb();
     }
 
-    QVector<int> all_dispense_pnumbers = getAllDispensePNumbersFromSlots();
-    qDebug() << "sapi prut";
-    for (int i = 0; i < all_dispense_pnumbers.size(); ++i)
-    {
-        qDebug() << all_dispense_pnumbers[i];
-    }
+    // QVector<int> all_dispense_pnumbers = getAllDispensePNumbersFromSlots();
+    initProductOptions(getAllDispensePNumbersFromSlots());
 
-    // get all PNumbers (all the products) defined in dispensers.
-    // for (int i = 0; i < all_dispense_pnumbers.size(); ++i)
-    // {
-    //     int num = uniquePNumbers[i];
-    // }
+    // TODO: For now, the index of a product in an array is its P-number.  e.g. P-6 is tangerine dish saop. Its object resides in m_pnumberproducts[6], that will only work for less than a million something p-numbers...
 
-    // TODO: For now, the index of a product in an array is its P-number.  e.g. P-6 is tangerine dish saop. Its object resides in m_pnumberproducts[6]
-    for (int pnumber_index = 0; pnumber_index < all_dispense_pnumbers.size(); pnumber_index++)
+    // load properties of all used PNumbers
+    QVector<int> all_pnumbers = getAllUsedPNumbersFromSlots();
+    for (int pnumber_index = 0; pnumber_index < all_pnumbers.size(); pnumber_index++)
     {
-        qDebug() << "machine: load product properties for pnumber:" << (all_dispense_pnumbers[pnumber_index]);
-        // m_pnumberproducts[pnumber_index].GET IT DONE;
-        m_pnumberproducts[all_dispense_pnumbers[pnumber_index]].setDb(m_db);
-        m_pnumberproducts[all_dispense_pnumbers[pnumber_index]].loadProductProperties();
+        m_pnumberproducts[all_pnumbers[pnumber_index]].setDb(m_db);
     }
 
     loadDynamicContent(); // part of it is redundant of what's been done here, but not everything. So, do it again.
@@ -79,10 +68,12 @@ void machine::loadDynamicContent()
         m_slots[slot_index].loadSlotParametersFromDb();
     }
 
-    QVector<int> all_dispense_pnumbers = getAllDispensePNumbersFromSlots();
-    for (int pnumber_index = 0; pnumber_index < all_dispense_pnumbers.size(); pnumber_index++)
+    // load properties of all used PNumbers
+    QVector<int> all_pnumbers = getAllUsedPNumbersFromSlots();
+    for (int pnumber_index = 0; pnumber_index < all_pnumbers.size(); pnumber_index++)
     {
-        m_pnumberproducts[all_dispense_pnumbers[pnumber_index]].loadProductProperties();
+        qDebug() << "machine: load product properties for pnumber:" << (all_pnumbers[pnumber_index]);
+        m_pnumberproducts[all_pnumbers[pnumber_index]].loadProductProperties();
     }
 
     loadTextsFromTemplateCsv();                                // dynamic content (text by template)
@@ -97,7 +88,7 @@ QSet<int> uniquePNumbers; // Use a QSet to store unique pnumbers (i.e. no value 
 QVector<int> machine::getAllDispensePNumbersFromSlots()
 {
 
-    // collect all pnumbers used in slots
+    // dispense PNumber are the numbers used to be displayed in UI. The 'end' product. ()
     for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
     {
         QVector<int> slotpnumbers = m_slots[slot_index].getDispensePNumbers();
@@ -114,17 +105,16 @@ QVector<int> machine::getAllDispensePNumbersFromSlots()
 
 QVector<int> machine::getAllUsedPNumbersFromSlots()
 {
+    // all pnumbers are all used dispense, base, addive numbers
+
     QSet<int> uniquePNumbers; // Use a QSet to store unique pnumbers (i.e. no value can appear twice)
 
-    // collect all pnumbers used in slots
     for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
     {
-        // qDebug() << "SLOTf:::" << (slot_index+1);
         QVector<int> slotpnumbers = m_slots[slot_index].getAllPNumbers();
         // Add unique pnumbers from the current slot to the QSet
         for (int i = 0; i < slotpnumbers.size(); ++i)
         {
-            // qDebug() << "pnumber: " << slotpnumbers[i];
             uniquePNumbers.insert(slotpnumbers[i]);
         }
     }
@@ -154,15 +144,39 @@ void machine::setDb(DbManager *db)
     m_db = db;
 }
 
+void machine::initProductOptions(const QVector<int> &pnumbersToBeSetAsOptions)
+{
+
+    productSelectionOptions.clear();
+    int dispenseProductsCount = pnumbersToBeSetAsOptions.size();
+    if (dispenseProductsCount > PRODUCT_SELECTION_OPTIONS_MAX)
+    {
+        dispenseProductsCount = PRODUCT_SELECTION_OPTIONS_MAX;
+    }
+
+    productSelectionOptions.resize(dispenseProductsCount);
+
+    for (int i = 0; i < dispenseProductsCount; ++i)
+    {
+        qDebug() << pnumbersToBeSetAsOptions[i];
+        setProductToOption(i + 1, pnumbersToBeSetAsOptions[i]);
+    }
+}
+
 void machine::setProductToOption(int productOption, int PNumber)
 {
-    // slotPosition starts at 1
+    // options start at 1
     if (productOption == 0)
     {
 
         qDebug() << "ERROR: option  numbers start from 1!!!";
     }
-    productSelectionOptions[productOption] = PNumber;
+    if (productOption > PRODUCT_SELECTION_OPTIONS_MAX)
+    {
+        qDebug() << "ERROR: Maximum amount of options exceeded. Will not add as an option. ";
+        return;
+    }
+    productSelectionOptions[productOption - 1] = PNumber;
 }
 
 pnumberproduct *machine::getProductByPNumber(int PNumber)
@@ -180,28 +194,68 @@ pnumberproduct *machine::getProductByOption(int productOption)
 
         qDebug() << "ERROR:  option numbering start from 1!!!";
     }
-    int pnumber = productSelectionOptions[productOption];
+    int pnumber = productSelectionOptions[productOption - 1];
     return &m_pnumberproducts[pnumber];
 }
 
 void machine::setSelectedProductByOption(int productOption)
 {
-    int pnumber = productSelectionOptions[productOption];
+    int pnumber = productSelectionOptions[productOption - 1];
     m_selectedProduct = &m_pnumberproducts[pnumber];
+}
+
+bool machine::getIsOptionAvailable(int productOption)
+{
+    // products will need an "isEnabled" and "statustext" column too.
+    // todo
+
+
+    // check if slot for option is valid
+    // check if all pnumbers for options are valid
+
+    return true;
+}
+
+int machine::getOptionCount()
+{
+    // number of set options.
+    int count = productSelectionOptions.size();
+    if (count > PRODUCT_SELECTION_OPTIONS_MAX)
+    {
+        qDebug() << "WARNING: exceeded maximum options count, will return max. ";
+        return PRODUCT_SELECTION_OPTIONS_MAX;
+    }
+    qDebug() << "get option scoun ts : " << count;
+    return count;
+}
+
+int machine::getSlotFromBasePNumber(int base_pnumber)
+{
+    int occurences_of_base_pnumber=0;
+    int slot_with_base_pnumber;
+    for (uint8_t slot_index = 0; slot_index < getSlotCount(); slot_index++)
+    {
+        int base_pnumber_in_slot = m_slots[slot_index].getBasePNumber();
+        if (base_pnumber == base_pnumber_in_slot){
+            occurences_of_base_pnumber++;
+            slot_with_base_pnumber = slot_index+1;
+        }
+    }
+
+    if (occurences_of_base_pnumber == 0){
+        qDebug() << "Error: Searched PNumber not set as Base Pnumber in any slot. ";
+        return 666;
+    }
+    if (occurences_of_base_pnumber > 1){
+        qDebug() << "Warning: Searched PNumber set as Base Pnumber in multiple slots. Will return last slot where it occured. Found in how many slots?: " << occurences_of_base_pnumber;
+    }
+    return slot_with_base_pnumber;
 }
 
 dispenser_slot *machine::getSelectedSlot()
 {
-    // check base product from selected product. if not a base product,
-    // check slot of base product.
-
-    int base_pnumber = m_selectedProduct->getBasePNumber(); // if this is not a mix, it will return the main p number.
-                                                            // check in slots/dispensers where the base_pnumber resides.
-
-    // for
-    qDebug() << "TODODOTOODOTODO ERROR:  get slot of product.";
-
-    // return selectedSlot;
+    
+    return selectedSlot;
 }
 
 pnumberproduct *machine::getSelectedProduct()
@@ -231,10 +285,20 @@ void machine::setSlots(dispenser_slot *slotss)
     m_slots = slotss; // slots is a TYPE in QT. so we can't use it as a variable name
 }
 
-// void machine::setSelectedSlot(uint8_t slot)
-// {
-//     selectedSlot = &m_slots[slot - 1];
-// }
+void machine::setSelectedSlotFromSelectedProduct()
+{
+
+    // FOR NOW this will only return a slot if the selected product has a base_product. 
+
+    // check base product from selected product
+    // check slot of base product.
+
+    int base_pnumber = m_selectedProduct->getFirstMixPNumberOrPNumberAsBasePNumber(); // if this is not a mix, it will return the main p number.
+    
+    int slot = getSlotFromBasePNumber(base_pnumber);    
+    
+    selectedSlot = &m_slots[slot - 1];
+}
 
 bool machine::isDispenseAreaBelowElseBesideScreen()
 {
@@ -315,7 +379,7 @@ int machine::getSlotCount()
             slot_count = 8;
         }
     }
-    if (compareSlotCountToMaxSlotCount(slot_count))
+    if (isSlotCountBiggerThanMaxSlotCount(slot_count))
     {
         qDebug() << "ERROR - Slot Count:" << slot_count << " exceeded MAX_SLOT_COUNT:" << MAX_SLOT_COUNT << "threshold";
     }
@@ -325,7 +389,7 @@ int machine::getSlotCount()
     // return m_dispense_buttons_count % 1000;
 }
 
-bool machine::compareSlotCountToMaxSlotCount(int slot_count)
+bool machine::isSlotCountBiggerThanMaxSlotCount(int slot_count)
 {
     return (slot_count > MAX_SLOT_COUNT);
 }
@@ -758,10 +822,20 @@ bool machine::isAllowedAsMaintainer()
     return allowed;
 }
 
-void machine::setStatusText(int slot, QString status)
+///////////////// START MOVE TO DISPENSER CLASS
+void machine::setSlotEnabled(int slot, bool isEnabled)
 {
-    QString column = QString("status_text_slot_%1").arg(slot);
-    m_db->updateTableMachineWithText(column, status);
+    // do this through dispenser_slot.cpp, as this should have been a part of products table
+    QString column_name = QString("is_enabled_slot_%1").arg(slot);
+    m_is_enabled_slots[slot - 1] = isEnabled; // Global variable
+    m_db->updateTableMachineWithInt(column_name, isEnabled);
+}
+
+bool machine::getSlotEnabled(int slot)
+{
+    // this should have been part of the products table. But it isn't. We access this from the dispenser_slot.cpp class.
+    slotNumberValidityCheck(slot);
+    return (m_is_enabled_slots[slot - 1] == 1);
 }
 
 void machine::setSlotEnabled(int slot, bool isEnabled, QString statusText)
@@ -775,6 +849,13 @@ QString machine::getStatusText(int slot)
     slotNumberValidityCheck(slot);
     return m_status_text_slots[slot - 1];
 }
+
+void machine::setStatusText(int slot, QString status)
+{
+    QString column = QString("status_text_slot_%1").arg(slot);
+    m_db->updateTableMachineWithText(column, status);
+}
+///////////////// END MOVE TO DISPENSER CLASS
 
 QString machine::getPumpId(int slot)
 {
@@ -807,21 +888,6 @@ bool machine::slotNumberValidityCheck(int slot)
         qDebug() << "Invalid slot! slots start from 1 and go up to " << getSlotCount() << " e.g. 1,2,3,4. Slot provided: " << slot;
     }
     return valid;
-}
-
-void machine::setSlotEnabled(int slot, bool isEnabled)
-{
-    // do this through dispenser_slot.cpp, as this should have been a part of products table
-    QString column_name = QString("is_enabled_slot_%1").arg(slot);
-    m_is_enabled_slots[slot - 1] = isEnabled; // Global variable
-    m_db->updateTableMachineWithInt(column_name, isEnabled);
-}
-
-bool machine::getSlotEnabled(int slot)
-{
-    // this should have been part of the products table. But it isn't. We access this from the dispenser_slot.cpp class.
-    slotNumberValidityCheck(slot);
-    return (m_is_enabled_slots[slot - 1] == 1);
 }
 
 QString machine::getHelpPageHtmlText()
@@ -921,7 +987,6 @@ void machine::addClientLogoToLabel(QLabel *label)
 
 void machine::addPictureToButton(QPushButton *button, QString picturePath)
 {
-    // QString p = selectedSlot->getProductPicturePath();
     if (df_util::pathExists(picturePath))
     {
         QPixmap im(picturePath);

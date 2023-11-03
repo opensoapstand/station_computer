@@ -64,7 +64,7 @@ public:
       void refresh();
       // void initDispenser(int slot);
 
-      product *getProduct();
+      product *getSelectedProduct();
       DF_ERROR setProduct(product *product);
       string getFinalPLU(char size, double price);
       // DF_ERROR initButtonsShutdownAndMaintenance();

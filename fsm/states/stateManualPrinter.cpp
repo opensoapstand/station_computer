@@ -423,19 +423,19 @@ DF_ERROR stateManualPrinter::onExit()
 
 DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double volume_dispensed, double volume_requested, double price, string time_stamp)
 {
-   std::string name_receipt = productDispensers[slot - 1].getProduct()->getProductName();
-   //  std::string plu = productDispensers[slot-1].getProduct()->getBasePLU( SIZE_CUSTOM_CHAR  );
+   std::string name_receipt = productDispensers[slot - 1].getSelectedProduct()->getProductName();
+   //  std::string plu = productDispensers[slot-1].getSelectedProduct()->getBasePLU( SIZE_CUSTOM_CHAR  );
 
-   char size = productDispensers[slot - 1].getProduct()->getSizeCharFromTargetVolume(volume_requested);
+   char size = productDispensers[slot - 1].getSelectedProduct()->getSizeCharFromTargetVolume(volume_requested);
    string plu = productDispensers[slot - 1].getFinalPLU(size, price);
 
-   std::string units = productDispensers[slot - 1].getProduct()->getDisplayUnits();
-   std::string paymentMethod = productDispensers[slot - 1].getProduct()->getPaymentMethod();
+   std::string units = productDispensers[slot - 1].getSelectedProduct()->getDisplayUnits();
+   std::string paymentMethod = productDispensers[slot - 1].getSelectedProduct()->getPaymentMethod();
 
    char chars_cost[MAX_BUF];
    char chars_volume_formatted[MAX_BUF];
 
-   std::string char_units_formatted = productDispensers[slot - 1].getProduct()->getDisplayUnits();
+   std::string char_units_formatted = productDispensers[slot - 1].getSelectedProduct()->getDisplayUnits();
 
    snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.0f", volume_dispensed);
 
@@ -449,19 +449,19 @@ DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double v
 
 // DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double volume_dispensed, double volume_requested, double price, string time_stamp)
 // {
-//    std::string name_receipt = (productDispensers[slot - 1].getProduct()->getProductName());
-//    //  std::string plu = productDispensers[slot-1].getProduct()->getBasePLU( SIZE_CUSTOM_CHAR  );
+//    std::string name_receipt = (productDispensers[slot - 1].getSelectedProduct()->getProductName());
+//    //  std::string plu = productDispensers[slot-1].getSelectedProduct()->getBasePLU( SIZE_CUSTOM_CHAR  );
 
-//    char size = productDispensers[slot - 1].getProduct()->getSizeCharFromTargetVolume(volume_requested);
+//    char size = productDispensers[slot - 1].getSelectedProduct()->getSizeCharFromTargetVolume(volume_requested);
 //    string plu = productDispensers[slot - 1].getFinalPLU(size, price);
 
-//    std::string units = (productDispensers[slot - 1].getProduct()->getDisplayUnits());
-//    std::string paymentMethod = productDispensers[slot - 1].getProduct()->getPaymentMethod();
+//    std::string units = (productDispensers[slot - 1].getSelectedProduct()->getDisplayUnits());
+//    std::string paymentMethod = productDispensers[slot - 1].getSelectedProduct()->getPaymentMethod();
 
 //    char chars_cost[MAX_BUF];
 //    char chars_volume_formatted[MAX_BUF];
 
-//    snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.2f", productDispensers[slot - 1].getProduct()->getTargetVolume(size));
+//    snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.2f", productDispensers[slot - 1].getSelectedProduct()->getTargetVolume(size));
 //    string vol = (chars_volume_formatted);
 //    string receipt_volume_formatted = vol + "ml";
 //    //  string receipt_volume_formatted = to_string(chars_volume_formatted) + "ml";

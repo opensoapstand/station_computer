@@ -60,7 +60,7 @@ DF_ERROR stateDispenseInit::onEntry()
 
     debugOutput::sendMessage("dispense init, we (re)load parameters from database.", MSG_INFO);
 
-    bool success = this->productDispensers[dispenser_index].getProduct()->reloadParametersFromDb();
+    bool success = this->productDispensers[dispenser_index].getSelectedProduct()->loadParameters();
     if (!success)
     {
         debugOutput::sendMessage("Did not reload parameters from database", MSG_INFO);
@@ -84,16 +84,16 @@ DF_ERROR stateDispenseInit::onAction()
     debugOutput::sendMessage("Chosen dispenser slot: " +
                                  std::to_string(productDispensers[dispenser_index].getSlot()) +
                                  " target volume: " +
-                                 std::to_string(productDispensers[dispenser_index].getProduct()->getTargetVolume(size)),
+                                 std::to_string(productDispensers[dispenser_index].getSelectedProduct()->getTargetVolume(size)),
                              MSG_INFO);
 
     productDispensers[dispenser_index].initDispense(
-        productDispensers[dispenser_index].getProduct()->getTargetVolume(size)
-        ,productDispensers[dispenser_index].getProduct()->getPrice(size)
+        productDispensers[dispenser_index].getSelectedProduct()->getTargetVolume(size)
+        ,productDispensers[dispenser_index].getSelectedProduct()->getPrice(size)
         );
 
-    // productDispensers[dispenser_index].getProduct()->productInfo();
-    // productDispensers[dispenser_index].getProduct()->productVolumeInfo();
+    // productDispensers[dispenser_index].getSelectedProduct()->productInfo();
+    // productDispensers[dispenser_index].getSelectedProduct()->productVolumeInfo();
 
     productDispensers[dispenser_index].startDispense();
     

@@ -55,7 +55,7 @@ DF_ERROR stateDispense::onEntry()
 
    productDispensers[slot_index].resetDispenseButton();
 
-   // productDispensers[slot_index].getProduct()->productVolumeInfo();
+   // productDispensers[slot_index].getSelectedProduct()->productVolumeInfo();
 
    if (m_pMessaging->getAction() == ACTION_AUTOFILL)
    {
@@ -75,7 +75,7 @@ DF_ERROR stateDispense::onEntry()
 DF_ERROR stateDispense::rectractProductBlocking()
 {
    DF_ERROR e_ret = OK;
-   productDispensers[slot_index].reversePumpForSetTimeMillis(productDispensers[slot_index].getProduct()->getRetractionTimeMillis());
+   productDispensers[slot_index].reversePumpForSetTimeMillis(productDispensers[slot_index].getSelectedProduct()->getRetractionTimeMillis());
    return e_ret;
 }
 

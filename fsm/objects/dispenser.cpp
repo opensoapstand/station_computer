@@ -128,10 +128,10 @@ dispenser::~dispenser()
 string dispenser::getFinalPLU(char size, double price)
 {
 
-    string base_plu = getProduct()->getBasePLU(size);
+    string base_plu = getSelectedProduct()->getBasePLU(size);
     char chars_plu_dynamic_formatted[MAX_BUF];
 
-    std::string paymentMethod = getProduct()->getPaymentMethod();
+    std::string paymentMethod = getSelectedProduct()->getPaymentMethod();
     if (paymentMethod == "plu")
     {
         return base_plu;
@@ -258,7 +258,7 @@ int dispenser::getSlot()
     return this->slot;
 }
 
-product *dispenser::getProduct()
+product *dispenser::getSelectedProduct()
 {
     return m_pDispensedProduct;
 }
@@ -396,24 +396,24 @@ bool dispenser::getIsDispenseTargetReached()
 
 void dispenser::resetVolumeDispensed()
 {
-    getProduct()->resetVolumeDispensed();
+    getSelectedProduct()->resetVolumeDispensed();
 }
 
 void dispenser::subtractFromVolumeDispensed(double volume_to_distract)
 {
-    double volume = getProduct()->getVolumeDispensed();
-    getProduct()->setVolumeDispensed(volume - volume_to_distract);
+    double volume = getSelectedProduct()->getVolumeDispensed();
+    getSelectedProduct()->setVolumeDispensed(volume - volume_to_distract);
 }
 
 double dispenser::getVolumeRemaining()
 {
-    return getProduct()->getVolumeRemaining();
+    return getSelectedProduct()->getVolumeRemaining();
 }
 
 double dispenser::getVolumeDispensed()
 {
     // return m_nVolumeDispensed;
-    return getProduct()->getVolumeDispensed();
+    return getSelectedProduct()->getVolumeDispensed();
 }
 
 // TODO: Call this function on Dispense onEntry()
@@ -1227,21 +1227,21 @@ void dispenser::updateDispenseStatus()
 {
     Time_val avg = getAveragedFlowRate(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS);
 
-    // debugOutput::sendMessage("minimummmmm: " + to_string(getProduct()->getThresholdFlow()), MSG_INFO);
-    // debugOutput::sendMessage("maximummmmm ml/s: " + to_string(getProduct()->getThresholdFlow_max_allowed()), MSG_INFO);
+    // debugOutput::sendMessage("minimummmmm: " + to_string(getSelectedProduct()->getThresholdFlow()), MSG_INFO);
+    // debugOutput::sendMessage("maximummmmm ml/s: " + to_string(getSelectedProduct()->getThresholdFlow_max_allowed()), MSG_INFO);
 
     if (!getDispenseButtonValue())
     {
         dispense_state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
     }
     else if ((getButtonPressedCurrentPressMillis() < EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS) &&
-             (avg.value < getProduct()->getThresholdFlow() || avg.value >= getProduct()->getThresholdFlow_max_allowed()))
+             (avg.value < getSelectedProduct()->getThresholdFlow() || avg.value >= getSelectedProduct()->getThresholdFlow_max_allowed()))
     {
         // flow rate needs to be ramped up until stable.  (or ramped down in situations I can't imagine)
         dispense_state = FLOW_STATE_RAMP_UP;
     }
-    // else if (avg.value >= getProduct()->getThresholdFlow() )
-    else if (avg.value >= getProduct()->getThresholdFlow() && avg.value < getProduct()->getThresholdFlow_max_allowed())
+    // else if (avg.value >= getSelectedProduct()->getThresholdFlow() )
+    else if (avg.value >= getSelectedProduct()->getThresholdFlow() && avg.value < getSelectedProduct()->getThresholdFlow_max_allowed())
     {
         // button pressed (aka pumping)
         // init time long enough for valid data
@@ -1253,13 +1253,13 @@ void dispenser::updateDispenseStatus()
         // button pressed (aka pumping)
         // init time long enough for valid data
         // no flow detected
-        if (avg.value < getProduct()->getThresholdFlow())
+        if (avg.value < getSelectedProduct()->getThresholdFlow())
         {
-            debugOutput::sendMessage("Below threshold of minimum flow rate. minimum flow rate: " + to_string(getProduct()->getThresholdFlow()), MSG_INFO);
+            debugOutput::sendMessage("Below threshold of minimum flow rate. minimum flow rate: " + to_string(getSelectedProduct()->getThresholdFlow()), MSG_INFO);
         }
-        else if (avg.value >= getProduct()->getThresholdFlow_max_allowed())
+        else if (avg.value >= getSelectedProduct()->getThresholdFlow_max_allowed())
         {
-            debugOutput::sendMessage("Exceeds threshold of maximum flow rate. maximum flow rate: " + to_string(getProduct()->getThresholdFlow_max_allowed()), MSG_INFO);
+            debugOutput::sendMessage("Exceeds threshold of maximum flow rate. maximum flow rate: " + to_string(getSelectedProduct()->getThresholdFlow_max_allowed()), MSG_INFO);
         }
         else
         {

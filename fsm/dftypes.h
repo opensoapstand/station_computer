@@ -182,8 +182,8 @@ typedef struct Time_val Time_val;
 
 #define TABLE_PRODUCTS_COLUMN_COUNT 51
 
-// WARNING: If adding more column names to products, change TABLE_PRODUCTS_COLUMN_COUNT, and change products.cpp:isDbValid() and reloadParametersFromDb()
-#define DB_PRODUCTS_SOAPSTAND_PRODUCT_SERIAL 0
+// WARNING: If adding more column names to products, change TABLE_PRODUCTS_COLUMN_COUNT, and change products.cpp:isDbValid() and loadParameters()
+#define DB_PRODUCTS_pnumber 0
 #define DB_PRODUCTS_MIX_PNUMBERS 1
 #define DB_PRODUCTS_MIX_RATIOS 2
 #define DB_PRODUCTS_PRODUCTID 3

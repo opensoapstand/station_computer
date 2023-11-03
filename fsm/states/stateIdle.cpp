@@ -149,7 +149,7 @@ DF_ERROR stateIdle::onAction()
       {
          
          debugOutput::sendMessage("Before reload parameters from product", MSG_INFO);
-         bool success = this->productDispensers[0].getProduct()->reloadParametersFromDb();
+         bool success = this->productDispensers[0].getSelectedProduct()->loadParameters();
          this->productDispensers[0].loadGeneralProperties();
          g_machine.loadGeneralProperties();
 

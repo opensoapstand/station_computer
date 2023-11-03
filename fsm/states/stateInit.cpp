@@ -71,15 +71,7 @@ DF_ERROR stateInit::onAction()
     pin_pgd = new oddyseyx86GPIO(PIC_PROGRAMMER_PIN_PGD);
     pin_pgd->setPinAsInputElseOutput(true);
 
-    e_ret = setProducts();
-    if (OK == e_ret)
-    {
-        e_ret = dispenserSetup();
-    }
-    else
-    {
-        debugOutput::sendMessage("ERROR: Problems setting up the products.", MSG_ERROR);
-    }
+    dispenserSetup();
 
     if (OK == e_ret)
     {
@@ -164,16 +156,7 @@ DF_ERROR stateInit::dispenserSetup()
 DF_ERROR stateInit::setProducts()
 {
 
-    for (int slot_index = 0; slot_index < PRODUCT_DISPENSERS_MAX; slot_index++)
-    {
-        debugOutput::sendMessage("Setup dispenser " + to_string(slot_index + 1), MSG_INFO);
-        g_productDispensers[slot_index].setSlot(slot_index + 1);
-    }
-
-    for (int pnumber = 0; pnumber < PNUMBERS_COUNT; pnumber++)
-    {
-
-        g_pnumbers[pnumber].init(pnumber);
-    }
+  
+    
     return OK;
 }

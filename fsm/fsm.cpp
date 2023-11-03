@@ -191,23 +191,31 @@ DF_ERROR initObjects()
 
     //    g_machine = new machine();
     debugOutput::sendMessage("message mediator set up.", MSG_INFO);
+
     g_machine.setup();
     g_pMessaging->setMachine(&g_machine);
+
+
     debugOutput::sendMessage("Machine set up.", MSG_INFO);
 
-    for (int i = 0; i < PRODUCT_DISPENSERS_MAX; i++)
+    for (int pnumber = 0; pnumber < PNUMBERS_COUNT; pnumber++)
     {
-        g_productDispensers[i].setup(&g_machine, g_pnumbers);
+        debugOutput::sendMessage("Load pnumber " + to_string(pnumber), MSG_INFO);
+        g_pnumbers[pnumber].init(pnumber);
     }
 
-    debugOutput::sendMessage("Dispensers set up. ", MSG_INFO);
+    for (int slot_index = 0; slot_index < PRODUCT_DISPENSERS_MAX; slot_index++)
+    {
+        debugOutput::sendMessage("Init dispenser " + to_string(slot_index + 1), MSG_INFO);
+        g_productDispensers[slot_index].setup(&g_machine, g_pnumbers);
+        g_productDispensers[slot_index].setSlot(slot_index + 1);
+    }
+
 
     dfRet = createStateArray();
     if (OK != dfRet)
     {
         debugOutput::sendMessage("Error at set up.", MSG_ERROR);
-        // TODO: DB function to check/create DB
-        // next
     }
     return dfRet;
 }

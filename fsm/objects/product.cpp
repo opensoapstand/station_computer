@@ -19,14 +19,14 @@
 #include <fstream>
 
 // Default CTOR
-product::product(){
-
+product::product()
+{
 }
 
 void product::init(int pnumber)
 {
     m_pnumber = pnumber;
-    this->reloadParametersFromDb();
+    this->loadParameters();
 }
 
 static int db_sql_callback(void *data, int argc, char **argv, char **azColName)
@@ -63,7 +63,7 @@ int product::getSlot()
     return m_pnumber;
 }
 
-void product::loadProductPropertiesFromCsv(string product_id)
+void product::loadProductPropertiesFromCsv()
 {
     // Create an input filestream
     std::ifstream products_file(PRODUCT_DETAILS_TSV_PATH);
@@ -95,17 +95,20 @@ void product::loadProductPropertiesFromCsv(string product_id)
 
         // }
         // debugOutput::sendMessage(m_product_properties[CSV_PRODUCT_COL_ID] , MSG_INFO);
+        // debugOutput::sendMessage(getPNumberAsPString() , MSG_INFO);
         // debugOutput::sendMessage(m_product_properties[CSV_PRODUCT_COL_NAME_UI] , MSG_INFO);
 
+       
         bool stringsAreDifferent;
-        stringsAreDifferent = m_product_properties[CSV_PRODUCT_COL_ID].compare(product_id);
+        // debugOutput::sendMessage("Product found in products file and loaded:"
+        stringsAreDifferent = m_product_properties[CSV_PRODUCT_COL_ID].compare(getPNumberAsPString());
         if (!(stringsAreDifferent))
         {
             debugOutput::sendMessage("Product found in products file and loaded: " + m_product_properties[CSV_PRODUCT_COL_ID] + " " + m_product_properties[CSV_PRODUCT_COL_NAME], MSG_INFO);
             return;
         }
     }
-    debugOutput::sendMessage("Product not found in products file: " + product_id, MSG_ERROR);
+    debugOutput::sendMessage("Could not load product from products file (not found). Pnumber " + std::to_string(m_pnumber), MSG_ERROR);
 }
 
 // Set the Product Name
@@ -470,9 +473,14 @@ double product::convertVolumeMetricToDisplayUnits(double volume)
     return converted_volume;
 }
 
-string product::getSoapstandProductSerial()
+int product::getPNumber()
 {
-    return m_soapstand_product_serial;
+    return m_pnumber;
+}
+
+string product::getPNumberAsPString()
+{
+    return "P-" + std::to_string(m_pnumber);
 }
 
 string product::getBasePLU(char size)
@@ -503,8 +511,6 @@ string product::getBasePLU(char size)
         debugOutput::sendMessage("Unknown volume parameter for plu: " + size, MSG_INFO);
     }
 }
-
-
 
 // void product::addMaintenancePwdToMachineTable()
 // {
@@ -723,6 +729,9 @@ bool product::isDbValid()
 
     sqlite3_finalize(stmt);
     sqlite3_close(db);
+    // if (is_valid){
+    // debugOutput::sendMessage("Database check: Valid. Please note that no NULL values are allowed in text fields.", MSG_INFO);
+    // }
     return is_valid;
 }
 
@@ -747,7 +756,21 @@ string product::dbFieldAsValidString(sqlite3_stmt *stmt, int column_index)
     }
 }
 
-bool product::reloadParametersFromDb()
+bool product::loadParameters()
+{
+    bool success = true;
+    success &= loadParametersFromDb();
+    success &= loadParametersFromCsv();
+    return success;
+}
+bool product::loadParametersFromCsv()
+{
+
+    loadProductPropertiesFromCsv();
+    return true;
+}
+
+bool product::loadParametersFromDb()
 {
 
     for (uint8_t i = 0; i < 4; i++)
@@ -763,67 +786,70 @@ bool product::reloadParametersFromDb()
         return false;
     }
 
-    debugOutput::sendMessage("Database check: Valid. Please note that no NULL values are allowed in text fields.", MSG_INFO);
     rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT "
-                        "soapstand_product_serial" // 0
-                        "mix_pnumbers"
-                        "mix_ratios"
-                        "productId"
-                        "name"
-                        "size_unit"
-                        "payment"
-                        "concentrate_multiplier"
-                        "dispense_speed" // 8
-                        "threshold_flow"
-                        "retraction_time" // 10
-                        "calibration_const"
-                        "volume_per_tick"
-                        "volume_full"
-                        "volume_remaining"
-                        "volume_dispensed_since_restock" // 15
-                        "volume_dispensed_total"
-                        "is_enabled_small"
-                        "is_enabled_medium"
-                        "is_enabled_large" // 19
-                        "is_enabled_custom"
-                        "size_small"
-                        "size_medium"
-                        "size_large"
-                        "size_custom_min"
-                        "size_custom_max" // 25
-                        "price_small"
-                        "price_medium"
-                        "price_large"
-                        "price_custom" // 29
-                        "plu_small"
-                        "plu_medium"
-                        "plu_large"
-                        "plu_custom"
-                        "is_enabled_custom_discount" //
-                        "size_custom_discount"
+                        "soapstand_product_serial," // 0
+                        "mix_pnumbers,"
+                        "mix_ratios,"
+                        "productId,"
+                        "name,"
+                        "size_unit,"
+                        "payment,"
+                        "concentrate_multiplier,"
+                        "dispense_speed," // 8
+                        "threshold_flow,"
+                        "retraction_time," // 10
+                        "calibration_const,"
+                        "volume_per_tick,"
+                        "volume_full,"
+                        "volume_remaining,"
+                        "volume_dispensed_since_restock," // 15
+                        "volume_dispensed_total,"
+                        "is_enabled_small,"
+                        "is_enabled_medium,"
+                        "is_enabled_large," // 19
+                        "is_enabled_custom,"
+                        "size_small,"
+                        "size_medium,"
+                        "size_large,"
+                        "size_custom_min,"
+                        "size_custom_max," // 25
+                        "price_small,"
+                        "price_medium,"
+                        "price_large,"
+                        "price_custom," // 29
+                        "plu_small,"
+                        "plu_medium,"
+                        "plu_large,"
+                        "plu_custom,"
+                        "is_enabled_custom_discount," //
+                        "size_custom_discount,"
                         "price_custom_discount" //
-                        "* FROM products WHERE slot=" +
-                        to_string(m_pnumber) + ";";
+                        " FROM products WHERE soapstand_product_serial='" +
+                        std::to_string(m_pnumber) + "';";
 
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
 
     int status;
     status = sqlite3_step(stmt);
 
+    int numberOfRecordsFound = 0;
+
     while (status == SQLITE_ROW)
     {
-        debugOutput::sendMessage("process record: " + sql_string, MSG_INFO);
+        numberOfRecordsFound++;
+
+        debugOutput::sendMessage("Record found for product : " + getPNumberAsPString(), MSG_INFO);
 
         // int columns_count = sqlite3_data_count(stmt);
         // debugOutput::sendMessage("colll count:  " + to_string(columns_count), MSG_INFO);
 
-        m_soapstand_product_serial = dbFieldAsValidString(stmt, 0);
+        m_pnumber = std::stoi(dbFieldAsValidString(stmt, 0));
         m_mix_pnumbers = dbFieldAsValidString(stmt, 1);
         m_mix_ratios = dbFieldAsValidString(stmt, 2);
 
-        m_dispenser_id = dbFieldAsValidString(stmt, 3);
+        m_dispenser_id_for_backend = dbFieldAsValidString(stmt, 3);
         m_name = dbFieldAsValidString(stmt, 4);
         m_display_unit = dbFieldAsValidString(stmt, 5);
         m_paymentMethod = dbFieldAsValidString(stmt, 6);
@@ -865,22 +891,36 @@ bool product::reloadParametersFromDb()
         m_nVolumeTarget_custom_discount = sqlite3_column_double(stmt, 35);
         m_price_custom_discount_per_liter = sqlite3_column_double(stmt, 36);
 
-        // status = sqlite3_step(stmt); // next record
-    }; // every sqlite3_step returns a row. if it returns 0, it's run over all the rows.
+        status = sqlite3_step(stmt); // next record
+        // every sqlite3_step returns a row. if it returns 0, it's run over all the rows.
+    }
 
-    debugOutput::sendMessage("DB status: " + to_string(status), MSG_INFO);
-    debugOutput::sendMessage("target vaolume serial number: : " + m_soapstand_product_serial, MSG_INFO);
-    debugOutput::sendMessage("mix pnumbers: : " + m_mix_pnumbers, MSG_INFO);
-    debugOutput::sendMessage("mix ratios: : " + m_mix_ratios, MSG_INFO);
-    debugOutput::sendMessage("target vaolume s: : " + to_string(m_nVolumeTarget_s), MSG_INFO);
-    debugOutput::sendMessage("target vaolume medium: : " + to_string(m_nVolumeTarget_m), MSG_INFO);
-    debugOutput::sendMessage("target vaolume l: : " + to_string(m_nVolumeTarget_l), MSG_INFO);
-    debugOutput::sendMessage("target vaolume custom: : " + to_string(m_price_custom_per_ml), MSG_INFO);
+    m_pnumber_loaded_from_db = false;
+    if (numberOfRecordsFound == 1)
+    {
+
+        debugOutput::sendMessage("DB status: " + to_string(status), MSG_INFO);
+        debugOutput::sendMessage("target vaolume serial number: : " + m_pnumber, MSG_INFO);
+        debugOutput::sendMessage("mix pnumbers: : " + m_mix_pnumbers, MSG_INFO);
+        debugOutput::sendMessage("mix ratios: : " + m_mix_ratios, MSG_INFO);
+        debugOutput::sendMessage("target vaolume s: : " + to_string(m_nVolumeTarget_s), MSG_INFO);
+        debugOutput::sendMessage("target vaolume medium: : " + to_string(m_nVolumeTarget_m), MSG_INFO);
+        debugOutput::sendMessage("target vaolume l: : " + to_string(m_nVolumeTarget_l), MSG_INFO);
+        debugOutput::sendMessage("target vaolume custom: : " + to_string(m_price_custom_per_ml), MSG_INFO);
+        m_pnumber_loaded_from_db = true;
+    }
+    else if (numberOfRecordsFound > 1)
+    {
+        debugOutput::sendMessage("ERROR: Multiple db records found for product: " + std::to_string(m_pnumber), MSG_ERROR);
+    }
+    else
+    {
+        // debugOutput::sendMessage("No db record for product: " + std::to_string(m_pnumber), MSG_INFO);
+        // debugOutput::sendMessage("no records for: " + sql_string, MSG_INFO);
+    }
 
     sqlite3_finalize(stmt);
     sqlite3_close(db);
-
-    loadProductPropertiesFromCsv(m_soapstand_product_serial);
     return true;
 }
 
@@ -976,8 +1016,8 @@ bool product::testParametersFromDb()
 //     {
 //     case DB_PRODUCTS_PRODUCTID:
 //     {
-//         // m_dispenser_id = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
-//         m_dispenser_id = dbFieldAsValidString(stmt, column_index);
+//         // m_dispenser_id_for_backend = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+//         m_dispenser_id_for_backend = dbFieldAsValidString(stmt, column_index);
 //     }
 //     break;
 //     case DB_PRODUCTS_SOAPSTAND_PRODUCT_SERIAL:

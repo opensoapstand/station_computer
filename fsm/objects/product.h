@@ -32,7 +32,8 @@ class product
 {
 public:
         // product();
-        product(int slot);
+        product();
+        void init(int pnumber);
 
         // product(int slot, string name, double calibration_const, double nVolumePerTick, int dispense_speed_pwm,
         //         double nVolumeTarget_s, double nVolumeTarget_m, double nVolumeTarget_l, double nVolumeTarget_c_min, double nVolumeTarget_c_max,
@@ -99,7 +100,7 @@ public:
         bool isMaintenancePwdInMachineTable();
         bool isShowTransactionsInMachineTable();
         void executeSQLStatement(string sql_string);
-        void syncSoftwareVersionWithDb();
+
         bool registerFlowSensorTick();
         int getSlot();
 
@@ -128,7 +129,7 @@ public:
         double m_price_small;
         double m_price_medium;
         double m_price_large;
-        double m_price_custom_per_liter;
+        double m_price_custom_per_ml;
         double m_price_custom_discount_per_liter;
         bool m_is_enabled_custom_discount;
         bool isEnabledSizes[4];
@@ -143,6 +144,10 @@ public:
         string m_dispenser_id;
         string m_soapstand_product_serial;
         string m_display_unit;
+        string m_mix_pnumbers;
+        string m_mix_ratios;
+
+
         // string m_name_receipt;
         // double m_buttonPressDuration;
         string m_nPLU_small;
@@ -168,7 +173,7 @@ public:
         double m_nVolumeDispensedTotalEver;
 
         double m_concentration_multiplier; // some products are concentrated. In that case, we don't dispense the advertised volume. i.e. 1L of 10x concentrate --> dispense 100ml, 900ml of water needs to be added afterwards.
-        int m_nSlot;
+        int m_pnumber;
         bool isEnabled;
         void loadProductPropertiesFromCsv(string product_id);
 private:

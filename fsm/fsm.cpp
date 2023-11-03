@@ -27,7 +27,8 @@
 #include "states/stateManualPump.h"
 #include "states/stateEnd.h"
 
-#include "objects/dispenser.h"
+// #include "objects/product.h"
+// #include "objects/dispenser.h"
 #include "objects/messageMediator.h"
 
 #include "objects/machine.h"
@@ -50,6 +51,7 @@ messageMediator *g_pMessaging;           // debug through local network
 stateVirtual *g_stateArray[FSM_MAX + 1]; // an object for every state
 
 dispenser g_productDispensers[PRODUCT_DISPENSERS_MAX];
+product g_pnumbers[PNUMBERS_COUNT];
 machine g_machine;
 
 DF_ERROR initObjects();
@@ -195,7 +197,7 @@ DF_ERROR initObjects()
 
     for (int i = 0; i < PRODUCT_DISPENSERS_MAX; i++)
     {
-        g_productDispensers[i].setup(&g_machine);
+        g_productDispensers[i].setup(&g_machine, g_pnumbers);
     }
 
     debugOutput::sendMessage("Dispensers set up. ", MSG_INFO);

@@ -54,6 +54,7 @@ void machine::setup()
     switch_24V = new oddyseyx86GPIO(IO_PIN_ENABLE_24V);
     power24VEnabled = false;
     switch_24V->setPinAsInputElseOutput(false); // set as output
+    syncSoftwareVersionWithDb();
 }
 
 void machine::loadGeneralProperties()
@@ -70,6 +71,24 @@ pcb *machine::getPcb()
 // // nothing here.
 //     debugOutput::sendMessage("*** global machine test message", MSG_INFO);
 // }
+
+void machine::syncSoftwareVersionWithDb()
+{
+    string sql_string = "UPDATE machine SET software_version_controller=\"" + std::string(CONTROLLER_VERSION) + "\";";
+    executeSQLStatement(sql_string);
+}
+
+void machine::executeSQLStatement(string sql_string)
+{
+
+    rc = sqlite3_open(CONFIG_DB_PATH, &db);
+    sqlite3_stmt *stmt;
+    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+    int status;
+    status = sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+}
 
 void machine::loadButtonPropertiesFromDb()
 {
@@ -166,9 +185,8 @@ void machine::refreshButtonLightAnimation()
     {
         // assert error
     }
-
     }
-        m_button_lights_behaviour_memory = m_button_lights_behaviour;
+    m_button_lights_behaviour_memory = m_button_lights_behaviour;
 }
 
 void machine::refreshButtonLightAnimationCaterpillar()
@@ -468,7 +486,7 @@ void machine::print_receipt(string name_receipt, string receipt_cost, string rec
     debugOutput::sendMessage("end sleep", MSG_INFO);
 }
 
-//pcb *machine::getTemperature();
-// {
-//     return 0;
-// }double cTemp
+// pcb *machine::getTemperature();
+//  {
+//      return 0;
+//  }double cTemp

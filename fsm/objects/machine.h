@@ -37,9 +37,9 @@ public:
     void setup();
     pcb *getPcb();
 
-    pcb *getTemperature(); 
-    pcb *getTemperature2(); 
-    // void getTemperature(temperature sensor); 
+    pcb *getTemperature();
+    pcb *getTemperature2();
+    // void getTemperature(temperature sensor);
     // static pcb *control_pcb;
     pcb *control_pcb;
     Adafruit_Thermal *receipt_printer;
@@ -53,6 +53,8 @@ public:
     Button_lights_behaviour m_button_lights_behaviour_memory;
     uint64_t m_lights_animation_most_recent_step_millis;
     uint8_t m_lights_animation_step;
+    void syncSoftwareVersionWithDb();
+    void executeSQLStatement(string sql_string);
 
     int getButtonAnimationProgram();
     void loadButtonPropertiesFromDb();

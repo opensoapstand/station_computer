@@ -26,15 +26,24 @@
 #define SYSFS_GPIO_DIR "/sys/class/gpio"
 #define MAX_BUF 64
 
+#ifndef INPUT
 #define INPUT 1
+#endif
+
+#ifndef OUTPUT
 #define OUTPUT 0
+#endif
+
+#ifndef HIGH
+#define HIGH = 1
+#endif
+#ifndef LOW
+#define LOW = 0
+#endif
 
 #define X20 20
 #define X21 21
 #define X22 22
-
-#define HIGH = 1
-#define LOW = 0
 
 // Default CTOR
 oddyseyx86GPIO::oddyseyx86GPIO()
@@ -275,7 +284,6 @@ void oddyseyx86GPIO::monitorGPIO_Flowsensor(bool *abortLoop)
                 {
                         read(fd, &flowsensor_state_char, 1);
                         close(fd);
-                        
                 }
                 else
                 {
@@ -290,10 +298,9 @@ void oddyseyx86GPIO::monitorGPIO_Flowsensor(bool *abortLoop)
                 if (flowsensor_state_memory != flowsensor_state_char)
                 {
                         flowsensor_most_recent_edge_millis = now;
-                        
                 }
 
-                if ((now - flowsensor_most_recent_edge_millis) > FLOWSENSOR_DEJITTER_MICROS) // Dejittering of the sensor. 
+                if ((now - flowsensor_most_recent_edge_millis) > FLOWSENSOR_DEJITTER_MICROS) // Dejittering of the sensor.
                 {
                         if (flowsensor_state_char == '1')
                         {

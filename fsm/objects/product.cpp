@@ -19,9 +19,13 @@
 #include <fstream>
 
 // Default CTOR
-product::product(int slot)
+product::product(){
+
+}
+
+void product::init(int pnumber)
 {
-    m_nSlot = slot;
+    m_pnumber = pnumber;
     this->reloadParametersFromDb();
 }
 
@@ -51,12 +55,12 @@ product::~product()
 // Set the Product option slot
 // void product::setSlot(int slot)
 // {
-//     m_nSlot = slot;
+//     m_pnumber = slot;
 // }
 // Set the Product option slot
 int product::getSlot()
 {
-    return m_nSlot;
+    return m_pnumber;
 }
 
 void product::loadProductPropertiesFromCsv(string product_id)
@@ -178,7 +182,7 @@ int product::getPWM()
 //     // {
 //     //     //  fprintf(stderr, "Opened database successfully\n");
 //     // }
-//     // string sql_string = "SELECT dispense_speed FROM products WHERE slot=" + to_string(m_nSlot) + ";";
+//     // string sql_string = "SELECT dispense_speed FROM products WHERE slot=" + to_string(m_pnumber) + ";";
 
 //     // sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
 //     // sqlite3_step(stmt);
@@ -216,7 +220,7 @@ double product::getVolPerTick()
 //         //       fprintf(stderr, "Opened database successfully\n");
 //     }
 
-//     string sql_string = "SELECT volume_per_tick FROM products WHERE slot=" + to_string(m_nSlot) + ";";
+//     string sql_string = "SELECT volume_per_tick FROM products WHERE slot=" + to_string(m_pnumber) + ";";
 
 //     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
 //     sqlite3_step(stmt);
@@ -231,7 +235,7 @@ double product::getVolPerTick()
 
 // void product::productInfo()
 // {
-//     //    cout << "Option: " << m_nSlot << endl;
+//     //    cout << "Option: " << m_pnumber << endl;
 //     //    cout << "Name: " << m_name << endl;
 //     //    cout << "Dispense Volume: " << m_nVolumeDispensed << endl;
 //     //    cout << "Target Volume: " << m_nVolumeTarget << endl;
@@ -366,7 +370,7 @@ double product::getPrice(char size)
     }
     else if (size == 'c')
     {
-        return m_price_custom_per_liter;
+        return m_price_custom_per_ml;
     }
     // else if (size == 'd')
     // {
@@ -374,11 +378,11 @@ double product::getPrice(char size)
     // }
     else if (size == 't')
     {
-        return m_price_custom_per_liter;
+        return m_price_custom_per_ml;
     }
     else if (size == SIZE_EMPTY_CONTAINER_DETECTED_CHAR)
     {
-        return m_price_custom_per_liter;
+        return m_price_custom_per_ml;
     }
     else
     {
@@ -500,41 +504,37 @@ string product::getBasePLU(char size)
     }
 }
 
-void product::syncSoftwareVersionWithDb()
-{
-    string sql_string = "UPDATE machine SET software_version=\"" + std::string(CONTROLLER_VERSION) + "\";";
-    executeSQLStatement(sql_string);
-}
 
-void product::addMaintenancePwdToMachineTable()
-{
-    executeSQLStatement("ALTER TABLE machine ADD maintenance_pwd TEXT");
-    executeSQLStatement("UPDATE machine SET maintenance_pwd=\"soap\";");
-}
 
-void product::addShowTransactionsToMachineTable()
-{
-    executeSQLStatement("ALTER TABLE machine ADD show_transactions INTEGER");
-    executeSQLStatement("UPDATE machine SET show_transactions=0;");
-}
-void product::addIsEnabledCustomDiscountToProductsTable()
-{
-    executeSQLStatement("ALTER TABLE products ADD is_enabled_custom_discount INT");
-    // executeSQLStatement("ALTER TABLE products ADD is_enabled_custom_discount INT AFTER is_enabled_custom");
-    executeSQLStatement("UPDATE products SET is_enabled_custom_discount=0;");
-}
-void product::addSizeCustomDiscountToProductsTable()
-{
-    executeSQLStatement("ALTER TABLE products ADD size_custom_discount REAL");
-    // executeSQLStatement("ALTER TABLE products ADD size_custom_discount REAL AFTER size_custom_min");
-    executeSQLStatement("UPDATE products SET size_custom_discount=2000;");
-}
-void product::addPriceCustomDiscountToProductsTable()
-{
-    executeSQLStatement("ALTER TABLE products ADD price_custom_discount REAL");
-    // executeSQLStatement("ALTER TABLE products ADD price_custom_discount REAL AFTER price_custom");
-    executeSQLStatement("UPDATE products SET price_custom_discount=0.01;");
-}
+// void product::addMaintenancePwdToMachineTable()
+// {
+//     executeSQLStatement("ALTER TABLE machine ADD maintenance_pwd TEXT");
+//     executeSQLStatement("UPDATE machine SET maintenance_pwd=\"soap\";");
+// }
+
+// void product::addShowTransactionsToMachineTable()
+// {
+//     executeSQLStatement("ALTER TABLE machine ADD show_transactions INTEGER");
+//     executeSQLStatement("UPDATE machine SET show_transactions=0;");
+// }
+// void product::addIsEnabledCustomDiscountToProductsTable()
+// {
+//     executeSQLStatement("ALTER TABLE products ADD is_enabled_custom_discount INT");
+//     // executeSQLStatement("ALTER TABLE products ADD is_enabled_custom_discount INT AFTER is_enabled_custom");
+//     executeSQLStatement("UPDATE products SET is_enabled_custom_discount=0;");
+// }
+// void product::addSizeCustomDiscountToProductsTable()
+// {
+//     executeSQLStatement("ALTER TABLE products ADD size_custom_discount REAL");
+//     // executeSQLStatement("ALTER TABLE products ADD size_custom_discount REAL AFTER size_custom_min");
+//     executeSQLStatement("UPDATE products SET size_custom_discount=2000;");
+// }
+// void product::addPriceCustomDiscountToProductsTable()
+// {
+//     executeSQLStatement("ALTER TABLE products ADD price_custom_discount REAL");
+//     // executeSQLStatement("ALTER TABLE products ADD price_custom_discount REAL AFTER price_custom");
+//     executeSQLStatement("UPDATE products SET price_custom_discount=0.01;");
+// }
 void product::executeSQLStatement(string sql_string)
 {
 
@@ -603,7 +603,60 @@ bool product::isColumnInTable(string table, string column_name_to_find)
 
 bool product::isDbValid()
 {
-    string table_products_columns[TABLE_PRODUCTS_COLUMN_COUNT] = {"soapstand_product_serial", "mix_pnumbers", "mix_ratios", "productId", "slot", "name", "size_unit", "currency", "payment", "name_receipt", "concentrate_multiplier", "dispense_speed", "threshold_flow", "retraction_time", "calibration_const", "volume_per_tick", "last_restock", "volume_full", "volume_remaining", "volume_dispensed_since_restock", "volume_dispensed_total", "is_enabled_small", "is_enabled_medium", "is_enabled_large", "is_enabled_custom", "size_small", "size_medium", "size_large", "size_custom_min", "size_custom_max", "price_small", "price_medium", "price_large", "price_custom", "plu_small", "plu_medium", "plu_large", "plu_custom", "pid_small", "pid_medium", "pid_large", "pid_custom", "flavour", "image_url", "type", "ingredients", "features", "description", "is_enabled_custom_discount", "size_custom_discount", "price_custom_discount"};
+    string table_products_columns[TABLE_PRODUCTS_COLUMN_COUNT] = {
+        "soapstand_product_serial",
+        "mix_pnumbers",
+        "mix_ratios",
+        "productId",
+        "slot",
+        "name",
+        "size_unit",
+        "currency",
+        "payment",
+        "name_receipt",
+        "concentrate_multiplier",
+        "dispense_speed",
+        "threshold_flow",
+        "retraction_time",
+        "calibration_const",
+        "volume_per_tick",
+        "last_restock",
+        "volume_full",
+        "volume_remaining",
+        "volume_dispensed_since_restock",
+        "volume_dispensed_total",
+        "is_enabled_small",
+        "is_enabled_medium",
+        "is_enabled_large",
+        "is_enabled_custom",
+        "size_small",
+        "size_medium",
+        "size_large",
+        "size_custom_min",
+        "size_custom_max",
+        "price_small",
+        "price_medium",
+        "price_large",
+        "price_custom",
+        "plu_small",
+        "plu_medium",
+        "plu_large",
+        "plu_custom",
+        "pid_small",
+        "pid_medium",
+        "pid_large",
+        "pid_custom",
+        "flavour",
+        "image_url",
+        "type",
+        "ingredients",
+        "features",
+        "description",
+        "is_enabled_custom_discount",
+        "size_custom_discount",
+        "price_custom_discount",
+
+    };
     bool is_valid = true;
 
     rc = sqlite3_open(CONFIG_DB_PATH, &db);
@@ -678,47 +731,28 @@ string product::getProductName()
     return m_product_properties[CSV_PRODUCT_COL_NAME];
 }
 
+string product::dbFieldAsValidString(sqlite3_stmt *stmt, int column_index)
+{
+    // protect against null values in db.
+    const unsigned char *column_text = sqlite3_column_text(stmt, column_index);
+    if (column_text != nullptr)
+    {
+        return std::string(reinterpret_cast<const char *>(column_text));
+    }
+    else
+    {
+        debugOutput::sendMessage("Null value in db at column index: " + to_string(column_index), MSG_WARNING);
+        // Handle the case when the value is NULL
+        return "";
+    }
+}
+
 bool product::reloadParametersFromDb()
 {
 
     for (uint8_t i = 0; i < 4; i++)
     {
         isEnabledSizes[i] = false;
-    }
-
-    syncSoftwareVersionWithDb();
-
-    if (!isColumnInTable("products", "is_enabled_custom_discount"))
-    {
-
-        debugOutput::sendMessage("ERROR: Unexpected database layout, is_enabled_custom_discount not found  ******************************", MSG_ERROR);
-        addIsEnabledCustomDiscountToProductsTable();
-    }
-    if (!isColumnInTable("products", "size_custom_discount"))
-    {
-
-        debugOutput::sendMessage("ERROR: Unexpected database layout, size_custom_discount not found  ******************************", MSG_ERROR);
-        addSizeCustomDiscountToProductsTable();
-    }
-    if (!isColumnInTable("products", "price_custom_discount"))
-    {
-
-        debugOutput::sendMessage("ERROR: Unexpected database layout, price_custom_discount not found  ******************************", MSG_ERROR);
-        addPriceCustomDiscountToProductsTable();
-    }
-
-    if (!isColumnInTable("machine", "maintenance_pwd"))
-    // if (!isMaintenancePwdInMachineTable())
-    {
-        debugOutput::sendMessage("ERROR: Unexpected database layout, will add maintentance_pwd to end of table", MSG_ERROR);
-        addMaintenancePwdToMachineTable();
-    }
-
-    if (!isColumnInTable("machine", "show_transactions"))
-    // if (!isShowTransactionsInMachineTable())
-    {
-        debugOutput::sendMessage("ERROR: Unexpected database layout, will add show_transactions to end of table", MSG_ERROR);
-        addShowTransactionsToMachineTable();
     }
 
     bool valid = isDbValid();
@@ -771,7 +805,7 @@ bool product::reloadParametersFromDb()
                         "size_custom_discount"
                         "price_custom_discount" //
                         "* FROM products WHERE slot=" +
-                        to_string(m_nSlot) + ";";
+                        to_string(m_pnumber) + ";";
 
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
 
@@ -786,6 +820,8 @@ bool product::reloadParametersFromDb()
         // debugOutput::sendMessage("colll count:  " + to_string(columns_count), MSG_INFO);
 
         m_soapstand_product_serial = dbFieldAsValidString(stmt, 0);
+        m_mix_pnumbers = dbFieldAsValidString(stmt, 1);
+        m_mix_ratios = dbFieldAsValidString(stmt, 2);
 
         m_dispenser_id = dbFieldAsValidString(stmt, 3);
         m_name = dbFieldAsValidString(stmt, 4);
@@ -820,7 +856,7 @@ bool product::reloadParametersFromDb()
         m_price_small = sqlite3_column_double(stmt, 26);
         m_price_medium = sqlite3_column_double(stmt, 27);
         m_price_large = sqlite3_column_double(stmt, 28);
-        m_price_custom_per_liter = sqlite3_column_double(stmt, 29);
+        m_price_custom_per_ml = sqlite3_column_double(stmt, 29);
         m_nPLU_small = dbFieldAsValidString(stmt, 30);
         m_nPLU_medium = dbFieldAsValidString(stmt, 31);
         m_nPLU_large = dbFieldAsValidString(stmt, 32);
@@ -829,319 +865,23 @@ bool product::reloadParametersFromDb()
         m_nVolumeTarget_custom_discount = sqlite3_column_double(stmt, 35);
         m_price_custom_discount_per_liter = sqlite3_column_double(stmt, 36);
 
-        // int columns_count = sqlite3_data_count(stmt);
-        // // debugOutput::sendMessage("colll count:  " + to_string(columns_count), MSG_INFO);
-
-        // for (int column_index = 0; column_index < columns_count; column_index++)
-        // {
-        //     switch (column_index)
-        //     {
-        //     case DB_PRODUCTS_PRODUCTID:
-        //     {
-        //         // m_dispenser_id = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
-        //         m_dispenser_id = dbFieldAsValidString(stmt, column_index);
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_SOAPSTAND_PRODUCT_SERIAL:
-        //     {
-        //         m_soapstand_product_serial = dbFieldAsValidString(stmt, column_index);
-        //         // m_soapstand_product_serial = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
-        //         debugOutput::sendMessage("m_soapstand_product_serial:" + m_soapstand_product_serial, MSG_INFO);
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_SLOT:
-        //     {
-        //         if (m_nSlot != sqlite3_column_int(stmt, column_index))
-        //         {
-        //             debugOutput::sendMessage("DB_PRODUCTS_SLOT unexpected value. " + to_string(sqlite3_column_int(stmt, column_index)), MSG_INFO);
-        //         }
-        //         else
-        //         {
-        //             debugOutput::sendMessage("DB_PRODUCTS_SLOT slot matching. ", MSG_INFO);
-        //         }
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_NAME:
-        //     {
-        //         // m_display_unit
-        //         m_name = dbFieldAsValidString(stmt, column_index);
-        //         // m_name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_SIZE_UNIT:
-        //     {
-        //         m_display_unit = dbFieldAsValidString(stmt, column_index);
-        //         // m_display_unit = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_CURRENCY:
-        //     {
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_PAYMENT:
-        //     {
-        //         m_paymentMethod = dbFieldAsValidString(stmt, column_index);
-        //         // m_paymentMethod = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_NAME_RECEIPT:
-        //     {
-        //         // GET FROM products csv!!!
-        //         // m_name_receipt = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_CONCENTRATION_MULTIPLIER:
-        //     {
-        //         m_concentration_multiplier = sqlite3_column_double(stmt, column_index);
-
-        //         if (m_concentration_multiplier < 0.00000001)
-        //         {
-        //             debugOutput::sendMessage("Concentration multiplier was not set. Will default to 1. Was:" + to_string(m_concentration_multiplier), MSG_INFO);
-        //             m_concentration_multiplier = 1.0;
-        //         }
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_DISPENSE_SPEED:
-        //     {
-        //         m_nDispenseSpeedPWM = sqlite3_column_int(stmt, column_index);
-        //         debugOutput::sendMessage("Speed PWM (0..255):" + to_string(m_nDispenseSpeedPWM), MSG_INFO);
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_THRESHOLD_FLOW:
-        //     {
-        //         m_nThresholdFlow = sqlite3_column_double(stmt, column_index);
-        //         debugOutput::sendMessage("Flow threshold: " + to_string(m_nThresholdFlow), MSG_INFO);
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_RETRACTION_TIME:
-        //     {
-        //         m_nRetractionTimeMillis = sqlite3_column_int(stmt, column_index);
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_CALIBRATION_CONST:
-        //     {
-        //         m_nThresholdFlow_maximum_allowed = sqlite3_column_double(stmt, column_index);
-        //         debugOutput::sendMessage("DB_PRODUCTS_CALIBRATION_CONST (reused for maximum flow rate):" + to_string(m_nThresholdFlow_maximum_allowed), MSG_INFO);
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_VOLUME_PER_TICK:
-        //     {
-        //         m_nVolumePerTick = sqlite3_column_double(stmt, column_index);
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_LAST_RESTOCK:
-        //     {
-
-        //         // m_nVolumeDispensedSinceRestock = sqlite3_column_double(stmt, column_index);
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_VOLUME_FULL:
-        //     {
-        //         m_nVolumeFull = sqlite3_column_double(stmt, column_index);
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_VOLUME_REMAINING:
-        //     {
-        //         m_nVolumeRemaining = sqlite3_column_double(stmt, column_index);
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_VOLUME_DISPENSED_SINCE_RESTOCK:
-        //     {
-        //         m_nVolumeDispensedSinceRestock = sqlite3_column_double(stmt, column_index);
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_VOLUME_DISPENSED_TOTAL:
-        //     {
-        //         m_nVolumeDispensedTotalEver = sqlite3_column_double(stmt, column_index);
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_IS_ENABLED_SMALL:
-        //     {
-        //         isEnabledSizes[SIZE_INDEX_SMALL] = sqlite3_column_int(stmt, column_index);
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_IS_ENABLED_MEDIUM:
-        //     {
-        //         isEnabledSizes[SIZE_INDEX_MEDIUM] = sqlite3_column_int(stmt, column_index);
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_IS_ENABLED_LARGE:
-        //     {
-        //         isEnabledSizes[SIZE_INDEX_LARGE] = sqlite3_column_int(stmt, column_index);
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_IS_ENABLED_CUSTOM:
-        //     {
-        //         isEnabledSizes[SIZE_INDEX_CUSTOM] = sqlite3_column_int(stmt, column_index);
-        //         // m_is_enabled_custom_discount = sqlite3_column_int(stmt, column_index);
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_IS_ENABLED_CUSTOM_DISCOUNT:
-        //     {
-        //         m_is_enabled_custom_discount = sqlite3_column_int(stmt, column_index);
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_SIZE_SMALL:
-        //     {
-        //         m_nVolumeTarget_s = sqlite3_column_double(stmt, column_index);
-        //         debugOutput::sendMessage("m_nVolumeTarget_s:" + to_string(m_nVolumeTarget_s), MSG_INFO);
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_SIZE_MEDIUM:
-        //     {
-        //         m_nVolumeTarget_m = sqlite3_column_double(stmt, column_index);
-        //         debugOutput::sendMessage("m_nVolumeTarget_m:" + to_string(m_nVolumeTarget_m), MSG_INFO);
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_SIZE_LARGE:
-        //     {
-        //         m_nVolumeTarget_l = sqlite3_column_double(stmt, column_index);
-        //         debugOutput::sendMessage("m_nVolumeTarget_l:" + to_string(m_nVolumeTarget_l), MSG_INFO);
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_SIZE_CUSTOM_MIN:
-        //     {
-        //         m_nVolumeTarget_c_min = sqlite3_column_double(stmt, column_index);
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_SIZE_CUSTOM_MAX:
-        //     {
-        //         m_nVolumeTarget_c_max = sqlite3_column_double(stmt, column_index);
-        //         debugOutput::sendMessage("m_nVolumeTarget_c:" + to_string(m_nVolumeTarget_c_max), MSG_INFO);
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_SIZE_CUSTOM_DISCOUNT:
-        //     {
-        //         m_nVolumeTarget_custom_discount = sqlite3_column_double(stmt, column_index);
-        //         debugOutput::sendMessage("m_nVolumeTarget_custom_volume_for_discount:" + to_string(m_nVolumeTarget_custom_discount), MSG_INFO);
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_PRICE_SMALL:
-        //     {
-        //         m_price_small = sqlite3_column_double(stmt, column_index);
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_PRICE_MEDIUM:
-        //     {
-        //         m_price_medium = sqlite3_column_double(stmt, column_index);
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_PRICE_LARGE:
-        //     {
-        //         m_price_large = sqlite3_column_double(stmt, column_index);
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_PRICE_CUSTOM:
-        //     {
-        //         m_price_custom_per_liter = sqlite3_column_double(stmt, column_index);
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_PRICE_CUSTOM_DISCOUNT:
-        //     {
-        //         m_price_custom_discount_per_liter = sqlite3_column_double(stmt, column_index);
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_PLU_SMALL:
-        //     {
-        //         m_nPLU_small = dbFieldAsValidString(stmt, column_index);
-        //         // m_nPLU_small = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_PLU_MEDIUM:
-        //     {
-        //         m_nPLU_medium = dbFieldAsValidString(stmt, column_index);
-        //         // m_nPLU_medium = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_PLU_LARGE:
-        //     {
-        //         m_nPLU_large = dbFieldAsValidString(stmt, column_index);
-        //         // m_nPLU_large = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_PLU_CUSTOM:
-        //     {
-        //         m_nPLU_custom = dbFieldAsValidString(stmt, column_index);
-        //         // m_nPLU_custom = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_PID_SMALL:
-        //     {
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_PID_MEDIUM:
-        //     {
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_PID_LARGE:
-        //     {
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_PID_CUSTOM:
-        //     {
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_FLAVOUR:
-        //     {
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_IMAGE_URL:
-        //     {
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_TYPE:
-        //     {
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_INGREDIENTS:
-        //     {
-        //         // GET FROM products csv!!!
-        //     }
-        //     break;
-        //     case DB_PRODUCTS_FEATURES:
-        //         // GET FROM products csv!!!
-        //         {
-        //         }
-        //         break;
-        //     case DB_PRODUCTS_DESCRIPTION:
-        //         // GET FROM products csv!!!
-        //         {
-        //         }
-        //         break;
-
-        //     default:
-        //     {
-        //         debugOutput::sendMessage("Unexpected column index" + to_string(column_index), MSG_INFO);
-        //     }
-        //     break;
-        //     }
-        // }
         // status = sqlite3_step(stmt); // next record
     }; // every sqlite3_step returns a row. if it returns 0, it's run over all the rows.
 
     debugOutput::sendMessage("DB status: " + to_string(status), MSG_INFO);
+    debugOutput::sendMessage("target vaolume serial number: : " + m_soapstand_product_serial, MSG_INFO);
+    debugOutput::sendMessage("mix pnumbers: : " + m_mix_pnumbers, MSG_INFO);
+    debugOutput::sendMessage("mix ratios: : " + m_mix_ratios, MSG_INFO);
+    debugOutput::sendMessage("target vaolume s: : " + to_string(m_nVolumeTarget_s), MSG_INFO);
+    debugOutput::sendMessage("target vaolume medium: : " + to_string(m_nVolumeTarget_m), MSG_INFO);
+    debugOutput::sendMessage("target vaolume l: : " + to_string(m_nVolumeTarget_l), MSG_INFO);
+    debugOutput::sendMessage("target vaolume custom: : " + to_string(m_price_custom_per_ml), MSG_INFO);
 
     sqlite3_finalize(stmt);
     sqlite3_close(db);
 
     loadProductPropertiesFromCsv(m_soapstand_product_serial);
     return true;
-}
-
-string product::dbFieldAsValidString(sqlite3_stmt *stmt, int column_index)
-{
-    // protect against null values in db.
-    const unsigned char *column_text = sqlite3_column_text(stmt, column_index);
-    if (column_text != nullptr)
-    {
-        return std::string(reinterpret_cast<const char *>(column_text));
-    }
-    else
-    {
-        debugOutput::sendMessage("Null value in db at column index: " + to_string(column_index), MSG_WARNING);
-        // Handle the case when the value is NULL
-        return "";
-    }
 }
 
 bool product::testParametersFromDb()
@@ -1164,7 +904,7 @@ bool product::testParametersFromDb()
     {
         //  fprintf(stderr, "Opened database successfully\n");
     }
-    string sql_string = "SELECT dispense_speed FROM products WHERE slot=" + to_string(m_nSlot) + ";";
+    string sql_string = "SELECT dispense_speed FROM products WHERE slot=" + to_string(m_pnumber) + ";";
 
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
 
@@ -1194,3 +934,323 @@ bool product::testParametersFromDb()
     sqlite3_close(db);
     return pwm;
 }
+
+// if (!isColumnInTable("products", "is_enabled_custom_discount"))
+// {
+
+//     debugOutput::sendMessage("ERROR: Unexpected database layout, is_enabled_custom_discount not found  ******************************", MSG_ERROR);
+//     addIsEnabledCustomDiscountToProductsTable();
+// }
+// if (!isColumnInTable("products", "size_custom_discount"))
+// {
+
+//     debugOutput::sendMessage("ERROR: Unexpected database layout, size_custom_discount not found  ******************************", MSG_ERROR);
+//     addSizeCustomDiscountToProductsTable();
+// }
+// if (!isColumnInTable("products", "price_custom_discount"))
+// {
+
+//     debugOutput::sendMessage("ERROR: Unexpected database layout, price_custom_discount not found  ******************************", MSG_ERROR);
+//     addPriceCustomDiscountToProductsTable();
+// }
+
+// if (!isColumnInTable("machine", "maintenance_pwd"))
+// // if (!isMaintenancePwdInMachineTable())
+// {
+//     debugOutput::sendMessage("ERROR: Unexpected database layout, will add maintentance_pwd to end of table", MSG_ERROR);
+//     addMaintenancePwdToMachineTable();
+// }
+
+// if (!isColumnInTable("machine", "show_transactions"))
+// // if (!isShowTransactionsInMachineTable())
+// {
+//     debugOutput::sendMessage("ERROR: Unexpected database layout, will add show_transactions to end of table", MSG_ERROR);
+//     addShowTransactionsToMachineTable();
+// }
+// int columns_count = sqlite3_data_count(stmt);
+// // debugOutput::sendMessage("colll count:  " + to_string(columns_count), MSG_INFO);
+
+// for (int column_index = 0; column_index < columns_count; column_index++)
+// {
+//     switch (column_index)
+//     {
+//     case DB_PRODUCTS_PRODUCTID:
+//     {
+//         // m_dispenser_id = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+//         m_dispenser_id = dbFieldAsValidString(stmt, column_index);
+//     }
+//     break;
+//     case DB_PRODUCTS_SOAPSTAND_PRODUCT_SERIAL:
+//     {
+//         m_soapstand_product_serial = dbFieldAsValidString(stmt, column_index);
+//         // m_soapstand_product_serial = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+//         debugOutput::sendMessage("m_soapstand_product_serial:" + m_soapstand_product_serial, MSG_INFO);
+//     }
+//     break;
+//     case DB_PRODUCTS_SLOT:
+//     {
+//         if (m_pnumber != sqlite3_column_int(stmt, column_index))
+//         {
+//             debugOutput::sendMessage("DB_PRODUCTS_SLOT unexpected value. " + to_string(sqlite3_column_int(stmt, column_index)), MSG_INFO);
+//         }
+//         else
+//         {
+//             debugOutput::sendMessage("DB_PRODUCTS_SLOT slot matching. ", MSG_INFO);
+//         }
+//     }
+//     break;
+//     case DB_PRODUCTS_NAME:
+//     {
+//         // m_display_unit
+//         m_name = dbFieldAsValidString(stmt, column_index);
+//         // m_name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+//     }
+//     break;
+//     case DB_PRODUCTS_SIZE_UNIT:
+//     {
+//         m_display_unit = dbFieldAsValidString(stmt, column_index);
+//         // m_display_unit = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+//     }
+//     break;
+//     case DB_PRODUCTS_CURRENCY:
+//     {
+//     }
+//     break;
+//     case DB_PRODUCTS_PAYMENT:
+//     {
+//         m_paymentMethod = dbFieldAsValidString(stmt, column_index);
+//         // m_paymentMethod = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+//     }
+//     break;
+//     case DB_PRODUCTS_NAME_RECEIPT:
+//     {
+//         // GET FROM products csv!!!
+//         // m_name_receipt = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+//     }
+//     break;
+//     case DB_PRODUCTS_CONCENTRATION_MULTIPLIER:
+//     {
+//         m_concentration_multiplier = sqlite3_column_double(stmt, column_index);
+
+//         if (m_concentration_multiplier < 0.00000001)
+//         {
+//             debugOutput::sendMessage("Concentration multiplier was not set. Will default to 1. Was:" + to_string(m_concentration_multiplier), MSG_INFO);
+//             m_concentration_multiplier = 1.0;
+//         }
+//     }
+//     break;
+//     case DB_PRODUCTS_DISPENSE_SPEED:
+//     {
+//         m_nDispenseSpeedPWM = sqlite3_column_int(stmt, column_index);
+//         debugOutput::sendMessage("Speed PWM (0..255):" + to_string(m_nDispenseSpeedPWM), MSG_INFO);
+//     }
+//     break;
+//     case DB_PRODUCTS_THRESHOLD_FLOW:
+//     {
+//         m_nThresholdFlow = sqlite3_column_double(stmt, column_index);
+//         debugOutput::sendMessage("Flow threshold: " + to_string(m_nThresholdFlow), MSG_INFO);
+//     }
+//     break;
+//     case DB_PRODUCTS_RETRACTION_TIME:
+//     {
+//         m_nRetractionTimeMillis = sqlite3_column_int(stmt, column_index);
+//     }
+//     break;
+//     case DB_PRODUCTS_CALIBRATION_CONST:
+//     {
+//         m_nThresholdFlow_maximum_allowed = sqlite3_column_double(stmt, column_index);
+//         debugOutput::sendMessage("DB_PRODUCTS_CALIBRATION_CONST (reused for maximum flow rate):" + to_string(m_nThresholdFlow_maximum_allowed), MSG_INFO);
+//     }
+//     break;
+//     case DB_PRODUCTS_VOLUME_PER_TICK:
+//     {
+//         m_nVolumePerTick = sqlite3_column_double(stmt, column_index);
+//     }
+//     break;
+//     case DB_PRODUCTS_LAST_RESTOCK:
+//     {
+
+//         // m_nVolumeDispensedSinceRestock = sqlite3_column_double(stmt, column_index);
+//     }
+//     break;
+//     case DB_PRODUCTS_VOLUME_FULL:
+//     {
+//         m_nVolumeFull = sqlite3_column_double(stmt, column_index);
+//     }
+//     break;
+//     case DB_PRODUCTS_VOLUME_REMAINING:
+//     {
+//         m_nVolumeRemaining = sqlite3_column_double(stmt, column_index);
+//     }
+//     break;
+//     case DB_PRODUCTS_VOLUME_DISPENSED_SINCE_RESTOCK:
+//     {
+//         m_nVolumeDispensedSinceRestock = sqlite3_column_double(stmt, column_index);
+//     }
+//     break;
+//     case DB_PRODUCTS_VOLUME_DISPENSED_TOTAL:
+//     {
+//         m_nVolumeDispensedTotalEver = sqlite3_column_double(stmt, column_index);
+//     }
+//     break;
+//     case DB_PRODUCTS_IS_ENABLED_SMALL:
+//     {
+//         isEnabledSizes[SIZE_INDEX_SMALL] = sqlite3_column_int(stmt, column_index);
+//     }
+//     break;
+//     case DB_PRODUCTS_IS_ENABLED_MEDIUM:
+//     {
+//         isEnabledSizes[SIZE_INDEX_MEDIUM] = sqlite3_column_int(stmt, column_index);
+//     }
+//     break;
+//     case DB_PRODUCTS_IS_ENABLED_LARGE:
+//     {
+//         isEnabledSizes[SIZE_INDEX_LARGE] = sqlite3_column_int(stmt, column_index);
+//     }
+//     break;
+//     case DB_PRODUCTS_IS_ENABLED_CUSTOM:
+//     {
+//         isEnabledSizes[SIZE_INDEX_CUSTOM] = sqlite3_column_int(stmt, column_index);
+//         // m_is_enabled_custom_discount = sqlite3_column_int(stmt, column_index);
+//     }
+//     break;
+//     case DB_PRODUCTS_IS_ENABLED_CUSTOM_DISCOUNT:
+//     {
+//         m_is_enabled_custom_discount = sqlite3_column_int(stmt, column_index);
+//     }
+//     break;
+//     case DB_PRODUCTS_SIZE_SMALL:
+//     {
+//         m_nVolumeTarget_s = sqlite3_column_double(stmt, column_index);
+//         debugOutput::sendMessage("m_nVolumeTarget_s:" + to_string(m_nVolumeTarget_s), MSG_INFO);
+//     }
+//     break;
+//     case DB_PRODUCTS_SIZE_MEDIUM:
+//     {
+//         m_nVolumeTarget_m = sqlite3_column_double(stmt, column_index);
+//         debugOutput::sendMessage("m_nVolumeTarget_m:" + to_string(m_nVolumeTarget_m), MSG_INFO);
+//     }
+//     break;
+//     case DB_PRODUCTS_SIZE_LARGE:
+//     {
+//         m_nVolumeTarget_l = sqlite3_column_double(stmt, column_index);
+//         debugOutput::sendMessage("m_nVolumeTarget_l:" + to_string(m_nVolumeTarget_l), MSG_INFO);
+//     }
+//     break;
+//     case DB_PRODUCTS_SIZE_CUSTOM_MIN:
+//     {
+//         m_nVolumeTarget_c_min = sqlite3_column_double(stmt, column_index);
+//     }
+//     break;
+//     case DB_PRODUCTS_SIZE_CUSTOM_MAX:
+//     {
+//         m_nVolumeTarget_c_max = sqlite3_column_double(stmt, column_index);
+//         debugOutput::sendMessage("m_nVolumeTarget_c:" + to_string(m_nVolumeTarget_c_max), MSG_INFO);
+//     }
+//     break;
+//     case DB_PRODUCTS_SIZE_CUSTOM_DISCOUNT:
+//     {
+//         m_nVolumeTarget_custom_discount = sqlite3_column_double(stmt, column_index);
+//         debugOutput::sendMessage("m_nVolumeTarget_custom_volume_for_discount:" + to_string(m_nVolumeTarget_custom_discount), MSG_INFO);
+//     }
+//     break;
+//     case DB_PRODUCTS_PRICE_SMALL:
+//     {
+//         m_price_small = sqlite3_column_double(stmt, column_index);
+//     }
+//     break;
+//     case DB_PRODUCTS_PRICE_MEDIUM:
+//     {
+//         m_price_medium = sqlite3_column_double(stmt, column_index);
+//     }
+//     break;
+//     case DB_PRODUCTS_PRICE_LARGE:
+//     {
+//         m_price_large = sqlite3_column_double(stmt, column_index);
+//     }
+//     break;
+//     case DB_PRODUCTS_PRICE_CUSTOM:
+//     {
+//         m_price_custom_per_ml = sqlite3_column_double(stmt, column_index);
+//     }
+//     break;
+//     case DB_PRODUCTS_PRICE_CUSTOM_DISCOUNT:
+//     {
+//         m_price_custom_discount_per_liter = sqlite3_column_double(stmt, column_index);
+//     }
+//     break;
+//     case DB_PRODUCTS_PLU_SMALL:
+//     {
+//         m_nPLU_small = dbFieldAsValidString(stmt, column_index);
+//         // m_nPLU_small = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+//     }
+//     break;
+//     case DB_PRODUCTS_PLU_MEDIUM:
+//     {
+//         m_nPLU_medium = dbFieldAsValidString(stmt, column_index);
+//         // m_nPLU_medium = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+//     }
+//     break;
+//     case DB_PRODUCTS_PLU_LARGE:
+//     {
+//         m_nPLU_large = dbFieldAsValidString(stmt, column_index);
+//         // m_nPLU_large = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+//     }
+//     break;
+//     case DB_PRODUCTS_PLU_CUSTOM:
+//     {
+//         m_nPLU_custom = dbFieldAsValidString(stmt, column_index);
+//         // m_nPLU_custom = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+//     }
+//     break;
+//     case DB_PRODUCTS_PID_SMALL:
+//     {
+//     }
+//     break;
+//     case DB_PRODUCTS_PID_MEDIUM:
+//     {
+//     }
+//     break;
+//     case DB_PRODUCTS_PID_LARGE:
+//     {
+//     }
+//     break;
+//     case DB_PRODUCTS_PID_CUSTOM:
+//     {
+//     }
+//     break;
+//     case DB_PRODUCTS_FLAVOUR:
+//     {
+//     }
+//     break;
+//     case DB_PRODUCTS_IMAGE_URL:
+//     {
+//     }
+//     break;
+//     case DB_PRODUCTS_TYPE:
+//     {
+//     }
+//     break;
+//     case DB_PRODUCTS_INGREDIENTS:
+//     {
+//         // GET FROM products csv!!!
+//     }
+//     break;
+//     case DB_PRODUCTS_FEATURES:
+//         // GET FROM products csv!!!
+//         {
+//         }
+//         break;
+//     case DB_PRODUCTS_DESCRIPTION:
+//         // GET FROM products csv!!!
+//         {
+//         }
+//         break;
+
+//     default:
+//     {
+//         debugOutput::sendMessage("Unexpected column index" + to_string(column_index), MSG_INFO);
+//     }
+//     break;
+//     }
+// }

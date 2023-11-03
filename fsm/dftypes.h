@@ -18,7 +18,7 @@
 #include <sqlite3.h>
 #include <stdint.h>
 
-#define CONTROLLER_VERSION "2.0"
+#define CONTROLLER_VERSION "3.0"
 
 #define PRODUCT_DETAILS_TSV_PATH "/home/df-admin/production/references/products/product_details.tsv" // https://docs.google.com/spreadsheets/d/17WR2gRyPIDIlGKBy1YKFAqN-Hyw_3VOJ6JCmfcAtjVk/edit#gid=169583479 download as .tsv file
 #define CSV_PRODUCT_COL_ID 0
@@ -35,6 +35,7 @@
 #define CSV_PRODUCT_COL_NOTES 11
 
 #define PRODUCT_DISPENSERS_MAX 4
+#define PNUMBERS_COUNT 100
 #define MINIMUM_DISPENSE_VOLUME_ML 10
 #define ENABLE_TRANSACTION_TO_CLOUD
 // #define ENABLE_MULTI_BUTTON

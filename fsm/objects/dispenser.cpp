@@ -66,11 +66,12 @@ dispenser::dispenser()
     previous_dispense_state = FLOW_STATE_UNAVAILABLE;
 }
 
-DF_ERROR dispenser::setup(machine *machine)
+DF_ERROR dispenser::setup(machine *machine, product * pnumbers)
 {
     // Set the pump PWM value to a nominal value
 
     m_machine = machine;
+    m_pnumbers = pnumbers;
 
     the_pcb = m_machine->getPcb();
 

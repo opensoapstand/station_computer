@@ -21,7 +21,6 @@
 #include <string>
 #include "../fsm.h"
 
-
 #define INIT_STRING "Init"
 
 // Default Ctor
@@ -110,6 +109,7 @@ DF_ERROR stateInit::dispenserSetup()
 {
     int idx;
     dispenser *productDispensers = g_productDispensers;
+
     debugOutput::sendMessage("Setting up control board.", MSG_INFO);
 
     // We only need one flow sensor interrupt pin since only one pump
@@ -135,8 +135,8 @@ DF_ERROR stateInit::dispenserSetup()
     // productDispensers[0].initButtonsShutdownAndMaintenance(); // todo: this is a hack for the maintenance and power button. It should not be part of the dispenser class
 
     // needs to be set up only once. Dispenser index is only important for the button 4 index.
-    
-    if (g_machine.control_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON )  //&& this->slot == 4
+
+    if (g_machine.control_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON) //&& this->slot == 4
     {
         if (g_machine.getMultiDispenseButtonEnabled())
         {
@@ -144,15 +144,14 @@ DF_ERROR stateInit::dispenserSetup()
             productDispensers[3].setAllDispenseButtonLightsOff();
         }
     }
-    else if (g_machine.control_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS || g_machine.control_pcb->get_pcb_version() == pcb::PcbVersion::EN134_8SLOTS  )
+    else if (g_machine.control_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS || g_machine.control_pcb->get_pcb_version() == pcb::PcbVersion::EN134_8SLOTS)
     {
         // debugOutput::sendMessage(" Enable 24V", MSG_INFO);
         // g_machine.pcb24VPowerSwitch(true);
         g_machine.pcb24VPowerSwitch(false);
-        
-
-
-    }else{
+    }
+    else
+    {
         debugOutput::sendMessage(" Unknown PCB (OLD?).", MSG_ERROR);
     }
 
@@ -169,7 +168,12 @@ DF_ERROR stateInit::setProducts()
     {
         debugOutput::sendMessage("Setup dispenser " + to_string(slot_index + 1), MSG_INFO);
         g_productDispensers[slot_index].setSlot(slot_index + 1);
-        g_productDispensers[slot_index].setProduct(new product(slot_index + 1));
+    }
+
+    for (int pnumber = 0; pnumber < PNUMBERS_COUNT; pnumber++)
+    {
+
+        g_pnumbers[pnumber].init(pnumber);
     }
     return OK;
 }

@@ -18,8 +18,8 @@
 #include "../dftypes.h"
 #include "../components/gpio.h"
 #include "../components/pcb.h"
-#include "machine.h"
 #include "../components/odysseyx86gpio.h"
+#include "machine.h"
 #include "product.h"
 #include <sqlite3.h>
 
@@ -59,7 +59,7 @@ public:
       dispenser(gpio *buttonReference);
       ~dispenser();
 
-      DF_ERROR setup(machine* machine);
+      DF_ERROR setup(machine* machine, product* pnumber);
       // DF_ERROR setup(pcb* pcb, machine* machine);
       void refresh();
       // void initDispenser(int slot);
@@ -165,6 +165,7 @@ public:
 
       pcb* the_pcb;
       machine* m_machine;
+      product* m_pnumbers;
       // machine* global_machine;
 private:
       bool dispenseButtonValueMemory;

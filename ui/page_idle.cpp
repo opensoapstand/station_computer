@@ -291,8 +291,7 @@ bool page_idle::eventFilter(QObject *object, QEvent *event)
                 // if rebootState is in triggered_wait_for_delay; do nothing 
                 if(thisMachine->getRebootState() == triggered_wait_for_delay){
                 }else{
-                this->hideCurrentPageAndShowProvided(p_pageSelectProduct, true);
-
+                    this->hideCurrentPageAndShowProvided(p_pageSelectProduct, true);
                 }
             }
         }
@@ -396,8 +395,8 @@ void page_idle::onRebootNightlyTimeOutTimerTick(){
     {
         _rebootNightlyTimeOutTimerSec = PAGE_IDLE_REBOOT_NIGHTLY_TIMEOUT_SECONDS;
         QTime currentTime = QTime::currentTime();
-        // int _millisecondsUntilSetTime = currentTime.msecsTo(QTime(23, 55));
-        _millisecondsUntilSetTime = QTime(23, 55).msecsTo(QTime(23, 55));
+        _millisecondsUntilSetTime = currentTime.msecsTo(QTime(23, 55));
+        // _millisecondsUntilSetTime = QTime(23, 55).msecsTo(QTime(23, 55));
         qDebug() << "!!!!!!!!!!!!!!!! milli seconds until midnight:" << _millisecondsUntilSetTime;
         switch(thisMachine->getRebootState()){
             case wait_for_trigger:

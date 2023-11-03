@@ -163,6 +163,71 @@ text-transform: lowercase;</string>
     <string>Label show temperature </string>
    </property>
   </widget>
+  <widget class="QLabel" name="label_reboot_nightly_text">
+   <property name="geometry">
+    <rect>
+     <x>341</x>
+     <y>840</y>
+     <width>400</width>
+     <height>120</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_reboot_nightly">
+   <property name="geometry">
+    <rect>
+     <x>341</x>
+     <y>970</y>
+     <width>400</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_reboot_nightly_bg">
+   <property name="geometry">
+    <rect>
+     <x>341</x>
+     <y>630</y>
+     <width>400</width>
+     <height>421</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_reboot_nightly_icon">
+   <property name="geometry">
+    <rect>
+     <x>491</x>
+     <y>650</y>
+     <width>100</width>
+     <height>100</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_reboot_nightly_title">
+   <property name="geometry">
+    <rect>
+     <x>341</x>
+     <y>750</y>
+     <width>400</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
   <zorder>pushButton_to_select_product_page</zorder>
   <zorder>savedBottles_label</zorder>
   <zorder>label_client_logo</zorder>
@@ -174,6 +239,11 @@ text-transform: lowercase;</string>
   <zorder>label_printer_status</zorder>
   <zorder>label_temperature_warning</zorder>
   <zorder>label_show_temperature</zorder>
+  <zorder>label_reboot_nightly_bg</zorder>
+  <zorder>label_reboot_nightly_text</zorder>
+  <zorder>pushButton_reboot_nightly</zorder>
+  <zorder>label_reboot_nightly_icon</zorder>
+  <zorder>label_reboot_nightly_title</zorder>
  </widget>
  <resources/>
  <connections/>

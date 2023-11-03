@@ -217,6 +217,13 @@ void machine::initCouponState()
     m_max_dollar_amount_discount = "0.0";
 }
 
+void machine::setRebootState(StateReboot state){
+    m_stateReboot = state;
+}
+StateReboot machine::getRebootState(){
+    return m_stateReboot;
+}
+
 void machine::setDiscountPercentageFraction(double percentageFraction)
 {
     // ratio = percentage / 100;

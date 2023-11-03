@@ -163,6 +163,58 @@ text-transform: lowercase;</string>
     <string>Label show temperature </string>
    </property>
   </widget>
+  <widget class="QLabel" name="label_reboot_nightly">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>800</y>
+     <width>600</width>
+     <height>120</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_reboot_nightly">
+   <property name="geometry">
+    <rect>
+     <x>421</x>
+     <y>930</y>
+     <width>240</width>
+     <height>100</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_reboot_nightly_bg">
+   <property name="geometry">
+    <rect>
+     <x>241</x>
+     <y>630</y>
+     <width>600</width>
+     <height>450</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_reboot_nightly_icon">
+   <property name="geometry">
+    <rect>
+     <x>466</x>
+     <y>650</y>
+     <width>150</width>
+     <height>150</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
   <zorder>pushButton_to_select_product_page</zorder>
   <zorder>savedBottles_label</zorder>
   <zorder>label_client_logo</zorder>
@@ -174,6 +226,10 @@ text-transform: lowercase;</string>
   <zorder>label_printer_status</zorder>
   <zorder>label_temperature_warning</zorder>
   <zorder>label_show_temperature</zorder>
+  <zorder>label_reboot_nightly_bg</zorder>
+  <zorder>label_reboot_nightly</zorder>
+  <zorder>pushButton_reboot_nightly</zorder>
+  <zorder>label_reboot_nightly_icon</zorder>
  </widget>
  <resources/>
  <connections/>

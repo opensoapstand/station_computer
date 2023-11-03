@@ -91,6 +91,15 @@ QMessageBox {
     width: 1000px;
  }
 
+#label_reboot_nightly_bg{
+    background: green;
+}
+#pushButton_reboot_nightly{
+    background: yellow;
+    border: 1px solid white;
+    color: black;
+}
+#pushButton_reboot_nightly:hover { background-color: #777777; }
 /* QMessageBox{
     min-height: 1000px;
     border: 1px solid white;

@@ -40,7 +40,8 @@ typedef enum StateFrozenScreenDetect
     state_screen_check_not_initiated,
     state_screen_check_clicked_and_wait,
     state_screen_check_clicked_and_succes,
-    state_screen_check_fail
+    state_screen_check_fail,
+    state_screen_check_deactivated
 } StateFrozenScreenDetect;
 
 namespace Ui
@@ -83,7 +84,9 @@ public:
     QTimer *rebootNightlyTimeOutTimer;
     QTime *currentTime;
     int _rebootNightlyTimeOutTimerSec;
-    
+    int _millisecondsUntilSetTime;
+    int _delaytime_seconds;
+
     void checkReceiptPrinterStatus();
     StateFrozenScreenDetect stateScreenCheck;
     void hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createNewSessionId);
@@ -98,6 +101,7 @@ private slots:
     void on_pushButton_test_clicked();
     void onUserRoleTimeOutTimerTick();
     void onRebootNightlyTimeOutTimerTick();
+    void on_pushButton_reboot_nightly_clicked();
 
 private:
     Ui::page_idle *ui;

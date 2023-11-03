@@ -137,6 +137,21 @@ void page_idle::showEvent(QShowEvent *event)
     ui->pushButton_test->setStyleSheet(styleSheet);
     ui->pushButton_test->hide();
 
+    ui->label_reboot_nightly->setStyleSheet(styleSheet);
+    ui->label_reboot_nightly_bg->setStyleSheet(styleSheet);
+    ui->label_reboot_nightly_icon->setStyleSheet(styleSheet);
+    ui->pushButton_reboot_nightly->setStyleSheet(styleSheet);
+
+    thisMachine->setTemplateTextToObject(ui->label_reboot_nightly);
+    thisMachine->setTemplateTextToObject(ui->pushButton_reboot_nightly);
+    QString reboot_nightly_icon_path = thisMachine->getTemplatePathFromName(REBOOT_NIGHTLY_ICON_PATH);
+    thisMachine->addPictureToLabel(ui->label_reboot_nightly_icon, reboot_nightly_icon_path);
+
+    ui->label_reboot_nightly->hide();
+    ui->label_reboot_nightly_bg->hide();
+    ui->label_reboot_nightly_icon->hide();
+    ui->pushButton_reboot_nightly->hide();
+
     thisMachine->setTemplateTextToObject(ui->label_welcome_message);
     thisMachine->addClientLogoToLabel(ui->label_client_logo);
     // QString machine_logo_full_path = thisMachine->getTemplatePathFromName(MACHINE_LOGO_PATH);
@@ -183,6 +198,7 @@ void page_idle::showEvent(QShowEvent *event)
     qDebug() << "================== Reboot Nightly Timer Activated ================== ";
     rebootNightlyTimeOutTimer->start(1000);
     _rebootNightlyTimeOutTimerSec = PAGE_IDLE_REBOOT_NIGHTLY_TIMEOUT_SECONDS;
+    _delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
 
 // #define PLAY_VIDEO
 #ifdef PLAY_VIDEO
@@ -272,7 +288,12 @@ bool page_idle::eventFilter(QObject *object, QEvent *event)
             else
             {
                 qDebug() << "Mouse Clicked in idle page (can be virtual): Go to page select products"; // leave this for a while to investigate frozen screens in the field.
+                // if rebootState is in triggered_wait_for_delay; do nothing 
+                if(thisMachine->getRebootState() == triggered_wait_for_delay){
+                }else{
                 this->hideCurrentPageAndShowProvided(p_pageSelectProduct, true);
+
+                }
             }
         }
         else
@@ -317,6 +338,10 @@ void page_idle::onTestForFrozenScreenTick()
     {
         stateScreenCheck = state_screen_check_not_initiated;
     }
+    else if (stateScreenCheck == state_screen_check_deactivated)
+    {
+        return; // do not tap if deactivated
+    }
     else if (stateScreenCheck == state_screen_check_clicked_and_wait)
     {
         // still in this state? This means we have a fail!
@@ -326,10 +351,11 @@ void page_idle::onTestForFrozenScreenTick()
         hideCurrentPageAndShowProvided(p_pageSelectProduct, true); // will go to select products page and automatically revert after some seconds. I hope that by reloading idle page, the 'freezing issue' is solved.
         return;                                                    // we would create a monster if we continue, with multiple clicks and doubled up pages...
     }
-
-    // prepare for next cycle
+   
     stateScreenCheck = state_screen_check_clicked_and_wait;
+    // prepare for next cycle
     df_util::executeVirtualClick(200, 500);
+
 
     if (tappingBlockedUntilPrinterReply)
     {
@@ -370,61 +396,56 @@ void page_idle::onRebootNightlyTimeOutTimerTick(){
     {
         _rebootNightlyTimeOutTimerSec = PAGE_IDLE_REBOOT_NIGHTLY_TIMEOUT_SECONDS;
         QTime currentTime = QTime::currentTime();
-        // int millisecondsUntilSetTime = currentTime.msecsTo(QTime(23, 55));
-        int millisecondsUntilSetTime = QTime(23, 55).msecsTo(QTime(23, 55));
-        int delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
-        qDebug() << "!!!!!!!!!!!!!!!! milli seconds until midnight:" << millisecondsUntilSetTime;
+        // int _millisecondsUntilSetTime = currentTime.msecsTo(QTime(23, 55));
+        _millisecondsUntilSetTime = QTime(23, 55).msecsTo(QTime(23, 55));
+        qDebug() << "!!!!!!!!!!!!!!!! milli seconds until midnight:" << _millisecondsUntilSetTime;
         switch(thisMachine->getRebootState()){
             case wait_for_trigger:
             {
                 qDebug() << "================== WAIT FOR TRIGGER =======================";
-                if (millisecondsUntilSetTime <= 0){
+                if (_millisecondsUntilSetTime <= 0){
                     thisMachine->setRebootState(triggered_wait_for_delay);
+                    stateScreenCheck = state_screen_check_deactivated;
                 }
             }
             break;
             case triggered_wait_for_delay:
             {
                 qDebug() << "================== TRIGGERED WAIT FOR DELAY =======================";
-                if(millisecondsUntilSetTime <= 0){
-                    qDebug() << "Reboot Nightly Timmer: Rebooting in" << delaytime_seconds  << "seconds...";
-                    //popup with option to cancel reboot; freeze idle page
-                    QMessageBox msgBox;
-                    msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
-                    QString styleSheet = thisMachine->getCSS(PAGE_IDLE_CSS);
-                    QString searchString = this->objectName() + "->msgBox_reboot->default";
-                    thisMachine->setTextToObject(&msgBox, thisMachine->getTemplateText(searchString));
-                    // QString base = msgBox.text();
-                    // QString seconds = QString::number(delaytime_seconds);
-                    // msgBox.setText(base.arg(seconds));
-                    // msgBox.setText("System will be rebooted in <br>".arg(delaytime_seconds));
-                    msgBox.setStyleSheet(styleSheet);
-                    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-                    int ret = msgBox.exec();
-                    delaytime_seconds--;
-                    if(msgBox.exec() == QMessageBox::No){
-                        thisMachine->setRebootState(user_cancelled_reboot);
-                    }
+                if(_millisecondsUntilSetTime <= 0){
+                    ui->label_reboot_nightly->show();
+                    ui->label_reboot_nightly_bg->show();
+                    ui->label_reboot_nightly_icon->show();
+                    ui->pushButton_reboot_nightly->show();
+                    QString base = thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_reboot_nightly, "count_down");
+                    ui->label_reboot_nightly->setText(base.arg(QString::number(_delaytime_seconds)));
+                    _delaytime_seconds--;
                 }else{
-                    //reboot system here
+                    qDebug() << "================== REBOOT NIGHTLY - SYSTEM REBOOT ==================";
                     thisMachine->setRebootState(wait_for_trigger);
-                    delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
+                    _delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
+                    stateScreenCheck = state_screen_check_not_initiated;
+                    QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -r 0";
+                    system(qPrintable(command));
                 }
             }
             break;
             case user_cancelled_reboot:
             {
                 qDebug() << "================== USER CANCELLED REBOOT =======================";
-                if(millisecondsUntilSetTime > 0){
+                ui->label_reboot_nightly->hide();
+                ui->label_reboot_nightly_bg->hide();
+                ui->label_reboot_nightly_icon->hide();
+                ui->pushButton_reboot_nightly->hide();
+                stateScreenCheck = state_screen_check_not_initiated;
+                _delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
+                if(_millisecondsUntilSetTime > 0){
                     thisMachine->setRebootState(wait_for_trigger);
                 }
             }
             break;
-
         }
-    
     }
-
 }
 
 void page_idle::refreshTemperature()
@@ -571,4 +592,10 @@ void page_idle::hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createN
 void page_idle::on_pushButton_test_clicked()
 {
     qDebug() << "pushButton_test clicked.. ";
+}
+
+void page_idle::on_pushButton_reboot_nightly_clicked()
+{
+    qDebug() << "reboot nightly cancel clicked.. ";
+    thisMachine->setRebootState(user_cancelled_reboot);
 }

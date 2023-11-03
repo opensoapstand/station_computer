@@ -509,6 +509,6 @@ def connect_device():
         # data2 = s.recv(8192)
         # print(data2)
 
-# connect_device()
+connect_device()
 # generate_rsa_keys()
-secondary_port()
+# secondary_port()

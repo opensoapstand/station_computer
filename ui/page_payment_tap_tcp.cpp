@@ -210,8 +210,8 @@ void page_payment_tap_tcp::tapPaymentHandler()
     lastTransactionId = std::stoi(configMap["INVOICE"]);
 
     startSession(socket, MAC_LABEL, MAC_KEY, lastTransactionId + 1);
-    tapPaymentObject["SESSION_ID"] = std::to_string(lastTransactionId);
-    tapPaymentObject["MAC_LABEL"] = MAC_LABEL;
+    tapPaymentObject["session_id"] = std::to_string(lastTransactionId);
+    tapPaymentObject["mac_label"] = MAC_LABEL;
 
     startPaymentProcess();
 }
@@ -313,34 +313,34 @@ void page_payment_tap_tcp::authorized_transaction(std::map<std::string, std::str
         p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
         // CTROUTD = responseObj["CTROUTD"];
         // AUTH_CODE = responseObj["AUTH_CODE"];
-        tapPaymentObject["CTROUTD"] = responseObj["CTROUTD"];
-        tapPaymentObject["AUTH_CODE"] = responseObj["AUTH_CODE"];
-        tapPaymentObject["AMOUNT"] = responseObj["TRANS_AMOUNT"];
-        tapPaymentObject["DATE"] = responseObj["TRANS_DATE"];
-        tapPaymentObject["TIME"] = responseObj["TRANS_TIME"];
-        tapPaymentObject["CARD_NUMBER"] = responseObj["ACCT_NUM"];
-        tapPaymentObject["CARD_TYPE"] = responseObj["PAYMENT_MEDIA"];
-        tapPaymentObject["STATUS"] = "Authorized";
+        tapPaymentObject["ctroutd"] = responseObj["CTROUTD"];
+        tapPaymentObject["auth_code"] = responseObj["AUTH_CODE"];
+        tapPaymentObject["amount"] = responseObj["TRANS_AMOUNT"];
+        tapPaymentObject["date"] = responseObj["TRANS_DATE"];
+        tapPaymentObject["time"] = responseObj["TRANS_TIME"];
+        tapPaymentObject["card_number"] = responseObj["ACCT_NUM"];
+        tapPaymentObject["card_type"] = responseObj["PAYMENT_MEDIA"];
+        tapPaymentObject["status"] = "Authorized";
         hideCurrentPageAndShowProvided(p_page_dispense);
     }
-    else if (responseObj["RESULT"] == "APPROVED/STORED")
+    else if (responseObj["result"] == "APPROVED/STORED")
     {
         p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
         // CTROUTD = responseObj["CTROUTD"];
         // AUTH_CODE = responseObj["AUTH_CODE"];
         // SAF_NUM = responseObj["SAF_NUM"];
-        tapPaymentObject["CTROUTD"] = responseObj["CTROUTD"];
-        tapPaymentObject["AUTH_CODE"] = responseObj["AUTH_CODE"];
-        tapPaymentObject["SAF_NUM"] = responseObj["SAF_NUM"];
-        tapPaymentObject["AMOUNT"] = responseObj["TRANS_AMOUNT"];
-        tapPaymentObject["DATE"] = responseObj["TRANS_DATE"];
-        tapPaymentObject["TIME"] = responseObj["TRANS_TIME"];
-        tapPaymentObject["CARD_NUMBER"] = responseObj["ACCT_NUM"];
-        tapPaymentObject["CARD_TYPE"] = responseObj["PAYMENT_MEDIA"];
-        tapPaymentObject["STATUS"] = "Authorized Offline";
+        tapPaymentObject["ctroutd"] = responseObj["CTROUTD"];
+        tapPaymentObject["auth_code"] = responseObj["AUTH_CODE"];
+        tapPaymentObject["saf_num"] = responseObj["SAF_NUM"];
+        tapPaymentObject["amount"] = responseObj["TRANS_AMOUNT"];
+        tapPaymentObject["date"] = responseObj["TRANS_DATE"];
+        tapPaymentObject["time"] = responseObj["TRANS_TIME"];
+        tapPaymentObject["card_number"] = responseObj["ACCT_NUM"];
+        tapPaymentObject["card_type"] = responseObj["PAYMENT_MEDIA"];
+        tapPaymentObject["status"] = "Authorized Offline";
         hideCurrentPageAndShowProvided(p_page_dispense);
     }
-    else if (responseObj["RESULT"] == "DECLINED")
+    else if (responseObj["result"] == "DECLINED")
     {
 
         p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_FAIL);

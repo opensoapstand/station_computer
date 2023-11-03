@@ -55,7 +55,7 @@ DF_ERROR stateDispense::onEntry()
 
    productDispensers[slot_index].resetDispenseButton();
 
-   productDispensers[slot_index].getProduct()->productVolumeInfo();
+   // productDispensers[slot_index].getProduct()->productVolumeInfo();
 
    if (m_pMessaging->getAction() == ACTION_AUTOFILL)
    {

@@ -70,12 +70,12 @@ public:
         // void recordSale(int volume);
         // void restockProduct(int volume);
 
-        void productInfo();
-        void productVolumeInfo();
+        // void productInfo();
+        // void productVolumeInfo();
 
         int getPWM();
-        int getPWMFromDB();
-        double getVolPerTickFromDB();
+        // int getPWMFromDB();
+        // double getVolPerTickFromDB();
         bool reloadParametersFromDb();
         bool testParametersFromDb();
 

@@ -92,8 +92,8 @@ DF_ERROR stateDispenseInit::onAction()
         ,productDispensers[dispenser_index].getProduct()->getPrice(size)
         );
 
-    productDispensers[dispenser_index].getProduct()->productInfo();
-    productDispensers[dispenser_index].getProduct()->productVolumeInfo();
+    // productDispensers[dispenser_index].getProduct()->productInfo();
+    // productDispensers[dispenser_index].getProduct()->productVolumeInfo();
 
     productDispensers[dispenser_index].startDispense();
     

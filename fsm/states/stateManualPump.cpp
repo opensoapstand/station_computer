@@ -450,7 +450,7 @@ DF_ERROR stateManualPump::pumpCyclicTestCycleStart()
 {
    pump_test_cycle_count++;
 
-   int speed = productDispensers[m_active_pump_index].getProduct()->getPWMFromDB();
+   int speed = productDispensers[m_active_pump_index].getProduct()->getPWM();
 
    debugOutput::sendMessage("Pump speed for test: " + to_string(speed), MSG_INFO);
 
@@ -549,7 +549,7 @@ DF_ERROR stateManualPump::pumpCyclicTest()
 
 //          // productDispensers[m_active_pump_index].setPumpDirectionForward();
 
-//          int speed = productDispensers[m_active_pump_index].getProduct()->getPWMFromDB();
+//          int speed = productDispensers[m_active_pump_index].getProduct()->getPWM();
 
 //          debugOutput::sendMessage("Pump speed for test: " + to_string(speed), MSG_INFO);
 //          // productDispensers[m_active_pump_index].setPumpPWM(speed, true);
@@ -578,7 +578,7 @@ DF_ERROR stateManualPump::autofillPresetQuantity()
       // productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
       // productDispensers[m_active_pump_index].setMultiDispenseButtonLight(m_active_pump_index + 1, true);
 
-      int speed = productDispensers[m_active_pump_index].getProduct()->getPWMFromDB();
+      int speed = productDispensers[m_active_pump_index].getProduct()->getPWM();
       debugOutput::sendMessage("Pump auto start: " + to_string(speed), MSG_INFO);
       if (productDispensers[m_active_pump_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
       {

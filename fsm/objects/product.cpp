@@ -679,11 +679,11 @@ bool product::isDbValid()
     // debugOutput::sendMessage("process record: " + sql_string, MSG_INFO);
     while (status == SQLITE_ROW)
     {
-        // int columns_count = sqlite3_data_count(stmt);
+        int columns_count = sqlite3_data_count(stmt);
         //  debugOutput::sendMessage("colll count:  " + to_string(columns_count), MSG_INFO);
 
         // for (int column_index = 0; column_index < columns_count; column_index++)
-        int columns_count = 3;
+        // int columns_count = 3;
         for (int column_index = 0; column_index < columns_count; column_index++)
         {
             // for every row, go over all the the items (0=cid, 1=name, 2=type,3=notnull,...)

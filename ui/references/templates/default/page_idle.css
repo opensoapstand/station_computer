@@ -64,3 +64,24 @@ QMessageBox.msgBoxbutton QPushButton {
    min-height: 300px;
 }
       
+#label_reboot_nightly_title{
+   font-size: 26px;
+   color: #3E4153;
+   font-family:'EuropaNuova-ExtraBold';
+}
+#label_reboot_nightly_text{
+   font-size: 16px;
+   color: #9A9AA6;
+}
+#label_reboot_nightly_bg{
+   background: #FFFFFF;
+   border-radius: 5px;
+}
+#pushButton_reboot_nightly{
+   background: #FFD42A;
+   border: 1px solid white;
+   text-transform: uppercase;
+   color: #3E4153;
+   font-size: 22px;
+   border-radius: 5px;
+}

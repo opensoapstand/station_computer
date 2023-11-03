@@ -137,17 +137,20 @@ void page_idle::showEvent(QShowEvent *event)
     ui->pushButton_test->setStyleSheet(styleSheet);
     ui->pushButton_test->hide();
 
-    ui->label_reboot_nightly->setStyleSheet(styleSheet);
+    ui->label_reboot_nightly_text->setStyleSheet(styleSheet);
+    ui->label_reboot_nightly_title->setStyleSheet(styleSheet);
     ui->label_reboot_nightly_bg->setStyleSheet(styleSheet);
     ui->label_reboot_nightly_icon->setStyleSheet(styleSheet);
     ui->pushButton_reboot_nightly->setStyleSheet(styleSheet);
 
-    thisMachine->setTemplateTextToObject(ui->label_reboot_nightly);
+    thisMachine->setTemplateTextToObject(ui->label_reboot_nightly_text);
+    thisMachine->setTemplateTextToObject(ui->label_reboot_nightly_title);
     thisMachine->setTemplateTextToObject(ui->pushButton_reboot_nightly);
     QString reboot_nightly_icon_path = thisMachine->getTemplatePathFromName(REBOOT_NIGHTLY_ICON_PATH);
     thisMachine->addPictureToLabel(ui->label_reboot_nightly_icon, reboot_nightly_icon_path);
 
-    ui->label_reboot_nightly->hide();
+    ui->label_reboot_nightly_text->hide();
+    ui->label_reboot_nightly_title->hide();
     ui->label_reboot_nightly_bg->hide();
     ui->label_reboot_nightly_icon->hide();
     ui->pushButton_reboot_nightly->hide();
@@ -195,7 +198,6 @@ void page_idle::showEvent(QShowEvent *event)
     userRoleTimeOutTimer->start(1000);
     _userRoleTimeOutTimerSec = PAGE_IDLE_USER_ROLE_TIMEOUT_SECONDS;
 
-    qDebug() << "================== Reboot Nightly Timer Activated ================== ";
     rebootNightlyTimeOutTimer->start(1000);
     _rebootNightlyTimeOutTimerSec = PAGE_IDLE_REBOOT_NIGHTLY_TIMEOUT_SECONDS;
     _delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
@@ -397,11 +399,10 @@ void page_idle::onRebootNightlyTimeOutTimerTick(){
         QTime currentTime = QTime::currentTime();
         _millisecondsUntilSetTime = currentTime.msecsTo(QTime(23, 55));
         // _millisecondsUntilSetTime = QTime(23, 55).msecsTo(QTime(23, 55));
-        qDebug() << "!!!!!!!!!!!!!!!! milli seconds until midnight:" << _millisecondsUntilSetTime;
+        // qDebug() << "!!!!!!!!!!!!!!!! milli seconds until midnight:" << _millisecondsUntilSetTime;
         switch(thisMachine->getRebootState()){
             case wait_for_trigger:
             {
-                qDebug() << "================== WAIT FOR TRIGGER =======================";
                 if (_millisecondsUntilSetTime <= 0){
                     thisMachine->setRebootState(triggered_wait_for_delay);
                     stateScreenCheck = state_screen_check_deactivated;
@@ -410,17 +411,18 @@ void page_idle::onRebootNightlyTimeOutTimerTick(){
             break;
             case triggered_wait_for_delay:
             {
-                qDebug() << "================== TRIGGERED WAIT FOR DELAY =======================";
+                // qDebug() << "================== TRIGGERED WAIT FOR DELAY =======================";
                 if(_millisecondsUntilSetTime <= 0){
-                    ui->label_reboot_nightly->show();
+                    ui->label_reboot_nightly_text->show();
+                    ui->label_reboot_nightly_title->show();
                     ui->label_reboot_nightly_bg->show();
                     ui->label_reboot_nightly_icon->show();
                     ui->pushButton_reboot_nightly->show();
-                    QString base = thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_reboot_nightly, "count_down");
-                    ui->label_reboot_nightly->setText(base.arg(QString::number(_delaytime_seconds)));
+                    QString base = thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_reboot_nightly_text, "count_down");
+                    ui->label_reboot_nightly_text->setText(base.arg(QString::number(_delaytime_seconds)));
                     _delaytime_seconds--;
                 }else{
-                    qDebug() << "================== REBOOT NIGHTLY - SYSTEM REBOOT ==================";
+                    // qDebug() << "================== REBOOT NIGHTLY - SYSTEM REBOOT ==================";
                     thisMachine->setRebootState(wait_for_trigger);
                     _delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
                     stateScreenCheck = state_screen_check_not_initiated;
@@ -431,8 +433,9 @@ void page_idle::onRebootNightlyTimeOutTimerTick(){
             break;
             case user_cancelled_reboot:
             {
-                qDebug() << "================== USER CANCELLED REBOOT =======================";
-                ui->label_reboot_nightly->hide();
+                // qDebug() << "================== USER CANCELLED REBOOT =======================";
+                ui->label_reboot_nightly_text->hide();
+                ui->label_reboot_nightly_title->hide();
                 ui->label_reboot_nightly_bg->hide();
                 ui->label_reboot_nightly_icon->hide();
                 ui->pushButton_reboot_nightly->hide();

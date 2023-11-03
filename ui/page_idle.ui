@@ -163,12 +163,12 @@ text-transform: lowercase;</string>
     <string>Label show temperature </string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_reboot_nightly">
+  <widget class="QLabel" name="label_reboot_nightly_text">
    <property name="geometry">
     <rect>
-     <x>240</x>
-     <y>800</y>
-     <width>600</width>
+     <x>341</x>
+     <y>840</y>
+     <width>400</width>
      <height>120</height>
     </rect>
    </property>
@@ -179,10 +179,10 @@ text-transform: lowercase;</string>
   <widget class="QPushButton" name="pushButton_reboot_nightly">
    <property name="geometry">
     <rect>
-     <x>421</x>
-     <y>930</y>
-     <width>240</width>
-     <height>100</height>
+     <x>341</x>
+     <y>970</y>
+     <width>400</width>
+     <height>80</height>
     </rect>
    </property>
    <property name="text">
@@ -192,10 +192,10 @@ text-transform: lowercase;</string>
   <widget class="QLabel" name="label_reboot_nightly_bg">
    <property name="geometry">
     <rect>
-     <x>241</x>
+     <x>341</x>
      <y>630</y>
-     <width>600</width>
-     <height>450</height>
+     <width>400</width>
+     <height>421</height>
     </rect>
    </property>
    <property name="text">
@@ -205,10 +205,23 @@ text-transform: lowercase;</string>
   <widget class="QLabel" name="label_reboot_nightly_icon">
    <property name="geometry">
     <rect>
-     <x>466</x>
+     <x>491</x>
      <y>650</y>
-     <width>150</width>
-     <height>150</height>
+     <width>100</width>
+     <height>100</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_reboot_nightly_title">
+   <property name="geometry">
+    <rect>
+     <x>341</x>
+     <y>750</y>
+     <width>400</width>
+     <height>80</height>
     </rect>
    </property>
    <property name="text">
@@ -227,9 +240,10 @@ text-transform: lowercase;</string>
   <zorder>label_temperature_warning</zorder>
   <zorder>label_show_temperature</zorder>
   <zorder>label_reboot_nightly_bg</zorder>
-  <zorder>label_reboot_nightly</zorder>
+  <zorder>label_reboot_nightly_text</zorder>
   <zorder>pushButton_reboot_nightly</zorder>
   <zorder>label_reboot_nightly_icon</zorder>
+  <zorder>label_reboot_nightly_title</zorder>
  </widget>
  <resources/>
  <connections/>

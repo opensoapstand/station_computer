@@ -544,7 +544,7 @@ string product::getBasePLU(char size)
 void product::executeSQLStatement(string sql_string)
 {
 
-    rc = sqlite3_open(CONFIG_DB_PATH, &db);
+    int rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
     int status;
@@ -558,7 +558,7 @@ bool product::isColumnInTable(string table, string column_name_to_find)
     bool contains_column_maintenance_pwd = false;
     // debugOutput::sendMessage("dcolumn nameee to seach e" + column_name_to_find, MSG_INFO);
 
-    rc = sqlite3_open(CONFIG_DB_PATH, &db);
+    int rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "PRAGMA table_info(" + table + ");";
 
@@ -665,7 +665,7 @@ bool product::isDbValid()
     };
     bool is_valid = true;
 
-    rc = sqlite3_open(CONFIG_DB_PATH, &db);
+    int rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "PRAGMA table_info(products);";
 
@@ -740,7 +740,7 @@ string product::getProductName()
     return m_product_properties[CSV_PRODUCT_COL_NAME];
 }
 
-string product::dbFieldAsValidString(sqlite3_stmt *stmt, int column_index)
+std::string product::dbFieldAsValidString(sqlite3_stmt *stmt, int column_index)
 {
     // protect against null values in db.
     const unsigned char *column_text = sqlite3_column_text(stmt, column_index);
@@ -786,7 +786,7 @@ bool product::loadParametersFromDb()
         return false;
     }
 
-    rc = sqlite3_open(CONFIG_DB_PATH, &db);
+    int rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT "
                         "soapstand_product_serial," // 0
@@ -845,14 +845,14 @@ bool product::loadParametersFromDb()
         // int columns_count = sqlite3_data_count(stmt);
         // debugOutput::sendMessage("colll count:  " + to_string(columns_count), MSG_INFO);
 
-        m_pnumber = std::stoi(dbFieldAsValidString(stmt, 0));
-        m_mix_pnumbers = dbFieldAsValidString(stmt, 1);
-        m_mix_ratios = dbFieldAsValidString(stmt, 2);
+        m_pnumber = std::stoi(product::dbFieldAsValidString(stmt, 0));
+        m_mix_pnumbers = product::dbFieldAsValidString(stmt, 1);
+        m_mix_ratios = product::dbFieldAsValidString(stmt, 2);
 
-        m_dispenser_id_for_backend = dbFieldAsValidString(stmt, 3);
-        m_name = dbFieldAsValidString(stmt, 4);
-        m_display_unit = dbFieldAsValidString(stmt, 5);
-        m_paymentMethod = dbFieldAsValidString(stmt, 6);
+        m_dispenser_id_for_backend = product::dbFieldAsValidString(stmt, 3);
+        m_name = product::dbFieldAsValidString(stmt, 4);
+        m_display_unit = product::dbFieldAsValidString(stmt, 5);
+        m_paymentMethod = product::dbFieldAsValidString(stmt, 6);
         m_concentration_multiplier = sqlite3_column_double(stmt, 7);
 
         if (m_concentration_multiplier < 0.00000001)
@@ -883,10 +883,10 @@ bool product::loadParametersFromDb()
         m_price_medium = sqlite3_column_double(stmt, 27);
         m_price_large = sqlite3_column_double(stmt, 28);
         m_price_custom_per_ml = sqlite3_column_double(stmt, 29);
-        m_nPLU_small = dbFieldAsValidString(stmt, 30);
-        m_nPLU_medium = dbFieldAsValidString(stmt, 31);
-        m_nPLU_large = dbFieldAsValidString(stmt, 32);
-        m_nPLU_custom = dbFieldAsValidString(stmt, 33);
+        m_nPLU_small = product::dbFieldAsValidString(stmt, 30);
+        m_nPLU_medium = product::dbFieldAsValidString(stmt, 31);
+        m_nPLU_large = product::dbFieldAsValidString(stmt, 32);
+        m_nPLU_custom = product::dbFieldAsValidString(stmt, 33);
         m_is_enabled_custom_discount = sqlite3_column_int(stmt, 34);
         m_nVolumeTarget_custom_discount = sqlite3_column_double(stmt, 35);
         m_price_custom_discount_per_liter = sqlite3_column_double(stmt, 36);
@@ -929,7 +929,7 @@ bool product::testParametersFromDb()
 
     debugOutput::sendMessage("***************************************************************************", MSG_INFO);
     // abandonned by Lode. What about updating the whole product properties at once when needed.
-    rc = sqlite3_open(CONFIG_DB_PATH, &db);
+    int rc = sqlite3_open(CONFIG_DB_PATH, &db);
 
     sqlite3_stmt *stmt;
 
@@ -1017,12 +1017,12 @@ bool product::testParametersFromDb()
 //     case DB_PRODUCTS_PRODUCTID:
 //     {
 //         // m_dispenser_id_for_backend = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
-//         m_dispenser_id_for_backend = dbFieldAsValidString(stmt, column_index);
+//         m_dispenser_id_for_backend = product::dbFieldAsValidString(stmt, column_index);
 //     }
 //     break;
 //     case DB_PRODUCTS_SOAPSTAND_PRODUCT_SERIAL:
 //     {
-//         m_soapstand_product_serial = dbFieldAsValidString(stmt, column_index);
+//         m_soapstand_product_serial = product::dbFieldAsValidString(stmt, column_index);
 //         // m_soapstand_product_serial = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
 //         debugOutput::sendMessage("m_soapstand_product_serial:" + m_soapstand_product_serial, MSG_INFO);
 //     }
@@ -1042,13 +1042,13 @@ bool product::testParametersFromDb()
 //     case DB_PRODUCTS_NAME:
 //     {
 //         // m_display_unit
-//         m_name = dbFieldAsValidString(stmt, column_index);
+//         m_name = product::dbFieldAsValidString(stmt, column_index);
 //         // m_name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
 //     }
 //     break;
 //     case DB_PRODUCTS_SIZE_UNIT:
 //     {
-//         m_display_unit = dbFieldAsValidString(stmt, column_index);
+//         m_display_unit = product::dbFieldAsValidString(stmt, column_index);
 //         // m_display_unit = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
 //     }
 //     break;
@@ -1058,7 +1058,7 @@ bool product::testParametersFromDb()
 //     break;
 //     case DB_PRODUCTS_PAYMENT:
 //     {
-//         m_paymentMethod = dbFieldAsValidString(stmt, column_index);
+//         m_paymentMethod = product::dbFieldAsValidString(stmt, column_index);
 //         // m_paymentMethod = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
 //     }
 //     break;
@@ -1221,25 +1221,25 @@ bool product::testParametersFromDb()
 //     break;
 //     case DB_PRODUCTS_PLU_SMALL:
 //     {
-//         m_nPLU_small = dbFieldAsValidString(stmt, column_index);
+//         m_nPLU_small = product::dbFieldAsValidString(stmt, column_index);
 //         // m_nPLU_small = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
 //     }
 //     break;
 //     case DB_PRODUCTS_PLU_MEDIUM:
 //     {
-//         m_nPLU_medium = dbFieldAsValidString(stmt, column_index);
+//         m_nPLU_medium = product::dbFieldAsValidString(stmt, column_index);
 //         // m_nPLU_medium = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
 //     }
 //     break;
 //     case DB_PRODUCTS_PLU_LARGE:
 //     {
-//         m_nPLU_large = dbFieldAsValidString(stmt, column_index);
+//         m_nPLU_large = product::dbFieldAsValidString(stmt, column_index);
 //         // m_nPLU_large = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
 //     }
 //     break;
 //     case DB_PRODUCTS_PLU_CUSTOM:
 //     {
-//         m_nPLU_custom = dbFieldAsValidString(stmt, column_index);
+//         m_nPLU_custom = product::dbFieldAsValidString(stmt, column_index);
 //         // m_nPLU_custom = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
 //     }
 //     break;

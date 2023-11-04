@@ -59,7 +59,10 @@ DF_ERROR stateInit::onEntry()
 // Initialize all related hardware
 DF_ERROR stateInit::onAction()
 {
-    DF_ERROR e_ret = ERROR_BAD_PARAMS;
+    // DF_ERROR e_ret = ERROR_BAD_PARAMS;
+
+
+    DF_ERROR e_ret = OK;
 
     debugOutput::sendMessage("Use database at: " + std::to_string(1) + CONFIG_DB_PATH, MSG_INFO);
 

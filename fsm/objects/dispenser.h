@@ -50,7 +50,7 @@
 #define MCP_PIN_START 0
 #define MPC_PIN_END 15
 
-class machine; 
+class machine;
 
 class dispenser
 {
@@ -59,13 +59,15 @@ public:
       dispenser(gpio *buttonReference);
       ~dispenser();
 
-      DF_ERROR setup(machine* machine, product* pnumber);
+      DF_ERROR setup(machine *machine, product *pnumber);
       // DF_ERROR setup(pcb* pcb, machine* machine);
       void refresh();
       // void initDispenser(int slot);
 
       product *getSelectedProduct();
-      DF_ERROR setProduct(product *product);
+      bool setSelectedProduct(int pnumber);
+      void setBasePNumberAsSelectedProduct();
+
       string getFinalPLU(char size, double price);
       // DF_ERROR initButtonsShutdownAndMaintenance();
       DF_ERROR setSlot(int slot);
@@ -86,16 +88,14 @@ public:
       void setMultiDispenseButtonLight(int slot, bool enableElseDisable);
       void setAllDispenseButtonLightsOff();
       void reversePumpForSetTimeMillis(int millis);
-      const char* getDispenseStatusAsString();
+      const char *getDispenseStatusAsString();
       void updateDispenseStatus();
       const char *getSlotStateAsString();
-
 
       DF_ERROR pumpSlowStart(bool forwardElseReverse);
       DF_ERROR pumpSlowStartHandler();
 
       DF_ERROR pumpSlowStopBlocking();
-
 
       void addDispenseButtonPress();
       DF_ERROR startDispense();
@@ -107,6 +107,8 @@ public:
       Slot_state getSlotState();
       void setSlotState(Slot_state state);
       void updateSlotState();
+
+      int getBasePNumber();
 
       bool getIsDispenseTargetReached();
 
@@ -146,6 +148,7 @@ public:
 
       DF_ERROR loadGeneralProperties();
 
+      bool loadParametersFromDb();
 
       void loadEmptyContainerDetectionEnabledFromDb();
       void loadSlotStateFromDb();
@@ -156,18 +159,37 @@ public:
       bool getPumpSlowStartStopEnabled();
       void sendToUiIfAllowed(string message);
       void logUpdateIfAllowed(string message);
-      
+
       void setSolenoid(bool openElseClosed);
-      
+
       bool getIsStatusUpdateAllowed();
 
-
-
-      pcb* the_pcb;
-      machine* m_machine;
-      product* m_pnumbers;
+      pcb *the_pcb;
+      machine *m_machine;
+      product *m_pnumbers;
       // machine* global_machine;
+
+      static int * parseCSVString(const std::string &csvString, int &size);
+
+      
 private:
+      bool m_slot_loaded_from_db;
+      
+      int m_slot;
+
+
+      int m_dispense_pnumbers_count;
+      int* m_dispense_pnumbers;
+      int m_additive_pnumbers_count;
+      int* m_additive_pnumbers;
+
+      string dispense_numbers_str;
+      int m_base_pnumber;
+      string m_additive_pnumbers_str;
+      bool m_is_enabled;
+      string m_status_text;
+
+
       bool dispenseButtonValueMemory;
       bool dispenseButtonValueEdgePositive;
       bool dispenseButtonValueEdgeNegative;
@@ -192,7 +214,6 @@ private:
       // We only want to create one instance of the class that controls
       // the actual hardware, so declare this static.
 
-
       uint64_t dispense_cycle_pump_running_time_millis;
       uint64_t dispense_start_timestamp_epoch;
 
@@ -205,7 +226,7 @@ private:
       uint64_t previous_status_update_allowed_epoch;
 
       uint64_t slowStartMostRecentIncreaseEpoch;
-      
+
       bool isStatusUpdateSendAndPrintAllowed;
 
       Dispense_behaviour previous_dispense_state;
@@ -213,7 +234,6 @@ private:
 
       Slot_state slot_state;
 
-      int slot;
       Time_val flowRateBuffer[RUNNING_AVERAGE_WINDOW_LENGTH];
       int flowRateBufferIndex;
 
@@ -224,7 +244,6 @@ private:
       bool m_isEmptyContainerDetectionEnabled = false;
       bool m_isPumpSlowStartStopEnabled = false;
       bool m_isPumpReversalEnabled = false;
-
 
       // bool m_isDispenseDone; // XXX: Remove later.
       // bool m_isStill;
@@ -237,7 +256,7 @@ private:
       sqlite3 *db;
       int rc;
 
-      product *m_pDispensedProduct;
+      int m_selected_pnumber;
 
       DF_ERROR *m_pthreadError;
 
@@ -253,7 +272,6 @@ private:
 
       // Button reference m_pButton[1] in stateVirtual; IPC shared due to Arduino!
       gpio *m_pButton[NUM_BUTTON];
-
 
       uint8_t pwm_actual_set_speed;
 };

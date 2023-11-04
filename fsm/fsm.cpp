@@ -195,7 +195,6 @@ DF_ERROR initObjects()
     g_machine.setup();
     g_pMessaging->setMachine(&g_machine);
 
-
     debugOutput::sendMessage("Machine set up.", MSG_INFO);
 
     for (int pnumber = 0; pnumber < PNUMBERS_COUNT; pnumber++)
@@ -209,8 +208,8 @@ DF_ERROR initObjects()
         debugOutput::sendMessage("Init dispenser " + to_string(slot_index + 1), MSG_INFO);
         g_productDispensers[slot_index].setup(&g_machine, g_pnumbers);
         g_productDispensers[slot_index].setSlot(slot_index + 1);
+        g_productDispensers[slot_index].setBasePNumberAsSelectedProduct();
     }
-
 
     dfRet = createStateArray();
     if (OK != dfRet)

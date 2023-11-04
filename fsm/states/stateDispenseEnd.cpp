@@ -69,7 +69,7 @@ DF_ERROR stateDispenseEnd::onAction()
 
     if (productDispensers[slot_index].getIsDispenseTargetReached())
     {
-        usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
+        usleep(100000);                                      // send message delay (pause from previous message) desperate attempt to prevent crashes
         m_pMessaging->sendMessageOverIP("Target Hit", true); // send to UI
     }
 
@@ -80,15 +80,15 @@ DF_ERROR stateDispenseEnd::onAction()
     //     empty_stock_detected = true;
     //     debugOutput::sendMessage("WARNING: Empty container detected. Will set remaining volume to zero.", MSG_INFO);
     // }
-
     // adjust to nearest lower fixed volume if less dispensed than requested
     adjustSizeToDispensedVolume();
 
+// crash test ok until here.
     // SIZE_TEST_CHAR is sent during Maintenance Mode dispenses - we do not want to record these in the transaction database, or print receipts...
     if (m_pMessaging->getRequestedSize() == SIZE_TEST_CHAR)
     {
-        debugOutput::sendMessage("Not a transaction: Test dispensing. (" + to_string(productDispensers[slot_index].getVolumeDispensed()) + "ml).", MSG_INFO);
-        dispenseEndUpdateDB(false); // update the db dispense statistics
+        // debugOutput::sendMessage("Not a transaction: Test dispensing. (" + to_string(productDispensers[slot_index].getVolumeDispensed()) + "ml).", MSG_INFO);
+        // dispenseEndUpdateDB(false); // update the db dispense statistics
     }
     else if (!is_valid_dispense)
     {
@@ -102,9 +102,9 @@ DF_ERROR stateDispenseEnd::onAction()
         e_ret = handleTransactionPayment();
 
         debugOutput::sendMessage("Normal transaction.", MSG_INFO);
-        dispenseEndUpdateDB(true);
+        // dispenseEndUpdateDB(true);  // CRASHES IF NOT COMMENTED
 
-        bool success = false;
+// #define ENABLE_TRANSACTION_TO_CLOUD  //  // CRASHES IF NOT COMMENTED
 #ifdef ENABLE_TRANSACTION_TO_CLOUD
 
         std::string paymentMethod = productDispensers[slot_index].getSelectedProduct()->getPaymentMethod();
@@ -115,6 +115,7 @@ DF_ERROR stateDispenseEnd::onAction()
         }
         else
         {
+            bool success = false;
             // make sure to do this after dispenseEndUpdateDB
             // at that point remaining product volume is already updated in db, and in Product
             success = sendTransactionToCloud(productDispensers[slot_index].getSelectedProduct()->getVolumeRemaining());
@@ -125,6 +126,7 @@ DF_ERROR stateDispenseEnd::onAction()
     }
 
     m_state_requested = STATE_IDLE;
+    usleep(100000);                                           // often the transaction end command is sent too quickly to the ui.
     m_pMessaging->sendMessageOverIP("Transaction End", true); // send to UI
 
     return e_ret;
@@ -451,10 +453,12 @@ DF_ERROR stateDispenseEnd::databaseUpdateSql(string sqlStatement, string dbPath)
 
     // FIXME: DB needs fully qualified link to find...obscure with XML loading.
     char *zErrMsg = 0;
-    if(dbPath == USAGE_DB_PATH){
+    if (dbPath == USAGE_DB_PATH)
+    {
         rc = sqlite3_open(USAGE_DB_PATH, &db);
     }
-    else{
+    else
+    {
         rc = sqlite3_open(CONFIG_DB_PATH, &db);
     }
 
@@ -586,7 +590,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
 
     std::string sql3;
     sql3 = ("UPDATE machine SET " + slot_status_field_name + "='" + slot_state_str + "';");
-    databaseUpdateSql(sql3,CONFIG_DB_PATH);
+    databaseUpdateSql(sql3, CONFIG_DB_PATH);
 
     // reload (changed) db values
     productDispensers[slot_index].getSelectedProduct()->loadParameters();

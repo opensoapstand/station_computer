@@ -42,6 +42,28 @@ QPushButton {
    border-radius: 20px;  
 }
 
+#pushButton_to_transactions{
+   text-align: right;
+   font-family: 'EuropaNuova-Regular';
+   font-style: normal;
+   font-weight: 700;
+   font-size: 35px;
+   color: #221F20;
+   qproperty-alignment: AlignCenter;
+   border: none;
+}
+
+#pushButton_to_idle{
+   text-align: left;
+   font-family: 'EuropaNuova-Regular';
+   font-style: normal;
+   font-weight: 700;
+   font-size: 35px;
+   color: #221F20;
+   qproperty-alignment: AlignCenter;
+   border: none;
+}
+
 /* QPushButton#pushButton_refresh {
    background-color: transparent;
    border: 0px;

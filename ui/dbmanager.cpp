@@ -907,3 +907,34 @@ void DbManager::getPrinterStatus(bool *isOnline, bool *hasPaper)
     }
     closeDb();
 }
+
+void DbManager::setPaymentTransaction(const std::map<std::string, std::string>& paymentObject){
+    {
+        QSqlDatabase db = openDb(USAGE_DB_PATH);
+        QSqlQuery qry(db);
+
+        qry.prepare("INSERT INTO payments(transaction_id,date,time,mac_label,amount,auth_code,ctrout_saf,card_number,card_type,status) VALUES (:transaction_id,:date,:time,:mac_label,:amount,:auth_code,:ctrout_saf,:card_number,:card_type,:status);");
+        qry.bindValue(":transaction_id", QVariant::fromValue(QString::fromStdString(paymentObject.at("session_id"))));
+        qry.bindValue(":date", QVariant::fromValue(QString::fromStdString(paymentObject.at("date"))));
+        qry.bindValue(":time", QVariant::fromValue(QString::fromStdString(paymentObject.at("time"))));
+        qry.bindValue(":mac_label", QVariant::fromValue(QString::fromStdString(paymentObject.at("mac_label"))));
+        qry.bindValue(":amount", QVariant::fromValue(QString::fromStdString(paymentObject.at("amount"))));
+        qry.bindValue(":auth_code", QVariant::fromValue(QString::fromStdString(paymentObject.at("auth_code"))));
+        qry.bindValue(":ctrout_saf", QVariant::fromValue(QString::fromStdString(paymentObject.at("ctrout_saf"))));
+        qry.bindValue(":card_number", QVariant::fromValue(QString::fromStdString(paymentObject.at("card_number"))));
+        qry.bindValue(":card_type", QVariant::fromValue(QString::fromStdString(paymentObject.at("card_type"))));
+        qry.bindValue(":status", QVariant::fromValue(QString::fromStdString(paymentObject.at("status"))));
+        bool success;
+        success = qry.exec();
+
+        if (!success)
+        {
+            qDebug() << "Failed to write user interaction. error type: " << qry.lastError().type() << "Error message:" << qry.lastError().text();
+            qDebug() << "Error message:" << qry.lastError().text();
+            qDebug() << "Query:" << qry.lastQuery();
+        }
+        qry.finish();
+        }
+        qDebug() << "Payment database write";
+    closeDb();
+}   

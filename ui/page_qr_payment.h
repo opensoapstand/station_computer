@@ -37,7 +37,7 @@
 #include <curl/curl.h>
 #include<atomic>
 
-
+class statusbar;
 class page_product;
 class page_dispenser;
 class page_idle;
@@ -63,7 +63,7 @@ class page_qr_payment : public QWidget
 public:
     // **** GUI Setup ****
     explicit page_qr_payment(QWidget *parent = nullptr);
-    void setPage(page_product* p_page_product,page_error_wifi *pageWifiError, page_dispenser* page_dispenser, page_idle* pageIdle, page_help *pageHelp);
+    void setPage(page_product* p_page_product,page_error_wifi *pageWifiError, page_dispenser* page_dispenser, page_idle* pageIdle, page_help *pageHelp, statusbar *p_statusbar);
     ~page_qr_payment();
 
     void showEvent(QShowEvent *event);
@@ -93,7 +93,7 @@ private:
     page_idle* p_page_idle;
     page_help* p_page_help;
     page_error_wifi *p_page_wifi_error;
-     
+    statusbar *p_statusbar;
 
     QString _paymentTimeLabel;
     int _pageTimeoutCounterSecondsLeft;
@@ -117,7 +117,7 @@ private:
     CURLcode res1;
     CURL *curl1;
     QByteArray curl_order_parameters;
-
+    QVBoxLayout *statusbarLayout;
     std::string readBuffer;
 
     void isQrProcessedCheckOnline();

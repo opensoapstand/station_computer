@@ -20,6 +20,11 @@ page_idle->label_printer_status->nopaper,Assistance needed<br>Receipt Printer em
 page_idle->label_show_temperature->temperature,Temperature is..
 #page_idle->label_show_temperature,Temperature: %1
 page_idle->label_show_temperature,%1°C
+page_idle->msgBox_reboot->default,<p align=center>System will be rebooted in<br></p>
+page_idle->label_reboot_nightly_title,NIGHTLY REBOOT
+page_idle->label_reboot_nightly_text,System will be rebooted in<br>%1 second(s)
+page_idle->pushButton_reboot_nightly,Cancel
+page_idle->label_reboot_nightly_text->count_down,System will be rebooted in<br>%1 second(s)
 
 #page_select_product
 page_select_product->label_pick_soap,Discover our Beverages
@@ -47,6 +52,10 @@ page_end->pushButton_contact,Feedback
 
 # page_help
 page_help->pushButton_to_idle,←back
+<<<<<<< HEAD
+=======
+page_help->pushButton_to_transactions,transactions→
+>>>>>>> develop
 
 # page_sendFeedback
 page_sendFeedback->pushButton_previous_page,←back

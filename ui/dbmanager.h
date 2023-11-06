@@ -105,7 +105,9 @@ public:
                                  int *is_enabled_slots,
                                  QString *status_text_slots,
                                  double *alert_temperature);
-    QString getHardwareVersion();
+         QString getHardwareVersion();
+
+    void setPaymentTransaction(const std::map<std::string, std::string>& paymentObject);
     // QString m_dbPath2;
 
 private:

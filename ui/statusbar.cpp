@@ -48,11 +48,12 @@ void statusbar::showEvent(QShowEvent *event)
     qDebug() << "Statusbar show.";
 
     QWidget::showEvent(event);
-
     QString styleSheet = p_page_idle->thisMachine->getCSS(STATUSBAR_CSS);
+    ui->statusbar_bg->setStyleSheet(styleSheet);
     ui->label_active_role->setStyleSheet(styleSheet);
     ui->label_session_id->setStyleSheet(styleSheet);
     ui->label_coupon_code->setStyleSheet(styleSheet);
+    ui->pushButton_hide->setStyleSheet(styleSheet);
 
     // ui->pushButton_active_role->setStyleSheet(styleSheet);
     // p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_active_role, "normal", STATUSBAR_CSS);

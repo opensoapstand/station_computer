@@ -63,6 +63,8 @@ using namespace std;
 #define PAGE_IDLE_USER_ROLE_TIMEOUT_SECONDS 5 
 #define PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS 6
 #define PAGE_IDLE_PRODUCTS_STEP_DISPLAY_TIME_SECONDS 1
+#define PAGE_IDLE_REBOOT_NIGHTLY_TIMEOUT_SECONDS 1
+#define PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN 300
 
 #define QR_PAGE_TIMEOUT_SECONDS 420
 #define QR_PAGE_TIMEOUT_WARNING_SECONDS 120
@@ -134,6 +136,7 @@ using namespace std;
 #define PAGE_ERROR_BACKGROUND_PATH                      "background_error_wifi.png"
 #define KEYBOARD_IMAGE_PATH                             "soapstand-keyboard.png"
 #define MACHINE_LOGO_PATH                               "machine_logo.png"
+#define REBOOT_NIGHTLY_ICON_PATH                        "reboot_nightly_icon.png"
 #define QR_MANUAL_PATH                                  "qr_user_manual.png"
 #define PAGE_DISPENSE_FILL_ANIMATION                    "bottle_fill_for_animation.png"
 

@@ -28,6 +28,7 @@ page_maintenance_dispenser::page_maintenance_dispenser(QWidget *parent) : QWidge
     maintainProductPageEndTimer = new QTimer(this);
     maintainProductPageEndTimer->setInterval(1000);
     connect(maintainProductPageEndTimer, SIGNAL(timeout()), this, SLOT(onMaintainProductPageTimeoutTick()));
+    statusbarLayout = new QVBoxLayout(this);
 
     dispenseTimer = new QTimer(this);
     dispenseTimer->setInterval(100);
@@ -43,24 +44,27 @@ page_maintenance_dispenser::~page_maintenance_dispenser()
     delete ui;
 }
 
-void page_maintenance_dispenser::setPage(page_maintenance *pageMaintenance, page_idle *pageIdle, page_idle_products *p_page_idle_products)
+void page_maintenance_dispenser::setPage(page_maintenance *pageMaintenance, page_idle *pageIdle, page_idle_products *p_page_idle_products, statusbar *p_statusbar)
 {
 
     this->p_page_maintenance = pageMaintenance;
     this->p_page_idle = pageIdle;
+    this->p_statusbar = p_statusbar;
 }
 
 void page_maintenance_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     dispense_test_end(true);
     maintainProductPageEndTimer->stop();
+    statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
 }
 
 void page_maintenance_dispenser::showEvent(QShowEvent *event)
 {
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
-
+    statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
+    statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
     qDebug() << "Active Slot: " << QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
     QWidget::showEvent(event);
 

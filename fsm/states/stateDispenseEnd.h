@@ -69,7 +69,7 @@ private:
     bool sendTransactionToCloud(double volume_remaining);
     DF_ERROR setup_and_print_receipt();
     
-    std::string getMachineID();
+    // std::string getMachineID();
     std::string getProductID(int slot);
 
     double getFinalPrice();

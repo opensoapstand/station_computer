@@ -172,20 +172,20 @@ void stateManualPrinter::printTransaction(int transactionNumber)
    std::string sql_string;
 
    //-------------------------------------------------
-   sql_string = ("SELECT product,price,quantity_dispensed,quantity_requested,end_time FROM transactions WHERE id=" + to_string(transactionNumber));
+   sql_string = ("SELECT soapstand_product_serial,price,quantity_dispensed,quantity_requested,end_time FROM transactions WHERE id=" + to_string(transactionNumber));
    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
 
    int status;
    status = sqlite3_step(stmt);
 
-   string product;
+   string pNumberString;
    double price;
    double quantity_dispensed;
    double quantity_requested;
    string end_time;
    if (status == SQLITE_ROW)
    {
-      product = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
+      pNumberString = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
       price = sqlite3_column_double(stmt, 1);
       quantity_dispensed = sqlite3_column_double(stmt, 2);
       quantity_requested = sqlite3_column_double(stmt, 3);
@@ -217,7 +217,7 @@ void stateManualPrinter::printTransaction(int transactionNumber)
       debugOutput::sendMessage("SUCCESS: SQL transaction retrieval : (" + to_string(rc) + ") " + sql_string, MSG_INFO);
    }
 
-   debugOutput::sendMessage("----------------: " + product, MSG_INFO);
+   debugOutput::sendMessage("----------------: " + pNumberString, MSG_INFO);
    debugOutput::sendMessage("----------------: " + to_string(price), MSG_INFO);
    debugOutput::sendMessage("----------------: " + to_string(quantity_dispensed), MSG_INFO);
    debugOutput::sendMessage("----------------: " + to_string(quantity_requested), MSG_INFO);
@@ -225,34 +225,35 @@ void stateManualPrinter::printTransaction(int transactionNumber)
    sqlite3_finalize(stmt);
    sqlite3_close(db);
 
-   //-------------------------------------------------
-   rc = sqlite3_open(CONFIG_DB_PATH, &db);
-   sql_string = ("SELECT slot FROM products WHERE name='" + product + "';");
+   // //-------------------------------------------------
+   // rc = sqlite3_open(CONFIG_DB_PATH, &db);
+   // sql_string = ("SELECT slot FROM products WHERE name='" + product + "';");
 
-   sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+   // sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
 
-   status = sqlite3_step(stmt);
+   // status = sqlite3_step(stmt);
 
-   int slot;
-   if (status == SQLITE_ROW)
-   {
-      slot = sqlite3_column_int(stmt, 0);
-   }
-   if (rc != SQLITE_OK)
-   {
-      debugOutput::sendMessage("ERROR: SQL transaction retrieval : (" + to_string(rc) + "):" + sql_string, MSG_INFO);
+   // int slot;
+   // if (status == SQLITE_ROW)
+   // {
+   //    slot = sqlite3_column_int(stmt, 0);
+   // }
+   // if (rc != SQLITE_OK)
+   // {
+   //    debugOutput::sendMessage("ERROR: SQL transaction retrieval : (" + to_string(rc) + "):" + sql_string, MSG_INFO);
 
-      sqlite3_free(zErrMsg);
-   }
-   else
-   {
-      debugOutput::sendMessage("SUCCESS: SQL transaction retrieval : (" + to_string(rc) + ") " + sql_string, MSG_INFO);
-   }
+   //    sqlite3_free(zErrMsg);
+   // }
+   // else
+   // {
+   //    debugOutput::sendMessage("SUCCESS: SQL transaction retrieval : (" + to_string(rc) + ") " + sql_string, MSG_INFO);
+   // }
 
-   debugOutput::sendMessage("slot ----------------: " + to_string(slot), MSG_INFO);
-   sqlite3_finalize(stmt);
-   sqlite3_close(db);
-   setup_receipt_from_data_and_slot(slot, quantity_dispensed, quantity_requested, price, end_time);
+   // debugOutput::sendMessage("slot ----------------: " + to_string(slot), MSG_INFO);
+   // sqlite3_finalize(stmt);
+   // sqlite3_close(db);
+   int pnumber = machine::convertPStringToPNumber(pNumberString);
+   setup_receipt_from_pnumber_and_dispense_data(pnumber, quantity_dispensed, quantity_requested, price, end_time);
 }
 
 DF_ERROR stateManualPrinter::sendPrinterStatus()
@@ -421,21 +422,21 @@ DF_ERROR stateManualPrinter::onExit()
    return e_ret;
 }
 
-DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double volume_dispensed, double volume_requested, double price, string time_stamp)
+DF_ERROR stateManualPrinter::setup_receipt_from_pnumber_and_dispense_data(int pnumber, double volume_dispensed, double volume_requested, double price, string time_stamp)
 {
-   std::string name_receipt = productDispensers[slot - 1].getSelectedProduct()->getProductName();
+   std::string name_receipt = g_pnumbers[pnumber].getProductName();
    //  std::string plu = productDispensers[slot-1].getSelectedProduct()->getBasePLU( SIZE_CUSTOM_CHAR  );
 
-   char size = productDispensers[slot - 1].getSelectedProduct()->getSizeCharFromTargetVolume(volume_requested);
-   string plu = productDispensers[slot - 1].getFinalPLU(size, price);
+   char size = g_pnumbers[pnumber].getSizeCharFromTargetVolume(volume_requested);
+   string plu = g_pnumbers[pnumber].getFinalPLU(size, price);
 
-   std::string units = productDispensers[slot - 1].getSelectedProduct()->getDisplayUnits();
-   std::string paymentMethod = productDispensers[slot - 1].getSelectedProduct()->getPaymentMethod();
+   std::string units = g_pnumbers[pnumber].getDisplayUnits();
+   std::string paymentMethod = g_pnumbers[pnumber].getPaymentMethod();
 
    char chars_cost[MAX_BUF];
    char chars_volume_formatted[MAX_BUF];
 
-   std::string char_units_formatted = productDispensers[slot - 1].getSelectedProduct()->getDisplayUnits();
+   std::string char_units_formatted = g_pnumbers[pnumber].getDisplayUnits();
 
    snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.0f", volume_dispensed);
 
@@ -446,31 +447,3 @@ DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double v
 
    g_machine.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, time_stamp, units, paymentMethod, plu, "", true);
 }
-
-// DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double volume_dispensed, double volume_requested, double price, string time_stamp)
-// {
-//    std::string name_receipt = (productDispensers[slot - 1].getSelectedProduct()->getProductName());
-//    //  std::string plu = productDispensers[slot-1].getSelectedProduct()->getBasePLU( SIZE_CUSTOM_CHAR  );
-
-//    char size = productDispensers[slot - 1].getSelectedProduct()->getSizeCharFromTargetVolume(volume_requested);
-//    string plu = productDispensers[slot - 1].getFinalPLU(size, price);
-
-//    std::string units = (productDispensers[slot - 1].getSelectedProduct()->getDisplayUnits());
-//    std::string paymentMethod = productDispensers[slot - 1].getSelectedProduct()->getPaymentMethod();
-
-//    char chars_cost[MAX_BUF];
-//    char chars_volume_formatted[MAX_BUF];
-
-//    snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.2f", productDispensers[slot - 1].getSelectedProduct()->getTargetVolume(size));
-//    string vol = (chars_volume_formatted);
-//    string receipt_volume_formatted = vol + "ml";
-//    //  string receipt_volume_formatted = to_string(chars_volume_formatted) + "ml";
-
-//    snprintf(chars_cost, sizeof(chars_cost), "%.2f", price);
-//    string receipt_cost = (chars_cost);
-
-//    // machine tmp;
-//    receipt_cost = m_pMessaging->getRequestedPrice();
-
-//    g_machine.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, time_stamp, units, paymentMethod, plu, "");
-// }

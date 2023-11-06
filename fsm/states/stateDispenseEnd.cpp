@@ -83,7 +83,7 @@ DF_ERROR stateDispenseEnd::onAction()
     // adjust to nearest lower fixed volume if less dispensed than requested
     adjustSizeToDispensedVolume();
 
-// crash test ok until here.
+    // crash test ok until here.
     // SIZE_TEST_CHAR is sent during Maintenance Mode dispenses - we do not want to record these in the transaction database, or print receipts...
     if (m_pMessaging->getRequestedSize() == SIZE_TEST_CHAR)
     {
@@ -293,9 +293,11 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
     std::string price_string = to_string(price);
     debugOutput::sendMessage("Final price" + price_string, MSG_INFO);
     std::string target_volume = to_string(productDispensers[slot_index].getSelectedProduct()->getTargetVolume(m_pMessaging->getRequestedSize()));
-    std::string product = (productDispensers[slot_index].getSelectedProduct()->m_name);
-    std::string machine_id = getMachineID();
-    std::string pid = getProductID(slot);
+    std::string product = productDispensers[slot_index].getSelectedProduct()->m_name;
+    // std::string machine_id = getMachineID();
+    std::string machine_id = g_machine.getMachineId();
+    // std::string pid = getProductID(slot);
+    std::string pid = productDispensers[slot_index].getSelectedProduct()->m_product_id_combined_with_location_for_backend;
     std::string units = productDispensers[slot_index].getSelectedProduct()->getDisplayUnits();
     std::string readBuffer;
     std::string volume_remaining_units_converted_string;
@@ -401,52 +403,52 @@ void stateDispenseEnd::write_curl_to_file(std::string curl_params)
     }
 }
 
-std::string stateDispenseEnd::getProductID(int slot)
-{
-    rc = sqlite3_open(CONFIG_DB_PATH, &db);
+// std::string stateDispenseEnd::getProductID(int slot)
+// {
+//     rc = sqlite3_open(CONFIG_DB_PATH, &db);
 
-    sqlite3_stmt *stmt;
+//     sqlite3_stmt *stmt;
 
-    debugOutput::sendMessage("Product ID getter START", MSG_INFO);
+//     debugOutput::sendMessage("Product ID getter START", MSG_INFO);
 
-    std::string sql_string_pid = "SELECT productId FROM products WHERE slot=" + std::to_string(slot) + ";";
+//     std::string sql_string_pid = "SELECT productId FROM products WHERE slot=" + std::to_string(slot) + ";";
 
-    sqlite3_prepare(db, sql_string_pid.c_str(), -1, &stmt, NULL);
-    sqlite3_step(stmt);
-    std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
-    ;
-    sqlite3_finalize(stmt);
-    sqlite3_close(db);
-    return str;
-}
+//     sqlite3_prepare(db, sql_string_pid.c_str(), -1, &stmt, NULL);
+//     sqlite3_step(stmt);
+//     std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
+//     ;
+//     sqlite3_finalize(stmt);
+//     sqlite3_close(db);
+//     return str;
+// }
 
-std::string stateDispenseEnd::getMachineID()
-{
+// std::string stateDispenseEnd::getMachineID()
+// {
 
-    rc = sqlite3_open(CONFIG_DB_PATH, &db);
+//     rc = sqlite3_open(CONFIG_DB_PATH, &db);
 
-    sqlite3_stmt *stmt;
+//     sqlite3_stmt *stmt;
 
-    debugOutput::sendMessage("Machine ID getter START", MSG_INFO);
+//     debugOutput::sendMessage("Machine ID getter START", MSG_INFO);
 
-    if (rc)
-    {
-        //       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
-        // TODO: Error handling here...
-    }
-    else
-    {
-        //       fprintf(stderr, "Opened database successfully\n");
-    }
+//     if (rc)
+//     {
+//         //       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+//         // TODO: Error handling here...
+//     }
+//     else
+//     {
+//         //       fprintf(stderr, "Opened database successfully\n");
+//     }
 
-    sqlite3_prepare(db, "SELECT machine_id FROM machine;", -1, &stmt, NULL);
-    sqlite3_step(stmt);
-    std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
-    ;
-    sqlite3_finalize(stmt);
-    sqlite3_close(db);
-    return str;
-}
+//     sqlite3_prepare(db, "SELECT machine_id FROM machine;", -1, &stmt, NULL);
+//     sqlite3_step(stmt);
+//     std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
+//     ;
+//     sqlite3_finalize(stmt);
+//     sqlite3_close(db);
+//     return str;
+// }
 
 DF_ERROR stateDispenseEnd::databaseUpdateSql(string sqlStatement, string dbPath)
 {
@@ -565,7 +567,8 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     std::string updated_volume_dispensed_total_ever_str = to_string(updated_volume_dispensed_total_ever);
     std::string updated_volume_dispensed_since_restock_str = to_string(updated_volume_dispensed_since_restock);
     std::string slot_state_str = productDispensers[slot_index].getSlotStateAsString();
-    std::string product_id = getProductID(slot);
+    // std::string product_id = getProductID(slot);
+    std::string product_id = productDispensers[slot_index].getSelectedProduct()->m_product_id_combined_with_location_for_backend;
 
     // FIXME: DB needs fully qualified link to find...obscure with XML loading.
     debugOutput::sendMessage("Update DB at dispense end: Vol dispensed: " + dispensed_volume_str, MSG_INFO);
@@ -707,7 +710,7 @@ DF_ERROR stateDispenseEnd::setup_and_print_receipt()
         debugOutput::sendMessage("invalid size provided" + m_pMessaging->getRequestedSize(), MSG_INFO);
     }
 
-    std::string plu = productDispensers[slot_index].getFinalPLU(m_pMessaging->getRequestedSize(), price);
+    std::string plu = productDispensers[slot_index].getSelectedProduct()->getFinalPLU(m_pMessaging->getRequestedSize(), price);
 
     // convert units
     if (units == "oz")

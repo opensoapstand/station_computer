@@ -62,6 +62,14 @@ public:
 
     void loadGeneralProperties();
     void loadParametersFromDb();
+    string getMachineId();
+
+    static int convertPStringToPNumber(const std::string& inputString);
+
+    bool getPumpReversalEnabled();
+    bool getEmptyContainerDetectionEnabled();
+    bool getPumpSlowStartStopEnabled();
+
 
 private:
     bool m_isMultiButtonEnabled = false;

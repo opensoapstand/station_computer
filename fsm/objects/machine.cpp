@@ -91,6 +91,10 @@ void machine::executeSQLStatement(string sql_string)
     sqlite3_close(db);
 }
 
+string machine::getMachineId()
+{
+    return m_machine_id;
+}
 // void machine::loadButtonPropertiesFromDb()
 // {
 //     rc = sqlite3_open(CONFIG_DB_PATH, &db);
@@ -492,7 +496,55 @@ void machine::print_receipt(string name_receipt, string receipt_cost, string rec
 //      return 0;
 //  }double cTemp
 
-bool machine::loadParametersFromDb()
+
+
+bool machine::getPumpReversalEnabled()
+{
+    // return m_isPumpReversalEnabled;
+    return m_enable_pump_reversal;
+}
+bool machine::getPumpSlowStartStopEnabled()
+{
+    return m_enable_pump_ramping;
+}
+
+bool machine::getEmptyContainerDetectionEnabled()
+{
+    return m_has_empty_detection;
+}
+
+int machine::convertPStringToPNumber(const std::string& inputString) {
+
+    // P-xxx to xxx   e.g. P-12  --> 12
+    // Check if the input string starts with "P-"
+    if (inputString.find("P-") == 0) {
+        // Extract the substring after "P-"
+        std::string numberStr = inputString.substr(2);
+        
+        int number = 0;
+        // Iterate through the characters of the substring and convert to integer
+        for (char digitChar : numberStr) {
+            // Check if the character is a valid digit
+            if (isdigit(digitChar)) {
+                // Convert the character to integer and update the number
+                number = number * 10 + (digitChar - '0');
+            } else {
+                // If a non-digit character is encountered, return -1 (invalid input)
+                return -1;
+            }
+        }
+        
+        // Check if the number is within the valid range (0 to 9999)
+        if (number >= 0 && number <= 9999) {
+            return number;
+        }
+    }
+    
+    // Return -1 to indicate an invalid input or number out of range
+    return -1;
+}
+
+void machine::loadParametersFromDb()
 {
     int rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
@@ -592,8 +644,14 @@ bool machine::loadParametersFromDb()
         m_alert_temperature = product::dbFieldAsValidString(stmt, 37);
         m_software_version_controller = product::dbFieldAsValidString(stmt, 38);
 
+        if (numberOfRecordsFound != 0)
+        {
+            // assert error
+            debugOutput::sendMessage("ASSERT Error: Machine table must have exactly one row. ", MSG_ERROR);
+        }
+
         m_button_animation_program = m_dispense_buttons_count / 1000; // button light effect program
-        int buttons_count = m_dispense_buttons_count % 1000;  // button count
+        int buttons_count = m_dispense_buttons_count % 1000;          // button count
 
         if (buttons_count == 1)
         {
@@ -611,10 +669,5 @@ bool machine::loadParametersFromDb()
 
         debugOutput::sendMessage("Multiple dispense buttons enabled? : " + to_string(m_isMultiButtonEnabled), MSG_INFO);
         debugOutput::sendMessage("Animation program number (0=no animation)? : " + to_string(m_button_animation_program), MSG_INFO);
-
-        if (numberOfRecordsFound != 0)
-        {
-            // assert error
-            debugOutput::sendMessage("ASSERT Error: Machine table must have exactly one row. ", MSG_ERROR);
-        }
     }
+}

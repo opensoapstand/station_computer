@@ -347,7 +347,11 @@ void page_dispenser::dispensing_end_admin()
                 response = voidTransaction(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["ctroutd"]);
                 tapPaymentObject["ctrout_saf"] = tapPaymentObject["ctroutd"];
             }
+            
+            tapPaymentObject["amount"] = stream.str();
             tapPaymentObject["status"] = "Voided";
+            p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
+
             finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
         }
         if (paymentMethod == PAYMENT_TAP_SERIAL)

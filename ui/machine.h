@@ -26,7 +26,24 @@ typedef enum StateCoupon
     network_error
 } StateCoupon;
 
+<<<<<<< HEAD
 class dispenser_slot; //  forward declaration.
+=======
+
+typedef enum StateReboot
+{
+    initial_state,
+    wait_for_trigger,
+    triggered_wait_for_delay,
+    delay_elapsed,
+    user_cancelled_reboot
+    
+} StateReboot;
+
+
+
+class product; //  forward declaration.
+>>>>>>> develop
 
 class machine : public QObject
 {
@@ -130,6 +147,15 @@ public:
     void setCouponConditions(QString couponConditions);
     std::map<QString, QString> getCouponConditions();
 
+<<<<<<< HEAD
+=======
+    StateReboot getRebootState();
+    void setRebootState(StateReboot state);
+
+    void setProducts(product *products);
+    QString m_session_id;
+
+>>>>>>> develop
     void setDiscountPercentageFraction(double percentageFraction);
     double getDiscountPercentageFraction();
     double getPriceCorrectedForSelectedSize(int pnumber, bool maximumVolumeForCustom);
@@ -240,6 +266,7 @@ private:
 
     double max_discount = 0.0;
     QString m_promoCode;
+    StateReboot m_stateReboot;
 
     DbManager *m_db;
     UserRole active_role;

@@ -219,26 +219,31 @@ int main(int argc, char *argv[])
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_DOWN));
 
     // Page pathing references to function calls.
-    p_page_help->setPage(p_page_select_product, p_page_product, p_page_idle, p_page_payment_qr, p_page_transactions, p_page_maintenance, p_page_sendFeedback);
-    p_page_transactions->setPage(p_page_idle);
+    p_page_help->setPage(p_page_select_product, p_page_product, p_page_idle, p_page_payment_qr, p_page_transactions, p_page_maintenance, p_page_sendFeedback, p_statusbar);
+    p_page_transactions->setPage(p_page_idle, p_statusbar);
     initPage->setPage(p_page_idle);
-    p_page_maintenance_product->setPage(p_page_maintenance, p_page_idle, p_page_idle_products);
+    p_page_maintenance_product->setPage(p_page_maintenance, p_page_idle, p_page_idle_products, p_statusbar);
 
-    p_page_maintenance_general->setPage(p_page_maintenance, p_page_idle, p_page_idle_products);
-    p_page_maintenance->setPage(p_page_idle, p_page_maintenance_product, p_page_maintenance_general, p_page_select_product, p_page_product);
+    p_page_maintenance_general->setPage(p_page_maintenance, p_page_idle, p_page_idle_products, p_statusbar);
+    p_page_maintenance->setPage(p_page_idle, p_page_maintenance_product, p_page_maintenance_general, p_page_select_product, p_page_product, p_statusbar);
     p_page_idle->setPage(p_page_select_product, p_page_maintenance, p_page_maintenance_general, p_page_idle_products, p_page_wifi_error, p_statusbar);
     p_page_idle_products->setPage(p_page_idle, p_page_select_product);
     p_page_select_product->setPage(p_page_product, p_page_idle_products, p_page_idle, p_page_maintenance, p_page_help, p_statusbar);
     p_page_product->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_help, p_page_product_overview, p_statusbar);
-    p_page_payment_qr->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
-    p_page_payment_tap_tcp->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
-    p_page_payment_tap_serial->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help);
-    p_page_email->setPage(p_page_dispense, p_page_idle, p_page_help, p_page_product_overview);
+    p_page_payment_qr->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help, p_statusbar);
+    p_page_payment_tap_tcp->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help, p_statusbar);
+    p_page_payment_tap_serial->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help, p_statusbar);
+    p_page_email->setPage(p_page_dispense, p_page_idle, p_page_help, p_page_product_overview, p_statusbar);
 
+<<<<<<< HEAD
     p_page_dispense->setPage(p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_end, p_page_idle, p_page_sendFeedback);
+=======
+
+    p_page_dispense->setPage(p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_end, p_page_idle, p_page_sendFeedback, p_statusbar);
+>>>>>>> develop
     p_page_product_overview->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_help, p_page_product, p_page_email, p_statusbar);
-    p_page_sendFeedback->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_help, p_page_product, p_page_end);
-    p_page_end->setPage(p_page_dispense, p_page_idle, p_page_payment_qr, p_page_sendFeedback);
+    p_page_sendFeedback->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_help, p_page_product, p_page_end, p_statusbar);
+    p_page_end->setPage(p_page_dispense, p_page_idle, p_page_payment_qr, p_page_sendFeedback, p_statusbar);
     p_statusbar->setPage(p_page_idle);
     p_page_wifi_error->setPage(p_page_payment_qr, p_page_end, p_page_idle);
 

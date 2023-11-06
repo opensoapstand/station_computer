@@ -102,9 +102,9 @@ DF_ERROR stateDispenseEnd::onAction()
         e_ret = handleTransactionPayment();
 
         debugOutput::sendMessage("Normal transaction.", MSG_INFO);
-        // dispenseEndUpdateDB(true);  // CRASHES IF NOT COMMENTED
+        dispenseEndUpdateDB(true);
 
-// #define ENABLE_TRANSACTION_TO_CLOUD  //  // CRASHES IF NOT COMMENTED
+#define ENABLE_TRANSACTION_TO_CLOUD
 #ifdef ENABLE_TRANSACTION_TO_CLOUD
 
         std::string paymentMethod = productDispensers[slot_index].getSelectedProduct()->getPaymentMethod();
@@ -578,14 +578,14 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     if (isValidTransaction)
     {
         std::string sql1;
-        sql1 = ("INSERT INTO transactions (product,quantity_requested,price,start_time,quantity_dispensed,end_time,volume_remaining,slot,button_duration,button_times,processed_by_backend,product_id, pnumber) VALUES ('" + product_name + "'," + target_volume + "," + price_string + ",'" + start_time + "'," + dispensed_volume_str + ",'" + end_time + "'," + updated_volume_remaining_str + "," + to_string(slot) + "," + button_press_duration + "," + dispense_button_count + "," + to_string(false) + ",'" + product_id + "','" + pnumber + "');");
+        sql1 = ("INSERT INTO transactions (product,quantity_requested,price,start_time,quantity_dispensed,end_time,volume_remaining,slot,button_duration,button_times,processed_by_backend,product_id, soapstand_product_serial) VALUES ('" + product_name + "'," + target_volume + "," + price_string + ",'" + start_time + "'," + dispensed_volume_str + ",'" + end_time + "'," + updated_volume_remaining_str + "," + to_string(slot) + "," + button_press_duration + "," + dispense_button_count + "," + to_string(false) + ",'" + product_id + "','" + pnumber + "');");
         databaseUpdateSql(sql1, USAGE_DB_PATH);
     }
     // update transactions table
 
     // update product table
     std::string sql2;
-    sql2 = ("UPDATE products SET volume_dispensed_total=" + updated_volume_dispensed_total_ever_str + ", volume_remaining=" + updated_volume_remaining_str + ", volume_dispensed_since_restock=" + updated_volume_dispensed_since_restock_str + " WHERE slot='" + to_string(slot) + "';");
+    sql2 = ("UPDATE products SET volume_dispensed_total=" + updated_volume_dispensed_total_ever_str + ", volume_remaining=" + updated_volume_remaining_str + ", volume_dispensed_since_restock=" + updated_volume_dispensed_since_restock_str + " WHERE soapstand_product_serial='" + pnumber + "';");
     databaseUpdateSql(sql2, CONFIG_DB_PATH);
 
     // update machine table

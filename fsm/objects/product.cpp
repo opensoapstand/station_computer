@@ -452,6 +452,110 @@ string product::getDisplayUnits()
     return m_display_unit;
 }
 
+
+
+string product::getFinalPLU(char size, double price)
+{
+
+    string base_plu = getBasePLU(size);
+    char chars_plu_dynamic_formatted[MAX_BUF];
+
+    std::string paymentMethod = getPaymentMethod();
+    if (paymentMethod == "plu")
+    {
+        return base_plu;
+    }
+
+    if (size == SIZE_CUSTOM_CHAR)
+    {
+
+        if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13")
+        {
+            if (base_plu.size() != 8)
+            {
+                // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
+                debugOutput::sendMessage("ERROR custom plu length must be of length eight. (e.g. standard drinkfill preamble(627987) + 2digit product code) : " + base_plu, MSG_WARNING);
+                string fake_plu = "66666666";
+                base_plu = fake_plu;
+            }
+
+            snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%5.2f", price); // will always be at least 5 chars long e.g. 3.456 --> " 3.46" , 1234.456 --> "1234.45"
+        }
+        else if (paymentMethod == "barcode_EAN-2")
+        {
+            if (base_plu.size() != 7)
+            {
+                // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
+                debugOutput::sendMessage("ERROR custom plu length must be of length seven. provided: " + base_plu, MSG_WARNING);
+                string fake_plu = "6666666";
+                base_plu = fake_plu;
+            }
+
+            snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%6.2f", price); // will always be at least 6 chars long e.g. 3.456 --> "  3.45" , 1234.456 --> "1234.46"
+        }
+        else
+        {
+            debugOutput::sendMessage("ERROR Payment method not expected: " + paymentMethod, MSG_ERROR);
+            string fake_plu = "66666666";
+            base_plu = fake_plu;
+        }
+
+        string plu_dynamic_price = (chars_plu_dynamic_formatted);
+
+        string plu_dynamic_formatted = base_plu + plu_dynamic_price;
+
+        // 3.14 --> " 3.14" --> " 314" --> "0314"
+        // 140.00 -->
+        std::string toReplace(".");
+        size_t pos = plu_dynamic_formatted.find(toReplace);
+        if (pos != -1)
+        {
+            plu_dynamic_formatted.replace(pos, toReplace.length(), "");
+        }
+
+        std::string toReplace2(" ");
+        pos = plu_dynamic_formatted.find(toReplace2);
+        while (pos != -1)
+        {
+            plu_dynamic_formatted.replace(pos, toReplace2.length(), "0");
+            pos = plu_dynamic_formatted.find(toReplace2);
+        }
+
+        if (plu_dynamic_formatted.length() != 12)
+        {
+            debugOutput::sendMessage("ERROR Generated barcode has an error. Was the price more than 99.99?  Its length should be twelve: " + plu_dynamic_formatted, MSG_ERROR);
+        }
+        return plu_dynamic_formatted;
+    }
+
+    return base_plu;
+}
+// DF_ERROR stateManualPrinter::setup_receipt_from_pnumber_and_dispense_data(double volume_dispensed, double volume_requested, double price, string time_stamp)
+// {
+//    std::string name_receipt = getProductName();
+
+//    char size = getSizeCharFromTargetVolume(volume_requested);
+//    string plu = productDispensers[slot - 1].getFinalPLU(size, price);
+
+//    std::string units = productDispensers[slot - 1].getSelectedProduct()->getDisplayUnits();
+//    std::string paymentMethod = productDispensers[slot - 1].getSelectedProduct()->getPaymentMethod();
+
+//    char chars_cost[MAX_BUF];
+//    char chars_volume_formatted[MAX_BUF];
+
+//    std::string char_units_formatted = productDispensers[slot - 1].getSelectedProduct()->getDisplayUnits();
+
+//    snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.0f", volume_dispensed);
+
+//    std::string receipt_volume_formatted = chars_volume_formatted + char_units_formatted;
+
+//    snprintf(chars_cost, sizeof(chars_cost), "%.2f", price);
+//    string receipt_cost = chars_cost;
+
+//    g_machine.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, time_stamp, units, paymentMethod, plu, "", true);
+// }
+
+
 double product::convertVolumeMetricToDisplayUnits(double volume)
 {
     double converted_volume;
@@ -849,7 +953,7 @@ bool product::loadParametersFromDb()
         m_mix_pnumbers = product::dbFieldAsValidString(stmt, 1);
         m_mix_ratios = product::dbFieldAsValidString(stmt, 2);
 
-        m_dispenser_id_for_backend = product::dbFieldAsValidString(stmt, 3);
+        m_product_id_combined_with_location_for_backend = product::dbFieldAsValidString(stmt, 3);
         m_name = product::dbFieldAsValidString(stmt, 4);
         m_display_unit = product::dbFieldAsValidString(stmt, 5);
         m_paymentMethod = product::dbFieldAsValidString(stmt, 6);
@@ -1016,8 +1120,8 @@ bool product::testParametersFromDb()
 //     {
 //     case DB_PRODUCTS_PRODUCTID:
 //     {
-//         // m_dispenser_id_for_backend = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
-//         m_dispenser_id_for_backend = product::dbFieldAsValidString(stmt, column_index);
+//         // m_product_id_combined_with_location_for_backend = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+//         m_product_id_combined_with_location_for_backend = product::dbFieldAsValidString(stmt, column_index);
 //     }
 //     break;
 //     case DB_PRODUCTS_SOAPSTAND_PRODUCT_SERIAL:

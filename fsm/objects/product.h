@@ -26,6 +26,8 @@
 
 // #define CONFIG_DB_PATH "/release/db/sqlite/drinkfill-sqlite.db"
 
+#define MAX_BUF 64
+
 using namespace std;
 
 class product
@@ -117,6 +119,8 @@ public:
         double getThresholdFlow_max_allowed();
         int getRetractionTimeMillis();
 
+        string getFinalPLU(char size, double price);
+
         double m_volumePerTick;
         int m_nDispenseSpeedPWM;
         double m_nThresholdFlow;
@@ -145,7 +149,7 @@ public:
 
         string m_product_properties[100];
         string m_name;
-        string m_dispenser_id_for_backend;
+        string m_product_id_combined_with_location_for_backend;
         string m_display_unit;
         string m_mix_pnumbers;
         string m_mix_ratios;

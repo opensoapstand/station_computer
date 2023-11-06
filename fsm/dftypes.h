@@ -37,7 +37,7 @@
 #define PRODUCT_DISPENSERS_MAX 4
 #define PNUMBERS_COUNT 100
 #define MINIMUM_DISPENSE_VOLUME_ML 10
-#define ENABLE_TRANSACTION_TO_CLOUD
+
 // #define ENABLE_MULTI_BUTTON
 
 #define CONFIG_DB_PATH "/home/df-admin/production/db/configuration.db"

@@ -152,82 +152,6 @@ dispenser::~dispenser()
     previous_status_update_allowed_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }
 
-string dispenser::getFinalPLU(char size, double price)
-{
-
-    string base_plu = getSelectedProduct()->getBasePLU(size);
-    char chars_plu_dynamic_formatted[MAX_BUF];
-
-    std::string paymentMethod = getSelectedProduct()->getPaymentMethod();
-    if (paymentMethod == "plu")
-    {
-        return base_plu;
-    }
-
-    if (size == SIZE_CUSTOM_CHAR)
-    {
-
-        if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13")
-        {
-            if (base_plu.size() != 8)
-            {
-                // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
-                debugOutput::sendMessage("ERROR custom plu length must be of length eight. (e.g. standard drinkfill preamble(627987) + 2digit product code) : " + base_plu, MSG_WARNING);
-                string fake_plu = "66666666";
-                base_plu = fake_plu;
-            }
-
-            snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%5.2f", price); // will always be at least 5 chars long e.g. 3.456 --> " 3.46" , 1234.456 --> "1234.45"
-        }
-        else if (paymentMethod == "barcode_EAN-2")
-        {
-            if (base_plu.size() != 7)
-            {
-                // debugOutput::sendMessage("Custom plu: " + plu, MSG_INFO);
-                debugOutput::sendMessage("ERROR custom plu length must be of length seven. provided: " + base_plu, MSG_WARNING);
-                string fake_plu = "6666666";
-                base_plu = fake_plu;
-            }
-
-            snprintf(chars_plu_dynamic_formatted, sizeof(chars_plu_dynamic_formatted), "%6.2f", price); // will always be at least 6 chars long e.g. 3.456 --> "  3.45" , 1234.456 --> "1234.46"
-        }
-        else
-        {
-            debugOutput::sendMessage("ERROR Payment method not expected: " + paymentMethod, MSG_ERROR);
-            string fake_plu = "66666666";
-            base_plu = fake_plu;
-        }
-
-        string plu_dynamic_price = (chars_plu_dynamic_formatted);
-
-        string plu_dynamic_formatted = base_plu + plu_dynamic_price;
-
-        // 3.14 --> " 3.14" --> " 314" --> "0314"
-        // 140.00 -->
-        std::string toReplace(".");
-        size_t pos = plu_dynamic_formatted.find(toReplace);
-        if (pos != -1)
-        {
-            plu_dynamic_formatted.replace(pos, toReplace.length(), "");
-        }
-
-        std::string toReplace2(" ");
-        pos = plu_dynamic_formatted.find(toReplace2);
-        while (pos != -1)
-        {
-            plu_dynamic_formatted.replace(pos, toReplace2.length(), "0");
-            pos = plu_dynamic_formatted.find(toReplace2);
-        }
-
-        if (plu_dynamic_formatted.length() != 12)
-        {
-            debugOutput::sendMessage("ERROR Generated barcode has an error. Was the price more than 99.99?  Its length should be twelve: " + plu_dynamic_formatted, MSG_ERROR);
-        }
-        return plu_dynamic_formatted;
-    }
-
-    return base_plu;
-}
 
 void dispenser::setAllDispenseButtonLightsOff()
 {
@@ -317,12 +241,12 @@ DF_ERROR dispenser::loadGeneralProperties()
     usleep(20000);
     loadSlotStateFromDb();
     usleep(20000);
-    loadEmptyContainerDetectionEnabledFromDb();
-    usleep(20000);
-    loadPumpRampingEnabledFromDb();
-    usleep(20000);
-    loadPumpReversalEnabledFromDb();
-    usleep(20000);
+    // loadEmptyContainerDetectionEnabledFromDb();
+    // usleep(20000);
+    // loadPumpRampingEnabledFromDb();
+    // usleep(20000);
+    // loadPumpReversalEnabledFromDb();
+    // usleep(20000);
 
     //  the_pcb->setSingleDispenseButtonLight(this->slot, false);
 
@@ -707,7 +631,7 @@ void dispenser::setSolenoid(bool openElseClosed)
 DF_ERROR dispenser::setPumpDirectionReverse()
 {
     DF_ERROR e_ret = OK;
-    if (!getPumpReversalEnabled())
+    if (!m_machine->getPumpReversalEnabled())
     {
         debugOutput::sendMessage("Pump reversal not allowed. Will not execute command.", MSG_WARNING);
 
@@ -720,7 +644,7 @@ DF_ERROR dispenser::setPumpDirectionReverse()
 // Stops pumping: Turn forward pin LOW - Reverse pin LOW
 DF_ERROR dispenser::setPumpsDisableAll()
 {
-    // g_machine.pcb24VPowerSwitch(false);
+    // m_machine->pcb24VPowerSwitch(false);
     debugOutput::sendMessage("Pump disable: all.", MSG_INFO);
     the_pcb->setPumpsDisableAll();
     m_isSlotEnabled = false;
@@ -730,7 +654,7 @@ DF_ERROR dispenser::setPumpsDisableAll()
 
 void dispenser::reversePumpForSetTimeMillis(int millis)
 {
-    if (getPumpReversalEnabled())
+    if (m_machine->getPumpReversalEnabled())
     {
         if (millis > 0)
         {
@@ -817,7 +741,7 @@ DF_ERROR dispenser::pumpSlowStartHandler()
 DF_ERROR dispenser::pumpSlowStart(bool forwardElseReverse)
 {
 
-    if (!forwardElseReverse && !getPumpReversalEnabled())
+    if (!forwardElseReverse && !m_machine->getPumpReversalEnabled())
     {
         debugOutput::sendMessage("Pump reversal not allowed. Will not execute command.", MSG_WARNING);
         DF_ERROR e_ret = OK;
@@ -842,7 +766,7 @@ DF_ERROR dispenser::pumpSlowStart(bool forwardElseReverse)
     }
     usleep(10000); // make sure direction is set well
     setPumpEnable();
-    if (SLOW_START_INCREASE_PERIOD_MILLIS == 0 || !getPumpSlowStartStopEnabled())
+    if (SLOW_START_INCREASE_PERIOD_MILLIS == 0 || !m_machine->getPumpSlowStartStopEnabled())
     {
         debugOutput::sendMessage("Pump instant start", MSG_INFO);
         setPumpPWM(target_pwm, true);
@@ -862,7 +786,7 @@ DF_ERROR dispenser::pumpSlowStopBlocking()
     isPumpSoftStarting = false;
     if (pwm_actual_set_speed > 0)
     {
-        if (SLOW_STOP_PERIOD_MILLIS == 0 || !getPumpSlowStartStopEnabled())
+        if (SLOW_STOP_PERIOD_MILLIS == 0 || !m_machine->getPumpSlowStartStopEnabled())
         {
             debugOutput::sendMessage("Pump instant stop", MSG_INFO);
             // no slow stop
@@ -892,7 +816,7 @@ DF_ERROR dispenser::setPumpEnable()
     // first pump is 1.
     // still needs dispense button to actually get the pump to start
     debugOutput::sendMessage("Pump enable position: " + to_string(this->m_slot), MSG_INFO);
-    // g_machine.pcb24VPowerSwitch(true);
+    // m_machine->pcb24VPowerSwitch(true);
     the_pcb->setPumpEnable(this->m_slot); // pump 1 to 4
     m_isSlotEnabled = true;
 }
@@ -911,57 +835,53 @@ unsigned short dispenser::getPumpSpeed()
     the_pcb->getPumpPWM();
 }
 
-void dispenser::loadPumpReversalEnabledFromDb()
-{
-    // val 0 = pump reversal not enabled
-    // val 1 = pump reversal enabled. Will take retraction time from products
+// void dispenser::loadPumpReversalEnabledFromDb()
+// {
+//     // val 0 = pump reversal not enabled
+//     // val 1 = pump reversal enabled. Will take retraction time from products
 
-    rc = sqlite3_open(CONFIG_DB_PATH, &db);
-    sqlite3_stmt *stmt;
-    string sql_string = "SELECT enable_pump_reversal FROM machine";
+//     rc = sqlite3_open(CONFIG_DB_PATH, &db);
+//     sqlite3_stmt *stmt;
+//     string sql_string = "SELECT enable_pump_reversal FROM machine";
 
-    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
-    sqlite3_step(stmt);
+//     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+//     sqlite3_step(stmt);
 
-    int val = sqlite3_column_int(stmt, 0);
+//     int val = sqlite3_column_int(stmt, 0);
 
-    sqlite3_finalize(stmt);
-    sqlite3_close(db);
-    m_isPumpReversalEnabled = (val != 0);
+//     sqlite3_finalize(stmt);
+//     sqlite3_close(db);
+//     m_isPumpReversalEnabled = (val != 0);
 
-    debugOutput::sendMessage("Pump reversal enabled? : " + to_string(m_isPumpReversalEnabled), MSG_INFO);
-}
+//     debugOutput::sendMessage("Pump reversal enabled? : " + to_string(m_isPumpReversalEnabled), MSG_INFO);
+// }
 
-bool dispenser::getPumpReversalEnabled()
-{
-    return m_isPumpReversalEnabled;
-}
 
-void dispenser::loadPumpRampingEnabledFromDb()
-{
-    // val 0 = pump slow start stop not enabled
-    // val 1 = pump slow start, slow stop enabled (with hardwired ramp up / ramp down time)
+// void dispenser::loadPumpRampingEnabledFromDb()
+// {
+//     // val 0 = pump slow start stop not enabled
+//     // val 1 = pump slow start, slow stop enabled (with hardwired ramp up / ramp down time)
 
-    rc = sqlite3_open(CONFIG_DB_PATH, &db);
-    sqlite3_stmt *stmt;
-    string sql_string = "SELECT enable_pump_ramping FROM machine";
+//     rc = sqlite3_open(CONFIG_DB_PATH, &db);
+//     sqlite3_stmt *stmt;
+//     string sql_string = "SELECT enable_pump_ramping FROM machine";
 
-    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
-    sqlite3_step(stmt);
+//     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+//     sqlite3_step(stmt);
 
-    int val = sqlite3_column_int(stmt, 0);
+//     int val = sqlite3_column_int(stmt, 0);
 
-    sqlite3_finalize(stmt);
-    sqlite3_close(db);
-    m_isPumpSlowStartStopEnabled = (val != 0);
+//     sqlite3_finalize(stmt);
+//     sqlite3_close(db);
+//     m_isPumpSlowStartStopEnabled = (val != 0);
 
-    debugOutput::sendMessage("Pump ramping enabled? : " + to_string(m_isPumpSlowStartStopEnabled) + "(val: " + to_string(val) + ")", MSG_INFO);
-}
+//     debugOutput::sendMessage("Pump ramping enabled? : " + to_string(m_isPumpSlowStartStopEnabled) + "(val: " + to_string(val) + ")", MSG_INFO);
+// }
 
-bool dispenser::getPumpSlowStartStopEnabled()
-{
-    return m_isPumpSlowStartStopEnabled;
-}
+// bool dispenser::getPumpSlowStartStopEnabled()
+// {
+//     return m_isPumpSlowStartStopEnabled;
+// }
 
 void dispenser::loadSlotStateFromDb()
 {
@@ -1013,31 +933,27 @@ void dispenser::loadSlotStateFromDb()
     debugOutput::sendMessage("Dispenser state loaded from db: " + std::string(getSlotStateAsString()) + "(db value: " + std::string(slotStateText) + ")", MSG_INFO);
 }
 
-void dispenser::loadEmptyContainerDetectionEnabledFromDb()
-{
-    // val 0 = empty container detection not enabled
-    // val 1 = empty container detection enabled
+// void dispenser::loadEmptyContainerDetectionEnabledFromDb()
+// {
+//     // val 0 = empty container detection not enabled
+//     // val 1 = empty container detection enabled
 
-    rc = sqlite3_open(CONFIG_DB_PATH, &db);
-    sqlite3_stmt *stmt;
-    string sql_string = "SELECT has_empty_detection FROM machine";
+//     rc = sqlite3_open(CONFIG_DB_PATH, &db);
+//     sqlite3_stmt *stmt;
+//     string sql_string = "SELECT has_empty_detection FROM machine";
 
-    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
-    sqlite3_step(stmt);
+//     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+//     sqlite3_step(stmt);
 
-    int val = sqlite3_column_int(stmt, 0);
+//     int val = sqlite3_column_int(stmt, 0);
 
-    sqlite3_finalize(stmt);
-    sqlite3_close(db);
-    m_isEmptyContainerDetectionEnabled = (val != 0);
+//     sqlite3_finalize(stmt);
+//     sqlite3_close(db);
+//     m_isEmptyContainerDetectionEnabled = (val != 0);
 
-    debugOutput::sendMessage("Empty container detection enabled? : " + to_string(m_isEmptyContainerDetectionEnabled), MSG_INFO);
-}
+//     debugOutput::sendMessage("Empty container detection enabled? : " + to_string(m_isEmptyContainerDetectionEnabled), MSG_INFO);
+// }
 
-bool dispenser::getEmptyContainerDetectionEnabled()
-{
-    return m_isEmptyContainerDetectionEnabled;
-}
 
 double dispenser::getVolumeDeltaAndReset()
 {

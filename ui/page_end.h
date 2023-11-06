@@ -20,6 +20,7 @@
 #include <curl/curl.h>
 #include <ctime>
 
+class statusbar;
 class page_dispenser;
 class page_idle;
 class page_qr_payment;
@@ -36,7 +37,7 @@ class page_end : public QWidget
 
 public:
     explicit page_end(QWidget *parent = nullptr);
-    void setPage(page_dispenser* page_dispenser, page_idle* pageIdle, page_qr_payment* page_qr_payment, page_sendFeedback *page_sendFeedback);
+    void setPage(page_dispenser* page_dispenser, page_idle* pageIdle, page_qr_payment* page_qr_payment, page_sendFeedback *page_sendFeedback, statusbar *p_statusbar);
     ~page_end();
 
     void controllerFinishedTransaction();
@@ -59,11 +60,13 @@ private:
     page_idle* p_page_idle;
     page_qr_payment* paymentPage;
     page_sendFeedback* p_page_sendFeedback;
+    statusbar *p_statusbar;
 
     QDialog *popup;
 
     int _thankYouTimeoutSec;
     QTimer *thankYouEndTimer;
+    QVBoxLayout *statusbarLayout;
 
     // QTimer *rinseTimer;
     // int _rinseTimerTimeoutSec;

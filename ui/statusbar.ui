@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1080</width>
-    <height>67</height>
+    <height>46</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,10 +16,10 @@
   <widget class="QPushButton" name="pushButton_hide">
    <property name="geometry">
     <rect>
-     <x>930</x>
-     <y>0</y>
-     <width>141</width>
-     <height>61</height>
+     <x>882</x>
+     <y>8</y>
+     <width>183</width>
+     <height>30</height>
     </rect>
    </property>
    <property name="text">
@@ -29,10 +29,10 @@
   <widget class="QLabel" name="label_active_role">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>10</y>
-     <width>301</width>
-     <height>51</height>
+     <x>15</x>
+     <y>8</y>
+     <width>274</width>
+     <height>30</height>
     </rect>
    </property>
    <property name="text">
@@ -42,10 +42,10 @@
   <widget class="QLabel" name="label_coupon_code">
    <property name="geometry">
     <rect>
-     <x>320</x>
-     <y>10</y>
-     <width>271</width>
-     <height>51</height>
+     <x>304</x>
+     <y>8</y>
+     <width>274</width>
+     <height>30</height>
     </rect>
    </property>
    <property name="text">
@@ -55,16 +55,34 @@
   <widget class="QLabel" name="label_session_id">
    <property name="geometry">
     <rect>
-     <x>610</x>
-     <y>10</y>
-     <width>271</width>
-     <height>51</height>
+     <x>593</x>
+     <y>8</y>
+     <width>274</width>
+     <height>30</height>
     </rect>
    </property>
    <property name="text">
     <string>Session Id</string>
    </property>
   </widget>
+  <widget class="QLabel" name="statusbar_bg">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1080</width>
+     <height>46</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <zorder>statusbar_bg</zorder>
+  <zorder>label_active_role</zorder>
+  <zorder>label_coupon_code</zorder>
+  <zorder>label_session_id</zorder>
+  <zorder>pushButton_hide</zorder>
  </widget>
  <resources/>
  <connections/>

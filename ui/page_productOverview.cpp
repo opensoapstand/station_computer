@@ -29,10 +29,11 @@
 #include <QMovie>
 using json = nlohmann::json;
 std::string CTROUTD = "";
+std::string SAF_NUM = "";
 std::string MAC_KEY = "";
 std::string MAC_LABEL = "";
 std::string AUTH_CODE = "";
-std::string SAF_NUM = "";
+std::map<std::string, std::string> tapPaymentObject;
 std::string socketAddr;
 
 // CTOR
@@ -93,7 +94,7 @@ void page_product_overview::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
 
     statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
-    statusbarLayout->setContentsMargins(0, 1860, 0, 0); // int left, int top, int right, int bottom);
+    statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
 
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget

@@ -11,8 +11,8 @@
 ./status_services.sh
 
 port_in_use=$(sudo ./rtunnel_print.sh 2>/dev/null)
-PS3="Choose option(digit + enter) (rtunnel port=$port_in_use) :"
-options=("Quit" "Station info" "Status" "Start" "Stop" "Restart" "Screenshotbot execute" "Enable Autostart" "Disable Autostart" "Copy binary files to production folder" "Create and run production data copied from drinkfill folder (without db!)" "(Re)load services from production" "Setup aws port (rtunnel)" "Setup Ubuntu for drinkfill UI" "Deploy productionstatic.zip" "Screenshot: Take single shot" "Copy db from drinkfill to production folder OLD" "Copy configuration db from drinkfill to production folder" "Copy usage db from drinkfill to production folder")
+PS3="Choiiiiiiiose option(digit + enter) (rtunnel port=$port_in_use) :"
+options=("Quit" "Station info" "Status" "Start" "Stop" "Restart" "Screenshotbot execute" "Enable Autostart" "Disable Autostart" "Copy binary files to production folder" "Create and run production data copied from drinkfill folder (without db!)" "(Re)load services from production" "Setup aws port (rtunnel)" "Setup Ubuntu for drinkfill UI" "Deploy productionstatic.zip" "Screenshot: Take single shot" "Copy db from drinkfill to production folder DEPRECATED_DB (drinkfill-sqlite_newlayout.db)" "Copy configuration.db from git repo (station_computer) to production folder" "Copy usage.db from git repo(station_computer) to production folder")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -94,15 +94,21 @@ do
             echo "done."
         ;;
 
-        "Copy db from drinkfill to production folder OLD")
-            sudo -u df-admin scp /home/df-admin/station_computer/db/sqlite/drinkfill-sqlite_newlayout.db /home/df-admin/production/db/drinkfill-sqlite_newlayout.db 
+        "Copy db from drinkfill to production folder DEPRECATED_DB (drinkfill-sqlite_newlayout.db)")
+        # echo "started1"
+           sudo -u df-admin mkdir -p /home/df-admin/production/db
+        # echo "started2"
+           sudo -u df-admin scp /home/df-admin/station_computer/db/sqlite/drinkfill-sqlite_newlayout.db /home/df-admin/production/db/drinkfill-sqlite_newlayout.db 
+        # echo "started3"
             echo "done."
         ;;
-        "Copy configuration db from drinkfill to production folder")
+        "Copy configuration.db from git repo (station_computer) to production folder")
+            sudo -u df-admin mkdir -p /home/df-admin/production/db
             sudo -u df-admin scp /home/df-admin/station_computer/db/sqlite/configuration.db /home/df-admin/production/db/configuration.db 
             echo "done."
         ;;
-        "Copy usage db from drinkfill to production folder")
+        "Copy usage.db from git repo(station_computer) to production folder")
+            sudo -u df-admin mkdir -p /home/df-admin/production/db
             sudo -u df-admin scp /home/df-admin/station_computer/db/sqlite/usage.db /home/df-admin/production/db/usage.db 
             echo "done."
         ;;

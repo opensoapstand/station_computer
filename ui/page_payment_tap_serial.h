@@ -36,6 +36,7 @@
 #include <vector>
 #include <thread>
 
+class statusbar;
 class page_product;
 class page_dispenser;
 class page_idle;
@@ -62,7 +63,7 @@ class page_payment_tap_serial : public QWidget
 public:
     // **** GUI Setup ****
     explicit page_payment_tap_serial(QWidget *parent = nullptr);
-    void setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp);
+    void setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp, statusbar *p_statusbar);
     ~page_payment_tap_serial();
 
     void resizeEvent(QResizeEvent *event);
@@ -116,6 +117,7 @@ private:
     page_idle *p_page_idle;
     page_help *p_page_help;
     page_error_wifi *p_page_wifi_error;
+    statusbar *p_statusbar;
 
     bool approved = false;
 
@@ -159,6 +161,7 @@ private:
     // QTimer *paymentEndTimer;
     void resetPaymentPage(bool cancelTapPayment);
     int tmpCounter;
+    QVBoxLayout *statusbarLayout;
 };
 
 #endif // page_tap_payment_serial_H

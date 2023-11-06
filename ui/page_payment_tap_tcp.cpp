@@ -29,6 +29,7 @@ extern std::string MAC_LABEL;
 extern std::string AUTH_CODE;
 extern std::string SAF_NUM;
 extern std::string socketAddr;
+extern std::map<std::string, std::string> tapPaymentObject;
 std::thread cardTapThread;
 std::thread dataThread;
 int numberOfTapAttempts = 0;
@@ -58,6 +59,7 @@ page_payment_tap_tcp::page_payment_tap_tcp(QWidget *parent) : QWidget(parent),
     ui->pushButton_payment_bypass->setEnabled(false);
     ui->label_title->hide();
     // ui->order_total_amount->hide();
+    statusbarLayout = new QVBoxLayout(this);
 }
 
 void page_payment_tap_tcp::initiate_tap_setup()
@@ -115,13 +117,14 @@ void page_payment_tap_tcp::stopPayTimers()
 /*
  * Page Tracking reference
  */
-void page_payment_tap_tcp::setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp)
+void page_payment_tap_tcp::setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp, statusbar *p_statusbar)
 {
     this->p_page_product = p_page_product;
     this->p_page_wifi_error = pageWifiError;
     this->p_page_dispense = page_dispenser;
     this->p_page_idle = pageIdle;
     this->p_page_help = pageHelp;
+    this->p_statusbar = p_statusbar;
 }
 
 // DTOR
@@ -146,6 +149,9 @@ void page_payment_tap_tcp::showEvent(QShowEvent *event)
 {
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
+
+    statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
+    statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
     
@@ -176,6 +182,8 @@ void page_payment_tap_tcp::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
 
     resetPaymentPage();
+    statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
+
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
 }
 
@@ -202,6 +210,9 @@ void page_payment_tap_tcp::tapPaymentHandler()
     lastTransactionId = std::stoi(configMap["INVOICE"]);
 
     startSession(socket, MAC_LABEL, MAC_KEY, lastTransactionId + 1);
+    tapPaymentObject["session_id"] = std::to_string(lastTransactionId+1);
+    tapPaymentObject["mac_label"] = MAC_LABEL;
+
     startPaymentProcess();
 }
 
@@ -301,19 +312,36 @@ void page_payment_tap_tcp::authorized_transaction(std::map<std::string, std::str
     {
 
         p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
-        CTROUTD = responseObj["CTROUTD"];
-        AUTH_CODE = responseObj["AUTH_CODE"];
+        // CTROUTD = responseObj["CTROUTD"];
+        // AUTH_CODE = responseObj["AUTH_CODE"];
+        tapPaymentObject["ctroutd"] = responseObj["CTROUTD"];
+        tapPaymentObject["auth_code"] = responseObj["AUTH_CODE"];
+        tapPaymentObject["amount"] = responseObj["TRANS_AMOUNT"];
+        tapPaymentObject["date"] = responseObj["TRANS_DATE"];
+        tapPaymentObject["time"] = responseObj["TRANS_TIME"];
+        tapPaymentObject["card_number"] = responseObj["ACCT_NUM"];
+        tapPaymentObject["card_type"] = responseObj["PAYMENT_MEDIA"];
+        tapPaymentObject["status"] = "Authorized";
         hideCurrentPageAndShowProvided(p_page_dispense);
     }
-    else if (responseObj["RESULT"] == "APPROVED/STORED")
+    else if (responseObj["result"] == "APPROVED/STORED")
     {
         p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
-        CTROUTD = responseObj["CTROUTD"];
-        AUTH_CODE = responseObj["AUTH_CODE"];
-        SAF_NUM = responseObj["SAF_NUM"];
+        // CTROUTD = responseObj["CTROUTD"];
+        // AUTH_CODE = responseObj["AUTH_CODE"];
+        // SAF_NUM = responseObj["SAF_NUM"];
+        tapPaymentObject["ctroutd"] = responseObj["CTROUTD"];
+        tapPaymentObject["auth_code"] = responseObj["AUTH_CODE"];
+        tapPaymentObject["saf_num"] = responseObj["SAF_NUM"];
+        tapPaymentObject["amount"] = responseObj["TRANS_AMOUNT"];
+        tapPaymentObject["date"] = responseObj["TRANS_DATE"];
+        tapPaymentObject["time"] = responseObj["TRANS_TIME"];
+        tapPaymentObject["card_number"] = responseObj["ACCT_NUM"];
+        tapPaymentObject["card_type"] = responseObj["PAYMENT_MEDIA"];
+        tapPaymentObject["status"] = "Authorized Offline";
         hideCurrentPageAndShowProvided(p_page_dispense);
     }
-    else if (responseObj["RESULT"] == "DECLINED")
+    else if (responseObj["result"] == "DECLINED")
     {
 
         p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_FAIL);

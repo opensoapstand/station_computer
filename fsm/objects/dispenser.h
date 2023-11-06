@@ -68,7 +68,7 @@ public:
       bool setSelectedProduct(int pnumber);
       void setBasePNumberAsSelectedProduct();
 
-      string getFinalPLU(char size, double price);
+     
       // DF_ERROR initButtonsShutdownAndMaintenance();
       DF_ERROR setSlot(int slot);
       int getSlot();
@@ -150,13 +150,11 @@ public:
 
       bool loadParametersFromDb();
 
-      void loadEmptyContainerDetectionEnabledFromDb();
+      // void loadEmptyContainerDetectionEnabledFromDb();
       void loadSlotStateFromDb();
-      void loadPumpReversalEnabledFromDb();
-      bool getPumpReversalEnabled();
-      void loadPumpRampingEnabledFromDb();
-      bool getEmptyContainerDetectionEnabled();
-      bool getPumpSlowStartStopEnabled();
+      // void loadPumpReversalEnabledFromDb();
+      
+      // bool getPumpSlowStartStopEnabled();
       void sendToUiIfAllowed(string message);
       void logUpdateIfAllowed(string message);
 
@@ -241,9 +239,9 @@ private:
       double previousDispensedVolume;
       unsigned char pump_position;
 
-      bool m_isEmptyContainerDetectionEnabled = false;
-      bool m_isPumpSlowStartStopEnabled = false;
-      bool m_isPumpReversalEnabled = false;
+      // bool m_isEmptyContainerDetectionEnabled = false;
+      // bool m_isPumpSlowStartStopEnabled = false;
+      // bool m_isPumpReversalEnabled = false;
 
       // bool m_isDispenseDone; // XXX: Remove later.
       // bool m_isStill;

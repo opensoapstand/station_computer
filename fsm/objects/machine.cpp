@@ -59,7 +59,8 @@ void machine::setup()
 
 void machine::loadGeneralProperties()
 {
-    loadButtonPropertiesFromDb();
+    // loadButtonPropertiesFromDb();
+    loadParametersFromDb();
     usleep(20000);
 }
 
@@ -90,42 +91,46 @@ void machine::executeSQLStatement(string sql_string)
     sqlite3_close(db);
 }
 
-void machine::loadButtonPropertiesFromDb()
+string machine::getMachineId()
 {
-    rc = sqlite3_open(CONFIG_DB_PATH, &db);
-    sqlite3_stmt *stmt;
-    string sql_string = "SELECT dispense_buttons_count FROM machine";
-    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
-    sqlite3_step(stmt);
-
-    int val = sqlite3_column_int(stmt, 0);
-
-    // button light effect program
-    m_button_animation_program = val / 1000;
-
-    // button count
-    int buttons_count = val % 1000;
-
-    sqlite3_finalize(stmt);
-    sqlite3_close(db);
-    // val = 4;
-    if (buttons_count == 1)
-    {
-        m_isMultiButtonEnabled = false;
-    }
-    else if (buttons_count == 4)
-    {
-        m_isMultiButtonEnabled = true;
-    }
-    else
-    {
-        m_isMultiButtonEnabled = false;
-        debugOutput::sendMessage("ASSERT Error: unimplemented number of dispense buttons. Default to single dispense button. Buttons indicated in db:" + to_string(m_isMultiButtonEnabled), MSG_ERROR);
-    }
-
-    debugOutput::sendMessage("Multiple dispense buttons enabled? : " + to_string(m_isMultiButtonEnabled), MSG_INFO);
-    debugOutput::sendMessage("Animation program number (0=no animation)? : " + to_string(m_button_animation_program), MSG_INFO);
+    return m_machine_id;
 }
+// void machine::loadButtonPropertiesFromDb()
+// {
+//     rc = sqlite3_open(CONFIG_DB_PATH, &db);
+//     sqlite3_stmt *stmt;
+//     string sql_string = "SELECT dispense_buttons_count FROM machine";
+//     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+//     sqlite3_step(stmt);
+
+//     int val = sqlite3_column_int(stmt, 0);
+
+//     // button light effect program
+//     m_button_animation_program = val / 1000;
+
+//     // button count
+//     int buttons_count = val % 1000;
+
+//     sqlite3_finalize(stmt);
+//     sqlite3_close(db);
+//     // val = 4;
+//     if (buttons_count == 1)
+//     {
+//         m_isMultiButtonEnabled = false;
+//     }
+//     else if (buttons_count == 4)
+//     {
+//         m_isMultiButtonEnabled = true;
+//     }
+//     else
+//     {
+//         m_isMultiButtonEnabled = false;
+//         debugOutput::sendMessage("ASSERT Error: unimplemented number of dispense buttons. Default to single dispense button. Buttons indicated in db:" + to_string(m_isMultiButtonEnabled), MSG_ERROR);
+//     }
+
+//     debugOutput::sendMessage("Multiple dispense buttons enabled? : " + to_string(m_isMultiButtonEnabled), MSG_INFO);
+//     debugOutput::sendMessage("Animation program number (0=no animation)? : " + to_string(m_button_animation_program), MSG_INFO);
+// }
 
 int machine::getButtonAnimationProgram()
 {
@@ -490,3 +495,179 @@ void machine::print_receipt(string name_receipt, string receipt_cost, string rec
 //  {
 //      return 0;
 //  }double cTemp
+
+
+
+bool machine::getPumpReversalEnabled()
+{
+    // return m_isPumpReversalEnabled;
+    return m_enable_pump_reversal;
+}
+bool machine::getPumpSlowStartStopEnabled()
+{
+    return m_enable_pump_ramping;
+}
+
+bool machine::getEmptyContainerDetectionEnabled()
+{
+    return m_has_empty_detection;
+}
+
+int machine::convertPStringToPNumber(const std::string& inputString) {
+
+    // P-xxx to xxx   e.g. P-12  --> 12
+    // Check if the input string starts with "P-"
+    if (inputString.find("P-") == 0) {
+        // Extract the substring after "P-"
+        std::string numberStr = inputString.substr(2);
+        
+        int number = 0;
+        // Iterate through the characters of the substring and convert to integer
+        for (char digitChar : numberStr) {
+            // Check if the character is a valid digit
+            if (isdigit(digitChar)) {
+                // Convert the character to integer and update the number
+                number = number * 10 + (digitChar - '0');
+            } else {
+                // If a non-digit character is encountered, return -1 (invalid input)
+                return -1;
+            }
+        }
+        
+        // Check if the number is within the valid range (0 to 9999)
+        if (number >= 0 && number <= 9999) {
+            return number;
+        }
+    }
+    
+    // Return -1 to indicate an invalid input or number out of range
+    return -1;
+}
+
+void machine::loadParametersFromDb()
+{
+    int rc = sqlite3_open(CONFIG_DB_PATH, &db);
+    sqlite3_stmt *stmt;
+    string sql_string = "SELECT "
+                        "machine_id"
+                        "soapstand_customer_id"
+                        "template"
+                        "location"
+                        "controller_type"
+                        "controller_id"
+                        "screen_type"
+                        "screen_id"
+                        "has_receipt_printer"
+                        "receipt_printer_is_online"
+                        "receipt_printer_has_paper"
+                        "has_tap_payment"
+                        "hardware_version"
+                        "software_version"
+                        "aws_port"
+                        "pump_id_slot_1"
+                        "pump_id_slot_2"
+                        "pump_id_slot_3"
+                        "pump_id_slot_4"
+                        "is_enabled_slot_1"
+                        "is_enabled_slot_2"
+                        "is_enabled_slot_3"
+                        "is_enabled_slot_4"
+                        "coupons_enabled"
+                        "status_text_slot_1"
+                        "status_text_slot_2"
+                        "status_text_slot_3"
+                        "status_text_slot_4"
+                        "has_empty_detection"
+                        "enable_pump_ramping"
+                        "enable_pump_reversal"
+                        "dispense_buttons_count"
+                        "maintenance_pwd"
+                        "show_transactions"
+                        "help_text_html"
+                        "idle_page_type"
+                        "admin_pwd"
+                        "alert_temperature"
+                        "software_version_controller"
+                        " FROM machine"
+                        ";";
+
+    // string sql_string = "SELECT dispense_buttons_count FROM machine";
+
+    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+
+    int status;
+    status = sqlite3_step(stmt);
+
+    int numberOfRecordsFound = 0;
+
+    while (status == SQLITE_ROW)
+    {
+        numberOfRecordsFound++;
+
+        m_machine_id = product::dbFieldAsValidString(stmt, 0);
+        m_soapstand_customer_id = sqlite3_column_int(stmt, 1);
+        m_template = product::dbFieldAsValidString(stmt, 2);
+        m_location = product::dbFieldAsValidString(stmt, 3);
+        m_controller_type = product::dbFieldAsValidString(stmt, 4);
+        m_controller_id = product::dbFieldAsValidString(stmt, 5);
+        m_screen_type = product::dbFieldAsValidString(stmt, 6);
+        m_screen_id = product::dbFieldAsValidString(stmt, 7);
+        m_has_receipt_printer = sqlite3_column_int(stmt, 8);
+        m_receipt_printer_is_online = sqlite3_column_int(stmt, 9);
+        m_receipt_printer_has_paper = sqlite3_column_int(stmt, 10);
+        m_has_tap_payment = sqlite3_column_int(stmt, 11);
+        m_hardware_version = product::dbFieldAsValidString(stmt, 12);
+        m_software_version = product::dbFieldAsValidString(stmt, 13);
+        m_aws_port = sqlite3_column_int(stmt, 14);
+        m_pump_id_slot_1 = product::dbFieldAsValidString(stmt, 15);
+        m_pump_id_slot_2 = product::dbFieldAsValidString(stmt, 16);
+        m_pump_id_slot_3 = product::dbFieldAsValidString(stmt, 17);
+        m_pump_id_slot_4 = product::dbFieldAsValidString(stmt, 18);
+        m_is_enabled_slot_1 = sqlite3_column_int(stmt, 19);
+        m_is_enabled_slot_2 = sqlite3_column_int(stmt, 20);
+        m_is_enabled_slot_3 = sqlite3_column_int(stmt, 21);
+        m_is_enabled_slot_4 = sqlite3_column_int(stmt, 22);
+        m_coupons_enabled = sqlite3_column_int(stmt, 23);
+        m_status_text_slot_1 = product::dbFieldAsValidString(stmt, 24);
+        m_status_text_slot_2 = product::dbFieldAsValidString(stmt, 25);
+        m_status_text_slot_3 = product::dbFieldAsValidString(stmt, 26);
+        m_status_text_slot_4 = product::dbFieldAsValidString(stmt, 27);
+        m_has_empty_detection = sqlite3_column_int(stmt, 28);
+        m_enable_pump_ramping = sqlite3_column_int(stmt, 29);
+        m_enable_pump_reversal = sqlite3_column_int(stmt, 30);
+        m_dispense_buttons_count = sqlite3_column_int(stmt, 31);
+        m_maintenance_pwd = product::dbFieldAsValidString(stmt, 32);
+        m_show_transactions = sqlite3_column_int(stmt, 33);
+        m_help_text_html = product::dbFieldAsValidString(stmt, 34);
+        m_idle_page_type = product::dbFieldAsValidString(stmt, 35);
+        m_admin_pwd = product::dbFieldAsValidString(stmt, 36);
+        m_alert_temperature = product::dbFieldAsValidString(stmt, 37);
+        m_software_version_controller = product::dbFieldAsValidString(stmt, 38);
+
+        if (numberOfRecordsFound != 0)
+        {
+            // assert error
+            debugOutput::sendMessage("ASSERT Error: Machine table must have exactly one row. ", MSG_ERROR);
+        }
+
+        m_button_animation_program = m_dispense_buttons_count / 1000; // button light effect program
+        int buttons_count = m_dispense_buttons_count % 1000;          // button count
+
+        if (buttons_count == 1)
+        {
+            m_isMultiButtonEnabled = false;
+        }
+        else if (buttons_count == 4)
+        {
+            m_isMultiButtonEnabled = true;
+        }
+        else
+        {
+            m_isMultiButtonEnabled = false;
+            debugOutput::sendMessage("ASSERT Error: unimplemented number of dispense buttons. Default to single dispense button. Buttons indicated in db:" + to_string(m_isMultiButtonEnabled), MSG_ERROR);
+        }
+
+        debugOutput::sendMessage("Multiple dispense buttons enabled? : " + to_string(m_isMultiButtonEnabled), MSG_INFO);
+        debugOutput::sendMessage("Animation program number (0=no animation)? : " + to_string(m_button_animation_program), MSG_INFO);
+    }
+}

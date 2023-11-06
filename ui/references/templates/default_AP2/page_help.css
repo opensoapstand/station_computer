@@ -17,7 +17,6 @@
    /* qproperty-alignment: AlignCenter; */
 }
 
-<<<<<<< HEAD
 #pushButton_to_idle{
    text-align: left;
    color: #221F20;
@@ -31,8 +30,6 @@
    border: none;
 }
 
-=======
->>>>>>> develop
 QPushButton {
    font-family: 'EuropaNuova-ExtraBold';
    font-style: normal;
@@ -45,8 +42,6 @@ QPushButton {
    border-radius: 20px;  
 }
 
-<<<<<<< HEAD
-=======
 #pushButton_to_transactions{
    text-align: right;
    font-family: 'EuropaNuova-Regular';
@@ -69,7 +64,6 @@ QPushButton {
    border: none;
 }
 
->>>>>>> develop
 /* QPushButton#pushButton_refresh {
    background-color: transparent;
    border: 0px;

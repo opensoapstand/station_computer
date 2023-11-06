@@ -63,14 +63,9 @@ void page_maintenance_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToS
 void page_maintenance_dispenser::showEvent(QShowEvent *event)
 {
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
-<<<<<<< HEAD
-
-    qDebug() << "Active Slot: " << QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
-=======
     statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
     statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
-    qDebug() << "Active Slot: " << QString::number(this->p_page_idle->thisMachine->selectedProduct->getSlot());
->>>>>>> develop
+    qDebug() << "Active Slot: " << QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
     QWidget::showEvent(event);
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget

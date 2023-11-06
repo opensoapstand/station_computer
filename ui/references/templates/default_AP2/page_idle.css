@@ -59,8 +59,6 @@ QLabel {
     qproperty-alignment: AlignCenter;
     text-align: center;
 }
-<<<<<<< HEAD
-=======
 
 #label_reboot_nightly_title{
     font-size: 26px;
@@ -83,4 +81,3 @@ QLabel {
     font-size: 22px;
     border-radius: 5px;
 }
->>>>>>> develop

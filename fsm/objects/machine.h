@@ -57,16 +57,57 @@ public:
     void executeSQLStatement(string sql_string);
 
     int getButtonAnimationProgram();
-    void loadButtonPropertiesFromDb();
+    // void loadButtonPropertiesFromDb();
     bool getMultiDispenseButtonEnabled();
 
     void loadGeneralProperties();
+    void loadParametersFromDb();
 
 private:
     bool m_isMultiButtonEnabled = false;
     int m_button_animation_program;
     sqlite3 *db;
     int rc;
+
+    string m_machine_id;
+    int m_soapstand_customer_id;
+    string m_template;
+    string m_location;
+    string m_controller_type;
+    string m_controller_id;
+    string m_screen_type;
+    string m_screen_id;
+    bool m_has_receipt_printer;
+    bool m_receipt_printer_is_online;
+    bool m_receipt_printer_has_paper;
+    bool m_has_tap_payment;
+    string m_hardware_version;
+    string m_software_version;
+    int m_aws_port;
+    string m_pump_id_slot_1;
+    string m_pump_id_slot_2;
+    string m_pump_id_slot_3;
+    string m_pump_id_slot_4;
+    bool m_is_enabled_slot_1;
+    bool m_is_enabled_slot_2;
+    bool m_is_enabled_slot_3;
+    bool m_is_enabled_slot_4;
+    bool m_coupons_enabled;
+    string m_status_text_slot_1;
+    string m_status_text_slot_2;
+    string m_status_text_slot_3;
+    string m_status_text_slot_4;
+    bool m_has_empty_detection;
+    bool m_enable_pump_ramping;
+    bool m_enable_pump_reversal;
+    int m_dispense_buttons_count;
+    string m_maintenance_pwd;
+    bool m_show_transactions;
+    string m_help_text_html;
+    string m_idle_page_type;
+    string m_admin_pwd;
+    string m_alert_temperature;
+    string m_software_version_controller;
 };
 
 #endif

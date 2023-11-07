@@ -98,7 +98,6 @@ void product::loadProductPropertiesFromCsv()
         // debugOutput::sendMessage(getPNumberAsPString() , MSG_INFO);
         // debugOutput::sendMessage(m_product_properties[CSV_PRODUCT_COL_NAME_UI] , MSG_INFO);
 
-       
         bool stringsAreDifferent;
         // debugOutput::sendMessage("Product found in products file and loaded:"
         stringsAreDifferent = m_product_properties[CSV_PRODUCT_COL_ID].compare(getPNumberAsPString());
@@ -396,12 +395,22 @@ double product::getPrice(char size)
 
 bool product::getIsEnabled()
 {
-    return this->isEnabled;
+    return this->m_is_enabled;
 }
 void product::setIsEnabled(bool isEnabled)
 {
-    this->isEnabled = isEnabled;
+    this->m_is_enabled = isEnabled;
 }
+
+string product::getStatusText()
+{
+    return m_status_text;
+}
+void product::setStatusText(string statusText)
+{
+    this->m_status_text = statusText;
+}
+
 bool product::getIsSizeEnabled(char size)
 {
     return isEnabledSizes[sizeCharToSizeIndex(size)];
@@ -451,8 +460,6 @@ string product::getDisplayUnits()
 {
     return m_display_unit;
 }
-
-
 
 string product::getFinalPLU(char size, double price)
 {
@@ -554,7 +561,6 @@ string product::getFinalPLU(char size, double price)
 
 //    g_machine.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, time_stamp, units, paymentMethod, plu, "", true);
 // }
-
 
 double product::convertVolumeMetricToDisplayUnits(double volume)
 {
@@ -929,7 +935,9 @@ bool product::loadParametersFromDb()
                         "plu_custom,"
                         "is_enabled_custom_discount," //
                         "size_custom_discount,"
-                        "price_custom_discount" //
+                        "price_custom_discount," //
+                        "is_enabled,"
+                        "status_text"
                         " FROM products WHERE soapstand_product_serial='" +
                         std::to_string(m_pnumber) + "';";
 
@@ -994,6 +1002,8 @@ bool product::loadParametersFromDb()
         m_is_enabled_custom_discount = sqlite3_column_int(stmt, 34);
         m_nVolumeTarget_custom_discount = sqlite3_column_double(stmt, 35);
         m_price_custom_discount_per_liter = sqlite3_column_double(stmt, 36);
+        m_is_enabled = sqlite3_column_int(stmt, 37);
+        m_status_text = product::dbFieldAsValidString(stmt, 38);
 
         status = sqlite3_step(stmt); // next record
         // every sqlite3_step returns a row. if it returns 0, it's run over all the rows.

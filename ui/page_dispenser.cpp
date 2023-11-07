@@ -530,8 +530,7 @@ void page_dispenser::fsmReceiveDispenserStatus(QString status)
         {
             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "out_of_stock");
             p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
-            // p_page_idle->thisMachine->setSlotEnabled(p_page_idle->thisMachine->getSelectedProduct()->getSlotId(), false);
-            p_page_idle->thisMachine->setSlotEnabled(p_page_idle->thisMachine->getSelectedSlot()->getSlotId(), false);
+            p_page_idle->thisMachine->getSelectedSlot()->setEnabled(false);
             ui->label_dispense_message->show();
         }
         else if (dispenseStatus == "SLOT_STATE_PROBLEM_NEEDS_ATTENTION")
@@ -546,8 +545,7 @@ void page_dispenser::fsmReceiveDispenserStatus(QString status)
             // normal status
             // ui->pushButton_problems->hide();
             ui->label_dispense_message->hide();
-            // p_page_idle->thisMachine->setSlotEnabled(p_page_idle->thisMachine->getSelectedSlot()->getSlotId(), true);
-            p_page_idle->thisMachine->setSlotEnabled(p_page_idle->thisMachine->getSelectedSlot()->getSlotId(), true);
+            p_page_idle->thisMachine->getSelectedSlot()->setEnabled(true);
         }
         else
         {

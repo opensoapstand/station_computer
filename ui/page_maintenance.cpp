@@ -106,6 +106,7 @@ void page_maintenance::showEvent(QShowEvent *event)
 
     for (uint8_t slot_index = 0; slot_index < p_page_idle-> thisMachine->getSlotCount(); slot_index++)
     {
+
         p_page_idle->thisMachine->setTemplateTextToObject(labels_product_position[slot_index]);
 
         labels_product_status[slot_index]->setProperty("class", "label_product_status");
@@ -127,9 +128,9 @@ void page_maintenance::showEvent(QShowEvent *event)
         pushButtons_products[slot_index]->raise();
 
         labels_product_name[slot_index]->setText(p_page_idle->thisMachine->getProductByOption(slot_index+1)->getProductName());
-        int product_slot_enabled = p_page_idle->thisMachine->getSlotEnabled(slot_index+1);
+        int product_slot_enabled = p_page_idle->thisMachine->getProductByOption(slot_index+1)->getIsEnabled();
 
-        QString product_status_text = p_page_idle->thisMachine->getStatusText( slot_index+1);
+        QString product_status_text = p_page_idle->thisMachine->getProductByOption(slot_index+1)->getStatusText();
         QString status_display_text = "";
 
         int pnumber = p_page_idle->thisMachine->getProductByOption(slot_index+1)->getPNumber();
@@ -137,7 +138,7 @@ void page_maintenance::showEvent(QShowEvent *event)
         {
             status_display_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->auto_empty");
         }
-        else if (!p_page_idle->thisMachine->getSlotEnabled(slot_index+1))
+        else if (!p_page_idle->thisMachine->getSlotByPosition(slot_index+1)->getEnabled())
         {
             status_display_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled");
         }

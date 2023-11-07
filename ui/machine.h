@@ -35,10 +35,8 @@ typedef enum StateReboot
     triggered_wait_for_delay,
     delay_elapsed,
     user_cancelled_reboot
-    
+
 } StateReboot;
-
-
 
 class product; //  forward declaration.
 
@@ -62,8 +60,6 @@ public:
 
     void dispenseButtonLightsAnimateState(bool animateElseOff);
     bool slotNumberValidityCheck(int slot);
-    QString getStatusText(int slot);
-    void setStatusText(int slot, QString status);
 
     QString getPumpId(int slot);
 
@@ -102,10 +98,14 @@ public:
     bool getPumpRampingEnabled();
     QString getHelpPageHtmlText();
 
-    // dispenser_slot *getSlotByPosition(int slotPosition);
-    bool getSlotEnabled(int slot);
-    void setSlotEnabled(int slot, bool isEnabled);
-    void setSlotEnabled(int slot, bool isEnabled, QString statusText);
+    dispenser_slot *getSlotByPosition(int slotPosition);
+    bool getMachineEnabled();
+    void setMachineEnabled(bool isEnabled);
+    void setMachineEnabled(bool isEnabled, QString statusText);
+
+    QString getMachineStatusText();
+    void setMachineStatusText(QString status);
+
     int getSlotCount();
     void setSlots(dispenser_slot *slotss);
     bool isSlotCountBiggerThanMaxSlotCount(int slot_count);
@@ -119,7 +119,6 @@ public:
     void setProductToOption(int productOption, int PNumber);
     int clearOptions();
     int getOptionCount();
-
 
     void setSelectedProductByOption(int productOption);
     pnumberproduct *getProductByOption(int productOption);
@@ -214,8 +213,12 @@ public:
     QString m_admin_pwd;
     double m_temperature;
     double m_alert_temperature;
+    QString m_software_version_controller;
     double m_temperature2;
     double m_alert_temperature2;
+
+    int m_is_enabled;
+    QString m_status_text;
 
     QString m_min_threshold_vol_ml_discount;
     QString m_max_threshold_vol_ml_discount;
@@ -267,6 +270,7 @@ private:
     QString m_pump_id_slots[MAX_SLOT_COUNT];
     int m_is_enabled_slots[MAX_SLOT_COUNT];
     QString m_status_text_slots[MAX_SLOT_COUNT];
+
 };
 
 #endif // MACHINE_H

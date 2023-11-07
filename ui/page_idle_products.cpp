@@ -128,17 +128,17 @@ void page_idle_products::displayProducts()
 {
     QString product_type_icons[5] = {ICON_TYPE_CONCENTRATE_PATH, ICON_TYPE_ALL_PURPOSE_PATH, ICON_TYPE_DISH_PATH, ICON_TYPE_HAND_PATH, ICON_TYPE_LAUNDRY_PATH};
 
-    bool product_slot_enabled;
+    // bool product_slot_enabled;
     QString product_type;
     QString product_name;
-    QString product_status_text;
+    // QString product_status_text;
 
     for (uint8_t slot_index = 0; slot_index < p_page_idle->thisMachine->getSlotCount(); slot_index++)
     {
         // display product picture
         p_page_idle->thisMachine->addPictureToLabel(labels_product_picture[slot_index], p_page_idle->thisMachine->getProductByOption(slot_index + 1)->getProductPicturePath());
-        product_slot_enabled = p_page_idle->thisMachine->getSlotEnabled(slot_index + 1);
-        product_status_text = p_page_idle->thisMachine->getStatusText(slot_index + 1);
+        // product_slot_enabled = p_page_idle->thisMachine->getSlotByPosition(slot_index+1)->getEnabled();
+        // product_status_text = p_page_idle->thisMachine->getSlotByPosition(slot_index + 1)->getStatusText();
 
         product_type = p_page_idle->thisMachine->getProductByOption(slot_index + 1)->getProductType();
         product_name = p_page_idle->thisMachine->getProductByOption(slot_index + 1)->getProductName();

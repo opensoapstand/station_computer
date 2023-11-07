@@ -26,6 +26,10 @@ public:
     bool updateTableProductsWithInt(int pnumber, QString column, int value);
     bool updateTableProductsWithDouble(int pnumber, QString column, double value, int precision);
 
+    bool updateTableSlotsWithInt(int slot, QString column, int value);
+    bool updateTableSlotsWithDouble(int slot, QString column, double value, int precision);
+    bool updateTableSlotsWithText(int slot, QString column, QString value);
+
     bool addPageClick(const QString &page);
     // void emailEmpty(int slot);
     uint32_t getNumberOfRows(QString table);
@@ -72,6 +76,8 @@ public:
                                  int *is_enabled_custom_discount,
                                  double *size_custom_discount,
                                  double *price_custom_discount,
+                                 bool *is_enabled,
+                                 QString *status_text,
                                  bool *isSizeEnabled, double *prices, double *volumes, QString *PLUs, QString *PIDs);
 
     void getAllMachineProperties(QString *machine_id,
@@ -104,10 +110,15 @@ public:
                                  QString *pump_id_slots,
                                  int *is_enabled_slots,
                                  QString *status_text_slots,
-                                 double *alert_temperature);
-         QString getHardwareVersion();
+                                 double *alert_temperature,
+                                 QString *software_version_controller,
+                                 int *is_enabled,
+                                 QString* status_text
 
-    void setPaymentTransaction(const std::map<std::string, std::string>& paymentObject);
+    );
+    QString getHardwareVersion();
+
+    void setPaymentTransaction(const std::map<std::string, std::string> &paymentObject);
     // QString m_dbPath2;
 
 private:

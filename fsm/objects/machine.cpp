@@ -564,19 +564,7 @@ void machine::loadParametersFromDb()
                         "hardware_version"
                         "software_version"
                         "aws_port"
-                        "pump_id_slot_1"
-                        "pump_id_slot_2"
-                        "pump_id_slot_3"
-                        "pump_id_slot_4"
-                        "is_enabled_slot_1"
-                        "is_enabled_slot_2"
-                        "is_enabled_slot_3"
-                        "is_enabled_slot_4"
                         "coupons_enabled"
-                        "status_text_slot_1"
-                        "status_text_slot_2"
-                        "status_text_slot_3"
-                        "status_text_slot_4"
                         "has_empty_detection"
                         "enable_pump_ramping"
                         "enable_pump_reversal"
@@ -588,6 +576,8 @@ void machine::loadParametersFromDb()
                         "admin_pwd"
                         "alert_temperature"
                         "software_version_controller"
+                        "is_enabled"
+                        "status_text"
                         " FROM machine"
                         ";";
 
@@ -619,30 +609,20 @@ void machine::loadParametersFromDb()
         m_hardware_version = product::dbFieldAsValidString(stmt, 12);
         m_software_version = product::dbFieldAsValidString(stmt, 13);
         m_aws_port = sqlite3_column_int(stmt, 14);
-        m_pump_id_slot_1 = product::dbFieldAsValidString(stmt, 15);
-        m_pump_id_slot_2 = product::dbFieldAsValidString(stmt, 16);
-        m_pump_id_slot_3 = product::dbFieldAsValidString(stmt, 17);
-        m_pump_id_slot_4 = product::dbFieldAsValidString(stmt, 18);
-        m_is_enabled_slot_1 = sqlite3_column_int(stmt, 19);
-        m_is_enabled_slot_2 = sqlite3_column_int(stmt, 20);
-        m_is_enabled_slot_3 = sqlite3_column_int(stmt, 21);
-        m_is_enabled_slot_4 = sqlite3_column_int(stmt, 22);
-        m_coupons_enabled = sqlite3_column_int(stmt, 23);
-        m_status_text_slot_1 = product::dbFieldAsValidString(stmt, 24);
-        m_status_text_slot_2 = product::dbFieldAsValidString(stmt, 25);
-        m_status_text_slot_3 = product::dbFieldAsValidString(stmt, 26);
-        m_status_text_slot_4 = product::dbFieldAsValidString(stmt, 27);
-        m_has_empty_detection = sqlite3_column_int(stmt, 28);
-        m_enable_pump_ramping = sqlite3_column_int(stmt, 29);
-        m_enable_pump_reversal = sqlite3_column_int(stmt, 30);
-        m_dispense_buttons_count = sqlite3_column_int(stmt, 31);
-        m_maintenance_pwd = product::dbFieldAsValidString(stmt, 32);
-        m_show_transactions = sqlite3_column_int(stmt, 33);
-        m_help_text_html = product::dbFieldAsValidString(stmt, 34);
-        m_idle_page_type = product::dbFieldAsValidString(stmt, 35);
-        m_admin_pwd = product::dbFieldAsValidString(stmt, 36);
-        m_alert_temperature = product::dbFieldAsValidString(stmt, 37);
-        m_software_version_controller = product::dbFieldAsValidString(stmt, 38);
+        m_coupons_enabled = sqlite3_column_int(stmt, 15);
+        m_has_empty_detection = sqlite3_column_int(stmt, 16);
+        m_enable_pump_ramping = sqlite3_column_int(stmt, 17);
+        m_enable_pump_reversal = sqlite3_column_int(stmt, 18);
+        m_dispense_buttons_count = sqlite3_column_int(stmt, 19);
+        m_maintenance_pwd = product::dbFieldAsValidString(stmt, 20);
+        m_show_transactions = sqlite3_column_int(stmt, 21);
+        m_help_text_html = product::dbFieldAsValidString(stmt, 22);
+        m_idle_page_type = product::dbFieldAsValidString(stmt, 23);
+        m_admin_pwd = product::dbFieldAsValidString(stmt, 24);
+        m_alert_temperature = product::dbFieldAsValidString(stmt, 25);
+        m_software_version_controller = product::dbFieldAsValidString(stmt, 26);
+        m_is_enabled = sqlite3_column_int(stmt, 27);
+        m_status_text = product::dbFieldAsValidString(stmt, 28);
 
         if (numberOfRecordsFound != 0)
         {

@@ -69,31 +69,38 @@ void dispenser_slot::loadSlotParametersFromDb()
                                &m_status_text);
 }
 
-// void dispenser_slot::setSlotEnabled(bool isEnabled)
-// {
-//     thisMachine->setSlotEnabled(getSlotId(), isEnabled);
-// }
+void dispenser_slot::setEnabled(bool isEnabled, QString statusText)
+{
+    // thisMachine->setSlotEnabled(getSlotId(), isEnabled);
+    // setStatusText(statusText);
+    // m_is_enabled = isEnabled;
+    setEnabled(isEnabled);
+    setStatusText(statusText);
+}
 
-// void dispenser_slot::setSlotEnabled(bool isEnabled, QString statusText)
-// {
-//     thisMachine->setSlotEnabled(getSlotId(), isEnabled);
-//     setStatusText(statusText);
-// }
+void dispenser_slot::setEnabled(bool isEnabled)
+{
+    // thisMachine->setSlotEnabled(getSlotId(), isEnabled);
+    m_is_enabled = isEnabled;
+    m_db->updateTableSlotsWithInt(getSlotId(), "is_enabled", m_is_enabled);
+}
 
-// bool dispenser_slot::getSlotEnabled()
-// {
-//     return thisMachine->getSlotEnabled(getSlotId());
-// }
+bool dispenser_slot::getEnabled()
+{
+    return m_is_enabled;
+}
 
-// void dispenser_slot::setStatusText(QString status)
-// {
-//     thisMachine->setStatusText(getSlotId(), getSlotEnabled(), status);
-// }
+void dispenser_slot::setStatusText(QString status)
+{
+    m_status_text = status;
+    m_db->updateTableSlotsWithText(getSlotId(), "status_text", m_status_text);
+}
 
-// QString dispenser_slot::getStatusText()
-// {
-//     return thisMachine->getStatusText(getSlotId());
-// }
+QString dispenser_slot::getStatusText()
+{
+    return m_status_text;
+    // return thisMachine->getStatusText(getSlotId());
+}
 
 int dispenser_slot::getSlotId()
 {

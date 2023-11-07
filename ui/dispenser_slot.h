@@ -19,7 +19,6 @@ public:
     // void setMachine(machine *machine);
     void setDb(DbManager *db);
 
-
     QVector<int> getAllPNumbers();
     QVector<int> getDispensePNumbers();
     int getBasePNumber();
@@ -31,6 +30,12 @@ public:
     // Setters and Getters
     void setSlot(int slot);
     int getSlotId();
+
+    void setEnabled(bool isEnabled, QString statusText);
+    void setEnabled(bool isEnabled);
+    bool getEnabled();
+    void setStatusText(QString status);
+    QString getStatusText();
 
     // void setBasePNumber(int);
     // void getBasePNumber(int);

@@ -64,12 +64,11 @@ public:
     void loadParametersFromDb();
     string getMachineId();
 
-    static int convertPStringToPNumber(const std::string& inputString);
+    static int convertPStringToPNumber(const std::string &inputString);
 
     bool getPumpReversalEnabled();
     bool getEmptyContainerDetectionEnabled();
     bool getPumpSlowStartStopEnabled();
-
 
 private:
     bool m_isMultiButtonEnabled = false;
@@ -116,6 +115,8 @@ private:
     string m_admin_pwd;
     string m_alert_temperature;
     string m_software_version_controller;
+    bool m_is_enabled;
+    string m_status_text;
 };
 
 #endif

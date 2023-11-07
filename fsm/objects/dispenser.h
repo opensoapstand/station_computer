@@ -151,7 +151,7 @@ public:
       bool loadParametersFromDb();
 
       // void loadEmptyContainerDetectionEnabledFromDb();
-      void loadSlotStateFromDb();
+      void analyseSlotState();
       // void loadPumpReversalEnabledFromDb();
       
       // bool getPumpSlowStartStopEnabled();

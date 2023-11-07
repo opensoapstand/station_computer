@@ -84,10 +84,13 @@ int pnumberproduct::getPNumber()
 
 int pnumberproduct::getFirstMixPNumberOrPNumberAsBasePNumber()
 {
-    // base p-number return the pnumber if no mixing set, or else returns the first mixpnumber of the list. 
-    if (m_mixPNumbers.size()>0){
+    // base p-number return the pnumber if no mixing set, or else returns the first mixpnumber of the list.
+    if (m_mixPNumbers.size() > 0)
+    {
         return m_mixPNumbers[0];
-    }else{
+    }
+    else
+    {
         return m_PNumber;
     }
 }
@@ -123,7 +126,29 @@ void pnumberproduct::loadProductPropertiesFromDb()
                                   &m_is_enabled_custom_discount,
                                   &m_size_custom_discount,
                                   &m_price_custom_discount,
+                                  &m_is_enabled,
+                                  &m_status_text,
                                   m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
+}
+
+bool pnumberproduct::getIsProductEnabled()
+{
+    return m_is_enabled;
+}
+void pnumberproduct::setIsProductEnabled(bool isEnabled)
+{
+    m_is_enabled = isEnabled;
+    m_db->updateTableProductsWithInt(getPNumber(), "is_enabled", isEnabled);
+}
+
+QString pnumberproduct::getStatusText()
+{
+    return m_status_text;
+}
+void pnumberproduct::setStatusText(QString statusText)
+{
+    m_status_text = statusText;
+    m_db->updateTableProductsWithText(getPNumber(), "status_text", statusText);
 }
 
 ///////////////////////////////////////////// SIZE
@@ -442,7 +467,7 @@ QString pnumberproduct::getProductType()
 QString pnumberproduct::getProductPicturePath()
 {
     QString pnumber = m_soapstand_product_serial;
-    qDebug()<< "pnumber before p nodted " << pnumber;
+    qDebug() << "pnumber before p nodted " << pnumber;
 
     // Check if serial starts with "P-"
     if (!pnumber.startsWith("P-"))
@@ -450,7 +475,7 @@ QString pnumberproduct::getProductPicturePath()
         // Add "P-" prefix if it's missing
         pnumber.prepend("P-");
     }
-    qDebug()<< "pnumber P- notated " << pnumber;
+    qDebug() << "pnumber P- notated " << pnumber;
     return QString(PRODUCT_PICTURES_ROOT_PATH).arg(pnumber);
 }
 

@@ -239,7 +239,7 @@ DF_ERROR dispenser::loadGeneralProperties()
     usleep(20000);
     loadParametersFromDb();
     usleep(20000);
-    loadSlotStateFromDb();
+    analyseSlotState();
     usleep(20000);
     // loadEmptyContainerDetectionEnabledFromDb();
     // usleep(20000);
@@ -883,20 +883,22 @@ unsigned short dispenser::getPumpSpeed()
 //     return m_isPumpSlowStartStopEnabled;
 // }
 
-void dispenser::loadSlotStateFromDb()
+void dispenser::analyseSlotState()
 {
-    rc = sqlite3_open(CONFIG_DB_PATH, &db);
-    sqlite3_stmt *stmt;
-    string sql_string = "SELECT status_text_slot_" + to_string(getSlot()) + " FROM machine;";
+    // rc = sqlite3_open(CONFIG_DB_PATH, &db);
+    // sqlite3_stmt *stmt;
+    // string sql_string = "SELECT status_text_slot_" + to_string(getSlot()) + " FROM machine;";
 
-    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+    // sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
 
-    int status;
-    status = sqlite3_step(stmt);
-    string slotStateText = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
+    // int status;
+    // status = sqlite3_step(stmt);
+    // string slotStateText = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
 
-    sqlite3_finalize(stmt);
-    sqlite3_close(db);
+    // sqlite3_finalize(stmt);
+    // sqlite3_close(db);
+
+    string slotStateText = m_status_text;
 
     if (slotStateText.find("SLOT_STATE_AVAILABLE") != string::npos)
     {

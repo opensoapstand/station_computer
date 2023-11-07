@@ -213,7 +213,6 @@ bool DbManager::updateTableMachineWithInt(QString column, int value)
 
 bool DbManager::updateTableMachineWithDouble(QString column, double value, int precision)
 {
-
     updateTableMachineWithText(column, QString::number(value, 'f', precision));
 }
 
@@ -225,13 +224,11 @@ bool DbManager::updateTableMachineWithText(QString column, QString value)
 
 bool DbManager::updateTableProductsWithInt(int pnumber, QString column, int value)
 {
-
     return updateTableProductsWithText(pnumber, column, QString::number(value));
 }
 
 bool DbManager::updateTableProductsWithDouble(int pnumber, QString column, double value, int precision)
 {
-
     return updateTableProductsWithText(pnumber, column, QString::number(value, 'f', precision));
 }
 
@@ -241,9 +238,24 @@ bool DbManager::updateTableProductsWithText(int pnumber, QString column, QString
     return executeQuery(sql_text);
 }
 
+bool DbManager::updateTableSlotsWithInt(int slot, QString column, int value)
+{
+    return updateTableSlotsWithText(slot, column, QString::number(value));
+}
+
+bool DbManager::updateTableSlotsWithDouble(int slot, QString column, double value, int precision)
+{
+    return updateTableSlotsWithText(slot, column, QString::number(value, 'f', precision));
+}
+
+bool DbManager::updateTableSlotsWithText(int slot, QString column, QString value)
+{
+    QString sql_text = QString("UPDATE slots SET %1='%2' WHERE slot=%3").arg(column, value, QString::number(slot));
+    return executeQuery(sql_text);
+}
+
 bool DbManager::addPageClick(const QString &page)
 {
-
     return true;
 }
 
@@ -255,7 +267,6 @@ void DbManager::getAllSlotProperties(int slot,
                                      QString *status_text)
 
 {
-
     // WARNING: consider using having arguments sent to function "by reference" instead of pointers. At least, chatgpt suggests that it's safer.
 
     qDebug() << "Open db: load all slot properties for slot: " << slot << "From: " << CONFIG_DB_PATH;
@@ -464,6 +475,8 @@ void DbManager::getAllProductProperties(int pnumber,
                                         int *is_enabled_custom_discount,
                                         double *size_custom_discount,
                                         double *price_custom_discount,
+                                        bool *is_enabled,
+                                        QString *status_text,
                                         bool *isSizeEnabled, double *prices, double *volumes, QString *PLUs, QString *PIDs)
 
 {
@@ -475,7 +488,7 @@ void DbManager::getAllProductProperties(int pnumber,
         QSqlDatabase db = openDb(CONFIG_DB_PATH);
         QSqlQuery qry(db);
         // qry.prepare("SELECT soapstand_product_serial, size_unit, payment, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_max,price_small,price_medium, price_large,price_custom FROM products WHERE pnumber=:pnumber");
-        qry.prepare("SELECT productId, soapstand_product_serial, mix_pnumbers, mix_ratios, slot, name, size_unit, name_receipt, concentrate_multiplier, dispense_speed, threshold_flow, retraction_time, calibration_const, volume_per_tick, last_restock, volume_full, volume_remaining, volume_dispensed_since_restock, volume_dispensed_total, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_min, size_custom_max, price_small, price_medium, price_large, price_custom, plu_small, plu_medium, plu_large, plu_custom, pid_small, pid_medium, pid_large, pid_custom, flavour, image_url, type, ingredients, features, description, is_enabled_custom_discount, size_custom_discount, price_custom_discount FROM products WHERE soapstand_product_serial=:pnumber");
+        qry.prepare("SELECT productId, soapstand_product_serial, mix_pnumbers, mix_ratios, slot, name, size_unit, name_receipt, concentrate_multiplier, dispense_speed, threshold_flow, retraction_time, calibration_const, volume_per_tick, last_restock, volume_full, volume_remaining, volume_dispensed_since_restock, volume_dispensed_total, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_min, size_custom_max, price_small, price_medium, price_large, price_custom, plu_small, plu_medium, plu_large, plu_custom, pid_small, pid_medium, pid_large, pid_custom, flavour, image_url, type, ingredients, features, description, is_enabled_custom_discount, size_custom_discount, price_custom_discount, is_enabled, status_text FROM products WHERE soapstand_product_serial=:pnumber");
         qry.bindValue(":pnumber", pnumber);
         bool success;
         success = qry.exec();
@@ -546,7 +559,6 @@ void DbManager::getAllProductProperties(int pnumber,
 
     df_util::csvQStringToQVectorInt(mix_pnumbers_str, mixPNumbers);
     df_util::csvQStringToQVectorDouble(mix_ratios_str, mixRatios);
-
 }
 
 /*
@@ -647,18 +659,20 @@ void DbManager::getAllMachineProperties(
     QString *help_text_html,
     QString *idle_page_type,
     QString *admin_pwd,
-
     QString *pump_id_slots,
     int *is_enabled_slots,
     QString *status_text_slots,
-    double *alert_temperature)
+    double *alert_temperature,
+    QString *software_version_controller,
+    int *is_enabled,
+    QString *status_text)
 {
     qDebug() << " db... all machine properties from: " << CONFIG_DB_PATH;
     {
         QSqlDatabase db = openDb(CONFIG_DB_PATH);
         QSqlQuery qry(db);
 
-        qry.prepare("SELECT machine_id,soapstand_customer_id,template,location,controller_type,controller_id,screen_type,'screen_id',has_receipt_printer,receipt_printer_is_online,receipt_printer_has_paper,has_tap_payment,hardware_version,software_version,aws_port,pump_id_slot_1,pump_id_slot_2,pump_id_slot_3,pump_id_slot_4,is_enabled_slot_1,is_enabled_slot_2,is_enabled_slot_3,is_enabled_slot_4,coupons_enabled,status_text_slot_1,status_text_slot_2,status_text_slot_3,status_text_slot_4,has_empty_detection,enable_pump_ramping,enable_pump_reversal,dispense_buttons_count,maintenance_pwd,show_transactions,help_text_html,idle_page_type,admin_pwd,alert_temperature FROM machine");
+        qry.prepare("SELECT machine_id,soapstand_customer_id,template,location,controller_type,controller_id,screen_type,'screen_id',has_receipt_printer,receipt_printer_is_online,receipt_printer_has_paper,has_tap_payment,hardware_version,software_version,aws_port,coupons_enabled,has_empty_detection,enable_pump_ramping,enable_pump_reversal,dispense_buttons_count,maintenance_pwd,show_transactions,help_text_html,idle_page_type,admin_pwd,alert_temperature,software_version_controller,is_enabled,status_text FROM machine");
         bool success;
         success = qry.exec();
         if (!success)
@@ -685,29 +699,32 @@ void DbManager::getAllMachineProperties(
             *hardware_version = qry.value(12).toString();
             *software_version = qry.value(13).toString();
             *aws_port = qry.value(14).toInt();
-            pump_id_slots[0] = qry.value(15).toString();
-            pump_id_slots[1] = qry.value(16).toString();
-            pump_id_slots[2] = qry.value(17).toString();
-            pump_id_slots[3] = qry.value(18).toString();
-            is_enabled_slots[0] = qry.value(19).toInt();
-            is_enabled_slots[1] = qry.value(20).toInt();
-            is_enabled_slots[2] = qry.value(21).toInt();
-            is_enabled_slots[3] = qry.value(22).toInt();
-            *coupons_enabled = qry.value(23).toInt();
-            status_text_slots[0] = qry.value(24).toString();
-            status_text_slots[1] = qry.value(25).toString();
-            status_text_slots[2] = qry.value(26).toString();
-            status_text_slots[3] = qry.value(27).toString();
-            *has_empty_detection = qry.value(28).toInt();
-            *enable_pump_ramping = qry.value(29).toInt();
-            *enable_pump_reversal = qry.value(30).toInt();
-            *dispense_buttons_count = qry.value(31).toInt();
-            *maintenance_pwd = qry.value(32).toString();
-            *show_transactions = qry.value(33).toInt();
-            *help_text_html = qry.value(34).toString();
-            *idle_page_type = qry.value(35).toString();
-            *admin_pwd = qry.value(36).toString();
-            *alert_temperature = qry.value(37).toDouble();
+            // pump_id_slots[0] = qry.value(15).toString();
+            // pump_id_slots[1] = qry.value(16).toString();
+            // pump_id_slots[2] = qry.value(17).toString();
+            // pump_id_slots[3] = qry.value(18).toString();
+            // is_enabled_slots[0] = qry.value(19).toInt();
+            // is_enabled_slots[1] = qry.value(20).toInt();
+            // is_enabled_slots[2] = qry.value(21).toInt();
+            // is_enabled_slots[3] = qry.value(22).toInt();
+            *coupons_enabled = qry.value(15).toInt();
+            // status_text_slots[0] = qry.value(24).toString();
+            // status_text_slots[1] = qry.value(25).toString();
+            // status_text_slots[2] = qry.value(26).toString();
+            // status_text_slots[3] = qry.value(27).toString();
+            *has_empty_detection = qry.value(16).toInt();
+            *enable_pump_ramping = qry.value(17).toInt();
+            *enable_pump_reversal = qry.value(18).toInt();
+            *dispense_buttons_count = qry.value(19).toInt();
+            *maintenance_pwd = qry.value(20).toString();
+            *show_transactions = qry.value(21).toInt();
+            *help_text_html = qry.value(22).toString();
+            *idle_page_type = qry.value(23).toString();
+            *admin_pwd = qry.value(24).toString();
+            *alert_temperature = qry.value(25).toDouble();
+            *software_version_controller = qry.value(26).toString();
+            *is_enabled = qry.value(27).toInt();
+            *status_text = qry.value(28).toString();
         }
         qry.finish();
     }
@@ -908,7 +925,8 @@ void DbManager::getPrinterStatus(bool *isOnline, bool *hasPaper)
     closeDb();
 }
 
-void DbManager::setPaymentTransaction(const std::map<std::string, std::string>& paymentObject){
+void DbManager::setPaymentTransaction(const std::map<std::string, std::string> &paymentObject)
+{
     {
         QSqlDatabase db = openDb(USAGE_DB_PATH);
         QSqlQuery qry(db);
@@ -934,7 +952,7 @@ void DbManager::setPaymentTransaction(const std::map<std::string, std::string>& 
             qDebug() << "Query:" << qry.lastQuery();
         }
         qry.finish();
-        }
-        qDebug() << "Payment database write";
+    }
+    qDebug() << "Payment database write";
     closeDb();
-}   
+}

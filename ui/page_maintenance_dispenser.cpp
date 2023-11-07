@@ -186,7 +186,7 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
     setStatusTextLabel(ui->label_status_dispenser_elaborated, statusText, true);
     setStatusTextLabel(ui->label_status_dispenser, statusText, false);
 
-    if (p_page_idle->thisMachine->getSelectedSlot()->getEnabled())
+    if (p_page_idle->thisMachine->getSelectedSlot()->getIsSlotEnabled())
     {
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_set_status, "unavailable");
         p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_set_status, "pushButton_set_status_unavailable", PAGE_MAINTENANCE_DISPENSER_CSS);
@@ -652,7 +652,7 @@ void page_maintenance_dispenser::on_pushButton_set_status_clicked()
 
         QString slotStatus = p_page_idle->thisMachine->getSelectedSlot()->getStatusText();
 
-        bool isEnabled = p_page_idle->thisMachine->getSelectedSlot()->getEnabled();
+        bool isEnabled = p_page_idle->thisMachine->getSelectedSlot()->getIsSlotEnabled();
 
         if (isEnabled)
         {
@@ -688,7 +688,7 @@ void page_maintenance_dispenser::on_pushButton_set_status_clicked()
         }
 
         // set to database
-        p_page_idle->thisMachine->getSelectedSlot()->setEnabled(true);
+        p_page_idle->thisMachine->getSelectedSlot()->setSlotEnabled(true);
 
         ui->label_action_feedback->setText("Slot Status set to " + slotStatus);
         updateProductLabelValues(true);

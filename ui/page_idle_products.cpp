@@ -137,7 +137,7 @@ void page_idle_products::displayProducts()
     {
         // display product picture
         p_page_idle->thisMachine->addPictureToLabel(labels_product_picture[slot_index], p_page_idle->thisMachine->getProductByOption(slot_index + 1)->getProductPicturePath());
-        // product_slot_enabled = p_page_idle->thisMachine->getSlotByPosition(slot_index+1)->getEnabled();
+        // product_slot_enabled = p_page_idle->thisMachine->getSlotByPosition(slot_index+1)->getIsSlotEnabled();
         // product_status_text = p_page_idle->thisMachine->getSlotByPosition(slot_index + 1)->getStatusText();
 
         product_type = p_page_idle->thisMachine->getProductByOption(slot_index + 1)->getProductType();

@@ -103,8 +103,8 @@ public:
 
     double getVolumeRemaining();
 
-    bool getIsEnabled();
-    void setIsEnabled(bool isEnabled);
+    bool getIsProductEnabled();
+    void setIsProductEnabled(bool isEnabled);
     QString getStatusText();
     void setStatusText(QString statusText);
 

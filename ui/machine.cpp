@@ -187,7 +187,7 @@ pnumberproduct *machine::getProductByPNumber(int PNumber)
 pnumberproduct *machine::getProductByOption(int productOption)
 {
     // options are selectable products by the customer. (they must be indexed. e.g. first page: option 1 to four)
-    // option start counting from 1?!
+    // option start counting from 1
     // slotPosition starts at 1
     if (productOption == 0)
     {
@@ -659,7 +659,7 @@ void machine::checkForHighTemperatureAndDisableProducts()
             //     qDebug() << "Temperature too high for one hour, block all slots.";
             //     setSlotEnabled(slot_index + 1, true, "SLOT_STATE_DISABLED_COMING_SOON");
             // }
-            setMachineEnabled(false, "SLOT_STATE_DISABLED_COMING_SOON");
+            setIsMachineEnabled(false, "SLOT_STATE_DISABLED_COMING_SOON");
         }
     }
     else
@@ -838,13 +838,13 @@ bool machine::isAllowedAsMaintainer()
 }
 
 ///////////////// START MOVE TO DISPENSER CLASS
-void machine::setMachineEnabled(bool isEnabled)
+void machine::setIsMachineEnabled(bool isEnabled)
 {
     m_is_enabled = isEnabled;
     m_db->updateTableMachineWithInt("is_enabled", m_is_enabled);
 }
 
-bool machine::getMachineEnabled()
+bool machine::getIsMachineEnabled()
 {
     // this should have been part of the products table. But it isn't. We access this from the dispenser_slot.cpp class.
     // slotNumberValidityCheck(slot);
@@ -852,12 +852,12 @@ bool machine::getMachineEnabled()
     return m_is_enabled;
 }
 
-void machine::setMachineEnabled(bool isEnabled, QString statusText)
+void machine::setIsMachineEnabled(bool isEnabled, QString statusText)
 {
-    setMachineEnabled(isEnabled);
+    setIsMachineEnabled(isEnabled);
 
     //  m_slots[slot-1].setStatusText();
-    //  m_slots[slot-1].setEnabled();
+    //  m_slots[slot-1].setSlotEnabled();
 }
 
 QString machine::getMachineStatusText()

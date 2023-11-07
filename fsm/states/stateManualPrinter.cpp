@@ -225,33 +225,6 @@ void stateManualPrinter::printTransaction(int transactionNumber)
    sqlite3_finalize(stmt);
    sqlite3_close(db);
 
-   // //-------------------------------------------------
-   // rc = sqlite3_open(CONFIG_DB_PATH, &db);
-   // sql_string = ("SELECT slot FROM products WHERE name='" + product + "';");
-
-   // sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
-
-   // status = sqlite3_step(stmt);
-
-   // int slot;
-   // if (status == SQLITE_ROW)
-   // {
-   //    slot = sqlite3_column_int(stmt, 0);
-   // }
-   // if (rc != SQLITE_OK)
-   // {
-   //    debugOutput::sendMessage("ERROR: SQL transaction retrieval : (" + to_string(rc) + "):" + sql_string, MSG_INFO);
-
-   //    sqlite3_free(zErrMsg);
-   // }
-   // else
-   // {
-   //    debugOutput::sendMessage("SUCCESS: SQL transaction retrieval : (" + to_string(rc) + ") " + sql_string, MSG_INFO);
-   // }
-
-   // debugOutput::sendMessage("slot ----------------: " + to_string(slot), MSG_INFO);
-   // sqlite3_finalize(stmt);
-   // sqlite3_close(db);
    int pnumber = machine::convertPStringToPNumber(pNumberString);
    setup_receipt_from_pnumber_and_dispense_data(pnumber, quantity_dispensed, quantity_requested, price, end_time);
 }

@@ -31,9 +31,9 @@ public:
     void setSlot(int slot);
     int getSlotId();
 
-    void setEnabled(bool isEnabled, QString statusText);
-    void setEnabled(bool isEnabled);
-    bool getEnabled();
+    void setSlotEnabled(bool isEnabled, QString statusText);
+    void setSlotEnabled(bool isEnabled);
+    bool getIsSlotEnabled();
     void setStatusText(QString status);
     QString getStatusText();
 

@@ -2,7 +2,6 @@
 #define MACHINE_H
 
 #include "df_util.h"
-#include "dispenser_slot.h"
 #include "pnumberproduct.h"
 #include "dbmanager.h"
 
@@ -99,9 +98,9 @@ public:
     QString getHelpPageHtmlText();
 
     dispenser_slot *getSlotByPosition(int slotPosition);
-    bool getMachineEnabled();
-    void setMachineEnabled(bool isEnabled);
-    void setMachineEnabled(bool isEnabled, QString statusText);
+    bool getIsMachineEnabled();
+    void setIsMachineEnabled(bool isEnabled);
+    void setIsMachineEnabled(bool isEnabled, QString statusText);
 
     QString getMachineStatusText();
     void setMachineStatusText(QString status);

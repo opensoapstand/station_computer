@@ -131,11 +131,11 @@ void pnumberproduct::loadProductPropertiesFromDb()
                                   m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
 }
 
-bool pnumberproduct::getIsEnabled()
+bool pnumberproduct::getIsProductEnabled()
 {
     return m_is_enabled;
 }
-void pnumberproduct::setIsEnabled(bool isEnabled)
+void pnumberproduct::setIsProductEnabled(bool isEnabled)
 {
     m_is_enabled = isEnabled;
     m_db->updateTableProductsWithInt(getPNumber(), "is_enabled", isEnabled);

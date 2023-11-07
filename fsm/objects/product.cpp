@@ -771,6 +771,8 @@ bool product::isDbValid()
         "is_enabled_custom_discount",
         "size_custom_discount",
         "price_custom_discount",
+        "is_enabled",
+        "status_text"
 
     };
     bool is_valid = true;

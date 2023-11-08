@@ -53,9 +53,9 @@ public:
 private:
     char dispensedVolumeToSmallestFixedSize();
     void adjustSizeToDispensedVolume();
-    int slot_index;
-    int slot;
-    char command;
+    int m_slot_index;
+    int m_slot;
+    // char command;
 
     sqlite3 *db;
     int rc;

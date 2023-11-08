@@ -66,6 +66,8 @@ public:
 
         bool getIsEnabled();
         void setIsEnabled(bool isEnabled);
+        string getStatusText();
+        void setStatusText(string statusText);
 
         bool getIsSizeEnabled(char size);
         
@@ -182,7 +184,8 @@ public:
         double m_concentration_multiplier; // some products are concentrated. In that case, we don't dispense the advertised volume. i.e. 1L of 10x concentrate --> dispense 100ml, 900ml of water needs to be added afterwards.
         int m_pnumber;
         bool m_pnumber_loaded_from_db;
-        bool isEnabled;
+        bool m_is_enabled;
+        string m_status_text;
         void loadProductPropertiesFromCsv();
 private:
 

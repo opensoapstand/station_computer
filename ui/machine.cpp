@@ -187,7 +187,7 @@ pnumberproduct *machine::getProductByPNumber(int PNumber)
 pnumberproduct *machine::getProductByOption(int productOption)
 {
     // options are selectable products by the customer. (they must be indexed. e.g. first page: option 1 to four)
-    // option start counting from 1?!
+    // option start counting from 1
     // slotPosition starts at 1
     if (productOption == 0)
     {
@@ -208,7 +208,6 @@ bool machine::getIsOptionAvailable(int productOption)
 {
     // products will need an "isEnabled" and "statustext" column too.
     // todo
-
 
     // check if slot for option is valid
     // check if all pnumbers for options are valid
@@ -231,22 +230,25 @@ int machine::getOptionCount()
 
 int machine::getSlotFromBasePNumber(int base_pnumber)
 {
-    int occurences_of_base_pnumber=0;
+    int occurences_of_base_pnumber = 0;
     int slot_with_base_pnumber;
     for (uint8_t slot_index = 0; slot_index < getSlotCount(); slot_index++)
     {
         int base_pnumber_in_slot = m_slots[slot_index].getBasePNumber();
-        if (base_pnumber == base_pnumber_in_slot){
+        if (base_pnumber == base_pnumber_in_slot)
+        {
             occurences_of_base_pnumber++;
-            slot_with_base_pnumber = slot_index+1;
+            slot_with_base_pnumber = slot_index + 1;
         }
     }
 
-    if (occurences_of_base_pnumber == 0){
+    if (occurences_of_base_pnumber == 0)
+    {
         qDebug() << "Error: Searched PNumber not set as Base Pnumber in any slot. ";
         return 666;
     }
-    if (occurences_of_base_pnumber > 1){
+    if (occurences_of_base_pnumber > 1)
+    {
         qDebug() << "Warning: Searched PNumber set as Base Pnumber in multiple slots. Will return last slot where it occured. Found in how many slots?: " << occurences_of_base_pnumber;
     }
     return slot_with_base_pnumber;
@@ -254,7 +256,7 @@ int machine::getSlotFromBasePNumber(int base_pnumber)
 
 dispenser_slot *machine::getSelectedSlot()
 {
-    
+
     return selectedSlot;
 }
 
@@ -269,16 +271,19 @@ void machine::setSelectedProduct(int pnumber)
     m_selectedProduct = &m_pnumberproducts[pnumber];
 }
 
-// dispenser_slot *machine::getSlotByPosition(int slotPosition)
-// {
-//     // slotPosition starts at 1
-//     if (slotPosition == 0)
-//     {
+dispenser_slot *machine::getSlotByPosition(int slotPosition)
+{
+    // DO YOU NEED TO USE THIS?
+    // this program became product centered. Only use for general stuff, like maintenance mode.
 
-//         qDebug() << "ERROR: slot numbers start from 1!!!";
-//     }
-//     return &m_slots[slotPosition - 1];
-// }
+    // slotPosition starts at 1
+    if (slotPosition == 0)
+    {
+
+        qDebug() << "ERROR: slot numbers start from 1!!!";
+    }
+    return &m_slots[slotPosition - 1];
+}
 
 void machine::setSlots(dispenser_slot *slotss)
 {
@@ -288,15 +293,15 @@ void machine::setSlots(dispenser_slot *slotss)
 void machine::setSelectedSlotFromSelectedProduct()
 {
 
-    // FOR NOW this will only return a slot if the selected product has a base_product. 
+    // FOR NOW this will only return a slot if the selected product has a base_product.
 
     // check base product from selected product
     // check slot of base product.
 
     int base_pnumber = m_selectedProduct->getFirstMixPNumberOrPNumberAsBasePNumber(); // if this is not a mix, it will return the main p number.
-    
-    int slot = getSlotFromBasePNumber(base_pnumber);    
-    
+
+    int slot = getSlotFromBasePNumber(base_pnumber);
+
     selectedSlot = &m_slots[slot - 1];
 }
 
@@ -439,10 +444,12 @@ void machine::initCouponState()
     m_max_dollar_amount_discount = "666.0";
 }
 
-void machine::setRebootState(StateReboot state){
+void machine::setRebootState(StateReboot state)
+{
     m_stateReboot = state;
 }
-StateReboot machine::getRebootState(){
+StateReboot machine::getRebootState()
+{
     return m_stateReboot;
 }
 
@@ -647,11 +654,12 @@ void machine::checkForHighTemperatureAndDisableProducts()
 
         if (elapsedMinutes >= 60) // 60  Check if one hour has passed
         {
-            for (uint8_t slot_index = 0; slot_index < getSlotCount(); slot_index++)
-            {
-                qDebug() << "Temperature too high for one hour, block all slots.";
-                setSlotEnabled(slot_index + 1, true, "SLOT_STATE_DISABLED_COMING_SOON");
-            }
+            // for (uint8_t slot_index = 0; slot_index < getSlotCount(); slot_index++)
+            // {
+            //     qDebug() << "Temperature too high for one hour, block all slots.";
+            //     setSlotEnabled(slot_index + 1, true, "SLOT_STATE_DISABLED_COMING_SOON");
+            // }
+            setIsMachineEnabled(false, "SLOT_STATE_DISABLED_COMING_SOON");
         }
     }
     else
@@ -830,38 +838,41 @@ bool machine::isAllowedAsMaintainer()
 }
 
 ///////////////// START MOVE TO DISPENSER CLASS
-void machine::setSlotEnabled(int slot, bool isEnabled)
+void machine::setIsMachineEnabled(bool isEnabled)
 {
-    // do this through dispenser_slot.cpp, as this should have been a part of products table
-    QString column_name = QString("is_enabled_slot_%1").arg(slot);
-    m_is_enabled_slots[slot - 1] = isEnabled; // Global variable
-    m_db->updateTableMachineWithInt(column_name, isEnabled);
+    m_is_enabled = isEnabled;
+    m_db->updateTableMachineWithInt("is_enabled", m_is_enabled);
 }
 
-bool machine::getSlotEnabled(int slot)
+bool machine::getIsMachineEnabled()
 {
     // this should have been part of the products table. But it isn't. We access this from the dispenser_slot.cpp class.
-    slotNumberValidityCheck(slot);
-    return (m_is_enabled_slots[slot - 1] == 1);
+    // slotNumberValidityCheck(slot);
+    // return (m_is_enabled_slots[slot - 1] == 1);
+    return m_is_enabled;
 }
 
-void machine::setSlotEnabled(int slot, bool isEnabled, QString statusText)
+void machine::setIsMachineEnabled(bool isEnabled, QString statusText)
 {
-    setSlotEnabled(slot, isEnabled);
-    setStatusText(slot, statusText);
+    setIsMachineEnabled(isEnabled);
+
+    //  m_slots[slot-1].setStatusText();
+    //  m_slots[slot-1].setSlotEnabled();
 }
 
-QString machine::getStatusText(int slot)
+QString machine::getMachineStatusText()
 {
-    slotNumberValidityCheck(slot);
-    return m_status_text_slots[slot - 1];
+    // slotNumberValidityCheck(slot);
+    // return m_status_text_slots[slot - 1];
+    return m_status_text;
 }
 
-void machine::setStatusText(int slot, QString status)
+void machine::setMachineStatusText(QString status)
 {
-    QString column = QString("status_text_slot_%1").arg(slot);
-    m_db->updateTableMachineWithText(column, status);
+    m_status_text = status;
+    m_db->updateTableMachineWithText("status_text", m_status_text);
 }
+
 ///////////////// END MOVE TO DISPENSER CLASS
 
 QString machine::getPumpId(int slot)
@@ -935,7 +946,10 @@ void machine::loadMachineParameterFromDb()
         m_pump_id_slots,
         m_is_enabled_slots,
         m_status_text_slots,
-        &m_alert_temperature);
+        &m_alert_temperature,
+        &m_software_version_controller,
+        &m_is_enabled,
+        &m_status_text);
 
     qDebug() << "Machine ID as loaded from db: " << getMachineId();
     qDebug() << "Template folder from db : " << getTemplateFolder();

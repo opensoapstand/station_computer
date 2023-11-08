@@ -55,11 +55,10 @@ public:
     QString getProductType();            // productt
     QString getProductDrinkfillSerial(); // productt
 
-
-    QString getProductDescription();   // productt
-    QString getProductIngredients();   // productt
-    QString getProductFeatures();      // productt
-    QString getLastRestockDate();      // productt
+    QString getProductDescription(); // productt
+    QString getProductIngredients(); // productt
+    QString getProductFeatures();    // productt
+    QString getLastRestockDate();    // productt
 
     void setSelectedSize(int sizeIndex); // productt
     int getSelectedSize();               // productt
@@ -91,9 +90,9 @@ public:
 
     double getBasePrice(int sizeIndex);                                                                                                       // productt
     void setPrice(int size, double price);                                                                                                    // productt
-                                                                                                       // productt
+                                                                                                                                              // productt
     double getPriceCustom();                                                                                                                  // productt
-    double getBasePriceSelectedSize();                                                                                                                    // productt
+    double getBasePriceSelectedSize();                                                                                                        // productt
     void getCustomDiscountDetails(bool *large_volume_discount_is_enabled, double *min_volume_for_discount, double *discount_price_per_liter); // productt
 
     int getDispenseSpeedPercentage();                // productt
@@ -104,6 +103,10 @@ public:
 
     double getVolumeRemaining();
 
+    bool getIsProductEnabled();
+    void setIsProductEnabled(bool isEnabled);
+    QString getStatusText();
+    void setStatusText(QString statusText);
 
 private:
     int m_PNumber;
@@ -120,6 +123,9 @@ private:
     QString m_soapstand_product_serial;
     QString m_ingredients_ui;
     QString m_product_type;
+
+    bool m_is_enabled;
+    QString m_status_text;
 
     QString m_name;
     QString m_name_ui;

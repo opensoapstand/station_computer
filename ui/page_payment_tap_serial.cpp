@@ -8,13 +8,13 @@
 // class then communcates results to page_dispenser.
 //
 // created: 05-04-2022
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "page_payment_tap_serial.h"
-#include "ui_page_tap_payment_serial.h"
+#include "ui_page_payment_tap_serial.h"
 
 #include "page_product.h"
 #include "page_dispenser.h"
@@ -33,22 +33,21 @@ page_payment_tap_serial::page_payment_tap_serial(QWidget *parent) : QWidget(pare
     ui->pushButton_payment_bypass->setEnabled(false);
     ui->label_title->hide();
     ui->order_total_amount->hide();
+    statusbarLayout = new QVBoxLayout(this);
 }
+
 
 void page_payment_tap_serial::stopPayTimers()
 {
-
-    if (readTimer != nullptr)
-    {
-        qDebug() << "cancel readTimer" << endl;
+    if (readTimer && readTimer->isActive()) {
+        qDebug() << "Cancel readTimer" << endl;
         readTimer->stop();
     }
 }
-
 /*
  * Page Tracking reference
  */
-void page_payment_tap_serial::setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp)
+void page_payment_tap_serial::setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp, statusbar *p_statusbar)
 {
     tmpCounter = 0;
     this->p_page_product = p_page_product;
@@ -56,6 +55,7 @@ void page_payment_tap_serial::setPage(page_product *p_page_product, page_error_w
     this->p_page_dispense = page_dispenser;
     this->p_page_idle = pageIdle;
     this->p_page_help = pageHelp;
+    this->p_statusbar = p_statusbar;
 }
 
 // DTOR
@@ -66,7 +66,7 @@ page_payment_tap_serial::~page_payment_tap_serial()
 
 void page_payment_tap_serial::on_pushButton_payment_bypass_clicked()
 {
-    hideCurrentPageAndShowProvided(p_page_dispense);
+    hideCurrentPageAndShowProvided(p_page_dispense,false);
 }
 
 /*Cancel any previous payment*/
@@ -75,6 +75,9 @@ void page_payment_tap_serial::cancelPayment()
     com.flushSerial();
     /*Cancel any previous payment*/
     pktToSend = paymentPacket.purchaseCancelPacket();
+    p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_CANCEL);
+    p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->animated_Label, "cancel");
+    
     if (sendToUX410())
     {
         waitForUX410();
@@ -91,7 +94,7 @@ void page_payment_tap_serial::on_pushButton_previous_page_clicked()
 
     if (exitConfirm())
     {
-        hideCurrentPageAndShowProvided(p_page_product);
+        hideCurrentPageAndShowProvided(p_page_product,true);
     }
 }
 
@@ -101,12 +104,15 @@ void page_payment_tap_serial::resizeEvent(QResizeEvent *event)
 
 void page_payment_tap_serial::showEvent(QShowEvent *event)
 {
-    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+    p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
+
+    statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
+    statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
     
-    p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+    p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
     
-    QString styleSheet = p_page_idle->getCSS(PAGE_TAP_PAYMENT_SERIAL_CSS);
+    QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_TAP_PAYMENT_SERIAL_CSS);
 
     ui->pushButton_previous_page->setStyleSheet(styleSheet);
 
@@ -114,8 +120,10 @@ void page_payment_tap_serial::showEvent(QShowEvent *event)
     ui->pushButton_payment_bypass->setProperty("class", "invisible_button");
     ui->pushButton_to_idle->setStyleSheet(styleSheet);
     ui->pushButton_payment_bypass->setStyleSheet(styleSheet);
+    ui->animated_Label->setProperty("class", "animated_Label");
+    ui->animated_Label->setStyleSheet(styleSheet);
 
-    p_page_idle->setTemplateTextToObject(ui->pushButton_previous_page);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_previous_page);
 
     ui->pushButton_payment_bypass->setEnabled(false);
 
@@ -140,7 +148,7 @@ void page_payment_tap_serial::showEvent(QShowEvent *event)
         timerEnabled = true;
     }
     readTimer->start(10);
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY);
+    p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY);
     ui->productLabel->hide();
     ui->order_drink_amount->hide();
 }
@@ -150,6 +158,7 @@ bool page_payment_tap_serial::setpaymentProcess(bool status)
     return (paymentProcessing = status);
 }
 
+
 bool page_payment_tap_serial::exitConfirm()
 {
     qDebug() << "In exit confirm";
@@ -158,9 +167,9 @@ bool page_payment_tap_serial::exitConfirm()
         // ARE YOU SURE YOU WANT TO EXIT?
         QMessageBox msgBox;
         msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
-        p_page_idle->addCssClassToObject(&msgBox, "msgBoxbutton msgBox", PAGE_TAP_PAYMENT_CSS);
+        p_page_idle->thisMachine->addCssClassToObject(&msgBox, "msgBoxbutton msgBox", PAGE_TAP_PAYMENT_CSS);
         QString searchString = this->objectName() + "->msgBox_cancel";
-        p_page_idle->setTextToObject(&msgBox, p_page_idle->getTemplateText(searchString));
+        p_page_idle->thisMachine->setTextToObject(&msgBox, p_page_idle->thisMachine->getTemplateText(searchString));
 
         msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         int ret = msgBox.exec();
@@ -190,32 +199,33 @@ void page_payment_tap_serial::on_pushButton_to_idle_clicked()
 {
     if (exitConfirm())
     {
-        hideCurrentPageAndShowProvided(p_page_help);
+        hideCurrentPageAndShowProvided(p_page_help,true);
     }
 }
 
-void page_payment_tap_serial::hideCurrentPageAndShowProvided(QWidget *pageToShow)
+void page_payment_tap_serial::hideCurrentPageAndShowProvided(QWidget *pageToShow, bool cancelTapPayment)
 {
-
-    resetPaymentPage();
-    p_page_idle->pageTransition(this, pageToShow);
+    resetPaymentPage(cancelTapPayment);
+    statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
+    p_page_idle->thisMachine->pageTransition(this, pageToShow);
 }
 
 void page_payment_tap_serial::idlePaymentTimeout()
 {
-    resetPaymentPage();
+    resetPaymentPage(true);
 }
 
-void page_payment_tap_serial::resetPaymentPage()
+void page_payment_tap_serial::resetPaymentPage(bool cancelTapPayment)
 {
     stopPayTimers();
-    readTimer->stop();
-    cancelPayment();
+    if(cancelTapPayment){
+        readTimer->stop();
+        cancelPayment();
+    }
 }
 
 bool page_payment_tap_serial::tap_serial_initiate()
 {
-
     while (!paymentConnected)
     {
         paymentConnected = com.page_init();
@@ -296,6 +306,7 @@ bool page_payment_tap_serial::tap_serial_initiate()
     com.flushSerial();
     /*Cancel any previous payment*/
     pktToSend = paymentPacket.purchaseCancelPacket();
+
     if (sendToUX410())
     {
         waitForUX410();
@@ -360,20 +371,21 @@ bool page_payment_tap_serial::waitForUX410()
 
 void page_payment_tap_serial::readTimer_loop()
 {   
-    double originalPrice = p_page_idle->selectedProduct->getBasePrice();
-    if (p_page_idle->selectedProduct->getSizeAsChar() == 'c')
+    double originalPrice = p_page_idle->thisMachine->selectedProduct->getBasePrice();
+    if (p_page_idle->thisMachine->selectedProduct->getSizeAsChar() == 'c')
     {
-        originalPrice = p_page_idle->selectedProduct->getPriceCustom();
+        originalPrice = p_page_idle->thisMachine->selectedProduct->getPriceCustom();
     }
-    pktToSend = paymentPacket.purchasePacket((QString::number(p_page_idle->thisMachine.getPriceWithDiscount(originalPrice), 'f', 2)).QString::toStdString());
+    pktToSend = paymentPacket.purchasePacket((QString::number(p_page_idle->thisMachine->getPriceWithDiscount(originalPrice), 'f', 2)).QString::toStdString());
     // response = getResponse();
     qDebug() << "Packet sent for payment";
     if (sendToUX410())
-    {
+    {   
         waitForUX410();
         while (!response)
         {
             response = getResponse();
+            
             QCoreApplication::processEvents();
             if (pktResponded[0] != 0x02)
             {
@@ -400,16 +412,20 @@ void page_payment_tap_serial::readTimer_loop()
 
                     if (pktResponded[19] == 0x41)
                     { // Host Response 41 = A "Approved"
+                        p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
+
                         purchaseEnable = true;
                         approved = true;
                         cout << "Approval Packet 41" << endl;
                         paymentPktInfo.transactionID(readPacket.getPacket().data);
                         paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
                         response = true;
-                        hideCurrentPageAndShowProvided(p_page_dispense);
+                        hideCurrentPageAndShowProvided(p_page_dispense,false);
                     }
                     else if (pktResponded[19] == 0x44)
                     { // Host Response 44 = D "Declined"
+                        p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_FAIL);
+
                         purchaseEnable = true;
                         approved = false;
                         cout << "Declined Packet 44" << endl;

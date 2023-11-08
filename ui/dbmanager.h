@@ -40,6 +40,7 @@ public:
 
     void addTemperature(QString machine_id, double temperature_1, double temperature_2, QString alert);
     void addUserInteraction(QString session_id, QString role, QString page, QString event);
+    void addUserInteraction(QString session_id, QString role, QString page, QString event, QString data);
     void getAllProductProperties(int slot,
                                  QString *productId,
                                  QString *soapstand_product_serial,
@@ -95,6 +96,8 @@ public:
                                  QString *status_text_slots,
                                  double *alert_temperature);
          QString getHardwareVersion();
+
+    void setPaymentTransaction(const std::map<std::string, std::string>& paymentObject);
     // QString m_dbPath2;
 
 private:

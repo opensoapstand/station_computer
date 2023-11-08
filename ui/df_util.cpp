@@ -8,6 +8,7 @@
 #include <QJsonObject>
 #include <QJsonParseError>
 #include <QDebug>
+#include <QProcess>
 
 static QPointer<QFile> file_out = nullptr;
 
@@ -148,23 +149,57 @@ QString df_util::getConvertedStringVolumeFromMl(double volumeMilliLiter, QString
 df_util::df_util(QWidget *parent) : QWidget(parent),
                                     tcpSocket(new QTcpSocket(this))
 {
-    in.setDevice(tcpSocket);
-    in.setVersion(QDataStream::Qt_4_0);
-    connect(tcpSocket, &QIODevice::readyRead, this, &df_util::send_to_FSM);
+    // in.setDevice(tcpSocket);
+    // in.setVersion(QDataStream::Qt_4_0);
+    // connect(tcpSocket, &QIODevice::readyRead, this, &df_util::send_to_FSM);
 }
 
-void df_util::send_command_to_FSM(QString command)
+void df_util::send_command_to_FSM(QString command, bool isLoggingMessage)
 {
     m_IsSendingFSM = true;
-    set_message_to_send_to_FSM(command);
-    send_to_FSM();
+    // this->send_msg = msg;
+    send_to_FSM(command, isLoggingMessage);
     m_IsSendingFSM = false;
 }
 
-void df_util::set_message_to_send_to_FSM(QString msg)
+void df_util::executeVirtualClick(int x, int y)
 {
-    this->send_msg = msg;
+    QString display = ":0";
+    QString command = "xdotool click 1";
+
+    // Set DISPLAY environment variable
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    env.insert("DISPLAY", display);
+
+    // Run the xdotool command
+    QProcess process;
+    process.setProcessEnvironment(env);
+    process.start(command);
+
+    // Wait for the process to finish (optional)
+    process.waitForFinished(-1); // You can specify a timeout in milliseconds if needed
+
+    // Handle the output if necessary
+    QString output = process.readAllStandardOutput();
+    QString error = process.readAllStandardError();
+
+    // Handle output and error messages as needed
+    // qDebug() << "Output:" << output;
+    // qDebug() << "Error:" << error;
+
+    // QString display = ":0";
+    // QString command = QString("DISPLAY=%1 xdotool mousemove --sync %2 %3 click 1")
+    //                      .arg(display)
+    //                      .arg(x)
+    //                      .arg(y);
+
+    // // Run the xdotool command
+    // QProcess::execute(command);
+
+    
+    // qDebug() << "Did the click.";
 }
+
 
 void df_util::write_to_file_timestamped(QString basePath, QString data)
 {
@@ -184,10 +219,8 @@ void df_util::write_to_file(QString path, QString data)
     file.close();
 }
 
-
-void df_util::send_to_FSM()
+void df_util::send_to_FSM(QString command, bool isLoggingMessage)
 {
-
     tcpSocket->abort();
 
     tcpSocket->connectToHost(host, port);
@@ -200,11 +233,14 @@ void df_util::send_to_FSM()
     {
         qDebug() << "ERROR: Failed Connection (Port ok? or Restarting the computer has worked to solve the issue in the past)" << endl;
     }
-
+    QString send_msg = command;
     send_msg.append(";");
 
     QByteArray block;
-    qDebug() << "send message to FSM: " << send_msg;
+    if (isLoggingMessage)
+    {
+        qDebug() << "send message to FSM: " << send_msg;
+    }
 
     block.append(send_msg);
     QDataStream out(&block, QIODevice::WriteOnly);
@@ -225,14 +261,18 @@ QJsonObject df_util::parseJsonString(QString jsonString)
     QJsonParseError jsonParseError;
     QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonString.toUtf8(), &jsonParseError);
 
-    if (jsonParseError.error != QJsonParseError::NoError) {
+    if (jsonParseError.error != QJsonParseError::NoError)
+    {
         qWarning() << "JSON parse error:" << jsonParseError.errorString();
         return QJsonObject();
     }
 
-    if (jsonDoc.isObject()) {
+    if (jsonDoc.isObject())
+    {
         return jsonDoc.object();
-    } else {
+    }
+    else
+    {
         qWarning() << "Invalid JSON object format";
         return QJsonObject();
     }

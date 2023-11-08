@@ -9,7 +9,7 @@
 // payment page and page_idle page
 //
 // created: 05-04-2022
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado & Udbhav Kansal
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado & Udbhav Kansal
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
@@ -53,12 +53,14 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
     ui->checkBox_3->setIconSize(size);
     ui->checkBox_4->setIconSize(size);
     ui->checkBox_5->setIconSize(size);
+
+    statusbarLayout = new QVBoxLayout(this);
 }
 
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, page_product *page_product, page_end *page_thankyou)
+void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, page_product *page_product, page_end *page_thankyou, statusbar *p_statusbar)
 {
 
     this->p_page_select_product = pageSelect;
@@ -68,15 +70,8 @@ void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser 
     this->p_page_help = pageHelp;
     this->p_page_wifi_error = pageWifiError;
     this->p_page_product = page_product;
+    this->p_statusbar = p_statusbar;
 
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SEND_FEEDBACK_PATH);
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
-
-    QString full_path = p_page_idle->thisMachine.getTemplatePathFromName(IMAGE_BUTTON_HELP);
-    p_page_idle->addPictureToLabel(ui->label_help, full_path);
-
-    full_path = p_page_idle->thisMachine.getTemplatePathFromName(THANK_YOU_FOR_YOUR_FEEDBACK);
-    p_page_idle->addPictureToLabel(ui->label_thank_you_image, full_path);
 }
 
 // DTOR
@@ -89,25 +84,37 @@ page_sendFeedback::~page_sendFeedback()
 
 void page_sendFeedback::showEvent(QShowEvent *event)
 {
-    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+    p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
-    p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
-    
-    p_page_idle->setTemplateTextToObject(ui->pushButton_previous_page);
-    p_page_idle->setTemplateTextToObject(ui->label_select_problem);
-    p_page_idle->setTemplateTextToObject(ui->label_still_cant_find);
-    p_page_idle->setTemplateTextToObject(ui->label_email);
-    p_page_idle->setTemplateTextToObject(ui->checkBox_1_Label);
-    p_page_idle->setTemplateTextToObject(ui->checkBox_2_Label);
-    p_page_idle->setTemplateTextToObject(ui->checkBox_3_Label);
-    p_page_idle->setTemplateTextToObject(ui->checkBox_4_Label);
-    p_page_idle->setTemplateTextToObject(ui->checkBox_5_Label);
-    p_page_idle->setTemplateTextToObject(ui->label_enter_feedback);
-    p_page_idle->setTemplateTextToObject(ui->label_thanks_for_feedback);
-    p_page_idle->setTemplateTextToObject(ui->pushButton_send);
+    statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
+    statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
 
-    QString styleSheet = p_page_idle->getCSS(PAGE_FEEDBACK_CSS);
+    p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+    
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_previous_page);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->label_select_problem);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->label_still_cant_find);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->label_email);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->checkBox_1_Label);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->checkBox_2_Label);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->checkBox_3_Label);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->checkBox_4_Label);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->checkBox_5_Label);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->label_enter_feedback);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->label_thanks_for_feedback);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_send);
+
+    p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_SEND_FEEDBACK_PATH);
+    p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
+
+    QString full_path = p_page_idle->thisMachine->getTemplatePathFromName(IMAGE_BUTTON_HELP);
+    p_page_idle->thisMachine->addPictureToLabel(ui->label_help, full_path);
+
+    full_path = p_page_idle->thisMachine->getTemplatePathFromName(THANK_YOU_FOR_YOUR_FEEDBACK);
+    p_page_idle->thisMachine->addPictureToLabel(ui->label_thank_you_image, full_path);
+    
+    QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_FEEDBACK_CSS);
 
     ui->pushButton_send->setStyleSheet(styleSheet);
     ui->pushButton_start_input->setProperty("class", "buttonTransparent");
@@ -155,6 +162,7 @@ void page_sendFeedback::onSelectTimeoutTick()
     if (--_selectIdleTimeoutSec >= 0)
     {
         qDebug() << "page_sendFeedback: Tick Down - " << _selectIdleTimeoutSec;
+        p_statusbar->refresh();
     }
     else
     {
@@ -205,7 +213,8 @@ void page_sendFeedback::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     {
         selectIdleTimer->stop();
     }
-    p_page_idle->pageTransition(this, pageToShow);
+    statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
+    p_page_idle->thisMachine->pageTransition(this, pageToShow);
 }
 
 void page_sendFeedback::mainPage()
@@ -268,7 +277,7 @@ void page_sendFeedback::on_pushButton_send_clicked()
         ui->label_thanks_for_feedback->repaint(); // instant showing instead of waiting for function to be finished.
 
         // send to backend
-        QString MachineSerialNumber = p_page_idle->thisMachine.getMachineId();
+        QString MachineSerialNumber = p_page_idle->thisMachine->getMachineId();
         QString customFeedback = ui->textEdit_custom_message->toPlainText();
         QString curl_param = "problems=" + problems + " " + customFeedback + "&MachineSerialNumber=" + MachineSerialNumber;
         qDebug() << "Curl params" << curl_param;

@@ -30,7 +30,7 @@ QLabel {
    border: none;
    }
 
-#label_temperature_status {
+#label_temperature_warning {
       font-family: 'Brevia';
       font-style: normal;
       font-weight: 100;
@@ -49,4 +49,39 @@ QLabel {
    background-color: transparent; 
    border: 0px;
    }
+
+QMessageBox {
+   min-width: 7000px;
+   font-size: 24px;
+   font-weight: bold;
+   font-style: normal;
+   font-family: 'Montserrat';
+}
+
+QMessageBox.msgBoxbutton QPushButton {
+   font-size: 24px;
+   min-width: 300px;
+   min-height: 300px;
+}
       
+#label_reboot_nightly_title{
+   font-size: 26px;
+   color: #3E4153;
+   font-family:'EuropaNuova-ExtraBold';
+}
+#label_reboot_nightly_text{
+   font-size: 16px;
+   color: #9A9AA6;
+}
+#label_reboot_nightly_bg{
+   background: #FFFFFF;
+   border-radius: 5px;
+}
+#pushButton_reboot_nightly{
+   background: #FFD42A;
+   border: 1px solid white;
+   text-transform: uppercase;
+   color: #3E4153;
+   font-size: 22px;
+   border-radius: 5px;
+}

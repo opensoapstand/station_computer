@@ -8,7 +8,7 @@
 // to dispense classes.
 //
 // created: 01-2022
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
@@ -108,6 +108,7 @@ public:
         double getVolumeDispensedSinceLastRestock();
         double getVolumeFull();
         double getThresholdFlow();
+        double getThresholdFlow_max_allowed();
         int getRetractionTimeMillis();
 
         double m_volumePerTick;
@@ -172,7 +173,8 @@ public:
         void loadProductPropertiesFromCsv(string product_id);
 private:
 
-        double m_calibration_const;
+        double m_nThresholdFlow_maximum_allowed;
+        // double m_calibration_const;
 
         // void setProductName(string productName);
         double getVolPerTick();

@@ -6,7 +6,7 @@
 // override for other systems
 //
 // created: 15-06-2020
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
@@ -18,7 +18,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <chrono>
-#include <fstream>
 #include <ctime>
 
 #include <sstream>

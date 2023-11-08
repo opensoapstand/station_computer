@@ -1,0 +1,84 @@
+# Display texts. 
+# Default template. 
+# Non default templates can be put in their template folder with the same name. Object names not found in the file in the template folder will be taken from the default template file
+
+########################################## example ##############################
+# PAGE->OBJECTNAME,mytext
+#    PAGE = QT page name
+#    OBJECTNAME = QWidget (QLabel or QPushButton)
+#    , = separator between name and text
+#    mytext = custom text to be displayed on screen
+#################################################################################
+
+# comment example (needs to start with a #)
+# empty lines are also permitted
+
+# page_idle
+page_idle->label_welcome_message,Fancy a free<br>beverage sample?
+page_idle->label_printer_status->offline,Assistance needed<br>Receipt Printer offline.
+page_idle->label_printer_status->nopaper,Assistance needed<br>Receipt Printer empty or improperly loaded.
+page_idle->label_show_temperature->temperature,Temperature is..
+#page_idle->label_show_temperature,Temperature: %1
+page_idle->label_show_temperature,%1°C
+page_idle->msgBox_reboot->default,<p align=center>System will be rebooted in<br></p>
+page_idle->label_reboot_nightly_title,NIGHTLY REBOOT
+page_idle->label_reboot_nightly_text,System will be rebooted in<br>%1 second(s)
+page_idle->pushButton_reboot_nightly,Cancel
+page_idle->label_reboot_nightly_text->count_down,System will be rebooted in<br>%1 second(s)
+
+#page_select_product
+page_select_product->label_pick_soap,Discover our Beverages
+page_select_product->pushButton_to_idle,←back
+page_select_product->no_text,
+
+
+# Page_product 
+page_product->pushButton_back,←back
+
+# page_product_overview
+page_product_overview->pushButton_select_product_page,←back
+page_product_overview->label_total,Total Amount
+page_product_overview->pushButton_continue->proceed_free,Proceed
+page_product_overview->pushButton_continue->proceed_pay,Proceed to Pay
+
+
+# page_dispenser
+page_dispenser->label_to_refill,To Refill
+page_dispenser->label_instructions_container,bring container to nozzle
+page_dispenser->label_press,press and hold the<br>button
+
+# page_end
+page_end->pushButton_contact,Feedback
+
+# page_help
+page_help->pushButton_to_idle,←back
+page_help->pushButton_to_transactions,transactions→
+
+# page_sendFeedback
+page_sendFeedback->pushButton_previous_page,←back
+page_sendFeedback->checkBox_1_Label,I love this, keep me in the loop.
+page_sendFeedback->checkBox_2_Label,User interface problem
+page_sendFeedback->checkBox_3_Label,Drink dispensing problem
+page_sendFeedback->checkBox_4_Label,Payment problem
+page_sendFeedback->checkBox_5_Label,Other
+page_sendFeedback->label_enter_feedback,Please enter details or comments below.<br>Provide email for feedback.
+page_sendFeedback->label_thanks_for_feedback,Thank you for <br> your feedback
+page_sendFeedback->pushButton_send,Send
+
+# page_qr_payment
+page_qr_payment->pushButton_previous_page,←back
+page_qr_payment->label_title->pay_by_phone,Pay by Phone
+page_qr_payment->label_steps,<style>        li:{margin-top:10px; margin-left: 5px;}        </style>        <ol>        <li><span class='tab'></span>Scan QR code with phone camera<br></li>        <li><span class='tab'></span>Click to open the link that appears<br></li>        <li><span class='tab'></span>Follow payment instructions on phone<br></li>        <li><span class='tab'></span>The station will proceed after payment<br></li>        <li><span class='tab'></span>Refill your beverage!</li>        </ol>        <style>        li:{margin-top:10px;}        </style>        <ol>       
+
+# page_payment_tap_tcp
+page_payment_tap_tcp->pushButton_previous_page,←back
+
+# page_payment_tap_serial
+page_payment_tap_serial->pushButton_previous_page,←back
+
+# page_email
+page_email->pushButton_to_product_overview,←back
+page_email->label_email_title,To dispense free sample<br>Please kindly enter your email address
+page_email->keyboardTextEntry->email_placeholder,Please enter your email address
+page_email->keyboardTextEntry->invalid,Incorrect email address, please enter valid email address
+page_email->pushButton_continue, Submit email for free dispense!

@@ -111,7 +111,7 @@ page_transactions->label_title,Most Recent Transactions
 page_sendFeedback->pushButton_previous_page,<- back
 page_sendFeedback->label_select_problem,Please provide feedback
 page_sendFeedback->label_still_cant_find,
-page_sendFeedback->label_email,Email us at: sales@soapstand.com
+page_sendFeedback->label_email,Email us at: hello@aelen.com
 page_sendFeedback->checkBox_1_Label,I love this, keep me in the loop.
 page_sendFeedback->checkBox_2_Label,User interface problem
 page_sendFeedback->checkBox_3_Label,Soap dispensing problem

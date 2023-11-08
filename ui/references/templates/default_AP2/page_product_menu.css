@@ -1,0 +1,108 @@
+QPushButton {
+    background-color: transparent;
+    border: 0px;
+}
+
+QLabel {
+    font-family: 'EuropaNuova';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 64px;
+    line-height: 99px;
+    color: #003840;
+    text-align: center;
+    /* qproperty-alignment: AlignCenter; */
+    border: none;
+}
+
+#label_product_menu_title {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 64px;
+    color: #001810;
+    text-align: center;
+    qproperty-alignment: AlignCenter;
+    font-family: 'El Messiri';
+}
+
+#label_base_products_section_bg{
+    border-top-right-radius: 35px;
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(226, 185, 133, 0.20), stop:0.9 rgba(226, 185, 133, 0.00));
+}
+
+#label_base_products_section_title{
+    color:#001810;
+    font-family: 'El Messiri';
+    font-weight: 700;
+    font-style: normal;
+    font-size: 30px;
+    text-align: center;
+    qproperty-alignment: AlignCenter;
+}
+
+.label_base_product_bg{
+    background: yellow;
+}
+
+#pushButton_to_idle {
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    color: #001810;
+    text-align: left;
+    qproperty-alignment: AlignCenter;
+    border: none;
+}
+
+.PushButton_selection {
+    background-color: transparent;
+    border: 0px;
+}
+
+.label_product_overlay_available {
+    background-color: transparent;
+    /* color: #a7a1a1; */
+    color: #ffffff;
+    font-size: 75px;
+}
+/* .label_product_overlay_available {
+    color: #ffffff;
+} */
+.label_product_overlay_unavailable {
+    font-size: 75px;
+    color: #ffffff;
+    background-color: rgba(64, 64, 64, 0.8); /* (x,x,x,0.9) is for 10% visibility */
+    border-radius: 20px; 
+    /* background-color: rgba(0, 0, 0, 80); */
+
+
+}
+
+.label_product_type {
+    /* font-family: 'Lora'; */
+    /* font-family: 'Vollkorn'; */
+    font-family: 'EuropaNuova-ExtraBold';
+    font-weight: 700;
+    font-style: normal;
+    font-size: 37px;
+    line-height: 49px;
+    text-align: center;
+    qproperty-alignment: AlignCenter;
+    color: #221F20;
+}
+
+.label_product_name {
+    line-height: 36px;
+    text-align: center;
+    qproperty-alignment: AlignCenter;
+    font-family: 'EuropaNuova-Regular';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    color: #221F20;
+}
+
+.label_product_photo {
+    /* border: 1px solid black;  */
+}

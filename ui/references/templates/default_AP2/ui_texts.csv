@@ -26,6 +26,11 @@ page_idle->label_reboot_nightly_text,System will be rebooted in<br>%1 second(s)
 page_idle->pushButton_reboot_nightly,Cancel
 page_idle->label_reboot_nightly_text->count_down,System will be rebooted in<br>%1 second(s)
 
+#page_product_menu
+page_product_menu->label_product_menu_title,Discover Your Beverage
+page_product_menu->pushButton_to_idle,←BACK
+page_product_menu->label_base_products_section_title,1. Select Drink
+
 #page_select_product
 page_select_product->label_pick_soap,Discover our Beverages
 page_select_product->pushButton_to_idle,←back

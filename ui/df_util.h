@@ -89,6 +89,7 @@ using namespace std;
 #define PAGE_FEEDBACK_CSS                               "page_sendFeedback.css"
 #define STATUSBAR_CSS                                   "statusbar.css"
 #define PAGE_IDLE_CSS                                   "page_idle.css"
+#define PAGE_PRODUCT_MENU_CSS                           "page_product_menu.css"
 #define PAGE_SELECT_PRODUCT_CSS                         "page_select_product.css"
 #define PAGE_PRODUCT_CSS                                "page_product.css"
 #define PAGE_DISPENSER_CSS                              "page_dispenser.css"
@@ -112,6 +113,7 @@ using namespace std;
 #define PAGE_END_BACKGROUND_PATH                        "background_end.png"
 #define PAGE_TRANSACTIONS_BACKGROUND_PATH               "background_transactions.png"
 
+#define PAGE_PRODUCT_MENU_BACKGROUND_PATH               "background_product_menu.png"
 #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH             "background_product_select.png"
 #define PAGE_PRODUCT_BACKGROUND_PATH                    "background_product_quantity.png"
 #define PAGE_ORDER_OVERVIEW_PATH                        "background_order_overview.png"

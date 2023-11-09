@@ -83,7 +83,7 @@ void page_end::showEvent(QShowEvent *event)
 
     p_page_idle->thisMachine->addClientLogoToLabel(ui->label_client_logo);
 
-    QString paymentMethod = p_page_idle->thisMachine->getSelectedProduct()->getPaymentMethod();
+    QString paymentMethod = p_page_idle->thisMachine->getPaymentMethod();
 
     if (p_page_idle->thisMachine->hasReceiptPrinter())
     {

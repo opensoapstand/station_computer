@@ -519,14 +519,14 @@ void page_product_overview::on_lineEdit_promo_codeInput_clicked()
 
 void page_product_overview::on_pushButton_continue_clicked()
 {
-    qDebug() << "page_product_overview: Pay button";
-
     ui->pushButton_to_help->setEnabled(false);
     ui->pushButton_previous_page->setEnabled(false);
 
-    QString paymentMethod = p_page_idle->thisMachine->getSelectedProduct()->getPaymentMethod();
+    QString paymentMethod = p_page_idle->thisMachine->getPaymentMethod();
     double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
     double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
+
+    qDebug() << "Payment method:" << paymentMethod;
     if (paymentMethod == PAYMENT_QR_EMAIL_FREE && finalPrice == 0.0 )
     {
         hideCurrentPageAndShowProvided(p_page_email);
@@ -596,7 +596,7 @@ void page_product_overview::on_pushButton_select_product_page_clicked()
 void page_product_overview::check_to_page_email(){
     double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
     double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
-    if(p_page_idle->thisMachine->getSelectedProduct()->getPaymentMethod() == PAYMENT_QR_EMAIL_FREE && finalPrice == 0.0 ){
+    if(p_page_idle->thisMachine->getPaymentMethod() == PAYMENT_QR_EMAIL_FREE && finalPrice == 0.0 ){
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_free");
     }else{
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay");

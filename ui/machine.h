@@ -65,6 +65,8 @@ public:
     double getPriceCorrected(int pnumber);
 
     QString getMachineId();
+    QString getPaymentMethod();
+    void setPaymentMethod(QString paymentMethod);
     bool getCouponsEnabled();
     bool getShowTransactionHistory();
     bool isAelenPillarElseSoapStand();
@@ -215,6 +217,7 @@ public:
     QString m_software_version_controller;
     double m_temperature2;
     double m_alert_temperature2;
+    QString m_payment;
 
     int m_is_enabled;
     QString m_status_text;

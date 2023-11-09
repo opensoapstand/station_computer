@@ -60,8 +60,8 @@ public:
                                  QVector<double> &mixRatios,
                                  QString *size_unit,
                                  QString *name_receipt,
-                                 QString *m_currency_deprecated, //_dummy_deprecated
-                                 QString *m_payment_deprecated,  //_deprecated,
+                                //  QString *m_currency_deprecated, //_dummy_deprecated
+                                //  QString *m_payment_deprecated,  //_deprecated,
                                  int *concentrate_multiplier,
                                  int *dispense_speed,
                                  double *threshold_flow,
@@ -113,7 +113,8 @@ public:
                                  double *alert_temperature,
                                  QString *software_version_controller,
                                  int *is_enabled,
-                                 QString* status_text
+                                 QString *status_text,
+                                 QString *payment
 
     );
     QString getHardwareVersion();

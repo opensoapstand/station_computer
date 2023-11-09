@@ -109,8 +109,8 @@ void pnumberproduct::loadProductPropertiesFromDb()
                                   m_mixPNumbers,
                                   m_mixRatios,
                                   &m_size_unit,
-                                  &m_currency_deprecated, //_dummy_deprecated
-                                  &m_payment_deprecated,  //_deprecated,
+                                //   &m_currency_deprecated, //_dummy_deprecated
+                                //   &m_payment_deprecated,  //_deprecated,
                                   &m_name_receipt,
                                   &m_concentrate_multiplier,
                                   &m_dispense_speed,
@@ -530,13 +530,14 @@ void pnumberproduct::setDispenseSpeedPercentage(int percentage)
     m_db->updateTableProductsWithInt(getPNumber(), "dispense_speed", pwm);
 }
 
-void pnumberproduct::setPaymentMethod(QString paymentMethod)
-{
-    qDebug() << "Open db: set payment method";
-    m_db->updateTableProductsWithText(getPNumber(), "payment", paymentMethod);
-}
+// void pnumberproduct::setPaymentMethod(QString paymentMethod)
+// {
+//     qDebug() << "Open db: set payment method";
+//     m_db->updateTableProductsWithText(getPNumber(), "payment", paymentMethod);
+// }
 
-QString pnumberproduct::getPaymentMethod()
-{
-    return m_payment_deprecated;
-}
+// QString pnumberproduct::getPaymentMethod()
+// {
+//     // DO  NOT USE
+//     return m_payment_deprecated;
+// }

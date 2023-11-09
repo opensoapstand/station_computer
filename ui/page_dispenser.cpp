@@ -213,7 +213,7 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     p_page_idle->thisMachine->getSelectedProduct()->resetVolumeDispensed();
     updatelabel_volume_dispensed_ml(p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl());
-    paymentMethod = p_page_idle->thisMachine->getSelectedProduct()->getPaymentMethod();
+    paymentMethod = p_page_idle->thisMachine->getPaymentMethod();
 
     fsmSendStartDispensing();
 }

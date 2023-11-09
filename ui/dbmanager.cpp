@@ -458,8 +458,8 @@ void DbManager::getAllProductProperties(int pnumber,
                                         QVector<int> &mixPNumbers,
                                         QVector<double> &mixRatios,
                                         QString *size_unit,
-                                        QString *m_currency_deprecated, //_dummy_deprecated
-                                        QString *m_payment_deprecated,  //_deprecated,
+                                        // QString *m_currency_deprecated, //_dummy_deprecated
+                                        // QString *m_payment_deprecated,  //_deprecated,
                                         QString *name_receipt,
                                         int *concentrate_multiplier,
                                         int *dispense_speed,
@@ -665,14 +665,15 @@ void DbManager::getAllMachineProperties(
     double *alert_temperature,
     QString *software_version_controller,
     int *is_enabled,
-    QString *status_text)
+    QString *status_text,
+    QString * payment)
 {
     qDebug() << " db... all machine properties from: " << CONFIG_DB_PATH;
     {
         QSqlDatabase db = openDb(CONFIG_DB_PATH);
         QSqlQuery qry(db);
 
-        qry.prepare("SELECT machine_id,soapstand_customer_id,template,location,controller_type,controller_id,screen_type,'screen_id',has_receipt_printer,receipt_printer_is_online,receipt_printer_has_paper,has_tap_payment,hardware_version,software_version,aws_port,coupons_enabled,has_empty_detection,enable_pump_ramping,enable_pump_reversal,dispense_buttons_count,maintenance_pwd,show_transactions,help_text_html,idle_page_type,admin_pwd,alert_temperature,software_version_controller,is_enabled,status_text FROM machine");
+        qry.prepare("SELECT machine_id,soapstand_customer_id,template,location,controller_type,controller_id,screen_type,'screen_id',has_receipt_printer,receipt_printer_is_online,receipt_printer_has_paper,has_tap_payment,hardware_version,software_version,aws_port,coupons_enabled,has_empty_detection,enable_pump_ramping,enable_pump_reversal,dispense_buttons_count,maintenance_pwd,show_transactions,help_text_html,idle_page_type,admin_pwd,alert_temperature,software_version_controller,is_enabled,status_text,payment FROM machine");
         bool success;
         success = qry.exec();
         if (!success)
@@ -725,6 +726,7 @@ void DbManager::getAllMachineProperties(
             *software_version_controller = qry.value(26).toString();
             *is_enabled = qry.value(27).toInt();
             *status_text = qry.value(28).toString();
+            *payment = qry.value(29).toString();
         }
         qry.finish();
     }

@@ -949,7 +949,8 @@ void machine::loadMachineParameterFromDb()
         &m_alert_temperature,
         &m_software_version_controller,
         &m_is_enabled,
-        &m_status_text);
+        &m_status_text,
+        &m_payment);
 
     qDebug() << "Machine ID as loaded from db: " << getMachineId();
     qDebug() << "Template folder from db : " << getTemplateFolder();
@@ -964,6 +965,17 @@ bool machine::getCouponsEnabled()
 {
     qDebug() << "coupons enabled>>> :: " << m_coupons_enabled;
     return m_coupons_enabled == 1;
+}
+
+QString machine::getPaymentMethod()
+{
+    return m_payment;
+}
+
+void machine::setPaymentMethod(QString paymentMethod)
+{
+    qDebug() << "Open db: set payment method";
+    m_db->updateTableMachineWithText("payment", paymentMethod);
 }
 
 QString machine::getMachineId()

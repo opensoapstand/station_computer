@@ -55,6 +55,13 @@ page_product_menu::page_product_menu(QWidget *parent) : QWidget(parent),
     pushButtons_dispense_product[4] = ui->pushButton_dispense_product_5;
     pushButtons_dispense_product[5] = ui->pushButton_dispense_product_6;
 
+    labels_dispense_product_picture[0] = ui->label_dispense_product_picture_1;
+    labels_dispense_product_picture[1] = ui->label_dispense_product_picture_2;
+    labels_dispense_product_picture[2] = ui->label_dispense_product_picture_3;
+    labels_dispense_product_picture[3] = ui->label_dispense_product_picture_4;
+    labels_dispense_product_picture[4] = ui->label_dispense_product_picture_5;
+    labels_dispense_product_picture[5] = ui->label_dispense_product_picture_6;
+
     // pushButtons_product_select[0] = ui->pushButton_selection1;
     // pushButtons_product_select[1] = ui->pushButton_selection2;
     // pushButtons_product_select[2] = ui->pushButton_selection3;
@@ -162,16 +169,26 @@ void page_product_menu::showEvent(QShowEvent *event)
         pushButtons_base_product[option_index]->setStyleSheet(styleSheet);
         labels_base_product_picture[option_index]->setProperty("class", "label_base_product_picture");
         labels_base_product_picture[option_index]->setStyleSheet(styleSheet);
-        p_page_idle->thisMachine->addPictureToLabel(labels_base_product_picture[option_index], p_page_idle->thisMachine->getProductByOption(option_index + 1)->getProductPicturePath());
+        p_page_idle->thisMachine->addPictureToLabel(labels_base_product_picture[option_index], p_page_idle->thisMachine->getProductByBNumber(option_index)->getProductPicturePath());
+        // p_page_idle->thisMachine->addPictureToLabel(labels_base_product_picture[option_index], p_page_idle->thisMachine->getProductByOption(option_index + 1)->getProductPicturePath());
        
         labels_base_product_name[option_index]->setProperty("class", "label_base_product_name");
         labels_base_product_name[option_index]->setStyleSheet(styleSheet);
         QString product_name = p_page_idle->thisMachine->getProductByOption(option_index + 1)->getProductName();
         labels_base_product_name[option_index]->setText(product_name);
 
-        pushButtons_dispense_product[option_index]->setProperty("class", "pushButton_dispense_product");
-        pushButtons_dispense_product[option_index]->setStyleSheet(styleSheet);
+        // pushButtons_dispense_product[option_index]->setProperty("class", "pushButton_dispense_product");
+        // pushButtons_dispense_product[option_index]->setStyleSheet(styleSheet);
     }
+    // int selectedBase = 0;
+    // for (int option_index = 0; option_index < 6; option_index++)
+    // {
+    //     labels_base_product_picture[option_index]->setProperty("class", "label_dispense_product_picture");
+    //     labels_base_product_picture[option_index]->setStyleSheet(styleSheet);
+    //     p_page_idle->thisMachine->addPictureToLabel(labels_base_product_picture[option_index], p_page_idle->thisMachine->getProductByOption((selectedBase * 6) + option_index)->getProductPicturePath());
+    //     pushButtons_dispense_product[option_index]->setProperty("class", "pushButton_dispense_product");
+    //     pushButtons_dispense_product[option_index]->setStyleSheet(styleSheet);
+    // }
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_product_menu_title);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_to_idle);
 

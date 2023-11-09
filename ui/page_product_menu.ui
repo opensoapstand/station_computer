@@ -393,6 +393,84 @@
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="label_dispense_product_picture_1">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>430</y>
+     <width>338</width>
+     <height>338</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_dispense_product_picture_2">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>430</y>
+     <width>338</width>
+     <height>338</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_dispense_product_picture_3">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>880</y>
+     <width>338</width>
+     <height>338</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_dispense_product_picture_4">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>880</y>
+     <width>338</width>
+     <height>338</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_dispense_product_picture_5">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1330</y>
+     <width>338</width>
+     <height>338</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_dispense_product_picture_6">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>1330</y>
+     <width>338</width>
+     <height>338</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
   <zorder>label_product_menu_title</zorder>
   <zorder>label_help</zorder>
   <zorder>pushButton_help_page</zorder>
@@ -422,6 +500,12 @@
   <zorder>pushButton_dispense_product_4</zorder>
   <zorder>pushButton_dispense_product_5</zorder>
   <zorder>pushButton_dispense_product_6</zorder>
+  <zorder>label_dispense_product_picture_1</zorder>
+  <zorder>label_dispense_product_picture_2</zorder>
+  <zorder>label_dispense_product_picture_3</zorder>
+  <zorder>label_dispense_product_picture_4</zorder>
+  <zorder>label_dispense_product_picture_5</zorder>
+  <zorder>label_dispense_product_picture_6</zorder>
  </widget>
  <resources/>
  <connections/>

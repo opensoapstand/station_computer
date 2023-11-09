@@ -179,6 +179,12 @@ void machine::setProductToOption(int productOption, int PNumber)
     productSelectionOptions[productOption - 1] = PNumber;
 }
 
+pnumberproduct *machine::getProductByBNumber(int slot_count){
+    int bNumber = m_slots[slot_count].getBasePNumber();
+    return &m_pnumberproducts[bNumber];
+    // return bNumber;
+}
+
 pnumberproduct *machine::getProductByPNumber(int PNumber)
 {
     return &m_pnumberproducts[PNumber];

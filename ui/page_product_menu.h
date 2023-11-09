@@ -49,6 +49,7 @@ public:
     QLabel* labels_base_product_name[4];
 
     QPushButton* pushButtons_dispense_product[6];
+    QLabel* labels_dispense_product_picture[6];
 
     QPushButton* pushButtons_product_select[4];
     QLabel* labels_product_picture[4];

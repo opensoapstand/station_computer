@@ -44,6 +44,11 @@ public:
     void displayProducts();
     
     QLabel* labels_base_product_bg[4];
+    QPushButton* pushButtons_base_product[4];
+    QLabel* labels_base_product_picture[4];
+    QLabel* labels_base_product_name[4];
+
+    QPushButton* pushButtons_dispense_product[6];
 
     QPushButton* pushButtons_product_select[4];
     QLabel* labels_product_picture[4];
@@ -56,6 +61,11 @@ public:
 private slots:
     // **** Navigation ****
     //void on_nextPageButton_clicked();
+    void on_pushButton_base_product_1_clicked();
+    void on_pushButton_base_product_2_clicked();
+    void on_pushButton_base_product_3_clicked();
+    void on_pushButton_base_product_4_clicked();
+
     // HACK: Could have better way for modular reference to buttons and drink orders...
     void on_pushButton_selection1_clicked();
     void on_pushButton_selection2_clicked();

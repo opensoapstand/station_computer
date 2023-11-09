@@ -40,7 +40,45 @@ QLabel {
     qproperty-alignment: AlignCenter;
 }
 
-.label_base_product_bg{
+.active{
+    background: #E2B985;
+    border-radius: 35px;
+}
+
+.inactive{
+    background: transparent;
+}
+
+.pushButton_base_product{
+    background-color: transparent;
+    border: 0px;
+}
+
+.label_base_product_picture{
+}
+
+.label_base_product_name{
+    color: #003840;
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    text-transform: capitalize;
+    text-align: center;
+    qproperty-alignment: AlignCenter;
+}
+
+#label_dispense_products_section_title{
+    color:#001810;
+    font-family: 'El Messiri';
+    font-weight: 700;
+    font-style: normal;
+    font-size: 30px;
+    text-align: left;
+    qproperty-alignment: AlignCenter;
+}
+
+.pushButton_dispense_product{
     background: yellow;
 }
 

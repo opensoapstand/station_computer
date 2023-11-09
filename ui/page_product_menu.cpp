@@ -33,6 +33,28 @@ page_product_menu::page_product_menu(QWidget *parent) : QWidget(parent),
     labels_base_product_bg[2] = ui->label_base_product_bg_3;
     labels_base_product_bg[3] = ui->label_base_product_bg_4;
 
+    pushButtons_base_product[0] = ui->pushButton_base_product_1;
+    pushButtons_base_product[1] = ui->pushButton_base_product_2;
+    pushButtons_base_product[2] = ui->pushButton_base_product_3;
+    pushButtons_base_product[3] = ui->pushButton_base_product_4;
+
+    labels_base_product_picture[0] = ui->label_base_product_picture_1;
+    labels_base_product_picture[1] = ui->label_base_product_picture_2;
+    labels_base_product_picture[2] = ui->label_base_product_picture_3;
+    labels_base_product_picture[3] = ui->label_base_product_picture_4;
+
+    labels_base_product_name[0] = ui->label_base_product_name_1;
+    labels_base_product_name[1] = ui->label_base_product_name_2;
+    labels_base_product_name[2] = ui->label_base_product_name_3;
+    labels_base_product_name[3] = ui->label_base_product_name_4;
+
+    pushButtons_dispense_product[0] = ui->pushButton_dispense_product_1;
+    pushButtons_dispense_product[1] = ui->pushButton_dispense_product_2;
+    pushButtons_dispense_product[2] = ui->pushButton_dispense_product_3;
+    pushButtons_dispense_product[3] = ui->pushButton_dispense_product_4;
+    pushButtons_dispense_product[4] = ui->pushButton_dispense_product_5;
+    pushButtons_dispense_product[5] = ui->pushButton_dispense_product_6;
+
     // pushButtons_product_select[0] = ui->pushButton_selection1;
     // pushButtons_product_select[1] = ui->pushButton_selection2;
     // pushButtons_product_select[2] = ui->pushButton_selection3;
@@ -113,6 +135,7 @@ void page_product_menu::showEvent(QShowEvent *event)
 
     ui->label_base_products_section_bg->setStyleSheet(styleSheet);
     ui->label_base_products_section_title->setStyleSheet(styleSheet);
+    ui->label_dispense_products_section_title->setStyleSheet(styleSheet);
 
     // displayProducts();
 
@@ -135,11 +158,25 @@ void page_product_menu::showEvent(QShowEvent *event)
     {
         labels_base_product_bg[option_index]->setProperty("class", "label_base_product_bg");
         labels_base_product_bg[option_index]->setStyleSheet(styleSheet);
+        pushButtons_base_product[option_index]->setProperty("class", "pushButton_base_product");
+        pushButtons_base_product[option_index]->setStyleSheet(styleSheet);
+        labels_base_product_picture[option_index]->setProperty("class", "label_base_product_picture");
+        labels_base_product_picture[option_index]->setStyleSheet(styleSheet);
+        p_page_idle->thisMachine->addPictureToLabel(labels_base_product_picture[option_index], p_page_idle->thisMachine->getProductByOption(option_index + 1)->getProductPicturePath());
+       
+        labels_base_product_name[option_index]->setProperty("class", "label_base_product_name");
+        labels_base_product_name[option_index]->setStyleSheet(styleSheet);
+        QString product_name = p_page_idle->thisMachine->getProductByOption(option_index + 1)->getProductName();
+        labels_base_product_name[option_index]->setText(product_name);
+
+        pushButtons_dispense_product[option_index]->setProperty("class", "pushButton_dispense_product");
+        pushButtons_dispense_product[option_index]->setStyleSheet(styleSheet);
     }
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_product_menu_title);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_to_idle);
 
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_base_products_section_title);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->label_dispense_products_section_title);
 
     maintenanceCounter = 0;
 
@@ -188,7 +225,7 @@ void page_product_menu::displayProducts()
             p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[option_index], "label_product_overlay_available", PAGE_PRODUCT_MENU_CSS);
         }
 
-        product_status_text = p_page_idle->thisMachine->getStatusText(option_index + 1);
+        product_status_text = p_page_idle->thisMachine->getProductByOption(option_index + 1)->getStatusText();
 
         qDebug() << "Product: " << product_type << "At Option: " << (option_index + 1) << ", enabled: " << p_page_idle->thisMachine->getIsOptionAvailable(option_index + 1) << " Status text: " << product_status_text;
 
@@ -312,6 +349,31 @@ void page_product_menu::select_product(int option)
     {
         qDebug() << "Invalid choice. Option not available: " << option;
     }
+}
+
+void page_product_menu::on_pushButton_base_product_1_clicked(){
+    p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_1, "active", PAGE_PRODUCT_MENU_CSS);
+    p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_2, "inactive", PAGE_PRODUCT_MENU_CSS);
+    p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_3, "inactive", PAGE_PRODUCT_MENU_CSS);
+    p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_4, "inactive", PAGE_PRODUCT_MENU_CSS);
+}
+void page_product_menu::on_pushButton_base_product_2_clicked(){
+    p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_1, "inactive", PAGE_PRODUCT_MENU_CSS);
+    p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_2, "active", PAGE_PRODUCT_MENU_CSS);
+    p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_3, "inactive", PAGE_PRODUCT_MENU_CSS);
+    p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_4, "inactive", PAGE_PRODUCT_MENU_CSS);
+}
+void page_product_menu::on_pushButton_base_product_3_clicked(){
+    p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_1, "inactive", PAGE_PRODUCT_MENU_CSS);
+    p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_2, "inactive", PAGE_PRODUCT_MENU_CSS);
+    p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_3, "active", PAGE_PRODUCT_MENU_CSS);
+    p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_4, "inactive", PAGE_PRODUCT_MENU_CSS);
+}
+void page_product_menu::on_pushButton_base_product_4_clicked(){
+    p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_1, "inactive", PAGE_PRODUCT_MENU_CSS);
+    p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_2, "inactive", PAGE_PRODUCT_MENU_CSS);
+    p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_3, "inactive", PAGE_PRODUCT_MENU_CSS);
+    p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_4, "active", PAGE_PRODUCT_MENU_CSS);
 }
 
 // FIXME: This is terrible...no time to make array reference to hold button press functions

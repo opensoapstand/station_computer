@@ -35,7 +35,7 @@ page_init::page_init(QWidget *parent) : QWidget(parent),
     rebootTimer = new QTimer(this);
     rebootTimer->setInterval(1000);
     connect(rebootTimer, SIGNAL(timeout()), this, SLOT(onRebootTimeoutTick()));
-    connect(this, SIGNAL(tapSetupInitialized()), this, SLOT(showIdlePage()));
+    // connect(this, SIGNAL(tapSetupInitialized()), this, SLOT(showIdlePage()));
 }
 
 void page_init::setPage(page_idle *pageIdle)
@@ -62,7 +62,7 @@ void page_init::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_INIT_BACKGROUND_IMAGE_PATH);
 
     initIdleTimer->start(1000);
-    paymentMethod = p_page_idle->thisMachine->getPaymentMethod(); 
+    paymentMethod = p_page_idle->thisMachine->getPaymentMethod();
 #ifdef START_FSM_FROM_UI
     start_controller = true;
 #else
@@ -117,6 +117,7 @@ void page_init::onInitTimeoutTick()
     else
     {
         initIdleTimer->stop();
+        qDebug() << "init: No connection with controller. Timeout trying.";
         if (paymentMethod != PAYMENT_TAP_TCP && paymentMethod != PAYMENT_TAP_SERIAL)
         {
             hideCurrentPageAndShowProvided(p_page_idle);
@@ -142,6 +143,8 @@ void page_init::onRebootTimeoutTick()
 
 void page_init::initiateTapPayment()
 {
+    // executed in a separate thread. It shows the init screen until the code is initialized. 
+
     this->showFullScreen();
     // Waiting for payment label setup
     QString waitingForPayment = p_page_idle->thisMachine->getTemplateText("page_init->label_fail_message->tap_payment");
@@ -158,7 +161,7 @@ void page_init::initiateTapPayment()
         paymentSerialObject.tap_serial_initiate();
     }
 
-    emit tapSetupInitialized();
+    emit tapSetupInitialized(); 
 }
 
 void page_init::showIdlePage()

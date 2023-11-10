@@ -467,7 +467,7 @@ QString pnumberproduct::getProductType()
 QString pnumberproduct::getProductPicturePath()
 {
     QString pnumber = m_soapstand_product_serial;
-    qDebug() << "pnumber before p nodted " << pnumber;
+    // qDebug() << "pnumber before p nodted " << pnumber;
 
     // Check if serial starts with "P-"
     if (!pnumber.startsWith("P-"))
@@ -475,7 +475,7 @@ QString pnumberproduct::getProductPicturePath()
         // Add "P-" prefix if it's missing
         pnumber.prepend("P-");
     }
-    qDebug() << "pnumber P- notated " << pnumber;
+    // qDebug() << "pnumber P- notated " << pnumber;
     return QString(PRODUCT_PICTURES_ROOT_PATH).arg(pnumber);
 }
 

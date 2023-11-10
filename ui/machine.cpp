@@ -429,13 +429,14 @@ StateCoupon machine::getCouponState()
 
 void machine::initCouponState()
 {
-
     if (getCouponsEnabled())
     {
+        qDebug() << "Machine: Coupons enabled ";
         m_stateCoupon = enabled_not_set;
     }
     else
     {
+        qDebug() << "Machine: Coupons disabled.";
         m_stateCoupon = disabled;
     }
 
@@ -963,7 +964,7 @@ QString machine::getIdlePageType()
 
 bool machine::getCouponsEnabled()
 {
-    qDebug() << "coupons enabled>>> :: " << m_coupons_enabled;
+    
     return m_coupons_enabled == 1;
 }
 

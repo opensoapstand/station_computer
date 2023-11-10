@@ -9,25 +9,13 @@
 // payment page and page_idle page
 //
 // created: 05-04-2022
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
 #include "page_product.h"
 #include "ui_page_product.h"
-#include <iostream>
-#include <string>
-#include <cmath>
-
-#include "page_qr_payment.h"
-#include "page_select_product.h"
-#include "page_productOverview.h"
-#include "product.h"
-
-#include "page_idle.h"
-#include <curl/curl.h>
-#include <json.hpp>
 
 using json = nlohmann::json;
 QString transactionLogging = "";
@@ -144,19 +132,18 @@ uint16_t orderSizePriceLabels_xy_dynamic_ui_small_custom_available[8][2] = {
 };
 
 uint16_t orderSizeVolumeLabels_xy_dynamic_ui_large_custom_available[8][2] = {
-    {1, 1}, // S vol
+    {1, 1},      // S vol
     {1, 1},      // M vol
-    {710, 1000},      // L vol
+    {710, 1000}, // L vol
     {570, 1110}  // custom col
 };
 
 uint16_t orderSizePriceLabels_xy_dynamic_ui_large_custom_available[8][2] = {
-    {1, 1}, // S price
+    {1, 1},      // S price
     {1, 1},      // M price
-    {710, 1040},      // L price
+    {710, 1040}, // L price
     {560, 1160}  // custom price
 };
-
 
 uint16_t orderSizeVolumeLabels_xy_dynamic_ui_small_available[8][2] = {
     {605, 1150}, // S vol
@@ -215,12 +202,13 @@ page_product::page_product(QWidget *parent) : QWidget(parent),
     connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
 
     transactionLogging = "";
+    statusbarLayout = new QVBoxLayout(this);
 }
 
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void page_product::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, page_product_overview *page_Overview)
+void page_product::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_payment_tap_serial *page_payment_tap_serial, page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product_overview *page_Overview, statusbar *p_statusbar)
 {
     this->p_page_select_product = pageSelect;
     this->paymentPage = page_qr_payment;
@@ -229,8 +217,10 @@ void page_product::setPage(page_select_product *pageSelect, page_dispenser *page
     this->p_page_help = pageHelp;
     this->p_page_wifi_error = pageWifiError;
     this->p_page_overview = page_Overview;
-
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_PRODUCT_BACKGROUND_PATH);
+    this->p_page_payment_tap_serial = page_payment_tap_serial;
+    this->p_page_payment_tap_tcp = page_payment_tap_tcp;
+    this->p_statusbar = p_statusbar;
+    this->p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_PRODUCT_BACKGROUND_PATH);
 }
 
 // DTOR
@@ -243,11 +233,14 @@ page_product::~page_product()
 void page_product::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
-    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+    p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
 
-    p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
-    
-    QString styleSheet = p_page_idle->getCSS(PAGE_PRODUCT_CSS);
+    statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
+    statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
+
+    p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+
+    QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_PRODUCT_CSS);
 
     ui->label_product_title->setProperty("class", "title");
     ui->label_product_title->setStyleSheet(styleSheet);
@@ -300,23 +293,23 @@ void page_product::reset_and_show_page_elements()
 {
 
     // general setup
-    p_page_idle->setTemplateTextToObject(ui->pushButton_back);
-    p_page_idle->setTemplateTextToObject(ui->label_select_quantity);
-    p_page_idle->setTemplateTextToObject(ui->pushButton_continue);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_back);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->label_select_quantity);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_continue);
 
     ui->label_product_description->setWordWrap(true);
     ui->label_product_ingredients->setWordWrap(true);
     ui->pushButton_continue->hide();
 
-    p_page_idle->addPictureToLabel(ui->label_product_photo, p_page_idle->selectedProduct->getProductPicturePath());
+    p_page_idle->thisMachine->addPictureToLabel(ui->label_product_photo, p_page_idle->thisMachine->selectedProduct->getProductPicturePath());
 
-    ui->label_product_title->setText(p_page_idle->selectedProduct->getProductName());
-    ui->label_product_ingredients->setText(p_page_idle->selectedProduct->getProductIngredients());
-    ui->label_product_description->setText(p_page_idle->selectedProduct->getProductDescription());
+    ui->label_product_title->setText(p_page_idle->thisMachine->selectedProduct->getProductName());
+    ui->label_product_ingredients->setText(p_page_idle->thisMachine->selectedProduct->getProductIngredients());
+    ui->label_product_description->setText(p_page_idle->thisMachine->selectedProduct->getProductDescription());
 
-    QString full_path = p_page_idle->thisMachine.getTemplatePathFromName(IMAGE_BUTTON_HELP);
+    QString full_path = p_page_idle->thisMachine->getTemplatePathFromName(IMAGE_BUTTON_HELP);
     qDebug() << full_path;
-    p_page_idle->addPictureToLabel(ui->label_help, full_path);
+    p_page_idle->thisMachine->addPictureToLabel(ui->label_help, full_path);
 
     selectIdleTimer->start(1000);
     _selectIdleTimeoutSec = 400;
@@ -330,7 +323,7 @@ void page_product::reset_and_show_page_elements()
     // create signature by sizes availability, use the bits
     for (uint8_t i = 0; i < 4; i++)
     {
-        uint8_t enabled = p_page_idle->selectedProduct->getSizeEnabled(product_sizes[i]);
+        uint8_t enabled = p_page_idle->thisMachine->selectedProduct->getSizeEnabled(product_sizes[i]);
         available_sizes_signature |= enabled << i;
         // S=1, M=2, L=4, C=8
 
@@ -372,7 +365,7 @@ void page_product::reset_and_show_page_elements()
         xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_small_custom_available;
         xy_size_labels_price = orderSizePriceLabels_xy_dynamic_ui_small_custom_available;
     }
-     else if (available_sizes_signature == 12)
+    else if (available_sizes_signature == 12)
     {
         xywh_size_buttons = orderSizeButtons_xywh_dynamic_ui_large_custom_available;
         xy_size_labels_volume = orderSizeVolumeLabels_xy_dynamic_ui_large_custom_available;
@@ -411,7 +404,7 @@ void page_product::reset_and_show_page_elements()
         orderSizeButtons[i]->hide();
 
         // check if size is enabled
-        if (p_page_idle->selectedProduct->getSizeEnabled(product_sizes[i]))
+        if (p_page_idle->thisMachine->selectedProduct->getSizeEnabled(product_sizes[i]))
         {
             sizes_available_count++;
 
@@ -419,12 +412,12 @@ void page_product::reset_and_show_page_elements()
             orderSizeLabelsVolume[i]->show();
             orderSizeBackgroundLabels[i]->show();
             orderSizeButtons[i]->show();
-            p_page_idle->addCssClassToObject(orderSizeLabelsVolume[i], "orderSizeLabelsVolume", PAGE_PRODUCT_CSS);
-            p_page_idle->addCssClassToObject(orderSizeBackgroundLabels[i], "orderSizeBackgroundLabels", PAGE_PRODUCT_CSS);
-            p_page_idle->addCssClassToObject(orderSizeButtons[i], "orderSizeButtons", PAGE_PRODUCT_CSS);
-            p_page_idle->addCssClassToObject(orderSizeLabelsPrice[i], "orderSizeLabelsPrice", PAGE_PRODUCT_CSS);
+            p_page_idle->thisMachine->addCssClassToObject(orderSizeLabelsVolume[i], "orderSizeLabelsVolume", PAGE_PRODUCT_CSS);
+            p_page_idle->thisMachine->addCssClassToObject(orderSizeBackgroundLabels[i], "orderSizeBackgroundLabels", PAGE_PRODUCT_CSS);
+            p_page_idle->thisMachine->addCssClassToObject(orderSizeButtons[i], "orderSizeButtons", PAGE_PRODUCT_CSS);
+            p_page_idle->thisMachine->addCssClassToObject(orderSizeLabelsPrice[i], "orderSizeLabelsPrice", PAGE_PRODUCT_CSS);
 
-            double price = p_page_idle->selectedProduct->getBasePrice(product_sizes[i]);
+            double price = p_page_idle->thisMachine->selectedProduct->getBasePrice(product_sizes[i]);
 
             // if there is only one product size available, the continue button will show, it will then load this default size
             default_size = product_sizes[i];
@@ -446,11 +439,11 @@ void page_product::reset_and_show_page_elements()
                 double discount_price_per_liter;
                 // check if there is a price decline for large volumes
 
-                p_page_idle->selectedProduct->getCustomDiscountDetails(&large_volume_discount_is_enabled, &min_volume_for_discount, &discount_price_per_liter);
-                orderSizeLabelsVolume[i]->setText(p_page_idle->getTemplateTextByPage(this, "custom_volume"));
+                p_page_idle->thisMachine->selectedProduct->getCustomDiscountDetails(&large_volume_discount_is_enabled, &min_volume_for_discount, &discount_price_per_liter);
+                orderSizeLabelsVolume[i]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "custom_volume"));
 
-                QString units = p_page_idle->selectedProduct->getUnitsForSlot();
-                QString units_discount_indication = p_page_idle->selectedProduct->getUnitsForSlot();
+                QString units = p_page_idle->thisMachine->selectedProduct->getUnitsForSlot();
+                QString units_discount_indication = p_page_idle->thisMachine->selectedProduct->getUnitsForSlot();
                 if (units == "ml")
                 {
                     units = "100ml";
@@ -462,7 +455,7 @@ void page_product::reset_and_show_page_elements()
 
                 else if (units == "g")
                 {
-                    if (p_page_idle->selectedProduct->getVolumeBySize(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
+                    if (p_page_idle->thisMachine->selectedProduct->getVolumeBySize(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
                     {
                         units = "100g";
                         units_discount_indication = "kg";
@@ -505,7 +498,7 @@ void page_product::reset_and_show_page_elements()
             else
             {
                 orderSizeLabelsPrice[i]->setText("$" + QString::number(price, 'f', 2));
-                orderSizeLabelsVolume[i]->setText(p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(product_sizes[i], true, true));
+                orderSizeLabelsVolume[i]->setText(p_page_idle->thisMachine->selectedProduct->getSizeToVolumeWithCorrectUnits(product_sizes[i], true, true));
             }
             orderSizeButtons[i]->raise();
         }
@@ -547,7 +540,10 @@ void page_product::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 
     selectIdleTimer->stop();
     this->stopSelectTimers();
-    p_page_idle->pageTransition(this, pageToShow);
+
+    statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
+
+    p_page_idle->thisMachine->pageTransition(this, pageToShow);
 }
 
 void page_product::on_pushButton_to_help_clicked()
@@ -558,14 +554,14 @@ void page_product::on_pushButton_to_help_clicked()
 void page_product::on_pushButton_order_custom_clicked()
 {
     qDebug() << "Button custom clicked ";
-    p_page_idle->selectedProduct->setSize(SIZE_CUSTOM_INDEX);
+    p_page_idle->thisMachine->selectedProduct->setSize(SIZE_CUSTOM_INDEX);
     hideCurrentPageAndShowProvided(p_page_overview);
 }
 
 void page_product::on_pushButton_order_medium_clicked()
 {
     qDebug() << "Button medium clicked";
-    p_page_idle->selectedProduct->setSize(SIZE_MEDIUM_INDEX);
+    p_page_idle->thisMachine->selectedProduct->setSize(SIZE_MEDIUM_INDEX);
     hideCurrentPageAndShowProvided(p_page_overview);
 }
 
@@ -573,7 +569,7 @@ void page_product::on_pushButton_order_medium_clicked()
 void page_product::on_pushButton_order_small_clicked()
 {
     qDebug() << "Button small clicked";
-    p_page_idle->selectedProduct->setSize(SIZE_SMALL_INDEX);
+    p_page_idle->thisMachine->selectedProduct->setSize(SIZE_SMALL_INDEX);
     hideCurrentPageAndShowProvided(p_page_overview);
 }
 
@@ -581,7 +577,7 @@ void page_product::on_pushButton_order_small_clicked()
 void page_product::on_pushButton_order_big_clicked()
 {
     qDebug() << "Button big clicked";
-    p_page_idle->selectedProduct->setSize(SIZE_LARGE_INDEX);
+    p_page_idle->thisMachine->selectedProduct->setSize(SIZE_LARGE_INDEX);
     hideCurrentPageAndShowProvided(p_page_overview);
 }
 
@@ -599,7 +595,7 @@ void page_product::on_pushButton_previous_page_clicked()
 void page_product::on_pushButton_continue_clicked()
 {
     // which size is enabled? select that size
-    p_page_idle->selectedProduct->setSize(default_size);
+    p_page_idle->thisMachine->selectedProduct->setSize(default_size);
     hideCurrentPageAndShowProvided(p_page_overview);
 }
 

@@ -9,7 +9,7 @@
 // Database threads
 //
 // created: 01-2022
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
@@ -42,7 +42,7 @@ public:
 
    DF_ERROR createThreads(pthread_t &kbThread, pthread_t &ipThread);
 
-   DF_ERROR sendMessageOverIP(string msg);
+   DF_ERROR sendMessageOverIP(string msg, bool isLoggingMessage);
    void setMachine(machine *machine);
    string getProcessString();
    DF_ERROR parseCommandString();
@@ -70,7 +70,7 @@ public:
       return m_requestedDiscountPrice;
    }
 
-   string getPromoCode()
+   string getCouponCode()
    {
       return m_promoCode;
    }

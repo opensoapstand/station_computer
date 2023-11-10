@@ -1,6 +1,6 @@
 //***************************************
 //
-// page_tap_payment_serial.h
+// page_payment_tap_serial.h
 // GUI class while machine is processing
 // payment.
 //
@@ -8,7 +8,7 @@
 // class then communcates results to page_dispenser.
 //
 // created: 05-04-2022
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
@@ -36,14 +36,15 @@
 #include <vector>
 #include <thread>
 
+class statusbar;
 class page_product;
 class page_dispenser;
 class page_idle;
 class page_help;
-
+class page_error_wifi;
 namespace Ui
 {
-    class page_tap_payment_serial;
+    class page_payment_tap_serial;
 }
 
 typedef enum StatePaymentSerial
@@ -55,19 +56,19 @@ typedef enum StatePaymentSerial
 
 using namespace std;
 
-class page_tap_payment_serial : public QWidget
+class page_payment_tap_serial : public QWidget
 {
     Q_OBJECT
 
 public:
     // **** GUI Setup ****
-    explicit page_tap_payment_serial(QWidget *parent = nullptr);
-    void setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp);
-    ~page_tap_payment_serial();
+    explicit page_payment_tap_serial(QWidget *parent = nullptr);
+    void setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp, statusbar *p_statusbar);
+    ~page_payment_tap_serial();
 
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
-    void hideCurrentPageAndShowProvided(QWidget *pageToShow);
+    void hideCurrentPageAndShowProvided(QWidget *pageToShow,bool cancelTapPayment);
     bool exitConfirm();
 
     bool setpaymentProcess(bool status);
@@ -77,6 +78,7 @@ public:
     void batchClose();
 
     void sendCommand();
+
 
     string getTerminalID()
     {
@@ -92,7 +94,7 @@ public:
     {
         return merchantAddress;
     }
-    void tap_serial_initiate();
+    bool tap_serial_initiate();
 
     QTimer *readTimer;
     StatePaymentSerial state_payment;
@@ -109,12 +111,13 @@ private slots:
 
 private:
     // **** GUI ****
-    Ui::page_tap_payment_serial *ui;
+    Ui::page_payment_tap_serial *ui;
     page_product *p_page_product;
     page_dispenser *p_page_dispense;
     page_idle *p_page_idle;
     page_help *p_page_help;
     page_error_wifi *p_page_wifi_error;
+    statusbar *p_statusbar;
 
     bool approved = false;
 
@@ -155,9 +158,10 @@ private:
     bool getResponse() { return response; }
     bool tapSetupStarted = false;
 
-    QTimer *paymentEndTimer;
-    void resetPaymentPage();
+    // QTimer *paymentEndTimer;
+    void resetPaymentPage(bool cancelTapPayment);
     int tmpCounter;
+    QVBoxLayout *statusbarLayout;
 };
 
 #endif // page_tap_payment_serial_H

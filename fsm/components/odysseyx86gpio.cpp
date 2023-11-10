@@ -5,7 +5,7 @@
 // NATIVE x86 pins on Oddysey board
 //
 // created: 15-06-2020
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
@@ -379,7 +379,7 @@ void oddyseyx86GPIO::monitorGPIO_Flowsensor(bool *abortLoop)
 //                         {
 //                                 debugOutput::sendMessage("Sending MM to UI. Deprecated. UI not listening.\n", MSG_INFO);
 //                                 // ENTER MAINTENANCE MODE!
-//                                 //m_pMessaging->sendMessageOverIP("MM");
+//                                 //m_pMessaging->sendMessageOverIP("MM", true); // send to UI
 //                         }
 //                         else
 //                         {

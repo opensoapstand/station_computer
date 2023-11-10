@@ -8,7 +8,7 @@
 // payment page and page_idle page
 //
 // created: 05-04-2022
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
@@ -25,6 +25,7 @@
 #include "page_product.h"
 #include <curl/curl.h>
 
+class statusbar;
 class page_select_product;
 class page_qr_payment;
 class page_idle;
@@ -49,7 +50,7 @@ public:
     QLabel *orderSizeBackgroundLabels[4];
 
     explicit page_sendFeedback(QWidget *parent = nullptr);
-    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, page_product *page_product, page_end *page_end);
+    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, page_product *page_product, page_end *page_end, statusbar *p_statusbar);
     ~page_sendFeedback();
 
     void resizeEvent(QResizeEvent *event);
@@ -89,6 +90,7 @@ private:
     page_error_wifi *p_page_wifi_error;
     page_help *p_page_help;
     page_product *p_page_product;
+    statusbar *p_statusbar;
 
     QTimer *selectIdleTimer;
     int _selectIdleTimeoutSec;
@@ -101,6 +103,7 @@ private:
     CURLcode res;
     QByteArray curl_param_array;
     QString MachineSerialNumber;
+    QVBoxLayout *statusbarLayout;
 };
 
 #endif // PAYSELECT_H

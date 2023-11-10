@@ -1,6 +1,6 @@
 //***************************************
 //
-// page_tap_payment.cpp
+// page_payment_tap_tcp.cpp
 // GUI class while machine is processing
 // payment.
 //
@@ -8,13 +8,13 @@
 // class then communcates results to page_dispenser.
 //
 // created: 05-04-2022
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
-#include "page_tap_payment.h"
-#include "ui_page_tap_payment.h"
+#include "page_payment_tap_tcp.h"
+#include "ui_page_payment_tap_tcp.h"
 
 #include "page_product.h"
 #include "page_dispenser.h"
@@ -29,13 +29,14 @@ extern std::string MAC_LABEL;
 extern std::string AUTH_CODE;
 extern std::string SAF_NUM;
 extern std::string socketAddr;
+extern std::map<std::string, std::string> tapPaymentObject;
 std::thread cardTapThread;
 std::thread dataThread;
 int numberOfTapAttempts = 0;
 // CTOR
 
-page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
-                                                      ui(new Ui::page_tap_payment)
+page_payment_tap_tcp::page_payment_tap_tcp(QWidget *parent) : QWidget(parent),
+                                                      ui(new Ui::page_payment_tap_tcp)
 {
     // Fullscreen background setup
     ui->setupUi(this);
@@ -58,9 +59,10 @@ page_tap_payment::page_tap_payment(QWidget *parent) : QWidget(parent),
     ui->pushButton_payment_bypass->setEnabled(false);
     ui->label_title->hide();
     // ui->order_total_amount->hide();
+    statusbarLayout = new QVBoxLayout(this);
 }
 
-void page_tap_payment::initiate_tap_setup()
+void page_payment_tap_tcp::initiate_tap_setup()
 {
     qDebug() << "InitializingTap payment";
     tap_payment = true;
@@ -91,7 +93,7 @@ void page_tap_payment::initiate_tap_setup()
         registerDevice(connectSocket());
     }
 }
-void page_tap_payment::stopPayTimers()
+void page_payment_tap_tcp::stopPayTimers()
 {
 
     if (checkPacketReceivedTimer != nullptr)
@@ -115,41 +117,45 @@ void page_tap_payment::stopPayTimers()
 /*
  * Page Tracking reference
  */
-void page_tap_payment::setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp)
+void page_payment_tap_tcp::setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp, statusbar *p_statusbar)
 {
     this->p_page_product = p_page_product;
     this->p_page_wifi_error = pageWifiError;
     this->p_page_dispense = page_dispenser;
     this->p_page_idle = pageIdle;
     this->p_page_help = pageHelp;
+    this->p_statusbar = p_statusbar;
 }
 
 // DTOR
-page_tap_payment::~page_tap_payment()
+page_payment_tap_tcp::~page_payment_tap_tcp()
 {
     delete ui;
 }
 
-void page_tap_payment::on_pushButton_payment_bypass_clicked()
+void page_payment_tap_tcp::on_pushButton_payment_bypass_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_dispense);
 }
 
 /*Cancel any previous payment*/
-void page_tap_payment::cancelPayment()
+void page_payment_tap_tcp::cancelPayment()
 {
     // finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
     checkPacketReceivedTimer->stop();
 }
 
-void page_tap_payment::showEvent(QShowEvent *event)
+void page_payment_tap_tcp::showEvent(QShowEvent *event)
 {
-    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+    p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
-    p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+    statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
+    statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
+
+    p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
     
-    QString styleSheet = p_page_idle->getCSS(PAGE_TAP_PAYMENT_CSS);
+    QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_TAP_PAYMENT_CSS);
 
     ui->pushButton_previous_page->setStyleSheet(styleSheet);
 
@@ -158,13 +164,13 @@ void page_tap_payment::showEvent(QShowEvent *event)
     ui->pushButton_to_idle->setStyleSheet(styleSheet);
     ui->pushButton_payment_bypass->setStyleSheet(styleSheet);
 
-    p_page_idle->setTemplateTextToObject(ui->pushButton_previous_page);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_previous_page);
 
     ui->pushButton_payment_bypass->setEnabled(false);
 
     state_tap_payment = s_tap_init;
     ui->pushButton_payment_bypass->setEnabled(false);
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY);
+    p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY);
     ui->productLabel->hide();
     ui->order_drink_amount->hide();
 
@@ -172,22 +178,24 @@ void page_tap_payment::showEvent(QShowEvent *event)
     tapPaymentHandler();
 }
 
-void page_tap_payment::hideCurrentPageAndShowProvided(QWidget *pageToShow)
+void page_payment_tap_tcp::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
 
     resetPaymentPage();
-    p_page_idle->pageTransition(this, pageToShow);
+    statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
+
+    p_page_idle->thisMachine->pageTransition(this, pageToShow);
 }
 
-bool page_tap_payment::setpaymentProcess(bool status)
+bool page_payment_tap_tcp::setpaymentProcess(bool status)
 {
     return (paymentProcessing = status);
 }
 
-void page_tap_payment::tapPaymentHandler()
+void page_payment_tap_tcp::tapPaymentHandler()
 {
     ui->animated_Label->move(221, 327);
-    QString image_path = p_page_idle->thisMachine.getTemplatePathFromName("tap.gif");
+    QString image_path = p_page_idle->thisMachine->getTemplatePathFromName("tap.gif");
     QMovie *tapGif = new QMovie(image_path);
 
     ui->animated_Label->setMovie(tapGif);
@@ -202,20 +210,23 @@ void page_tap_payment::tapPaymentHandler()
     lastTransactionId = std::stoi(configMap["INVOICE"]);
 
     startSession(socket, MAC_LABEL, MAC_KEY, lastTransactionId + 1);
+    tapPaymentObject["session_id"] = std::to_string(lastTransactionId+1);
+    tapPaymentObject["mac_label"] = MAC_LABEL;
+
     startPaymentProcess();
 }
 
-void page_tap_payment::startPaymentProcess()
+void page_payment_tap_tcp::startPaymentProcess()
 {
     if (numberOfTapAttempts < 3)
     {
         numberOfTapAttempts += 1;
-        double price = p_page_idle->selectedProduct->getPriceCorrected();
-        if (p_page_idle->selectedProduct->getSizeAsChar() == 'c')
+        double price = p_page_idle->thisMachine->selectedProduct->getPriceCorrected();
+        if (p_page_idle->thisMachine->selectedProduct->getSizeAsChar() == 'c')
         {
-            price = p_page_idle->selectedProduct->getPriceCustom();
+            price = p_page_idle->thisMachine->selectedProduct->getPriceCustom();
         }
-        price = p_page_idle->thisMachine.getPriceWithDiscount(price);
+        price = p_page_idle->thisMachine->getPriceWithDiscount(price);
         std::ostringstream stream;
         stream << std::fixed << std::setprecision(2) << price;
         std::string authCommand = authorizationCommand(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, stream.str());
@@ -230,8 +241,8 @@ void page_tap_payment::startPaymentProcess()
         dataThread = std::thread(receiveAuthorizationThread, std::stoi(socketAddr));
         dataThread.detach();
         checkPacketReceivedTimer->start();
-        QString base_text = p_page_idle->getTemplateTextByElementNameAndPage(ui->preauthLabel);
-        ui->preauthLabel->setText(base_text.arg(p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true)));
+        QString base_text = p_page_idle->thisMachine->getTemplateTextByElementNameAndPage(ui->preauthLabel);
+        ui->preauthLabel->setText(base_text.arg(p_page_idle->thisMachine->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true)));
         ui->order_total_amount->setText("$ " + QString::number(price, 'f', 2));
     }
     else
@@ -241,7 +252,7 @@ void page_tap_payment::startPaymentProcess()
     }
 }
 
-void page_tap_payment::check_packet_available()
+void page_payment_tap_tcp::check_packet_available()
 {
     std::map<std::string, std::string> xml_packet_dict;
     bool isPacketReceived;
@@ -252,7 +263,7 @@ void page_tap_payment::check_packet_available()
         authorized_transaction(xml_packet_dict);
     }
 }
-void page_tap_payment::check_card_tapped()
+void page_payment_tap_tcp::check_card_tapped()
 {
     std::map<std::string, std::string> xml_packet_dict_tapped;
     bool isPacketReceived;
@@ -264,9 +275,9 @@ void page_tap_payment::check_card_tapped()
 
     if (isPacketReceived && card_tap_status == "Success")
     {
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY);
+        p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY);
         qDebug() << "Packet received true";
-        p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_title, "processing");
+        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_title, "processing");
 
         // ui->label_title->setText("Processing Payment");
         // ui->label_title->show();
@@ -279,7 +290,7 @@ void page_tap_payment::check_card_tapped()
         }
 
         ui->animated_Label->move(410, 480);
-        QString image_path = p_page_idle->thisMachine.getTemplatePathFromName("soapstandspinner.gif");
+        QString image_path = p_page_idle->thisMachine->getTemplatePathFromName("soapstandspinner.gif");
         QMovie *movie = new QMovie(image_path);
         ui->animated_Label->setMovie(movie);
         movie->start();
@@ -290,7 +301,7 @@ void page_tap_payment::check_card_tapped()
     }
 }
 
-void page_tap_payment::authorized_transaction(std::map<std::string, std::string> responseObj)
+void page_payment_tap_tcp::authorized_transaction(std::map<std::string, std::string> responseObj)
 {
     stopPayTimers();
     QMovie *currentGif = ui->animated_Label->movie();
@@ -299,28 +310,45 @@ void page_tap_payment::authorized_transaction(std::map<std::string, std::string>
     if (responseObj["RESULT"] == "APPROVED")
     {
 
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
-        CTROUTD = responseObj["CTROUTD"];
-        AUTH_CODE = responseObj["AUTH_CODE"];
+        p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
+        // CTROUTD = responseObj["CTROUTD"];
+        // AUTH_CODE = responseObj["AUTH_CODE"];
+        tapPaymentObject["ctroutd"] = responseObj["CTROUTD"];
+        tapPaymentObject["auth_code"] = responseObj["AUTH_CODE"];
+        tapPaymentObject["amount"] = responseObj["TRANS_AMOUNT"];
+        tapPaymentObject["date"] = responseObj["TRANS_DATE"];
+        tapPaymentObject["time"] = responseObj["TRANS_TIME"];
+        tapPaymentObject["card_number"] = responseObj["ACCT_NUM"];
+        tapPaymentObject["card_type"] = responseObj["PAYMENT_MEDIA"];
+        tapPaymentObject["status"] = "Authorized";
         hideCurrentPageAndShowProvided(p_page_dispense);
     }
-    else if (responseObj["RESULT"] == "APPROVED/STORED")
+    else if (responseObj["result"] == "APPROVED/STORED")
     {
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
-        CTROUTD = responseObj["CTROUTD"];
-        AUTH_CODE = responseObj["AUTH_CODE"];
-        SAF_NUM = responseObj["SAF_NUM"];
+        p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
+        // CTROUTD = responseObj["CTROUTD"];
+        // AUTH_CODE = responseObj["AUTH_CODE"];
+        // SAF_NUM = responseObj["SAF_NUM"];
+        tapPaymentObject["ctroutd"] = responseObj["CTROUTD"];
+        tapPaymentObject["auth_code"] = responseObj["AUTH_CODE"];
+        tapPaymentObject["saf_num"] = responseObj["SAF_NUM"];
+        tapPaymentObject["amount"] = responseObj["TRANS_AMOUNT"];
+        tapPaymentObject["date"] = responseObj["TRANS_DATE"];
+        tapPaymentObject["time"] = responseObj["TRANS_TIME"];
+        tapPaymentObject["card_number"] = responseObj["ACCT_NUM"];
+        tapPaymentObject["card_type"] = responseObj["PAYMENT_MEDIA"];
+        tapPaymentObject["status"] = "Authorized Offline";
         hideCurrentPageAndShowProvided(p_page_dispense);
     }
-    else if (responseObj["RESULT"] == "DECLINED")
+    else if (responseObj["result"] == "DECLINED")
     {
 
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_FAIL);
+        p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_FAIL);
         startPaymentProcess();
     }
 }
 
-bool page_tap_payment::exitConfirm()
+bool page_payment_tap_tcp::exitConfirm()
 {
     qDebug() << "In exit confirm";
     if (state_tap_payment == s_tap_payment_processing || state_tap_payment == s_tap_payment_done)
@@ -328,9 +356,9 @@ bool page_tap_payment::exitConfirm()
         // ARE YOU SURE YOU WANT TO EXIT?
         QMessageBox msgBox;
         msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
-        p_page_idle->addCssClassToObject(&msgBox, "msgBoxbutton msgBox", PAGE_TAP_PAYMENT_CSS);
+        p_page_idle->thisMachine->addCssClassToObject(&msgBox, "msgBoxbutton msgBox", PAGE_TAP_PAYMENT_CSS);
         QString searchString = this->objectName() + "->msgBox_cancel";
-        p_page_idle->setTextToObject(&msgBox, p_page_idle->getTemplateText(searchString));
+        p_page_idle->thisMachine->setTextToObject(&msgBox, p_page_idle->thisMachine->getTemplateText(searchString));
     
         msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         int ret = msgBox.exec();
@@ -361,7 +389,7 @@ bool page_tap_payment::exitConfirm()
 }
 
 // Navigation: Back to Drink Size Selection
-void page_tap_payment::on_pushButton_previous_page_clicked()
+void page_payment_tap_tcp::on_pushButton_previous_page_clicked()
 {
     qDebug() << "In previous page button" << endl;
 
@@ -387,7 +415,7 @@ void page_tap_payment::on_pushButton_previous_page_clicked()
     }
 }
 
-void page_tap_payment::on_pushButton_to_idle_clicked()
+void page_payment_tap_tcp::on_pushButton_to_idle_clicked()
 {
     if (exitConfirm())
     {
@@ -395,11 +423,11 @@ void page_tap_payment::on_pushButton_to_idle_clicked()
     }
 }
 
-void page_tap_payment::idlePaymentTimeout()
+void page_payment_tap_tcp::idlePaymentTimeout()
 {
     hideCurrentPageAndShowProvided(p_page_idle);
 }
-void page_tap_payment::resetPaymentPage()
+void page_payment_tap_tcp::resetPaymentPage()
 {
     ui->label_title->hide();
 

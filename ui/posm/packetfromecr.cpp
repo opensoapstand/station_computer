@@ -27,11 +27,7 @@ void packetFromECR::setPacketDataLen()
    convertFrom16To8(currentPacket.dataLen, length);
 }
 
-void packetFromECR::setPacketDataLenPur()
-{
-   uint16_t length = uint16_t(currentPacket.data.size()) + 2 + 2 + 1 + 1; //size of data + + extra 2 as per doc + apiid + parent id + class id
-   convertFrom16To8(currentPacket.dataLen, length);
-}
+
 
 
 void packetFromECR::setPacketClassID(uint8_t id)
@@ -61,18 +57,6 @@ void packetFromECR::setPacketLRC()
     LRCgenerator curLRC(lrcPkt, combineLength);
     currentPacket.LRC = curLRC.getLRC();
 }
-
-void packetFromECR::setPacketLRCPur()
-{
-    // qDebug() <<"Current length 0:  "<< currentPacket.dataLen[0];
-    // qDebug() <<"Current length 1:  " <<currentPacket.dataLen[1];
-
-    uint16_t combineLength = convertFrom8To16(currentPacket.dataLen[0], currentPacket.dataLen[1]) + 2  ;
-    std::vector<uint8_t> lrcPkt = constructPartialPacket(combineLength); //exclude STX, ETX
-    LRCgenerator curLRC(lrcPkt, combineLength);
-
-    currentPacket.LRC = curLRC.getLRC() + 2;
-} 
 
 std::vector<uint8_t> packetFromECR::getPacket()
 {

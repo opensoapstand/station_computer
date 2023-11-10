@@ -1,0 +1,80 @@
+QPushButton {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 20;
+   font-size: 16px;
+   color: #E2B985;
+   background-color: #5E5E5E;
+   border: 2px solid #2B2B2B;
+   text-align: center;
+   border-radius: 5px;
+}
+
+#pushButton_hide{
+   font-style: normal;
+   font-weight: 600;
+}
+
+QLabel {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 20;
+   font-size: 16px;
+   color: #E2B985;
+   background-color: #5E5E5E;
+   border: 2px solid #2B2B2B;
+   text-align: center;
+   border-radius: 5px;
+   qproperty-alignment: AlignCenter;
+}
+
+#label_active_role{
+   font-style: normal;
+   font-weight: 600;
+ }
+
+ #statusbar_bg{
+   background-color: #404040;
+   border-radius: 0px;
+   border: none;
+}
+ 
+ .normal {
+    background-color: #5E5E5E;
+ }
+ .alert {
+    background-color: #BC8439;
+ }
+
+/* 
+#label_active_role {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 20;
+   background-color: #5E8580;
+   font-size: 12px;
+   text-align: center;
+   line-height: auto;
+   border-radius: 20px;
+   color: white;
+   border: none;
+   }
+
+#label_temperature_warning {
+      font-family: 'Brevia';
+      font-style: normal;
+      font-weight: 100;
+      background-color: #5E8580;
+      font-size: 84px;
+      text-align: center;
+      line-height: auto;
+      border-radius: 20px;
+      color: rgb(189, 18, 18);
+      border: none;
+      }
+      
+#pushButton_to_select_product_page {
+
+   background-color: transparent; 
+   border: 0px;
+   } */

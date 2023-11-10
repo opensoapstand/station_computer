@@ -7,7 +7,7 @@
 // command from IPC QT Socket
 //
 // created: 01-2022
-// by:Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
+// by:Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
@@ -85,7 +85,7 @@ DF_ERROR stateManualPump::onAction()
 
       if (m_pMessaging->getAction() == ACTION_RESET)
       {
-         m_pMessaging->sendMessageOverIP("Init Ready");
+         m_pMessaging->sendMessageOverIP("Init Ready", true); // send to UI
          m_state_requested = STATE_IDLE;
       }
       else if ('0' == m_pMessaging->getAction() || ACTION_QUIT == m_pMessaging->getAction())

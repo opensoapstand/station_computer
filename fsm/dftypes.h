@@ -4,7 +4,7 @@
 // types specific to drinkfill
 //
 // created: 01-2022
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
 // copyright 2022 by Productfill Beverages Ltd
 // all rights reserved

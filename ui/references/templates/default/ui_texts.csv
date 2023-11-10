@@ -23,9 +23,12 @@ page_idle->label_welcome_message->testargument,Refill %1 here!<br>Tap screen to 
 page_idle->label_welcome_message,Refill soap here!<br>Tap screen to start
 page_idle->label_printer_status->offline,Assistance needed <br>Receipt Printer offline.
 page_idle->label_printer_status->nopaper,Assistance needed<br>Receipt Printer empty or improperly loaded.
-page_idle->label_temperature_status->temperature_too_high,Temperature alert<br>Max %1
+page_idle->label_temperature_warning->temperature_too_high,Temperature alert<br>Max %1
 page_product_overview->label_total->custom_volume,Price for maximum %1
-
+page_idle->label_reboot_nightly_title,NIGHTLY REBOOT
+page_idle->label_reboot_nightly_text,System will be rebooted in<br>%1 second(s)
+page_idle->pushButton_reboot_nightly,Cancel
+page_idle->label_reboot_nightly_text->count_down,System will be rebooted in<br>%1 second(s)
 #################### page_idle_products
 
 #tap here to refill your soap
@@ -61,7 +64,7 @@ page_product_overview->label_total->non_custom_volume,Total
 page_product_overview->label_total->custom_volume,Price for maximum %1
 page_product_overview->lineEdit_promo_code->valid,Promo Code Valid
 page_product_overview->lineEdit_promo_code->invalid,Promo Code Invalid
-page_product_overview->lineEdit_promo_code->ineligible,Promo Code Not Eligible
+page_product_overview->lineEdit_promo_code->ineligible,Promo Code Not Eligible At This Station
 page_product_overview->lineEdit_promo_code->network_error,Network error, could not verify. Try again.
 page_product_overview->lineEdit_promo_code->invite,Tap here to enter promo code
 page_product_overview->label_selected_volume->custom_volume,Custom Volume<br>(maximum: %1)
@@ -73,7 +76,7 @@ page_dispenser->label_press,press and hold <br>the button
 page_dispenser->pushButton_problems,Tap here if you notice a problem.
 page_dispenser->pushButton_abort->abort,Cancel
 page_dispenser->pushButton_abort->complete,Complete
-page_dispenser->label_finishTransactionMessage->no_pay,Cancelling payment
+page_dispenser->label_finishTransactionMessage->no_pay,Please wait for some moments we are working on your refund
 page_dispenser->label_finishTransactionMessage->display_price,Capturing payment: $%1
 page_dispenser->label_dispense_message->priming,Please keep the button pressed.<br>for up to 15 seconds<br>before the product starts dispensing.
 page_dispenser->label_dispense_message->out_of_stock,It appears we're out of stock.
@@ -140,18 +143,29 @@ page_error_wifi->label_oops,oops..
 page_error_wifi->label_error_occured,AN ERROR HAS OCCURED
 page_error_wifi->label_check_back,Please check back soon
 
-#################### page_tap_payment
-page_tap_payment->pushButton_previous_page,<- back
-page_tap_payment->label_title->processing,Processing Payment
-page_tap_payment->msgBox_cancel,<p align=center><br><br>Cancel transaction and exit page?<br><br>It can take up to 30 seconds for dispensing to start after a payment is completed. <br></p>
-page_tap_payment->preauthLabel,You are being pre-authorized for maximum volume %1 with amount of
+#################### page_payment_tap_tcp
+page_payment_tap_tcp->pushButton_previous_page,<- back
+page_payment_tap_tcp->label_title->processing,Processing Payment
+page_payment_tap_tcp->msgBox_cancel,<p align=center><br><br>Cancel transaction and exit page?<br><br>It can take up to 30 seconds for dispensing to start after a payment is completed. <br></p>
+page_payment_tap_tcp->preauthLabel,Pre-authorization for the maximum volume %1 with amount
 
-#################### page_tap_payment_serial
-page_tap_payment_serial->pushButton_previous_page,<- back
-page_tap_payment_serial->label_title->processing,Processing Payment
-page_tap_payment_serial->msgBox_cancel,<p align=center><br><br>Cancel transaction and exit page?<br><br>It can take up to 30 seconds for dispensing to start after a payment is completed. <br></p>
-page_tap_payment_serial->preauthLabel,You are being pre-authorized for maximum volume %1 with amount of
+#################### page_payment_tap_serial
+page_payment_tap_serial->pushButton_previous_page,<- back
+page_payment_tap_serial->label_title->processing,Processing Payment
+page_payment_tap_serial->animated_Label->cancel,Please wait a moment to choose another product
+page_payment_tap_serial->msgBox_cancel,<p align=center><br><br>Cancel transaction and exit page?<br><br>It can take up to 30 seconds for dispensing to start after a payment is completed. <br></p>
+page_payment_tap_serial->preauthLabel,You are being pre-authorized for maximum volume %1 with amount of
 
+
+#################### statusbar 
+statusbar->label_active_role->user, User
+statusbar->label_active_role->maintainer, Maintainer
+statusbar->label_active_role->admin, Administrator
+# statusbar->pushButton_active_role->user, User%1
+# statusbar->pushButton_active_role->maintainer, Maintainer%1
+# statusbar->pushButton_active_role->admin, Administrator%1
+statusbar->pushButton_hide,Exit%1
+statusbar->label_coupon_code,Active coupon: %1
 
 #################### page maintenance
 page_maintenance->status_text->auto_empty,Empty detected
@@ -170,10 +184,12 @@ page_maintenance->label_product_1_position,P1
 page_maintenance->label_product_2_position,P2
 page_maintenance->label_product_3_position,P3
 page_maintenance->label_product_4_position,P4
-page_maintenance->label_role->User,Logged in as User. Use the machine as a customer.
-page_maintenance->label_role->Maintainer,Logged in as Maintainer. Swap out products and perform basic maintenance and tests.
-page_maintenance->label_role->Admin,Logged in as Administrator. Full rights.
+page_maintenance->label_role->user,Logged in as User. Use the machine as a customer.
+page_maintenance->label_role->maintainer,Logged in as Maintainer. Swap out products and perform basic maintenance and tests.
+page_maintenance->label_role->admin,Logged in as Administrator. Full rights.
 page_maintenance->label_role->Unknown,Logged in as: Unknown status. 
+page_maintenance->label_qr_manual_description,Scan for user manual 
+
 
 
 #################### page_maintenance_dispenser

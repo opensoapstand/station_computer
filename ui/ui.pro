@@ -14,8 +14,8 @@ FORMS += \
     page_error_wifi.ui \
     page_idle.ui \
     page_qr_payment.ui \
-    page_tap_payment.ui \
-    page_tap_payment_serial.ui \
+    page_payment_tap_tcp.ui \
+    page_payment_tap_serial.ui \
     page_product.ui \
     page_select_product.ui \
     page_end.ui \
@@ -24,11 +24,13 @@ FORMS += \
     page_maintenance_dispenser.ui \
     page_init.ui \
     page_help.ui \
+    page_email.ui \
     keyboard.ui \
     page_sendFeedback.ui \
     page_transactions.ui \
     page_maintenance_general.ui \
-    page_idle_products.ui
+    page_idle_products.ui \
+    statusbar.ui
 
 HEADERS += \
     dfuicommthread.h \
@@ -37,8 +39,8 @@ HEADERS += \
     page_idle.h \
     includefiles.h \
     page_qr_payment.h \
-    page_tap_payment.h \
-    page_tap_payment_serial.h \
+    page_payment_tap_tcp.h \
+    page_payment_tap_serial.h \
     page_product.h \
     posm/enums.h \
     posm/lrcgenerator.h \
@@ -62,11 +64,13 @@ HEADERS += \
     page_error_wifi.h \
     page_init.h \
     page_help.h \
+    page_email.h \
     page_sendFeedback.h  \
     page_transactions.h \
     product.h \
     page_idle_products.h \
-    machine.h
+    machine.h \
+    statusbar.h
 
 SOURCES += \
     dfuicommthread.cpp \
@@ -75,8 +79,8 @@ SOURCES += \
     page_idle.cpp \
     main.cpp \
     page_qr_payment.cpp \
-    page_tap_payment.cpp \
-    page_tap_payment_serial.cpp \
+    page_payment_tap_tcp.cpp \
+    page_payment_tap_serial.cpp \
     page_product.cpp \
     posm/lrcgenerator.cpp \
     posm/mcommunication.cpp \
@@ -100,11 +104,13 @@ SOURCES += \
     page_maintenance_general.cpp \
     page_init.cpp \
     page_help.cpp \
+    page_email.cpp \
     ../library/qr/qrcodegen.cpp \
     page_transactions.cpp \
     product.cpp \
     page_idle_products.cpp \
-    machine.cpp
+    machine.cpp \
+    statusbar.cpp
 
 RESOURCES += \
     src.qrc

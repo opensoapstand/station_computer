@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>page_tap_payment_serial</class>
- <widget class="QWidget" name="page_tap_payment_serial">
+ <class>page_payment_tap_serial</class>
+ <widget class="QWidget" name="page_payment_tap_serial">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -172,6 +172,9 @@ color: #58595B;</string>
    </property>
    <property name="text">
     <string/>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QLabel" name="preauthLabel">

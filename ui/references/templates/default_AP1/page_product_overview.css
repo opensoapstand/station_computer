@@ -13,6 +13,7 @@ QPushButton {
     line-height: 44px; 
     color: #58595B;
     border: 3px solid #CCC9C7;
+    border-radius: 5px;
 }
 .promoCode_network_error{
     font-family: Montserrat; 

@@ -8,12 +8,12 @@
 // TODO: Refactor to fit with dfuicommthread
 //#define START_FSM_FROM_UI //enabled by default (start controller from ui)
 
-#define UI_VERSION "2.2.1"
+#define UI_VERSION "2.5"
 
 #define ENABLE_COUPON   // Petros stations have no coupon
 
 #define OPTION_SLOT_INVALID 0
-#define SLOT_COUNT 4  // number of products
+#define MAX_SLOT_COUNT 20  // number of slots
 
 #define SIZES_COUNT 6
 #define MINIMUM_DISPENSE_VOLUME_ML 10.0
@@ -28,8 +28,8 @@
 #define USAGE_DB_PATH "/home/df-admin/production/db/usage.db"
 
 #define PRODUCT_DETAILS_TSV_PATH "/home/df-admin/production/references/products/product_details.tsv"  // https://docs.google.com/spreadsheets/d/17WR2gRyPIDIlGKBy1YKFAqN-Hyw_3VOJ6JCmfcAtjVk/edit#gid=169583479 download as .tsv file
-#define UI_TEXTS_CSV_PATH "ui_texts.csv" 
-#define UI_ELEMENT_PROPERTIES_PATH "ui_element_properties.txt" 
+#define UI_TEXTS_CSV_NAME "ui_texts.csv" 
+#define UI_ELEMENT_PROPERTIES_NAME "ui_element_properties.txt" 
 #define CSV_PRODUCT_COL_ID 0
 #define CSV_PRODUCT_COL_NAME 1
 #define CSV_PRODUCT_COL_TYPE 2
@@ -54,9 +54,14 @@
 using namespace std;
 
 #define PAGE_IDLE_DELAY_BEFORE_ENTERING_IDLE_PRODUCTS 15
+#define STATUS_BAR_REFRESH_PERIOD_SECONDS 3
 #define PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS 60 //60
+#define PAGE_IDLE_TEST_FOR_FROZEN_SCREEN_PERIOD_SECONDS 60 
+#define PAGE_IDLE_USER_ROLE_TIMEOUT_SECONDS 5 
 #define PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS 6
 #define PAGE_IDLE_PRODUCTS_STEP_DISPLAY_TIME_SECONDS 1
+#define PAGE_IDLE_REBOOT_NIGHTLY_TIMEOUT_SECONDS 1
+#define PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN 300
 
 #define QR_PAGE_TIMEOUT_SECONDS 420
 #define QR_PAGE_TIMEOUT_WARNING_SECONDS 120
@@ -79,6 +84,7 @@ using namespace std;
 #define CLIENT_LOGO_PATH                                "/home/df-admin/production/references/logos/%1_logo_white.png"
 #define PAGE_HELP_CSS                                   "page_help.css"
 #define PAGE_FEEDBACK_CSS                               "page_sendFeedback.css"
+#define STATUSBAR_CSS                                   "statusbar.css"
 #define PAGE_IDLE_CSS                                   "page_idle.css"
 #define PAGE_SELECT_PRODUCT_CSS                         "page_select_product.css"
 #define PAGE_PRODUCT_CSS                                "page_product.css"
@@ -87,12 +93,13 @@ using namespace std;
 #define PAGE_END_CSS                                    "page_end.css"
 #define PAGE_QR_PAYMENT_CSS                             "page_qr_payment.css"
 #define PAGE_ERROR_WIFI_CSS                             "page_error_wifi.css"
-#define PAGE_TAP_PAYMENT_CSS                            "page_tap_payment.css"
+#define PAGE_TAP_PAYMENT_CSS                            "page_payment_tap_tcp.css"
 #define PAGE_TRANSACTIONS_CSS                           "page_transactions.css"
 #define PAGE_MAINTENANCE_CSS                            "page_maintenance.css"
 #define PAGE_MAINTENANCE_DISPENSER_CSS                  "page_maintenance_dispenser.css"
 #define PAGE_IDLE_PRODUCTS_CSS                          "page_idle_products.css"
-#define PAGE_TAP_PAYMENT_SERIAL_CSS                     "page_tap_payment_serial.css"
+#define PAGE_TAP_PAYMENT_SERIAL_CSS                     "page_payment_tap_serial.css"
+#define PAGE_EMAIL_CSS                                  "page_email.css"
 
 
 
@@ -113,9 +120,10 @@ using namespace std;
 #define PAGE_QR_PAY_BACKGROUND_PATH                     "background_qr.png"
 #define PAGE_MAINTENANCE_BACKGROUND_PATH                "background_maintenance.png"
 #define ERROR_MESSAGE_PATH                              "error_message.png"
-#define PAGE_TAP_PAY                                    "tapNow.png"
+#define PAGE_TAP_CANCEL                                  "tapCancel.png"
 #define PAGE_TAP_PAY_SUCCESS                            "paymentSuccess.png"
 #define PAGE_TAP_PAY_FAIL                               "paymentFailed.png"
+#define PAGE_TAP_PAY                                    "tapNow.png"
 #define PAGE_AUTHORIZE_NOW                              "authorizeNow.png"
 #define PAGE_TAP_GENERIC                                "genericTap.png"
 #define PAGE_SEND_FEEDBACK_PATH                         "background_sendfeedback.png"
@@ -125,6 +133,8 @@ using namespace std;
 #define PAGE_ERROR_BACKGROUND_PATH                      "background_error_wifi.png"
 #define KEYBOARD_IMAGE_PATH                             "soapstand-keyboard.png"
 #define MACHINE_LOGO_PATH                               "machine_logo.png"
+#define REBOOT_NIGHTLY_ICON_PATH                        "reboot_nightly_icon.png"
+#define QR_MANUAL_PATH                                  "qr_user_manual.png"
 #define PAGE_DISPENSE_FILL_ANIMATION                    "bottle_fill_for_animation.png"
 
 #define ICON_TYPE_CONCENTRATE_PATH                      "Soapstand_UI-concentrate-icon.png"
@@ -148,6 +158,7 @@ using namespace std;
 #define PAYMENT_TAP_SERIAL                              "tapSerial"
 #define PAYMENT_TAP_TCP                                 "tapTCP"
 #define PAYMENT_QR                                      "qr"
+
 class df_util : public QWidget
 {
     Q_OBJECT
@@ -165,14 +176,14 @@ public:
     void write_to_file_timestamped(QString basePath, QString data);
     void write_to_file(QString path, QString data);
 
-    void send_command_to_FSM(QString command);
-    void set_message_to_send_to_FSM(QString msg);
+    void send_command_to_FSM(QString command, bool isLoggingMessage);
 
     static QJsonObject parseJsonString(QString jsonString);
 
     bool m_IsSendingFSM;
 
-    QString send_msg;
+    static void executeVirtualClick(int x, int y);
+    // QString send_msg;
 
     QTcpSocket *tcpSocket = nullptr;
     QDataStream in;
@@ -185,7 +196,7 @@ protected:
 
 public slots:
     void displayError(QAbstractSocket::SocketError socketError);
-    void send_to_FSM();
+    void send_to_FSM(QString command, bool isLoggingMessage);
 
 private:
 };

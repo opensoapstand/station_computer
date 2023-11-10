@@ -9,7 +9,7 @@
 // Database threads
 //
 // created: 01-2022
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
@@ -71,10 +71,13 @@ messageMediator::~messageMediator()
 //    return false;
 // }
 
-DF_ERROR messageMediator::sendMessageOverIP(string msg)
+DF_ERROR messageMediator::sendMessageOverIP(string msg, bool isLoggingMessage)
 {
    DF_ERROR dfError = OK;
-   debugOutput::sendMessage("Send msg to UI (don't wait for reply): " + msg, MSG_INFO);
+   if (isLoggingMessage)
+   {
+      debugOutput::sendMessage("Send msg to UI (don't wait for reply): " + msg, MSG_INFO);
+   }
 
    int attempts = 200;
    bool done = false;
@@ -259,14 +262,13 @@ DF_ERROR messageMediator::updateCmdString(char key)
       // ; is the command finished char
       m_receiveStringBuffer.clear();
       m_bCommandStringReceived = true;
-
-      debugOutput::sendMessage("Provided command (unparsed) : " + m_processCommand, MSG_INFO);
+      debugOutput::sendMessage("Received message (unparsed, finished): " + m_processCommand, MSG_INFO);
    }
 
    return df_ret;
 }
 
-// Parse/verify and incomming processing string
+// Parse/verify an incoming processing string
 // then break down into a command string.
 DF_ERROR messageMediator::updateCmdString()
 {
@@ -588,7 +590,7 @@ void messageMediator::sendTemperatureData()
    snprintf(temp_celcius_chars, sizeof(temp_celcius_chars), "%.2f", temperature_2);
    str_temperature_2 = temp_celcius_chars;
 
-   sendMessageOverIP("temperature|" + str_temperature_1 + "|" + str_temperature_2);
+   sendMessageOverIP("temperature|" + str_temperature_1 + "|" + str_temperature_2, false);
 }
 void messageMediator::resetAction()
 {

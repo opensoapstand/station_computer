@@ -4,7 +4,7 @@
 // Dispense End State; Reset for Idle
 //
 // created: 01-2022
-// by:Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
+// by:Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
@@ -70,7 +70,7 @@ DF_ERROR stateDispenseEnd::onAction()
     if (productDispensers[slot_index].getIsDispenseTargetReached())
     {
         usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
-        m_pMessaging->sendMessageOverIP("Target Hit");
+        m_pMessaging->sendMessageOverIP("Target Hit", true); // send to UI
     }
 
     // bool empty_stock_detected = false;
@@ -125,7 +125,7 @@ DF_ERROR stateDispenseEnd::onAction()
     }
 
     m_state_requested = STATE_IDLE;
-    m_pMessaging->sendMessageOverIP("Transaction End"); // send to UI
+    m_pMessaging->sendMessageOverIP("Transaction End", true); // send to UI
 
     return e_ret;
 }
@@ -297,7 +297,7 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
     std::string units = productDispensers[slot_index].getProduct()->getDisplayUnits();
     std::string readBuffer;
     std::string volume_remaining_units_converted_string;
-    std::string coupon = m_pMessaging->getPromoCode();
+    std::string coupon = m_pMessaging->getCouponCode();
     std::string button_press_duration = to_string(productDispensers[slot_index].getButtonPressedTotalMillis());
     std::string dispense_button_count = to_string(productDispensers[slot_index].getDispenseButtonPressesDuringDispensing());
     std::string soapstand_product_serial = (productDispensers[slot_index].getProduct()->getSoapstandProductSerial());
@@ -635,7 +635,7 @@ double stateDispenseEnd::getFinalPrice()
     debugOutput::sendMessage("Post dispense final price: " + to_string(price), MSG_INFO);
     double volume = productDispensers[slot_index].getVolumeDispensed();
     std::string message = "finalVolumeDispensed|" + std::to_string(volume) + "|";
-    m_pMessaging->sendMessageOverIP(message);
+    m_pMessaging->sendMessageOverIP(message, true); // send to UI
     return price;
 }
 
@@ -775,7 +775,7 @@ DF_ERROR stateDispenseEnd::setup_and_print_receipt()
 
     machine tmp;
     // receipt_cost = m_pMessaging->getRequestedPrice();
-    string promoCode = m_pMessaging->getPromoCode();
+    string promoCode = m_pMessaging->getCouponCode();
     debugOutput::sendMessage("Price changed to " + receipt_cost, MSG_INFO);
     tmp.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, now, units, paymentMethod, plu, promoCode, true);
 }

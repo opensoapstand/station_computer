@@ -18,8 +18,21 @@
 # empty lines are also permitted
 
 
-# page_idle->label_customer_logo,{"x":370, "y":1580, "width":351, "height":211,"isVisibleAtLoad":true}
+# page_idle->label_client_logo,{"x":370, "y":1580, "width":351, "height":211,"isVisibleAtLoad":true}
 # page_select_product->label_product_1_type,{"x":53, "y":814, "width":450, "height":46,"isVisibleAtLoad":true}
 # page_select_product->label_product_2_type,{"x":562, "y":814, "width":450, "height":46,"isVisibleAtLoad":false}
 page_dispenser->label_indicate_active_spout,{"x":460,"y":1700,"isVisibleAtLoad":true}
 page_idle->label_show_temperature,{"x":10000}
+
+page_select_product->label_help,{"x": 940, "y": 35, "width": 75, "height": 75}
+page_select_product->pushButton_help_page,{"x": 940, "y": 35, "width": 75, "height": 75}
+page_product->label_help,{"x": 940, "y": 35, "width": 75, "height": 75}
+page_product->pushButton_to_help,{"x": 940, "y": 35, "width": 75, "height": 75}
+page_product_overview->label_help,{"x": 940, "y": 35, "width": 75, "height": 75}
+page_product_overview->pushButton_to_help,{"x": 940, "y": 35, "width": 75, "height": 75}
+page_email->label_help,{"x": 940, "y": 35, "width": 75, "height": 75}
+page_email->pushButton_to_help,{"x": 940, "y": 35, "width": 75, "height": 75}
+page_sendFeedback->label_help,{"x": 940, "y": 35, "width": 75, "height": 75}
+page_sendFeedback->pushButton_help_page,{"x": 940, "y": 35, "width": 75, "height": 75}
+
+statusbar->statusbar,{"width": 75, "height": 75}

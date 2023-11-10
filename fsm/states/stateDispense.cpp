@@ -8,7 +8,7 @@
 // Routes dispense instruction to GPIO's
 //
 // created: 01-2022
-// by:Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
+// by:Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
@@ -94,7 +94,7 @@ DF_ERROR stateDispense::onAction()
       if (productDispensers[slot_index].getDispenseButtonEdgePositive())
       {
          debugOutput::sendMessage("Dispense button pressed edge", MSG_INFO);
-         m_pMessaging->sendMessageOverIP("Dispense Button Pos Edge"); // send to UI
+         m_pMessaging->sendMessageOverIP("Dispense Button Pos Edge", true); // send to UI
 
          startPumping();
          productDispensers[slot_index].addDispenseButtonPress();
@@ -103,7 +103,7 @@ DF_ERROR stateDispense::onAction()
       if (productDispensers[slot_index].getDispenseButtonEdgeNegative())
       {
          debugOutput::sendMessage("Dispense button released edge", MSG_INFO);
-         m_pMessaging->sendMessageOverIP("Dispense Button Neg Edge"); // send to UI
+         m_pMessaging->sendMessageOverIP("Dispense Button Neg Edge", true); // send to UI
 
          stopPumping();
       }
@@ -127,7 +127,7 @@ DF_ERROR stateDispense::onAction()
       const char *statusStringChar = productDispensers[slot_index].getSlotStateAsString();
       std::string statusString(statusStringChar);
       std::string message = "dispenseupdate|" + std::to_string(volume) + "|" + std::to_string(flowrate) + "|" + statusString;
-      m_pMessaging->sendMessageOverIP(message);
+      m_pMessaging->sendMessageOverIP(message, true); // send to UI
 
       // update of the actual dispense
       const char *dispenseStatusStr = productDispensers[slot_index].getDispenseStatusAsString();
@@ -136,7 +136,7 @@ DF_ERROR stateDispense::onAction()
 
    if (m_pMessaging->getAction() == ACTION_RESET)
    {
-      m_pMessaging->sendMessageOverIP("Init Ready");
+      m_pMessaging->sendMessageOverIP("Init Ready", true); // send to UI
       m_state_requested = STATE_IDLE;
       return e_ret = OK;
    }

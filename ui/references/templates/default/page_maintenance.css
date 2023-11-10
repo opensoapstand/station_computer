@@ -3,6 +3,15 @@
    font-weight: 255;
 }
 
+.label_qr {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-size: 28px;
+   color: #003840;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+}
+
 #pushButton_general_settings {
    font-family: 'Brevia';
    font-style: normal;
@@ -90,65 +99,8 @@
    color: #003840;
 }
 
-
-
-
-
-/* QPushButton {
-   font-family: 'Brevia';
-   font-style: normal;
-   font-weight: 75;
-   font-size: 20px;
-   line-height: 99px;
-   color: green;
-   text-align: center;
-   qproperty-alignment: AlignCenter;
-   border: none;
-   }
-   QFont {
-      
-      font-family: Brevia;
-      font-size: 20pt;
-   font-weight: 200;
-   font-style: normal;
-} */
-/* 
-
-#label_help {
-   
-   font-family: 'Brevia';
-   font-style: normal;
-   font-weight: 75;
-   font-size: 20px;
-   line-height: 99px;
-   color: #FFFFFF;
-   text-align: center;
-   qproperty-alignment: AlignCenter;
-   border: none;
+.label_qr_user_manual{
+   border-radius: 20px;
 }
 
-/* #pushButton_to_idle {
 
-   font-family: 'Brevia';
-   font-style: normal;
-   font-weight: 75;
-   font-size: 20px;
-   line-height: 99px;
-   color: #FFFFFF;
-   text-align: center;
-   qproperty-alignment: AlignCenter;
-   border: none;
-} 
-
- .button_transparent {
-   background-color: transparent;
-   border: 0px;
-} 
-#pushButton_to_idle {
-
-   font-family: 'Brevia';
-   font-style: normal;
-   font-weight: 75;
-   font-size: 32px;
-   background-color: transparent;
-   /* border: 0px; */

@@ -8,7 +8,7 @@
 // Idle Page
 //
 // created: 16-06-2023
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
@@ -18,8 +18,8 @@
 
 #include "df_util.h"
 #include "page_idle.h"
-#include "page_tap_payment.h"
-#include "page_tap_payment_serial.h"
+#include "page_payment_tap_tcp.h"
+#include "page_payment_tap_serial.h"
 #include "dfuicommthread.h"
 #include "dbmanager.h"
 

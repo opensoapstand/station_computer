@@ -10,7 +10,7 @@
 // Connect or create database.
 //
 // created: 01-2022
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
@@ -87,7 +87,7 @@ DF_ERROR stateInit::onAction()
         m_state_requested = STATE_IDLE;
 
         // The UI program waits for this message to move from its initializing phase to its Idle phase:
-        m_pMessaging->sendMessageOverIP("Init Ready");
+        m_pMessaging->sendMessageOverIP("Init Ready", true); // send to UI
         debugOutput::sendMessage("Finished controller init.", MSG_INFO);
     }
     else

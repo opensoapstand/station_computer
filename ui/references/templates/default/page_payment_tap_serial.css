@@ -45,6 +45,19 @@ QMessageBox.msgBoxbutton QPushButton {
   /* Additional styles specific to QPushButton within QMessageBox */
 }
 
+.animated_Label{
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 54px;
+   line-height: 99px;
+   /* letter-spacing: px; */
+   color: #003840;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   border: none;
+   word-wrap: break-word;
+}
 /* 
 
 

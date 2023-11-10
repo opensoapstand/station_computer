@@ -122,6 +122,7 @@ void page_select_product::showEvent(QShowEvent *event)
         labels_product_name[option_index]->setStyleSheet(styleSheet);
         pushButtons_product_select[option_index]->setProperty("class", "PushButton_selection");
         pushButtons_product_select[option_index]->setStyleSheet(styleSheet);
+        qDebug() << " loaded option: " << option_index + 1;
     }
 
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_pick_soap);
@@ -155,9 +156,9 @@ void page_select_product::displayProducts()
 
         // display product picture
 
-        p_page_idle->thisMachine->addPictureToLabel(labels_product_picture[option_index], p_page_idle->thisMachine->getProductByOption(option_index + 1)->getProductPicturePath());
-        product_type = p_page_idle->thisMachine->getProductByOption(option_index + 1)->getProductType();
-        product_name = p_page_idle->thisMachine->getProductByOption(option_index + 1)->getProductName();
+        p_page_idle->thisMachine->addPictureToLabel(labels_product_picture[option_index], p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductPicturePath());
+        product_type = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductType();
+        product_name = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductName();
 
         if (!p_page_idle->thisMachine->getIsOptionAvailable(option_index + 1))
         {
@@ -174,7 +175,7 @@ void page_select_product::displayProducts()
             p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[option_index], "label_product_overlay_available", PAGE_SELECT_PRODUCT_CSS);
         }
 
-        product_status_text = p_page_idle->thisMachine->getProductByOption(option_index + 1)->getStatusText();
+        product_status_text = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getStatusText();
 
         qDebug() << "Product: " << product_type << "At Option: " << (option_index + 1) << ", enabled: " << p_page_idle->thisMachine->getIsOptionAvailable(option_index + 1) << " Status text: " << product_status_text;
 
@@ -257,7 +258,7 @@ void page_select_product::displayProducts()
         {
             labels_product_overlay_text[option_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
         }
-        else if (!(p_page_idle->thisMachine->isProductVolumeInContainer(p_page_idle->thisMachine->getProductByOption(option_index + 1)->getPNumber())))
+        else if (!(p_page_idle->thisMachine->isProductVolumeInContainer(p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getPNumber())))
         {
 
             labels_product_overlay_text[option_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->empty"));

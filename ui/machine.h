@@ -115,14 +115,15 @@ public:
     int getSlotFromBasePNumber(int base_pnumber);
     dispenser_slot *getSelectedSlot();
 
-    void initProductOptions(const QVector<int> &pnumbersToBeSetAsOptions);
+    void initProductOptions();
+    // void initProductOptions(const QVector<int> &pnumbersToBeSetAsOptions);
     bool getIsOptionAvailable(int productOption);
-    void setProductToOption(int productOption, int PNumber);
+    void setProductToMenuOption(int productOption, int PNumber);
     int clearOptions();
     int getOptionCount();
 
     void setSelectedProductByOption(int productOption);
-    pnumberproduct *getProductByOption(int productOption);
+    pnumberproduct *getProductFromMenuOption(int productOption);
 
     pnumberproduct *getProductByPNumber(int PNumber);
     void setSelectedProduct(int pnumber);
@@ -236,7 +237,8 @@ public:
     void loadTextsFromCsv(QString csv_path, std::map<QString, QString> *dictionary);
 
     QVector<int> getAllUsedPNumbersFromSlots();
-    QVector<int> getAllDispensePNumbersFromSlots();
+    QVector<int> getAllUniqueDispensePNumbers();
+    QVector<int> getAllDispensePNumbersFromSlot(int slot);
 
 public slots:
 
@@ -245,7 +247,7 @@ signals:
 private:
     dispenser_slot *selectedSlot; // deprecated, derived from selectedProduct.
     pnumberproduct *m_selectedProduct;
-    QVector<int> productSelectionOptions;
+    QVector<int> dispenseProductsMenuOptions;
     dispenser_slot *m_slots;
     pnumberproduct m_pnumberproducts[HIGHEST_PNUMBER_COUNT];
 

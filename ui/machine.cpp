@@ -18,7 +18,8 @@ machine::machine()
 
     // IPC Networking
     dfUtility = new df_util();
-    productSelectionOptions.resize(PRODUCT_SELECTION_OPTIONS_MAX);
+    dispenseProductsMenuOptions.resize(MENU_PRODUCT_SELECTION_OPTIONS_MAX);
+    dispenseProductsMenuOptions.fill(DUMMY_PNUMBER);
 
     // initializing array, containing all existing pnumbers
     for (int pnumber_index = 0; pnumber_index < HIGHEST_PNUMBER_COUNT; pnumber_index++)
@@ -44,8 +45,9 @@ void machine::initMachine()
         m_slots[slot_index].loadSlotParametersFromDb();
     }
 
-    // QVector<int> all_dispense_pnumbers = getAllDispensePNumbersFromSlots();
-    initProductOptions(getAllDispensePNumbersFromSlots());
+    // QVector<int> all_dispense_pnumbers = getAllUniqueDispensePNumbers();
+    // initProductOptions(getAllUniqueDispensePNumbers());
+    initProductOptions();
 
     // TODO: For now, the index of a product in an array is its P-number.  e.g. P-6 is tangerine dish saop. Its object resides in m_pnumberproducts[6], that will only work for less than a million something p-numbers...
 
@@ -84,14 +86,20 @@ void machine::loadDynamicContent()
     loadElementDynamicPropertiesFromDefaultTemplate();         // dynamic elements (position, visibility)
 }
 
-QSet<int> uniquePNumbers; // Use a QSet to store unique pnumbers (i.e. no value can appear twice)
-QVector<int> machine::getAllDispensePNumbersFromSlots()
+QVector<int> machine::getAllDispensePNumbersFromSlot(int slot)
 {
+    int slot_index = slot - 1;
+    return m_slots[slot_index].getDispensePNumbers();
+}
 
+QVector<int> machine::getAllUniqueDispensePNumbers()
+{
+    QSet<int> uniquePNumbers; // Use a QSet to store unique pnumbers (i.e. no value can appear twice)
     // dispense PNumber are the numbers used to be displayed in UI. The 'end' product. ()
     for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
     {
-        QVector<int> slotpnumbers = m_slots[slot_index].getDispensePNumbers();
+        QVector<int> slotpnumbers = getAllDispensePNumbersFromSlot(slot_index + 1) ;
+
         // Add unique pnumbers from the current slot to the QSet
         for (int i = 0; i < slotpnumbers.size(); ++i)
         {
@@ -144,47 +152,58 @@ void machine::setDb(DbManager *db)
     m_db = db;
 }
 
-void machine::initProductOptions(const QVector<int> &pnumbersToBeSetAsOptions)
+// void machine::initProductOptions(const QVector<int> &pnumbersToBeSetAsOptions)
+void machine::initProductOptions()
 {
 
-    productSelectionOptions.clear();
-    int dispenseProductsCount = pnumbersToBeSetAsOptions.size();
-    if (dispenseProductsCount > PRODUCT_SELECTION_OPTIONS_MAX)
-    {
-        dispenseProductsCount = PRODUCT_SELECTION_OPTIONS_MAX;
-    }
+    // dynamically size options array
+    // dispenseProductsMenuOptions.clear();
+    // int dispenseProductsCount = pnumbersToBeSetAsOptions.size();
+    // if (dispenseProductsCount > MENU_PRODUCT_SELECTION_OPTIONS_MAX)
+    // {
+    //     dispenseProductsCount = MENU_PRODUCT_SELECTION_OPTIONS_MAX;
+    // }
 
-    productSelectionOptions.resize(dispenseProductsCount);
+    // dispenseProductsMenuOptions.resize(dispenseProductsCount);
 
-    for (int i = 0; i < dispenseProductsCount; ++i)
+    // for (int i = 0; i < dispenseProductsCount; ++i)
+    // {
+    //     qDebug() << pnumbersToBeSetAsOptions[i];
+    //     setProductToMenuOption(i + 1, pnumbersToBeSetAsOptions[i]);
+    // }
+    dispenseProductsMenuOptions.fill(DUMMY_PNUMBER);
+    for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
     {
-        qDebug() << pnumbersToBeSetAsOptions[i];
-        setProductToOption(i + 1, pnumbersToBeSetAsOptions[i]);
+
+        QVector<int> dispense_pnumbers = getAllDispensePNumbersFromSlot(slot_index + 1);
+        for (int i = 0; i < MENU_DISPENSE_OPTIONS_PER_BASE_MAXIMUM; i++)
+        {
+            int position = 1 + slot_index * MENU_DISPENSE_OPTIONS_PER_BASE_MAXIMUM + i ; 
+            setProductToMenuOption( position, dispense_pnumbers[i]);
+        }
     }
 }
 
-void machine::setProductToOption(int productOption, int PNumber)
+void machine::setProductToMenuOption(int productOption, int PNumber)
 {
+    // options array layout containing P-number for a certain menu position. [base1option1, base1option2, base1option3, base1option4, base1option5, base1option6, 
+    //base2option1, base2option2, base2option3, base2option4, base2option5, base2option6, 
+    // base3option1, base3option2, base3option3, base3option4, base3option5, base3option6, ...
     // options start at 1
     if (productOption == 0)
     {
 
         qDebug() << "ERROR: option  numbers start from 1!!!";
     }
-    if (productOption > PRODUCT_SELECTION_OPTIONS_MAX)
+    if (productOption > MENU_PRODUCT_SELECTION_OPTIONS_MAX)
     {
         qDebug() << "ERROR: Maximum amount of options exceeded. Will not add as an option. ";
         return;
     }
-    productSelectionOptions[productOption - 1] = PNumber;
+    dispenseProductsMenuOptions[productOption - 1] = PNumber;
 }
 
-pnumberproduct *machine::getProductByPNumber(int PNumber)
-{
-    return &m_pnumberproducts[PNumber];
-}
-
-pnumberproduct *machine::getProductByOption(int productOption)
+pnumberproduct *machine::getProductFromMenuOption(int productOption)
 {
     // options are selectable products by the customer. (they must be indexed. e.g. first page: option 1 to four)
     // option start counting from 1
@@ -194,13 +213,18 @@ pnumberproduct *machine::getProductByOption(int productOption)
 
         qDebug() << "ERROR:  option numbering start from 1!!!";
     }
-    int pnumber = productSelectionOptions[productOption - 1];
+    int pnumber = dispenseProductsMenuOptions[productOption - 1];
     return &m_pnumberproducts[pnumber];
+}
+
+pnumberproduct *machine::getProductByPNumber(int PNumber)
+{
+    return &m_pnumberproducts[PNumber];
 }
 
 void machine::setSelectedProductByOption(int productOption)
 {
-    int pnumber = productSelectionOptions[productOption - 1];
+    int pnumber = dispenseProductsMenuOptions[productOption - 1];
     m_selectedProduct = &m_pnumberproducts[pnumber];
 }
 
@@ -217,12 +241,16 @@ bool machine::getIsOptionAvailable(int productOption)
 
 int machine::getOptionCount()
 {
+    if (!isAelenPillarElseSoapStand()){
+        return getSlotCount();   
+    }
+
     // number of set options.
-    int count = productSelectionOptions.size();
-    if (count > PRODUCT_SELECTION_OPTIONS_MAX)
+    int count = dispenseProductsMenuOptions.size();
+    if (count > MENU_PRODUCT_SELECTION_OPTIONS_MAX)
     {
         qDebug() << "WARNING: exceeded maximum options count, will return max. ";
-        return PRODUCT_SELECTION_OPTIONS_MAX;
+        return MENU_PRODUCT_SELECTION_OPTIONS_MAX;
     }
     qDebug() << "get option scoun ts : " << count;
     return count;
@@ -964,7 +992,7 @@ QString machine::getIdlePageType()
 
 bool machine::getCouponsEnabled()
 {
-    
+
     return m_coupons_enabled == 1;
 }
 

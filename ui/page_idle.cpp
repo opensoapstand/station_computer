@@ -106,7 +106,7 @@ void page_idle::showEvent(QShowEvent *event)
     thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
 
     this->installEventFilter(this); // catches all events.
-
+    this->raise();
     // p_statusbar->autoSetVisibility();
     p_statusbar->refresh();
 

@@ -311,8 +311,8 @@ transfer_all_production_dbs(){
             "dbname to dbname OVERWRITE ALERT")
             production_configuration_db_name_source="configuration.db"
             production_configuration_db_name_destination="configuration.db"
-            productionusagen_db_name_source="usage.db"
-            productionusagen_db_name_destination="usage.db"
+            production_usage_db_name_source="usage.db"
+            production_usage_db_name_destination="usage.db"
                 ;;
             "dbname_xsrcx to dbname_xsrcx")
             production_configuration_db_name_source="configuration_$source_port.db"

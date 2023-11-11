@@ -388,6 +388,7 @@ bool page_payment_tap_tcp::exitConfirm()
     }
 }
 
+
 // Navigation: Back to Drink Size Selection
 void page_payment_tap_tcp::on_pushButton_previous_page_clicked()
 {

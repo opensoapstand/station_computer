@@ -430,6 +430,57 @@ bool page_qr_payment::exitConfirm()
     }
 }
 
+bool page_qr_payment::exitConfirm()
+{
+    qDebug() << "In exit confirm";
+
+    QMessageBox msgBox;
+    msgBox.setWindowFlags(Qt::FramelessWindowHint);
+
+    if (state_payment == s_payment_processing || state_payment == s_payment_done)
+    {
+        QString searchString = this->objectName() + "->msgBox_cancel->default";
+        p_page_idle->thisMachine->setTextToObject(&msgBox, p_page_idle->thisMachine->getTemplateText(searchString));
+    }
+    else if (state_payment == s_init)
+    {
+        QString searchString = this->objectName() + "->msgBox_refund->default";
+        p_page_idle->thisMachine->setTextToObject(&msgBox, p_page_idle->thisMachine->getTemplateText(searchString));
+    }
+
+    QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_QR_PAYMENT_CSS);
+    msgBox.setProperty("class", "msgBoxbutton msgBox");
+    msgBox.setStyleSheet(styleSheet);
+
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+
+    // Set up a QTimer for a 10-second timeout
+    QTimer timer;
+    timer.setSingleShot(true); // Fires only once
+    timer.start(10000); // 10 seconds timeout
+
+    int ret = msgBox.exec();
+
+    // If the user did not make a choice before the timeout, consider it as a "No"
+    if (timer.isActive() && ret == -1) {
+        qDebug() << "Timeout occurred. Choosing No by default.";
+        return false;
+    }
+
+    // If the user made a choice, handle it accordingly
+    switch (ret)
+    {
+    case QMessageBox::Yes:
+        return true;
+    case QMessageBox::No:
+        return false;
+    }
+
+    // Note: If the timer expires and the user hasn't made a choice, the default "No" will be returned.
+}
+
+
+
 void page_qr_payment::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
 

@@ -42,7 +42,6 @@ page_qr_payment::page_qr_payment(QWidget *parent) : QWidget(parent),
 
     state_payment = s_init;
     statusbarLayout = new QVBoxLayout(this);
-
 }
 
 /*
@@ -82,10 +81,10 @@ void page_qr_payment::showEvent(QShowEvent *event)
 
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
-    statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
-    statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
+    statusbarLayout->addWidget(p_statusbar);                                            // Only one instance can be shown. So, has to be added/removed per page.
+    statusbarLayout->setContentsMargins(0, 1874, 0, 0);                                 // int left, int top, int right, int bottom);
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
-    
+
     // p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ox2, "button_problems_message");
     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_title, "pay_by_phone");
     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_scan, "label_scan_1");
@@ -164,9 +163,9 @@ void page_qr_payment::setupQrOrder()
 
         // build up qr content (link)
         QString qrdata = "https://soapstandportal.com/payment?oid=" + orderId;
-        if((p_page_idle->thisMachine->getMachineId()).left(2)=="AP"){
+        if ((p_page_idle->thisMachine->getMachineId()).left(2) == "AP")
+        {
             qrdata = "https://soapstandportal.com/paymentAelen?oid=" + orderId;
-
         }
         // create qr code graphics
         paintQR(painter, QSize(360, 360), qrdata, QColor("white"));
@@ -200,7 +199,7 @@ void page_qr_payment::showErrorTimerPage()
 
 bool page_qr_payment::createOrderIdAndSendToBackend()
 {
-    std::map<QString,QString> myMap = p_page_idle->thisMachine->getCouponConditions();
+    std::map<QString, QString> myMap = p_page_idle->thisMachine->getCouponConditions();
     qDebug() << myMap["m_min_threshold_vol_ml_discount"];
     // an order Id is generated locally and the order is sent to the cloud.
     bool shouldShowQR = false;
@@ -334,7 +333,6 @@ void page_qr_payment::isQrProcessedCheckOnline()
             ui->label_steps->hide();
             ui->label_gif->show();
 
-
             ui->label_processing->show();
             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_scan, "finalize_transaction");
             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_title, "almost_there");
@@ -412,13 +410,17 @@ bool page_qr_payment::exitConfirm()
     msgBox.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
     msgBox.setStyleSheet(styleSheet);
 
+     QTimer::singleShot(MESSAGE_BOX_TIMEOUT_MILLIS, &msgBox, [&msgBox]() {
+        msgBox.hide();
+        msgBox.deleteLater();
+    });
+
     msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-    int ret = msgBox.exec();
+    int ret = msgBox.exec(); // .exec() is blocking. For non blocking behaviour, use .open()
     switch (ret)
     {
     case QMessageBox::Yes:
     {
-
         return true;
     }
     break;
@@ -428,6 +430,8 @@ bool page_qr_payment::exitConfirm()
     }
     break;
     }
+
+    return false; // return false as default e.g. if message box timed out
 }
 
 // bool page_qr_payment::exitConfirm()
@@ -478,8 +482,6 @@ bool page_qr_payment::exitConfirm()
 
 //     // Note: If the timer expires and the user hasn't made a choice, the default "No" will be returned.
 // }
-
-
 
 void page_qr_payment::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {

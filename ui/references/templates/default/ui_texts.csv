@@ -68,6 +68,9 @@ page_product_overview->lineEdit_promo_code->ineligible,Promo Code Not Eligible A
 page_product_overview->lineEdit_promo_code->network_error,Network error, could not verify. Try again.
 page_product_overview->lineEdit_promo_code->invite,Tap here to enter promo code
 page_product_overview->label_selected_volume->custom_volume,Custom Volume<br>(maximum: %1)
+page_product_overview->pushButton_continue->proceed_free,Proceed
+page_product_overview->pushButton_continue->proceed_pay,Continue
+page_product_overview->label_total,Total Amount
 
 #################### page_dispenser
 page_dispenser->label_to_refill,to refill

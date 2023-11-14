@@ -49,7 +49,6 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
     arrowAnimationStepTimer->setInterval(50);
     connect(arrowAnimationStepTimer, SIGNAL(timeout()), this, SLOT(onArrowAnimationStepTimerTick()));
     statusbarLayout = new QVBoxLayout(this);
-
 }
 
 /*
@@ -342,12 +341,12 @@ void page_dispenser::dispensing_end_admin()
                 response = voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["saf_num"]);
             }
             else if (tapPaymentObject.find("ctroutd") != tapPaymentObject.end())
-            {   
+            {
                 qDebug() << "CTROUTD" << QString::fromStdString(tapPaymentObject["ctroutd"]);
                 response = voidTransaction(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["ctroutd"]);
                 tapPaymentObject["ctrout_saf"] = tapPaymentObject["ctroutd"];
             }
-            
+
             tapPaymentObject["amount"] = stream.str();
             tapPaymentObject["status"] = "Voided";
             p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
@@ -689,6 +688,15 @@ void page_dispenser::on_pushButton_abort_clicked()
         p_page_idle->thisMachine->addCssClassToObject(msgBox_abort, "msgBoxbutton msgBox", PAGE_DISPENSER_CSS);
         msgBox_abort->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 
+        // Use a QTimer to hide and delete the message box after a timeout
+        QTimer *timeoutTimer = new QTimer(msgBox_abort);
+        QObject::connect(timeoutTimer, &QTimer::timeout, [this, timeoutTimer]()
+                         {
+            timeoutTimer->stop();
+            msgBox_abort->hide();
+            msgBox_abort->deleteLater(); });
+        timeoutTimer->start(MESSAGE_BOX_TIMEOUT_DEFAULT_MILLIS); // Set the timeout duration in milliseconds (5000 = 5 seconds)
+
         int ret = msgBox_abort->exec();
         switch (ret)
         {
@@ -738,6 +746,15 @@ void page_dispenser::on_pushButton_problems_clicked()
 
     p_page_idle->thisMachine->addCssClassToObject(msgBox_problems, "msgBoxbutton msgBox", PAGE_DISPENSER_CSS);
     msgBox_problems->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+
+    // Use a QTimer to hide and delete the message box after a timeout
+    QTimer *timeoutTimer = new QTimer(msgBox_abort);
+    QObject::connect(timeoutTimer, &QTimer::timeout, [this, timeoutTimer]()
+                     {
+            timeoutTimer->stop();
+            msgBox_abort->hide();
+            msgBox_abort->deleteLater(); });
+    timeoutTimer->start(MESSAGE_BOX_TIMEOUT_DEFAULT_MILLIS); // Set the timeout duration in milliseconds (5000 = 5 seconds)
 
     int ret = msgBox_problems->exec();
     switch (ret)

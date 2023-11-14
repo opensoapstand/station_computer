@@ -358,8 +358,37 @@ bool page_payment_tap_tcp::exitConfirm()
         msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
         p_page_idle->thisMachine->addCssClassToObject(&msgBox, "msgBoxbutton msgBox", PAGE_TAP_PAYMENT_CSS);
         QString searchString = this->objectName() + "->msgBox_cancel";
-        p_page_idle->thisMachine->setTextToObject(&msgBox, p_page_idle->thisMachine->getTemplateText(searchString));
+        // p_page_idle->thisMachine->setTextToObject(&msgBox, p_page_idle->thisMachine->getTemplateText(searchString));
     
+
+        int remainingTime = MESSAGE_BOX_TIMEOUT_EXIT_TAP_CONFIRM_SECONDS; // Initial value in seconds
+        QString templateText = p_page_idle->thisMachine->getTemplateText(searchString);
+        QString autoCloseText = QString("Closing in %1 seconds...").arg(remainingTime);
+        QString messageBoxText = templateText + "\n" + autoCloseText;
+
+        msgBox.setText(messageBoxText);
+
+        QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_QR_PAYMENT_CSS);
+        msgBox.setProperty("class", "msgBoxbutton msgBox");
+        msgBox.setStyleSheet(styleSheet);
+
+        QTimer *timeauto_timer = new QTimer(&msgBox);
+        QObject::connect(timeauto_timer, &QTimer::timeout, [&msgBox, &remainingTime, &templateText, timeauto_timer]()
+                        {
+            remainingTime--;
+            QString autoCloseText = QString("Closing in %1 seconds...").arg(remainingTime);
+            QString messageBoxText = templateText + "\n" + autoCloseText;
+            msgBox.setText(messageBoxText);
+            if (remainingTime <= 0) {
+                timeauto_timer->stop();
+                msgBox.hide();
+                msgBox.deleteLater();
+            } });
+
+        timeauto_timer->start(1000); // Update every 1000 milliseconds (1 second)
+
+
+
         msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         int ret = msgBox.exec();
         bool success;
@@ -387,6 +416,7 @@ bool page_payment_tap_tcp::exitConfirm()
         return true;
     }
 }
+
 
 // Navigation: Back to Drink Size Selection
 void page_payment_tap_tcp::on_pushButton_previous_page_clicked()

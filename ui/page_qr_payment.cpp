@@ -42,7 +42,6 @@ page_qr_payment::page_qr_payment(QWidget *parent) : QWidget(parent),
 
     state_payment = s_init;
     statusbarLayout = new QVBoxLayout(this);
-
 }
 
 /*
@@ -82,10 +81,10 @@ void page_qr_payment::showEvent(QShowEvent *event)
 
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
-    statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
-    statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
+    statusbarLayout->addWidget(p_statusbar);                                            // Only one instance can be shown. So, has to be added/removed per page.
+    statusbarLayout->setContentsMargins(0, 1874, 0, 0);                                 // int left, int top, int right, int bottom);
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
-    
+
     // p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ox2, "button_problems_message");
     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_title, "pay_by_phone");
     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_scan, "label_scan_1");
@@ -164,9 +163,9 @@ void page_qr_payment::setupQrOrder()
 
         // build up qr content (link)
         QString qrdata = "https://soapstandportal.com/payment?oid=" + orderId;
-        if((p_page_idle->thisMachine->getMachineId()).left(2)=="AP"){
+        if ((p_page_idle->thisMachine->getMachineId()).left(2) == "AP")
+        {
             qrdata = "https://soapstandportal.com/paymentAelen?oid=" + orderId;
-
         }
         // create qr code graphics
         paintQR(painter, QSize(360, 360), qrdata, QColor("white"));
@@ -200,7 +199,7 @@ void page_qr_payment::showErrorTimerPage()
 
 bool page_qr_payment::createOrderIdAndSendToBackend()
 {
-    std::map<QString,QString> myMap = p_page_idle->thisMachine->getCouponConditions();
+    std::map<QString, QString> myMap = p_page_idle->thisMachine->getCouponConditions();
     qDebug() << myMap["m_min_threshold_vol_ml_discount"];
     // an order Id is generated locally and the order is sent to the cloud.
     bool shouldShowQR = false;
@@ -334,7 +333,6 @@ void page_qr_payment::isQrProcessedCheckOnline()
             ui->label_steps->hide();
             ui->label_gif->show();
 
-
             ui->label_processing->show();
             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_scan, "finalize_transaction");
             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_title, "almost_there");
@@ -397,38 +395,151 @@ bool page_qr_payment::exitConfirm()
     qDebug() << "In exit confirm";
     QMessageBox msgBox;
 
-    msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
+    msgBox.setWindowFlags(Qt::FramelessWindowHint);
+    QString searchString;
     if (state_payment == s_payment_processing || state_payment == s_payment_done)
     {
-        QString searchString = this->objectName() + "->msgBox_cancel->default";
+        searchString = this->objectName() + "->msgBox_cancel->default";
         p_page_idle->thisMachine->setTextToObject(&msgBox, p_page_idle->thisMachine->getTemplateText(searchString));
     }
     else if (state_payment == s_init)
     {
-        QString searchString = this->objectName() + "->msgBox_refund->default";
-        p_page_idle->thisMachine->setTextToObject(&msgBox, p_page_idle->thisMachine->getTemplateText(searchString));
+        searchString = this->objectName() + "->msgBox_refund->default";
     }
+
+    int remainingTime = MESSAGE_BOX_TIMEOUT_EXIT_QR_CONFIRM_SECONDS; // Initial value in seconds
+    QString templateText = p_page_idle->thisMachine->getTemplateText(searchString);
+    QString autoCloseText = QString("Closing in %1 seconds...").arg(remainingTime);
+    QString messageBoxText = templateText + "\n" + autoCloseText;
+
+    msgBox.setText(messageBoxText);
+
     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_QR_PAYMENT_CSS);
-    msgBox.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
+    msgBox.setProperty("class", "msgBoxbutton msgBox");
     msgBox.setStyleSheet(styleSheet);
+
+    QTimer *timeauto_timer = new QTimer(&msgBox);
+    QObject::connect(timeauto_timer, &QTimer::timeout, [&msgBox, &remainingTime, &templateText, timeauto_timer]()
+                     {
+        remainingTime--;
+        QString autoCloseText = QString("Closing in %1 seconds...").arg(remainingTime);
+        QString messageBoxText = templateText + "\n" + autoCloseText;
+        msgBox.setText(messageBoxText);
+        if (remainingTime <= 0) {
+            timeauto_timer->stop();
+            msgBox.hide();
+            msgBox.deleteLater();
+        } });
+
+    timeauto_timer->start(1000); // Update every 1000 milliseconds (1 second)
 
     msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     int ret = msgBox.exec();
+
     switch (ret)
     {
     case QMessageBox::Yes:
-    {
-
         return true;
-    }
-    break;
     case QMessageBox::No:
-    {
         return false;
     }
-    break;
-    }
+
+    timeauto_timer->stop();
+    return false; // return false as default e.g. if message box timed out
 }
+
+// bool page_qr_payment::exitConfirm()
+// {
+//     qDebug() << "In exit confirm";
+//     QMessageBox msgBox;
+
+//     msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
+//     if (state_payment == s_payment_processing || state_payment == s_payment_done)
+//     {
+//         QString searchString = this->objectName() + "->msgBox_cancel->default";
+//         p_page_idle->thisMachine->setTextToObject(&msgBox, p_page_idle->thisMachine->getTemplateText(searchString));
+//     }
+//     else if (state_payment == s_init)
+//     {
+//         QString searchString = this->objectName() + "->msgBox_refund->default";
+//         p_page_idle->thisMachine->setTextToObject(&msgBox, p_page_idle->thisMachine->getTemplateText(searchString));
+//     }
+//     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_QR_PAYMENT_CSS);
+//     msgBox.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
+//     msgBox.setStyleSheet(styleSheet);
+
+//      QTimer::singleShot(MESSAGE_BOX_TIMEOUT_MILLIS, &msgBox, [&msgBox]() {
+//         msgBox.hide();
+//         msgBox.deleteLater();
+//     });
+
+//     msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+//     int ret = msgBox.exec(); // .exec() is blocking. For non blocking behaviour, use .open()
+//     switch (ret)
+//     {
+//     case QMessageBox::Yes:
+//     {
+//         return true;
+//     }
+//     break;
+//     case QMessageBox::No:
+//     {
+//         return false;
+//     }
+//     break;
+//     }
+
+//     return false; // return false as default e.g. if message box timed out
+// }
+
+// bool page_qr_payment::exitConfirm()
+// {
+//     qDebug() << "In exit confirm";
+
+//     QMessageBox msgBox;
+//     msgBox.setWindowFlags(Qt::FramelessWindowHint);
+
+//     if (state_payment == s_payment_processing || state_payment == s_payment_done)
+//     {
+//         QString searchString = this->objectName() + "->msgBox_cancel->default";
+//         p_page_idle->thisMachine->setTextToObject(&msgBox, p_page_idle->thisMachine->getTemplateText(searchString));
+//     }
+//     else if (state_payment == s_init)
+//     {
+//         QString searchString = this->objectName() + "->msgBox_refund->default";
+//         p_page_idle->thisMachine->setTextToObject(&msgBox, p_page_idle->thisMachine->getTemplateText(searchString));
+//     }
+
+//     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_QR_PAYMENT_CSS);
+//     msgBox.setProperty("class", "msgBoxbutton msgBox");
+//     msgBox.setStyleSheet(styleSheet);
+
+//     msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+
+//     // Set up a QTimer for a 10-second timeout
+//     QTimer timer;
+//     timer.setSingleShot(true); // Fires only once
+//     timer.start(10000); // 10 seconds timeout
+
+//     int ret = msgBox.exec();
+
+//     // If the user did not make a choice before the timeout, consider it as a "No"
+//     if (timer.isActive() && ret == -1) {
+//         qDebug() << "Timeout occurred. Choosing No by default.";
+//         return false;
+//     }
+
+//     // If the user made a choice, handle it accordingly
+//     switch (ret)
+//     {
+//     case QMessageBox::Yes:
+//         return true;
+//     case QMessageBox::No:
+//         return false;
+//     }
+
+//     // Note: If the timer expires and the user hasn't made a choice, the default "No" will be returned.
+// }
 
 void page_qr_payment::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {

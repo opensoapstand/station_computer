@@ -210,7 +210,7 @@ void page_payment_tap_tcp::tapPaymentHandler()
     lastTransactionId = std::stoi(configMap["INVOICE"]);
 
     startSession(socket, MAC_LABEL, MAC_KEY, lastTransactionId + 1);
-    tapPaymentObject["session_id"] = std::to_string(lastTransactionId+1);
+    // tapPaymentObject["session_id"] = std::to_string(lastTransactionId+1);
     tapPaymentObject["mac_label"] = MAC_LABEL;
 
     startPaymentProcess();

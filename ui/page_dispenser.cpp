@@ -365,6 +365,11 @@ void page_dispenser::dispensing_end_admin()
                 pktResponded.clear();
                 com.flushSerial();
             }
+
+            tapPaymentObject["status"] = "Voided";
+            // tapPaymentObject["session_id"] = "1";
+            p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
+
         }
     }
     else if (((paymentMethod == PAYMENT_TAP_TCP || paymentMethod == PAYMENT_TAP_SERIAL)))
@@ -394,6 +399,10 @@ void page_dispenser::dispensing_end_admin()
             p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
 
             finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
+        }
+        else if(paymentMethod == PAYMENT_TAP_SERIAL){
+            tapPaymentObject["status"] = "CAPTURED";
+            p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
         }
     }
 

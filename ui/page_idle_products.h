@@ -60,7 +60,7 @@ public:
     void setBackgroundPictureFromTemplateToPage(QWidget *page, QString imageName);
     int setStepTimerFromFileName(QString fileName, int defaultTimeMillis);
 
-    void printerStatusFeedback(bool isOnline, bool hasPaper);
+    // void printerStatusFeedback(bool isOnline, bool hasPaper);
 
     QLabel *labels_product_picture[4];
     QLabel *labels_selectProductOverlay[4];
@@ -83,7 +83,7 @@ private:
     void hideAllLabelAndButtons();
     void showAllLabelsAndButtons();
     void changeBackground();
-    void displayPrinterStatus();
+    // void displayPrinterStatus();
 
     void resizeEvent(QResizeEvent *event);
 

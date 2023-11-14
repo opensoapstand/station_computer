@@ -146,7 +146,7 @@ void statusbar::onRefreshTimerTick()
     else
     {
 
-        qDebug() << "Statusbar: refresh";
+        // qDebug() << "Statusbar: refresh";
         refresh();
 
         _refreshTimerTimeoutSec = STATUS_BAR_REFRESH_PERIOD_SECONDS;

@@ -72,7 +72,7 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     connect(rebootNightlyTimeOutTimer, SIGNAL(timeout()), this, SLOT(onRebootNightlyTimeOutTimerTick()));
     // thisMachine->setRebootState(initial_state);
 
-    tappingBlockedUntilPrinterReply = false; 
+    tappingBlockedUntilPrinterReply = false;
 }
 
 void page_idle::setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products, page_error_wifi *p_page_error_wifi, statusbar *p_statusbar)
@@ -106,7 +106,7 @@ void page_idle::showEvent(QShowEvent *event)
     thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
 
     this->installEventFilter(this); // catches all events.
-
+    this->raise();
     // p_statusbar->autoSetVisibility();
     p_statusbar->refresh();
 
@@ -117,9 +117,9 @@ void page_idle::showEvent(QShowEvent *event)
 
     thisMachine->dispenseButtonLightsAnimateState(true);
 
-    if (!thisMachine->isSessionLocked()) 
+    if (!thisMachine->isSessionLocked())
     {
-      thisMachine->resetSessionId();
+        thisMachine->resetSessionId();
     }
 
     if (thisMachine->getCouponState() == StateCoupon::no_state) // at startup
@@ -175,6 +175,14 @@ void page_idle::showEvent(QShowEvent *event)
     thisMachine->setTemplateTextToObject(ui->label_welcome_message);
     thisMachine->addClientLogoToLabel(ui->label_client_logo);
 
+
+    ui->label_show_temperature->hide(); // always hide by default
+    ui->label_temperature_warning->hide();
+    if (thisMachine->isAelenPillarElseSoapStand())
+    {
+        refreshTemperature();
+    }
+    
     ui->label_printer_status->hide(); // always hide here, will show if enabled and has problems.
 
     if (thisMachine->hasReceiptPrinter())
@@ -290,9 +298,12 @@ bool page_idle::eventFilter(QObject *object, QEvent *event)
             else
             {
                 qDebug() << "Mouse Clicked in idle page (can be virtual): Go to page select products"; // leave this for a while to investigate frozen screens in the field.
-                // if rebootState is in triggered_wait_for_delay; do nothing 
-                if(thisMachine->getRebootState() == triggered_wait_for_delay){
-                }else{
+                // if rebootState is in triggered_wait_for_delay; do nothing
+                if (thisMachine->getRebootState() == triggered_wait_for_delay)
+                {
+                }
+                else
+                {
                     this->hideCurrentPageAndShowProvided(p_pageSelectProduct, true);
                 }
             }
@@ -352,11 +363,10 @@ void page_idle::onTestForFrozenScreenTick()
         hideCurrentPageAndShowProvided(p_pageSelectProduct, true); // will go to select products page and automatically revert after some seconds. I hope that by reloading idle page, the 'freezing issue' is solved.
         return;                                                    // we would create a monster if we continue, with multiple clicks and doubled up pages...
     }
-   
+
     stateScreenCheck = state_screen_check_clicked_and_wait;
     // prepare for next cycle
     df_util::executeVirtualClick(200, 500);
-
 
     if (tappingBlockedUntilPrinterReply)
     {
@@ -387,7 +397,8 @@ void page_idle::onUserRoleTimeOutTimerTick()
     }
 }
 
-void page_idle::onRebootNightlyTimeOutTimerTick(){
+void page_idle::onRebootNightlyTimeOutTimerTick()
+{
     _rebootNightlyTimeOutTimerSec--;
     if (_rebootNightlyTimeOutTimerSec >= 0)
     {
@@ -400,52 +411,58 @@ void page_idle::onRebootNightlyTimeOutTimerTick(){
         _millisecondsUntilSetTime = currentTime.msecsTo(QTime(23, 55));
         // _millisecondsUntilSetTime = QTime(23, 55).msecsTo(QTime(23, 55));
         // qDebug() << "!!!!!!!!!!!!!!!! milli seconds until midnight:" << _millisecondsUntilSetTime;
-        switch(thisMachine->getRebootState()){
-            case wait_for_trigger:
+        switch (thisMachine->getRebootState())
+        {
+        case wait_for_trigger:
+        {
+            if (_millisecondsUntilSetTime <= 0)
             {
-                if (_millisecondsUntilSetTime <= 0){
-                    thisMachine->setRebootState(triggered_wait_for_delay);
-                    stateScreenCheck = state_screen_check_deactivated;
-                }
+                thisMachine->setRebootState(triggered_wait_for_delay);
+                stateScreenCheck = state_screen_check_deactivated;
             }
-            break;
-            case triggered_wait_for_delay:
+        }
+        break;
+        case triggered_wait_for_delay:
+        {
+            // qDebug() << "================== TRIGGERED WAIT FOR DELAY =======================";
+            if (_millisecondsUntilSetTime <= 0)
             {
-                // qDebug() << "================== TRIGGERED WAIT FOR DELAY =======================";
-                if(_millisecondsUntilSetTime <= 0){
-                    ui->label_reboot_nightly_text->show();
-                    ui->label_reboot_nightly_title->show();
-                    ui->label_reboot_nightly_bg->show();
-                    ui->label_reboot_nightly_icon->show();
-                    ui->pushButton_reboot_nightly->show();
-                    QString base = thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_reboot_nightly_text, "count_down");
-                    ui->label_reboot_nightly_text->setText(base.arg(QString::number(_delaytime_seconds)));
-                    _delaytime_seconds--;
-                }else{
-                    // qDebug() << "================== REBOOT NIGHTLY - SYSTEM REBOOT ==================";
-                    thisMachine->setRebootState(wait_for_trigger);
-                    _delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
-                    stateScreenCheck = state_screen_check_not_initiated;
-                    QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -r 0";
-                    system(qPrintable(command));
-                }
+                ui->label_reboot_nightly_text->show();
+                ui->label_reboot_nightly_title->show();
+                ui->label_reboot_nightly_bg->show();
+                ui->label_reboot_nightly_icon->show();
+                ui->pushButton_reboot_nightly->show();
+                QString base = thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_reboot_nightly_text, "count_down");
+                ui->label_reboot_nightly_text->setText(base.arg(QString::number(_delaytime_seconds)));
+                _delaytime_seconds--;
             }
-            break;
-            case user_cancelled_reboot:
+            else
             {
-                // qDebug() << "================== USER CANCELLED REBOOT =======================";
-                ui->label_reboot_nightly_text->hide();
-                ui->label_reboot_nightly_title->hide();
-                ui->label_reboot_nightly_bg->hide();
-                ui->label_reboot_nightly_icon->hide();
-                ui->pushButton_reboot_nightly->hide();
-                stateScreenCheck = state_screen_check_not_initiated;
+                // qDebug() << "================== REBOOT NIGHTLY - SYSTEM REBOOT ==================";
+                thisMachine->setRebootState(wait_for_trigger);
                 _delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
-                if(_millisecondsUntilSetTime > 0){
-                    thisMachine->setRebootState(wait_for_trigger);
-                }
+                stateScreenCheck = state_screen_check_not_initiated;
+                QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -r 0";
+                system(qPrintable(command));
             }
-            break;
+        }
+        break;
+        case user_cancelled_reboot:
+        {
+            // qDebug() << "================== USER CANCELLED REBOOT =======================";
+            ui->label_reboot_nightly_text->hide();
+            ui->label_reboot_nightly_title->hide();
+            ui->label_reboot_nightly_bg->hide();
+            ui->label_reboot_nightly_icon->hide();
+            ui->pushButton_reboot_nightly->hide();
+            stateScreenCheck = state_screen_check_not_initiated;
+            _delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
+            if (_millisecondsUntilSetTime > 0)
+            {
+                thisMachine->setRebootState(wait_for_trigger);
+            }
+        }
+        break;
         }
     }
 }
@@ -453,34 +470,27 @@ void page_idle::onRebootNightlyTimeOutTimerTick(){
 void page_idle::refreshTemperature()
 {
     //  QString base_text = "Current Temperature: %1 °C"; //Assuming you have the base_text defined somewhere else or you can define it here.
-    if (thisMachine->isAelenPillarElseSoapStand())
+
+    QString base_text = thisMachine->getTemplateTextByElementNameAndPage(ui->label_show_temperature);
+    float temperature = thisMachine->getTemperature_1();
+    QString temperatureStr = QString::number(temperature, 'f', 1);
+
+    ui->label_show_temperature->setText(base_text.arg(temperatureStr));
+    ui->label_show_temperature->show();
+
+    if (thisMachine->isTemperatureTooHigh_1())
     {
-        QString base_text = thisMachine->getTemplateTextByElementNameAndPage(ui->label_show_temperature);
-        float temperature = thisMachine->getTemperature_1();
-        QString temperatureStr = QString::number(temperature, 'f', 1);
+        thisMachine->checkForHighTemperatureAndDisableProducts(); // todo test if it works
+        qDebug() << "Temperature too high, disable all slots.";
 
-        ui->label_show_temperature->setText(base_text.arg(temperatureStr));
-        ui->label_show_temperature->show();
-
-        if (thisMachine->isTemperatureTooHigh_1())
-        {
-            thisMachine->checkForHighTemperatureAndDisableProducts(); // todo test if it works
-            qDebug() << "Temperature too high, disable all slots.";
-
-            // Update temperature status label
-            QString base = thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_temperature_warning, "temperature_too_high");
-            ui->label_temperature_warning->setText(base.arg(temperatureStr));
-            ui->label_temperature_warning->show();
-        }
-        else
-        {
-            ui->label_temperature_warning->hide();
-        }
+        // Update temperature status label
+        QString base = thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_temperature_warning, "temperature_too_high");
+        ui->label_temperature_warning->setText(base.arg(temperatureStr));
+        ui->label_temperature_warning->show();
     }
     else
     {
         ui->label_temperature_warning->hide();
-        ui->label_show_temperature->hide();
     }
 }
 
@@ -494,7 +504,11 @@ void page_idle::onPollTemperatureTimerTick()
     }
 
     _pollTemperatureTimerTimeoutSec = PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS;
-    refreshTemperature();
+
+    if (thisMachine->isAelenPillarElseSoapStand())
+    {
+        refreshTemperature();
+    }
 }
 
 // periodical check to transition to other idle page type
@@ -586,7 +600,9 @@ void page_idle::hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createN
         testForFrozenScreenTimer->stop();
         userRoleTimeOutTimer->stop();
         statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
-    }else{
+    }
+    else
+    {
         qDebug() << "Tapping blocked until receipt printer reply. ";
     }
 }

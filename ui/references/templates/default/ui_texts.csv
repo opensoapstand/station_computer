@@ -68,6 +68,9 @@ page_product_overview->lineEdit_promo_code->ineligible,Promo Code Not Eligible A
 page_product_overview->lineEdit_promo_code->network_error,Network error, could not verify. Try again.
 page_product_overview->lineEdit_promo_code->invite,Tap here to enter promo code
 page_product_overview->label_selected_volume->custom_volume,Custom Volume<br>(maximum: %1)
+page_product_overview->pushButton_continue->proceed_free,Proceed
+page_product_overview->pushButton_continue->proceed_pay,Continue
+page_product_overview->label_total,Total Amount
 
 #################### page_dispenser
 page_dispenser->label_to_refill,to refill
@@ -136,7 +139,7 @@ page_qr_payment->label_product_price->fixed_size,$%1
 page_qr_payment->label_product_price->custom_size,Pre-authorize $%1
 page_qr_payment->label_product_information->volume_up_to, volume max 
 page_qr_payment->msgBox_cancel->default,<p align=center><br><br>Cancel transaction and exit page?<br><br>It can take up to 30 seconds for dispensing to start after a payment is completed. <br></p>
-page_qr_payment->msgBox_refund->default,<p align=center><br><br>Are you sure you want to cancel this order?<br><br>The QR code won't be valid anymore if this order is cancelled.<br><br>In case a payment was made with an invalid QR code or cancelled order, a refund will be issued within 24-48 hours. <br></p>
+page_qr_payment->msgBox_refund->default,<p align=center><br><br><h1>Cancel order?</h1></p><p align=left><br><br><ul><li><span style="color: red;">Do not pay</span> cancelled orders if you scanned the QR code</li><li>Refunds for cancelled/invalid orders will be issued within 48 hours</li></ul><br></p>
 
 #################### page_error_wifi
 page_error_wifi->label_oops,oops..

@@ -105,6 +105,7 @@ void page_idle_products::showEvent(QShowEvent *event)
     }
 
     ui->label_printer_status->setStyleSheet(styleSheet);
+    ui->label_printer_status->hide();
 
     // we already checked this in p_page_idle the results from there.
     // if (p_page_idle->thisMachine->hasReceiptPrinter())

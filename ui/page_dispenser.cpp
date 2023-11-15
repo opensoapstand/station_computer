@@ -744,17 +744,30 @@ void page_dispenser::on_pushButton_problems_clicked()
     msgBox_problems->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 
     // Use a QTimer to hide and delete the message box after a timeout
-    QTimer *timeoutTimer = new QTimer(msgBox_problems);
-    QObject::connect(timeoutTimer, &QTimer::timeout, [this, timeoutTimer]()
+    QTimer *timeoutTimer2 = new QTimer(msgBox_problems);
+    QObject::connect(timeoutTimer2, &QTimer::timeout, [this, timeoutTimer2]()
                      {
-            timeoutTimer->stop();
-            timeoutTimer->deleteLater();
-            if (msgBox_problems!= nullptr){
+            // qDebug() << "msgBox_problems timed out.  start ";
+            timeoutTimer2->stop();
+            // qDebug() << "msgBox_problems timed out.  111 ";
+            timeoutTimer2->deleteLater();
+            // qDebug() << "msgBox_problems timed out.  222 ";
+
+            if (msgBox_problems != nullptr){
+            // qDebug() << "msgBox_problems timed out.  3323 ";
                 msgBox_problems->hide();
                 msgBox_problems->deleteLater(); 
             }
-            qDebug() << "msgBox_problems timed out. "; });
-    timeoutTimer->start(MESSAGE_BOX_TIMEOUT_DEFAULT_MILLIS); // Set the timeout duration in milliseconds (5000 = 5 seconds)
+
+            qDebug() << "msgBox_problems timed out. end "; });
+    timeoutTimer2->start(MESSAGE_BOX_TIMEOUT_DEFAULT_MILLIS); // Set the timeout duration in milliseconds (5000 = 5 seconds)
+
+    // Connect message box finished signal to a slot that stops and deletes the timer
+    QObject::connect(msgBox_problems, &QMessageBox::finished, [timeoutTimer2](int result)
+                     {
+        // Stop and delete the timer when the message box is closed
+        timeoutTimer2->stop();
+        timeoutTimer2->deleteLater(); });
 
     int ret = msgBox_problems->exec();
     switch (ret)
@@ -775,5 +788,11 @@ void page_dispenser::on_pushButton_problems_clicked()
         p_page_idle->thisMachine->dfUtility->send_command_to_FSM(SEND_REPAIR_PCA, true);
         break;
     }
+    }
+
+    if (msgBox_problems != nullptr)
+    {
+        msgBox_problems->hide();
+        msgBox_problems->deleteLater();
     }
 }

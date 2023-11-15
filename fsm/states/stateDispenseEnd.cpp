@@ -64,15 +64,22 @@ DF_ERROR stateDispenseEnd::onAction()
     // handle minimum dispensing
     bool is_valid_dispense = productDispensers[slot_index].getVolumeDispensed() >= MINIMUM_DISPENSE_VOLUME_ML;
 
+    if (!is_valid_dispense)
+    {
+        productDispensers[slot_index].resetVolumeDispensed();
+
+        debugOutput::sendMessage("Not a valid dispense. Volume set to zero. " + std::to_string(productDispensers[slot_index].getVolumeDispensed()), MSG_STATE);
+    }
+
     // send dispensed volume to ui (will be used to write to portal)
     usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
 
     if (productDispensers[slot_index].getIsDispenseTargetReached())
     {
-        usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
+        usleep(100000);                                      // send message delay (pause from previous message) desperate attempt to prevent crashes
         m_pMessaging->sendMessageOverIP("Target Hit", true); // send to UI
     }
-     // send dispensed volume to ui (will be used to write to portal)
+    // send dispensed volume to ui (will be used to write to portal)
     usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
 
     // bool empty_stock_detected = false;
@@ -125,6 +132,7 @@ DF_ERROR stateDispenseEnd::onAction()
         debugOutput::sendMessage("NOT SENDING transaction to cloud.", MSG_INFO);
 #endif
     }
+
     double price = getFinalPrice();
     debugOutput::sendMessage("Post dispense final price: " + to_string(price), MSG_INFO);
     double volume = productDispensers[slot_index].getVolumeDispensed();
@@ -460,10 +468,12 @@ DF_ERROR stateDispenseEnd::databaseUpdateSql(string sqlStatement, string dbPath)
 
     // FIXME: DB needs fully qualified link to find...obscure with XML loading.
     char *zErrMsg = 0;
-    if(dbPath == USAGE_DB_PATH){
+    if (dbPath == USAGE_DB_PATH)
+    {
         rc = sqlite3_open(USAGE_DB_PATH, &db);
     }
-    else{
+    else
+    {
         rc = sqlite3_open(CONFIG_DB_PATH, &db);
     }
 
@@ -595,7 +605,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
 
     std::string sql3;
     sql3 = ("UPDATE machine SET " + slot_status_field_name + "='" + slot_state_str + "';");
-    databaseUpdateSql(sql3,CONFIG_DB_PATH);
+    databaseUpdateSql(sql3, CONFIG_DB_PATH);
 
     // reload (changed) db values
     productDispensers[slot_index].getProduct()->reloadParametersFromDb();
@@ -641,7 +651,7 @@ double stateDispenseEnd::getFinalPrice()
     {
         price = m_pMessaging->getRequestedPrice();
     }
-   
+
     return price;
 }
 

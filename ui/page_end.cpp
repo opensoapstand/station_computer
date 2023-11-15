@@ -84,6 +84,8 @@ void page_end::showEvent(QShowEvent *event)
 
     QString paymentMethod = p_page_idle->thisMachine->selectedProduct->getPaymentMethod();
 
+    ui->label_volume_dispensed_ml->setText("");
+
     if (p_page_idle->thisMachine->hasReceiptPrinter())
     {
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "hasReceiptPrinter");
@@ -256,11 +258,11 @@ void page_end::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     // p_page_idle->setCouponCode("");
 
     thankYouEndTimer->stop();
-     qDebug() << "Thank you timer stopped. "
+    //  qDebug() << "Thank you timer stopped. ";
     statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
-     qDebug() << "statusbar hidden "
+    //  qDebug() << "statusbar hidden ";
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
-     qDebug() << "page transition done.  "
+    //  qDebug() << "page transition done.  ";
 }
 
 void page_end::finishHandler()

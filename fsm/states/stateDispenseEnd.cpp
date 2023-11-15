@@ -72,6 +72,8 @@ DF_ERROR stateDispenseEnd::onAction()
         usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
         m_pMessaging->sendMessageOverIP("Target Hit", true); // send to UI
     }
+     // send dispensed volume to ui (will be used to write to portal)
+    usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
 
     // bool empty_stock_detected = false;
     // // handle empty container detection
@@ -123,7 +125,14 @@ DF_ERROR stateDispenseEnd::onAction()
         debugOutput::sendMessage("NOT SENDING transaction to cloud.", MSG_INFO);
 #endif
     }
+    double price = getFinalPrice();
+    debugOutput::sendMessage("Post dispense final price: " + to_string(price), MSG_INFO);
+    double volume = productDispensers[slot_index].getVolumeDispensed();
+    std::string message = "finalVolumeDispensed|" + std::to_string(volume) + "|";
+    m_pMessaging->sendMessageOverIP(message, true); // send to UI
 
+    // send dispensed volume to ui (will be used to write to portal)
+    usleep(1000000); // send message delay (pause from previous message) desperate attempt to prevent crashes
     m_state_requested = STATE_IDLE;
     m_pMessaging->sendMessageOverIP("Transaction End", true); // send to UI
 
@@ -632,10 +641,7 @@ double stateDispenseEnd::getFinalPrice()
     {
         price = m_pMessaging->getRequestedPrice();
     }
-    debugOutput::sendMessage("Post dispense final price: " + to_string(price), MSG_INFO);
-    double volume = productDispensers[slot_index].getVolumeDispensed();
-    std::string message = "finalVolumeDispensed|" + std::to_string(volume) + "|";
-    m_pMessaging->sendMessageOverIP(message, true); // send to UI
+   
     return price;
 }
 

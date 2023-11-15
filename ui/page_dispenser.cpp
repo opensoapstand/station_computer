@@ -82,13 +82,25 @@ void page_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     {
         msgBox_abort->hide();
         msgBox_abort->deleteLater();
+        msgBox_abort = nullptr;
     }
+    // else
+    // {
+    //     qDebug() << "msgBox_abort was not active ";
+    // }
 
     if (msgBox_problems != nullptr)
     {
         msgBox_problems->hide();
         msgBox_problems->deleteLater();
+        msgBox_abort = nullptr;
     }
+    // else
+    // {
+    //     qDebug() << "msgBox_problems was not active ";
+    // }
+
+    qDebug() << "msgBox done. ";
     statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
 
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
@@ -368,7 +380,6 @@ void page_dispenser::dispensing_end_admin()
             tapPaymentObject["status"] = "Voided";
             // tapPaymentObject["session_id"] = "1";
             p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
-
         }
     }
     else if (((paymentMethod == PAYMENT_TAP_TCP || paymentMethod == PAYMENT_TAP_SERIAL)))
@@ -399,7 +410,8 @@ void page_dispenser::dispensing_end_admin()
 
             finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
         }
-        else if(paymentMethod == PAYMENT_TAP_SERIAL){
+        else if (paymentMethod == PAYMENT_TAP_SERIAL)
+        {
             tapPaymentObject["status"] = "CAPTURED";
             p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
         }
@@ -717,13 +729,13 @@ void page_dispenser::on_pushButton_abort_clicked()
     }
     else
     {
-
         if (this->isDispensing)
         {
             force_finish_dispensing();
         }
     }
 }
+
 
 void page_dispenser::on_pushButton_problems_clicked()
 {
@@ -750,39 +762,40 @@ void page_dispenser::on_pushButton_problems_clicked()
     }
 
     p_page_idle->thisMachine->addCssClassToObject(msgBox_problems, "msgBoxbutton msgBox", PAGE_DISPENSER_CSS);
+
     msgBox_problems->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 
     // Use a QTimer to hide and delete the message box after a timeout
     QTimer *timeoutTimer2 = new QTimer(msgBox_problems);
+
     QObject::connect(timeoutTimer2, &QTimer::timeout, [this, timeoutTimer2]()
                      {
-            // qDebug() << "msgBox_problems timed out.  start ";
-            timeoutTimer2->stop();
-            // qDebug() << "msgBox_problems timed out.  111 ";
-            timeoutTimer2->deleteLater();
-            // qDebug() << "msgBox_problems timed out.  222 ";
+                         timeoutTimer2->stop();
+                         timeoutTimer2->deleteLater();
 
-            if (msgBox_problems != nullptr){
-            // qDebug() << "msgBox_problems timed out.  3323 ";
-                msgBox_problems->hide();
-                msgBox_problems->deleteLater(); 
-            }
+                         if (msgBox_problems != nullptr)
+                         {
+                             msgBox_problems->hide();
+                             msgBox_problems->deleteLater();
+                             msgBox_problems = nullptr; // Set to nullptr after deletion
+                         }
 
-            qDebug() << "msgBox_problems timed out. end "; });
+                         qDebug() << "msgBox_problems timed out. end "; });
     timeoutTimer2->start(MESSAGE_BOX_TIMEOUT_DEFAULT_MILLIS); // Set the timeout duration in milliseconds (5000 = 5 seconds)
 
     // Connect message box finished signal to a slot that stops and deletes the timer
     QObject::connect(msgBox_problems, &QMessageBox::finished, [timeoutTimer2](int result)
                      {
-        // Stop and delete the timer when the message box is closed
-        timeoutTimer2->stop();
-        timeoutTimer2->deleteLater(); });
+                         // Stop and delete the timer when the message box is closed
+                         timeoutTimer2->stop();
+                         timeoutTimer2->deleteLater(); });
 
     int ret = msgBox_problems->exec();
     switch (ret)
     {
     case QMessageBox::Yes:
     {
+
         if (this->isDispensing)
         {
             askForFeedbackAtEnd = true;
@@ -790,6 +803,7 @@ void page_dispenser::on_pushButton_problems_clicked()
         }
         break;
     }
+
     case QMessageBox::No:
     {
         // send repair command
@@ -797,11 +811,17 @@ void page_dispenser::on_pushButton_problems_clicked()
         p_page_idle->thisMachine->dfUtility->send_command_to_FSM(SEND_REPAIR_PCA, true);
         break;
     }
+    default:
+    {
+        qDebug() << "Nothing chosen. User did not choose. ";
+    }
+    break;
     }
 
     if (msgBox_problems != nullptr)
     {
         msgBox_problems->hide();
         msgBox_problems->deleteLater();
+        msgBox_problems = nullptr; // Set to nullptr after deletion
     }
 }

@@ -64,7 +64,8 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     userRoleTimeOutTimer->setInterval(1000);
     connect(userRoleTimeOutTimer, SIGNAL(timeout()), this, SLOT(onUserRoleTimeOutTimerTick()));
 
-    stateScreenCheck = state_screen_check_not_initiated;
+    stateScreenCheck = state_screen_check_disabled;
+    // stateScreenCheck = state_screen_check_not_initiated;
     statusbarLayout = new QVBoxLayout(this);
 
     rebootNightlyTimeOutTimer = new QTimer(this);
@@ -175,14 +176,13 @@ void page_idle::showEvent(QShowEvent *event)
     thisMachine->setTemplateTextToObject(ui->label_welcome_message);
     thisMachine->addClientLogoToLabel(ui->label_client_logo);
 
-
     ui->label_show_temperature->hide(); // always hide by default
     ui->label_temperature_warning->hide();
     if (thisMachine->isAelenPillarElseSoapStand())
     {
         refreshTemperature();
     }
-    
+
     ui->label_printer_status->hide(); // always hide here, will show if enabled and has problems.
 
     if (thisMachine->hasReceiptPrinter())
@@ -342,36 +342,38 @@ void page_idle::onTestForFrozenScreenTick()
     _testForFrozenScreenTimerTimeoutSec = PAGE_IDLE_TEST_FOR_FROZEN_SCREEN_PERIOD_SECONDS;
 
     // we will test the previous cycle's outcome. If there is a fail, that means it will take at least one whole period that it's undetected (for the sake of simplicity of implementation)
+    if (stateScreenCheck != state_screen_check_disabled)
+    {
+        if (stateScreenCheck == state_screen_check_not_initiated)
+        {
+        }
+        else if (stateScreenCheck == state_screen_check_clicked_and_succes)
+        {
+            stateScreenCheck = state_screen_check_not_initiated;
+        }
+        else if (stateScreenCheck == state_screen_check_deactivated)
+        {
+            return; // do not tap if deactivated
+        }
+        else if (stateScreenCheck == state_screen_check_clicked_and_wait)
+        {
+            // still in this state? This means we have a fail!
+            stateScreenCheck = state_screen_check_fail;
 
-    if (stateScreenCheck == state_screen_check_not_initiated)
-    {
-    }
-    else if (stateScreenCheck == state_screen_check_clicked_and_succes)
-    {
-        stateScreenCheck = state_screen_check_not_initiated;
-    }
-    else if (stateScreenCheck == state_screen_check_deactivated)
-    {
-        return; // do not tap if deactivated
-    }
-    else if (stateScreenCheck == state_screen_check_clicked_and_wait)
-    {
-        // still in this state? This means we have a fail!
-        stateScreenCheck = state_screen_check_fail;
+            qDebug() << "ERROR: Idle Screen Not resposive to click test. (or program lost focus?!...). Will automatically go to 'select products page'. Screen freeze test is only active on idle page. If this is ennoying you while working in Ubuntu, put the program in maintenance mode. ";
+            hideCurrentPageAndShowProvided(p_pageSelectProduct, true); // will go to select products page and automatically revert after some seconds. I hope that by reloading idle page, the 'freezing issue' is solved.
+            return;                                                    // we would create a monster if we continue, with multiple clicks and doubled up pages...
+        }
 
-        qDebug() << "ERROR: Idle Screen Not resposive to click test. (or program lost focus?!...). Will automatically go to 'select products page'. Screen freeze test is only active on idle page. If this is ennoying you while working in Ubuntu, put the program in maintenance mode. ";
-        hideCurrentPageAndShowProvided(p_pageSelectProduct, true); // will go to select products page and automatically revert after some seconds. I hope that by reloading idle page, the 'freezing issue' is solved.
-        return;                                                    // we would create a monster if we continue, with multiple clicks and doubled up pages...
-    }
+        stateScreenCheck = state_screen_check_clicked_and_wait;
+        // prepare for next cycle
+        df_util::executeVirtualClick(200, 500);
 
-    stateScreenCheck = state_screen_check_clicked_and_wait;
-    // prepare for next cycle
-    df_util::executeVirtualClick(200, 500);
-
-    if (tappingBlockedUntilPrinterReply)
-    {
-        qDebug() << "ERROR: receipt printer did not respond in time! Unblock at frozen screen test.  ";
-        tappingBlockedUntilPrinterReply = false; // if printer not responsive, unblock here. s
+        if (tappingBlockedUntilPrinterReply)
+        {
+            qDebug() << "ERROR: receipt printer did not respond in time! Unblock at frozen screen test.  ";
+            tappingBlockedUntilPrinterReply = false; // if printer not responsive, unblock here. s
+        }
     }
 }
 

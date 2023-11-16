@@ -1,6 +1,6 @@
 #include "mcommunication.h"
 
-#define  MONERIS_PORT "/dev/mpos"
+#define  MONERIS_PORT "/dev/tap_terminal"
 #define  MONERIS_READ "gpio read %c\r"
 #define  MONERIS_SET  "gpio set %c\r"
 #define  MONERIS_CLEAR "gpio clear %c\r"

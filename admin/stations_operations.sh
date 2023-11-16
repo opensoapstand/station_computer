@@ -176,23 +176,28 @@ transfer_production_usage_db(){
     done
 
     production_db_name="configuration_$source_port.db"  # check for where used, not as a variable. Because... it's hard.
-    
-    cmd0=( scp -r -P $source_port "df-admin@localhost:/home/df-admin/production/db/$production_usage_db_name_source" "/home/ubuntu/Stations/$production_usage_db_name_destination" )
-    cmd1=( scp -r -P $destination_port "/home/ubuntu/Stations/$production_usage_db_name_destination" df-admin@localhost:/home/df-admin/production/db)
+
+    cmd0=(rm /home/ubuntu/Stations/$production_usage_db_name_destination)
+    cmd1=( scp -r -P $source_port "df-admin@localhost:/home/df-admin/production/db/$production_usage_db_name_source" "/home/ubuntu/Stations/$production_usage_db_name_destination" )
+    cmd2=( scp -r -P $destination_port "/home/ubuntu/Stations/$production_usage_db_name_destination" df-admin@localhost:/home/df-admin/production/db)
     printf -v cmd0_str '%q ' "${cmd0[@]}"
     printf -v cmd1_str '%q ' "${cmd1[@]}"
+    printf -v cmd2_str '%q ' "${cmd2[@]}"
 
     # confirm_execute "$cmd_str"
     echo "Lined up commands: "
     echo "$cmd0_str"
     echo "$cmd1_str"
+    echo "$cmd2_str"
     
     continu_or_exit
 
-    echo "Transfer usage db to aws..."
+    echo "Remove previously moved usage db from AWS..."
     "${cmd0[@]}"
-    echo "Transfer usage db from aws to station..."
+    echo "Transfer usage db to aws..."
     "${cmd1[@]}"
+    echo "Transfer usage db from aws to station..."
+    "${cmd2[@]}"
     echo "done"
 }
 
@@ -238,22 +243,27 @@ transfer_production_configuration_db(){
 
     production_db_name="configuration_$source_port.db"  # check for where used, not as a variable. Because... it's hard.
     
-    cmd0=( scp -r -P $source_port "df-admin@localhost:/home/df-admin/production/db/$production_configuration_db_name_source" "/home/ubuntu/Stations/$production_configuration_db_name_destination" )
-    cmd1=( scp -r -P $destination_port "/home/ubuntu/Stations/$production_configuration_db_name_destination" df-admin@localhost:/home/df-admin/production/db)
+    cmd0=(rm /home/ubuntu/Stations/$production_configuration_db_name_destination)
+    cmd1=( scp -r -P $source_port "df-admin@localhost:/home/df-admin/production/db/$production_configuration_db_name_source" "/home/ubuntu/Stations/$production_configuration_db_name_destination" )
+    cmd2=( scp -r -P $destination_port "/home/ubuntu/Stations/$production_configuration_db_name_destination" df-admin@localhost:/home/df-admin/production/db)
     printf -v cmd0_str '%q ' "${cmd0[@]}"
     printf -v cmd1_str '%q ' "${cmd1[@]}"
+    printf -v cmd2_str '%q ' "${cmd2[@]}"
 
     # confirm_execute "$cmd_str"
     echo "Lined up commands: "
     echo "$cmd0_str"
     echo "$cmd1_str"
+    echo "$cmd2_str"
     
     continu_or_exit
 
-    echo "Transfer configuration db to aws..."
+    echo "Remove previously moved configuration db from AWS..."
     "${cmd0[@]}"
-    echo "Transfer configuration db from aws to station..."
+    echo "Transfer configuration db to aws..."
     "${cmd1[@]}"
+    echo "Transfer configuration db from aws to station..."
+    "${cmd2[@]}"
     echo "done"
 }
 
@@ -301,8 +311,8 @@ transfer_all_production_dbs(){
             "dbname to dbname OVERWRITE ALERT")
             production_configuration_db_name_source="configuration.db"
             production_configuration_db_name_destination="configuration.db"
-            productionusagen_db_name_source="usage.db"
-            productionusagen_db_name_destination="usage.db"
+            production_usage_db_name_source="usage.db"
+            production_usage_db_name_destination="usage.db"
                 ;;
             "dbname_xsrcx to dbname_xsrcx")
             production_configuration_db_name_source="configuration_$source_port.db"
@@ -317,14 +327,21 @@ transfer_all_production_dbs(){
 
     production_db_name="configuration_$source_port.db"  # check for where used, not as a variable. Because... it's hard.
     
-    cmd0=( scp -r -P $source_port "df-admin@localhost:/home/df-admin/production/db/$production_configuration_db_name_source" "/home/ubuntu/Stations/$production_configuration_db_name_destination" )
-    cmd1=( scp -r -P $destination_port "/home/ubuntu/Stations/$production_configuration_db_name_destination" df-admin@localhost:/home/df-admin/production/db)
-    cmd2=( scp -r -P $source_port "df-admin@localhost:/home/df-admin/production/db/$production_usage_db_name_source" "/home/ubuntu/Stations/$production_usage_db_name_destination" )
-    cmd3=( scp -r -P $destination_port "/home/ubuntu/Stations/$production_usage_db_name_destination" df-admin@localhost:/home/df-admin/production/db)
+
+    cmd0=(rm /home/ubuntu/Stations/$production_configuration_db_name_destination)
+    cmd1=(rm /home/ubuntu/Stations/$production_usage_db_name_destination)
+
+    cmd2=( scp -r -P $source_port "df-admin@localhost:/home/df-admin/production/db/$production_configuration_db_name_source" "/home/ubuntu/Stations/$production_configuration_db_name_destination" )
+    cmd3=( scp -r -P $destination_port "/home/ubuntu/Stations/$production_configuration_db_name_destination" df-admin@localhost:/home/df-admin/production/db)
+    cmd4=( scp -r -P $source_port "df-admin@localhost:/home/df-admin/production/db/$production_usage_db_name_source" "/home/ubuntu/Stations/$production_usage_db_name_destination" )
+    cmd5=( scp -r -P $destination_port "/home/ubuntu/Stations/$production_usage_db_name_destination" df-admin@localhost:/home/df-admin/production/db)
+    
     printf -v cmd0_str '%q ' "${cmd0[@]}"
     printf -v cmd1_str '%q ' "${cmd1[@]}"
     printf -v cmd2_str '%q ' "${cmd2[@]}"
     printf -v cmd3_str '%q ' "${cmd3[@]}"
+    printf -v cmd4_str '%q ' "${cmd4[@]}"
+    printf -v cmd5_str '%q ' "${cmd5[@]}"
 
     # confirm_execute "$cmd_str"
     echo "Lined up commands: "
@@ -332,17 +349,23 @@ transfer_all_production_dbs(){
     echo "$cmd1_str"
     echo "$cmd2_str"
     echo "$cmd3_str"
+    echo "$cmd4_str"
+    echo "$cmd5_str"
     
     continu_or_exit
 
-    echo "Transfer configuration db to aws..."
+    echo "Remove previously moved configuration db from AWS..."
     "${cmd0[@]}"
-    echo "Transfer configuration db from aws to station..."
+    echo "Remove previously moved usage db from AWS..."
     "${cmd1[@]}"
-    echo "Transfer usage db to aws..."
+    echo "Transfer configuration db to aws..."
     "${cmd2[@]}"
-    echo "Transfer usage db from aws to station..."
+    echo "Transfer configuration db from aws to station..."
     "${cmd3[@]}"
+    echo "Transfer usage db to aws..."
+    "${cmd4[@]}"
+    echo "Transfer usage db from aws to station..."
+    "${cmd5[@]}"
     echo "done"
 }
 
@@ -421,32 +444,37 @@ transfer_production_logging(){
 
     logging_zip_name=logging_$source_port.zip  # check for where used, not as a variable. Because... it's hard.
     
+    cmd0=( rm /home/ubuntu/Stations/logging.zip )
     # zip it up
-    cmd0=( sudo ssh -t df-admin@localhost -p $source_port 'cd /home/df-admin/production; zip -r logging.zip logging; mv logging.zip ..' )
+    cmd1=( sudo ssh -t df-admin@localhost -p $source_port 'cd /home/df-admin/production; zip -r logging.zip logging; mv logging.zip ..' )
     
     # transfer zip from source station to aws 
-    cmd1=( scp -r -P $source_port "df-admin@localhost:/home/df-admin/logging.zip" "/home/ubuntu/Stations/" )
+    cmd2=( scp -r -P $source_port "df-admin@localhost:/home/df-admin/logging.zip" "/home/ubuntu/Stations/" )
     # transfer zip from aws to destination station
 
-    cmd2=( scp -r -P $destination_port "/home/ubuntu/Stations/logging.zip" df-admin@localhost:/home/df-admin/$logging_zip_name )
+    cmd3=( scp -r -P $destination_port "/home/ubuntu/Stations/logging.zip" df-admin@localhost:/home/df-admin/$logging_zip_name )
 
     printf -v cmd0_str '%q ' "${cmd0[@]}"
     printf -v cmd1_str '%q ' "${cmd1[@]}"
     printf -v cmd2_str '%q ' "${cmd2[@]}"
+    printf -v cmd3_str '%q ' "${cmd3[@]}"
 
     # confirm_execute "$cmd_str"
     echo "Lined up commands: "
     echo "$cmd0_str"
     echo "$cmd1_str"
     echo "$cmd2_str"
+    echo "$cmd3_str"
     
     continu_or_exit
-    echo "Zip production logs..."
+    echo "Delete previous transfer artefacts"
     "${cmd0[@]}"
-    echo "Transfer production logs to aws..."
+    echo "Zip production logs..."
     "${cmd1[@]}"
-    echo "Transfer production logs from aws to station..."
+    echo "Transfer production logs to aws..."
     "${cmd2[@]}"
+    echo "Transfer production logs from aws to station..."
+    "${cmd3[@]}"
     echo "done"
 }
 
@@ -531,31 +559,37 @@ transfer_production_static_files(){
  
     production_zip_name=productionstatic.zip  # check for where used, not as a variable. Because... it's hard.
     
+    # remove previously transferred file
+    cmd0=(rm /home/ubuntu/Stations/$production_zip_name)
     # zip it up
-    cmd0=( sudo ssh -t df-admin@localhost -p $source_port 'cd /home/df-admin/production; zip -r productionstatic.zip references admin bin; mv productionstatic.zip ..' )
+    cmd1=( sudo ssh -t df-admin@localhost -p $source_port 'cd /home/df-admin/production; zip -r productionstatic.zip references admin bin; mv productionstatic.zip ..' )
     # cmd0=( sudo ssh -t df-admin@localhost -p $source_port 'cd "/home/df-admin/production"; zip -r production.zip references admin bin; mv production.zip ..' )
     
     # transfer zip from source station to aws 
-    cmd1=( scp -r -P $source_port "df-admin@localhost:/home/df-admin/$production_zip_name" "/home/ubuntu/Stations/" )
+    cmd2=( scp -r -P $source_port "df-admin@localhost:/home/df-admin/$production_zip_name" "/home/ubuntu/Stations/" )
     # transfer zip from aws to destination station
-    cmd2=( scp -r -P $destination_port "/home/ubuntu/Stations/$production_zip_name" df-admin@localhost:/home/df-admin )
+    cmd3=( scp -r -P $destination_port "/home/ubuntu/Stations/$production_zip_name" df-admin@localhost:/home/df-admin )
     printf -v cmd0_str '%q ' "${cmd0[@]}"
     printf -v cmd1_str '%q ' "${cmd1[@]}"
     printf -v cmd2_str '%q ' "${cmd2[@]}"
+    printf -v cmd2_str '%q ' "${cmd3[@]}"
 
     # confirm_execute "$cmd_str"
     echo "Lined up commands: "
     echo "$cmd0_str"
     echo "$cmd1_str"
     echo "$cmd2_str"
+    echo "$cmd3_str"
     
     continu_or_exit
-    echo "Zip static production data..."
+    echo "Remove previously transferred static_files.zip from AWS"
     "${cmd0[@]}"
-    echo "Transfer static production data to aws..."
+    echo "Zip static production data..."
     "${cmd1[@]}"
-    echo "Transfer static production data from aws to station..."
+    echo "Transfer static production data to aws..."
     "${cmd2[@]}"
+    echo "Transfer static production data from aws to station..."
+    "${cmd3[@]}"
     echo "done"
 
     if [[ $1 = "deploy" ]]

@@ -64,6 +64,13 @@ DF_ERROR stateDispenseEnd::onAction()
     // handle minimum dispensing
     bool is_valid_dispense = productDispensers[m_slot_index].getVolumeDispensed() >= MINIMUM_DISPENSE_VOLUME_ML;
 
+    if (!is_valid_dispense)
+    {
+        productDispensers[m_slot_index].resetVolumeDispensed();
+
+        debugOutput::sendMessage("Not a valid dispense. Volume set to zero. " + std::to_string(productDispensers[m_slot_index].getVolumeDispensed()), MSG_STATE);
+    }
+
     // send dispensed volume to ui (will be used to write to portal)
     usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
 
@@ -72,6 +79,8 @@ DF_ERROR stateDispenseEnd::onAction()
         usleep(100000);                                      // send message delay (pause from previous message) desperate attempt to prevent crashes
         m_pMessaging->sendMessageOverIP("Target Hit", true); // send to UI
     }
+    // send dispensed volume to ui (will be used to write to portal)
+    usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
 
     // bool empty_stock_detected = false;
     // // handle empty container detection
@@ -125,6 +134,14 @@ DF_ERROR stateDispenseEnd::onAction()
 #endif
     }
 
+    double price = getFinalPrice();
+    debugOutput::sendMessage("Post dispense final price: " + to_string(price), MSG_INFO);
+    double volume = productDispensers[m_slot_index].getVolumeDispensed();
+    std::string message = "finalVolumeDispensed|" + std::to_string(volume) + "|";
+    m_pMessaging->sendMessageOverIP(message, true); // send to UI
+
+    // send dispensed volume to ui (will be used to write to portal)
+    usleep(1000000); // send message delay (pause from previous message) desperate attempt to prevent crashes
     m_state_requested = STATE_IDLE;
     usleep(100000);                                           // often the transaction end command is sent too quickly to the ui.
     m_pMessaging->sendMessageOverIP("Transaction End", true); // send to UI
@@ -637,10 +654,6 @@ double stateDispenseEnd::getFinalPrice()
     {
         price = m_pMessaging->getRequestedPrice();
     }
-    debugOutput::sendMessage("Post dispense final price: " + to_string(price), MSG_INFO);
-    double volume = productDispensers[m_slot_index].getVolumeDispensed();
-    std::string message = "finalVolumeDispensed|" + std::to_string(volume) + "|";
-    m_pMessaging->sendMessageOverIP(message, true); // send to UI
     return price;
 }
 

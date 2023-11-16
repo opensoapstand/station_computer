@@ -683,7 +683,7 @@ void DbManager::setPaymentTransaction(const std::map<std::string, std::string> &
         QSqlQuery qry(db);
 
         qry.prepare("INSERT INTO payments(transaction_id,date,time,mac_label,amount,auth_code,ctrout_saf,card_number,card_type,status) VALUES (:transaction_id,:date,:time,:mac_label,:amount,:auth_code,:ctrout_saf,:card_number,:card_type,:status);");
-        qry.bindValue(":transaction_id", QVariant::fromValue(QString::fromStdString(paymentObject.at("session_id"))));
+        // qry.bindValue(":transaction_id", QVariant::fromValue(QString::fromStdString(paymentObject.at("session_id"))));
         qry.bindValue(":date", QVariant::fromValue(QString::fromStdString(paymentObject.at("date"))));
         qry.bindValue(":time", QVariant::fromValue(QString::fromStdString(paymentObject.at("time"))));
         qry.bindValue(":mac_label", QVariant::fromValue(QString::fromStdString(paymentObject.at("mac_label"))));

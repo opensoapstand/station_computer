@@ -128,6 +128,7 @@ bool product::registerFlowSensorTick()
     // tick from flowsensor interrupt will increase dispensed volume.
     //    cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
     // cout << getVolumePerTick()<< endl;
+    // cout << "TICKTICK"<< endl;
     // cout << m_concentration_multiplier <<endl;
 
     m_nVolumeDispensed += getVolumePerTick() * m_concentration_multiplier;
@@ -153,8 +154,17 @@ double product::getThresholdFlow()
 }
 double product::getThresholdFlow_max_allowed()
 {
-    // when using kegs, an empty keg results in pressurised CO2 or beergas being pushed through the flow sensor. That speeds up the flowsensor.
-    return m_nThresholdFlow_maximum_allowed;
+
+    if (m_nThresholdFlow_maximum_allowed < getThresholdFlow())
+    {
+        // 2023-11: in the db, column "calibration_const" was reused to hold this variable, for AP. if not set, set it to an arbitray high value 
+                return 1000.0; // 1L per second. magic number
+    }
+    else
+    {
+        // when using kegs, an empty keg results in pressurised CO2 or beergas being pushed through the flow sensor. That speeds up the flowsensor.
+        return m_nThresholdFlow_maximum_allowed;
+    }
 }
 int product::getRetractionTimeMillis()
 {

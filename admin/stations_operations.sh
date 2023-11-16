@@ -437,7 +437,7 @@ transfer_production_logging(){
 
     local days=$1  # Number of days to consider for -mtime option
 
-    echo "Number of days (all if none provided): $days"
+    echo "Number of days (all logs if none provided) WARNING:non timestamped files will not be included if number of days is provided): $days"
     echo "Source Station: "
     get_station_port
     source_port=$global_port

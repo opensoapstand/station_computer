@@ -105,6 +105,7 @@ void page_idle_products::showEvent(QShowEvent *event)
     }
 
     ui->label_printer_status->setStyleSheet(styleSheet);
+    ui->label_printer_status->hide();
 
     // we already checked this in p_page_idle the results from there.
     // if (p_page_idle->thisMachine->hasReceiptPrinter())
@@ -178,7 +179,7 @@ void page_idle_products::showAllLabelsAndButtons()
     ui->label_title->show();
     ui->label_client_logo->show();
 
-    displayPrinterStatus();
+    // displayPrinterStatus();
     ui->pushButton_to_select_product_page->show();
 
     for (int slot_index = 0; slot_index < p_page_idle->thisMachine->getSlotCount(); slot_index++)
@@ -210,29 +211,29 @@ void page_idle_products::hideAllLabelAndButtons()
 //     m_printer_hasPaper = hasPaper;
 // }
 
-void page_idle_products::displayPrinterStatus()
-{
-    bool isOnline;
-    bool hasPaper;
-    p_page_idle->thisMachine->getPrinterStatusFromDb(&isOnline, &hasPaper);
+// void page_idle_products::displayPrinterStatus()
+// {
+//     bool isOnline;
+//     bool hasPaper;
+//     p_page_idle->thisMachine->getPrinterStatusFromDb(&isOnline, &hasPaper);
 
-    ui->label_printer_status->hide();
-    if (p_page_idle->thisMachine->hasReceiptPrinter())
-    {
-        if (!isOnline)
-        {
-            ui->label_printer_status->raise();
-            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_printer_status, "assistance_printer_offline");
-            ui->label_printer_status->show();
-        }
-        else if (!hasPaper)
-        {
-            ui->label_printer_status->raise();
-            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_printer_status, "empty_improperly_loaded");
-            ui->label_printer_status->show();
-        }
-    }
-}
+//     ui->label_printer_status->hide();
+//     if (p_page_idle->thisMachine->hasReceiptPrinter())
+//     {
+//         if (!isOnline)
+//         {
+//             ui->label_printer_status->raise();
+//             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_printer_status, "assistance_printer_offline");
+//             ui->label_printer_status->show();
+//         }
+//         else if (!hasPaper)
+//         {
+//             ui->label_printer_status->raise();
+//             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_printer_status, "empty_improperly_loaded");
+//             ui->label_printer_status->show();
+//         }
+//     }
+// }
 
 int page_idle_products::setStepTimerFromFileName(QString fileName, int defaultTimeMillis)
 {

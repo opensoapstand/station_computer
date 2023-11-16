@@ -15,6 +15,7 @@
 #include <iostream>
 #include <algorithm>    // std::find_if
 #include <stdio.h>
+#include <map>
 
 //#include "database_logger.h"
 
@@ -122,8 +123,9 @@ void transactionInfo::makeReceipt(string terminalID, string merchantName, string
     purchaseDate.insert(8, " ");
     purchaseDate.insert(11, ":");
     purchaseDate.insert(14, ":");
-    std::ofstream customerReceipt("/release/receipts/"+filenameC);
-    std::ofstream merchantReceipt("/release/receipts/"+filenameM);
+    
+    std::ofstream customerReceipt("/home/df-admin/production/logging/transactions/"+filenameC);
+    std::ofstream merchantReceipt("/home/df-admin/production/logging/transactions/"+filenameM);
 
     //customerReceipt.open(filename);
     if (accountType == "01"){
@@ -238,4 +240,26 @@ void transactionInfo::makeReceipt(string terminalID, string merchantName, string
 //    for (int i = 0; i < MAX_FIELD; i++){
 //        ptr[i].clear();
 //    }
+}
+
+std::pair<std::string, std::string>transactionInfo:: convertDateTime(const std::string& date_time) {
+    std::string date = "20" + date_time.substr(0,2) + "-" + date_time.substr(2,2) + "-"+ date_time.substr(4,2);
+    std::string time = date_time.substr(6,2) + ":" + date_time.substr(8,2) + ":"+ date_time.substr(10,2);
+    return std::make_pair(date, time);
+}
+
+std::map<std::string, std::string> transactionInfo::getTapPaymentObject(string terminalID, string merchantName, string merchantAddress){
+    std::map<std::string, std::string> tapPaymentObject;
+    auto date_time = convertDateTime(getTransactionInfo(TXN_FIDs::DATE_TIME));
+    tapPaymentObject["date"] = date_time.first;
+    tapPaymentObject["time"] = date_time.second;
+    tapPaymentObject["mac_label"] = "NA";
+    tapPaymentObject["amount"]= getTransactionInfo(TXN_FIDs::AMOUNT);
+    tapPaymentObject["auth_code"] = getTransactionInfo(TXN_FIDs::APPROVAL_CODE);
+    tapPaymentObject["ctrout_saf"] = terminalID + getTransactionInfo(TXN_FIDs::SEQ_NUM) +  getTransactionInfo(TXN_FIDs::TXN_TRACE_NR) + " " + getTransactionInfo(TXN_FIDs::MOP);
+    tapPaymentObject["card_number"] = getTransactionInfo(TXN_FIDs::PAN);
+    tapPaymentObject["card_type"] =  getTransactionInfo(TXN_FIDs::CARD_NAME);
+    // tapPaymentObject["accountType"] = getTransactionInfo(TXN_FIDs::ACCOUNT_TYPE);
+    return tapPaymentObject;
+    
 }

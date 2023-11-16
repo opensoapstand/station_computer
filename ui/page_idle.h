@@ -37,6 +37,7 @@ class page_error_wifi;
 
 typedef enum StateFrozenScreenDetect
 {
+    state_screen_check_disabled,
     state_screen_check_not_initiated,
     state_screen_check_clicked_and_wait,
     state_screen_check_clicked_and_succes,

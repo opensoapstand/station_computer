@@ -45,6 +45,13 @@
 #define X21 21
 #define X22 22
 
+#ifndef HIGH
+#define HIGH = 1
+#endif
+#ifndef LOW
+#define LOW = 0
+#endif
+
 // Default CTOR
 oddyseyx86GPIO::oddyseyx86GPIO()
 {

@@ -710,6 +710,7 @@ void page_dispenser::on_pushButton_abort_clicked()
                              {
                                  msgBox_abort->hide();
                                  msgBox_abort->deleteLater();
+                                 msgBox_abort = nullptr;
                              }
                              qDebug() << "msgBox_abort timed out. "; });
         timeoutTimer->start(MESSAGE_BOX_TIMEOUT_DEFAULT_MILLIS); // Set the timeout duration in milliseconds (5000 = 5 seconds)

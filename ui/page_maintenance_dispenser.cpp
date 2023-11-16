@@ -189,11 +189,13 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
     // if (p_page_idle->thisMachine->selectedProduct->getSlotEnabled())
     if (p_page_idle->thisMachine->getSlotEnabled(p_page_idle->thisMachine->selectedProduct->getSlot()))
     {
+        //if slot is enabled, set button text to "make unavailable"
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_set_status, "unavailable");
         p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_set_status, "pushButton_set_status_unavailable", PAGE_MAINTENANCE_DISPENSER_CSS);
     }
     else
     {
+        //if slot is disabled
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_set_status, "available");
         p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_set_status, "pushButton_set_status_available", PAGE_MAINTENANCE_DISPENSER_CSS);
     }
@@ -690,7 +692,8 @@ void page_maintenance_dispenser::on_pushButton_set_status_clicked()
 
         // set to database
         // p_page_idle->thisMachine->selectedProduct->setSlotEnabled(isEnabled, slotStatus);
-        p_page_idle->thisMachine->setSlotEnabled(p_page_idle->thisMachine->getSelectedProduct()->getSlot(), true);
+        p_page_idle->thisMachine->setSlotEnabled(p_page_idle->thisMachine->getSelectedProduct()->getSlot(), isEnabled);
+        p_page_idle->thisMachine->setStatusText(p_page_idle->thisMachine->getSelectedProduct()->getSlot(), slotStatus);
 
         ui->label_action_feedback->setText("Slot Status set to " + slotStatus);
         updateProductLabelValues(true);

@@ -105,12 +105,10 @@ bool machine::isAelenPillarElseSoapStand()
 
     if (m_hardware_version.startsWith("AP"))
     {
-        qDebug() << "piialalalalaaarrr ";
         return true;
     }
     else if (m_hardware_version.startsWith("SS"))
     {
-        qDebug() << "sosososospappastsadn:  ";
         return false;
     }
     else

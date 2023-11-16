@@ -20,6 +20,8 @@
 #include "page_dispenser.h"
 #include "page_idle.h"
 
+extern std::map<std::string, std::string> tapPaymentObject;
+
 // CTOR
 page_payment_tap_serial::page_payment_tap_serial(QWidget *parent) : QWidget(parent),
                                                                     ui(new Ui::page_payment_tap_serial)
@@ -419,6 +421,7 @@ void page_payment_tap_serial::readTimer_loop()
                         cout << "Approval Packet 41" << endl;
                         paymentPktInfo.transactionID(readPacket.getPacket().data);
                         paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
+                        tapPaymentObject = paymentPktInfo.getTapPaymentObject(getTerminalID(), getMerchantName(), getMerchantAddress());
                         response = true;
                         hideCurrentPageAndShowProvided(p_page_dispense,false);
                     }

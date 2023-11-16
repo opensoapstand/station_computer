@@ -15,6 +15,7 @@
 
 #include <vector>
 #include "enums.h"
+#include <map>
 //#include "paymentdatabase.h"
 //#include "database_logger.h"
 
@@ -36,6 +37,8 @@ public:
     std::string getTransactionInfo(int id);
 //    void makeReceipt(database_logger logData);
     void makeReceipt(string terminalID, string merchantName, string merchantAddress);
+    std::pair<std::string, std::string> convertDateTime(const std::string& date_time);
+    std::map<std::string, std::string> getTapPaymentObject(string terminalID, string merchantName, string merchantAddress);
 
 private:
     std::string ptr[MAX_FIELD];

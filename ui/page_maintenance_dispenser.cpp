@@ -690,9 +690,7 @@ void page_maintenance_dispenser::on_pushButton_set_status_clicked()
         }
 
         // set to database
-        // p_page_idle->thisMachine->selectedProduct->setSlotEnabled(isEnabled, slotStatus);
-        p_page_idle->thisMachine->setSlotEnabled(p_page_idle->thisMachine->getSelectedProduct()->getSlot(), isEnabled);
-        p_page_idle->thisMachine->setStatusText(p_page_idle->thisMachine->getSelectedProduct()->getSlot(), slotStatus);
+        p_page_idle->thisMachine->getSelectedSlot()->setSlotEnabled(isEnabled, slotStatus);
 
         ui->label_action_feedback->setText("Slot Status set to " + slotStatus);
         updateProductLabelValues(true);

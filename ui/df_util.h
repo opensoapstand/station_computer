@@ -164,6 +164,7 @@ using namespace std;
 #define PAYMENT_TAP_SERIAL                              "tapSerial"
 #define PAYMENT_TAP_TCP                                 "tapTCP"
 #define PAYMENT_QR                                      "qr"
+#define PAYMENT_QR_EMAIL_FREE                           "qr/emailfree"
 
 class df_util : public QWidget
 {

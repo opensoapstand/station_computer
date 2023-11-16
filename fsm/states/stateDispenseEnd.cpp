@@ -66,9 +66,9 @@ DF_ERROR stateDispenseEnd::onAction()
 
     if (!is_valid_dispense)
     {
-        productDispensers[slot_index].resetVolumeDispensed();
+        productDispensers[m_slot_index].resetVolumeDispensed();
 
-        debugOutput::sendMessage("Not a valid dispense. Volume set to zero. " + std::to_string(productDispensers[slot_index].getVolumeDispensed()), MSG_STATE);
+        debugOutput::sendMessage("Not a valid dispense. Volume set to zero. " + std::to_string(productDispensers[m_slot_index].getVolumeDispensed()), MSG_STATE);
     }
 
     // send dispensed volume to ui (will be used to write to portal)

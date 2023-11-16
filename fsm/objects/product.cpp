@@ -154,10 +154,6 @@ double product::getThresholdFlow()
 }
 double product::getThresholdFlow_max_allowed()
 {
-<<<<<<< HEAD
-    // when using kegs, an empty keg results in pressurised CO2 or beergas being pushed through the flow sensor. That speeds up the flowsensor.
-    return m_nThresholdFlow_maximum_allowed;
-=======
 
     if (m_nThresholdFlow_maximum_allowed < getThresholdFlow())
     {
@@ -169,7 +165,6 @@ double product::getThresholdFlow_max_allowed()
         // when using kegs, an empty keg results in pressurised CO2 or beergas being pushed through the flow sensor. That speeds up the flowsensor.
         return m_nThresholdFlow_maximum_allowed;
     }
->>>>>>> develop
 }
 int product::getRetractionTimeMillis()
 {

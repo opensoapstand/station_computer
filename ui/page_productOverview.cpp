@@ -56,7 +56,7 @@ page_product_overview::page_product_overview(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void page_product_overview::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,  page_payment_tap_serial *page_payment_tap_serial,page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product *page_product, page_email *page_email, statusbar *statusbar)
+void page_product_overview::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_payment_tap_serial *page_payment_tap_serial, page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product *page_product, page_email *page_email, statusbar *statusbar)
 {
     this->p_page_select_product = pageSelect;
     this->p_page_payment_qr = page_qr_payment;
@@ -68,7 +68,7 @@ void page_product_overview::setPage(page_select_product *pageSelect, page_dispen
     this->p_page_wifi_error = pageWifiError;
     this->p_page_product = page_product;
     this->p_statusbar = statusbar;
-    this->p_page_email = page_email; 
+    this->p_page_email = page_email;
 
     ui->label_discount_tag->hide();
     ui->label_gif->hide();
@@ -95,7 +95,6 @@ void page_product_overview::showEvent(QShowEvent *event)
 
     statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
     statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
-
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
 
@@ -527,10 +526,9 @@ void page_product_overview::on_pushButton_continue_clicked()
     QString paymentMethod = p_page_idle->thisMachine->getSelectedProduct()->getPaymentMethod();
     double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
     double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
-    if (paymentMethod == PAYMENT_QR && selectedPrice == 0.0 )
+    if (paymentMethod == PAYMENT_QR && finalPrice == 0.0)
     {
         hideCurrentPageAndShowProvided(p_page_email);
-
     }
     else if (paymentMethod == PAYMENT_QR)
     {
@@ -593,12 +591,16 @@ void page_product_overview::on_pushButton_select_product_page_clicked()
     this->return_to_selectProductPage();
 }
 
-void page_product_overview::check_to_page_email(){
+void page_product_overview::check_to_page_email()
+{
     double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
     double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
-    if(p_page_idle->thisMachine->getSelectedProduct()->getPaymentMethod() == PAYMENT_QR_EMAIL_FREE && (finalPrice == 0.0|| selectedPrice== 0.0 ){
+    if (p_page_idle->thisMachine->getSelectedProduct()->getPaymentMethod() == PAYMENT_QR && (finalPrice == 0.0 || selectedPrice == 0.0))
+    {
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_free");
-    }else{
+    }
+    else
+    {
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay");
     }
 }

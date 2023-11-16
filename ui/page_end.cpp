@@ -132,39 +132,39 @@ size_t WriteCallback2(char *contents, size_t size, size_t nmemb, void *userp)
     return size * nmemb;
 }
 
-// void page_end::fsmReceiveFinalDispensedVolume(double dispensed)
-// {
-//     qDebug() << "Updated dispensed volume" << dispensed;
-//     p_page_idle->thisMachine->getSelectedProduct()->setVolumeDispensedMl(dispensed);
-//     QString units = p_page_idle->thisMachine->getSelectedProduct()->getUnitsForSlot();
-//     QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl(), units, false, true);
-
-//     double price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize());
-
-//     if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize() == SIZE_CUSTOM_INDEX)
-//     {
-//     price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize()*p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl());
-//     }
-//     ui->label_volume_dispensed_ml->setText(dispensed_correct_units + " ( $" + QString::number(price, 'f', 2) + " )");
-    
-// }
-
 void page_end::fsmReceiveFinalDispensedVolume(double dispensed)
 {
     qDebug() << "Updated dispensed volume" << dispensed;
-    p_page_idle->thisMachine->selectedProduct->setVolumeDispensedMl(dispensed);
-    QString units = p_page_idle->thisMachine->selectedProduct->getUnitsForSlot();
-    QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl(), units, false, true);
+    p_page_idle->thisMachine->getSelectedProduct()->setVolumeDispensedMl(dispensed);
+    QString units = p_page_idle->thisMachine->getSelectedProduct()->getUnitsForSlot();
+    QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl(), units, false, true);
 
-    double price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->selectedProduct->getBasePrice());
+    double price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize());
 
-    if (p_page_idle->thisMachine->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
+    if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize() == SIZE_CUSTOM_INDEX)
     {
-        price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->selectedProduct->getBasePrice() * p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl());
+    price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize()*p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl());
     }
     ui->label_volume_dispensed_ml->setText(dispensed_correct_units + " ( $" + QString::number(price, 'f', 2) + " )");
-     qDebug() << "End of fsm received dispensed volume";
+    
 }
+
+// void page_end::fsmReceiveFinalDispensedVolume(double dispensed)
+// {
+//     qDebug() << "Updated dispensed volume" << dispensed;
+//     p_page_idle->thisMachine->selectedProduct->setVolumeDispensedMl(dispensed);
+//     QString units = p_page_idle->thisMachine->selectedProduct->getUnitsForSlot();
+//     QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl(), units, false, true);
+
+//     double price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->selectedProduct->getBasePrice());
+
+//     if (p_page_idle->thisMachine->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
+//     {
+//         price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->selectedProduct->getBasePrice() * p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl());
+//     }
+//     ui->label_volume_dispensed_ml->setText(dispensed_correct_units + " ( $" + QString::number(price, 'f', 2) + " )");
+//      qDebug() << "End of fsm received dispensed volume";
+// }
 
 void page_end::sendDispenseEndToCloud()
 {

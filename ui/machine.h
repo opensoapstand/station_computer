@@ -118,6 +118,7 @@ public:
     void initProductOptions();
     // void initProductOptions(const QVector<int> &pnumbersToBeSetAsOptions);
     bool getIsOptionAvailable(int productOption);
+    bool isOptionExisting(int productOption);
     void setProductToMenuOption(int productOption, int PNumber);
     int clearOptions();
     int getOptionCount();

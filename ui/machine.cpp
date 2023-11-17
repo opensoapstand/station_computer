@@ -215,6 +215,11 @@ void machine::setProductToMenuOption(int productOption, int PNumber)
     dispenseProductsMenuOptions[productOption - 1] = PNumber;
 }
 
+bool machine::isOptionExisting(int productOption){
+    int pnumber = dispenseProductsMenuOptions[productOption - 1];
+    return pnumber == DUMMY_PNUMBER;
+}
+
 pnumberproduct *machine::getProductFromMenuOption(int productOption)
 {
     // options are selectable products by the customer. (they must be indexed. e.g. first page: option 1 to four)
@@ -242,6 +247,8 @@ void machine::setSelectedProductByOption(int productOption)
 
 bool machine::getIsOptionAvailable(int productOption)
 {
+    // available as in: is it enabled, not empty, no technical problem,... (assumes the option exists and is linked to a valid pnumber)
+
     // products will need an "isEnabled" and "statustext" column too.
     // todo
 

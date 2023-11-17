@@ -36,7 +36,7 @@ int numberOfTapAttempts = 0;
 // CTOR
 
 page_payment_tap_tcp::page_payment_tap_tcp(QWidget *parent) : QWidget(parent),
-                                                      ui(new Ui::page_payment_tap_tcp)
+                                                              ui(new Ui::page_payment_tap_tcp)
 {
     // Fullscreen background setup
     ui->setupUi(this);
@@ -154,7 +154,7 @@ void page_payment_tap_tcp::showEvent(QShowEvent *event)
     statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
-    
+
     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_TAP_PAYMENT_CSS);
 
     ui->pushButton_previous_page->setStyleSheet(styleSheet);
@@ -174,6 +174,8 @@ void page_payment_tap_tcp::showEvent(QShowEvent *event)
     ui->productLabel->hide();
     ui->order_drink_amount->hide();
 
+    msgBox = nullptr;
+
     qDebug() << "Prepare tap order";
     tapPaymentHandler();
 }
@@ -185,6 +187,13 @@ void page_payment_tap_tcp::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
 
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
+
+    if (msgBox != nullptr)
+    {
+        msgBox->hide();
+        msgBox->deleteLater();
+        msgBox = nullptr;
+    }
 }
 
 bool page_payment_tap_tcp::setpaymentProcess(bool status)
@@ -354,43 +363,44 @@ bool page_payment_tap_tcp::exitConfirm()
     if (state_tap_payment == s_tap_payment_processing || state_tap_payment == s_tap_payment_done)
     {
         // ARE YOU SURE YOU WANT TO EXIT?
-        QMessageBox msgBox;
-        msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
-        p_page_idle->thisMachine->addCssClassToObject(&msgBox, "msgBoxbutton msgBox", PAGE_TAP_PAYMENT_CSS);
+        msgBox = new QMessageBox();
+        msgBox->setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
+        p_page_idle->thisMachine->addCssClassToObject(msgBox, "msgBoxbutton msgBox", PAGE_TAP_PAYMENT_CSS);
         QString searchString = this->objectName() + "->msgBox_cancel";
         // p_page_idle->thisMachine->setTextToObject(&msgBox, p_page_idle->thisMachine->getTemplateText(searchString));
-    
 
         int remainingTime = MESSAGE_BOX_TIMEOUT_EXIT_TAP_CONFIRM_SECONDS; // Initial value in seconds
         QString templateText = p_page_idle->thisMachine->getTemplateText(searchString);
         QString autoCloseText = QString("Closing in %1 seconds...").arg(remainingTime);
         QString messageBoxText = templateText + "\n" + autoCloseText;
 
-        msgBox.setText(messageBoxText);
+        msgBox->setText(messageBoxText);
 
         QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_QR_PAYMENT_CSS);
-        msgBox.setProperty("class", "msgBoxbutton msgBox");
-        msgBox.setStyleSheet(styleSheet);
+        msgBox->setProperty("class", "msgBoxbutton msgBox");
+        msgBox->setStyleSheet(styleSheet);
 
-        QTimer *timeauto_timer = new QTimer(&msgBox);
-        QObject::connect(timeauto_timer, &QTimer::timeout, [&msgBox, &remainingTime, &templateText, timeauto_timer]()
-                        {
+        QTimer *timeoutTimer = new QTimer(msgBox);
+        QObject::connect(timeoutTimer, &QTimer::timeout, [this, &remainingTime, &templateText, timeoutTimer]()
+                         {
             remainingTime--;
             QString autoCloseText = QString("Closing in %1 seconds...").arg(remainingTime);
             QString messageBoxText = templateText + "\n" + autoCloseText;
-            msgBox.setText(messageBoxText);
+            msgBox->setText(messageBoxText);
+            msgBox->raise(); // not reproducable bug for Lode but, for UBC machine, the msgbox keeps focus but is set to background, so it's unclickable
+ 
             if (remainingTime <= 0) {
-                timeauto_timer->stop();
-                msgBox.hide();
-                msgBox.deleteLater();
+                timeoutTimer->stop();
+                msgBox->hide();
+                msgBox->deleteLater();
+                msgBox = nullptr;
             } });
 
-        timeauto_timer->start(1000); // Update every 1000 milliseconds (1 second)
+        timeoutTimer->start(1000); // Update every 1000 milliseconds (1 second)
 
-
-
-        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-        int ret = msgBox.exec();
+        msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        int ret = msgBox->exec();
+        msgBox = nullptr;
         bool success;
         switch (ret)
         {
@@ -416,7 +426,6 @@ bool page_payment_tap_tcp::exitConfirm()
         return true;
     }
 }
-
 
 // Navigation: Back to Drink Size Selection
 void page_payment_tap_tcp::on_pushButton_previous_page_clicked()

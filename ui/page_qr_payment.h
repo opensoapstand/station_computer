@@ -87,6 +87,7 @@ private slots:
     void showErrorTimerPage();
 
 private:
+    QMessageBox* msgBox;
     Ui::page_qr_payment *ui;
     page_product* p_page_product;
     page_dispenser* p_page_dispense;

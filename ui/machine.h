@@ -121,7 +121,7 @@ public:
 
     void setSelectedProductByOption(int productOption);
     pnumberproduct *getProductByOption(int productOption);
-
+    pnumberproduct *getProductByBNumber(int slot_count);
     pnumberproduct *getProductByPNumber(int PNumber);
     void setSelectedProduct(int pnumber);
     pnumberproduct *getSelectedProduct();

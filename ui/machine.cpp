@@ -51,7 +51,7 @@ void machine::initMachine()
 
     // TODO: For now, the index of a product in an array is its P-number.  e.g. P-6 is tangerine dish saop. Its object resides in m_pnumberproducts[6], that will only work for less than a million something p-numbers...
 
-    // load properties of all used PNumbers
+    // load properties of all used pnumbers
     QVector<int> all_pnumbers = getAllUsedPNumbersFromSlots();
     for (int pnumber_index = 0; pnumber_index < all_pnumbers.size(); pnumber_index++)
     {
@@ -70,7 +70,7 @@ void machine::loadDynamicContent()
         m_slots[slot_index].loadSlotParametersFromDb();
     }
 
-    // load properties of all used PNumbers
+    // load properties of all used pnumbers
     QVector<int> all_pnumbers = getAllUsedPNumbersFromSlots();
     for (int pnumber_index = 0; pnumber_index < all_pnumbers.size(); pnumber_index++)
     {
@@ -95,7 +95,7 @@ QVector<int> machine::getAllDispensePNumbersFromSlot(int slot)
 QVector<int> machine::getAllUniqueDispensePNumbers()
 {
     QSet<int> uniquePNumbers; // Use a QSet to store unique pnumbers (i.e. no value can appear twice)
-    // dispense PNumber are the numbers used to be displayed in UI. The 'end' product. ()
+    // dispense pnumber are the numbers used to be displayed in UI. The 'end' product. ()
     for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
     {
         QVector<int> slotpnumbers = getAllDispensePNumbersFromSlot(slot_index + 1);
@@ -194,13 +194,13 @@ void machine::initProductOptions()
 
 }
 
-void machine::setProductToMenuOption(int productOption, int PNumber)
+void machine::setProductToMenuOption(int productOption, int pnumber)
 {
     // options array layout containing P-number for a certain menu position. [base1option1, base1option2, base1option3, base1option4, base1option5, base1option6,
     // base2option1, base2option2, base2option3, base2option4, base2option5, base2option6,
     // base3option1, base3option2, base3option3, base3option4, base3option5, base3option6, ...
     // options start at 1
-    qDebug() << "Set up PNumber: " << PNumber << " To option: " << productOption;
+    qDebug() << "Set up pnumber: " << pnumber << " To option: " << productOption;
     if (productOption == 0)
     {
 
@@ -212,7 +212,7 @@ void machine::setProductToMenuOption(int productOption, int PNumber)
         return;
     }
 
-    dispenseProductsMenuOptions[productOption - 1] = PNumber;
+    dispenseProductsMenuOptions[productOption - 1] = pnumber;
 }
 
 bool machine::isOptionExisting(int productOption){
@@ -234,15 +234,14 @@ pnumberproduct *machine::getProductFromMenuOption(int productOption)
     return &m_pnumberproducts[pnumber];
 }
 
-pnumberproduct *machine::getProductByBNumber(int slot_count){
-    int bNumber = m_slots[slot_count].getBasePNumber();
-    return &m_pnumberproducts[bNumber];
-    // return bNumber;
+pnumberproduct *machine::getSlotBaseProduct(int slot){
+    int basePNumber = m_slots[slot - 1].getBasePNumber();
+    return &m_pnumberproducts[basePNumber];
 }
 
-pnumberproduct *machine::getProductByPNumber(int PNumber)
+pnumberproduct *machine::getProductByPNumber(int pnumber)
 {
-    return &m_pnumberproducts[PNumber];
+    return &m_pnumberproducts[pnumber];
 }
 
 void machine::setSelectedProductByOption(int productOption)
@@ -298,12 +297,12 @@ int machine::getSlotFromBasePNumber(int base_pnumber)
 
     if (occurences_of_base_pnumber == 0)
     {
-        qDebug() << "Error: Searched PNumber not set as Base Pnumber in any slot. ";
+        qDebug() << "Error: Searched pnumber not set as Base Pnumber in any slot. ";
         return 666;
     }
     if (occurences_of_base_pnumber > 1)
     {
-        qDebug() << "Warning: Searched PNumber set as Base Pnumber in multiple slots. Will return last slot where it occured. Found in how many slots?: " << occurences_of_base_pnumber;
+        qDebug() << "Warning: Searched pnumber set as Base Pnumber in multiple slots. Will return last slot where it occured. Found in how many slots?: " << occurences_of_base_pnumber;
     }
     return slot_with_base_pnumber;
 }

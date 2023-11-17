@@ -161,21 +161,21 @@ void page_product_menu::showEvent(QShowEvent *event)
     //     pushButtons_product_select[option_index]->setProperty("class", "PushButton_selection");
     //     pushButtons_product_select[option_index]->setStyleSheet(styleSheet);
     // }
-    for (int option_index = 0; option_index < p_page_idle->thisMachine->getOptionCount(); option_index++)
+    for (int slot_index = 0; slot_index < p_page_idle->thisMachine->getSlotCount(); slot_index++)
     {
-        labels_base_product_bg[option_index]->setProperty("class", "label_base_product_bg");
-        labels_base_product_bg[option_index]->setStyleSheet(styleSheet);
-        pushButtons_base_product[option_index]->setProperty("class", "pushButton_base_product");
-        pushButtons_base_product[option_index]->setStyleSheet(styleSheet);
-        labels_base_product_picture[option_index]->setProperty("class", "label_base_product_picture");
-        labels_base_product_picture[option_index]->setStyleSheet(styleSheet);
-        p_page_idle->thisMachine->addPictureToLabel(labels_base_product_picture[option_index], p_page_idle->thisMachine->getProductByBNumber(option_index)->getProductPicturePath());
-        // p_page_idle->thisMachine->addPictureToLabel(labels_base_product_picture[option_index], p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductPicturePath());
+        labels_base_product_bg[slot_index]->setProperty("class", "label_base_product_bg");
+        labels_base_product_bg[slot_index]->setStyleSheet(styleSheet);
+        pushButtons_base_product[slot_index]->setProperty("class", "pushButton_base_product");
+        pushButtons_base_product[slot_index]->setStyleSheet(styleSheet);
+        labels_base_product_picture[slot_index]->setProperty("class", "label_base_product_picture");
+        labels_base_product_picture[slot_index]->setStyleSheet(styleSheet);
+        p_page_idle->thisMachine->addPictureToLabel(labels_base_product_picture[slot_index], p_page_idle->thisMachine->getSlotBaseProduct(slot_index + 1)->getProductPicturePath());
+        // p_page_idle->thisMachine->addPictureToLabel(labels_base_product_picture[slot_index], p_page_idle->thisMachine->getProductFromMenuOption(slot_index + 1)->getProductPicturePath());
        
-        labels_base_product_name[option_index]->setProperty("class", "label_base_product_name");
-        labels_base_product_name[option_index]->setStyleSheet(styleSheet);
-        QString product_name = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductName();
-        labels_base_product_name[option_index]->setText(product_name);
+        labels_base_product_name[slot_index]->setProperty("class", "label_base_product_name");
+        labels_base_product_name[slot_index]->setStyleSheet(styleSheet);
+        QString product_name = p_page_idle->thisMachine->getSlotBaseProduct(slot_index + 1)->getProductName();
+        labels_base_product_name[slot_index]->setText(product_name);
 
         // pushButtons_dispense_product[option_index]->setProperty("class", "pushButton_dispense_product");
         // pushButtons_dispense_product[option_index]->setStyleSheet(styleSheet);

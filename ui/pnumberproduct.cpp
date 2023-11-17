@@ -24,9 +24,9 @@ QString pnumberproduct::convertPNumberToPNotation(int pnumber)
     return "P-" + QString::number(pnumber);
 }
 
-int pnumberproduct::convertPNotationToPNumber(QString PNumberNotation)
+int pnumberproduct::convertPNotationToPNumber(QString pnumberNotation)
 {
-    QString pnumber_as_string = PNumberNotation.mid(2);
+    QString pnumber_as_string = pnumberNotation.mid(2);
     return pnumber_as_string.toInt();
 }
 
@@ -55,8 +55,8 @@ void pnumberproduct::loadProductPropertiesFromProductsFile()
         QString line = in.readLine();
 
         QStringList fields = line.split("\t");
-        QString PNumberNotation = convertPNumberToPNotation(getPNumber());
-        int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], PNumberNotation, Qt::CaseSensitive);
+        QString pnumberNotation = convertPNumberToPNotation(getPNumber());
+        int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], pnumberNotation, Qt::CaseSensitive);
         if (compareResult == 0)
         {
             // qDebug() << "compare result is 0";
@@ -72,9 +72,9 @@ void pnumberproduct::loadProductPropertiesFromProductsFile()
     file.close();
 }
 
-void pnumberproduct::setPNumber(int PNumber)
+void pnumberproduct::setPNumber(int pnumber)
 {
-    m_PNumber = PNumber;
+    m_PNumber = pnumber;
 }
 
 int pnumberproduct::getPNumber()

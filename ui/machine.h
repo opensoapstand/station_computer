@@ -119,14 +119,15 @@ public:
     // void initProductOptions(const QVector<int> &pnumbersToBeSetAsOptions);
     bool getIsOptionAvailable(int productOption);
     bool isOptionExisting(int productOption);
-    void setProductToMenuOption(int productOption, int PNumber);
+    void setProductToMenuOption(int productOption, int pnumber);
     int clearOptions();
     int getOptionCount();
 
     void setSelectedProductByOption(int productOption);
     pnumberproduct *getProductFromMenuOption(int productOption);
 
-    pnumberproduct *getProductByPNumber(int PNumber);
+    pnumberproduct *getProductByPNumber(int pnumber);
+    pnumberproduct *getSlotBaseProduct(int slot);
     void setSelectedProduct(int pnumber);
     pnumberproduct *getSelectedProduct();
 

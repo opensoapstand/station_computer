@@ -12,7 +12,7 @@ public:
     void setDb(DbManager *db);
     DbManager *m_db;
 
-    void setPNumber(int PNumber);
+    void setPNumber(int pnumber);
     int getPNumber();
 
     int getFirstMixPNumberOrPNumberAsBasePNumber();
@@ -25,7 +25,7 @@ public:
     void loadProductProperties();       // productt
 
     QString convertPNumberToPNotation(int pnumber);
-    int convertPNotationToPNumber(QString PNumberNotation);
+    int convertPNotationToPNumber(QString pnumberNotation);
 
     double inputTextToMlConvertUnits(QString inputValueAsText);
 

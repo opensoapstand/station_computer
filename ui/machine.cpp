@@ -234,6 +234,12 @@ pnumberproduct *machine::getProductFromMenuOption(int productOption)
     return &m_pnumberproducts[pnumber];
 }
 
+pnumberproduct *machine::getProductByBNumber(int slot_count){
+    int bNumber = m_slots[slot_count].getBasePNumber();
+    return &m_pnumberproducts[bNumber];
+    // return bNumber;
+}
+
 pnumberproduct *machine::getProductByPNumber(int PNumber)
 {
     return &m_pnumberproducts[PNumber];
@@ -389,7 +395,8 @@ bool machine::isAelenPillarElseSoapStand()
 
 QString machine::getHardwareMajorVersion()
 {
-    return m_hardware_version.left(3);
+    // e.g. AP2, SS1, ...
+    return m_hardware_version.left(3); // 
 }
 
 int machine::getSlotCount()
@@ -406,7 +413,7 @@ int machine::getSlotCount()
         {
             slot_count = 4;
         }
-        else if (m_hardware_version == "AP2")
+        else if (m_hardware_version.startsWith("AP2"))
         {
             // get slot count dynamically from slots (number of records, check also with slot id, to make sure there are no 'gaps' (e.g. 1,2,3,4,5  instead of 1,4,5,6,7))
             slot_count = m_dispense_buttons_count % 1000;
@@ -414,7 +421,7 @@ int machine::getSlotCount()
         }
         else
         {
-            slot_count = 8;
+            slot_count = 4;
         }
     }
     else if (m_hardware_version.startsWith("SS"))

@@ -47,26 +47,55 @@ int dispenser_slot::getBasePNumber()
 QVector<int> dispenser_slot::getAllPNumbers()
 {
 
-    QVector<int> pnumbers(m_dispensePNumbers);
+    QSet<int> pnumbers; // Use a QSet to store unique pnumbers (i.e. no value can appear twice)
+    
+
+    for (const int &value : m_dispensePNumbers) {
+        pnumbers.insert(value);
+    }
+
+    // QVector<int> pnumbers(m_dispensePNumbers);
+    qDebug()<<"dispensePNumbers Count: " << m_dispensePNumbers.size();
 
     // Copy elements from m_additivePNumbers
     for (int i = 0; i < m_additivePNumbers.size(); ++i)
     {
-        pnumbers.append(m_additivePNumbers[i]);
+       
+        pnumbers.insert(m_additivePNumbers[i]);
+
+    }
+    qDebug()<<"m_additivePNumbers Count: " << m_additivePNumbers.size();
+
+    pnumbers.insert(m_basePNumber);
+    qDebug()<<"base pnumber value: " <<m_basePNumber;
+
+    int option = 1;
+    foreach (const int &value, pnumbers) {
+        if (value < 0){
+            qDebug()<<"Assert error: pNumber invalid too low (" << value << " ) at option: " << option;
+        }
+        if (value > HIGHEST_PNUMBER_COUNT){
+            qDebug()<<"Assert error: pNumber invalid too high(" << value << " ) at option: " << option;
+            
+        }
+        std::cout << value << std::endl;
+        option++;
     }
 
-    pnumbers.append(m_basePNumber);
-    return pnumbers;
+    qDebug()<<"size of all pnumbers: " <<pnumbers.size();
+
+    // return pnumbers;
+     return QVector<int>::fromList(pnumbers.toList());
 }
 
 void dispenser_slot::loadSlotParametersFromDb()
 {
     m_db->getAllSlotProperties(getSlotId(),
-                               &m_dispensePNumbers,
-                               &m_basePNumber,
-                               &m_additivePNumbers,
-                               &m_is_enabled,
-                               &m_status_text);
+                               m_dispensePNumbers,
+                               m_basePNumber,
+                               m_additivePNumbers,
+                               m_is_enabled,
+                               m_status_text);
 }
 
 void dispenser_slot::setSlotEnabled(bool isEnabled, QString statusText)

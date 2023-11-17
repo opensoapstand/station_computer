@@ -47,11 +47,11 @@ public:
     void addUserInteraction(QString session_id, QString role, QString page, QString event, QString data);
 
     void getAllSlotProperties(int slot,
-                              QVector<int> *dispensePNumbers,
-                              int *basePNumber,
-                              QVector<int> *additivesPNumbers,
-                              bool *is_enabled,
-                              QString *status_text);
+                              QVector<int> &dispensePNumbers,
+                              int &basePNumber,
+                              QVector<int> &additivesPNumbers,
+                              bool &is_enabled,
+                              QString &status_text);
 
     void getAllProductProperties(int pnumber,
                                  QString *productId,

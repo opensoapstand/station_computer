@@ -260,11 +260,11 @@ bool DbManager::addPageClick(const QString &page)
 }
 
 void DbManager::getAllSlotProperties(int slot,
-                                     QVector<int> *dispensePNumbers,
-                                     int *basePNumber,
-                                     QVector<int> *additivesPNumbers,
-                                     bool *is_enabled,
-                                     QString *status_text)
+                                     QVector<int> &dispensePNumbers,
+                                     int &basePNumber,
+                                     QVector<int> &additivesPNumbers,
+                                     bool &is_enabled,
+                                     QString &status_text)
 
 {
     // WARNING: consider using having arguments sent to function "by reference" instead of pointers. At least, chatgpt suggests that it's safer.
@@ -289,24 +289,30 @@ void DbManager::getAllSlotProperties(int slot,
 
         QString additivesAsString;
         QString dispensePNumbersAsString;
+        QString basePNumberAsString;
         while (qry.next())
         {
             dispensePNumbersAsString = qry.value(0).toString();
-            *basePNumber = qry.value(1).toInt();
+            // *basePNumber = qry.value(1).toInt();
+            basePNumberAsString = qry.value(1).toString();
             additivesAsString = qry.value(2).toString();
-            *is_enabled = qry.value(3).toInt();
-            *status_text = qry.value(4).toString();
+            is_enabled = qry.value(3).toInt();
+            status_text = qry.value(4).toString();
         }
         qry.finish();
 
-        // QStringList stringList = dispensePNumbersAsString.split(",");
-        // foreach (QString num, stringList)
-        // {
-        //     // additivesPNumbers->append(num.toInt());
-        //     // qDebug()<< "==================" << num;
-        // }
-        df_util::csvQStringToQVectorInt(additivesAsString, *additivesPNumbers);
-        df_util::csvQStringToQVectorInt(dispensePNumbersAsString, *dispensePNumbers);
+        df_util::csvQStringToQVectorInt(additivesAsString, additivesPNumbers);
+        df_util::csvQStringToQVectorInt(dispensePNumbersAsString, dispensePNumbers);
+        if (basePNumberAsString.isEmpty())
+        {
+            if (dispensePNumbersAsString.size()>=1){
+                basePNumber = dispensePNumbers[0];
+            }else{
+                qDebug("Error: no base product (or dispense product in db for slot. )");
+            }
+        }else{
+            basePNumber = basePNumberAsString.toInt();
+        }
     }
     closeDb();
 }
@@ -452,7 +458,7 @@ void DbManager::getAllMachineProperties(
     QString *software_version_controller,
     int *is_enabled,
     QString *status_text,
-    QString * payment)
+    QString *payment)
 {
     qDebug() << " db... all machine properties from: " << CONFIG_DB_PATH;
     {

@@ -48,20 +48,36 @@ QVector<double> splitQStringToQVectorDouble(QString commaSeparatedNoSpaces)
     return doubleslist;
 }
 
-void df_util::csvQStringToQVectorInt(const QString& csvList, QVector<int>& returnIntList) {
+void df_util::csvQStringToQVectorInt(const QString &csvList, QVector<int> &returnIntList)
+{
     // call as csvQStringToQVectorInt(myQString, myQVector)
     returnIntList.clear();
+
+    // if empty csv string, return empty list.
+    if (csvList.isEmpty())
+    {
+        return ;
+    }
+
     QStringList stringList = csvList.split(",");
-    foreach (QString num, stringList) {
+    foreach (QString num, stringList)
+    {
         returnIntList.append(num.toInt());
     }
 }
 
-void df_util::csvQStringToQVectorDouble(const QString& csvList, QVector<double>& returnDoubleList) {
+void df_util::csvQStringToQVectorDouble(const QString &csvList, QVector<double> &returnDoubleList)
+{
     // call as csvQStringToQVectorInt(myQString, myQVector)
     returnDoubleList.clear();
+     // if empty csv string, return empty list.
+    if (csvList.isEmpty())
+    {
+        return;
+    }
     QStringList stringList = csvList.split(",");
-    foreach (QString num, stringList) {
+    foreach (QString num, stringList)
+    {
         returnDoubleList.append(num.toDouble());
     }
 }

@@ -98,7 +98,7 @@ QVector<int> machine::getAllUniqueDispensePNumbers()
     // dispense PNumber are the numbers used to be displayed in UI. The 'end' product. ()
     for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
     {
-        QVector<int> slotpnumbers = getAllDispensePNumbersFromSlot(slot_index + 1) ;
+        QVector<int> slotpnumbers = getAllDispensePNumbersFromSlot(slot_index + 1);
 
         // Add unique pnumbers from the current slot to the QSet
         for (int i = 0; i < slotpnumbers.size(); ++i)
@@ -123,6 +123,7 @@ QVector<int> machine::getAllUsedPNumbersFromSlots()
         // Add unique pnumbers from the current slot to the QSet
         for (int i = 0; i < slotpnumbers.size(); ++i)
         {
+            // qDebug() << "flbijb" << slotpnumbers[i];
             uniquePNumbers.insert(slotpnumbers[i]);
         }
     }
@@ -171,25 +172,35 @@ void machine::initProductOptions()
     //     qDebug() << pnumbersToBeSetAsOptions[i];
     //     setProductToMenuOption(i + 1, pnumbersToBeSetAsOptions[i]);
     // }
+    dispenseProductsMenuOptions.resize(MENU_PRODUCT_SELECTION_OPTIONS_MAX);
     dispenseProductsMenuOptions.fill(DUMMY_PNUMBER);
     for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
     {
-
+        qDebug() << "slot: " << (slot_index+1) ;
         QVector<int> dispense_pnumbers = getAllDispensePNumbersFromSlot(slot_index + 1);
-        for (int i = 0; i < MENU_DISPENSE_OPTIONS_PER_BASE_MAXIMUM; i++)
+        for (int i = 0; i < dispense_pnumbers.size(); i++)
         {
-            int position = 1 + slot_index * MENU_DISPENSE_OPTIONS_PER_BASE_MAXIMUM + i ; 
-            setProductToMenuOption( position, dispense_pnumbers[i]);
+            int position = 1 + slot_index * MENU_DISPENSE_OPTIONS_PER_BASE_MAXIMUM + i;
+            setProductToMenuOption(position, dispense_pnumbers[i]);
+            qDebug() << "pnumber. : : " << (dispense_pnumbers[i]) << "at option" << position ;
         }
     }
+
+
+    for (int i = 0; i < dispenseProductsMenuOptions.size(); ++i) {
+        int option = dispenseProductsMenuOptions[i];
+        qDebug() << "Option eef" << (i+1) << ": " << option;
+    }
+
 }
 
 void machine::setProductToMenuOption(int productOption, int PNumber)
 {
-    // options array layout containing P-number for a certain menu position. [base1option1, base1option2, base1option3, base1option4, base1option5, base1option6, 
-    //base2option1, base2option2, base2option3, base2option4, base2option5, base2option6, 
+    // options array layout containing P-number for a certain menu position. [base1option1, base1option2, base1option3, base1option4, base1option5, base1option6,
+    // base2option1, base2option2, base2option3, base2option4, base2option5, base2option6,
     // base3option1, base3option2, base3option3, base3option4, base3option5, base3option6, ...
     // options start at 1
+    qDebug() << "Set up PNumber: " << PNumber << " To option: " << productOption;
     if (productOption == 0)
     {
 
@@ -200,6 +211,7 @@ void machine::setProductToMenuOption(int productOption, int PNumber)
         qDebug() << "ERROR: Maximum amount of options exceeded. Will not add as an option. ";
         return;
     }
+
     dispenseProductsMenuOptions[productOption - 1] = PNumber;
 }
 
@@ -210,10 +222,10 @@ pnumberproduct *machine::getProductFromMenuOption(int productOption)
     // slotPosition starts at 1
     if (productOption == 0)
     {
-
         qDebug() << "ERROR:  option numbering start from 1!!!";
     }
     int pnumber = dispenseProductsMenuOptions[productOption - 1];
+    qDebug() << "Get product with pnumber " << pnumber << "from product option:  " << productOption;
     return &m_pnumberproducts[pnumber];
 }
 
@@ -241,8 +253,9 @@ bool machine::getIsOptionAvailable(int productOption)
 
 int machine::getOptionCount()
 {
-    if (!isAelenPillarElseSoapStand()){
-        return getSlotCount();   
+    if (!isAelenPillarElseSoapStand())
+    {
+        return getSlotCount();
     }
 
     // number of set options.
@@ -418,7 +431,7 @@ int machine::getSlotCount()
         qDebug() << "ERROR - Slot Count:" << slot_count << " exceeded MAX_SLOT_COUNT:" << MAX_SLOT_COUNT << "threshold";
     }
     //  qDebug() << "AMOUNT OFF SLOTTST. " << slot_count;
-    
+
     return slot_count;
     // dispensers is the same as slots.
 

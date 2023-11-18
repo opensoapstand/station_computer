@@ -55,7 +55,7 @@ QVector<int> dispenser_slot::getAllPNumbers()
     }
 
     // QVector<int> pnumbers(m_dispensePNumbers);
-    qDebug()<<"dispensePNumbers Count: " << m_dispensePNumbers.size();
+    // qDebug()<<"dispensePNumbers Count: " << m_dispensePNumbers.size();
 
     // Copy elements from m_additivePNumbers
     for (int i = 0; i < m_additivePNumbers.size(); ++i)
@@ -64,7 +64,7 @@ QVector<int> dispenser_slot::getAllPNumbers()
         pnumbers.insert(m_additivePNumbers[i]);
 
     }
-    qDebug()<<"m_additivePNumbers Count: " << m_additivePNumbers.size();
+    // qDebug()<<"m_additivePNumbers Count: " << m_additivePNumbers.size();
 
     pnumbers.insert(m_basePNumber);
     qDebug()<<"base pnumber value: " <<m_basePNumber;
@@ -78,11 +78,11 @@ QVector<int> dispenser_slot::getAllPNumbers()
             qDebug()<<"Assert error: pNumber invalid too high(" << value << " ) at option: " << option;
             
         }
-        std::cout << value << std::endl;
+        // std::cout << value << std::endl;
         option++;
     }
 
-    qDebug()<<"size of all pnumbers: " <<pnumbers.size();
+    // qDebug()<<"size of all pnumbers: " <<pnumbers.size();
 
     // return pnumbers;
      return QVector<int>::fromList(pnumbers.toList());

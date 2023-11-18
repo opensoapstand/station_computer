@@ -167,9 +167,6 @@ void page_idle::showEvent(QShowEvent *event)
     ui->label_temperature_warning->setStyleSheet(styleSheet);
     ui->label_show_temperature->setStyleSheet(styleSheet);
 
-    // ui->pushButton_to_select_product_page->setStyleSheet(styleSheet);
-    // ui->pushButton_test->raise();
-
     // template text with argument example
     // QString base_text = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_welcome_message, "testargument" );
     // ui->label_welcome_message->setText(base_text.arg("SoAp")); // will replace %1 character in string by the provide text

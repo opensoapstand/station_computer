@@ -135,7 +135,6 @@ void page_product_menu::showEvent(QShowEvent *event)
 
     p_page_idle->thisMachine->addPictureToLabel(ui->label_help, full_path);
     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_PRODUCT_MENU_CSS);
-    // ui->pushButton_to_maintenance->setStyleSheet(styleSheet);
     ui->pushButton_help_page->setStyleSheet(styleSheet);
     ui->pushButton_to_idle->setStyleSheet(styleSheet);
     ui->label_product_menu_title->setStyleSheet(styleSheet);
@@ -143,7 +142,7 @@ void page_product_menu::showEvent(QShowEvent *event)
     ui->label_base_products_section_bg->setStyleSheet(styleSheet);
     ui->label_base_products_section_title->setStyleSheet(styleSheet);
     ui->label_dispense_products_section_title->setStyleSheet(styleSheet);
-    
+
     for (int slot_index = 0; slot_index < p_page_idle->thisMachine->getSlotCount(); slot_index++)
     {
         qDebug() << "Set up slot: " << slot_index + 1 << " with base product: " << p_page_idle->thisMachine->getSlotBaseProduct(slot_index + 1)->getPNumber();
@@ -155,31 +154,16 @@ void page_product_menu::showEvent(QShowEvent *event)
         labels_base_product_picture[slot_index]->setStyleSheet(styleSheet);
         qDebug() << p_page_idle->thisMachine->getSlotBaseProduct(slot_index + 1)->getProductPicturePath();
         p_page_idle->thisMachine->addPictureToLabel(labels_base_product_picture[slot_index], p_page_idle->thisMachine->getSlotBaseProduct(slot_index + 1)->getProductPicturePath());
-        // p_page_idle->thisMachine->addPictureToLabel(labels_base_product_picture[slot_index], p_page_idle->thisMachine->getProductFromMenuOption(slot_index + 1)->getProductPicturePath());
 
         labels_base_product_name[slot_index]->setProperty("class", "label_base_product_name");
         labels_base_product_name[slot_index]->setStyleSheet(styleSheet);
         QString product_name = p_page_idle->thisMachine->getSlotBaseProduct(slot_index + 1)->getProductName();
         qDebug() << product_name;
         labels_base_product_name[slot_index]->setText(product_name);
-
-        // pushButtons_dispense_product[option_index]->setProperty("class", "pushButton_dispense_product");
-        // pushButtons_dispense_product[option_index]->setStyleSheet(styleSheet);
     }
 
     select_base_product_in_menu(0);
 
-    //  displayProducts();
-
-    // int selectedBase = 0;
-    // for (int option_index = 0; option_index < 6; option_index++)
-    // {
-    //     labels_base_product_picture[option_index]->setProperty("class", "label_dispense_product_picture");
-    //     labels_base_product_picture[option_index]->setStyleSheet(styleSheet);
-    //     p_page_idle->thisMachine->addPictureToLabel(labels_base_product_picture[option_index], p_page_idle->thisMachine->getProductFromMenuOption((selectedBase * 6) + option_index)->getProductPicturePath());
-    //     pushButtons_dispense_product[option_index]->setProperty("class", "pushButton_dispense_product");
-    //     pushButtons_dispense_product[option_index]->setStyleSheet(styleSheet);
-    // }
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_product_menu_title);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_to_idle);
 
@@ -351,15 +335,26 @@ void page_product_menu::displayDispenseProductsMenu()
     {
         int option_index = m_selectedBaseProductIndex * MENU_DISPENSE_OPTIONS_PER_BASE_MAXIMUM + sub_menu_index;
 
-        pnumberproduct *dispenseProduct = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1);
-        p_page_idle->thisMachine->addPictureToLabel(labels_dispense_product_picture[sub_menu_index], dispenseProduct->getProductPicturePath());
+        if (p_page_idle->thisMachine->isOptionExisting(option_index + 1))
+        {
+            pnumberproduct *dispenseProduct = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1);
+            p_page_idle->thisMachine->addPictureToLabel(labels_dispense_product_picture[sub_menu_index], dispenseProduct->getProductPicturePath());
 
-        qDebug() << "Set up sub menu for item: " << sub_menu_index + 1 << " which is option: " << option_index + 1 << " which has pnumber; " << p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getPNumber();
+            qDebug() << "Set up sub menu for item: " << sub_menu_index + 1 << " which is option: " << option_index + 1 << " which has pnumber; " << p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getPNumber();
 
-        pushButtons_dispense_product[sub_menu_index]->setProperty("class", "pushButton_base_product");
-        pushButtons_dispense_product[sub_menu_index]->setStyleSheet(styleSheet);
-        labels_dispense_product_picture[sub_menu_index]->setProperty("class", "label_base_product_picture");
-        labels_dispense_product_picture[sub_menu_index]->setStyleSheet(styleSheet);
+            pushButtons_dispense_product[sub_menu_index]->setProperty("class", "pushButton_base_product");
+            pushButtons_dispense_product[sub_menu_index]->setStyleSheet(styleSheet);
+            labels_dispense_product_picture[sub_menu_index]->setProperty("class", "label_base_product_picture");
+            labels_dispense_product_picture[sub_menu_index]->setStyleSheet(styleSheet);
+
+            pushButtons_dispense_product[sub_menu_index]->show();
+            labels_dispense_product_picture[sub_menu_index]->show();
+            pushButtons_dispense_product[sub_menu_index]->raise();
+        }else{
+            qDebug() << "Set up sub menu for item: " << sub_menu_index + 1 << "Invalid pnumber product. Will hide option. ";
+            pushButtons_dispense_product[sub_menu_index]->hide();
+            labels_dispense_product_picture[sub_menu_index]->hide();
+        }
     }
 }
 
@@ -368,7 +363,6 @@ void page_product_menu::select_base_product_in_menu(int base_product_index)
 
     m_selectedBaseProductIndex = base_product_index;
     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_PRODUCT_MENU_CSS);
-
 
     for (int slot_index = 0; slot_index < p_page_idle->thisMachine->getSlotCount(); slot_index++)
     {
@@ -391,6 +385,7 @@ void page_product_menu::select_product(int option)
 {
     if (p_page_idle->thisMachine->getIsOptionAvailable(option))
     {
+        qDebug() << "Option select and available: " << option;
         p_page_idle->thisMachine->setSelectedProductByOption(option);
         p_page_idle->thisMachine->setSelectedSlotFromSelectedProduct();
 
@@ -398,41 +393,25 @@ void page_product_menu::select_product(int option)
     }
     else
     {
-        qDebug() << "Invalid choice. Option not available: " << option;
+        qDebug() << "Option not available: " << option;
     }
 }
 
 void page_product_menu::on_pushButton_base_product_1_clicked()
 {
     select_base_product_in_menu(0);
-    // p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_1, "active", PAGE_PRODUCT_MENU_CSS);
-    // p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_2, "inactive", PAGE_PRODUCT_MENU_CSS);
-    // p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_3, "inactive", PAGE_PRODUCT_MENU_CSS);
-    // p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_4, "inactive", PAGE_PRODUCT_MENU_CSS);
 }
 void page_product_menu::on_pushButton_base_product_2_clicked()
 {
     select_base_product_in_menu(1);
-    // p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_1, "inactive", PAGE_PRODUCT_MENU_CSS);
-    // p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_2, "active", PAGE_PRODUCT_MENU_CSS);
-    // p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_3, "inactive", PAGE_PRODUCT_MENU_CSS);
-    // p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_4, "inactive", PAGE_PRODUCT_MENU_CSS);
 }
 void page_product_menu::on_pushButton_base_product_3_clicked()
 {
     select_base_product_in_menu(2);
-    // p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_1, "inactive", PAGE_PRODUCT_MENU_CSS);
-    // p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_2, "inactive", PAGE_PRODUCT_MENU_CSS);
-    // p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_3, "active", PAGE_PRODUCT_MENU_CSS);
-    // p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_4, "inactive", PAGE_PRODUCT_MENU_CSS);
 }
 void page_product_menu::on_pushButton_base_product_4_clicked()
 {
     select_base_product_in_menu(3);
-    // p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_1, "inactive", PAGE_PRODUCT_MENU_CSS);
-    // p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_2, "inactive", PAGE_PRODUCT_MENU_CSS);
-    // p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_3, "inactive", PAGE_PRODUCT_MENU_CSS);
-    // p_page_idle->thisMachine->addCssClassToObject(ui->label_base_product_bg_4, "active", PAGE_PRODUCT_MENU_CSS);
 }
 
 void page_product_menu::onProductPageTimeoutTick()
@@ -448,15 +427,6 @@ void page_product_menu::onProductPageTimeoutTick()
     }
 }
 
-// void page_product_menu::on_pushButton_to_maintenance_pressed()
-// {
-//     maintenanceCounter++;
-//     if (maintenanceCounter > 50)
-//     {
-//         hideCurrentPageAndShowProvided(p_page_maintenance);
-//     }
-// }
-
 void page_product_menu::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     productPageEndTimer->stop();
@@ -469,14 +439,12 @@ void page_product_menu::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 void page_product_menu::on_pushButton_to_idle_clicked()
 {
     qDebug() << "Back to Idle Page Button pressed";
-    // p_page_idle->setDiscountPercentage(0.0);
     hideCurrentPageAndShowProvided(p_page_idle);
 }
 
 void page_product_menu::on_pushButton_help_page_clicked()
 {
     qDebug() << "Help_Button pressed";
-    // p_page_idle->setDiscountPercentage(0.0);
     hideCurrentPageAndShowProvided(p_page_help);
 }
 

@@ -216,8 +216,12 @@ void machine::setProductToMenuOption(int productOption, int pnumber)
 }
 
 bool machine::isOptionExisting(int productOption){
+    if (productOption == 0)
+    {
+        qDebug() << "ERROR:  option numbering start from 1!!!";
+    }
     int pnumber = dispenseProductsMenuOptions[productOption - 1];
-    return pnumber == DUMMY_PNUMBER;
+    return pnumber != DUMMY_PNUMBER;
 }
 
 pnumberproduct *machine::getProductFromMenuOption(int productOption)
@@ -225,10 +229,11 @@ pnumberproduct *machine::getProductFromMenuOption(int productOption)
     // options are selectable products by the customer. (they must be indexed. e.g. first page: option 1 to four)
     // option start counting from 1
     // slotPosition starts at 1
-    if (productOption == 0)
-    {
-        qDebug() << "ERROR:  option numbering start from 1!!!";
+
+    if (!isOptionExisting(productOption)){
+        qDebug() << "ASSERT ERROR: non existing number (dummy or not valid). undefined behaviour from now on";
     }
+
     int pnumber = dispenseProductsMenuOptions[productOption - 1];
     qDebug() << "Get product with pnumber " << pnumber << "from product option:  " << productOption;
     return &m_pnumberproducts[pnumber];

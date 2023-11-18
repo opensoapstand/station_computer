@@ -208,8 +208,9 @@ page_product::page_product(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void page_product::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_payment_tap_serial *page_payment_tap_serial, page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product_overview *page_Overview, statusbar *p_statusbar)
+void page_product::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_payment_tap_serial *page_payment_tap_serial, page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product_overview *page_Overview, statusbar *p_statusbar, page_product_menu *page_product_menu)
 {
+    this->p_page_product_menu = page_product_menu;
     this->p_page_select_product = pageSelect;
     this->paymentPage = page_qr_payment;
     this->p_page_idle = pageIdle;
@@ -535,6 +536,18 @@ bool page_product::stopSelectTimers()
     }
 }
 
+void page_product::hideCurrentPageAndShowProductMenu()
+{
+    if (p_page_idle->thisMachine->getHardwareMajorVersion().startsWith("AP2"))
+    {
+        this->hideCurrentPageAndShowProvided(p_page_product_menu);
+    }
+    else
+    {
+        this->hideCurrentPageAndShowProvided(p_page_select_product);
+    }
+}
+    
 void page_product::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
 
@@ -589,7 +602,7 @@ size_t WriteCallback_coupon(char *contents, size_t size, size_t nmemb, void *use
 
 void page_product::on_pushButton_previous_page_clicked()
 {
-    hideCurrentPageAndShowProvided(p_page_select_product);
+    hideCurrentPageAndShowProductMenu();
 }
 
 void page_product::on_pushButton_continue_clicked()
@@ -601,5 +614,5 @@ void page_product::on_pushButton_continue_clicked()
 
 void page_product::on_pushButton_back_clicked()
 {
-    hideCurrentPageAndShowProvided(p_page_select_product);
+    hideCurrentPageAndShowProductMenu();
 }

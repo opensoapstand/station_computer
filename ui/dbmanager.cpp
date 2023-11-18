@@ -260,11 +260,11 @@ bool DbManager::addPageClick(const QString &page)
 }
 
 void DbManager::getAllSlotProperties(int slot,
-                                     QVector<int> *dispensePNumbers,
-                                     int *basePNumber,
-                                     QVector<int> *additivesPNumbers,
-                                     bool *is_enabled,
-                                     QString *status_text)
+                                     QVector<int> &dispensePNumbers,
+                                     int &basePNumber,
+                                     QVector<int> &additivesPNumbers,
+                                     bool &is_enabled,
+                                     QString &status_text)
 
 {
     // WARNING: consider using having arguments sent to function "by reference" instead of pointers. At least, chatgpt suggests that it's safer.
@@ -289,177 +289,42 @@ void DbManager::getAllSlotProperties(int slot,
 
         QString additivesAsString;
         QString dispensePNumbersAsString;
+        QString basePNumberAsString;
         while (qry.next())
         {
             dispensePNumbersAsString = qry.value(0).toString();
-            *basePNumber = qry.value(1).toInt();
+            // *basePNumber = qry.value(1).toInt();
+            basePNumberAsString = qry.value(1).toString();
             additivesAsString = qry.value(2).toString();
-            *is_enabled = qry.value(3).toInt();
-            *status_text = qry.value(4).toString();
+            is_enabled = qry.value(3).toInt();
+            status_text = qry.value(4).toString();
         }
         qry.finish();
 
-        // qDebug()<< "********f*f*f*f*f*f"<<dispensePNumbersAsString;
-
-        // qDebug() << "base:  " << *basePNumber;
-        // qDebug() << "raw additives string:  " << additivesAsString;
-        // qDebug() << "isenabled:  " << *is_enabled;
-        // qDebug() << "statustext:  " << *status_text;
-        QStringList stringList = dispensePNumbersAsString.split(",");
-        foreach (QString num, stringList)
+        df_util::csvQStringToQVectorInt(additivesAsString, additivesPNumbers);
+        df_util::csvQStringToQVectorInt(dispensePNumbersAsString, dispensePNumbers);
+        if (basePNumberAsString.isEmpty())
         {
-            // additivesPNumbers->append(num.toInt());
-            // qDebug()<< "==================" << num;
+            if (dispensePNumbersAsString.size()>=1){
+                basePNumber = dispensePNumbers[0];
+            }else{
+                qDebug("Error: no base product (or dispense product in db for slot. )");
+            }
+        }else{
+            basePNumber = basePNumberAsString.toInt();
         }
-        df_util::csvQStringToQVectorInt(additivesAsString, *additivesPNumbers);
-        df_util::csvQStringToQVectorInt(dispensePNumbersAsString, *dispensePNumbers);
-
-        // QStringList stringList = additivesAsString.split(",");
-        // foreach (QString num, stringList)
-        // {
-        //     additivesPNumbers->append(num.toInt());
-        // }
     }
     closeDb();
 }
 
-/*
-productId
-soapstand_product_serial
-slot
-name
-size_unit
-currency
-payment
-name_receipt
-concentrate_multiplier
-dispense_speed
-threshold_flow
-retraction_time
-calibration_const
-volume_per_tick
-last_restock
-volume_full
-volume_remaining
-volume_dispensed_since_restock
-volume_dispensed_total
-is_enabled_small
-is_enabled_medium
-is_enabled_large
-is_enabled_custom
-size_small
-size_medium
-size_large
-size_custom_min
-size_custom_max
-price_small
-price_medium
-price_large
-price_custom
-plu_small
-plu_medium
-plu_large
-plu_custom
-pid_small
-pid_medium
-pid_large
-pid_custom
-flavour
-image_url
-type
-ingredients
-features
-description
-is_enabled_custom_discount
-size_custom_discount
-price_custom_discount
-
-0	productId
-1	soapstand_product_serial
-2	slot
-3	name
-4	size_unit
-5	currency
-6	payment
-7	name_receipt
-8	concentrate_multiplier
-9	dispense_speed
-10	threshold_flow
-11	retraction_time
-12	calibration_const
-13	volume_per_tick
-14	last_restock
-15	volume_full
-16	volume_remaining
-17	volume_dispensed_since_restock
-18	volume_dispensed_total
-19	is_enabled_small
-20	is_enabled_medium
-21	is_enabled_large
-22	is_enabled_custom
-23	size_small
-24	size_medium
-25	size_large
-26	size_custom_min
-27	size_custom_max
-28	price_small
-29	price_medium
-30	price_large
-31	price_custom
-32	plu_small
-33	plu_medium
-34	plu_large
-35	plu_custom
-36	pid_small
-37	pid_medium
-38	pid_large
-39	pid_custom
-40	flavour
-41	image_url
-42	type
-43	ingredients
-44	features
-45	description
-46	is_enabled_custom_discount
-47	size_custom_discount
-48	price_custom_discount
-
-    // void getAllProductProperties(int slot,
-    //                              QString *productId,
-    //                              QString *soapstand_product_serial,
-    //                              QVector<int> *m_mixPNumbers,
-    //                              QVector<double> *m_mixRatios,
-    //                              QString *size_unit,
-    //                              QString *name_receipt,
-    //                              QString *m_currency_deprecated, //_dummy_deprecated
-    //                              QString *m_payment_deprecated,  //_deprecated,
-    //                              int *concentrate_multiplier,
-    //                              int *dispense_speed,
-    //                              double *threshold_flow,
-    //                              int *retraction_time,
-    //                              double *calibration_const,
-    //                              double *volume_per_tick,
-    //                              QString *last_restock,
-    //                              double *volume_full,
-    //                              double *volume_remaining,
-    //                              double *volume_dispensed_since_restock,
-    //                              double *volume_dispensed_total,
-    //                              int *is_enabled_custom_discount,
-    //                              double *size_custom_discount,
-    //                              double *price_custom_discount,
-    //                              bool *isSizeEnabled, double *prices, double *volumes, QString *PLUs, QString *PIDs);
- */
-// void DbManager::getAllProductProperties(int slot, QString* soapstand_product_serial, QString* size_unit, QString* payment, int* concentrate_multiplier, int* dispense_speed, bool *isSizeEnabled, double* prices, double* volumes, QString* PLUs, QString* PIDs)
-//   string table_products_columns[TABLE_PRODUCTS_COLUMN_COUNT] = {"productId", "soapstand_product_serial", "slot", "name", "size_unit", "currency", "payment", "name_receipt", "concentrate_multiplier", "dispense_speed", "threshold_flow", "retraction_time", "calibration_const", "volume_per_tick", "last_restock", "volume_full", "volume_remaining", "volume_dispensed_since_restock", "volume_dispensed_total", "is_enabled_small", "is_enabled_medium", "is_enabled_large", "is_enabled_custom", "size_small", "size_medium", "size_large", "size_custom_min", "size_custom_max", "price_small", "price_medium", "price_large", "price_custom", "plu_small", "plu_medium", "plu_large", "plu_custom", "pid_small", "pid_medium", "pid_large", "pid_custom", "flavour", "image_url", "type", "ingredients", "features", "description", "is_enabled_custom_discount", "size_custom_discount", "price_custom_discount"};
-//  (productId, soapstand_product_serial, slot, name, size_unit, currency, payment, name_receipt, concentrate_multiplier, dispense_speed, threshold_flow, retraction_time, calibration_const, volume_per_tick, last_restock, volume_full, volume_remaining, volume_dispensed_since_restock, volume_dispensed_total, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_min, size_custom_max, price_small, price_medium, price_large, price_custom, plu_small, plu_medium, plu_large, plu_custom, pid_small, pid_medium, pid_large, pid_custom, flavour, image_url, type, ingredients, features, description, is_enabled_custom_discount, size_custom_discount, price_custom_discount)
 void DbManager::getAllProductProperties(int pnumber,
                                         QString *productId,
                                         QString *soapstand_product_serial,
                                         QVector<int> &mixPNumbers,
                                         QVector<double> &mixRatios,
                                         QString *size_unit,
-                                        QString *m_currency_deprecated, //_dummy_deprecated
-                                        QString *m_payment_deprecated,  //_deprecated,
+                                        // QString *m_currency_deprecated, //_dummy_deprecated
+                                        // QString *m_payment_deprecated,  //_deprecated,
                                         QString *name_receipt,
                                         int *concentrate_multiplier,
                                         int *dispense_speed,
@@ -487,7 +352,6 @@ void DbManager::getAllProductProperties(int pnumber,
     {
         QSqlDatabase db = openDb(CONFIG_DB_PATH);
         QSqlQuery qry(db);
-        // qry.prepare("SELECT soapstand_product_serial, size_unit, payment, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_max,price_small,price_medium, price_large,price_custom FROM products WHERE pnumber=:pnumber");
         qry.prepare("SELECT productId, soapstand_product_serial, mix_pnumbers, mix_ratios, slot, name, size_unit, name_receipt, concentrate_multiplier, dispense_speed, threshold_flow, retraction_time, calibration_const, volume_per_tick, last_restock, volume_full, volume_remaining, volume_dispensed_since_restock, volume_dispensed_total, is_enabled_small, is_enabled_medium, is_enabled_large, is_enabled_custom, size_small, size_medium, size_large, size_custom_min, size_custom_max, price_small, price_medium, price_large, price_custom, plu_small, plu_medium, plu_large, plu_custom, pid_small, pid_medium, pid_large, pid_custom, flavour, image_url, type, ingredients, features, description, is_enabled_custom_discount, size_custom_discount, price_custom_discount, is_enabled, status_text FROM products WHERE soapstand_product_serial=:pnumber");
         qry.bindValue(":pnumber", pnumber);
         bool success;
@@ -498,7 +362,6 @@ void DbManager::getAllProductProperties(int pnumber,
             qDebug() << "Open db: Attempted to load all product properties for pnumber: " << pnumber;
             qDebug() << "Did not execute sql. "
                      << qry.lastError() << " | " << qry.lastQuery();
-            // success = false;
             return;
         }
 
@@ -561,77 +424,6 @@ void DbManager::getAllProductProperties(int pnumber,
     df_util::csvQStringToQVectorDouble(mix_ratios_str, mixRatios);
 }
 
-/*
-0	machine_id
-1	soapstand_customer_id
-2	template
-3	location
-4	controller_type
-5	controller_id
-6	screen_type
-7	screen_id
-8	has_receipt_printer
-9	receipt_printer_is_online
-10	receipt_printer_has_paper
-11	has_tap_payment
-12	hardware_version
-13	software_version
-14	aws_port
-15	pump_id_slot_1
-16	pump_id_slot_2
-17	pump_id_slot_3
-18	pump_id_slot_4
-19	is_enabled_slot_1
-20	is_enabled_slot_2
-21	is_enabled_slot_3
-22	is_enabled_slot_4
-23	coupons_enabled
-24	status_text_slot_1
-25	status_text_slot_2
-26	status_text_slot_3
-27	status_text_slot_4
-28	has_empty_detection
-29	enable_pump_ramping
-30	enable_pump_reversal
-31	dispense_buttons_count
-32	maintenance_pwd
-33	show_transactions
-34	help_text_html
-35	idle_page_type
-36	admin_pwd
-
-QString* machine_id,
-int* soapstand_customer_id,
-QString* template,
-QString* location,
-QString* controller_type,
-QString* controller_id,
-QString* screen_type,
-QString* screen_id,
-int* has_receipt_printer,
-int* receipt_printer_is_online,
-int* receipt_printer_has_paper,
-int* has_tap_payment,
-QString* hardware_version,
-QString* software_version,
-int* aws_port,
-
-int* coupons_enabled,
-int* has_empty_detection,
-int* enable_pump_ramping,
-int* enable_pump_reversal,
-int* dispense_buttons_count,
-QString* maintenance_pwd,
-int* show_transactions,
-QString* help_text_html,
-QString* idle_page_type,
-
-QString* pump_id_slots*,
-int* is_enabled_slots*,
-QString* status_text_slots
-
-*/
-
 void DbManager::getAllMachineProperties(
     QString *machine_id,
     QString *soapstand_customer_id,
@@ -665,14 +457,15 @@ void DbManager::getAllMachineProperties(
     double *alert_temperature,
     QString *software_version_controller,
     int *is_enabled,
-    QString *status_text)
+    QString *status_text,
+    QString *payment)
 {
     qDebug() << " db... all machine properties from: " << CONFIG_DB_PATH;
     {
         QSqlDatabase db = openDb(CONFIG_DB_PATH);
         QSqlQuery qry(db);
 
-        qry.prepare("SELECT machine_id,soapstand_customer_id,template,location,controller_type,controller_id,screen_type,'screen_id',has_receipt_printer,receipt_printer_is_online,receipt_printer_has_paper,has_tap_payment,hardware_version,software_version,aws_port,coupons_enabled,has_empty_detection,enable_pump_ramping,enable_pump_reversal,dispense_buttons_count,maintenance_pwd,show_transactions,help_text_html,idle_page_type,admin_pwd,alert_temperature,software_version_controller,is_enabled,status_text FROM machine");
+        qry.prepare("SELECT machine_id,soapstand_customer_id,template,location,controller_type,controller_id,screen_type,'screen_id',has_receipt_printer,receipt_printer_is_online,receipt_printer_has_paper,has_tap_payment,hardware_version,software_version,aws_port,coupons_enabled,has_empty_detection,enable_pump_ramping,enable_pump_reversal,dispense_buttons_count,maintenance_pwd,show_transactions,help_text_html,idle_page_type,admin_pwd,alert_temperature,software_version_controller,is_enabled,status_text,payment FROM machine");
         bool success;
         success = qry.exec();
         if (!success)
@@ -699,19 +492,7 @@ void DbManager::getAllMachineProperties(
             *hardware_version = qry.value(12).toString();
             *software_version = qry.value(13).toString();
             *aws_port = qry.value(14).toInt();
-            // pump_id_slots[0] = qry.value(15).toString();
-            // pump_id_slots[1] = qry.value(16).toString();
-            // pump_id_slots[2] = qry.value(17).toString();
-            // pump_id_slots[3] = qry.value(18).toString();
-            // is_enabled_slots[0] = qry.value(19).toInt();
-            // is_enabled_slots[1] = qry.value(20).toInt();
-            // is_enabled_slots[2] = qry.value(21).toInt();
-            // is_enabled_slots[3] = qry.value(22).toInt();
             *coupons_enabled = qry.value(15).toInt();
-            // status_text_slots[0] = qry.value(24).toString();
-            // status_text_slots[1] = qry.value(25).toString();
-            // status_text_slots[2] = qry.value(26).toString();
-            // status_text_slots[3] = qry.value(27).toString();
             *has_empty_detection = qry.value(16).toInt();
             *enable_pump_ramping = qry.value(17).toInt();
             *enable_pump_reversal = qry.value(18).toInt();
@@ -725,36 +506,12 @@ void DbManager::getAllMachineProperties(
             *software_version_controller = qry.value(26).toString();
             *is_enabled = qry.value(27).toInt();
             *status_text = qry.value(28).toString();
+            *payment = qry.value(29).toString();
         }
         qry.finish();
     }
     closeDb();
 }
-
-// QString DbManager::getPaymentMethod(int slot)
-// {
-//     // used by Ash in tap. to do --> get tap init out of constructor.
-//     qDebug() << "********* DEPRECATED *********** ";
-//     qDebug() << "DB call: get payment method for slot";
-//     QString payment_method;
-//     {
-//         QSqlDatabase db = openDb();
-//         QSqlQuery qry(db);
-
-//         qry.prepare("SELECT payment FROM products WHERE slot=:slot");
-//         qry.bindValue(":slot", slot);
-//         bool success;
-//         success = qry.exec();
-
-//         while (qry.next())
-//         {
-//             payment_method = qry.value(0).toString();
-//         }
-//         qry.finish();
-//     }
-//     closeDb();
-//     return payment_method;
-// }
 
 uint32_t DbManager::getNumberOfRows(QString table)
 {

@@ -115,7 +115,7 @@ void page_maintenance::showEvent(QShowEvent *event)
         labels_product_position[slot_index]->setProperty("class", "label_product_position");
         labels_product_position[slot_index]->setStyleSheet(styleSheet);
 
-        QString p = p_page_idle->thisMachine->getProductByOption(slot_index+1)->getProductPicturePath();
+        QString p = p_page_idle->thisMachine->getProductFromMenuOption(slot_index+1)->getProductPicturePath();
         p_page_idle->thisMachine->dfUtility->pathExists(p);
         QPixmap im(p);
         QIcon qi(im);
@@ -127,13 +127,13 @@ void page_maintenance::showEvent(QShowEvent *event)
         pushButtons_products[slot_index]->setStyleSheet("background-color: transparent; border: 1px solid black;");
         pushButtons_products[slot_index]->raise();
 
-        labels_product_name[slot_index]->setText(p_page_idle->thisMachine->getProductByOption(slot_index+1)->getProductName());
-        int product_slot_enabled = p_page_idle->thisMachine->getProductByOption(slot_index+1)->getIsProductEnabled();
+        labels_product_name[slot_index]->setText(p_page_idle->thisMachine->getProductFromMenuOption(slot_index+1)->getProductName());
+        int product_slot_enabled = p_page_idle->thisMachine->getProductFromMenuOption(slot_index+1)->getIsProductEnabled();
 
-        QString product_status_text = p_page_idle->thisMachine->getProductByOption(slot_index+1)->getStatusText();
+        QString product_status_text = p_page_idle->thisMachine->getProductFromMenuOption(slot_index+1)->getStatusText();
         QString status_display_text = "";
 
-        int pnumber = p_page_idle->thisMachine->getProductByOption(slot_index+1)->getPNumber();
+        int pnumber = p_page_idle->thisMachine->getProductFromMenuOption(slot_index+1)->getPNumber();
         if (!(p_page_idle->thisMachine->isProductVolumeInContainer(pnumber)))
         {
             status_display_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->auto_empty");

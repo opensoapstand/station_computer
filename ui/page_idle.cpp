@@ -15,6 +15,7 @@
 
 #include "page_idle.h"
 #include "machine.h"
+#include "page_product_menu.h"
 #include "ui_page_idle.h"
 #include "page_idle_products.h"
 #include "page_maintenance.h"
@@ -76,10 +77,11 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     tappingBlockedUntilPrinterReply = false;
 }
 
-void page_idle::setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products, page_error_wifi *p_page_error_wifi, statusbar *p_statusbar)
+void page_idle::setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products, page_error_wifi *p_page_error_wifi, statusbar *p_statusbar, page_product_menu *p_page_product_menu)
 {
     // Chained to KB Listener
     this->p_pageSelectProduct = p_page_select_product;
+    this->p_page_product_menu = p_page_product_menu;
     this->p_page_maintenance = pageMaintenance;
     this->p_page_maintenance_general = pageMaintenanceGeneral;
     this->p_page_idle_products = p_page_idle_products;
@@ -164,9 +166,6 @@ void page_idle::showEvent(QShowEvent *event)
     ui->label_printer_status->setStyleSheet(styleSheet);
     ui->label_temperature_warning->setStyleSheet(styleSheet);
     ui->label_show_temperature->setStyleSheet(styleSheet);
-
-    // ui->pushButton_to_select_product_page->setStyleSheet(styleSheet);
-    // ui->pushButton_test->raise();
 
     // template text with argument example
     // QString base_text = getTemplateTextByElementNameAndPageAndIdentifier(ui->label_welcome_message, "testargument" );
@@ -304,7 +303,7 @@ bool page_idle::eventFilter(QObject *object, QEvent *event)
                 }
                 else
                 {
-                    this->hideCurrentPageAndShowProvided(p_pageSelectProduct, true);
+                    hideCurrentPageAndShowProductMenu();
                 }
             }
         }
@@ -361,8 +360,8 @@ void page_idle::onTestForFrozenScreenTick()
             stateScreenCheck = state_screen_check_fail;
 
             qDebug() << "ERROR: Idle Screen Not resposive to click test. (or program lost focus?!...). Will automatically go to 'select products page'. Screen freeze test is only active on idle page. If this is ennoying you while working in Ubuntu, put the program in maintenance mode. ";
-            hideCurrentPageAndShowProvided(p_pageSelectProduct, true); // will go to select products page and automatically revert after some seconds. I hope that by reloading idle page, the 'freezing issue' is solved.
-            return;                                                    // we would create a monster if we continue, with multiple clicks and doubled up pages...
+            hideCurrentPageAndShowProductMenu(); // will go to select products page and automatically revert after some seconds. I hope that by reloading idle page, the 'freezing issue' is solved.
+            return;                              // we would create a monster if we continue, with multiple clicks and doubled up pages...
         }
 
         stateScreenCheck = state_screen_check_clicked_and_wait;
@@ -578,6 +577,19 @@ void page_idle::on_pushButton_to_select_product_page_clicked()
     //     {
     //         // this->hideCurrentPageAndShowProvided(p_pageSelectProduct, true);
     //     }
+}
+
+void page_idle::hideCurrentPageAndShowProductMenu()
+{
+    if (thisMachine->getHardwareMajorVersion().startsWith("AP2"))
+    {
+
+        this->hideCurrentPageAndShowProvided(p_page_product_menu, true);
+    }
+    else
+    {
+        this->hideCurrentPageAndShowProvided(p_pageSelectProduct, true);
+    }
 }
 
 void page_idle::hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createNewSessionId)

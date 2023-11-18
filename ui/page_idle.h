@@ -16,6 +16,7 @@
 #ifndef IDLE_H
 #define IDLE_H
 
+#include "page_product_menu.h"
 #include "page_select_product.h"
 #include "page_idle_products.h"
 #include "dfuicommthread.h"
@@ -31,6 +32,7 @@
 class statusbar;
 class page_maintenance;
 class page_select_product;
+class page_product_menu;
 class page_maintenance_general;
 class page_idle_products;
 class page_error_wifi;
@@ -57,7 +59,7 @@ class page_idle : public QWidget
 public:
     void refreshTemperature();
     explicit page_idle(QWidget *parent = nullptr);
-    void setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products, page_error_wifi *p_page_error_wifi, statusbar *p_statusbar);
+    void setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products, page_error_wifi *p_page_error_wifi, statusbar *p_statusbar, page_product_menu *p_page_product_menu);
     ~page_idle();
     void showEvent(QShowEvent *event);
     void changeToIdleProductsIfSet();
@@ -90,6 +92,7 @@ public:
 
     void checkReceiptPrinterStatus();
     StateFrozenScreenDetect stateScreenCheck;
+    void hideCurrentPageAndShowProductMenu();
     void hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createNewSessionId);
 
     bool eventFilter(QObject *object, QEvent *event);
@@ -107,6 +110,7 @@ private slots:
 private:
     Ui::page_idle *ui;
     page_select_product *p_pageSelectProduct;
+    page_product_menu *p_page_product_menu;
     page_maintenance *p_page_maintenance;
     page_maintenance_general *p_page_maintenance_general;
     page_idle_products *p_page_idle_products;

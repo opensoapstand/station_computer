@@ -19,6 +19,7 @@
 #include "page_init.h"
 #include "page_idle.h"
 #include "page_idle_products.h"
+#include "page_product_menu.h"
 #include "page_select_product.h"
 #include "page_product.h"
 #include "page_qr_payment.h"
@@ -133,6 +134,8 @@ int main(int argc, char *argv[])
     page_idle_products *p_page_idle_products = new page_idle_products();
     qDebug() << "Constructor page_transactions";
     page_transactions *p_page_transactions = new page_transactions();
+    qDebug() << "Constructor page_product_menu";
+    page_product_menu *p_page_product_menu = new page_product_menu();
     qDebug() << "Constructor page_select_product";
     page_select_product *p_page_select_product = new page_select_product();
     qDebug() << "Constructor page_product";
@@ -182,6 +185,7 @@ int main(int argc, char *argv[])
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_IDLE_PRODUCTS_BACKGROUND_PATH));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_END_BACKGROUND_PATH));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_TRANSACTIONS_BACKGROUND_PATH));
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_PRODUCT_MENU_BACKGROUND_PATH));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_SELECT_PRODUCT_BACKGROUND_PATH));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_PRODUCT_BACKGROUND_PATH));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_ORDER_OVERVIEW_PATH));
@@ -226,10 +230,11 @@ int main(int argc, char *argv[])
 
     p_page_maintenance_general->setPage(p_page_maintenance, p_page_idle, p_page_idle_products, p_statusbar);
     p_page_maintenance->setPage(p_page_idle, p_page_maintenance_product, p_page_maintenance_general, p_page_select_product, p_page_product, p_statusbar);
-    p_page_idle->setPage(p_page_select_product, p_page_maintenance, p_page_maintenance_general, p_page_idle_products, p_page_wifi_error, p_statusbar);
+    p_page_idle->setPage(p_page_select_product, p_page_maintenance, p_page_maintenance_general, p_page_idle_products, p_page_wifi_error, p_statusbar, p_page_product_menu);
     p_page_idle_products->setPage(p_page_idle, p_page_select_product);
+    p_page_product_menu->setPage(p_page_product, p_page_idle_products, p_page_idle, p_page_maintenance, p_page_help, p_statusbar);
     p_page_select_product->setPage(p_page_product, p_page_idle_products, p_page_idle, p_page_maintenance, p_page_help, p_statusbar);
-    p_page_product->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_help, p_page_product_overview, p_statusbar);
+    p_page_product->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_help, p_page_product_overview, p_statusbar,p_page_product_menu);
     p_page_payment_qr->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help, p_statusbar);
     p_page_payment_tap_tcp->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help, p_statusbar);
     p_page_payment_tap_serial->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help, p_statusbar);

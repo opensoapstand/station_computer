@@ -47,11 +47,11 @@ public:
     void addUserInteraction(QString session_id, QString role, QString page, QString event, QString data);
 
     void getAllSlotProperties(int slot,
-                              QVector<int> *dispensePNumbers,
-                              int *basePNumber,
-                              QVector<int> *additivesPNumbers,
-                              bool *is_enabled,
-                              QString *status_text);
+                              QVector<int> &dispensePNumbers,
+                              int &basePNumber,
+                              QVector<int> &additivesPNumbers,
+                              bool &is_enabled,
+                              QString &status_text);
 
     void getAllProductProperties(int pnumber,
                                  QString *productId,
@@ -60,8 +60,8 @@ public:
                                  QVector<double> &mixRatios,
                                  QString *size_unit,
                                  QString *name_receipt,
-                                 QString *m_currency_deprecated, //_dummy_deprecated
-                                 QString *m_payment_deprecated,  //_deprecated,
+                                //  QString *m_currency_deprecated, //_dummy_deprecated
+                                //  QString *m_payment_deprecated,  //_deprecated,
                                  int *concentrate_multiplier,
                                  int *dispense_speed,
                                  double *threshold_flow,
@@ -113,7 +113,8 @@ public:
                                  double *alert_temperature,
                                  QString *software_version_controller,
                                  int *is_enabled,
-                                 QString* status_text
+                                 QString *status_text,
+                                 QString *payment
 
     );
     QString getHardwareVersion();

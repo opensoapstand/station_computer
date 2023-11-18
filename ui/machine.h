@@ -65,6 +65,8 @@ public:
     double getPriceCorrected(int pnumber);
 
     QString getMachineId();
+    QString getPaymentMethod();
+    void setPaymentMethod(QString paymentMethod);
     bool getCouponsEnabled();
     bool getShowTransactionHistory();
     bool isAelenPillarElseSoapStand();
@@ -113,16 +115,19 @@ public:
     int getSlotFromBasePNumber(int base_pnumber);
     dispenser_slot *getSelectedSlot();
 
-    void initProductOptions(const QVector<int> &pnumbersToBeSetAsOptions);
+    void initProductOptions();
+    // void initProductOptions(const QVector<int> &pnumbersToBeSetAsOptions);
     bool getIsOptionAvailable(int productOption);
-    void setProductToOption(int productOption, int PNumber);
+    bool isOptionExisting(int productOption);
+    void setProductToMenuOption(int productOption, int pnumber);
     int clearOptions();
     int getOptionCount();
 
     void setSelectedProductByOption(int productOption);
-    pnumberproduct *getProductByOption(int productOption);
+    pnumberproduct *getProductFromMenuOption(int productOption);
 
-    pnumberproduct *getProductByPNumber(int PNumber);
+    pnumberproduct *getProductByPNumber(int pnumber);
+    pnumberproduct *getSlotBaseProduct(int slot);
     void setSelectedProduct(int pnumber);
     pnumberproduct *getSelectedProduct();
 
@@ -215,6 +220,7 @@ public:
     QString m_software_version_controller;
     double m_temperature2;
     double m_alert_temperature2;
+    QString m_payment;
 
     int m_is_enabled;
     QString m_status_text;
@@ -233,7 +239,8 @@ public:
     void loadTextsFromCsv(QString csv_path, std::map<QString, QString> *dictionary);
 
     QVector<int> getAllUsedPNumbersFromSlots();
-    QVector<int> getAllDispensePNumbersFromSlots();
+    QVector<int> getAllUniqueDispensePNumbers();
+    QVector<int> getAllDispensePNumbersFromSlot(int slot);
 
 public slots:
 
@@ -242,7 +249,7 @@ signals:
 private:
     dispenser_slot *selectedSlot; // deprecated, derived from selectedProduct.
     pnumberproduct *m_selectedProduct;
-    QVector<int> productSelectionOptions;
+    QVector<int> dispenseProductsMenuOptions;
     dispenser_slot *m_slots;
     pnumberproduct m_pnumberproducts[HIGHEST_PNUMBER_COUNT];
 

@@ -24,9 +24,9 @@ QString pnumberproduct::convertPNumberToPNotation(int pnumber)
     return "P-" + QString::number(pnumber);
 }
 
-int pnumberproduct::convertPNotationToPNumber(QString PNumberNotation)
+int pnumberproduct::convertPNotationToPNumber(QString pnumberNotation)
 {
-    QString pnumber_as_string = PNumberNotation.mid(2);
+    QString pnumber_as_string = pnumberNotation.mid(2);
     return pnumber_as_string.toInt();
 }
 
@@ -55,8 +55,8 @@ void pnumberproduct::loadProductPropertiesFromProductsFile()
         QString line = in.readLine();
 
         QStringList fields = line.split("\t");
-        QString PNumberNotation = convertPNumberToPNotation(getPNumber());
-        int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], PNumberNotation, Qt::CaseSensitive);
+        QString pnumberNotation = convertPNumberToPNotation(getPNumber());
+        int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], pnumberNotation, Qt::CaseSensitive);
         if (compareResult == 0)
         {
             // qDebug() << "compare result is 0";
@@ -72,9 +72,9 @@ void pnumberproduct::loadProductPropertiesFromProductsFile()
     file.close();
 }
 
-void pnumberproduct::setPNumber(int PNumber)
+void pnumberproduct::setPNumber(int pnumber)
 {
-    m_PNumber = PNumber;
+    m_PNumber = pnumber;
 }
 
 int pnumberproduct::getPNumber()
@@ -109,8 +109,8 @@ void pnumberproduct::loadProductPropertiesFromDb()
                                   m_mixPNumbers,
                                   m_mixRatios,
                                   &m_size_unit,
-                                  &m_currency_deprecated, //_dummy_deprecated
-                                  &m_payment_deprecated,  //_deprecated,
+                                //   &m_currency_deprecated, //_dummy_deprecated
+                                //   &m_payment_deprecated,  //_deprecated,
                                   &m_name_receipt,
                                   &m_concentrate_multiplier,
                                   &m_dispense_speed,
@@ -467,7 +467,7 @@ QString pnumberproduct::getProductType()
 QString pnumberproduct::getProductPicturePath()
 {
     QString pnumber = m_soapstand_product_serial;
-    qDebug() << "pnumber before p nodted " << pnumber;
+    // qDebug() << "pnumber before p nodted " << pnumber;
 
     // Check if serial starts with "P-"
     if (!pnumber.startsWith("P-"))
@@ -475,7 +475,7 @@ QString pnumberproduct::getProductPicturePath()
         // Add "P-" prefix if it's missing
         pnumber.prepend("P-");
     }
-    qDebug() << "pnumber P- notated " << pnumber;
+    // qDebug() << "pnumber P- notated " << pnumber;
     return QString(PRODUCT_PICTURES_ROOT_PATH).arg(pnumber);
 }
 
@@ -530,13 +530,14 @@ void pnumberproduct::setDispenseSpeedPercentage(int percentage)
     m_db->updateTableProductsWithInt(getPNumber(), "dispense_speed", pwm);
 }
 
-void pnumberproduct::setPaymentMethod(QString paymentMethod)
-{
-    qDebug() << "Open db: set payment method";
-    m_db->updateTableProductsWithText(getPNumber(), "payment", paymentMethod);
-}
+// void pnumberproduct::setPaymentMethod(QString paymentMethod)
+// {
+//     qDebug() << "Open db: set payment method";
+//     m_db->updateTableProductsWithText(getPNumber(), "payment", paymentMethod);
+// }
 
-QString pnumberproduct::getPaymentMethod()
-{
-    return m_payment_deprecated;
-}
+// QString pnumberproduct::getPaymentMethod()
+// {
+//     // DO  NOT USE
+//     return m_payment_deprecated;
+// }

@@ -12,7 +12,7 @@ public:
     void setDb(DbManager *db);
     DbManager *m_db;
 
-    void setPNumber(int PNumber);
+    void setPNumber(int pnumber);
     int getPNumber();
 
     int getFirstMixPNumberOrPNumberAsBasePNumber();
@@ -25,7 +25,7 @@ public:
     void loadProductProperties();       // productt
 
     QString convertPNumberToPNotation(int pnumber);
-    int convertPNotationToPNumber(QString PNumberNotation);
+    int convertPNotationToPNumber(QString pnumberNotation);
 
     double inputTextToMlConvertUnits(QString inputValueAsText);
 
@@ -98,8 +98,8 @@ public:
     int getDispenseSpeedPercentage();                // productt
     void setDispenseSpeedPercentage(int percentage); // productt
 
-    QString getPaymentMethod();                   // ---> machine?! productt
-    void setPaymentMethod(QString paymentMethod); //  ---> machine? or productt
+    // QString getPaymentMethod();                   // ---> machine?! productt
+    // void setPaymentMethod(QString paymentMethod); //  ---> machine? or productt
 
     double getVolumeRemaining();
 
@@ -151,8 +151,8 @@ private:
     double m_price_custom_discount;
     int m_is_enabled_custom_discount;
 
-    QString m_payment_deprecated;  // placeholders
-    QString m_currency_deprecated; // placeholders
+    // QString m_payment_deprecated;  // placeholders
+    // QString m_currency_deprecated; // placeholders
 
     bool m_sizeIndexIsEnabled[SIZES_COUNT]; // size indeces.
     QString m_sizeIndexPLUs[SIZES_COUNT];

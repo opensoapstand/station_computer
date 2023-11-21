@@ -25,7 +25,7 @@ public:
     void loadProductProperties();       // productt
 
     QString convertPNumberToPNotation(int pnumber);
-    int convertPNotationToPNumber(QString pnumberNotation);
+    int convertPStringToPInt(QString pnumberNotation);
 
     double inputTextToMlConvertUnits(QString inputValueAsText);
 
@@ -53,7 +53,7 @@ public:
 
     QString getProductName();            // productt
     QString getProductType();            // productt
-    QString getProductDrinkfillSerial(); // productt
+    QString getPNumberAsPString(); // productt
 
     QString getProductDescription(); // productt
     QString getProductIngredients(); // productt

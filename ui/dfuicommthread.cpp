@@ -47,6 +47,13 @@ QByteArray DfUiCommThread::readyRead()
     //    qDebug() << socketDescriptor << " Data in: " << Data;
 
     // socket->write(Data); // THIS CAUSES THE UI TO CRASH AT TIMES.... for now, we delete it. todo. send ack to controller.
+        qDebug() << "Process received messa666666666666666ge : " << Data; // not every message gets a debug acknowledgement.
+        qDebug() << "Process received messa666666666666666ge : " << Data; // not every message gets a debug acknowledgement.
+        qDebug() << "Process received messa666666666666666ge : " << Data; // not every message gets a debug acknowledgement.
+        qDebug() << "Process received messa666666666666666ge : " << Data; // not every message gets a debug acknowledgement.
+        qDebug() << "Process received messa666666666666666ge : " << Data; // not every message gets a debug acknowledgement.
+        qDebug() << "Process received messa666666666666666ge : " << Data; // not every message gets a debug acknowledgement.
+        qDebug() << "Process received messa666666666666666ge : " << Data; // not every message gets a debug acknowledgement.
 
     if (Data == "Transaction End")
     {
@@ -91,8 +98,11 @@ QByteArray DfUiCommThread::readyRead()
         qDebug() << "Process received message : " << Data; // not every message gets a debug acknowledgement.
         emit dispenseButtonPressedNegEdgeSignal();
     }
-    else if (Data.startsWith("temperature|"))
+    else if (Data.startsWith("temperatu"))
+    // else if (Data.startsWith("temperature|"))
     {
+        qDebug() << "Process received message temperature temperature : " << Data; // not every message gets a debug acknowledgement. 33333333333
+        
         int first_delim_pos = Data.indexOf('|');
         int second_delim_pos = Data.indexOf('|', first_delim_pos + 1);
 

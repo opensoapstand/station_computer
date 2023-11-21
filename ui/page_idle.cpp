@@ -471,14 +471,22 @@ void page_idle::onRebootNightlyTimeOutTimerTick()
 
 void page_idle::refreshTemperature()
 {
+    // will send out a message and continue. This means that we will not receive the feedback in the same cycle.
+    // The temperature received is from the previouus cycle.
+
     //  QString base_text = "Current Temperature: %1 °C"; //Assuming you have the base_text defined somewhere else or you can define it here.
+
+    thisMachine->getTemperatureFromController(); 
+
 
     QString base_text = thisMachine->getTemplateTextByElementNameAndPage(ui->label_show_temperature);
     float temperature = thisMachine->getTemperature_1();
     QString temperatureStr = QString::number(temperature, 'f', 1);
-
+    
+// works qDebug() << "Temperature 3333333333333333333333333333333333:" << temperatureStr;
     ui->label_show_temperature->setText(base_text.arg(temperatureStr));
     ui->label_show_temperature->show();
+
 
     if (thisMachine->isTemperatureTooHigh_1())
     {
@@ -506,7 +514,7 @@ void page_idle::onPollTemperatureTimerTick()
     }
 
     _pollTemperatureTimerTimeoutSec = PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS;
-
+ 
     if (thisMachine->isAelenPillarElseSoapStand())
     {
         refreshTemperature();
@@ -598,7 +606,7 @@ void page_idle::hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createN
 
         thisMachine->pageTransition(this, pageToShow);
         idlePageTypeSelectorTimer->stop();
-        pollTemperatureTimer->stop();
+        //pollTemperatureTimer->stop();    ////////333333333
         testForFrozenScreenTimer->stop();
         userRoleTimeOutTimer->stop();
         statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.

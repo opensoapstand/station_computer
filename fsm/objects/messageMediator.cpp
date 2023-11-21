@@ -566,7 +566,7 @@ DF_ERROR messageMediator::parseCommandString()
 
 void messageMediator::sendTemperatureData()
 {
-   // debugOutput::sendMessage("Temperature requested", MSG_INFO);
+    debugOutput::sendMessage("Temperature requested", MSG_INFO);//333333333333
    double temperature_1 = 666.0;
    double temperature_2 = 666.0;
 

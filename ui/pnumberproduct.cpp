@@ -14,7 +14,7 @@ void pnumberproduct::setDb(DbManager *db)
 
 void pnumberproduct::loadProductProperties()
 {
-    qDebug() << "pnumber: " << getPNumber() << " Load properties from db and csv";
+    qDebug() << "Load properties from db and csv for pnumer: " << getPNumber();
     loadProductPropertiesFromDb();
     loadProductPropertiesFromProductsFile();
 }
@@ -24,10 +24,14 @@ QString pnumberproduct::convertPNumberToPNotation(int pnumber)
     return "P-" + QString::number(pnumber);
 }
 
-int pnumberproduct::convertPNotationToPNumber(QString pnumberNotation)
+int pnumberproduct::convertPStringToPInt(QString pnumberNotation)
 {
-    QString pnumber_as_string = pnumberNotation.mid(2);
-    return pnumber_as_string.toInt();
+    // QString pnumber_as_string;
+    if (pnumberNotation.startsWith("P-") || pnumberNotation.startsWith("p-"))
+    {
+        pnumberNotation = pnumberNotation.mid(2);
+    }
+    return pnumberNotation.toInt();
 }
 
 void pnumberproduct::getProductProperties(QString *name, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui)
@@ -109,8 +113,8 @@ void pnumberproduct::loadProductPropertiesFromDb()
                                   m_mixPNumbers,
                                   m_mixRatios,
                                   &m_size_unit,
-                                //   &m_currency_deprecated, //_dummy_deprecated
-                                //   &m_payment_deprecated,  //_deprecated,
+                                  //   &m_currency_deprecated, //_dummy_deprecated
+                                  //   &m_payment_deprecated,  //_deprecated,
                                   &m_name_receipt,
                                   &m_concentrate_multiplier,
                                   &m_dispense_speed,
@@ -129,6 +133,17 @@ void pnumberproduct::loadProductPropertiesFromDb()
                                   &m_is_enabled,
                                   &m_status_text,
                                   m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
+
+        int pnumberFromDb = convertPStringToPInt(m_soapstand_product_serial);
+
+        if (getPNumber() != pnumberFromDb){
+            qDebug() << "ERROR: Could not load from DB: " << getPNumber() <<" was set as: " << pnumberFromDb;
+        }
+        
+        // else{
+        //     qDebug() << "Loaded from DB: " << getPNumber() <<" with db pnumber: " << pnumberFromDb;
+
+        // }
 }
 
 bool pnumberproduct::getIsProductEnabled()
@@ -435,9 +450,10 @@ QString pnumberproduct::getSizeAsVolumeWithCorrectUnits(int size, bool roundValu
     return volume_as_string;
 }
 
-QString pnumberproduct::getProductDrinkfillSerial()
+QString pnumberproduct::getPNumberAsPString()
 {
-    return m_soapstand_product_serial;
+    // return m_soapstand_product_serial;
+    return convertPNumberToPNotation(getPNumber());
 }
 
 QString pnumberproduct::getProductIngredients()
@@ -466,17 +482,19 @@ QString pnumberproduct::getProductType()
 
 QString pnumberproduct::getProductPicturePath()
 {
-    QString pnumber = m_soapstand_product_serial;
-    // qDebug() << "pnumber before p nodted " << pnumber;
+    // QString pnumber = m_soapstand_product_serial;
+    // // qDebug() << "pnumber before p nodted " << pnumber;
 
-    // Check if serial starts with "P-"
-    if (!pnumber.startsWith("P-"))
-    {
-        // Add "P-" prefix if it's missing
-        pnumber.prepend("P-");
-    }
-    // qDebug() << "pnumber P- notated " << pnumber;
-    return QString(PRODUCT_PICTURES_ROOT_PATH).arg(pnumber);
+    // // Check if serial starts with "P-"
+    // if (!pnumber.startsWith("P-"))
+    // {
+    //     // Add "P-" prefix if it's missing
+    //     pnumber.prepend("P-");
+    // }
+    // // qDebug() << "pnumber P- notated " << pnumber;
+    QString path = QString(PRODUCT_PICTURES_ROOT_PATH).arg(getPNumberAsPString());
+    qDebug() << "Picture path: " << path;
+    return path;
 }
 
 QString pnumberproduct::getPlu(int sizeIndex)

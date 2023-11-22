@@ -483,7 +483,7 @@ void page_idle::refreshTemperature()
     float temperature = thisMachine->getTemperature_1();
     QString temperatureStr = QString::number(temperature, 'f', 1);
     
-// works qDebug() << "Temperature 3333333333333333333333333333333333:" << temperatureStr;
+// qDebug() << "Temperature:" << temperatureStr;
     ui->label_show_temperature->setText(base_text.arg(temperatureStr));
     ui->label_show_temperature->show();
 
@@ -606,7 +606,7 @@ void page_idle::hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createN
 
         thisMachine->pageTransition(this, pageToShow);
         idlePageTypeSelectorTimer->stop();
-        //pollTemperatureTimer->stop();    ////////333333333
+     //   pollTemperatureTimer->stop(); // this is to stop the temperature sensor reading
         testForFrozenScreenTimer->stop();
         userRoleTimeOutTimer->stop();
         statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.

@@ -460,8 +460,8 @@ void machine::fsmReceiveTemperature(double temperature_1, double temperature_2)
 {
     m_temperature = temperature_1;
     m_temperature2 = temperature_2;
-    qDebug() << "Temperature received from FSM in machine: " << m_temperature;//333333333
-    qDebug() << "Temperature 2 received from FSM in machine: " << m_temperature2;//333333
+    //qDebug() << "Temperature received from FSM in machine: " << m_temperature;
+    //qDebug() << "Temperature 2 received from FSM in machine: " << m_temperature2;
 
     writeTemperatureToDb(m_temperature, m_temperature2);
 

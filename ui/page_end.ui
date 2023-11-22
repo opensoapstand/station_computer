@@ -48,7 +48,7 @@
     <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
    </property>
   </widget>
-  <widget class="QLabel" name="label_customer_logo">
+  <widget class="QLabel" name="label_client_logo">
    <property name="geometry">
     <rect>
      <x>370</x>

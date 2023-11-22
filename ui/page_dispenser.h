@@ -9,7 +9,7 @@
 // thankyou page
 //
 // created: 05-04-2022
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
@@ -37,6 +37,7 @@ class page_payment_tap_tcp;
 class page_payment_tap_serial;
 class page_end;
 class page_idle;
+class statusbar;
 
 namespace Ui {
 class page_dispenser;
@@ -47,14 +48,13 @@ class page_dispenser : public QWidget
     Q_OBJECT
 
 public:
-
     QMessageBox* msgBox_problems;
     QMessageBox* msgBox_abort;
     // QMessageBox* msgBox;
 
     // **** GUI ****
     explicit page_dispenser(QWidget *parent = nullptr);
-    void setPage(page_qr_payment* page_qr_payment, page_payment_tap_serial* page_payment_tap_serial, page_payment_tap_tcp* page_payment_tap_tcp,  page_end* page_end, page_idle* pageIdle, page_sendFeedback* pageFeedback);
+    void setPage(page_qr_payment* page_qr_payment, page_payment_tap_serial* page_payment_tap_serial, page_payment_tap_tcp* page_payment_tap_tcp,  page_end* page_end, page_idle* pageIdle, page_sendFeedback* pageFeedback, statusbar *p_statusbar);
     ~page_dispenser();
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void showEvent(QShowEvent *event);
@@ -72,7 +72,7 @@ public:
     void fsmReceiveNoFlowAbort();
     
     // QString getMostRecentDispensed();
-    // QString getPromoCodeUsed();
+    // QString getCouponCodeUsed();
     // void startDispensing();
     void force_finish_dispensing();
     QString getStartDispensingCommand();
@@ -114,6 +114,7 @@ private:
     page_end* thanksPage;
     page_sendFeedback* feedbackPage;
     page_idle* p_page_idle;
+    statusbar *p_statusbar;
 
     uint16_t arrow_animation_step_counter;
     bool animationStepForwardElseBackward;
@@ -127,6 +128,7 @@ private:
     int _dispenseIdleTimeoutSec;
     QTimer *dispenseIdleTimer;
     QTimer *arrowAnimationStepTimer;
+    QVBoxLayout *statusbarLayout;
 
     // double volumeDispensed;
     // double targetVolume;

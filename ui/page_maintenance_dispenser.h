@@ -8,7 +8,7 @@
 // class then communcates results to page_dispenser.
 //
 // created: 16-06-2023
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
@@ -25,6 +25,7 @@
 #include <curl/curl.h>
 #include <ctime>
 
+class statusbar;
 class page_maintenance;
 class page_idle;
 class page_idle_products;
@@ -40,7 +41,7 @@ class page_maintenance_dispenser : public QWidget
 
 public:
     explicit page_maintenance_dispenser(QWidget *parent = nullptr);
-    void setPage(page_maintenance *pageMaintenance, page_idle *pageIdle, page_idle_products *p_page_idle_products);
+    void setPage(page_maintenance *pageMaintenance, page_idle *pageIdle, page_idle_products *p_page_idle_products, statusbar *p_statusbar);
     ~page_maintenance_dispenser();
     void resizeEvent(QResizeEvent *event);
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
@@ -117,6 +118,7 @@ private:
     Ui::page_maintenance_dispenser *ui;
     page_maintenance *p_page_maintenance;
     page_idle *p_page_idle;
+    statusbar *p_statusbar;
 
     bool is_pump_enabled_for_dispense = false;
 
@@ -147,6 +149,7 @@ private:
     char *curl_data;
 
     QString activeEditField = "";
+    QVBoxLayout *statusbarLayout;
 };
 
 #endif // PAGE_MAINTENANCE_DISPENSER_H

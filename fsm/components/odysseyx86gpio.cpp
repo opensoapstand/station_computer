@@ -5,7 +5,7 @@
 // NATIVE x86 pins on Oddysey board
 //
 // created: 15-06-2020
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
@@ -33,8 +33,12 @@
 #define X21 21
 #define X22 22
 
+#ifndef HIGH
 #define HIGH = 1
+#endif
+#ifndef LOW
 #define LOW = 0
+#endif
 
 // Default CTOR
 oddyseyx86GPIO::oddyseyx86GPIO()
@@ -275,7 +279,6 @@ void oddyseyx86GPIO::monitorGPIO_Flowsensor(bool *abortLoop)
                 {
                         read(fd, &flowsensor_state_char, 1);
                         close(fd);
-                        
                 }
                 else
                 {
@@ -290,10 +293,9 @@ void oddyseyx86GPIO::monitorGPIO_Flowsensor(bool *abortLoop)
                 if (flowsensor_state_memory != flowsensor_state_char)
                 {
                         flowsensor_most_recent_edge_millis = now;
-                        
                 }
 
-                if ((now - flowsensor_most_recent_edge_millis) > FLOWSENSOR_DEJITTER_MICROS) // Dejittering of the sensor. 
+                if ((now - flowsensor_most_recent_edge_millis) > FLOWSENSOR_DEJITTER_MICROS) // Dejittering of the sensor.
                 {
                         if (flowsensor_state_char == '1')
                         {

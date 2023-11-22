@@ -8,7 +8,7 @@
 // Product Page1
 //
 // created: 01-05-2022
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado & Udbhav Kansal
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado & Udbhav Kansal
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
@@ -56,11 +56,11 @@ public:
 
     // void select_product(int slot);
     void displayProducts();
-    void addCustomerLogoToLabel(QLabel *label);
+    void addClientLogoToLabel(QLabel *label);
     void setBackgroundPictureFromTemplateToPage(QWidget *page, QString imageName);
     int setStepTimerFromFileName(QString fileName, int defaultTimeMillis);
 
-    void printerStatusFeedback(bool isOnline, bool hasPaper);
+    // void printerStatusFeedback(bool isOnline, bool hasPaper);
 
     QLabel *labels_product_picture[4];
     QLabel *labels_selectProductOverlay[4];
@@ -83,7 +83,7 @@ private:
     void hideAllLabelAndButtons();
     void showAllLabelsAndButtons();
     void changeBackground();
-    void displayPrinterStatus();
+    // void displayPrinterStatus();
 
     void resizeEvent(QResizeEvent *event);
 

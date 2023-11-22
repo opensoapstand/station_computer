@@ -426,7 +426,7 @@
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_customer_logo">
+  <widget class="QLabel" name="label_client_logo">
    <property name="geometry">
     <rect>
      <x>446</x>
@@ -490,7 +490,7 @@
   <zorder>label_product_4_overlay</zorder>
   <zorder>label_product_3_overlay</zorder>
   <zorder>label_title</zorder>
-  <zorder>label_customer_logo</zorder>
+  <zorder>label_client_logo</zorder>
   <zorder>label_printer_status</zorder>
  </widget>
  <resources/>

@@ -1,0 +1,73 @@
+QPushButton { 
+    background: transparent;
+    border: none;
+}
+
+#pushButton_to_product_overview{
+   text-align: left;
+   color: #221F20;
+   font-family: 'EuropaNuova-Regular';
+   font-style: normal;
+   font-weight: 700;
+   font-size: 35px;
+   color: #221F20;
+   qproperty-alignment: AlignCenter;
+   text-align: left;
+   border: none;
+}
+
+#pushButton_continue{
+    font-family: 'EuropaNuova-Regular';
+    font-style: normal;
+    font-weight: 400;
+    background-color: #221F20;
+    font-size: 47px;
+    text-align: center;
+    line-height: auto;
+    qproperty-alignment: AlignCenter;
+    border-radius: 25px;
+    color: #FFFFFF;
+    border: 1px solid #221F20;
+}
+
+#label_email_title {
+    position: absolute;
+    font-family: 'EuropaNuova-ExtraBold';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 46px;
+    line-height: 52px;
+    text-transform: capitalize;
+    color: #221F20;
+    /* text-align: center; */
+    /* qproperty-alignment: AlignCenter; */
+}
+
+.button{
+    font-family: "EuropaNuova-Regular"; 
+    font-style: normal; 
+    border: 2px solid #CCC9C7;
+    font-size: 14px;
+    border-radius: 5px;
+}
+
+.keyboardTextEntry{
+    font-family: "EuropaNuova-Regular"; 
+    font-style: normal; 
+    font-weight: 700; 
+    font-size: 28px; 
+    line-height: 44px; 
+    color: #58595B;
+    border: 3px solid #CCC9C7;
+    border-radius: 5px;
+}
+
+.enteredEmail_invalid{
+    color: red;
+    font-family: "EuropaNuova-Regular"; 
+    font-style: normal; 
+    font-weight: 700; 
+    font-size: 28px; 
+    line-height: 44px; 
+    border: 3px solid #CCC9C7;
+}

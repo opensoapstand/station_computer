@@ -8,7 +8,7 @@
 // class then communcates results to page_dispenser.
 //
 // created: 05-04-2022
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
@@ -41,18 +41,20 @@ page_qr_payment::page_qr_payment(QWidget *parent) : QWidget(parent),
     connect(showErrorTimer, SIGNAL(timeout()), this, SLOT(showErrorTimerPage()));
 
     state_payment = s_init;
+    statusbarLayout = new QVBoxLayout(this);
 }
 
 /*
  * Page Tracking reference
  */
-void page_qr_payment::setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp)
+void page_qr_payment::setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp, statusbar *p_statusbar)
 {
     this->p_page_product = p_page_product;
     this->p_page_wifi_error = pageWifiError;
     this->p_page_dispense = page_dispenser;
     this->p_page_idle = pageIdle;
     this->p_page_help = pageHelp;
+    this->p_statusbar = p_statusbar;
 }
 
 // DTOR
@@ -77,19 +79,20 @@ size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
 void page_qr_payment::showEvent(QShowEvent *event)
 {
 
-    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+    p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
+    statusbarLayout->addWidget(p_statusbar);                                            // Only one instance can be shown. So, has to be added/removed per page.
+    statusbarLayout->setContentsMargins(0, 1874, 0, 0);                                 // int left, int top, int right, int bottom);
+    p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
 
-    p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
-    
-    // p_page_idle->setTemplateTextWithIdentifierToObject(ox2, "button_problems_message");
-    p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_title, "pay_by_phone");
-    p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_scan, "label_scan_1");
-    p_page_idle->setTemplateTextToObject(ui->label_steps);
-    p_page_idle->setTemplateTextToObject(ui->label_processing);
-    p_page_idle->setTemplateTextToObject(ui->pushButton_previous_page);
+    // p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ox2, "button_problems_message");
+    p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_title, "pay_by_phone");
+    p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_scan, "label_scan_1");
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->label_steps);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->label_processing);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_previous_page);
 
-    QString styleSheet = p_page_idle->getCSS(PAGE_QR_PAYMENT_CSS);
+    QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_QR_PAYMENT_CSS);
 
     ui->pushButton_refresh->setProperty("class", "invisible_button");
 
@@ -105,24 +108,24 @@ void page_qr_payment::showEvent(QShowEvent *event)
     ui->label_gif->setStyleSheet(styleSheet);
 
     state_payment = s_init;
-    double originalPrice = p_page_idle->selectedProduct->getBasePrice();
-    if (p_page_idle->selectedProduct->getSizeAsChar() == 'c')
+    double originalPrice = p_page_idle->thisMachine->selectedProduct->getBasePrice();
+    if (p_page_idle->thisMachine->selectedProduct->getSizeAsChar() == 'c')
     {
-        originalPrice = p_page_idle->selectedProduct->getPriceCustom();
+        originalPrice = p_page_idle->thisMachine->selectedProduct->getPriceCustom();
     }
-    QString price = QString::number(p_page_idle->thisMachine.getPriceWithDiscount(originalPrice), 'f', 2);
+    QString price = QString::number(p_page_idle->thisMachine->getPriceWithDiscount(originalPrice), 'f', 2);
 
-    if (p_page_idle->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
+    if (p_page_idle->thisMachine->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
     {
-        ui->label_product_information->setText(p_page_idle->selectedProduct->getProductName() + p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_information, "volume_up_to") + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
-        QString base_text = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_price, "custom_size");
+        ui->label_product_information->setText(p_page_idle->thisMachine->selectedProduct->getProductName() + p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_information, "volume_up_to") + p_page_idle->thisMachine->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
+        QString base_text = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_price, "custom_size");
         QString label_product_price_text = base_text.arg(price);
         ui->label_product_price->setText(label_product_price_text);
     }
     else
     {
-        ui->label_product_information->setText(p_page_idle->selectedProduct->getProductName() + " " + p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
-        QString base_text = p_page_idle->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_price, "fixed_size");
+        ui->label_product_information->setText(p_page_idle->thisMachine->selectedProduct->getProductName() + " " + p_page_idle->thisMachine->selectedProduct->getSizeToVolumeWithCorrectUnits(true, true));
+        QString base_text = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_price, "fixed_size");
         QString label_product_price_text = base_text.arg(price);
         ui->label_product_price->setText(label_product_price_text);
     }
@@ -131,7 +134,7 @@ void page_qr_payment::showEvent(QShowEvent *event)
     ui->label_product_information->show();
     ui->label_product_price->show();
 
-    p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
+    p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
 
     ui->label_steps->show();
     ui->label_processing->hide();
@@ -160,9 +163,9 @@ void page_qr_payment::setupQrOrder()
 
         // build up qr content (link)
         QString qrdata = "https://soapstandportal.com/payment?oid=" + orderId;
-        if((p_page_idle->thisMachine.getMachineId()).left(2)=="AP"){
+        if ((p_page_idle->thisMachine->getMachineId()).left(2) == "AP")
+        {
             qrdata = "https://soapstandportal.com/paymentAelen?oid=" + orderId;
-
         }
         // create qr code graphics
         paintQR(painter, QSize(360, 360), qrdata, QColor("white"));
@@ -196,24 +199,24 @@ void page_qr_payment::showErrorTimerPage()
 
 bool page_qr_payment::createOrderIdAndSendToBackend()
 {
-    std::map<QString,QString> myMap = p_page_idle->thisMachine.getCouponConditions();
+    std::map<QString, QString> myMap = p_page_idle->thisMachine->getCouponConditions();
     qDebug() << myMap["m_min_threshold_vol_ml_discount"];
     // an order Id is generated locally and the order is sent to the cloud.
     bool shouldShowQR = false;
     qDebug() << "Get cloud to create an order and retrieve the order id";
-    QString MachineSerialNumber = p_page_idle->thisMachine.getMachineId();
-    QString productUnits = p_page_idle->selectedProduct->getUnitsForSlot();
-    QString productId = p_page_idle->selectedProduct->getAwsProductId();
-    QString contents = p_page_idle->selectedProduct->getProductName();
-    QString quantity_requested = p_page_idle->selectedProduct->getSizeToVolumeWithCorrectUnits(false, false);
-    char drinkSize = p_page_idle->selectedProduct->getSizeAsChar();
-    double originalPrice = p_page_idle->selectedProduct->getBasePrice();
+    QString MachineSerialNumber = p_page_idle->thisMachine->getMachineId();
+    QString productUnits = p_page_idle->thisMachine->selectedProduct->getUnitsForSlot();
+    QString productId = p_page_idle->thisMachine->selectedProduct->getAwsProductId();
+    QString contents = p_page_idle->thisMachine->selectedProduct->getProductName();
+    QString quantity_requested = p_page_idle->thisMachine->selectedProduct->getSizeToVolumeWithCorrectUnits(false, false);
+    char drinkSize = p_page_idle->thisMachine->selectedProduct->getSizeAsChar();
+    double originalPrice = p_page_idle->thisMachine->selectedProduct->getBasePrice();
     if (drinkSize == 'c')
     {
-        originalPrice = p_page_idle->selectedProduct->getPriceCustom();
+        originalPrice = p_page_idle->thisMachine->selectedProduct->getPriceCustom();
     }
 
-    QString price = QString::number(p_page_idle->thisMachine.getPriceWithDiscount(originalPrice), 'f', 2);
+    QString price = QString::number(p_page_idle->thisMachine->getPriceWithDiscount(originalPrice), 'f', 2);
 
     // create a unique order id locally
     orderId = QUuid::createUuid().QUuid::toString();
@@ -330,11 +333,10 @@ void page_qr_payment::isQrProcessedCheckOnline()
             ui->label_steps->hide();
             ui->label_gif->show();
 
-
             ui->label_processing->show();
-            p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_scan, "finalize_transaction");
-            p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_title, "almost_there");
-            QString image_path = p_page_idle->thisMachine.getTemplatePathFromName("soapstandspinner.gif");
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_scan, "finalize_transaction");
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_title, "almost_there");
+            QString image_path = p_page_idle->thisMachine->getTemplatePathFromName("soapstandspinner.gif");
             QMovie *movie = new QMovie(image_path);
             ui->label_gif->setMovie(movie);
             movie->start();
@@ -393,44 +395,158 @@ bool page_qr_payment::exitConfirm()
     qDebug() << "In exit confirm";
     QMessageBox msgBox;
 
-    msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
+    msgBox.setWindowFlags(Qt::FramelessWindowHint);
+    QString searchString;
     if (state_payment == s_payment_processing || state_payment == s_payment_done)
     {
-        QString searchString = this->objectName() + "->msgBox_cancel->default";
-        p_page_idle->setTextToObject(&msgBox, p_page_idle->getTemplateText(searchString));
+        searchString = this->objectName() + "->msgBox_cancel->default";
+        p_page_idle->thisMachine->setTextToObject(&msgBox, p_page_idle->thisMachine->getTemplateText(searchString));
     }
     else if (state_payment == s_init)
     {
-        QString searchString = this->objectName() + "->msgBox_refund->default";
-        p_page_idle->setTextToObject(&msgBox, p_page_idle->getTemplateText(searchString));
+        searchString = this->objectName() + "->msgBox_refund->default";
     }
-    QString styleSheet = p_page_idle->getCSS(PAGE_QR_PAYMENT_CSS);
-    msgBox.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
+
+    int remainingTime = MESSAGE_BOX_TIMEOUT_EXIT_QR_CONFIRM_SECONDS; // Initial value in seconds
+    QString templateText = p_page_idle->thisMachine->getTemplateText(searchString);
+    QString autoCloseText = QString("Closing in %1 seconds...").arg(remainingTime);
+    QString messageBoxText = templateText + "\n" + autoCloseText;
+
+    msgBox.setText(messageBoxText);
+
+    QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_QR_PAYMENT_CSS);
+    msgBox.setProperty("class", "msgBoxbutton msgBox");
     msgBox.setStyleSheet(styleSheet);
+
+    QTimer *timeauto_timer = new QTimer(&msgBox);
+    QObject::connect(timeauto_timer, &QTimer::timeout, [&msgBox, &remainingTime, &templateText, timeauto_timer]()
+                     {
+        remainingTime--;
+        QString autoCloseText = QString("Closing in %1 seconds...").arg(remainingTime);
+        QString messageBoxText = templateText + "\n" + autoCloseText;
+        msgBox.setText(messageBoxText);
+        if (remainingTime <= 0) {
+            timeauto_timer->stop();
+            msgBox.hide();
+            msgBox.deleteLater();
+        } });
+
+    timeauto_timer->start(1000); // Update every 1000 milliseconds (1 second)
 
     msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     int ret = msgBox.exec();
+
     switch (ret)
     {
     case QMessageBox::Yes:
-    {
-
         return true;
-    }
-    break;
     case QMessageBox::No:
-    {
         return false;
     }
-    break;
-    }
+
+    timeauto_timer->stop();
+    return false; // return false as default e.g. if message box timed out
 }
+
+// bool page_qr_payment::exitConfirm()
+// {
+//     qDebug() << "In exit confirm";
+//     QMessageBox msgBox;
+
+//     msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
+//     if (state_payment == s_payment_processing || state_payment == s_payment_done)
+//     {
+//         QString searchString = this->objectName() + "->msgBox_cancel->default";
+//         p_page_idle->thisMachine->setTextToObject(&msgBox, p_page_idle->thisMachine->getTemplateText(searchString));
+//     }
+//     else if (state_payment == s_init)
+//     {
+//         QString searchString = this->objectName() + "->msgBox_refund->default";
+//         p_page_idle->thisMachine->setTextToObject(&msgBox, p_page_idle->thisMachine->getTemplateText(searchString));
+//     }
+//     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_QR_PAYMENT_CSS);
+//     msgBox.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
+//     msgBox.setStyleSheet(styleSheet);
+
+//      QTimer::singleShot(MESSAGE_BOX_TIMEOUT_MILLIS, &msgBox, [&msgBox]() {
+//         msgBox.hide();
+//         msgBox.deleteLater();
+//     });
+
+//     msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+//     int ret = msgBox.exec(); // .exec() is blocking. For non blocking behaviour, use .open()
+//     switch (ret)
+//     {
+//     case QMessageBox::Yes:
+//     {
+//         return true;
+//     }
+//     break;
+//     case QMessageBox::No:
+//     {
+//         return false;
+//     }
+//     break;
+//     }
+
+//     return false; // return false as default e.g. if message box timed out
+// }
+
+// bool page_qr_payment::exitConfirm()
+// {
+//     qDebug() << "In exit confirm";
+
+//     QMessageBox msgBox;
+//     msgBox.setWindowFlags(Qt::FramelessWindowHint);
+
+//     if (state_payment == s_payment_processing || state_payment == s_payment_done)
+//     {
+//         QString searchString = this->objectName() + "->msgBox_cancel->default";
+//         p_page_idle->thisMachine->setTextToObject(&msgBox, p_page_idle->thisMachine->getTemplateText(searchString));
+//     }
+//     else if (state_payment == s_init)
+//     {
+//         QString searchString = this->objectName() + "->msgBox_refund->default";
+//         p_page_idle->thisMachine->setTextToObject(&msgBox, p_page_idle->thisMachine->getTemplateText(searchString));
+//     }
+
+//     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_QR_PAYMENT_CSS);
+//     msgBox.setProperty("class", "msgBoxbutton msgBox");
+//     msgBox.setStyleSheet(styleSheet);
+
+//     msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+
+//     // Set up a QTimer for a 10-second timeout
+//     QTimer timer;
+//     timer.setSingleShot(true); // Fires only once
+//     timer.start(10000); // 10 seconds timeout
+
+//     int ret = msgBox.exec();
+
+//     // If the user did not make a choice before the timeout, consider it as a "No"
+//     if (timer.isActive() && ret == -1) {
+//         qDebug() << "Timeout occurred. Choosing No by default.";
+//         return false;
+//     }
+
+//     // If the user made a choice, handle it accordingly
+//     switch (ret)
+//     {
+//     case QMessageBox::Yes:
+//         return true;
+//     case QMessageBox::No:
+//         return false;
+//     }
+
+//     // Note: If the timer expires and the user hasn't made a choice, the default "No" will be returned.
+// }
 
 void page_qr_payment::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
 
     resetPaymentPage();
-    p_page_idle->pageTransition(this, pageToShow);
+    statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
+    p_page_idle->thisMachine->pageTransition(this, pageToShow);
 }
 
 // Navigation: Back to Product Size Selection

@@ -8,7 +8,7 @@
 // Product Page1
 //
 // created: 01-05-2023
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado & Udbhav Kansal & Daniel C.
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado & Udbhav Kansal & Daniel C.
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
@@ -79,22 +79,22 @@ page_idle_products::~page_idle_products()
 
 void page_idle_products::showEvent(QShowEvent *event)
 {
-    p_page_idle->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
+    p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
-    
-    p_page_idle->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
-    
+
+    p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+
     _backgroundChangeTimeLeftTenthsOfSec = PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS * 10;
     backgroundChangeTimer->start();
     active_background_index = 0;
 
-    p_page_idle->setTemplateTextToObject(ui->label_title);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->label_title);
 
-    QString styleSheet = p_page_idle->getCSS(PAGE_IDLE_PRODUCTS_CSS);
+    QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_IDLE_PRODUCTS_CSS);
     ui->pushButton_to_select_product_page->setStyleSheet(styleSheet);
     ui->label_title->setStyleSheet(styleSheet);
 
-    for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+    for (int slot_index = 0; slot_index < p_page_idle->thisMachine->getSlotCount(); slot_index++)
     {
         labels_product_picture[slot_index]->setProperty("class", "labels_product_picture");
         labels_product_type[slot_index]->setProperty("class", "labels_product_type");
@@ -105,14 +105,15 @@ void page_idle_products::showEvent(QShowEvent *event)
     }
 
     ui->label_printer_status->setStyleSheet(styleSheet);
+    ui->label_printer_status->hide();
 
-    // we already checked this in p_page_idle the results from there. 
-    // if (p_page_idle->thisMachine.hasReceiptPrinter())
+    // we already checked this in p_page_idle the results from there.
+    // if (p_page_idle->thisMachine->hasReceiptPrinter())
     // {
     //     p_page_idle->checkReceiptPrinterStatus();
     // }
 
-    p_page_idle->addCustomerLogoToLabel(ui->label_customer_logo);
+    p_page_idle->thisMachine->addClientLogoToLabel(ui->label_client_logo);
 
     changeBackground();
     displayProducts();
@@ -133,14 +134,15 @@ void page_idle_products::displayProducts()
     QString product_name;
     QString product_status_text;
 
-    for (uint8_t slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+    for (uint8_t slot_index = 0; slot_index < p_page_idle->thisMachine->getSlotCount(); slot_index++)
     {
         // display product picture
-        p_page_idle->addPictureToLabel(labels_product_picture[slot_index], p_page_idle->products[slot_index].getProductPicturePath());
-        product_slot_enabled = p_page_idle->products[slot_index].getSlotEnabled();
-        product_status_text = p_page_idle->products[slot_index].getStatusText();
-        product_type = p_page_idle->products[slot_index].getProductType();
-        product_name = p_page_idle->products[slot_index].getProductName();
+        p_page_idle->thisMachine->addPictureToLabel(labels_product_picture[slot_index], p_page_idle->thisMachine->getProduct(slot_index + 1)->getProductPicturePath());
+        product_slot_enabled = p_page_idle->thisMachine->getSlotEnabled(slot_index + 1);
+        product_status_text = p_page_idle->thisMachine->getStatusText(slot_index + 1);
+
+        product_type = p_page_idle->thisMachine->getProduct(slot_index + 1)->getProductType();
+        product_name = p_page_idle->thisMachine->getProduct(slot_index + 1)->getProductName();
 
         labels_selectProductOverlay[slot_index]->raise();
         labels_product_overlay_text[slot_index]->raise();
@@ -153,7 +155,7 @@ void page_idle_products::displayProducts()
     // overlay product status
     ui->pushButton_to_select_product_page->show();
 
-    QString styleSheet = p_page_idle->getCSS(PAGE_IDLE_PRODUCTS_CSS);
+    QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_IDLE_PRODUCTS_CSS);
     ui->label_printer_status->setStyleSheet(styleSheet);
 }
 
@@ -161,24 +163,26 @@ void page_idle_products::hideCurrentPageAndShowProvided(QWidget *pageToShow, boo
 {
     if (createNewSessionId)
     {
-        // the moment there is a user interaction to go to select product , a new session ID is created.
-        p_page_idle->thisMachine.createSessionId();
+        if (!p_page_idle->thisMachine->isSessionLocked())
+        {
+            p_page_idle->thisMachine->createSessionId();
+        }
     }
 
     backgroundChangeTimer->stop();
 
-    p_page_idle->pageTransition(this, pageToShow);
+    p_page_idle->thisMachine->pageTransition(this, pageToShow);
 }
 
 void page_idle_products::showAllLabelsAndButtons()
 {
     ui->label_title->show();
-    ui->label_customer_logo->show();
+    ui->label_client_logo->show();
 
-    displayPrinterStatus();
+    // displayPrinterStatus();
     ui->pushButton_to_select_product_page->show();
 
-    for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+    for (int slot_index = 0; slot_index < p_page_idle->thisMachine->getSlotCount(); slot_index++)
     {
         labels_selectProductOverlay[slot_index]->show(); // seems to do nothing
         labels_product_picture[slot_index]->show();
@@ -189,10 +193,10 @@ void page_idle_products::showAllLabelsAndButtons()
 void page_idle_products::hideAllLabelAndButtons()
 {
     ui->label_title->hide();
-    ui->label_customer_logo->hide();
+    ui->label_client_logo->hide();
     ui->label_printer_status->hide();
 
-    for (int slot_index = 0; slot_index < SLOT_COUNT; slot_index++)
+    for (int slot_index = 0; slot_index < p_page_idle->thisMachine->getSlotCount(); slot_index++)
     {
         labels_selectProductOverlay[slot_index]->hide(); // seems to do nothing
         labels_product_picture[slot_index]->hide();
@@ -207,29 +211,29 @@ void page_idle_products::hideAllLabelAndButtons()
 //     m_printer_hasPaper = hasPaper;
 // }
 
-void page_idle_products::displayPrinterStatus()
-{
-    bool isOnline;
-    bool hasPaper;
-    p_page_idle->thisMachine.getPrinterStatusFromDb(&isOnline, &hasPaper);
+// void page_idle_products::displayPrinterStatus()
+// {
+//     bool isOnline;
+//     bool hasPaper;
+//     p_page_idle->thisMachine->getPrinterStatusFromDb(&isOnline, &hasPaper);
 
-    ui->label_printer_status->hide();
-    if (p_page_idle->thisMachine.hasReceiptPrinter())
-    {
-        if (!isOnline)
-        {
-            ui->label_printer_status->raise();
-            p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_printer_status, "assistance_printer_offline");
-            ui->label_printer_status->show();
-        }
-        else if (!hasPaper)
-        {
-            ui->label_printer_status->raise();
-            p_page_idle->setTemplateTextWithIdentifierToObject(ui->label_printer_status, "empty_improperly_loaded");
-            ui->label_printer_status->show();
-        }
-    }
-}
+//     ui->label_printer_status->hide();
+//     if (p_page_idle->thisMachine->hasReceiptPrinter())
+//     {
+//         if (!isOnline)
+//         {
+//             ui->label_printer_status->raise();
+//             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_printer_status, "assistance_printer_offline");
+//             ui->label_printer_status->show();
+//         }
+//         else if (!hasPaper)
+//         {
+//             ui->label_printer_status->raise();
+//             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_printer_status, "empty_improperly_loaded");
+//             ui->label_printer_status->show();
+//         }
+//     }
+// }
 
 int page_idle_products::setStepTimerFromFileName(QString fileName, int defaultTimeMillis)
 {
@@ -256,7 +260,7 @@ int page_idle_products::setStepTimerFromFileName(QString fileName, int defaultTi
 
 void page_idle_products::changeBackground()
 {
-    QStringList all_files_in_template_folder = df_util::getFileList(p_page_idle->thisMachine.getTemplateFolder());
+    QStringList all_files_in_template_folder = df_util::getFileList(p_page_idle->thisMachine->getTemplateFolder());
 
     QString template_name = "background_idle_products_%1_"; // background_idle_products_X_Yms.png  --> where X is a sequence number and Y is a display time in ms.
     QString filterPattern = template_name.arg(active_background_index);
@@ -273,7 +277,7 @@ void page_idle_products::changeBackground()
     if (filteredList.count() == 0)
     {
         // If there is no matching image at all (not even for position zero), set to default.
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
+        p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_PRODUCTS_BACKGROUND_PATH);
         showAllLabelsAndButtons();
         _backgroundChangeTimeLeftTenthsOfSec = PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS * 10; // PAGE_IDLE_PRODUCTS_STEP_DISPLAY_TIME_SECONDS;
     }
@@ -290,7 +294,7 @@ void page_idle_products::changeBackground()
             setStepTimerFromFileName(background_name, PAGE_IDLE_PRODUCTS_STEP_DISPLAY_TIME_SECONDS * 10);
             hideAllLabelAndButtons();
         }
-        p_page_idle->setBackgroundPictureFromTemplateToPage(this, background_name);
+        p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, background_name);
     }
     else
     {

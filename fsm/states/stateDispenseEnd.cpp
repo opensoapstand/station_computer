@@ -4,7 +4,7 @@
 // Dispense End State; Reset for Idle
 //
 // created: 01-2022
-// by:Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
+// by:Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
@@ -64,14 +64,23 @@ DF_ERROR stateDispenseEnd::onAction()
     // handle minimum dispensing
     bool is_valid_dispense = productDispensers[slot_index].getVolumeDispensed() >= MINIMUM_DISPENSE_VOLUME_ML;
 
+    if (!is_valid_dispense)
+    {
+        productDispensers[slot_index].resetVolumeDispensed();
+
+        debugOutput::sendMessage("Not a valid dispense. Volume set to zero. " + std::to_string(productDispensers[slot_index].getVolumeDispensed()), MSG_STATE);
+    }
+
     // send dispensed volume to ui (will be used to write to portal)
     usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
 
     if (productDispensers[slot_index].getIsDispenseTargetReached())
     {
-        usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
+        usleep(100000);                                      // send message delay (pause from previous message) desperate attempt to prevent crashes
         m_pMessaging->sendMessageOverIP("Target Hit", true); // send to UI
     }
+    // send dispensed volume to ui (will be used to write to portal)
+    usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
 
     // bool empty_stock_detected = false;
     // // handle empty container detection
@@ -124,6 +133,14 @@ DF_ERROR stateDispenseEnd::onAction()
 #endif
     }
 
+    double price = getFinalPrice();
+    debugOutput::sendMessage("Post dispense final price: " + to_string(price), MSG_INFO);
+    double volume = productDispensers[slot_index].getVolumeDispensed();
+    std::string message = "finalVolumeDispensed|" + std::to_string(volume) + "|";
+    m_pMessaging->sendMessageOverIP(message, true); // send to UI
+
+    // send dispensed volume to ui (will be used to write to portal)
+    usleep(1000000); // send message delay (pause from previous message) desperate attempt to prevent crashes
     m_state_requested = STATE_IDLE;
     m_pMessaging->sendMessageOverIP("Transaction End", true); // send to UI
 
@@ -297,7 +314,7 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
     std::string units = productDispensers[slot_index].getProduct()->getDisplayUnits();
     std::string readBuffer;
     std::string volume_remaining_units_converted_string;
-    std::string coupon = m_pMessaging->getPromoCode();
+    std::string coupon = m_pMessaging->getCouponCode();
     std::string button_press_duration = to_string(productDispensers[slot_index].getButtonPressedTotalMillis());
     std::string dispense_button_count = to_string(productDispensers[slot_index].getDispenseButtonPressesDuringDispensing());
     std::string soapstand_product_serial = (productDispensers[slot_index].getProduct()->getSoapstandProductSerial());
@@ -451,10 +468,12 @@ DF_ERROR stateDispenseEnd::databaseUpdateSql(string sqlStatement, string dbPath)
 
     // FIXME: DB needs fully qualified link to find...obscure with XML loading.
     char *zErrMsg = 0;
-    if(dbPath == USAGE_DB_PATH){
+    if (dbPath == USAGE_DB_PATH)
+    {
         rc = sqlite3_open(USAGE_DB_PATH, &db);
     }
-    else{
+    else
+    {
         rc = sqlite3_open(CONFIG_DB_PATH, &db);
     }
 
@@ -586,7 +605,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
 
     std::string sql3;
     sql3 = ("UPDATE machine SET " + slot_status_field_name + "='" + slot_state_str + "';");
-    databaseUpdateSql(sql3,CONFIG_DB_PATH);
+    databaseUpdateSql(sql3, CONFIG_DB_PATH);
 
     // reload (changed) db values
     productDispensers[slot_index].getProduct()->reloadParametersFromDb();
@@ -632,10 +651,7 @@ double stateDispenseEnd::getFinalPrice()
     {
         price = m_pMessaging->getRequestedPrice();
     }
-    debugOutput::sendMessage("Post dispense final price: " + to_string(price), MSG_INFO);
-    double volume = productDispensers[slot_index].getVolumeDispensed();
-    std::string message = "finalVolumeDispensed|" + std::to_string(volume) + "|";
-    m_pMessaging->sendMessageOverIP(message, true); // send to UI
+
     return price;
 }
 
@@ -775,7 +791,7 @@ DF_ERROR stateDispenseEnd::setup_and_print_receipt()
 
     machine tmp;
     // receipt_cost = m_pMessaging->getRequestedPrice();
-    string promoCode = m_pMessaging->getPromoCode();
+    string promoCode = m_pMessaging->getCouponCode();
     debugOutput::sendMessage("Price changed to " + receipt_cost, MSG_INFO);
     tmp.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, now, units, paymentMethod, plu, promoCode, true);
 }

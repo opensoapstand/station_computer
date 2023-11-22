@@ -8,7 +8,7 @@
 // class then communcates results to page_dispenser.
 //
 // created: 16-06-2023
-// by: Lode Ameije, Ash Singla, Udbhav Kansal & Daniel Delgado
+// by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
@@ -25,6 +25,7 @@
 #include "page_idle.h"
 #include "page_select_product.h"
 
+class statusbar;
 class page_idle;
 class page_maintenance_dispenser;
 class page_maintenance_general;
@@ -43,7 +44,7 @@ class page_maintenance : public QWidget
 
 public:
     explicit page_maintenance(QWidget *parent = nullptr);
-    void setPage(page_idle* pageIdle, page_maintenance_dispenser* p_pageMaintenanceDispenser, page_maintenance_general* p_pageMaintenanceGeneral, page_select_product *p_page_product, page_product* pagePaySelect);
+    void setPage(page_idle* pageIdle, page_maintenance_dispenser* p_pageMaintenanceDispenser, page_maintenance_general* p_pageMaintenanceGeneral, page_select_product *p_page_product, page_product* pagePaySelect, statusbar *p_statusbar);
 
 
     ~page_maintenance();
@@ -83,14 +84,16 @@ private:
     page_maintenance_general* p_page_maintenance_general;
     page_select_product* p_pageSelectProduct;
     page_product* p_page_product;
+    statusbar *p_statusbar;
 
     // QResizeEvent *productSelection;
-    QPushButton* pushButtons_products[SLOT_COUNT];
-    QLabel* labels_product_status[SLOT_COUNT];
-    QLabel* labels_product_name[SLOT_COUNT];
-    QLabel* labels_product_position[SLOT_COUNT];
+    QPushButton* pushButtons_products[MAX_SLOT_COUNT];
+    QLabel* labels_product_status[MAX_SLOT_COUNT];
+    QLabel* labels_product_name[MAX_SLOT_COUNT];
+    QLabel* labels_product_position[MAX_SLOT_COUNT];
     int _page_maintenanceTimeoutSec;
     QTimer* page_maintenanceEndTimer;
+    QVBoxLayout *statusbarLayout;
 
 };
 

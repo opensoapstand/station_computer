@@ -11,6 +11,7 @@ if ip link show enp3s0|grep -q 'state UP';then
 	ETHERNET_PORT_INACTIVE="enp2s0";
 fi
 echo "${ETHERNET_PORT}"
+sudo iptables -t nat -A POSTROUTING -o wlo2 -j MASQUERADE
 sudo sysctl -w net.ipv4.ip_forward=1;
 echo "IP forwarded";
 sudo ifconfig "${ETHERNET_PORT_ACTIVE}" "192.168.1.2";

@@ -75,7 +75,6 @@ void page_end::showEvent(QShowEvent *event)
     ui->label_volume_dispensed->setStyleSheet(styleSheet);
     ui->pushButton_contact->setStyleSheet(styleSheet);
 
-
     ui->pushButton_to_idle->setEnabled(true);
     ui->pushButton_to_idle->raise();
     ui->pushButton_contact->raise();
@@ -84,6 +83,8 @@ void page_end::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->addClientLogoToLabel(ui->label_client_logo);
 
     QString paymentMethod = p_page_idle->thisMachine->selectedProduct->getPaymentMethod();
+
+    ui->label_volume_dispensed_ml->setText("");
 
     if (p_page_idle->thisMachine->hasReceiptPrinter())
     {
@@ -131,22 +132,6 @@ size_t WriteCallback2(char *contents, size_t size, size_t nmemb, void *userp)
     return size * nmemb;
 }
 
-void page_end::fsmReceiveFinalDispensedVolume(double dispensed)
-{
-    qDebug() << "Updated dispensed volume" << dispensed;
-    p_page_idle->thisMachine->selectedProduct->setVolumeDispensedMl(dispensed);
-    QString units = p_page_idle->thisMachine->selectedProduct->getUnitsForSlot();
-    QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl(), units, false, true);
-
-    double price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->selectedProduct->getBasePrice());
-
-    if (p_page_idle->thisMachine->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
-    {
-    price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->selectedProduct->getBasePrice()*p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl());
-    }
-    ui->label_volume_dispensed_ml->setText(dispensed_correct_units + " ( $" + QString::number(price, 'f', 2) + " )");
-    
-}
 
 void page_end::sendDispenseEndToCloud()
 {
@@ -164,7 +149,7 @@ void page_end::sendDispenseEndToCloud()
     }
     // std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&size_unit=" + units + "&price=" + price_string + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + end_time + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer&volume_remaining_ml=" + to_string(volume_remaining) + "&quantity_dispensed_ml=" + to_string(productDispensers[slot_index].getVolumeDispensed()) + "&volume_remaining=" + volume_remaining_units_converted_string + "&coupon=" + coupon + "&buttonDuration=" + button_press_duration + "&buttonTimes=" + dispense_button_count + "&soapstand_product_serial=" + soapstand_product_serial;
 
-    QString curl_param = "oid=" + order_id + "&dispensed_amount=" + dispensed_correct_units + "&coupon=" + promoCode + "&logging=" + transactionLogging+ "&volume_remaining_ml=" +volume_remaining+ "&soapstand_product_serial=" + soapstand_product_serial;
+    QString curl_param = "oid=" + order_id + "&dispensed_amount=" + dispensed_correct_units + "&coupon=" + promoCode + "&logging=" + transactionLogging + "&volume_remaining_ml=" + volume_remaining + "&soapstand_product_serial=" + soapstand_product_serial;
     qDebug() << "Curl params" << curl_param << endl;
     curl_param_array = curl_param.toLocal8Bit();
     curl_data = curl_param_array.data();
@@ -222,6 +207,24 @@ void page_end::controllerFinishedTransaction()
     }
 }
 
+
+void page_end::fsmReceiveFinalDispensedVolume(double dispensed)
+{
+    qDebug() << "Updated dispensed volume" << dispensed;
+    p_page_idle->thisMachine->selectedProduct->setVolumeDispensedMl(dispensed);
+    QString units = p_page_idle->thisMachine->selectedProduct->getUnitsForSlot();
+    QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl(), units, false, true);
+
+    double price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->selectedProduct->getBasePrice());
+
+    if (p_page_idle->thisMachine->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
+    {
+        price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->selectedProduct->getBasePrice() * p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl());
+    }
+    ui->label_volume_dispensed_ml->setText(dispensed_correct_units + " ( $" + QString::number(price, 'f', 2) + " )");
+     qDebug() << "End of fsm received dispensed volume";
+}
+
 void page_end::transactionToFile(char *curl_params)
 {
     QString data_out = curl_params;
@@ -255,8 +258,11 @@ void page_end::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     // p_page_idle->setCouponCode("");
 
     thankYouEndTimer->stop();
+    //  qDebug() << "Thank you timer stopped. ";
     statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
+    //  qDebug() << "statusbar hidden ";
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
+    //  qDebug() << "page transition done.  ";
 }
 
 void page_end::finishHandler()

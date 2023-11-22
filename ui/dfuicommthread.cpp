@@ -91,7 +91,8 @@ QByteArray DfUiCommThread::readyRead()
         qDebug() << "Process received message : " << Data; // not every message gets a debug acknowledgement.
         emit dispenseButtonPressedNegEdgeSignal();
     }
-    else if (Data.startsWith("temperature|"))
+    else if (Data.startsWith("temperatu"))
+    // else if (Data.startsWith("temperature|"))
     {
         int first_delim_pos = Data.indexOf('|');
         int second_delim_pos = Data.indexOf('|', first_delim_pos + 1);

@@ -129,11 +129,11 @@ int machine::getSlotCount()
     int slot_count;
     if (m_hardware_version.startsWith("AP"))
     {
-        if (m_hardware_version == "AP1")
+        if (m_hardware_version.startsWith("AP1"))
         {
             slot_count = 4;
         }
-        else if (m_hardware_version == "AP1.1")
+        else if (m_hardware_version.startsWith("AP1.1"))
         {
             slot_count = 4;
         }
@@ -144,23 +144,26 @@ int machine::getSlotCount()
     }
     else if (m_hardware_version.startsWith("SS"))
     {
-        if (m_hardware_version == "SS1")
+        if (m_hardware_version.startsWith("SS1"))
         {
             slot_count = 4;
         }
-        else if (m_hardware_version == "SS2")
+        else if (m_hardware_version.startsWith("SS2"))
         {
             slot_count = 4;
         }
         else
         {
-            slot_count = 8;
+            qDebug() << "Warning, unrecognized Hardware version. Version in db: " << m_hardware_version;
+            slot_count = 4;
         }
     }
     if (compareSlotCountToMaxSlotCount(slot_count))
     {
         qDebug() << "ERROR - Slot Count:" << slot_count << " exceeded MAX_SLOT_COUNT:" << MAX_SLOT_COUNT << "threshold";
     }
+    //  qDebug() << "AMOUNT OFF SLOTTST. " << slot_count;
+    
     return slot_count;
     // dispensers is the same as slots.
 
@@ -457,8 +460,8 @@ void machine::fsmReceiveTemperature(double temperature_1, double temperature_2)
 {
     m_temperature = temperature_1;
     m_temperature2 = temperature_2;
-    // qDebug() << "Temperature received from FSM in machine: " << m_temperature;
-    // qDebug() << "Temperature 2 received from FSM in machine: " << m_temperature2;
+    //qDebug() << "Temperature received from FSM in machine: " << m_temperature;
+    //qDebug() << "Temperature 2 received from FSM in machine: " << m_temperature2;
 
     writeTemperatureToDb(m_temperature, m_temperature2);
 

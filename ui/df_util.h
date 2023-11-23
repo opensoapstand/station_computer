@@ -8,7 +8,7 @@
 // TODO: Refactor to fit with dfuicommthread
 //#define START_FSM_FROM_UI //enabled by default (start controller from ui)
 
-#define UI_VERSION "2.6"
+#define UI_VERSION "2.8"
 
 #define ENABLE_COUPON   // Petros stations have no coupon
 

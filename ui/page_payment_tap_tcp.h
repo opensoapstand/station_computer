@@ -81,8 +81,8 @@ public:
 
     StateTapPayment state_tap_payment; 
 
-private slots:
 
+private slots:
     // Navigation
     void on_pushButton_previous_page_clicked();
     void on_pushButton_payment_bypass_clicked();
@@ -96,6 +96,7 @@ private slots:
 
     void idlePaymentTimeout();
 private:
+     QMessageBox* msgBox;
     // **** GUI ****
     Ui::page_payment_tap_tcp *ui;
     page_product *p_page_product;

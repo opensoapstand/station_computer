@@ -704,15 +704,16 @@ void page_dispenser::on_pushButton_abort_clicked()
         QTimer *timeoutTimer = new QTimer(msgBox_abort);
         QObject::connect(timeoutTimer, &QTimer::timeout, [this, timeoutTimer]()
                          {
-                             timeoutTimer->stop();
-                             timeoutTimer->deleteLater();
-                             if (msgBox_abort) // check if still exits.
-                             {
-                                 msgBox_abort->hide();
-                                 msgBox_abort->deleteLater();
-                                 msgBox_abort = nullptr;
-                             }
-                             qDebug() << "msgBox_abort timed out. "; });
+                timeoutTimer->stop();
+                timeoutTimer->deleteLater();
+                if (msgBox_abort) // check if still exits.
+                {
+                    msgBox_abort->hide();
+                    msgBox_abort->deleteLater();
+                    msgBox_abort = nullptr;
+                }
+                qDebug() << "msgBox_abort timed out. "; 
+                });
         timeoutTimer->start(MESSAGE_BOX_TIMEOUT_DEFAULT_MILLIS); // Set the timeout duration in milliseconds (5000 = 5 seconds)
 
         int ret = msgBox_abort->exec();
@@ -736,7 +737,6 @@ void page_dispenser::on_pushButton_abort_clicked()
         }
     }
 }
-
 
 void page_dispenser::on_pushButton_problems_clicked()
 {

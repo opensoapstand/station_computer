@@ -15,6 +15,7 @@
 #include "page_sendFeedback.h"
 
 extern QString transactionLogging;
+extern bool isFreeEmailOrder;
 
 // CTOR
 page_end::page_end(QWidget *parent) : QWidget(parent),
@@ -108,8 +109,11 @@ void page_end::showEvent(QShowEvent *event)
     is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
     exitIsForceable = false;
 
-    if (paymentMethod == PAYMENT_QR)
+    if (isFreeEmailOrder)
     {
+        is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
+    }
+    else if(paymentMethod == PAYMENT_QR){
         sendDispenseEndToCloud();
     }
     else
@@ -164,6 +168,79 @@ void page_end::sendDispenseEndToCloud()
     }
 
     curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/updateOrder");
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback2);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+    curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
+    res = curl_easy_perform(curl);
+
+    if (res != CURLE_OK)
+    {
+        qDebug() << "ERROR: Transaction NOT sent to cloud. cURL fail. Error code: " + QString::number(res);
+
+        transactionToFile(curl_data);
+        is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
+    }
+    else
+    {
+        QString feedback = QString::fromUtf8(readBuffer.c_str());
+        qDebug() << "Transaction sent to cloud. cURL success. Server feedback readbuffer: " << feedback;
+
+        // readbuffer is a string. "true" or "false"
+        if (readBuffer == "true" || "Order Completed")
+        {
+            // return data
+            is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
+        }
+    }
+    curl_easy_cleanup(curl);
+    readBuffer = "";
+}
+
+void page_end::sendTransactionToCloud()
+{
+
+    // QString start_time = p_page_idle->thisMachine->selectedProduct->getDispenseStartTime();
+    // QString end_time = p_page_idle->thisMachine->selectedProduct->getDispenseEndTime();
+    QString price_string = "1";
+    QString machine_id = p_page_idle->thisMachine->getMachineId();
+    QString units = p_page_idle->thisMachine->selectedProduct->getUnitsForSlot();
+    QString pid = p_page_idle->thisMachine->selectedProduct->getAwsProductId();
+    QString product = p_page_idle->thisMachine->selectedProduct->getProductName();
+    QString target_volume = p_page_idle->thisMachine->selectedProduct->getSizeToVolumeWithCorrectUnits(false, false);
+
+    QString coupon = this->p_page_idle->thisMachine->getCouponCode();
+    QString soapstand_product_serial = p_page_idle->thisMachine->selectedProduct->getProductDrinkfillSerial();
+    QString payment_method = p_page_idle->thisMachine->selectedProduct->getPaymentMethod();
+    QString quantity_dispensed = df_util::getConvertedStringVolumeFromMl(p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl(), units, false, false);
+    QString volume_remaining = p_page_idle->thisMachine->selectedProduct->getVolumeRemainingCorrectUnits(false);
+    QString volume_remaining_converted;
+    QString dispensed_volume_units_converted;
+    double dispensed_volume = ceil(p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl());
+    if (dispensed_volume <= p_page_idle->thisMachine->selectedProduct->getVolumePerTickForSlot())
+    {
+        quantity_dispensed = "0";
+    }
+
+    QString volume_remaining_units_converted_string = p_page_idle->thisMachine->selectedProduct->getTotalDispensedCorrectUnits();
+
+
+    QString curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + quantity_dispensed + "&size_unit=" + units + "&price=" + price_string + "&productId=" + pid + "&MachineSerialNumber=" + machine_id + "&paymentMethod="+payment_method+"&volume_remaining_ml=" + volume_remaining + "&quantity_dispensed_ml=" + quantity_dispensed + "&volume_remaining=" + volume_remaining_units_converted_string + "&coupon=" + coupon + "&soapstand_product_serial=" + soapstand_product_serial;
+    qDebug() << "Curl params" << curl_param << endl;
+    curl_param_array = curl_param.toLocal8Bit();
+    curl_data = curl_param_array.data();
+
+    curl = curl_easy_init();
+    if (!curl)
+    {
+        qDebug() << "page_end: cURL failed to init. parameters:" + curl_param;
+        transactionToFile(curl_data);
+        is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
+        return;
+    }
+    // debugOutput::sendMessage("cURL init success. Will send: https://soapstandportal.com/api/machine_data/pushPrinterOrder?" + curl_param, MSG_INFO);
+
+    curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/pushPrinterOrder");
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback2);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);

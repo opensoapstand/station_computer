@@ -279,7 +279,7 @@ void page_sendFeedback::on_pushButton_send_clicked()
         // send to backend
         QString MachineSerialNumber = p_page_idle->thisMachine->getMachineId();
         QString customFeedback = ui->textEdit_custom_message->toPlainText();
-        QString curl_param = "problems=" + problems + " " + customFeedback + "&MachineSerialNumber=" + MachineSerialNumber;
+        QString curl_param = "problems=" + problems + " ," + customFeedback + "&MachineSerialNumber=" + MachineSerialNumber;
         qDebug() << "Curl params" << curl_param;
         curl_param_array = curl_param.toLocal8Bit();
         qDebug() << curl_param_array;

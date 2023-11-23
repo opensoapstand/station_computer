@@ -20,6 +20,8 @@
 #include "page_idle.h"
 #include <iostream>
 #include <regex>
+
+extern bool isFreeEmailOrder;
 // CTOR
 page_email::page_email(QWidget *parent) : QWidget(parent),
                                         ui(new Ui::page_email)
@@ -134,6 +136,7 @@ void page_email::on_pushButton_continue_clicked()
     if(emailValid(textEntry)){
         p_page_idle->thisMachine->getDb()->addUserInteraction(sessionId, activeRole, page_name, event, textEntry);
         qDebug() << "EMAIL CORRECT: continue with free sample dispense";
+        isFreeEmailOrder = true;
         hideCurrentPageAndShowProvided(p_page_dispenser);
     }else{
         p_page_idle->thisMachine->addCssClassToObject(ui->keyboardTextEntry, "enteredEmail_invalid", PAGE_EMAIL_CSS);

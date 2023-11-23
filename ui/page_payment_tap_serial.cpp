@@ -31,7 +31,6 @@ page_payment_tap_serial::page_payment_tap_serial(QWidget *parent) : QWidget(pare
     // Payment Tap Ready
     readTimer = new QTimer(this);
     connect(readTimer, SIGNAL(timeout()), this, SLOT(readTimer_loop()));
-
     ui->pushButton_payment_bypass->setEnabled(false);
     ui->label_title->hide();
     ui->order_total_amount->hide();
@@ -54,7 +53,7 @@ void page_payment_tap_serial::setPage(page_product *p_page_product, page_error_w
     tmpCounter = 0;
     this->p_page_product = p_page_product;
     this->p_page_wifi_error = pageWifiError;
-    this->p_page_dispense = page_dispenser;
+    this->p_page_dispense = page_dispenser; 
     this->p_page_idle = pageIdle;
     this->p_page_help = pageHelp;
     this->p_statusbar = p_statusbar;
@@ -64,6 +63,7 @@ void page_payment_tap_serial::setPage(page_product *p_page_product, page_error_w
 page_payment_tap_serial::~page_payment_tap_serial()
 {
     delete ui;
+
 }
 
 void page_payment_tap_serial::on_pushButton_payment_bypass_clicked()
@@ -74,19 +74,21 @@ void page_payment_tap_serial::on_pushButton_payment_bypass_clicked()
 /*Cancel any previous payment*/
 void page_payment_tap_serial::cancelPayment()
 {
+    
     com.flushSerial();
     /*Cancel any previous payment*/
     pktToSend = paymentPacket.purchaseCancelPacket();
     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_CANCEL);
+    ui->animated_Label->show();
     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->animated_Label, "cancel");
     
     if (sendToUX410())
     {
         waitForUX410();
-        // pktResponded.clear();
     }
     com.flushSerial();
     qDebug() << "Cancel payment";
+    
 }
 
 // Navigation: Back to Drink Size Selection
@@ -124,14 +126,14 @@ void page_payment_tap_serial::showEvent(QShowEvent *event)
     ui->pushButton_payment_bypass->setStyleSheet(styleSheet);
     ui->animated_Label->setProperty("class", "animated_Label");
     ui->animated_Label->setStyleSheet(styleSheet);
-
+    ui->animated_Label->hide();
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_previous_page);
 
     ui->pushButton_payment_bypass->setEnabled(false);
 
     state_payment = s_serial_init;
     ui->pushButton_payment_bypass->setEnabled(false);
-
+   
     qDebug() << "Prepare tap order";
     paymentConnected = com.page_init();
 
@@ -140,6 +142,7 @@ void page_payment_tap_serial::showEvent(QShowEvent *event)
         paymentConnected = com.page_init();
     }
     pktResponded = com.readForAck();
+
     readPacket.packetReadFromUX(pktResponded);
     pktResponded.clear();
     response = false;
@@ -149,7 +152,8 @@ void page_payment_tap_serial::showEvent(QShowEvent *event)
 
         timerEnabled = true;
     }
-    readTimer->start(10);
+
+    readTimer->start(1000);
     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY);
     ui->productLabel->hide();
     ui->order_drink_amount->hide();
@@ -221,7 +225,6 @@ void page_payment_tap_serial::resetPaymentPage(bool cancelTapPayment)
 {
     stopPayTimers();
     if(cancelTapPayment){
-        readTimer->stop();
         cancelPayment();
     }
 }
@@ -350,7 +353,7 @@ bool page_payment_tap_serial::waitForUX410()
     while (!waitResponse)
     {
         qDebug() << "In wait for packet" << endl;
-        sleep(1);
+        usleep(1000);
         QCoreApplication::processEvents();
         cout << readPacket << endl;
         if (pktResponded[0] != 0x02)
@@ -394,7 +397,7 @@ void page_payment_tap_serial::readTimer_loop()
                 pktResponded.clear();
                 pktResponded = com.readPacket();
                 response = getResponse();
-                readTimer->start(1000);
+                // readTimer->start(1000);
             }
             else if (pktResponded[10] == 0x33)
             {
@@ -437,12 +440,13 @@ void page_payment_tap_serial::readTimer_loop()
                         paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
                         pktResponded.clear();
                         QCoreApplication::processEvents();
-                        sleep(1);
+                        sleep(3);
                         pktResponded.clear();
                         pktResponded = com.readPacket();
                         usleep(100);
                         response = getResponse();
-                        readTimer->start(10);
+                        on_pushButton_previous_page_clicked();
+                        // readTimer->start(10);
                         // idlePaymentTimeout();
                     }
 
@@ -464,7 +468,7 @@ void page_payment_tap_serial::readTimer_loop()
                         pktResponded = com.readPacket();
                         usleep(100);
                         response = getResponse();
-                        readTimer->start(10);
+                        // readTimer->start(10);
                     }
                 }
             }

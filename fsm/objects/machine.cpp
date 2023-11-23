@@ -51,7 +51,7 @@ void machine::setup()
     control_pcb->setup();
     control_pcb->setPumpPWM(DEFAULT_PUMP_PWM);
     // the 24V power has a master on/off switch
-    switch_24V = new oddyseyx86GPIO(IO_PIN_ENABLE_24V);
+    switch_24V = new FSModdyseyx86GPIO(IO_PIN_ENABLE_24V);
     power24VEnabled = false;
     switch_24V->setPinAsInputElseOutput(false); // set as output
     syncSoftwareVersionWithDb();

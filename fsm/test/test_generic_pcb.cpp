@@ -76,15 +76,14 @@ void board_test()
 
 
     int pin = IO_PIN_ENABLE_24V;
-    oddyseyx86GPIO testping(pin) ;
+    oddyseyx86GPIO io24VEnable(pin) ;
+    io24VEnable.setPinAsInputElseOutput(false);
 
-    testping.setPinAsInputElseOutput(false);
 
+    // oddyseyx86GPIO* io24VEnable;
+    // io24VEnable = new oddyseyx86GPIO(pin);
 
-    oddyseyx86GPIO* io24VEnable;
-    io24VEnable = new oddyseyx86GPIO(pin);
-
-    io24VEnable->setPinAsInputElseOutput(false);
+    io24VEnable.setPinAsInputElseOutput(false);
     
 
 
@@ -206,7 +205,7 @@ void board_test()
         break;
         case (dispense_activate_solenoid):
         {
-            io24VEnable->writePin(true);
+            io24VEnable.writePin(true);
 
             pump_start_delay_start_epoch = now_epoch_millis;
             connected_pcb->setSolenoid(active_slot, true);
@@ -318,7 +317,7 @@ void board_test()
         break;
         case (dispense_end_solenoid_delay):
         {
-             io24VEnable->writePin(false);
+             io24VEnable.writePin(false);
 
             if (!AUTO_DISPENSE_ENABLED && connected_pcb->getDispenseButtonStateDebounced(active_slot))
             {

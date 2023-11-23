@@ -13,23 +13,18 @@
 #define _ODDYSEYX86GPIO__H__
 
 #include "gpio.h"
-#include "../objects/messageMediator.h"
-#include <poll.h>
+// #include "../objects/messageMediator.h"
+// #include <poll.h>
 
-class messageMediator;
+// class messageMediator;
 
 class oddyseyx86GPIO : public gpio
 {
 public:
 	oddyseyx86GPIO();
 	oddyseyx86GPIO(int address);
-	//        oddyseyx86GPIO(messageMediator * message);
 	~oddyseyx86GPIO();
 
-	//setter
-	// DF_ERROR setFlowPin(int pinNumber);
-
-	//
 	DF_ERROR setPinAsInputElseOutput(bool input);
 	DF_ERROR readPin(bool *level);
 	DF_ERROR writePin(bool level);
@@ -38,10 +33,10 @@ protected:
 	void monitorGPIO_Flowsensor(bool* abortLoop);
 	// void monitorGPIO_Buttons_powerAndMaintenance();
 	string command_to_string(string cmd);
-	messageMediator *m_pMessaging;
+	// messageMediator *m_pMessaging;
 
 private:
-	struct pollfd pfd;
+	// struct pollfd pfd;
 
 	double tickcounter;
 

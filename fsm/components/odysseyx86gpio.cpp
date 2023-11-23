@@ -263,7 +263,7 @@ void oddyseyx86GPIO::monitorGPIO_Flowsensor(bool *abortLoop)
 {
         int fd, len;
         char buf[MAX_BUF];
-        struct pollfd pfd;
+        // struct pollfd pfd;
 
         string GPIO = "" + to_string(IO_PIN_FLOW_SENSOR);
         string command("/sys/class/gpio/gpio");

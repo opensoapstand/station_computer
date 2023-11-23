@@ -59,7 +59,7 @@
 #define MAX31760_ADDRESS 0b1010000
 #define DS2485Q_ADDRESS 0b1000000
 #define MCP3424T_ADDRESS 0b1101000
-#define ADC081C021_ADDRESS 0b01010100
+#define ADC081C021_CURRENT_SENSOR_ADDRESS 0b01010100
 #define TEMPERATURE_SENSOR_1_ADDRESS 0b00011000 
 #define TEMPERATURE_SENSOR_2_ADDRESS 0b00011001 
 
@@ -186,6 +186,7 @@ private:
 
     bool pic_pwm_found = false;
     bool max31760_pwm_found = false;
+    bool current_sensor_found = false;
     bool mcp9808_temperature_sensor_found = false;
     bool mcp9808_temperature2_sensor_found = false;
 

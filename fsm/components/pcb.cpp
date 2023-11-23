@@ -281,7 +281,7 @@ void pcb::setup()
     {
         std::string message("pcbEN134: I2C bus ");
         // message.append(i2c_bus_name);
-        message.append(" has a problem.");
+        message.append("has a problem.");
         debugOutput::sendMessage(message, MSG_ERROR);
         return;
     }
@@ -354,9 +354,10 @@ bool pcb::define_pcb_version(void)
                 max31760_pwm_found = true;
                 debugOutput::sendMessage("MAX31760 found on I2C bus for PWM and speed feedback", MSG_INFO);
             }
-            else if (i2c_probe_address == ADC081C021_ADDRESS)
+            else if (i2c_probe_address == ADC081C021_CURRENT_SENSOR_ADDRESS)
             {
                 // ADC081C021
+                current_sensor_found = true;
 
                 debugOutput::sendMessage("ADC081C021 current sensor found. NOT IN USE YET.", MSG_INFO);
             }
@@ -390,6 +391,9 @@ bool pcb::define_pcb_version(void)
             else
             {
                 std::string message("Unknown device found on I2C bus ");
+                // int address = ADC081C021_CURRENT_SENSOR_ADDRESS;
+                // std::string addressStr = std::to_string(address);
+                // debugOutput::sendMessage(addressStr, MSG_INFO);
                 message.append(i2c_bus_name);
                 debugOutput::sendMessage(message, MSG_ERROR);
                 config_valid = false;
@@ -1522,7 +1526,7 @@ bool pcb::startPump(uint8_t slot)
     {
         if (slotEnabled[slot - 1])
         {
-            debugOutput::sendMessage("Start pump " + to_string(slot), MSG_INFO);
+            debugOutput::sendMessage("SStart pump " + to_string(slot), MSG_INFO);
             setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_PUMP_ENABLE, true); // start pump
         }
         else

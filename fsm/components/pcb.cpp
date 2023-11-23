@@ -1526,7 +1526,7 @@ bool pcb::startPump(uint8_t slot)
     {
         if (slotEnabled[slot - 1])
         {
-            debugOutput::sendMessage("SStart pump " + to_string(slot), MSG_INFO);
+            debugOutput::sendMessage("Start pump " + to_string(slot), MSG_INFO);
             setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_PUMP_ENABLE, true); // start pump
         }
         else

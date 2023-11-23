@@ -1,7 +1,7 @@
 
 #include "../objects/debugOutput.h"
 #include "../components/pcb.h"
-#include "../components/odysseyx86gpio.h"
+#include "../components/gpio_odyssey.h"
 #include <chrono>
 
 enum Dispense_state
@@ -76,12 +76,12 @@ void board_test()
 
 
     int pin = IO_PIN_ENABLE_24V;
-    oddyseyx86GPIO io24VEnable(pin) ;
+    gpio_odyssey io24VEnable(pin) ;
     io24VEnable.setPinAsInputElseOutput(false);
 
 
-    // oddyseyx86GPIO* io24VEnable;
-    // io24VEnable = new oddyseyx86GPIO(pin);
+    // gpio_odyssey* io24VEnable;
+    // io24VEnable = new gpio_odyssey(pin);
 
     io24VEnable.setPinAsInputElseOutput(false);
     
@@ -385,16 +385,16 @@ void board_test()
 // #endif
 // #define SYSFS_GPIO_DIR "/sys/class/gpio"
 
-//     std::string msg = "------oddyseyx86GPIO------ pin:" + std::to_string(pinNumber);
+//     std::string msg = "------gpio_odyssey------ pin:" + std::to_string(pinNumber);
 //     debugOutput::sendMessage(msg, MSG_INFO);
 
-//     // debugOutput::sendMessage("------oddyseyx86GPIO------", MSG_INFO);
+//     // debugOutput::sendMessage("------gpio_odyssey------", MSG_INFO);
 //     int fd, len;
 //     char buf[MAX_BUF];
 //     fd = open(SYSFS_GPIO_DIR "/export", O_WRONLY);
 //     if (fd < 0)
 //     {
-//         debugOutput::sendMessage("~oddyseyx86GPIO could not open the gpio", MSG_ERROR);
+//         debugOutput::sendMessage("~gpio_odyssey could not open the gpio", MSG_ERROR);
 //         return;
 //     }
 
@@ -418,10 +418,10 @@ void board_test()
 //     using namespace std::chrono;
 //     uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
-//     std::string msg = "oddyseyx86GPIO::setPinAsInputElseOutput " + std::to_string(pinNumber);
+//     std::string msg = "gpio_odyssey::setPinAsInputElseOutput " + std::to_string(pinNumber);
 //     debugOutput::sendMessage(msg, MSG_INFO);
 
-//     // debugOutput::sendMessage("oddyseyx86GPIO::setPinAsInputElseOutput ", MSG_INFO);
+//     // debugOutput::sendMessage("gpio_odyssey::setPinAsInputElseOutput ", MSG_INFO);
 //     DF_ERROR df_ret = ERROR_MECH_FS_FAULT;
 //     int fd, len;
 //     char syscode;

@@ -1,6 +1,6 @@
 //***************************************
 //
-// oddyseyX86gpio.h
+// gpio_odyssey.h
 // GPIO Definitions for
 // NATIVE x86 pins on Oddysey board
 //
@@ -18,12 +18,12 @@
 
 class messageMediator;
 
-class oddyseyx86GPIO
+class gpio_odyssey
 {
 public:
-	oddyseyx86GPIO();
-	oddyseyx86GPIO(int address);
-	~oddyseyx86GPIO();
+	gpio_odyssey();
+	gpio_odyssey(int address);
+	~gpio_odyssey();
 
 	DF_ERROR setPinAsInputElseOutput(bool input);
 	DF_ERROR readPin(bool *level);

@@ -1,6 +1,6 @@
 //***************************************
 //
-// oddyseyX86gpio.cpp
+// gpio_odyssey.cpp
 // GPIO implementation for
 // NATIVE x86 pins on Oddysey board
 //
@@ -20,7 +20,7 @@
 #include <poll.h>
 #include <iostream>
 
-#include "odysseyx86gpio.h"
+#include "gpio_odyssey.h"
 #include "../dftypes.h"
 
 #define SYSFS_GPIO_DIR "/sys/class/gpio"
@@ -53,11 +53,11 @@
 #endif
 
 // Default CTOR
-oddyseyx86GPIO::oddyseyx86GPIO()
+gpio_odyssey::gpio_odyssey()
 {
 }
 
-// oddyseyx86GPIO::oddyseyx86GPIO(messageMediator * message)
+// gpio_odyssey::gpio_odyssey(messageMediator * message)
 //{
 //    //debugOutput::sendMessage("stateDispense(messageMediator * message)", MSG_INFO);
 // }
@@ -66,14 +66,14 @@ oddyseyx86GPIO::oddyseyx86GPIO()
  * CTOR with Pin reference
  * Typically for Initializing sensors directly...Flow Sensors for now.
  * SEE Manual, Use last three digits to initialize class
- * i.e. GPIO 335; new oddyseyx86GPIO(335);
+ * i.e. GPIO 335; new gpio_odyssey(335);
  */
-oddyseyx86GPIO::oddyseyx86GPIO(int pinNumber)
+gpio_odyssey::gpio_odyssey(int pinNumber)
 {
-        std::string msg = "------oddyseyx86GPIO------ pin:" + std::to_string(pinNumber);
+        std::string msg = "------gpio_odyssey------ pin:" + std::to_string(pinNumber);
         debugOutput::sendMessage(msg, MSG_INFO);
 
-        // debugOutput::sendMessage("------oddyseyx86GPIO------", MSG_INFO);
+        // debugOutput::sendMessage("------gpio_odyssey------", MSG_INFO);
         int fd, len;
         char buf[MAX_BUF];
 
@@ -82,7 +82,7 @@ oddyseyx86GPIO::oddyseyx86GPIO(int pinNumber)
         fd = open(SYSFS_GPIO_DIR "/export", O_WRONLY);
         if (fd < 0)
         {
-                debugOutput::sendMessage("~oddyseyx86GPIO could not open the gpio", MSG_ERROR);
+                debugOutput::sendMessage("~gpio_odyssey could not open the gpio", MSG_ERROR);
                 return;
         }
 
@@ -112,16 +112,16 @@ oddyseyx86GPIO::oddyseyx86GPIO(int pinNumber)
 }
 
 // DTOR
-oddyseyx86GPIO::~oddyseyx86GPIO()
+gpio_odyssey::~gpio_odyssey()
 {
-        debugOutput::sendMessage("~oddyseyx86GPIO", MSG_INFO);
+        debugOutput::sendMessage("~gpio_odyssey", MSG_INFO);
         int fd, len;
         char buf[MAX_BUF];
 
         fd = open(SYSFS_GPIO_DIR "/unexport", O_WRONLY);
         if (fd < 0)
         {
-                debugOutput::sendMessage("~oddyseyx86GPIO could not close the gpio", MSG_ERROR);
+                debugOutput::sendMessage("~gpio_odyssey could not close the gpio", MSG_ERROR);
                 return;
         }
 
@@ -131,13 +131,13 @@ oddyseyx86GPIO::~oddyseyx86GPIO()
         return;
 }
 
-DF_ERROR oddyseyx86GPIO::setPinAsInputElseOutput(bool input)
+DF_ERROR gpio_odyssey::setPinAsInputElseOutput(bool input)
 {
-        // debugOutput::sendMessage("oddyseyx86GPIO::setPinAsInputElseOutput ", MSG_INFO);
-        std::string msg = "oddyseyx86GPIO::setPinAsInputElseOutput " + std::to_string(m_nPin);
+        // debugOutput::sendMessage("gpio_odyssey::setPinAsInputElseOutput ", MSG_INFO);
+        std::string msg = "gpio_odyssey::setPinAsInputElseOutput " + std::to_string(m_nPin);
         debugOutput::sendMessage(msg, MSG_INFO);
 
-        // debugOutput::sendMessage("oddyseyx86GPIO::setPinAsInputElseOutput ", MSG_INFO);
+        // debugOutput::sendMessage("gpio_odyssey::setPinAsInputElseOutput ", MSG_INFO);
         DF_ERROR df_ret = ERROR_MECH_FS_FAULT;
         int fd, len;
         char syscode;
@@ -173,7 +173,7 @@ DF_ERROR oddyseyx86GPIO::setPinAsInputElseOutput(bool input)
 
 // TODO: Implementation is commented out and needs testing.;
 //		 A SPECIFIC function name change REQUIRED. i.e. readWastePinLevel
-DF_ERROR oddyseyx86GPIO::readPin(bool *level)
+DF_ERROR gpio_odyssey::readPin(bool *level)
 {
         debugOutput::sendMessage("readPin", MSG_INFO);
         DF_ERROR df_ret = ERROR_MECH_FS_FAULT;
@@ -216,7 +216,7 @@ DF_ERROR oddyseyx86GPIO::readPin(bool *level)
 
 // Flags Level sensor on Waste tank...
 // TODO: A SPECIFIC function name change REQUIRED. i.e. triggersWasteLevel
-DF_ERROR oddyseyx86GPIO::writePin(bool level)
+DF_ERROR gpio_odyssey::writePin(bool level)
 {
         debugOutput::sendMessage("OdysseyX86 writePin", MSG_INFO);
         DF_ERROR df_ret = ERROR_MECH_FS_FAULT;

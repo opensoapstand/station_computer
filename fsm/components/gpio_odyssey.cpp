@@ -218,7 +218,7 @@ DF_ERROR gpio_odyssey::readPin(bool *level)
 // TODO: A SPECIFIC function name change REQUIRED. i.e. triggersWasteLevel
 DF_ERROR gpio_odyssey::writePin(bool level)
 {
-        debugOutput::sendMessage("OdysseyX86 writePin", MSG_INFO);
+        debugOutput::sendMessage("OdysseyX86 writePin : " + std::to_string(m_nPin) + " value: " + std::to_string(level), MSG_INFO);
         DF_ERROR df_ret = ERROR_MECH_FS_FAULT;
         int fd, len;
         char buf[MAX_BUF];

@@ -4,6 +4,10 @@
 #include "../components/gpio_odyssey.h"
 #include <chrono>
 
+ #define IO_PIN_ENABLE_24V 410         // connector pin 36 for EN-134 and EN258 pcb
+#define IO_PIN_ENABLE_3point3V 328         // connector pin 28 for EN258 pcb
+#define IO_PIN_ENABLE_5V 338         // connector pin 12 for EN258 pcb
+
 enum Dispense_state
 {
 
@@ -69,7 +73,7 @@ Dispense_state dispense_state;
 void board_test(pcb *connected_pcb)
 {
     int active_solenoid_position = 0; // first solenoid at position 1, but at first run, will do +1
-#define IO_PIN_ENABLE_24V 410         // connector pin 36 for EN-134 pcb
+   
 
     int pin = IO_PIN_ENABLE_24V;
     gpio_odyssey io24VEnable(pin);
@@ -600,6 +604,16 @@ int main(int argc, char *argv[])
 
     pcb *pcb_to_test;
     pcb_to_test = new pcb();
+
+    int pinNumber = IO_PIN_ENABLE_3point3V;
+    gpio_odyssey controlPower3point3V(pinNumber);
+    controlPower3point3V.setPinAsInputElseOutput(false);
+    controlPower3point3V.writePin(true);
+    
+    gpio_odyssey controlPower5V(IO_PIN_ENABLE_5V);
+    controlPower5V.setPinAsInputElseOutput(false);
+    controlPower5V.writePin(true);
+
     pcb_to_test->setup();
 
     debugOutput::sendMessage("***********************", MSG_INFO);

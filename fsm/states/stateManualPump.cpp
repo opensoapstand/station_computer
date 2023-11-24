@@ -342,7 +342,7 @@ DF_ERROR stateManualPump::onAction()
          if (productDispensers[m_active_pump_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
          {
             productDispensers[m_active_pump_index].the_pcb->startPump(m_active_pump_index + 1);
-            productDispensers[m_active_pump_index].setSolenoid(true);
+            productDispensers[m_active_pump_index].setSolenoidOnePerSlot(true);
          }
       }
       if (productDispensers[m_active_pump_index].getDispenseButtonEdgeNegative())
@@ -350,7 +350,7 @@ DF_ERROR stateManualPump::onAction()
          if (productDispensers[m_active_pump_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
          {
             productDispensers[m_active_pump_index].the_pcb->stopPump(m_active_pump_index + 1);
-            productDispensers[m_active_pump_index].setSolenoid(false);
+            productDispensers[m_active_pump_index].setSolenoidOnePerSlot(false);
          }
       }
    }
@@ -457,7 +457,7 @@ DF_ERROR stateManualPump::pumpCyclicTestCycleStart()
    if (productDispensers[m_active_pump_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
    {
       productDispensers[m_active_pump_index].the_pcb->startPump(m_active_pump_index + 1);
-      productDispensers[m_active_pump_index].setSolenoid(true);
+      productDispensers[m_active_pump_index].setSolenoidOnePerSlot(true);
    }
    else
    {
@@ -474,7 +474,7 @@ DF_ERROR stateManualPump::pumpCyclicTestCycleFinish()
    if (productDispensers[m_active_pump_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
    {
       productDispensers[m_active_pump_index].the_pcb->stopPump(m_active_pump_index + 1);
-      productDispensers[m_active_pump_index].setSolenoid(false);
+      productDispensers[m_active_pump_index].setSolenoidOnePerSlot(false);
    }
    else
    {
@@ -583,7 +583,7 @@ DF_ERROR stateManualPump::autofillPresetQuantity()
       if (productDispensers[m_active_pump_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
       {
          productDispensers[m_active_pump_index].the_pcb->startPump(m_active_pump_index + 1);
-         productDispensers[m_active_pump_index].setSolenoid(true);
+         productDispensers[m_active_pump_index].setSolenoidOnePerSlot(true);
       }
       else
       {
@@ -616,7 +616,7 @@ DF_ERROR stateManualPump::autofillPresetQuantity()
       if (productDispensers[m_active_pump_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
       {
          productDispensers[m_active_pump_index].the_pcb->stopPump(m_active_pump_index + 1);
-         productDispensers[m_active_pump_index].setSolenoid(false);
+         productDispensers[m_active_pump_index].setSolenoidOnePerSlot(false);
       }
       else
       {

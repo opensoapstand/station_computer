@@ -622,9 +622,9 @@ uint64_t dispenser::getButtonPressedCurrentPressMillis()
     return dispense_button_current_press_millis;
 }
 
-void dispenser::setSolenoid(bool openElseClosed)
+void dispenser::setSolenoidOnePerSlot(bool openElseClosed)
 {
-    the_pcb->setSolenoid(this->m_slot, openElseClosed);
+    the_pcb->setSolenoidOnePerSlot(this->m_slot, openElseClosed);
 }
 
 // Reverse pump: Turn forward pin LOW - Reverse pin HIGH

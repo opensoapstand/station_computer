@@ -11,7 +11,6 @@ void board_test()
     connected_pcb = new pcb();
 
     connected_pcb->setup();
-    connected_pcb->setPumpPWM(255); // 255 is max speed
 
     bool dispenseCycleStarted = false;
     uint64_t dispense_cycle_count = 0;
@@ -37,7 +36,7 @@ void board_test()
 //     connected_pcb->setPumpDirection(SLOT, true);
 //     // connected_pcb->setPumpDirection(SLOT, false);
 //     connected_pcb->setPumpEnable(SLOT);
-//     // connected_pcb->setSolenoid(SLOT, true);
+//     // connected_pcb->setSolenoidOnePerSlot(SLOT, true);
 //     // connected_pcb->setSingleDispenseButtonLight(SLOT, true);
 //     //     debugOutput::sendMessage("started. press button to stop", MSG_INFO);
 //     using namespace std::chrono;
@@ -53,7 +52,7 @@ void board_test()
 //         // if (connected_pcb->getDispenseButtonEdgePositive(SLOT))
 //         // {
 //         //     connected_pcb->setPumpsDisableAll();
-//         //     connected_pcb->setSolenoid(SLOT, false);
+//         //     connected_pcb->setSolenoidOnePerSlot(SLOT, false);
 //         //     debugOutput::sendMessage("button pressed. finish up", MSG_INFO);
 //         //     connected_pcb->setSingleDispenseButtonLight(SLOT, false);
 //         //     return;
@@ -116,7 +115,7 @@ void board_test()
 //         // if (connected_pcb->getDispenseButtonEdgePositive(SLOT))
 //         // {
 //         //     connected_pcb->setPumpsDisableAll();
-//         //     connected_pcb->setSolenoid(SLOT, false);
+//         //     connected_pcb->setSolenoidOnePerSlot(SLOT, false);
 //         //     debugOutput::sendMessage("button pressed. finish up", MSG_INFO);
 //         //     connected_pcb->setSingleDispenseButtonLight(SLOT, false);
 //         //     return;

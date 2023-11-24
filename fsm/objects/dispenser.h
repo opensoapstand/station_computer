@@ -158,7 +158,7 @@ public:
       void sendToUiIfAllowed(string message);
       void logUpdateIfAllowed(string message);
 
-      void setSolenoid(bool openElseClosed);
+      void setSolenoidOnePerSlot(bool openElseClosed);
 
       bool getIsStatusUpdateAllowed();
 

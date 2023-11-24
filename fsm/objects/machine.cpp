@@ -491,13 +491,6 @@ void machine::print_receipt(string name_receipt, string receipt_cost, string rec
     debugOutput::sendMessage("end sleep", MSG_INFO);
 }
 
-// pcb *machine::getTemperature();
-//  {
-//      return 0;
-//  }double cTemp
-
-
-
 bool machine::getPumpReversalEnabled()
 {
     // return m_isPumpReversalEnabled;

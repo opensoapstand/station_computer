@@ -19,7 +19,7 @@ pcb::pcb(void)
     i2c_bus_name = (char *)calloc(strlen(DEFAULT_I2C_BUS) + 1, sizeof(char));
     if (i2c_bus_name == NULL)
     {
-        debugOutput::sendMessage("pcbEN134: Unable to allocate memory.", MSG_ERROR);
+        debugOutput::sendMessage("pcb: Unable to allocate memory.", MSG_ERROR);
         return;
     }
     strcpy(i2c_bus_name, DEFAULT_I2C_BUS);
@@ -48,7 +48,7 @@ pcb::pcb(void)
     i2c_bus_name = (char *)calloc(strlen(path) + 5, sizeof(char));
     if (i2c_bus_name == NULL)
     {
-        debugOutput::sendMessage("pcbEN134: Unable to allocate memory.", MSG_ERROR);
+        debugOutput::sendMessage("pcb: Unable to allocate memory.", MSG_ERROR);
         return;
     }
     strcpy(i2c_bus_name, "/dev/");
@@ -192,7 +192,7 @@ void pcb::setup_i2c_bus(void)
         i2c_handle = open(i2c_bus_name, O_RDWR);
         if (i2c_handle < 0)
         {
-            std::string message("pcbEN134: Error opening");
+            std::string message("pcb: Error opening");
             message.append(i2c_bus_name);
             debugOutput::sendMessage(message, MSG_ERROR);
             return;
@@ -246,6 +246,48 @@ uint8_t pcb::get_PCA9534_address_from_slot(uint8_t slot)
 
 ////////////////////////
 
+///////////////////////////
+
+bool pcb::getMCP23017Input(uint8_t slot, int posIndex)
+{
+    return (ReadByte(get_MCP23017_address_from_slot(slot), 0x00) & (1 << posIndex));
+}
+
+void pcb::setMCP23017Output(uint8_t slot, int posIndex, bool onElseOff)
+{
+    // slot starts at 1!
+
+    unsigned char reg_value;
+
+    reg_value = ReadByte(get_MCP23017_address_from_slot(slot), 0x01);
+
+    if (onElseOff)
+    {
+        reg_value = reg_value | (1UL << posIndex);
+    }
+    else
+    {
+        reg_value = reg_value & ~(1UL << posIndex);
+    }
+    // debugOutput::sendMessage("value to be sent: " + to_string(reg_value) + " to address: " + to_string(get_PCA9534_address_from_slot(slot)), MSG_INFO);
+
+    SendByte(get_MCP23017_address_from_slot(slot), 0x01, reg_value);
+}
+
+uint8_t pcb::get_MCP23017_address_from_slot(uint8_t slot)
+{
+    if (slot == 0)
+    {
+        debugOutput::sendMessage("ASSERT ERROR: slot numbers start at 1", MSG_ERROR);
+    }
+
+    uint8_t slot_index = slot - 1;
+
+    uint8_t slot_addresses[MAX_SLOT_COUNT] = {MCP23017_ADDRESS_SLOT_1, MCP23017_ADDRESS_SLOT_2, MCP23017_ADDRESS_SLOT_3, MCP23017_ADDRESS_SLOT_4, MCP23017_ADDRESS_SLOT_5, MCP23017_ADDRESS_SLOT_6, MCP23017_ADDRESS_SLOT_7, MCP23017_ADDRESS_SLOT_8};
+    return slot_addresses[slot_index];
+}
+
+////////////////////////
 void pcb::pcb_refresh()
 {
 
@@ -279,7 +321,7 @@ void pcb::setup()
 
     if (!define_pcb_version())
     {
-        std::string message("pcbEN134: I2C bus ");
+        std::string message("pcb: I2C bus ");
         // message.append(i2c_bus_name);
         message.append("has a problem.");
         debugOutput::sendMessage(message, MSG_ERROR);
@@ -303,6 +345,7 @@ bool pcb::define_pcb_version(void)
     for (uint8_t i = 0; i < MAX_SLOT_COUNT; i++)
     {
         slot_pca9534_found[i] = false;
+        slot_mcp23017_found[i] = false;
     }
 
     for (i2c_probe_address = 0x03; i2c_probe_address <= 0x77; i2c_probe_address++)
@@ -329,25 +372,53 @@ bool pcb::define_pcb_version(void)
         }
         else
         {
-            if (i2c_probe_address == PCA9534_ADDRESS_SLOT_1)
+            if (i2c_probe_address == PCA9534_ADDRESS_SLOT_1 || i2c_probe_address == MCP23017_ADDRESS_SLOT_1)
             {
-                debugOutput::sendMessage("Slot 1 PCA9534 found on I2C bus for pcb I/O", MSG_INFO);
+                debugOutput::sendMessage("Slot 1 PCA9534 OR mcp23017 found on I2C bus for pcb I/O", MSG_INFO);
                 slot_pca9534_found[0] = true;
+                slot_mcp23017_found[0] = true;
             }
-            else if (i2c_probe_address == PCA9534_ADDRESS_SLOT_2)
+            else if (i2c_probe_address == PCA9534_ADDRESS_SLOT_2 || i2c_probe_address == MCP23017_ADDRESS_SLOT_2)
             {
-                debugOutput::sendMessage("Slot 2 PCA9534 found on I2C bus for pcb I/O", MSG_INFO);
+                debugOutput::sendMessage("Slot 2 PCA9534 OR mcp23017 found on I2C bus for pcb I/O", MSG_INFO);
                 slot_pca9534_found[1] = true;
+                slot_mcp23017_found[1] = true;
             }
-            else if (i2c_probe_address == PCA9534_ADDRESS_SLOT_3)
+            else if (i2c_probe_address == PCA9534_ADDRESS_SLOT_3 || i2c_probe_address == MCP23017_ADDRESS_SLOT_3)
             {
-                debugOutput::sendMessage("Slot 3 PCA9534 found on I2C bus for pcb I/O", MSG_INFO);
+                debugOutput::sendMessage("Slot 3 PCA9534 OR mcp23017 found on I2C bus for pcb I/O", MSG_INFO);
                 slot_pca9534_found[2] = true;
+                slot_mcp23017_found[2] = true;
             }
-            else if (i2c_probe_address == PCA9534_ADDRESS_SLOT_4)
+            else if (i2c_probe_address == PCA9534_ADDRESS_SLOT_4 || i2c_probe_address == MCP23017_ADDRESS_SLOT_4)
             {
-                debugOutput::sendMessage("Slot 4 PCA9534 found on I2C bus for pcb I/O", MSG_INFO);
+                debugOutput::sendMessage("Slot 4 PCA9534 OR mcp23017 found on I2C bus for pcb I/O", MSG_INFO);
                 slot_pca9534_found[3] = true;
+                slot_mcp23017_found[3] = true;
+            }
+            else if (i2c_probe_address == MCP23017_ADDRESS_SLOT_5)
+            {
+                debugOutput::sendMessage("Slot 4 PCA9534 OR mcp23017 found on I2C bus for pcb I/O", MSG_INFO);
+                slot_pca9534_found[4] = true;
+                slot_mcp23017_found[4] = true;
+            }
+            else if (i2c_probe_address == MCP23017_ADDRESS_SLOT_6)
+            {
+                debugOutput::sendMessage("Slot 4 PCA9534 OR mcp23017 found on I2C bus for pcb I/O", MSG_INFO);
+                slot_pca9534_found[5] = true;
+                slot_mcp23017_found[5] = true;
+            }
+            else if (i2c_probe_address == MCP23017_ADDRESS_SLOT_7)
+            {
+                debugOutput::sendMessage("Slot 4 PCA9534 OR mcp23017 found on I2C bus for pcb I/O", MSG_INFO);
+                slot_pca9534_found[6] = true;
+                slot_mcp23017_found[6] = true;
+            }
+            else if (i2c_probe_address == MCP23017_ADDRESS_SLOT_8)
+            {
+                debugOutput::sendMessage("Slot 4 PCA9534 OR mcp23017 found on I2C bus for pcb I/O", MSG_INFO);
+                slot_pca9534_found[7] = true;
+                slot_mcp23017_found[7] = true;
             }
             else if (i2c_probe_address == MAX31760_ADDRESS)
             {
@@ -361,26 +432,31 @@ bool pcb::define_pcb_version(void)
 
                 debugOutput::sendMessage("ADC081C021 current sensor found. NOT IN USE YET.", MSG_INFO);
             }
-            else if (i2c_probe_address == TEMPERATURE_SENSOR_2_ADDRESS)
+            else if (i2c_probe_address == TEMPERATURE_ADC_ADS7830)
+            {
+                temperature_ads7830_found = true;
+
+                debugOutput::sendMessage("ads7830. Temperature sensor.", MSG_INFO);
+            }
+
+            else if (i2c_probe_address == TEMPERATURE_OPTIONAL_EXTERNAL_MCP9808_2_ADDRESS)
             {
                 debugOutput::sendMessage("MCP9808 Temperature Sensor 2 found.", MSG_INFO);
-                mcp9808_temperature2_sensor_found = true;
-                cTemp2 = getTemperature(TEMPERATURE_SENSOR_2_ADDRESS);
+                mcp9808_temperature_sensor_2_found = true;
+                double temp = getTemperatureFromMCP9808(TEMPERATURE_OPTIONAL_EXTERNAL_MCP9808_2_ADDRESS);
                 char temp_celcius_chars[MAX_BUF];
-                snprintf(temp_celcius_chars, sizeof(temp_celcius_chars), "%.2f", cTemp2);
+                snprintf(temp_celcius_chars, sizeof(temp_celcius_chars), "%.2f", temp);
                 string temp_celcius = (temp_celcius_chars);
-                // Output data to screen
                 debugOutput::sendMessage("Temperature at startup: " + std::string(temp_celcius), MSG_INFO);
             }
-            else if (i2c_probe_address == TEMPERATURE_SENSOR_1_ADDRESS)
+            else if (i2c_probe_address == TEMPERATURE_OPTIONAL_EXTERNAL_MCP9808_1_ADDRESS)
             {
                 debugOutput::sendMessage("MCP9808 Temperature Sensor 1 found.", MSG_INFO);
-                mcp9808_temperature_sensor_found = true;
-                cTemp = getTemperature(TEMPERATURE_SENSOR_1_ADDRESS);
+                mcp9808_temperature_sensor_1_found = true;
+                double temp = getTemperatureFromMCP9808(TEMPERATURE_OPTIONAL_EXTERNAL_MCP9808_1_ADDRESS);
                 char temp_celcius_chars[MAX_BUF];
-                snprintf(temp_celcius_chars, sizeof(temp_celcius_chars), "%.2f", cTemp);
+                snprintf(temp_celcius_chars, sizeof(temp_celcius_chars), "%.2f", temp);
                 string temp_celcius = (temp_celcius_chars);
-                // Output data to screen
                 debugOutput::sendMessage("Temperature at startup: " + std::string(temp_celcius), MSG_INFO);
             }
             else if (i2c_probe_address == PIC_ADDRESS)
@@ -404,8 +480,26 @@ bool pcb::define_pcb_version(void)
     if (max31760_pwm_found)
     {
         // definitely 8344
-        debugOutput::sendMessage("max31760 found. Definitely DSED8344 board.", MSG_INFO);
+        debugOutput::sendMessage("DSED8344 board because max31760 is found.", MSG_INFO);
         pcb_version = DSED8344_NO_PIC;
+    }
+    else if (temperature_ads7830_found)
+    {
+        // only the EN258 has a temperature chip on the pcb
+        pcb_version = EN258_8SLOTS;
+        if (slot_mcp23017_found[4] || slot_mcp23017_found[5] || slot_mcp23017_found[6] || slot_mcp23017_found[7])
+        {
+            pcb_version = EN258_8SLOTS;
+        }
+        else if (slot_mcp23017_found[0] || slot_mcp23017_found[1] || slot_mcp23017_found[2] || slot_mcp23017_found[3])
+        {
+            pcb_version = EN258_4SLOTS;
+        }
+        else
+        {
+            pcb_version = INVALID;
+            debugOutput::sendMessage("No pca9534 I/O expanders found. Impossible to determine board type.", MSG_ERROR);
+        }
     }
     else if (pic_pwm_found)
     {
@@ -434,7 +528,7 @@ bool pcb::define_pcb_version(void)
     }
     else
     {
-        debugOutput::sendMessage("No pca9534 I/O expanders found. Impossible to determine board type.", MSG_INFO);
+        debugOutput::sendMessage("Board type could not be determined.", MSG_INFO);
         pcb_version = INVALID;
     }
 
@@ -442,27 +536,18 @@ bool pcb::define_pcb_version(void)
     {
     case (INVALID):
     {
-        debugOutput::sendMessage("Pcb not valid. Is it connected?", MSG_ERROR);
-
-        if (!pic_pwm_found)
-        {
-            std::string message("No PWM generator found on I2C bus ");
-            message.append(i2c_bus_name);
-            debugOutput::sendMessage(message, MSG_ERROR);
-            debugOutput::sendMessage("Pump control impossible.", MSG_ERROR);
-            config_valid = false;
-        }
+        debugOutput::sendMessage("Pcb: Pcb not valid. Is it connected? Check found i2c devices vs expected ones.", MSG_ERROR);
     };
     break;
 
     case (DSED8344_NO_PIC):
     {
-        debugOutput::sendMessage("Pcb DSED8344 without pic found. pwm generated by MAX31760", MSG_INFO);
+        debugOutput::sendMessage("Pcb: DSED8344 without pic found. pwm generated by MAX31760", MSG_INFO);
     };
     break;
     case (DSED8344_PIC_MULTIBUTTON):
     {
-        debugOutput::sendMessage("Pcb DSED8344 with pwm generating pic found", MSG_INFO);
+        debugOutput::sendMessage("Pcb: DSED8344 with pwm generating pic found", MSG_INFO);
         if (!slot_pca9534_found[0])
         {
             debugOutput::sendMessage("PCA9534 not found! ", MSG_ERROR);
@@ -472,7 +557,7 @@ bool pcb::define_pcb_version(void)
 
     case (EN134_4SLOTS):
     {
-        debugOutput::sendMessage("Pcb EN-134 4 slots found. ", MSG_INFO);
+        debugOutput::sendMessage("Pcb: EN-134 4 slots found. ", MSG_INFO);
         for (uint8_t i = 0; i < 4; i++)
         {
             if (!slot_pca9534_found[i])
@@ -484,10 +569,33 @@ bool pcb::define_pcb_version(void)
     break;
     case (EN134_8SLOTS):
     {
-        debugOutput::sendMessage("Pcb EN-134 8 slots found.", MSG_INFO);
+        debugOutput::sendMessage("Pcb: EN-134 8 slots found.", MSG_INFO);
         for (uint8_t i = 0; i < 8; i++)
         {
             if (!slot_pca9534_found[i])
+            {
+                debugOutput::sendMessage("No controller found for slot" + to_string(i + 1), MSG_ERROR);
+            }
+        }
+    };
+    case (EN258_8SLOTS):
+    {
+        debugOutput::sendMessage("Pcb: EN-258 8 slots found.", MSG_INFO);
+        for (uint8_t i = 0; i < 8; i++)
+        {
+            if (!slot_mcp23017_found[i])
+            {
+                debugOutput::sendMessage("No controller found for slot" + to_string(i + 1), MSG_ERROR);
+            }
+        }
+    };
+    break;
+    case (EN258_4SLOTS):
+    {
+        debugOutput::sendMessage("Pcb: EN-258 4 slots found.", MSG_INFO);
+        for (uint8_t i = 0; i < 4; i++)
+        {
+            if (!slot_mcp23017_found[i])
             {
                 debugOutput::sendMessage("No controller found for slot" + to_string(i + 1), MSG_ERROR);
             }
@@ -571,7 +679,7 @@ void pcb::initialize_pcb()
         setPumpsDisableAll();
         for (uint8_t slot = 1; slot <= 4; slot++)
         {
-            setSolenoid(slot, false);
+            setSolenoidOnePerSlot(slot, false);
             setSingleDispenseButtonLight(slot, false);
         }
     };
@@ -587,7 +695,7 @@ void pcb::initialize_pcb()
         setPumpsDisableAll();
         for (uint8_t slot = 1; slot <= 8; slot++)
         {
-            setSolenoid(slot, false);
+            setSolenoidOnePerSlot(slot, false);
             setSingleDispenseButtonLight(slot, false);
         }
     };
@@ -600,22 +708,59 @@ void pcb::initialize_pcb()
     }
 }
 
-bool pcb::isTemperatureSensorAvailable()
+bool pcb::isTemperatureSensorMCP9808Available_1()
 {
-    return mcp9808_temperature_sensor_found;
+    return mcp9808_temperature_sensor_1_found;
 }
-bool pcb::isTemperatureSensor2Available()
+bool pcb::isTemperatureSensorMCP9808Available_2()
 {
-    return mcp9808_temperature2_sensor_found;
+    return mcp9808_temperature_sensor_2_found;
 }
+
+bool pcb::isTemperatureSensorADS7830Available()
+{
+    return temperature_ads7830_found;
+}
+
 bool pcb::isSlotAvailable(uint8_t slot)
 {
+
     if (slot == 0)
     {
         debugOutput::sendMessage("Slot numbering starts at 1", MSG_ERROR);
     }
 
-    return slot_pca9534_found[slot - 1];
+    switch (pcb_version)
+    {
+
+    case (DSED8344_NO_PIC):
+    {
+        return true;
+    };
+    break;
+    case (DSED8344_PIC_MULTIBUTTON):
+    {
+        return true;
+    };
+    break;
+    case (EN134_4SLOTS):
+    case (EN134_8SLOTS):
+    {
+        return slot_pca9534_found[slot - 1];
+    };
+    break;
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
+    {
+        return slot_mcp23017_found[slot - 1];
+    };
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Error PCB NOT VALID!!2", MSG_ERROR);
+    }
+    break;
+    }
 }
 ///////////////////////////////////////////////////////////////////////////
 // BUTTON FUNCTIONS
@@ -744,9 +889,6 @@ void pcb::virtualButtonUnpressHack(uint8_t slot)
     };
     case (DSED8344_PIC_MULTIBUTTON):
     {
-        // unsigned char reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x03);
-        // reg_value = reg_value | 0b10000000;
-        // SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x03, reg_value); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
     };
     break;
     case (EN134_4SLOTS):
@@ -1132,7 +1274,7 @@ void pcb::independentDispensingRefresh()
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!8", MSG_ERROR);
+        debugOutput::sendMessage("Pcb: No independent dispensing refresh cycle for this pcb. ", MSG_ERROR);
     }
     break;
     }
@@ -1159,7 +1301,7 @@ void pcb::EN134_PumpCycle_refresh(uint8_t slots)
 
             case state_init:
             {
-                setSolenoid(slot, false);
+                setSolenoidOnePerSlot(slot, false);
                 setSingleDispenseButtonLight(slot, false);
                 stopPump(slot);
                 pumpCycle_state[slot_index] = state_idle;
@@ -1207,7 +1349,7 @@ void pcb::EN134_PumpCycle_refresh(uint8_t slots)
                 {
                     pumpCycle_state[slot_index] = state_button_pressed;
                     pump_start_delay_start_epoch[slot_index] = now_epoch_millis;
-                    setSolenoid(slot, true);
+                    setSolenoidOnePerSlot(slot, true);
                     setSingleDispenseButtonLight(slot, true);
                 }
             }
@@ -1290,7 +1432,7 @@ void pcb::EN134_PumpCycle_refresh(uint8_t slots)
                 if (now_epoch_millis > (solenoid_stop_delay_start_epoch[slot_index] + SOLENOID_STOP_DELAY_MILLIS))
                 {
                     pumpCycle_state[slot_index] = state_slot_enabled;
-                    setSolenoid(slot, false);
+                    setSolenoidOnePerSlot(slot, false);
                     setSingleDispenseButtonLight(slot, false);
                 }
             }
@@ -1303,7 +1445,7 @@ void pcb::EN134_PumpCycle_refresh(uint8_t slots)
         break;
     default:
     {
-        debugOutput::sendMessage("Do not execute independent dispense cycle with this PCB", MSG_ERROR);
+        debugOutput::sendMessage("Pcb: DO NOT execute independent dispense cycle with this PCB", MSG_ERROR);
     }
     break;
     }
@@ -1336,7 +1478,7 @@ unsigned char pcb::getPumpPWM()
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!9", MSG_ERROR);
+        debugOutput::sendMessage("Pcb: No PWM setting available for this pcb.", MSG_ERROR);
         return 0;
     }
     break;
@@ -1395,7 +1537,7 @@ bool pcb::setPumpPWM(uint8_t pwm_val)
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!10", MSG_ERROR);
+        debugOutput::sendMessage("Pcb: Pcb has No pwm setting available", MSG_ERROR);
     }
     break;
     }
@@ -1404,13 +1546,33 @@ bool pcb::setPumpPWM(uint8_t pwm_val)
 
 bool pcb::setPumpSpeedPercentage(uint8_t speed_percentage)
 {
-    if (speed_percentage > 100)
+    bool success = false;
+    // pump speed is set globally. Not set per slot!
+    // pwm_val = byte value max = 255
+    switch (pcb_version)
     {
-        debugOutput::sendMessage("Speed invalid. Will set to max. Please provide argument in [0..100] interval. Provided: " + to_string(speed_percentage), MSG_WARNING);
-        speed_percentage = 100;
+    case DSED8344_NO_PIC:
+    case (DSED8344_PIC_MULTIBUTTON):
+    case (EN134_4SLOTS):
+    case (EN134_8SLOTS):
+    {
+
+        if (speed_percentage > 100)
+        {
+            debugOutput::sendMessage("Speed invalid. Will set to max. Please provide argument in [0..100] interval. Provided: " + to_string(speed_percentage), MSG_WARNING);
+            speed_percentage = 100;
+        }
+        debugOutput::sendMessage("Speed percentage set: " + to_string(speed_percentage), MSG_INFO);
+        success = SendByte(PIC_ADDRESS, 0x00, speed_percentage); // PWM value
+    };
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Pcb: Pcb has no setPumpSpeedPercentage available", MSG_ERROR);
     }
-    debugOutput::sendMessage("Speed percentage set: " + to_string(speed_percentage), MSG_INFO);
-    return SendByte(PIC_ADDRESS, 0x00, speed_percentage); // PWM value
+    break;
+    }
+    return success;
 }
 
 bool pcb::setPumpsDisableAll()
@@ -1430,6 +1592,7 @@ bool pcb::setPumpsDisableAll()
         return true;
     };
     break;
+    case (EN258_4SLOTS):
     case (EN134_4SLOTS):
     {
         uint8_t reg_value;
@@ -1440,6 +1603,7 @@ bool pcb::setPumpsDisableAll()
         }
     };
     break;
+    case (EN258_8SLOTS):
     case (EN134_8SLOTS):
     {
         uint8_t reg_value;
@@ -1450,9 +1614,10 @@ bool pcb::setPumpsDisableAll()
         }
     };
     break;
+
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!11", MSG_ERROR);
+        debugOutput::sendMessage("Pcb: Error PCB NOT VALID!!11", MSG_ERROR);
     }
     break;
     }
@@ -1501,8 +1666,10 @@ bool pcb::setPumpEnable(uint8_t slot)
     break;
     case (EN134_4SLOTS):
     case (EN134_8SLOTS):
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
     {
-        debugOutput::sendMessage("Enable pump " + to_string(slot), MSG_INFO);
+        debugOutput::sendMessage("Pcb: Enable pump " + to_string(slot), MSG_INFO);
         slotEnabled[slot_index] = true;
     };
     break;
@@ -1526,18 +1693,32 @@ bool pcb::startPump(uint8_t slot)
     {
         if (slotEnabled[slot - 1])
         {
-            debugOutput::sendMessage("Start pump " + to_string(slot), MSG_INFO);
+            debugOutput::sendMessage("Pcb: Start pump " + to_string(slot), MSG_INFO);
             setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_PUMP_ENABLE, true); // start pump
         }
         else
         {
-            debugOutput::sendMessage("Fail: Cannot start non enabled pump " + to_string(slot), MSG_WARNING);
+            debugOutput::sendMessage("Pcb: Cannot start pump. Not enabled for slot:" + to_string(slot), MSG_WARNING);
+        }
+    };
+    break;
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
+    {
+        if (slotEnabled[slot - 1])
+        {
+            debugOutput::sendMessage("Pcb: Start pump " + to_string(slot), MSG_INFO);
+            setMCP23017Output(slot, MCP23017_EN258_GPB2_PIN_OUT_PUMP, true); // stop pump
+        }
+        else
+        {
+            debugOutput::sendMessage("Pcb: Cannot start pump. Not enabled for slot:" + to_string(slot), MSG_WARNING);
         }
     };
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!124", MSG_ERROR);
+        debugOutput::sendMessage("Pcb: no pump available for unknown pcb", MSG_ERROR);
     }
     break;
     }
@@ -1553,13 +1734,20 @@ bool pcb::stopPump(uint8_t slot)
     case (EN134_4SLOTS):
     case (EN134_8SLOTS):
     {
-        debugOutput::sendMessage("Stop pump " + to_string(slot), MSG_INFO);
+        debugOutput::sendMessage("Pcb: Stop pump " + to_string(slot), MSG_INFO);
         setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_PUMP_ENABLE, false); // stop pump
+    };
+    break;
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
+    {
+        debugOutput::sendMessage("Pcb: Stop pump " + to_string(slot), MSG_INFO);
+        setMCP23017Output(slot, MCP23017_EN258_GPB2_PIN_OUT_PUMP, false); // stop pump
     };
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!124", MSG_ERROR);
+        debugOutput::sendMessage("Pcb: Unknown Pcb has No pump", MSG_ERROR);
     }
     break;
     }
@@ -1567,13 +1755,25 @@ bool pcb::stopPump(uint8_t slot)
 
 bool pcb::setPumpDirection(uint8_t slot, bool forwardElseReverse)
 {
-    // remember rotating or not.
-    // bool slotEnabled = slotEnabled[slot-1];
-    // setPumpsDisableAll();
-    // usleep(1000000);
-    bool reverseElseForward = !forwardElseReverse;
+    switch (pcb_version)
+    {
+    case (DSED8344_NO_PIC):
+    case (DSED8344_PIC_MULTIBUTTON):
+    case (EN134_4SLOTS):
+    case (EN134_8SLOTS):
+    {
+        bool reverseElseForward = !forwardElseReverse;
 
-    setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_PUMP_DIR, reverseElseForward);
+        setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_PUMP_DIR, reverseElseForward);
+    };
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Pcb: Pcb has No direction setting", MSG_ERROR);
+    }
+    break;
+    }
+
     // slotEnabled[slot-1] = slotEnabled;
 }
 
@@ -1581,7 +1781,50 @@ bool pcb::setPumpDirection(uint8_t slot, bool forwardElseReverse)
 // SOLENOID FUNCTIONS
 ///////////////////////////////////////////////////////////////////////////
 
-void pcb::setSolenoid(uint8_t slot, bool onElseOff)
+void pcb::setSolenoidFromArray(uint8_t slot, uint8_t position, bool onElseOff)
+{
+    uint8_t solenoid_positions[8] = {MCP23017_EN258_GPB3_PIN_OUT_SOLENOID_1,
+                                     MCP23017_EN258_GPB4_PIN_OUT_SOLENOID_2,
+                                     MCP23017_EN258_GPB5_PIN_OUT_SOLENOID_3,
+                                     MCP23017_EN258_GPB6_PIN_OUT_SOLENOID_4,
+                                     MCP23017_EN258_GPB7_PIN_OUT_SOLENOID_5,
+                                     MCP23017_EN258_GPA0_PIN_OUT_SOLENOID_6,
+                                     MCP23017_EN258_GPA1_PIN_OUT_SOLENOID_7,
+                                     MCP23017_EN258_GPA2_PIN_OUT_SOLENOID_8};
+    bool isValid = false;
+    switch (pcb_version)
+    {
+
+    case (EN258_4SLOTS):
+    {
+
+        if (slot > 0 && slot <= 4)
+        {
+            isValid = true;
+        }
+    }
+    break;
+    case (EN258_8SLOTS):
+    {
+        if (slot > 0 && slot <= 8)
+        {
+            isValid = true;
+        }
+    };
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Pcb: No solenoid array function available for this pcb.", MSG_ERROR);
+    }
+    break;
+    }
+
+    if (isValid)
+    {
+        setMCP23017Output(slot, solenoid_positions[position], onElseOff); // stop pump
+    }
+}
+void pcb::setSolenoidOnePerSlot(uint8_t slot, bool onElseOff)
 {
     switch (pcb_version)
     {
@@ -1600,14 +1843,85 @@ void pcb::setSolenoid(uint8_t slot, bool onElseOff)
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!13", MSG_ERROR);
+        debugOutput::sendMessage("Pcb: No single solenoid function available for this pcb.", MSG_ERROR);
     }
     break;
     }
 }
 
-double pcb::getTemperature(uint8_t temperatureSensorI2CAddress)
+double pcb::getTemperature(TemperatureSensor sensor)
 {
+
+    double temperature = 666.0;
+
+    switch (sensor)
+    {
+    case (external_sensor_fridge):
+    {
+        if (mcp9808_temperature_sensor_1_found)
+        {
+            temperature = getTemperatureFromMCP9808(TEMPERATURE_OPTIONAL_EXTERNAL_MCP9808_1_ADDRESS);
+        }
+        else
+        {
+            debugOutput::sendMessage("Pcb: temperature sensor not available (external_sensor_fridge)", MSG_ERROR);
+        }
+    }
+    break;
+    case (external_sensor_cavity):
+    {
+        if (mcp9808_temperature_sensor_2_found)
+        {
+            temperature = getTemperatureFromMCP9808(TEMPERATURE_OPTIONAL_EXTERNAL_MCP9808_2_ADDRESS);
+        }
+        else
+        {
+            debugOutput::sendMessage("Pcb: temperature sensor not available (external_sensor_cavity)", MSG_ERROR);
+        }
+    }
+    break;
+    case (pcb_sensor_fridge):
+    {
+        if (isTemperatureSensorADS7830Available())
+        {
+            temperature = getTemperatureFromADS7830(TEMPERATURE_OPTIONAL_EXTERNAL_MCP9808_2_ADDRESS, 0);
+        }
+        else
+        {
+            debugOutput::sendMessage("Pcb: temperature sensor not available (pcb_sensor_fridge)", MSG_ERROR);
+        }
+    }
+    break;
+    case (pcb_sensor_cavity):
+    {
+        if (isTemperatureSensorADS7830Available())
+        {
+            temperature = getTemperatureFromADS7830(TEMPERATURE_OPTIONAL_EXTERNAL_MCP9808_2_ADDRESS, 1);
+        }
+        {
+            debugOutput::sendMessage("Pcb: temperature sensor not available (pcb_sensor_cavity)", MSG_ERROR);
+        }
+    }
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Pcb: Unknown indicated temperature sensor.)", MSG_ERROR);
+    }
+    break;
+    }
+    return temperature;
+}
+
+double pcb::getTemperatureFromADS7830(uint8_t temperatureSensorI2CAddress, uint8_t position)
+{
+    debugOutput::sendMessage("Not yet implemented for postion" + std::to_string(position), MSG_WARNING);
+    return 666.1;
+}
+
+double pcb::getTemperatureFromMCP9808(uint8_t temperatureSensorI2CAddress)
+{
+
+    double return_temperature;
     set_i2c_address(temperatureSensorI2CAddress);
     int temperature_bytes = i2c_smbus_read_word_data(i2c_handle, 0x05);
     if (temperature_bytes < 0)
@@ -1623,63 +1937,18 @@ double pcb::getTemperature(uint8_t temperatureSensorI2CAddress)
     temperature_bytes = temperature_bytes_swapped;
     uint16_t signBit = (temperature_bytes >> 12) & 0x01;   // Sign bit is at bit 12
     uint16_t temperatureData = temperature_bytes & 0x0FFF; // Temperature data is bits 11-0
+
     if ((temperatureData & 0x0800) != 0)
     {
         // Negative temperature
         temperatureData = (~temperatureData & 0x0FFF) + 1; // Two's complement conversion
-        cTemp = -1.0 * temperatureData * 0.0625;
+        return_temperature = -1.0 * temperatureData * 0.0625;
     }
     else
     {
         // Positive temperature
-        cTemp = temperatureData * 0.0625;
+        return_temperature = temperatureData * 0.0625;
     }
 
-    return cTemp;
+    return return_temperature;
 }
-// double pcb::getTemperature2()
-// {
-//     set_i2c_address(TEMPERATURE_SENSOR_ADDRESS2);
-//     int temperature_bytes = i2c_smbus_read_word_data(i2c_handle, 0x05);
-//     if (temperature_bytes < 0)
-//     {
-//         debugOutput::sendMessage("Error did not read from temperature sensor mcp9808", MSG_INFO);
-//         return 1;
-//     }
-
-//     uint16_t msbint = temperature_bytes >> 8;
-//     uint16_t lsbint = temperature_bytes & 0x00FF;
-//     uint16_t temperature_bytes_swapped = (lsbint << 8) | msbint;
-//     // create function to swap this
-//     //     uint16_t swapBytes(uint16_t temperature_bytes) {
-//     //     uint16_t msbint = temperature_bytes >> 8;
-//     //     uint16_t lsbint = temperature_bytes & 0x00FF;
-//     //     uint16_t temperature_bytes_swapped = (lsbint << 8) | msbint;
-//     //     return temperature_bytes_swapped;
-//     // }
-
-//     // std::string binarymsb = std::bitset<16>(msbint).to_string();
-//     //debugOutput::sendMessage("Temperature as bits msb: " + binarymsb, MSG_INFO);
-
-//     // std::string binarylsb = std::bitset<16>(lsbint).to_string();
-//     // debugOutput::sendMessage("Temperature as bits lsb: " + binarylsb, MSG_INFO);
-
-//     temperature_bytes = temperature_bytes_swapped;
-//     uint16_t signBit = (temperature_bytes >> 12) & 0x01;   // Sign bit is at bit 12
-//     uint16_t temperatureData = temperature_bytes & 0x0FFF; // Temperature data is bits 11-0
-//     if ((temperatureData & 0x0800) != 0)
-//     {
-//         // Negative temperature
-//         temperatureData = (~temperatureData & 0x0FFF) + 1; // Two's complement conversion
-//         cTemp = -1.0 * temperatureData * 0.0625;
-//     }
-//     else
-//     {
-//         // Positive temperature
-//         cTemp2 = temperatureData * 0.0625;
-//     }
-//     // std::string binary = std::bitset<16>(temperature_bytes).to_string();
-//     // debugOutput::sendMessage("Temperature as bits: " + binary, MSG_INFO);
-
-//     return cTemp2;
-// }

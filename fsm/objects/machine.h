@@ -38,10 +38,6 @@ public:
     void setup();
     pcb *getPcb();
 
-    pcb *getTemperature();
-    pcb *getTemperature2();
-    // void getTemperature(temperature sensor);
-    // static pcb *control_pcb;
     pcb *control_pcb;
     Adafruit_Thermal *receipt_printer;
     void setButtonLightsBehaviour(Button_lights_behaviour behaviour);

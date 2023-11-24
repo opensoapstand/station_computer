@@ -183,7 +183,7 @@ void stateDispense::startPumping()
       productDispensers[slot_index].the_pcb->setPumpDirection(slot, true);
 
       productDispensers[slot_index].the_pcb->startPump(slot);
-      productDispensers[slot_index].the_pcb->setSolenoid(slot, true);
+      productDispensers[slot_index].the_pcb->setSolenoidOnePerSlot(slot, true);
    }
    else
    {
@@ -196,7 +196,7 @@ void stateDispense::stopPumping()
    if (productDispensers[slot_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
    {
       productDispensers[slot_index].the_pcb->stopPump(slot);
-      productDispensers[slot_index].the_pcb->setSolenoid(slot, false);
+      productDispensers[slot_index].the_pcb->setSolenoidOnePerSlot(slot, false);
    }
    else
    {

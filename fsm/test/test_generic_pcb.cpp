@@ -96,6 +96,7 @@ void board_test(pcb *connected_pcb)
 
     while (true)
     {
+        //  usleep(500000);
         using namespace std::chrono;
         uint64_t now_epoch_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
         connected_pcb->pcb_refresh();
@@ -116,6 +117,8 @@ void board_test(pcb *connected_pcb)
                     connected_pcb->setSingleDispenseButtonLight(slot, false);
                     // connected_pcb->setSolenoidOnePerSlot(slot, false);
                     connected_pcb->disableAllSolenoidsOfSlot(slot);
+                }else{
+                    usleep(1000000);
                 }
             };
 
@@ -179,6 +182,10 @@ void board_test(pcb *connected_pcb)
                             next_step = true;
                             active_slot = slot;
                         }
+                    
+                    }else{
+                        usleep(1000000);
+                        debugOutput::sendMessage("slot not there.", MSG_INFO);
                     }
                 }
             }

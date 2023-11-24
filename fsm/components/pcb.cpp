@@ -758,7 +758,7 @@ bool pcb::isSlotAvailable(uint8_t slot)
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!2", MSG_ERROR);
+        debugOutput::sendMessage("Error PCB NOT VALID!! check for slot available", MSG_ERROR);
     }
     break;
     }
@@ -838,7 +838,7 @@ void pcb::setSingleDispenseButtonLight(uint8_t slot, bool onElseOff)
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!2", MSG_ERROR);
+        debugOutput::sendMessage("Error PCB NOT VALID!!setSingleDispenseButtonLight", MSG_ERROR);
     }
     break;
     }

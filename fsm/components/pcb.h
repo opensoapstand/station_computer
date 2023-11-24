@@ -152,8 +152,7 @@ public:
     bool isTemperatureSensorMCP9808Available_2(); // 2nd sensor
     bool isTemperatureSensorADS7830Available();   // 2nd sensor
 
-    void disableAllSolenoidsOfSlot(uint8_t slot);
-
+    
     unsigned char getPumpPWM();
     bool setPumpPWM(uint8_t pwm_val);
     bool setPumpSpeedPercentage(uint8_t speed_percentage);
@@ -180,6 +179,7 @@ public:
     void dispenseButtonRefreshPerSlot(uint8_t slot);
     bool getDispenseButtonState(uint8_t slot);
 
+    void disableAllSolenoidsOfSlot(uint8_t slot);
     void setSolenoidFromArray(uint8_t slot, uint8_t position, bool onElseOff);
     void setSolenoidOnePerSlot(uint8_t slot, bool onElseOff);
     uint64_t getFlowSensorTotalPulses(uint8_t slot);

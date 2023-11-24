@@ -140,24 +140,27 @@ void page_init::onRebootTimeoutTick()
     }
 }
 
+//Init function to initialize tap payment setup
+
 void page_init::initiateTapPayment()
 {
     this->showFullScreen();
-    // Waiting for payment label setup
+    //Label setup -> Waiting for payment. Shows the page_init but the page can be used till it finishes the payment initialization
     QString waitingForPayment = p_page_idle->thisMachine->getTemplateText("page_init->label_fail_message->tap_payment");
     p_page_idle->thisMachine->setTextToObject(ui->label_fail_message, waitingForPayment);
-
+    // Tap TCP is the payment method for Verifone USA
     if (paymentMethod == PAYMENT_TAP_TCP)
     {
         page_payment_tap_tcp paymentObject;
         paymentObject.initiate_tap_setup();
     }
+    // Tap Serial is the payment method for Moneris Canada
     else if (paymentMethod == PAYMENT_TAP_SERIAL)
     {
         page_payment_tap_serial paymentSerialObject;
         paymentSerialObject.tap_serial_initiate();
     }
-
+    // Emit signal to start the TAP thread
     emit tapSetupInitialized();
 }
 

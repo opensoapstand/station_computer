@@ -72,14 +72,10 @@
 #define PCA9534_EN134_PIN_IN_FLOW_SENSOR_TICKS 6
 #define PCA9534_EN134_PIN_OUT_FLOW_SENSOR_ENABLE 7
 
-#define MCP23017_EN258_GPB0_PIN_IN_BUTTON 0
-#define MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON 1
-#define MCP23017_EN258_GPB2_PIN_OUT_PUMP 2
-#define MCP23017_EN258_GPB3_PIN_OUT_SOLENOID_1 3
-#define MCP23017_EN258_GPB4_PIN_OUT_SOLENOID_2 4
-#define MCP23017_EN258_GPB5_PIN_OUT_SOLENOID_3 5
-#define MCP23017_EN258_GPB6_PIN_OUT_SOLENOID_4 6
-#define MCP23017_EN258_GPB7_PIN_OUT_SOLENOID_5 7
+
+
+#define MCP23017_REGISTER_GPA 0
+#define MCP23017_REGISTER_GPB 0
 
 #define MCP23017_EN258_GPA0_PIN_OUT_SOLENOID_6 0
 #define MCP23017_EN258_GPA1_PIN_OUT_SOLENOID_7 1
@@ -89,6 +85,16 @@
 #define MCP23017_EN258_GPA5_NOT_USED 5
 #define MCP23017_EN258_GPA6_PIN_IN_FLOW_SENSOR_AICHI 6
 #define MCP23017_EN258_GPA7_PIN_OUT_FLOW_SENSOR_DIGMESA 7
+
+#define MCP23017_EN258_GPB0_PIN_IN_BUTTON 0
+#define MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON 1
+#define MCP23017_EN258_GPB2_PIN_OUT_PUMP 2
+#define MCP23017_EN258_GPB3_PIN_OUT_SOLENOID_1 3
+#define MCP23017_EN258_GPB4_PIN_OUT_SOLENOID_2 4
+#define MCP23017_EN258_GPB5_PIN_OUT_SOLENOID_3 5
+#define MCP23017_EN258_GPB6_PIN_OUT_SOLENOID_4 6
+#define MCP23017_EN258_GPB7_PIN_OUT_SOLENOID_5 7
+
 
 #define PUMP_START_DELAY_MILLIS 100
 #define PUMP_STOP_BEFORE_BACKTRACK_TIME_MILLIS 0
@@ -198,8 +204,8 @@ private:
     bool getPCA9534Input(uint8_t slot, int posIndex);
     void setPCA9534Output(uint8_t slot, int posIndex, bool onElseOff);
     uint8_t get_PCA9534_address_from_slot(uint8_t slot);
-    bool getMCP23017Input(uint8_t slot, int posIndex);
-    void setMCP23017Output(uint8_t slot, int posIndex, bool onElseOff);
+    bool getMCP23017Input(uint8_t slot, int posIndex, uint8_t registerAorB);
+    void setMCP23017Output(uint8_t slot, int posIndex, bool onElseOff, uint8_t registerAorB);
     uint8_t get_MCP23017_address_from_slot(uint8_t slot);
 
     bool dispenseButtonStateMemory[MAX_SLOT_COUNT];

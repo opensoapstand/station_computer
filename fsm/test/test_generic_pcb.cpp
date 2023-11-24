@@ -66,29 +66,15 @@ Dispense_state dispense_state;
 //     }
 // }
 
-void board_test()
+void board_test(pcb *connected_pcb)
 {
-
-    pcb *connected_pcb;
-    connected_pcb = new pcb();
-
-    #define IO_PIN_ENABLE_24V 410 // connector pin 36 for EN-134 pcb
-
+    int active_solenoid_position = 0; // first solenoid at position 1, but at first run, will do +1
+#define IO_PIN_ENABLE_24V 410         // connector pin 36 for EN-134 pcb
 
     int pin = IO_PIN_ENABLE_24V;
-    gpio_odyssey io24VEnable(pin) ;
+    gpio_odyssey io24VEnable(pin);
     io24VEnable.setPinAsInputElseOutput(false);
 
-
-    // gpio_odyssey* io24VEnable;
-    // io24VEnable = new gpio_odyssey(pin);
-
-    io24VEnable.setPinAsInputElseOutput(false);
-    
-
-
-
-    connected_pcb->setup();
     connected_pcb->setPumpPWM(255); // 255 is max speed
 
     bool dispenseCycleStarted = false;
@@ -124,7 +110,8 @@ void board_test()
                 {
                     connected_pcb->setPumpDirection(slot, true);
                     connected_pcb->setSingleDispenseButtonLight(slot, false);
-                    connected_pcb->setSolenoidOnePerSlot(slot, false);
+                    // connected_pcb->setSolenoidOnePerSlot(slot, false);
+                    connected_pcb->disableAllSolenoidsOfSlot(slot);
                 }
             };
 
@@ -208,11 +195,31 @@ void board_test()
             io24VEnable.writePin(true);
 
             pump_start_delay_start_epoch = now_epoch_millis;
-            connected_pcb->setSolenoidOnePerSlot(active_slot, true);
+            if (connected_pcb->get_pcb_version() == pcb::EN134_4SLOTS || connected_pcb->get_pcb_version() == pcb::EN134_8SLOTS)
+            {
+
+                connected_pcb->setSolenoidOnePerSlot(active_slot, true);
+                debugOutput::sendMessage("Activate solenoid", MSG_INFO);
+            }
+            else if (connected_pcb->get_pcb_version() == pcb::EN258_4SLOTS || connected_pcb->get_pcb_version() == pcb::EN258_8SLOTS)
+            {
+                active_solenoid_position++;
+
+                if (active_solenoid_position > 8)
+                {
+                    active_solenoid_position = 1;
+                }
+                connected_pcb->setSolenoidFromArray(active_slot, active_solenoid_position, true);
+                debugOutput::sendMessage("Activate solenoid at position : " + std::to_string(active_solenoid_position), MSG_INFO);
+            }
+            else
+            {
+                debugOutput::sendMessage("Invalid pcb ", MSG_INFO);
+            }
+
             connected_pcb->flowSensorEnable(active_slot);
             connected_pcb->setSingleDispenseButtonLight(active_slot, true);
             dispense_state = dispense_pump_delay;
-            debugOutput::sendMessage("Activate solenoid", MSG_INFO);
         };
         break;
         case (dispense_pump_delay):
@@ -309,15 +316,13 @@ void board_test()
             connected_pcb->stopPump(active_slot);
             connected_pcb->setPumpDirection(active_slot, true);
 
-           
-
             solenoid_stop_delay_start_epoch = now_epoch_millis;
             dispense_state = dispense_end_solenoid_delay;
         };
         break;
         case (dispense_end_solenoid_delay):
         {
-             io24VEnable.writePin(false);
+            io24VEnable.writePin(false);
 
             if (!AUTO_DISPENSE_ENABLED && connected_pcb->getDispenseButtonStateDebounced(active_slot))
             {
@@ -332,7 +337,9 @@ void board_test()
             if (now_epoch_millis > (solenoid_stop_delay_start_epoch + SOLENOID_STOP_DELAY_MILLIS))
             {
 
-                connected_pcb->setSolenoidOnePerSlot(active_slot, false);
+                // connected_pcb->setSolenoidOnePerSlot(active_slot, false);
+                connected_pcb->disableAllSolenoidsOfSlot(active_slot);
+
                 uint64_t cycle_pulses;
                 cycle_pulses = connected_pcb->getFlowSensorPulsesSinceEnabling(active_slot);
 
@@ -452,8 +459,6 @@ void board_test()
 //         df_ret = OK;
 //     }
 // }
-
-
 
 // void motor_test()
 // // void motor_test(int slot, int speedpwm)
@@ -592,7 +597,44 @@ void board_test()
 int main(int argc, char *argv[])
 {
     // pwm_test();
-    board_test();
+
+    pcb *pcb_to_test;
+    pcb_to_test = new pcb();
+    pcb_to_test->setup();
+
+    debugOutput::sendMessage("***********************", MSG_INFO);
+    switch (pcb_to_test->get_pcb_version())
+    {
+    case pcb::EN134_4SLOTS:
+    {
+        debugOutput::sendMessage("Test EN-134 4 slots", MSG_INFO);
+    }
+    break;
+    case pcb::EN134_8SLOTS:
+    {
+        debugOutput::sendMessage("Test EN-134 8 slots", MSG_INFO);
+    }
+    break;
+    case pcb::EN258_4SLOTS:
+    {
+        debugOutput::sendMessage("Test EN-258 4 slots", MSG_INFO);
+    }
+    break;
+    case pcb::EN258_8SLOTS:
+    {
+
+        debugOutput::sendMessage("Test EN-258 8 slots", MSG_INFO);
+    }
+    break;
+    default:
+    {
+
+        debugOutput::sendMessage("Invalid pcb pcb_to_test", MSG_INFO);
+    }
+    break;
+    }
+
+    board_test(pcb_to_test);
     debugOutput::sendMessage(to_string(argc), MSG_INFO);
 
     // motor_test(argv[1], argv[2]);

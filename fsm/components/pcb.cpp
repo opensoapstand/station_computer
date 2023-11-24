@@ -936,7 +936,7 @@ bool pcb::getDispenseButtonState(uint8_t slot)
     case (EN258_4SLOTS):
     case (EN258_8SLOTS):
     {
-        
+
         bool val = (ReadByte(get_MCP23017_address_from_slot(slot), MCP23017_REGISTER_GPB) & (1 << MCP23017_EN258_GPB0_PIN_IN_BUTTON));
 
         isPressed = !val;
@@ -1230,21 +1230,21 @@ void pcb::refreshFlowSensor(uint8_t slot)
         debugOutput::sendMessage("Slot error! Starts at 1!", MSG_ERROR);
     }
 
- bool state = false;
-  switch (pcb_version)
+    bool state = false;
+    switch (pcb_version)
     {
     case (EN134_4SLOTS):
     case (EN134_8SLOTS):
     {
-         state = getPCA9534Input(slot, PCA9534_EN134_PIN_IN_FLOW_SENSOR_TICKS);
+        state = getPCA9534Input(slot, PCA9534_EN134_PIN_IN_FLOW_SENSOR_TICKS);
     };
     break;
     case (EN258_4SLOTS):
     case (EN258_8SLOTS):
     {
         debugOutput::sendMessage("wARNING: todo: set manually which flow sensor is being used! BEST to only use one pin. or it will be a hassle in the future (define which sensor is used,....)", MSG_ERROR);
-       
-         state = getMCP23017Input(slot, MCP23017_EN258_GPA7_PIN_OUT_FLOW_SENSOR_DIGMESA, MCP23017_REGISTER_GPA);
+
+        state = getMCP23017Input(slot, MCP23017_EN258_GPA7_PIN_OUT_FLOW_SENSOR_DIGMESA, MCP23017_REGISTER_GPA);
     };
     break;
     default:
@@ -1811,6 +1811,8 @@ bool pcb::setPumpDirection(uint8_t slot, bool forwardElseReverse)
 
 void pcb::setSolenoidFromArray(uint8_t slot, uint8_t position, bool onElseOff)
 {
+    // position starts from 1
+    // slot starts from 1
     uint8_t solenoid_positions[8] = {MCP23017_EN258_GPB3_PIN_OUT_SOLENOID_1,
                                      MCP23017_EN258_GPB4_PIN_OUT_SOLENOID_2,
                                      MCP23017_EN258_GPB5_PIN_OUT_SOLENOID_3,
@@ -1820,14 +1822,20 @@ void pcb::setSolenoidFromArray(uint8_t slot, uint8_t position, bool onElseOff)
                                      MCP23017_EN258_GPA1_PIN_OUT_SOLENOID_7,
                                      MCP23017_EN258_GPA2_PIN_OUT_SOLENOID_8};
     uint8_t solenoid_positions_register[8] = {MCP23017_REGISTER_GPB,
-                                     MCP23017_REGISTER_GPB,
-                                     MCP23017_REGISTER_GPB,
-                                     MCP23017_REGISTER_GPB,
-                                     MCP23017_REGISTER_GPB,
-                                     MCP23017_REGISTER_GPA,
-                                     MCP23017_REGISTER_GPA,
-                                     MCP23017_REGISTER_GPA};
+                                              MCP23017_REGISTER_GPB,
+                                              MCP23017_REGISTER_GPB,
+                                              MCP23017_REGISTER_GPB,
+                                              MCP23017_REGISTER_GPB,
+                                              MCP23017_REGISTER_GPA,
+                                              MCP23017_REGISTER_GPA,
+                                              MCP23017_REGISTER_GPA};
     bool isValid = false;
+
+    if (position <= 0)
+    {
+        debugOutput::sendMessage("First Solenoid position is 1  !!!!", MSG_ERROR);
+    }
+
     switch (pcb_version)
     {
 
@@ -1857,9 +1865,44 @@ void pcb::setSolenoidFromArray(uint8_t slot, uint8_t position, bool onElseOff)
 
     if (isValid)
     {
-        setMCP23017Output(slot, solenoid_positions[position], onElseOff, solenoid_positions_register[position]); // stop pump
+        setMCP23017Output(slot, solenoid_positions[position - 1], onElseOff, solenoid_positions_register[position - 1]); // stop pump
     }
 }
+
+void pcb::disableAllSolenoidsOfSlot(uint8_t slot)
+{
+    switch (pcb_version)
+    {
+    case (EN134_4SLOTS):
+    case (EN134_8SLOTS):
+    {
+        setSolenoidOnePerSlot(slot, false);
+    };
+    break;
+    case (EN258_4SLOTS):
+    {
+        for (uint8_t position = 1; position <= 4; position++)
+        {
+            setSolenoidFromArray(slot, position, false);
+        }
+    }
+    break;
+    case (EN258_8SLOTS):
+    {
+        for (uint8_t position = 1; position <= 8; position++)
+        {
+            setSolenoidFromArray(slot, position, false);
+        }
+    }
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Pcb: No solenoid function available for this pcb.", MSG_ERROR);
+    }
+    break;
+    }
+}
+
 void pcb::setSolenoidOnePerSlot(uint8_t slot, bool onElseOff)
 {
     switch (pcb_version)

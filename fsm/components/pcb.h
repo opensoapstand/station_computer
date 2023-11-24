@@ -152,6 +152,8 @@ public:
     bool isTemperatureSensorMCP9808Available_2(); // 2nd sensor
     bool isTemperatureSensorADS7830Available();   // 2nd sensor
 
+    void disableAllSolenoidsOfSlot(uint8_t slot);
+
     unsigned char getPumpPWM();
     bool setPumpPWM(uint8_t pwm_val);
     bool setPumpSpeedPercentage(uint8_t speed_percentage);

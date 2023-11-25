@@ -623,26 +623,32 @@ int main(int argc, char *argv[])
 
     pcb_to_test->setup();
 
+    bool pcbValid = false;
+
     debugOutput::sendMessage("***********************", MSG_INFO);
     switch (pcb_to_test->get_pcb_version())
     {
     case pcb::EN134_4SLOTS:
     {
         debugOutput::sendMessage("Test EN-134 4 slots", MSG_INFO);
+        pcbValid = true;
     }
     break;
     case pcb::EN134_8SLOTS:
     {
         debugOutput::sendMessage("Test EN-134 8 slots", MSG_INFO);
+        pcbValid = true;
     }
     break;
     case pcb::EN258_4SLOTS:
     {
         debugOutput::sendMessage("Test EN-258 4 slots", MSG_INFO);
+        pcbValid = true;
     }
     break;
     case pcb::EN258_8SLOTS:
     {
+        pcbValid = true;
 
         debugOutput::sendMessage("Test EN-258 8 slots", MSG_INFO);
     }
@@ -654,8 +660,10 @@ int main(int argc, char *argv[])
     }
     break;
     }
-
+    if (pcbValid){
     board_test(pcb_to_test);
+
+    }
     debugOutput::sendMessage(to_string(argc), MSG_INFO);
 
     // motor_test(argv[1], argv[2]);

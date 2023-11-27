@@ -196,7 +196,6 @@ public:
     void sendEN134DefaultConfigurationToPCA9534(uint8_t slot, bool reportIfModified);
     void sendByteIfNotSetToSlot(uint8_t slot, unsigned char reg, unsigned char value, bool reportIfModified);
 
-private:
     void EN134_PumpCycle_refresh(uint8_t slots);
 
     bool set_i2c_address(unsigned char address);
@@ -209,6 +208,8 @@ private:
     bool getMCP23017Input(uint8_t slot, int posIndex, uint8_t registerAorB);
     void setMCP23017Output(uint8_t slot, int posIndex, bool onElseOff, uint8_t registerAorB);
     uint8_t get_MCP23017_address_from_slot(uint8_t slot);
+    uint8_t getMCP23017Register(uint8_t slot, uint8_t reg);
+private:
 
     bool dispenseButtonStateMemory[MAX_SLOT_COUNT];
     bool dispenseButtonIsDebounced[MAX_SLOT_COUNT];

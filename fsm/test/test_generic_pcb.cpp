@@ -4,9 +4,9 @@
 #include "../components/gpio_odyssey.h"
 #include <chrono>
 
- #define IO_PIN_ENABLE_24V 410         // connector pin 36 for EN-134 and EN258 pcb
-#define IO_PIN_ENABLE_3point3V 328         // connector pin 28 for EN258 pcb
-#define IO_PIN_ENABLE_5V 338         // connector pin 12 for EN258 pcb
+#define IO_PIN_ENABLE_24V 410      // connector pin 36 for EN-134 and EN258 pcb
+#define IO_PIN_ENABLE_3point3V 328 // connector pin 28 for EN258 pcb
+#define IO_PIN_ENABLE_5V 338       // connector pin 12 for EN258 pcb
 
 enum Dispense_state
 {
@@ -73,7 +73,6 @@ Dispense_state dispense_state;
 void board_test(pcb *connected_pcb)
 {
     int active_solenoid_position = 0; // first solenoid at position 1, but at first run, will do +1
-   
 
     int pin = IO_PIN_ENABLE_24V;
     gpio_odyssey io24VEnable(pin);
@@ -99,7 +98,9 @@ void board_test(pcb *connected_pcb)
         //  usleep(500000);
         using namespace std::chrono;
         uint64_t now_epoch_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+
         connected_pcb->pcb_refresh();
+
         // connected_pcb->independentDispensingRefresh();
 
         switch (dispense_state)
@@ -117,7 +118,9 @@ void board_test(pcb *connected_pcb)
                     connected_pcb->setSingleDispenseButtonLight(slot, false);
                     // connected_pcb->setSolenoidOnePerSlot(slot, false);
                     connected_pcb->disableAllSolenoidsOfSlot(slot);
-                }else{
+                }
+                else
+                {
                     usleep(1000000);
                 }
             };
@@ -182,8 +185,9 @@ void board_test(pcb *connected_pcb)
                             next_step = true;
                             active_slot = slot;
                         }
-                    
-                    }else{
+                    }
+                    else
+                    {
                         usleep(1000000);
                         debugOutput::sendMessage("slot not there.", MSG_INFO);
                     }
@@ -616,7 +620,7 @@ int main(int argc, char *argv[])
     gpio_odyssey controlPower3point3V(pinNumber);
     controlPower3point3V.setPinAsInputElseOutput(false);
     controlPower3point3V.writePin(true);
-    
+
     gpio_odyssey controlPower5V(IO_PIN_ENABLE_5V);
     controlPower5V.setPinAsInputElseOutput(false);
     controlPower5V.writePin(true);
@@ -660,10 +664,20 @@ int main(int argc, char *argv[])
     }
     break;
     }
-    if (pcbValid){
-    board_test(pcb_to_test);
 
+    if (pcbValid)
+    {
+        uint8_t IOCON ;
+        for (uint8_t i=0;i<16;i++){
+
+        IOCON = pcb_to_test->getMCP23017Register(1, i);
+        debugOutput::sendMessage("IOCON value: " + std::to_string(IOCON), MSG_INFO);
+        }
     }
+
+    // if (pcbValid){
+    //  board_test(pcb_to_test);
+    //  }
     debugOutput::sendMessage(to_string(argc), MSG_INFO);
 
     // motor_test(argv[1], argv[2]);

@@ -612,21 +612,22 @@ void board_test(pcb *connected_pcb)
 //     connected_pcb->pcb_refresh();
 // }
 
-int main(int argc, char *argv[])
-{
-    // pwm_test();
+
+
+void runMainTest(){
+  // pwm_test();
 
     pcb *pcb_to_test;
     pcb_to_test = new pcb();
 
-    int pinNumber = IO_PIN_ENABLE_3point3V;
-    gpio_odyssey controlPower3point3V(pinNumber);
-    controlPower3point3V.setPinAsInputElseOutput(false);
-    controlPower3point3V.writePin(true);
+    // int pinNumber = IO_PIN_ENABLE_3point3V;
+    // gpio_odyssey controlPower3point3V(pinNumber);
+    // controlPower3point3V.setPinAsInputElseOutput(false);
+    // controlPower3point3V.writePin(true);
 
-    gpio_odyssey controlPower5V(IO_PIN_ENABLE_5V);
-    controlPower5V.setPinAsInputElseOutput(false);
-    controlPower5V.writePin(true);
+    // gpio_odyssey controlPower5V(IO_PIN_ENABLE_5V);
+    // controlPower5V.setPinAsInputElseOutput(false);
+    // controlPower5V.writePin(true);
 
     pcb_to_test->setup();
 
@@ -656,7 +657,7 @@ int main(int argc, char *argv[])
         for (uint8_t i = 0; i < 16; i++)
         {
             std::string binaryString = std::bitset<8>(IOCON).to_string();
-            debugOutput::sendMessage("IOCON resister: " + std::to_string(i) + "value: " + std::to_string(IOCON) + "As bits: " + binaryString, MSG_INFO);
+            debugOutput::sendMessage("IOCON resister: " + std::to_string(i) + "value: " + std::to_string(IOCON) + ". As bits: " + binaryString, MSG_INFO);
         }
     }
     break;
@@ -682,11 +683,17 @@ int main(int argc, char *argv[])
     // if (pcbValid){
     //  board_test(pcb_to_test);
     //  }
-    debugOutput::sendMessage(to_string(argc), MSG_INFO);
 
     // motor_test(argv[1], argv[2]);
     // motor_test();
     // motor_test_ramp_up();
     // init_test();
     // test_button_lights(false);
+}
+
+int main(int argc, char *argv[])
+{
+    // runMainTest();
+    debugOutput::sendMessage(to_string(argc), MSG_INFO);
+  
 }

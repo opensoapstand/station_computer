@@ -4,6 +4,9 @@
 #include "../components/gpio_odyssey.h"
 #include <chrono>
 
+#include <bitset>
+#include <string>
+
 #define IO_PIN_ENABLE_24V 410      // connector pin 36 for EN-134 and EN258 pcb
 #define IO_PIN_ENABLE_3point3V 328 // connector pin 28 for EN258 pcb
 #define IO_PIN_ENABLE_5V 338       // connector pin 12 for EN258 pcb
@@ -648,6 +651,14 @@ int main(int argc, char *argv[])
     {
         debugOutput::sendMessage("Test EN-258 4 slots", MSG_INFO);
         pcbValid = true;
+
+          uint8_t IOCON;
+        for (uint8_t i = 0; i < 16; i++)
+        {
+            std::string binaryString = std::bitset<8>(IOCON).to_string();
+            debugOutput::sendMessage("IOCON resister: " + std::to_string(i) + "value: " + std::to_string(IOCON) +"As bits: " + binaryString, MSG_INFO);
+        }
+        
     }
     break;
     case pcb::EN258_8SLOTS:
@@ -667,12 +678,7 @@ int main(int argc, char *argv[])
 
     if (pcbValid)
     {
-        uint8_t IOCON;
-        for (uint8_t i = 0; i < 16; i++)
-        {
-            std::string binaryString = std::bitset<8>(IOCON).to_string();
-            debugOutput::sendMessage("IOCON resister: " + std::to_string(i) + "value: " + std::to_string(IOCON) +."As bits: " + binaryString, MSG_INFO);
-        }
+      
     }
 
     // if (pcbValid){

@@ -667,11 +667,11 @@ int main(int argc, char *argv[])
 
     if (pcbValid)
     {
-        uint8_t IOCON ;
-        for (uint8_t i=0;i<16;i++){
-
-        IOCON = pcb_to_test->getMCP23017Register(1, i);
-        debugOutput::sendMessage("IOCON value: " + std::to_string(IOCON), MSG_INFO);
+        uint8_t IOCON;
+        for (uint8_t i = 0; i < 16; i++)
+        {
+            std::string binaryString = std::bitset<8>(IOCON).to_string();
+            debugOutput::sendMessage("IOCON resister: " + std::to_string(i) + "value: " + std::to_string(IOCON) +."As bits: " + binaryString, MSG_INFO);
         }
     }
 

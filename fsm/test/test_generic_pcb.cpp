@@ -652,13 +652,12 @@ int main(int argc, char *argv[])
         debugOutput::sendMessage("Test EN-258 4 slots", MSG_INFO);
         pcbValid = true;
 
-          uint8_t IOCON;
+        uint8_t IOCON;
         for (uint8_t i = 0; i < 16; i++)
         {
             std::string binaryString = std::bitset<8>(IOCON).to_string();
-            debugOutput::sendMessage("IOCON resister: " + std::to_string(i) + "value: " + std::to_string(IOCON) +"As bits: " + binaryString, MSG_INFO);
+            debugOutput::sendMessage("IOCON resister: " + std::to_string(i) + "value: " + std::to_string(IOCON) + "As bits: " + binaryString, MSG_INFO);
         }
-        
     }
     break;
     case pcb::EN258_8SLOTS:
@@ -678,7 +677,6 @@ int main(int argc, char *argv[])
 
     if (pcbValid)
     {
-      
     }
 
     // if (pcbValid){

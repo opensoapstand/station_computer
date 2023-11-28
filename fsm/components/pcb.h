@@ -190,9 +190,9 @@ public:
     void flowSensorsDisableAll();
     // PcbVersion enum PcbVersion;
     enum PcbVersion pcb_version;
-    uint8_t readRegisterFromSlot(uint8_t slot, uint8_t reg);
+    uint8_t PCA9534ReadRegisterFromSlot(uint8_t slot, uint8_t reg);
 
-    void SendByteToSlot(uint8_t slot, unsigned char reg, unsigned char byte);
+    void PCA9534SendByteToSlot(uint8_t slot, unsigned char reg, unsigned char byte);
     void sendEN134DefaultConfigurationToPCA9534(uint8_t slot, bool reportIfModified);
     void sendByteIfNotSetToSlot(uint8_t slot, unsigned char reg, unsigned char value, bool reportIfModified);
 
@@ -209,6 +209,7 @@ public:
     void setMCP23017Output(uint8_t slot, int posIndex, bool onElseOff, uint8_t registerAorB);
     uint8_t get_MCP23017_address_from_slot(uint8_t slot);
     uint8_t getMCP23017Register(uint8_t slot, uint8_t reg);
+    void setMCP23017Register(uint8_t slot, uint8_t reg, uint8_t value);
 private:
 
     bool dispenseButtonStateMemory[MAX_SLOT_COUNT];

@@ -8,7 +8,7 @@
 #include <string>
 
 #define IO_PIN_ENABLE_24V 410      // connector pin 36 for EN-134 and EN258 pcb
-#define IO_PIN_ENABLE_3point3V 328 // connector pin 28 for EN258 pcb
+#define IO_PIN_ENABLE_3point3V 389 // connector pin 28 for EN258 pcb
 #define IO_PIN_ENABLE_5V 338       // connector pin 12 for EN258 pcb
 
 enum Dispense_state
@@ -612,18 +612,17 @@ void board_test(pcb *connected_pcb)
 //     connected_pcb->pcb_refresh();
 // }
 
-
-
-void runMainTest(){
-  // pwm_test();
+void runMainTest()
+{
+    // pwm_test();
 
     pcb *pcb_to_test;
     pcb_to_test = new pcb();
 
-    // int pinNumber = IO_PIN_ENABLE_3point3V;
-    // gpio_odyssey controlPower3point3V(pinNumber);
-    // controlPower3point3V.setPinAsInputElseOutput(false);
-    // controlPower3point3V.writePin(true);
+     int pinNumber = IO_PIN_ENABLE_3point3V;
+    gpio_odyssey controlPower3point3V(pinNumber);
+    controlPower3point3V.setPinAsInputElseOutput(false);
+    controlPower3point3V.writePin(true);
 
     // gpio_odyssey controlPower5V(IO_PIN_ENABLE_5V);
     // controlPower5V.setPinAsInputElseOutput(false);
@@ -654,8 +653,13 @@ void runMainTest(){
         pcbValid = true;
 
         uint8_t IOCON;
-        for (uint8_t i = 0; i < 16; i++)
+        // pcb_to_test->setMCP23017Register(1, 0x0A, 0x70);
+        // pcb_to_test->setMCP23017Register(1, 0x0A, 0x80);
+        // pcb_to_test->setMCP23017Register(1, 0x05, 0x00);
+        pcb_to_test->setMCP23017Register(1, 0x05, 0x3E);
+        for (uint8_t i = 0; i < 26; i++)
         {
+            IOCON = pcb_to_test->getMCP23017Register(1, i);
             std::string binaryString = std::bitset<8>(IOCON).to_string();
             debugOutput::sendMessage("IOCON resister: " + std::to_string(i) + "value: " + std::to_string(IOCON) + ". As bits: " + binaryString, MSG_INFO);
         }
@@ -693,7 +697,6 @@ void runMainTest(){
 
 int main(int argc, char *argv[])
 {
-    // runMainTest();
+    runMainTest();
     debugOutput::sendMessage(to_string(argc), MSG_INFO);
-  
 }

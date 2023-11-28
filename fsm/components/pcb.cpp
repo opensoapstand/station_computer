@@ -119,13 +119,13 @@ bool pcb::SendByte(unsigned char address, unsigned char reg, unsigned char byte)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void pcb::SendByteToSlot(uint8_t slot, unsigned char reg, unsigned char byte)
+void pcb::PCA9534SendByteToSlot(uint8_t slot, unsigned char reg, unsigned char byte)
 {
 
     SendByte(get_PCA9534_address_from_slot(slot), reg, byte);
 }
 
-uint8_t pcb::readRegisterFromSlot(uint8_t slot, uint8_t reg)
+uint8_t pcb::PCA9534ReadRegisterFromSlot(uint8_t slot, uint8_t reg)
 {
     return ReadByte(get_PCA9534_address_from_slot(slot), reg);
 }
@@ -247,6 +247,12 @@ uint8_t pcb::get_PCA9534_address_from_slot(uint8_t slot)
 ////////////////////////
 
 ///////////////////////////
+
+void pcb::setMCP23017Register(uint8_t slot, uint8_t reg, uint8_t value)
+{
+
+    SendByte(get_MCP23017_address_from_slot(slot), reg, value);
+}
 
 uint8_t pcb::getMCP23017Register(uint8_t slot, uint8_t reg)
 {
@@ -625,7 +631,7 @@ void pcb::sendEN134DefaultConfigurationToPCA9534(uint8_t slot, bool reportIfModi
 void pcb::sendByteIfNotSetToSlot(uint8_t slot, unsigned char reg, unsigned char value, bool reportIfModified)
 {
     int attempts = 10;
-    uint8_t readVal = readRegisterFromSlot(slot, reg);
+    uint8_t readVal = PCA9534ReadRegisterFromSlot(slot, reg);
     while (readVal != value)
     {
         if (attempts < 0)
@@ -634,13 +640,13 @@ void pcb::sendByteIfNotSetToSlot(uint8_t slot, unsigned char reg, unsigned char 
             break;
         }
         attempts--;
-        SendByteToSlot(slot, reg, value); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
+        PCA9534SendByteToSlot(slot, reg, value); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
         debugOutput::sendMessage("PCA9534 register " + to_string(reg) + " of slot: " + to_string(slot) + ": " + to_string(readVal) + ". Not configured right. Set to value: " + to_string(value), MSG_INFO);
         if (reportIfModified)
         {
             debugOutput::sendMessage("WARNING: This register was changed. Was this a glitch?", MSG_WARNING);
         }
-        readVal = readRegisterFromSlot(slot, reg);
+        readVal = PCA9534ReadRegisterFromSlot(slot, reg);
     }
 }
 
@@ -708,12 +714,12 @@ void pcb::initialize_pcb()
     break;
     case (EN258_4SLOTS):
     {
-         debugOutput::sendMessage("TODO INITIALIZE PCB!!!!!!!", MSG_ERROR);
+        debugOutput::sendMessage("TODO INITIALIZE PCB!!!!!!!", MSG_ERROR);
     };
     break;
     case (EN258_8SLOTS):
     {
-         debugOutput::sendMessage("TODO INITIALIZE PCB!!!!!!!", MSG_ERROR);
+        debugOutput::sendMessage("TODO INITIALIZE PCB!!!!!!!", MSG_ERROR);
     };
     break;
     default:

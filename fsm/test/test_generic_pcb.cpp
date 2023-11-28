@@ -6,6 +6,7 @@
 
 #include <bitset>
 #include <string>
+#include <iomanip>
 
 #define IO_PIN_ENABLE_24V 410      // connector pin 36 for EN-134 and EN258 pcb
 #define IO_PIN_ENABLE_3point3V 389 // connector pin 28 for EN258 pcb
@@ -28,9 +29,16 @@ enum Dispense_state
 };
 Dispense_state dispense_state;
 
+#ifndef PUMP_START_DELAY_MILLIS
 #define PUMP_START_DELAY_MILLIS 50
+#endif
+#ifndef PUMP_BACKTRACK_TIME_MILLIS
 #define PUMP_BACKTRACK_TIME_MILLIS 50
+#endif
+
+#ifndef SOLENOID_STOP_DELAY_MILLIS
 #define SOLENOID_STOP_DELAY_MILLIS 50
+#endif
 
 #define AUTO_DISPENSE_ENABLED false
 #define AUTO_DISPENSE_SLOT 2
@@ -619,10 +627,13 @@ void runMainTest()
     pcb *pcb_to_test;
     pcb_to_test = new pcb();
 
-     int pinNumber = IO_PIN_ENABLE_3point3V;
-    gpio_odyssey controlPower3point3V(pinNumber);
+    gpio_odyssey controlPower3point3V(IO_PIN_ENABLE_3point3V);
     controlPower3point3V.setPinAsInputElseOutput(false);
     controlPower3point3V.writePin(true);
+
+    gpio_odyssey controlPower24V(IO_PIN_ENABLE_24V);
+    controlPower24V.setPinAsInputElseOutput(false);
+    controlPower24V.writePin(false);
 
     // gpio_odyssey controlPower5V(IO_PIN_ENABLE_5V);
     // controlPower5V.setPinAsInputElseOutput(false);
@@ -652,16 +663,70 @@ void runMainTest()
         debugOutput::sendMessage("Test EN-258 4 slots", MSG_INFO);
         pcbValid = true;
 
-        uint8_t IOCON;
-        // pcb_to_test->setMCP23017Register(1, 0x0A, 0x70);
-        // pcb_to_test->setMCP23017Register(1, 0x0A, 0x80);
-        // pcb_to_test->setMCP23017Register(1, 0x05, 0x00);
-        pcb_to_test->setMCP23017Register(1, 0x05, 0x3E);
-        for (uint8_t i = 0; i < 26; i++)
+        uint8_t IOCON_value;
+        uint8_t register_value;
+
+        
+        IOCON_value |= 0x02; // INTPOL...
+        IOCON_value |= 0x00; // BANK disable.
+        // IOCON_value |= 0x80; // BANK enable.
+        IOCON_value |= 0x00; // BANK disable.
+
+        uint8_t GPIOA = 0x00;
+        uint8_t GPIOB = 0x00;
+
+        bool light = true;
+
+        if (light)
         {
-            IOCON = pcb_to_test->getMCP23017Register(1, i);
-            std::string binaryString = std::bitset<8>(IOCON).to_string();
-            debugOutput::sendMessage("IOCON resister: " + std::to_string(i) + "value: " + std::to_string(IOCON) + ". As bits: " + binaryString, MSG_INFO);
+            GPIOB &= ~(1 << MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON);
+        }
+        else
+        {
+            GPIOB |= (1 << MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON);
+        }
+
+        pcb_to_test->setMCP23017Register(1, 0x0A, IOCON_value); // IOCON (IOCON.bank = 1)
+        pcb_to_test->setMCP23017Register(1, 0x00, 0xC0);        // IODIRA (IOCON.bank = 1)
+        pcb_to_test->setMCP23017Register(1, 0x10, 0x01);        // IODIRA (IOCON.bank = 1
+        pcb_to_test->setMCP23017Register(1, 0x19, GPIOB);       // GPIOB (IOCON.bank = 1 // button off (0 for ON)
+
+        // pcb_to_test->setMCP23017Register(1, 0x0A, IOCON_value); // IOCON (IOCON.bank = 0)
+        // pcb_to_test->setMCP23017Register(1, 0x00, 0xC0);        // IODIRA (IOCON.bank = 0)
+        // pcb_to_test->setMCP23017Register(1, 0x01, 0x01);        // IODIRA (IOCON.bank = 0
+        // pcb_to_test->setMCP23017Register(1, 0x1xxxxxxxxxxxxxx9, GPIOB);       // GPIOB (IOCON.bank = 0 // button off (0 for ON)
+
+        // pcb_to_test->setMCP23017Register(1, 0x19, 0x02);  // GPIOB (IOCON.bank = 1 // button off (0 for ON)
+        // pcb_to_test->setMCP23017Register(1, 0x19, 0x00);  // GPIOB (IOCON.bank = 1 // button on (0 for ON)
+        // pcb_to_test->setMCP23017Register(1, 0x05, 0x3E);
+        // pcb_to_test->setMCP23017Register(1, 0x05, 0x3E);
+        for (uint8_t i = 0; i < 100; i++)
+        {
+            debugOutput::sendMessage("----------------------", MSG_INFO);
+            for (uint8_t i = 0; i < 36; i++)
+            {
+                std::stringstream ss;
+                register_value = pcb_to_test->getMCP23017Register(1, i);
+                std::string binaryString = std::bitset<8>(register_value).to_string();
+
+                ss << "register: " << std::to_string(i) << " (0x"
+                   << std::setfill('0') << std::setw(2) << std::hex << static_cast<unsigned int>(i) << ") value: "
+                   << std::to_string(register_value) << ". As bits: " << binaryString;
+
+                debugOutput::sendMessage(ss.str(), MSG_INFO);
+            }
+            usleep(500000);
+            light = !light;
+            if (light)
+            {
+                GPIOB &= ~(1 << MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON);
+            }
+            else
+            {
+                GPIOB |= (1 << MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON);
+            }
+
+            pcb_to_test->setMCP23017Register(1, 0x19, GPIOB); // GPIOB (IOCON.bank = 1 // button off (0 for ON)
         }
     }
     break;

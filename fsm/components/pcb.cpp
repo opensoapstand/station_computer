@@ -259,6 +259,7 @@ uint8_t pcb::getMCP23017Register(uint8_t slot, uint8_t reg)
 
     return (ReadByte(get_MCP23017_address_from_slot(slot), reg));
 }
+
 bool pcb::getMCP23017Input(uint8_t slot, int posIndex, uint8_t registerAorB)
 {
 

@@ -732,10 +732,21 @@ void pcb::initialize_pcb()
             uint8_t GPIOA_value = 0x00;
             uint8_t GPIOB_value = 0x00;
 
-            GPIOB_value |= 0x01 << MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON; // switch off button light
+            // GPIOB_value |= 0x01 << MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON; // switch off button light
 
-            setMCP23017Register(slot, MCP23017_REGISTER_GPB, GPIOB_value); // GPIOB (IOCON.bank = 1 // button off (0 for ON)
             setMCP23017Register(slot, MCP23017_REGISTER_GPA, GPIOA_value); // GPIOA (IOCON.bank = 1 // button off (0 for ON)
+            setMCP23017Register(slot, MCP23017_REGISTER_GPB, GPIOB_value); // GPIOB (IOCON.bank = 1 // button off (0 for ON)
+
+            setFlowSensorTypeEN258(slot, true);
+
+            if (getFlowSensorTypeEN258DigmesaElseAichi(slot))
+            {
+                debugOutput::sendMessage("Flow sensor set to DIGMESA.", MSG_INFO);
+            }
+            else
+            {
+                debugOutput::sendMessage("Flow sensor set to AICHI.", MSG_INFO);
+            }
         }
 
         setPumpsDisableAll();
@@ -750,7 +761,7 @@ void pcb::initialize_pcb()
             }
         }
 
-         debugOutput::sendMessage("Initialized.", MSG_INFO);
+        debugOutput::sendMessage("Initialized.", MSG_INFO);
     };
     break;
     case (EN258_8SLOTS):
@@ -1295,6 +1306,15 @@ uint64_t pcb::getFlowSensorTotalPulses(uint8_t slot)
     uint8_t slot_index = slot - 1;
     return flow_sensor_total_pulses[slot_index];
 }
+bool pcb::getFlowSensorTypeEN258DigmesaElseAichi(uint8_t slot)
+{
+    return flowSensorDigmesaElseAichi[slot];
+}
+void pcb::setFlowSensorTypeEN258(uint8_t slot, bool isDigmesaElseAichi)
+{
+    flowSensorDigmesaElseAichi[slot] = isDigmesaElseAichi;
+}
+
 void pcb::refreshFlowSensor(uint8_t slot)
 {
     if (slot == 0)
@@ -1314,9 +1334,16 @@ void pcb::refreshFlowSensor(uint8_t slot)
     case (EN258_4SLOTS):
     case (EN258_8SLOTS):
     {
-        debugOutput::sendMessage("wARNING: todo: set manually which flow sensor is being used! BEST to only use one pin. or it will be a hassle in the future (define which sensor is used,....)", MSG_ERROR);
+        // debugOutput::sendMessage("wARNING: todo: set manually which flow sensor is being used! BEST to only use one pin. or it will be a hassle in the future (define which sensor is used,....)", MSG_ERROR);
 
-        state = getMCP23017Input(slot, MCP23017_EN258_GPA7_PIN_OUT_FLOW_SENSOR_DIGMESA, MCP23017_REGISTER_GPA);
+        if (getFlowSensorTypeEN258DigmesaElseAichi(slot))
+        {
+            state = getMCP23017Input(slot, MCP23017_EN258_GPA7_PIN_OUT_FLOW_SENSOR_DIGMESA, MCP23017_REGISTER_GPA);
+        }
+        else
+        {
+            state = getMCP23017Input(slot, MCP23017_EN258_GPA6_PIN_IN_FLOW_SENSOR_AICHI, MCP23017_REGISTER_GPA);
+        }
     };
     break;
     default:
@@ -1937,8 +1964,8 @@ void pcb::setSolenoidFromArray(uint8_t slot, uint8_t position, bool onElseOff)
 
     if (isValid)
     {
-        setMCP23017Output(slot, solenoid_positions[position - 1], onElseOff, solenoid_positions_register[position - 1]); // stop pump
-        debugOutput::sendMessage("Pcb: Solenoid array ", MSG_ERROR);
+        setMCP23017Output(slot, solenoid_positions[position - 1], onElseOff, solenoid_positions_register[position - 1]); 
+        debugOutput::sendMessage("Pcb: Solenoid array. Position: " + std::to_string(position) + ". Slot: " + std::to_string(slot) + ". Enabled: " + std::to_string(onElseOff), MSG_ERROR);
     }
 }
 

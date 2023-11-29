@@ -210,8 +210,12 @@ public:
     uint8_t get_MCP23017_address_from_slot(uint8_t slot);
     uint8_t getMCP23017Register(uint8_t slot, uint8_t reg);
     void setMCP23017Register(uint8_t slot, uint8_t reg, uint8_t value);
+    void setFlowSensorTypeEN258(uint8_t slot, bool isDigmesaElseAichi);
+    bool getFlowSensorTypeEN258DigmesaElseAichi(uint8_t slot);
 private:
 
+
+    bool flowSensorDigmesaElseAichi[MAX_SLOT_COUNT];
     bool dispenseButtonStateMemory[MAX_SLOT_COUNT];
     bool dispenseButtonIsDebounced[MAX_SLOT_COUNT];
     bool dispenseButtonStateDebounced[MAX_SLOT_COUNT];

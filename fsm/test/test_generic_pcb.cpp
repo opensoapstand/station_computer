@@ -633,7 +633,7 @@ void runMainTest()
 
     gpio_odyssey controlPower24V(IO_PIN_ENABLE_24V);
     controlPower24V.setPinAsInputElseOutput(false);
-    controlPower24V.writePin(false);
+    controlPower24V.writePin(true);
 
     // gpio_odyssey controlPower5V(IO_PIN_ENABLE_5V);
     // controlPower5V.setPinAsInputElseOutput(false);
@@ -663,70 +663,113 @@ void runMainTest()
         debugOutput::sendMessage("Test EN-258 4 slots", MSG_INFO);
         pcbValid = true;
 
-        uint8_t IOCON_value;
-        uint8_t register_value;
-
         
-        IOCON_value |= 0x02; // INTPOL...
-        IOCON_value |= 0x00; // BANK disable.
-        // IOCON_value |= 0x80; // BANK enable.
-        IOCON_value |= 0x00; // BANK disable.
+        uint8_t register_gpioB_value;
+        uint8_t register_gpioA_value;
 
-        uint8_t GPIOA = 0x00;
-        uint8_t GPIOB = 0x00;
 
-        bool light = true;
 
-        if (light)
-        {
-            GPIOB &= ~(1 << MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON);
-        }
-        else
-        {
-            GPIOB |= (1 << MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON);
-        }
+        uint8_t GPIOA_value = 0x00;
+        uint8_t GPIOB_value = 0x00;
 
-        pcb_to_test->setMCP23017Register(1, 0x0A, IOCON_value); // IOCON (IOCON.bank = 1)
-        pcb_to_test->setMCP23017Register(1, 0x00, 0xC0);        // IODIRA (IOCON.bank = 1)
-        pcb_to_test->setMCP23017Register(1, 0x10, 0x01);        // IODIRA (IOCON.bank = 1
-        pcb_to_test->setMCP23017Register(1, 0x19, GPIOB);       // GPIOB (IOCON.bank = 1 // button off (0 for ON)
+        bool active = true;
+
+        // if (active)
+        // {
+        //     GPIOB_value &= ~(1 << MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON);
+        // }
+        // else
+        // {
+        //     GPIOB_value |= (1 << MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON);
+        // }
+
+        // pcb_to_test->setMCP23017Register(1, 0x0A, IOCON_value); // IOCON (IOCON.bank = 0)
+
+        // pcb_to_test->setMCP23017Register(1, 0x00, 0xC0);        // IODIRA (IOCON.bank = 1)
+        // pcb_to_test->setMCP23017Register(1, 0x10, 0x01);        // IODIRB (IOCON.bank = 1
+        // pcb_to_test->setMCP23017Register(1, MCP23017_REGISTER_GPB, GPIOB_value);       // GPIOB (IOCON.bank = 1 // button off (0 for ON)
+        // pcb_to_test->setMCP23017Register(1, MCP23017_REGISTER_GPA, GPIOA_value);       // GPIOA (IOCON.bank = 1 // button off (0 for ON)
 
         // pcb_to_test->setMCP23017Register(1, 0x0A, IOCON_value); // IOCON (IOCON.bank = 0)
         // pcb_to_test->setMCP23017Register(1, 0x00, 0xC0);        // IODIRA (IOCON.bank = 0)
         // pcb_to_test->setMCP23017Register(1, 0x01, 0x01);        // IODIRA (IOCON.bank = 0
-        // pcb_to_test->setMCP23017Register(1, 0x1xxxxxxxxxxxxxx9, GPIOB);       // GPIOB (IOCON.bank = 0 // button off (0 for ON)
+        // pcb_to_test->setMCP23017Register(1, 0x1xxxxxxxxxxxxxx9, GPIOB_value);       // GPIOB (IOCON.bank = 0 // button off (0 for ON)
 
         // pcb_to_test->setMCP23017Register(1, 0x19, 0x02);  // GPIOB (IOCON.bank = 1 // button off (0 for ON)
         // pcb_to_test->setMCP23017Register(1, 0x19, 0x00);  // GPIOB (IOCON.bank = 1 // button on (0 for ON)
         // pcb_to_test->setMCP23017Register(1, 0x05, 0x3E);
         // pcb_to_test->setMCP23017Register(1, 0x05, 0x3E);
-        for (uint8_t i = 0; i < 100; i++)
+
+
+
+        // pcb_to_test->setMCP23017Register(1, MCP23017_REGISTER_GPB, GPIOB_value); // GPIOB (IOCON.bank = 1 // button off (0 for ON)
+        // pcb_to_test->setMCP23017Output(1, MCP23017_EN258_GPB4_PIN_OUT_SOLENOID_2, false, MCP23017_REGISTER_GPB);
+        // pcb_to_test->setMCP23017Output(1, MCP23017_EN258_GPB2_PIN_OUT_PUMP, false, MCP23017_REGISTER_GPB);
+        // pcb_to_test->setMCP23017Output(1, MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON, true, MCP23017_REGISTER_GPB);
+
+        for (uint8_t i = 0; i < 1000; i++)
         {
             debugOutput::sendMessage("----------------------", MSG_INFO);
-            for (uint8_t i = 0; i < 36; i++)
-            {
-                std::stringstream ss;
-                register_value = pcb_to_test->getMCP23017Register(1, i);
-                std::string binaryString = std::bitset<8>(register_value).to_string();
+                // std::stringstream ssA;
+                
+                // register_gpioA_value = pcb_to_test->getMCP23017Register(1, MCP23017_REGISTER_GPA);
+                // std::string binaryString_gpioA = std::bitset<8>(register_gpioA_value).to_string();
+                // ssA << "register GPIOA (0x"
+                //    << std::setfill('0') << std::setw(2) << std::hex << static_cast<unsigned int>(MCP23017_REGISTER_GPA) << ") value: "
+                //    << std::to_string(register_gpioA_value) << ". \tAs bits: " << binaryString_gpioA;
+                // debugOutput::sendMessage(ssA.str(), MSG_INFO);
+                
+                // std::stringstream ssB;
+                // register_gpioB_value = pcb_to_test->getMCP23017Register(1, MCP23017_REGISTER_GPB);
+                // std::string binaryString_gpioB = std::bitset<8>(register_gpioB_value).to_string();
+                // ssB << "register GPIOB (0x"
+                //    << std::setfill('0') << std::setw(2) << std::hex << static_cast<unsigned int>(MCP23017_REGISTER_GPB) << ") value: "
+                //    << std::to_string(register_gpioB_value) << ". \tAs bits: " << binaryString_gpioB;
+                // debugOutput::sendMessage(ssB.str(), MSG_INFO);
 
-                ss << "register: " << std::to_string(i) << " (0x"
-                   << std::setfill('0') << std::setw(2) << std::hex << static_cast<unsigned int>(i) << ") value: "
-                   << std::to_string(register_value) << ". As bits: " << binaryString;
 
-                debugOutput::sendMessage(ss.str(), MSG_INFO);
-            }
-            usleep(500000);
-            light = !light;
-            if (light)
+
+
+            // for (uint8_t i = 0; i < 36; i++)
+            // {
+            //     std::stringstream ss;
+            //     register_gpioB_value = pcb_to_test->getMCP23017Register(1, i);
+            //     std::string binaryString = std::bitset<8>(register_gpioB_value).to_string();
+
+            //     ss << "register: " << std::to_string(i) << " (0x"
+            //        << std::setfill('0') << std::setw(2) << std::hex << static_cast<unsigned int>(i) << ") value: "
+            //        << std::to_string(register_gpioB_value) << ". As bits: " << binaryString;
+
+            //     debugOutput::sendMessage(ss.str(), MSG_INFO);
+            // }
+
+            usleep(1000000);
+
+            active = !active;
+            if (active)
             {
-                GPIOB &= ~(1 << MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON);
+                pcb_to_test->setPumpEnable(1);
+                pcb_to_test->startPump(1);
+                pcb_to_test->setSolenoidFromArray(1, 6,true);
+                pcb_to_test->setSolenoidFromArray(2, 6,true);
+                pcb_to_test->setSolenoidFromArray(3, 6,true);
+                pcb_to_test->setSolenoidFromArray(4, 6,true);
+
+
             }
             else
             {
-                GPIOB |= (1 << MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON);
+                pcb_to_test->setPumpsDisableAll();
+                pcb_to_test->setSolenoidFromArray(1, 6,false);
+                pcb_to_test->setSolenoidFromArray(2, 6,false);
+                pcb_to_test->setSolenoidFromArray(3, 6,false);
+                pcb_to_test->setSolenoidFromArray(4, 6,false);
             }
 
-            pcb_to_test->setMCP23017Register(1, 0x19, GPIOB); // GPIOB (IOCON.bank = 1 // button off (0 for ON)
+            // pcb_to_test->setMCP23017Register(1, MCP23017_REGISTER_GPB, GPIOB_value); // GPIOB (IOCON.bank = 1 // button off (0 for ON)
+            // pcb_to_test->setMCP23017Output(1, MCP23017_EN258_GPB4_PIN_OUT_SOLENOID_2, light, MCP23017_REGISTER_GPB);
+            // pcb_to_test->setMCP23017Output(1, MCP23017_EN258_GPB2_PIN_OUT_PUMP, light, MCP23017_REGISTER_GPB);
+            // pcb_to_test->setMCP23017Output(1, MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON, !light, MCP23017_REGISTER_GPB);
         }
     }
     break;

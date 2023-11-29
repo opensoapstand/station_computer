@@ -260,19 +260,21 @@ uint8_t pcb::getMCP23017Register(uint8_t slot, uint8_t reg)
     return (ReadByte(get_MCP23017_address_from_slot(slot), reg));
 }
 
-bool pcb::getMCP23017Input(uint8_t slot, int posIndex, uint8_t registerAorB)
+bool pcb::getMCP23017Input(uint8_t slot, int posIndex, uint8_t GPIORegister)
 {
 
-    return (ReadByte(get_MCP23017_address_from_slot(slot), registerAorB) & (1 << posIndex));
+    return (ReadByte(get_MCP23017_address_from_slot(slot), GPIORegister) & (1 << posIndex));
 }
 
-void pcb::setMCP23017Output(uint8_t slot, int posIndex, bool onElseOff, uint8_t registerAorB)
+void pcb::setMCP23017Output(uint8_t slot, int posIndex, bool onElseOff, uint8_t GPIORegister)
 {
     // slot starts at 1!
 
+    // GPIORegister --> gpioA or gpioB register value
+
     unsigned char reg_value;
 
-    reg_value = ReadByte(get_MCP23017_address_from_slot(slot), registerAorB);
+    reg_value = ReadByte(get_MCP23017_address_from_slot(slot), GPIORegister);
 
     if (onElseOff)
     {
@@ -284,7 +286,7 @@ void pcb::setMCP23017Output(uint8_t slot, int posIndex, bool onElseOff, uint8_t 
     }
     // debugOutput::sendMessage("value to be sent: " + to_string(reg_value) + " to address: " + to_string(get_PCA9534_address_from_slot(slot)), MSG_INFO);
 
-    SendByte(get_MCP23017_address_from_slot(slot), registerAorB, reg_value);
+    SendByte(get_MCP23017_address_from_slot(slot), GPIORegister, reg_value);
 }
 
 uint8_t pcb::get_MCP23017_address_from_slot(uint8_t slot)
@@ -715,7 +717,40 @@ void pcb::initialize_pcb()
     break;
     case (EN258_4SLOTS):
     {
-        debugOutput::sendMessage("TODO INITIALIZE PCB!!!!!!!", MSG_ERROR);
+
+        for (uint8_t slot = 1; slot <= 4; slot++)
+        {
+            uint8_t IOCON_value;
+            // IOCON_value |= 0x02;                          // INTPOL...
+            IOCON_value |= 0x80;                          // BANK disable.
+                                                          // IOCON_value |= 0x80; // BANK enable.
+            setMCP23017Register(slot, 0x0A, IOCON_value); // IOCON (IOCON.bank = 0)
+            setMCP23017Register(slot, 0x00, 0xC0);        // IODIRA (IOCON.bank = 1)
+            setMCP23017Register(slot, 0x10, 0x01);        // IODIRB (IOCON.bank = 1
+                                                          // sendEN134DefaultConfigurationToPCA9534(slot, true);
+
+            uint8_t GPIOA_value = 0x00;
+            uint8_t GPIOB_value = 0x00;
+
+            GPIOB_value |= 0x01 << MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON; // switch off button light
+
+            setMCP23017Register(slot, MCP23017_REGISTER_GPB, GPIOB_value); // GPIOB (IOCON.bank = 1 // button off (0 for ON)
+            setMCP23017Register(slot, MCP23017_REGISTER_GPA, GPIOA_value); // GPIOA (IOCON.bank = 1 // button off (0 for ON)
+        }
+
+        setPumpsDisableAll();
+        for (uint8_t slot = 1; slot <= 4; slot++)
+        {
+
+            for (uint8_t position = 1; position <= 8; position++)
+            {
+
+                setSolenoidFromArray(slot, position, false);
+                setSingleDispenseButtonLight(slot, false);
+            }
+        }
+
+         debugOutput::sendMessage("Initialized.", MSG_INFO);
     };
     break;
     case (EN258_8SLOTS):
@@ -855,6 +890,21 @@ void pcb::setSingleDispenseButtonLight(uint8_t slot, bool onElseOff)
         {
             // debugOutput::sendMessage("Set button light off: " + to_string(slot), MSG_INFO);
             setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_BUTTON_LED_LOW_IS_ON, true);
+        }
+    };
+    break;
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
+    {
+        if (onElseOff)
+        {
+            // debugOutput::sendMessage("Set button light on: " + to_string(slot), MSG_INFO);
+            setMCP23017Output(slot, MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON, false, MCP23017_REGISTER_GPB);
+        }
+        else
+        {
+            // debugOutput::sendMessage("Set button light off: " + to_string(slot), MSG_INFO);
+            setMCP23017Output(slot, MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON, true, MCP23017_REGISTER_GPB);
         }
     };
     break;
@@ -1888,6 +1938,7 @@ void pcb::setSolenoidFromArray(uint8_t slot, uint8_t position, bool onElseOff)
     if (isValid)
     {
         setMCP23017Output(slot, solenoid_positions[position - 1], onElseOff, solenoid_positions_register[position - 1]); // stop pump
+        debugOutput::sendMessage("Pcb: Solenoid array ", MSG_ERROR);
     }
 }
 

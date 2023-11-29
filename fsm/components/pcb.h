@@ -74,8 +74,8 @@
 
 
 
-#define MCP23017_REGISTER_GPA 0
-#define MCP23017_REGISTER_GPB 0
+#define MCP23017_REGISTER_GPA 0x09
+#define MCP23017_REGISTER_GPB 0x19
 
 #define MCP23017_EN258_GPA0_PIN_OUT_SOLENOID_6 0
 #define MCP23017_EN258_GPA1_PIN_OUT_SOLENOID_7 1
@@ -205,8 +205,8 @@ public:
     bool getPCA9534Input(uint8_t slot, int posIndex);
     void setPCA9534Output(uint8_t slot, int posIndex, bool onElseOff);
     uint8_t get_PCA9534_address_from_slot(uint8_t slot);
-    bool getMCP23017Input(uint8_t slot, int posIndex, uint8_t registerAorB);
-    void setMCP23017Output(uint8_t slot, int posIndex, bool onElseOff, uint8_t registerAorB);
+    bool getMCP23017Input(uint8_t slot, int posIndex, uint8_t GPIORegister);
+    void setMCP23017Output(uint8_t slot, int posIndex, bool onElseOff, uint8_t GPIORegister);
     uint8_t get_MCP23017_address_from_slot(uint8_t slot);
     uint8_t getMCP23017Register(uint8_t slot, uint8_t reg);
     void setMCP23017Register(uint8_t slot, uint8_t reg, uint8_t value);

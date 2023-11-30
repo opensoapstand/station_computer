@@ -18,7 +18,7 @@
 #include "../dftypes.h"
 #include "../components/gpio.h"
 #include "../components/pcb.h"
-#include "../components/odysseyx86gpio.h"
+#include "../components/fsmodysseyx86gpio.h"
 #include "machine.h"
 #include "product.h"
 #include <sqlite3.h>
@@ -158,7 +158,7 @@ public:
       void sendToUiIfAllowed(string message);
       void logUpdateIfAllowed(string message);
 
-      void setSolenoid(bool openElseClosed);
+      void setSolenoidOnePerSlot(bool openElseClosed);
 
       bool getIsStatusUpdateAllowed();
 

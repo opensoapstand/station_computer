@@ -573,14 +573,14 @@ void messageMediator::sendTemperatureData()
    string str_temperature_1;
    string str_temperature_2;
 
-   if (m_machine->control_pcb->isTemperatureSensorAvailable())
+   if (m_machine->control_pcb->isTemperatureSensorMCP9808Available_1())
    {
-      temperature_1 = m_machine->control_pcb->getTemperature(TEMPERATURE_SENSOR_1_ADDRESS);
+      temperature_1 = m_machine->control_pcb->getTemperature(pcb::external_sensor_fridge);
    }
 
-   if (m_machine->control_pcb->isTemperatureSensor2Available())
+   if (m_machine->control_pcb->isTemperatureSensorMCP9808Available_2())
    {
-      temperature_2 = m_machine->control_pcb->getTemperature(TEMPERATURE_SENSOR_2_ADDRESS);
+      temperature_2 = m_machine->control_pcb->getTemperature(pcb::external_sensor_cavity);
    }
    char temp_celcius_chars[MAX_BUF];
    snprintf(temp_celcius_chars, sizeof(temp_celcius_chars), "%.2f", temperature_1);

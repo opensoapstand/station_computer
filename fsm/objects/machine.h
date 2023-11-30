@@ -18,7 +18,8 @@
 #include "../dftypes.h"
 #include "../components/gpio.h"
 // #include "../components/dsed8344.h"
-#include "../components/odysseyx86gpio.h"
+#include "../components/fsmodysseyx86gpio.h"
+#include "../components/pcb.h"
 #include "product.h"
 #include <sqlite3.h>
 
@@ -37,10 +38,6 @@ public:
     void setup();
     pcb *getPcb();
 
-    pcb *getTemperature();
-    pcb *getTemperature2();
-    // void getTemperature(temperature sensor);
-    // static pcb *control_pcb;
     pcb *control_pcb;
     Adafruit_Thermal *receipt_printer;
     void setButtonLightsBehaviour(Button_lights_behaviour behaviour);

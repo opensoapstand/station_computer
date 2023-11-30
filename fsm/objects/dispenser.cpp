@@ -482,7 +482,7 @@ DF_ERROR dispenser::initGlobalFlowsensorIO(int pin, int pos)
     {
         // Instantiate, set input, spin up a flowsensor thread.
         // gets created at every instance. Which is not ok as there is only one pin that gets looked at multiple times. Hence, if there are four slots, for every tick, things will get triggered four times (even an edge) because it's processed four times (but seems to work)
-        m_pFlowsenor[pos] = new oddyseyx86GPIO(pin);
+        m_pFlowsenor[pos] = new FSModdyseyx86GPIO(pin);
         m_pFlowsenor[pos]->setPinAsInputElseOutput(true);
         m_pFlowsenor[pos]->registerProduct(getSelectedProduct());
         m_pFlowsenor[pos]->startListener_flowsensor();
@@ -500,7 +500,7 @@ DF_ERROR dispenser::initDispenseButton4Light()
 {
     if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON)
     {
-        m_pDispenseButton4[0] = new oddyseyx86GPIO(IO_PIN_BUTTON_4);
+        m_pDispenseButton4[0] = new FSModdyseyx86GPIO(IO_PIN_BUTTON_4);
         m_pDispenseButton4[0]->setPinAsInputElseOutput(false);
     }
 }
@@ -508,9 +508,9 @@ DF_ERROR dispenser::initDispenseButton4Light()
 // DF_ERROR dispenser::initButtonsShutdownAndMaintenance()
 // {
 
-//     m_pPowerOffOrMaintenanceModeButtonPressed[0] = new oddyseyx86GPIO(IO_PIN_BUTTON_MAINTENANCE_SHUTDOWN_EDGE_DETECTOR);
-//     m_pButtonPowerOff[0] = new oddyseyx86GPIO(IO_PIN_BUTTON_MAINTENANCE);
-//     m_pButtonDisplayMaintenanceMode[0] = new oddyseyx86GPIO(IO_PIN_BUTTON_SHUTDOWN);
+//     m_pPowerOffOrMaintenanceModeButtonPressed[0] = new FSModdyseyx86GPIO(IO_PIN_BUTTON_MAINTENANCE_SHUTDOWN_EDGE_DETECTOR);
+//     m_pButtonPowerOff[0] = new FSModdyseyx86GPIO(IO_PIN_BUTTON_MAINTENANCE);
+//     m_pButtonDisplayMaintenanceMode[0] = new FSModdyseyx86GPIO(IO_PIN_BUTTON_SHUTDOWN);
 
 //     m_pPowerOffOrMaintenanceModeButtonPressed[0]->setPinAsInputElseOutput(true);
 //     m_pButtonPowerOff[0]->setPinAsInputElseOutput(true);
@@ -622,9 +622,9 @@ uint64_t dispenser::getButtonPressedCurrentPressMillis()
     return dispense_button_current_press_millis;
 }
 
-void dispenser::setSolenoid(bool openElseClosed)
+void dispenser::setSolenoidOnePerSlot(bool openElseClosed)
 {
-    the_pcb->setSolenoid(this->m_slot, openElseClosed);
+    the_pcb->setSolenoidOnePerSlot(this->m_slot, openElseClosed);
 }
 
 // Reverse pump: Turn forward pin LOW - Reverse pin HIGH

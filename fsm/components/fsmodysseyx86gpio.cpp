@@ -1,6 +1,6 @@
 //***************************************
 //
-// oddyseyX86gpio.cpp
+// FSModdyseyx86GPIO.cpp
 // GPIO implementation for
 // NATIVE x86 pins on Oddysey board
 //
@@ -20,7 +20,7 @@
 #include <poll.h>
 #include <iostream>
 
-#include "odysseyx86gpio.h"
+#include "fsmodysseyx86gpio.h"
 #include "../dftypes.h"
 
 #define SYSFS_GPIO_DIR "/sys/class/gpio"
@@ -53,11 +53,11 @@
 #endif
 
 // Default CTOR
-oddyseyx86GPIO::oddyseyx86GPIO()
+FSModdyseyx86GPIO::FSModdyseyx86GPIO()
 {
 }
 
-// oddyseyx86GPIO::oddyseyx86GPIO(messageMediator * message)
+// FSModdyseyx86GPIO::FSModdyseyx86GPIO(messageMediator * message)
 //{
 //    //debugOutput::sendMessage("stateDispense(messageMediator * message)", MSG_INFO);
 // }
@@ -66,14 +66,14 @@ oddyseyx86GPIO::oddyseyx86GPIO()
  * CTOR with Pin reference
  * Typically for Initializing sensors directly...Flow Sensors for now.
  * SEE Manual, Use last three digits to initialize class
- * i.e. GPIO 335; new oddyseyx86GPIO(335);
+ * i.e. GPIO 335; new FSModdyseyx86GPIO(335);
  */
-oddyseyx86GPIO::oddyseyx86GPIO(int pinNumber)
+FSModdyseyx86GPIO::FSModdyseyx86GPIO(int pinNumber)
 {
-        std::string msg = "------oddyseyx86GPIO------ pin:" + std::to_string(pinNumber);
+        std::string msg = "------FSModdyseyx86GPIO------ pin:" + std::to_string(pinNumber);
         debugOutput::sendMessage(msg, MSG_INFO);
 
-        // debugOutput::sendMessage("------oddyseyx86GPIO------", MSG_INFO);
+        // debugOutput::sendMessage("------FSModdyseyx86GPIO------", MSG_INFO);
         int fd, len;
         char buf[MAX_BUF];
 
@@ -82,7 +82,7 @@ oddyseyx86GPIO::oddyseyx86GPIO(int pinNumber)
         fd = open(SYSFS_GPIO_DIR "/export", O_WRONLY);
         if (fd < 0)
         {
-                debugOutput::sendMessage("~oddyseyx86GPIO could not open the gpio", MSG_ERROR);
+                debugOutput::sendMessage("~FSModdyseyx86GPIO could not open the gpio", MSG_ERROR);
                 return;
         }
 
@@ -114,16 +114,16 @@ oddyseyx86GPIO::oddyseyx86GPIO(int pinNumber)
 }
 
 // DTOR
-oddyseyx86GPIO::~oddyseyx86GPIO()
+FSModdyseyx86GPIO::~FSModdyseyx86GPIO()
 {
-        debugOutput::sendMessage("~oddyseyx86GPIO", MSG_INFO);
+        debugOutput::sendMessage("~FSModdyseyx86GPIO", MSG_INFO);
         int fd, len;
         char buf[MAX_BUF];
 
         fd = open(SYSFS_GPIO_DIR "/unexport", O_WRONLY);
         if (fd < 0)
         {
-                debugOutput::sendMessage("~oddyseyx86GPIO could not close the gpio", MSG_ERROR);
+                debugOutput::sendMessage("~FSModdyseyx86GPIO could not close the gpio", MSG_ERROR);
                 return;
         }
 
@@ -134,7 +134,7 @@ oddyseyx86GPIO::~oddyseyx86GPIO()
 }
 
 // // Setter for flow sensor on Odyssey GPIO Pin
-// DF_ERROR oddyseyx86GPIO::setFlowPin(int pinNumber)
+// DF_ERROR FSModdyseyx86GPIO::setFlowPin(int pinNumber)
 // {
 //         DF_ERROR df_Ret = ERROR_BAD_PARAMS;
 
@@ -149,13 +149,13 @@ oddyseyx86GPIO::~oddyseyx86GPIO()
 // Writes "in" into a GPIO direction file while
 // reading input and "out" otherwise.
 
-DF_ERROR oddyseyx86GPIO::setPinAsInputElseOutput(bool input)
+DF_ERROR FSModdyseyx86GPIO::setPinAsInputElseOutput(bool input)
 {
-        // debugOutput::sendMessage("oddyseyx86GPIO::setPinAsInputElseOutput ", MSG_INFO);
-        std::string msg = "oddyseyx86GPIO::setPinAsInputElseOutput " + std::to_string(m_nPin);
+        // debugOutput::sendMessage("FSModdyseyx86GPIO::setPinAsInputElseOutput ", MSG_INFO);
+        std::string msg = "FSModdyseyx86GPIO::setPinAsInputElseOutput " + std::to_string(m_nPin);
         debugOutput::sendMessage(msg, MSG_INFO);
 
-        // debugOutput::sendMessage("oddyseyx86GPIO::setPinAsInputElseOutput ", MSG_INFO);
+        // debugOutput::sendMessage("FSModdyseyx86GPIO::setPinAsInputElseOutput ", MSG_INFO);
         DF_ERROR df_ret = ERROR_MECH_FS_FAULT;
         int fd, len;
         char syscode;
@@ -192,7 +192,7 @@ DF_ERROR oddyseyx86GPIO::setPinAsInputElseOutput(bool input)
 // Checks for Level sensor on Waste tank...
 // TODO: Implementation is commented out and needs testing.;
 //		 A SPECIFIC function name change REQUIRED. i.e. readWastePinLevel
-DF_ERROR oddyseyx86GPIO::readPin(bool *level)
+DF_ERROR FSModdyseyx86GPIO::readPin(bool *level)
 {
         debugOutput::sendMessage("readPin", MSG_INFO);
         DF_ERROR df_ret = ERROR_MECH_FS_FAULT;
@@ -235,9 +235,9 @@ DF_ERROR oddyseyx86GPIO::readPin(bool *level)
 
 // Flags Level sensor on Waste tank...
 // TODO: A SPECIFIC function name change REQUIRED. i.e. triggersWasteLevel
-DF_ERROR oddyseyx86GPIO::writePin(bool level)
+DF_ERROR FSModdyseyx86GPIO::writePin(bool level)
 {
-        debugOutput::sendMessage("OdysseyX86 writePin", MSG_INFO);
+        debugOutput::sendMessage("OdysseyX86 writePin : " + std::to_string(m_nPin) + " value: " + std::to_string(level), MSG_INFO);
         DF_ERROR df_ret = ERROR_MECH_FS_FAULT;
         int fd, len;
         char buf[MAX_BUF];
@@ -259,7 +259,7 @@ DF_ERROR oddyseyx86GPIO::writePin(bool level)
         return df_ret;
 }
 
-void oddyseyx86GPIO::monitorGPIO_Flowsensor(bool *abortLoop)
+void FSModdyseyx86GPIO::monitorGPIO_Flowsensor(bool *abortLoop)
 {
         int fd, len;
         char buf[MAX_BUF];
@@ -343,7 +343,7 @@ void oddyseyx86GPIO::monitorGPIO_Flowsensor(bool *abortLoop)
         return;
 }
 
-// void oddyseyx86GPIO::monitorGPIO_Buttons_powerAndMaintenance()
+// void FSModdyseyx86GPIO::monitorGPIO_Buttons_powerAndMaintenance()
 // {
 //         //        debugOutput::sendMessage("monitorGPIO", MSG_INFO);  //nuke this later it will cause so much spam
 //         int fd, len;
@@ -407,7 +407,7 @@ void oddyseyx86GPIO::monitorGPIO_Flowsensor(bool *abortLoop)
 //         return;
 // }
 
-bool oddyseyx86GPIO::readButtonPin(int pin)
+bool FSModdyseyx86GPIO::readButtonPin(int pin)
 {
 
         int fd, len;
@@ -437,7 +437,7 @@ bool oddyseyx86GPIO::readButtonPin(int pin)
 
 // Utility
 // TODO: Should be interpreting for flow sensor buffer...this does not seem to provide value...
-string oddyseyx86GPIO::command_to_string(string cmd)
+string FSModdyseyx86GPIO::command_to_string(string cmd)
 {
 
         string data;

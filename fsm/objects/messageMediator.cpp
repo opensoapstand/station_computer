@@ -71,9 +71,26 @@ messageMediator::~messageMediator()
 //    return false;
 // }
 
+DF_ERROR messageMediator::setSendingBehaviour(bool enableElseDisableSending)
+{
+   m_enable_sending = enableElseDisableSending;
+
+   DF_ERROR dfError = OK;
+   return dfError;
+}
+
 DF_ERROR messageMediator::sendMessageOverIP(string msg, bool isLoggingMessage)
 {
    DF_ERROR dfError = OK;
+   if (!m_enable_sending)
+   {
+      if (isLoggingMessage)
+      {
+         debugOutput::sendMessage("Standalone mode. Will not send msg:  " + msg, MSG_INFO);
+      }
+      return dfError;
+   }
+
    if (isLoggingMessage)
    {
       debugOutput::sendMessage("Send msg to UI (don't wait for reply): " + msg, MSG_INFO);

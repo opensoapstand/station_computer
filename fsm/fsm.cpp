@@ -54,6 +54,8 @@ dispenser g_productDispensers[PRODUCT_DISPENSERS_MAX];
 product g_pnumbers[PNUMBERS_COUNT];
 machine g_machine;
 
+bool g_connect_to_ui=true;
+
 DF_ERROR initObjects();
 DF_ERROR createStateArray();
 DF_ERROR stateLoop();
@@ -84,7 +86,7 @@ DF_ERROR createStateArray()
     return dfRet;
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     pthread_t ipThread, kbThread;
 
@@ -95,10 +97,20 @@ int main()
     std::string version = CONTROLLER_VERSION;
     debugOutput::sendMessage("***************************************************************************", MSG_INFO);
     debugOutput::sendMessage("****** SOAPSTAND CONTROLLER v" + version + " ***********************************", MSG_INFO);
+    debugOutput::sendMessage("*      If not connected to UI, run:  ./controller standalone               *", MSG_INFO);
     debugOutput::sendMessage("***************************************************************************", MSG_INFO);
 
-    // machine test;
-    // test.testtest();
+    // process program arguments
+    for (int i = 1; i < argc; i++)
+    {
+        if (std::string(argv[i]) == "standalone")
+        {
+            g_connect_to_ui = false;
+            debugOutput::sendMessage("Running in standalone mode", MSG_INFO);
+            
+        }
+        debugOutput::sendMessage("argument: " + std::string(argv[i]), MSG_INFO);
+    }
 
     if (OK == initObjects())
     {
@@ -188,8 +200,8 @@ DF_ERROR initObjects()
     {
         debugOutput::sendMessage("**************Failed to allocate messageMediator", MSG_ERROR);
     }
+    g_pMessaging->setSendingBehaviour(g_connect_to_ui);
 
-    //    g_machine = new machine();
     debugOutput::sendMessage("message mediator set up.", MSG_INFO);
 
     g_machine.setup();

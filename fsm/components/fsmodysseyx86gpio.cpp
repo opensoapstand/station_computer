@@ -70,7 +70,7 @@ FSModdyseyx86GPIO::FSModdyseyx86GPIO()
  */
 FSModdyseyx86GPIO::FSModdyseyx86GPIO(int pinNumber)
 {
-        std::string msg = "------FSModdyseyx86GPIO------ pin:" + std::to_string(pinNumber);
+        std::string msg = "FSModdyseyx86GPIO constructor for pin:" + std::to_string(pinNumber);
         debugOutput::sendMessage(msg, MSG_INFO);
 
         // debugOutput::sendMessage("------FSModdyseyx86GPIO------", MSG_INFO);

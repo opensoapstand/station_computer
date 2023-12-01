@@ -14,6 +14,7 @@
 
 #include "../dftypes.h"
 #include "../objects/messageMediator.h"
+#include "../objects/machine.h"
 #include "../fsm.h"
 
 #include "stateVirtual.h"

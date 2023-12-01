@@ -1206,6 +1206,12 @@ void pcb::flowSensorEnable(uint8_t slot)
         setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_FLOW_SENSOR_ENABLE, true);
     };
     break;
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
+    {
+        // enable not needed for EN258 board.
+    };
+    break;
     default:
     {
         debugOutput::sendMessage("Pcb: Flow sensor enable not available for this pcb.", MSG_ERROR);
@@ -1245,6 +1251,12 @@ void pcb::flowSensorsDisableAll()
             setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_FLOW_SENSOR_ENABLE, false);
             flow_sensor_pulses_since_enable[slot - 1] = 0;
         }
+    };
+    break;
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
+    {
+        // enable not needed for EN258 board.
     };
     break;
     default:
@@ -1964,7 +1976,7 @@ void pcb::setSolenoidFromArray(uint8_t slot, uint8_t position, bool onElseOff)
 
     if (isValid)
     {
-        setMCP23017Output(slot, solenoid_positions[position - 1], onElseOff, solenoid_positions_register[position - 1]); 
+        setMCP23017Output(slot, solenoid_positions[position - 1], onElseOff, solenoid_positions_register[position - 1]);
         debugOutput::sendMessage("Pcb: Solenoid array. Position: " + std::to_string(position) + ". Slot: " + std::to_string(slot) + ". Enabled: " + std::to_string(onElseOff), MSG_ERROR);
     }
 }

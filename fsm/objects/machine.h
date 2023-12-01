@@ -27,19 +27,19 @@
 
 #include "../../library/printer/Adafruit_Thermal.h"
 
-
-enum HardwareVersion {
-    SS09,
-    SS1,
-    SS2,
-    AP1,
-    AP2,
-    UNKNOWN
-};
-
 class machine
 {
 public:
+    enum HardwareVersion
+    {
+        SS09,
+        SS1,
+        SS2,
+        AP1,
+        AP2,
+        UNKNOWN
+    };
+
     machine();
     void pcb24VPowerSwitch(bool enableElseDisable);
     bool getPcb24VPowerSwitchStatus();
@@ -65,7 +65,7 @@ public:
     void syncSoftwareVersionWithDb();
     void executeSQLStatement(string sql_string);
 
-    HardwareVersion getHardwareVersion();
+    machine::HardwareVersion getHardwareVersion();
 
     int getButtonAnimationProgram();
     // void loadButtonPropertiesFromDb();
@@ -82,13 +82,13 @@ public:
     bool getPumpSlowStartStopEnabled();
 
 private:
-void machine::setHardwareVersionFromString(const std::string& version) {
+    void setHardwareVersionFromString(const std::string &version);
     bool m_isMultiButtonEnabled = false;
     int m_button_animation_program;
     sqlite3 *db;
     int rc;
 
-    HardwareVersion m_hardwareeeeeeVersion;
+    machine::HardwareVersion m_hardware_version;
 
     string m_machine_id;
     int m_soapstand_customer_id;
@@ -102,7 +102,7 @@ void machine::setHardwareVersionFromString(const std::string& version) {
     bool m_receipt_printer_is_online;
     bool m_receipt_printer_has_paper;
     bool m_has_tap_payment;
-    string m_hardware_version_str;
+    // string m_hardware_version_str;
     string m_software_version;
     int m_aws_port;
     string m_pump_id_slot_1;

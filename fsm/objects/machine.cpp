@@ -32,28 +32,31 @@ machine::machine()
     m_button_animation_program = 0;
 }
 
-HardwareVersion machine::getHardwareVersion(){
+machine::HardwareVersion machine::getHardwareVersion()
+{
     return m_hardware_version;
 }
 
 // Function to convert string to HardwareVersion
-void machine::setHardwareVersionFromString(const std::string& version) {
+void machine::setHardwareVersionFromString(const std::string &version)
+{
     static const std::map<std::string, HardwareVersion> versionMap = {
         {"SS0.9", SS09},
         {"SS1", SS1},
         {"SS2", SS2},
         {"AP1", AP1},
-        {"AP2", AP2}
-    };
+        {"AP2", AP2}};
 
     auto it = versionMap.find(version);
-    if (it != versionMap.end()) {
+    if (it != versionMap.end())
+    {
         m_hardware_version = it->second;
-    } else {
+    }
+    else
+    {
         m_hardware_version = UNKNOWN;
     }
 }
-
 
 void machine::setup()
 {
@@ -529,33 +532,40 @@ bool machine::getEmptyContainerDetectionEnabled()
     return m_has_empty_detection;
 }
 
-int machine::convertPStringToPNumber(const std::string& inputString) {
+int machine::convertPStringToPNumber(const std::string &inputString)
+{
 
     // P-xxx to xxx   e.g. P-12  --> 12
     // Check if the input string starts with "P-"
-    if (inputString.find("P-") == 0) {
+    if (inputString.find("P-") == 0)
+    {
         // Extract the substring after "P-"
         std::string numberStr = inputString.substr(2);
-        
+
         int number = 0;
         // Iterate through the characters of the substring and convert to integer
-        for (char digitChar : numberStr) {
+        for (char digitChar : numberStr)
+        {
             // Check if the character is a valid digit
-            if (isdigit(digitChar)) {
+            if (isdigit(digitChar))
+            {
                 // Convert the character to integer and update the number
                 number = number * 10 + (digitChar - '0');
-            } else {
+            }
+            else
+            {
                 // If a non-digit character is encountered, return -1 (invalid input)
                 return -1;
             }
         }
-        
+
         // Check if the number is within the valid range (0 to 9999)
-        if (number >= 0 && number <= 9999) {
+        if (number >= 0 && number <= 9999)
+        {
             return number;
         }
     }
-    
+
     // Return -1 to indicate an invalid input or number out of range
     return -1;
 }
@@ -605,6 +615,7 @@ void machine::loadParametersFromDb()
     status = sqlite3_step(stmt);
 
     int numberOfRecordsFound = 0;
+    string m_hardware_version_str;
 
     while (status == SQLITE_ROW)
     {
@@ -643,7 +654,7 @@ void machine::loadParametersFromDb()
         if (numberOfRecordsFound != 0)
         {
             // assert error
-            debugOutput::sendMessage("ASSERT Error: Machine table must have exactly one row. ", MSG_ERROR);
+            debugOutput::sendMessage("ASSERT Error: Machine table must have exactly one row. Found rows: " + std::to_string(numberOfRecordsFound), MSG_ERROR);
         }
 
         m_button_animation_program = m_dispense_buttons_count / 1000; // button light effect program
@@ -665,5 +676,6 @@ void machine::loadParametersFromDb()
 
         debugOutput::sendMessage("Multiple dispense buttons enabled? : " + to_string(m_isMultiButtonEnabled), MSG_INFO);
         debugOutput::sendMessage("Animation program number (0=no animation)? : " + to_string(m_button_animation_program), MSG_INFO);
+        setHardwareVersionFromString(m_hardware_version_str);
     }
 }

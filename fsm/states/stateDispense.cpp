@@ -26,7 +26,7 @@ stateDispense::stateDispense()
 // CTOR Linked to IPC
 stateDispense::stateDispense(messageMediator *message)
 {
-      m_pMessaging = message;
+   m_pMessaging = message;
 }
 
 // DTOR
@@ -148,7 +148,7 @@ DF_ERROR stateDispense::onAction()
       debugOutput::sendMessage("Stop dispensing (stop command received)", MSG_INFO);
       m_state_requested = STATE_DISPENSE_END;
       stopPumping();
-      
+
       return e_ret = OK;
    }
 
@@ -178,7 +178,12 @@ DF_ERROR stateDispense::onAction()
 
 void stateDispense::startPumping()
 {
-   if (productDispensers[slot_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
+
+   switch (g_machine.getHardwareVersion())
+   {
+   case (machine::HardwareVersion::AP1):
+   case (machine::HardwareVersion::SS1):
+   case (machine::HardwareVersion::SS2):
    {
       productDispensers[slot_index].the_pcb->setPumpSpeedPercentage(0);
       productDispensers[slot_index].the_pcb->setPumpDirection(slot, true);
@@ -186,14 +191,83 @@ void stateDispense::startPumping()
       productDispensers[slot_index].the_pcb->startPump(slot);
       productDispensers[slot_index].the_pcb->setSolenoidOnePerSlot(slot, true);
    }
-   else
+   break;
+   case (machine::HardwareVersion::SS09):
    {
       productDispensers[slot_index].pumpSlowStart(true);
    }
+   break;
+   case (machine::HardwareVersion::AP2):
+   {
+      debugOutput::sendMessage("start pumping dummy.", MSG_ERROR);
+   }
+   break;
+   default:
+   {
+      debugOutput::sendMessage("UNKNOWN HARDWARE version", MSG_ERROR);
+   }
+   break;
+   }
+
+   // if (productDispensers[slot_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
+   // {
+   //    productDispensers[slot_index].the_pcb->setPumpSpeedPercentage(0);
+   //    productDispensers[slot_index].the_pcb->setPumpDirection(slot, true);
+
+   //    productDispensers[slot_index].the_pcb->startPump(slot);
+   //    productDispensers[slot_index].the_pcb->setSolenoidOnePerSlot(slot, true);
+   // }
+   // else
+   // {
+   //    productDispensers[slot_index].pumpSlowStart(true);
+   // }
 }
 
 void stateDispense::stopPumping()
 {
+
+   switch (g_machine.getHardwareVersion())
+   {
+   case (machine::HardwareVersion::AP1):
+   case (machine::HardwareVersion::SS1):
+   case (machine::HardwareVersion::SS2):
+   {
+      if (productDispensers[slot_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
+      {
+         productDispensers[slot_index].the_pcb->stopPump(slot);
+         productDispensers[slot_index].the_pcb->setSolenoidOnePerSlot(slot, false);
+      }
+      else
+      {
+         debugOutput::sendMessage("pcb not compatible", MSG_ERROR);
+      }
+   }
+   break;
+   case (machine::HardwareVersion::SS09):
+   {
+      productDispensers[slot_index].pumpSlowStopBlocking();
+      rectractProductBlocking();
+   }
+   break;
+   case (machine::HardwareVersion::AP2):
+   {
+      if (productDispensers[slot_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN258_4SLOTS)
+      {
+         debugOutput::sendMessage("start pumping dummy.", MSG_ERROR);
+      }
+      else
+      {
+         debugOutput::sendMessage("pcb not compatiblevnot en258 4 slots", MSG_ERROR);
+      }
+   }
+   break;
+   default:
+   {
+      debugOutput::sendMessage("UNKNOWN HARDWARE version", MSG_ERROR);
+   }
+   break;
+   }
+
    if (productDispensers[slot_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
    {
       productDispensers[slot_index].the_pcb->stopPump(slot);

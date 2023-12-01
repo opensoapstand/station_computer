@@ -32,6 +32,29 @@ machine::machine()
     m_button_animation_program = 0;
 }
 
+HardwareVersion machine::getHardwareVersion(){
+    return m_hardware_version;
+}
+
+// Function to convert string to HardwareVersion
+void machine::setHardwareVersionFromString(const std::string& version) {
+    static const std::map<std::string, HardwareVersion> versionMap = {
+        {"SS0.9", SS09},
+        {"SS1", SS1},
+        {"SS2", SS2},
+        {"AP1", AP1},
+        {"AP2", AP2}
+    };
+
+    auto it = versionMap.find(version);
+    if (it != versionMap.end()) {
+        m_hardware_version = it->second;
+    } else {
+        m_hardware_version = UNKNOWN;
+    }
+}
+
+
 void machine::setup()
 {
     // if ((the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON) && this->slot == 4)
@@ -599,7 +622,7 @@ void machine::loadParametersFromDb()
         m_receipt_printer_is_online = sqlite3_column_int(stmt, 9);
         m_receipt_printer_has_paper = sqlite3_column_int(stmt, 10);
         m_has_tap_payment = sqlite3_column_int(stmt, 11);
-        m_hardware_version = product::dbFieldAsValidString(stmt, 12);
+        m_hardware_version_str = product::dbFieldAsValidString(stmt, 12);
         m_software_version = product::dbFieldAsValidString(stmt, 13);
         m_aws_port = sqlite3_column_int(stmt, 14);
         m_coupons_enabled = sqlite3_column_int(stmt, 15);

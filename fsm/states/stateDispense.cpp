@@ -138,6 +138,7 @@ DF_ERROR stateDispense::onAction()
    {
       m_pMessaging->sendMessageOverIP("Init Ready", true); // send to UI
       m_state_requested = STATE_IDLE;
+      stopPumping();
       return e_ret = OK;
    }
 

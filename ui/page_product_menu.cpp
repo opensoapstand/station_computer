@@ -62,6 +62,13 @@ page_product_menu::page_product_menu(QWidget *parent) : QWidget(parent),
     labels_dispense_product_picture[4] = ui->label_dispense_product_picture_5;
     labels_dispense_product_picture[5] = ui->label_dispense_product_picture_6;
 
+    labels_dispense_product_name[0] = ui->label_dispense_product_name_1;
+    labels_dispense_product_name[1] = ui->label_dispense_product_name_2;
+    labels_dispense_product_name[2] = ui->label_dispense_product_name_3;
+    labels_dispense_product_name[3] = ui->label_dispense_product_name_4;
+    labels_dispense_product_name[4] = ui->label_dispense_product_name_5;
+    labels_dispense_product_name[5] = ui->label_dispense_product_name_6;
+
     // pushButtons_product_select[0] = ui->pushButton_selection1;
     // pushButtons_product_select[1] = ui->pushButton_selection2;
     // pushButtons_product_select[2] = ui->pushButton_selection3;
@@ -157,9 +164,9 @@ void page_product_menu::showEvent(QShowEvent *event)
 
         labels_base_product_name[slot_index]->setProperty("class", "label_base_product_name");
         labels_base_product_name[slot_index]->setStyleSheet(styleSheet);
-        QString product_name = p_page_idle->thisMachine->getSlotBaseProduct(slot_index + 1)->getProductName();
-        qDebug() << product_name;
-        labels_base_product_name[slot_index]->setText(product_name);
+        QString product_type = p_page_idle->thisMachine->getSlotBaseProduct(slot_index + 1)->getProductType();
+        qDebug() << product_type;
+        labels_base_product_name[slot_index]->setText(product_type);
     }
 
     select_base_product_in_menu(0);
@@ -347,6 +354,11 @@ void page_product_menu::displayDispenseProductsMenu()
             labels_dispense_product_picture[sub_menu_index]->setProperty("class", "label_base_product_picture");
             labels_dispense_product_picture[sub_menu_index]->setStyleSheet(styleSheet);
 
+            QString dispense_product_name = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductName();
+            labels_dispense_product_name[sub_menu_index]->setProperty("class", "label_dispense_product_name");
+            labels_dispense_product_name[sub_menu_index]->setStyleSheet(styleSheet);
+            labels_dispense_product_name[sub_menu_index]->setText(dispense_product_name);
+
             pushButtons_dispense_product[sub_menu_index]->show();
             labels_dispense_product_picture[sub_menu_index]->show();
             pushButtons_dispense_product[sub_menu_index]->raise();
@@ -354,6 +366,7 @@ void page_product_menu::displayDispenseProductsMenu()
             qDebug() << "Set up sub menu for item: " << sub_menu_index + 1 << "Invalid pnumber product. Will hide option. ";
             pushButtons_dispense_product[sub_menu_index]->hide();
             labels_dispense_product_picture[sub_menu_index]->hide();
+            labels_dispense_product_name[sub_menu_index]->hide();
         }
     }
 }

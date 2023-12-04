@@ -78,8 +78,13 @@ QLabel {
     qproperty-alignment: AlignLeft;
 }
 
-.pushButton_dispense_product{
-    background: yellow;
+.label_dispense_product_name{
+    color: #003840;
+    font-family: 'Lato';
+    font-style: normal;
+    text-align: center;
+    font-size: 24px;
+    qproperty-alignment: AlignCenter;
 }
 
 #pushButton_to_idle {

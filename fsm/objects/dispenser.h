@@ -19,7 +19,7 @@
 #include "../components/gpio.h"
 #include "../components/pcb.h"
 #include "../components/fsmodysseyx86gpio.h"
-#include "machine.h"
+// #include "machine.h"
 #include "product.h"
 #include <sqlite3.h>
 
@@ -50,7 +50,7 @@
 #define MCP_PIN_START 0
 #define MPC_PIN_END 15
 
-class machine;
+// class machine;
 
 class dispenser
 {
@@ -59,7 +59,10 @@ public:
       dispenser(gpio *buttonReference);
       ~dispenser();
 
-      DF_ERROR setup(machine *machine, product *pnumber);
+      // DF_ERROR setup(machine *machine, product *pnumber);
+      DF_ERROR setup(pcb *pcb, product *pnumbers);
+      void setPumpReversalEnabled(bool isEnabled);
+      void setPumpSlowStartStopEnabled(bool isEnabled);
       // DF_ERROR setup(pcb* pcb, machine* machine);
       void refresh();
       // void initDispenser(int slot);
@@ -75,7 +78,7 @@ public:
 
       DF_ERROR setPump(int mcpAddress, int pin, int position);
       DF_ERROR initGlobalFlowsensorIO(int pinint, int pos);
-      DF_ERROR initDispenseButton4Light();
+      // DF_ERROR initDispenseButton4Light();
 
       unsigned short getPumpSpeed();
       bool isSlotEnabled();
@@ -85,8 +88,8 @@ public:
       DF_ERROR setPumpEnable();
       DF_ERROR setPumpPWM(uint8_t value, bool enableLog);
       DF_ERROR preparePumpForDispenseTrigger();
-      void setMultiDispenseButtonLight(int slot, bool enableElseDisable);
-      void setAllDispenseButtonLightsOff();
+
+      // void setAllDispenseButtonLightsOff();
       void reversePumpForSetTimeMillis(int millis);
       const char *getDispenseStatusAsString();
       void updateDispenseStatus();
@@ -158,23 +161,24 @@ public:
       void sendToUiIfAllowed(string message);
       void logUpdateIfAllowed(string message);
 
-      void setSolenoidOnePerSlot(bool openElseClosed);
+      void setSpoutSolenoid(bool openElseClosed);
 
       bool getIsStatusUpdateAllowed();
 
-      pcb *the_pcb;
-      machine *m_machine;
+      pcb *m_pcb;
+      // machine *m_machine;
       product *m_pnumbers;
       // machine* global_machine;
 
       static int * parseCSVString(const std::string &csvString, int &size);
+      void setDispenseButtonLight(bool onElseOff);
 
-      
 private:
       bool m_slot_loaded_from_db;
-      
       int m_slot;
 
+      bool m_isPumpReversalEnabled;
+      bool m_isPumpSlowStartStopEnabled;
 
       int m_dispense_pnumbers_count;
       int* m_dispense_pnumbers;
@@ -266,7 +270,7 @@ private:
       gpio *m_pButtonPowerOff[1];
       gpio *m_pButtonDisplayMaintenanceMode[1];
       gpio *m_pPowerOffOrMaintenanceModeButtonPressed[1];
-      gpio *m_pDispenseButton4[1];
+      // gpio *m_pDispenseButton4[1];
 
       // Button reference m_pButton[1] in stateVirtual; IPC shared due to Arduino!
       gpio *m_pButton[NUM_BUTTON];

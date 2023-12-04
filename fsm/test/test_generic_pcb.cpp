@@ -127,7 +127,7 @@ void board_test(pcb *connected_pcb)
                 {
                     connected_pcb->setPumpDirection(slot, true);
                     connected_pcb->setSingleDispenseButtonLight(slot, false);
-                    // connected_pcb->setSolenoidOnePerSlot(slot, false);
+                    // connected_pcb->setSpoutSolenoid(slot, false);
                     connected_pcb->disableAllSolenoidsOfSlot(slot);
                 }
                 else
@@ -224,7 +224,7 @@ void board_test(pcb *connected_pcb)
             if (connected_pcb->get_pcb_version() == pcb::EN134_4SLOTS || connected_pcb->get_pcb_version() == pcb::EN134_8SLOTS)
             {
 
-                connected_pcb->setSolenoidOnePerSlot(active_slot, true);
+                connected_pcb->setSpoutSolenoid(active_slot, true);
                 debugOutput::sendMessage("Activate solenoid", MSG_INFO);
             }
             else if (connected_pcb->get_pcb_version() == pcb::EN258_4SLOTS || connected_pcb->get_pcb_version() == pcb::EN258_8SLOTS)
@@ -363,7 +363,7 @@ void board_test(pcb *connected_pcb)
             if (now_epoch_millis > (solenoid_stop_delay_start_epoch + SOLENOID_STOP_DELAY_MILLIS))
             {
 
-                // connected_pcb->setSolenoidOnePerSlot(active_slot, false);
+                // connected_pcb->setSpoutSolenoid(active_slot, false);
                 connected_pcb->disableAllSolenoidsOfSlot(active_slot);
 
                 uint64_t cycle_pulses;
@@ -498,7 +498,7 @@ void board_test(pcb *connected_pcb)
 //     connected_pcb->setPumpDirection(SLOT, true);
 //     // connected_pcb->setPumpDirection(SLOT, false);
 //     connected_pcb->setPumpEnable(SLOT);
-//     // connected_pcb->setSolenoidOnePerSlot(SLOT, true);
+//     // connected_pcb->setSpoutSolenoid(SLOT, true);
 //     // connected_pcb->setSingleDispenseButtonLight(SLOT, true);
 //     //     debugOutput::sendMessage("started. press button to stop", MSG_INFO);
 //     using namespace std::chrono;
@@ -514,7 +514,7 @@ void board_test(pcb *connected_pcb)
 //         // if (connected_pcb->getDispenseButtonEdgePositive(SLOT))
 //         // {
 //         //     connected_pcb->setPumpsDisableAll();
-//         //     connected_pcb->setSolenoidOnePerSlot(SLOT, false);
+//         //     connected_pcb->setSpoutSolenoid(SLOT, false);
 //         //     debugOutput::sendMessage("button pressed. finish up", MSG_INFO);
 //         //     connected_pcb->setSingleDispenseButtonLight(SLOT, false);
 //         //     return;
@@ -577,7 +577,7 @@ void board_test(pcb *connected_pcb)
 //         // if (connected_pcb->getDispenseButtonEdgePositive(SLOT))
 //         // {
 //         //     connected_pcb->setPumpsDisableAll();
-//         //     connected_pcb->setSolenoidOnePerSlot(SLOT, false);
+//         //     connected_pcb->setSpoutSolenoid(SLOT, false);
 //         //     debugOutput::sendMessage("button pressed. finish up", MSG_INFO);
 //         //     connected_pcb->setSingleDispenseButtonLight(SLOT, false);
 //         //     return;

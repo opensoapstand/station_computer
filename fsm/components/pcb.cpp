@@ -694,7 +694,7 @@ void pcb::initialize_pcb()
         setPumpsDisableAll();
         for (uint8_t slot = 1; slot <= 4; slot++)
         {
-            setSolenoidOnePerSlot(slot, false);
+            setSpoutSolenoid(slot, false);
             setSingleDispenseButtonLight(slot, false);
         }
     };
@@ -710,7 +710,7 @@ void pcb::initialize_pcb()
         setPumpsDisableAll();
         for (uint8_t slot = 1; slot <= 8; slot++)
         {
-            setSolenoidOnePerSlot(slot, false);
+            setSpoutSolenoid(slot, false);
             setSingleDispenseButtonLight(slot, false);
         }
     };
@@ -835,6 +835,47 @@ bool pcb::isSlotAvailable(uint8_t slot)
 // BUTTON FUNCTIONS
 ///////////////////////////////////////////////////////////////////////////
 
+void pcb::setDispenseButtonLightsAllOff()
+{
+    switch (pcb_version)
+    {
+
+    case (DSED8344_NO_PIC):
+    {
+        setPCA9534Output(1, 6, true);
+    };
+    break;
+    case (DSED8344_PIC_MULTIBUTTON):
+    case (EN134_4SLOTS):
+    case (EN258_4SLOTS):
+    {
+        debugOutput::sendMessage("All 4 button lights off.", MSG_INFO);
+
+        for (int slot = 1; slot < 5; slot++)
+        {
+            setSingleDispenseButtonLight(slot, false);
+        }
+    };
+    break;
+    case (EN134_8SLOTS):
+    case (EN258_8SLOTS):
+    {
+        debugOutput::sendMessage("All 8 button lights off.", MSG_INFO);
+
+        for (int slot = 1; slot < 9; slot++)
+        {
+            setSingleDispenseButtonLight(slot, false);
+        }
+    };
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Error PCB NOT VALID!!setSingleDispenseButtonLight", MSG_ERROR);
+    }
+    break;
+    }
+}
+
 void pcb::setSingleDispenseButtonLight(uint8_t slot, bool onElseOff)
 {
 
@@ -928,65 +969,65 @@ void pcb::setSingleDispenseButtonLight(uint8_t slot, bool onElseOff)
 
 } // End of setSingleDispenseButtonLight()
 
-void pcb::virtualButtonPressHack(uint8_t slot)
-{
+// void pcb::virtualButtonPressHack(uint8_t slot)
+// {
 
-    switch (pcb_version)
-    {
+//     switch (pcb_version)
+//     {
 
-    case (DSED8344_NO_PIC):
-    {
-    };
-    case (DSED8344_PIC_MULTIBUTTON):
-    {
-        // // WARNING: This overrides the physical dispense button. As such, there is no fail safe mechanism.
-        // // If the program crashes while the button is pressed, it might keep on dispensing *forever*.
-        // unsigned char reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x03);
-        // reg_value = reg_value & 0b01111111;
-        // SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x03, reg_value); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
+//     case (DSED8344_NO_PIC):
+//     {
+//     };
+//     case (DSED8344_PIC_MULTIBUTTON):
+//     {
+//         // // WARNING: This overrides the physical dispense button. As such, there is no fail safe mechanism.
+//         // // If the program crashes while the button is pressed, it might keep on dispensing *forever*.
+//         // unsigned char reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x03);
+//         // reg_value = reg_value & 0b01111111;
+//         // SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x03, reg_value); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
 
-        // reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01);
-        // reg_value = reg_value & 0b01111111; // virtual button press
-        // SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01, reg_value);
-    };
-    break;
-    case (EN134_4SLOTS):
-    case (EN134_8SLOTS):
-    {
-    };
-    break;
-    default:
-    {
-        debugOutput::sendMessage("Error PCB NOT VALID!!3", MSG_ERROR);
-    }
-    break;
-    }
-}
+//         // reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01);
+//         // reg_value = reg_value & 0b01111111; // virtual button press
+//         // SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01, reg_value);
+//     };
+//     break;
+//     case (EN134_4SLOTS):
+//     case (EN134_8SLOTS):
+//     {
+//     };
+//     break;
+//     default:
+//     {
+//         debugOutput::sendMessage("Error PCB NOT VALID!!3", MSG_ERROR);
+//     }
+//     break;
+//     }
+// }
 
-void pcb::virtualButtonUnpressHack(uint8_t slot)
-{
-    switch (pcb_version)
-    {
+// void pcb::virtualButtonUnpressHack(uint8_t slot)
+// {
+//     switch (pcb_version)
+//     {
 
-    case (DSED8344_NO_PIC):
-    {
-    };
-    case (DSED8344_PIC_MULTIBUTTON):
-    {
-    };
-    break;
-    case (EN134_4SLOTS):
-    case (EN134_8SLOTS):
-    {
-    };
-    break;
-    default:
-    {
-        debugOutput::sendMessage("Error PCB NOT VALID!!4", MSG_ERROR);
-    }
-    break;
-    }
-}
+//     case (DSED8344_NO_PIC):
+//     {
+//     };
+//     case (DSED8344_PIC_MULTIBUTTON):
+//     {
+//     };
+//     break;
+//     case (EN134_4SLOTS):
+//     case (EN134_8SLOTS):
+//     {
+//     };
+//     break;
+//     default:
+//     {
+//         debugOutput::sendMessage("Error PCB NOT VALID!!4", MSG_ERROR);
+//     }
+//     break;
+//     }
+// }
 
 bool pcb::getDispenseButtonState(uint8_t slot)
 {
@@ -1440,7 +1481,7 @@ void pcb::EN134_PumpCycle_refresh(uint8_t slots)
 
             case state_init:
             {
-                setSolenoidOnePerSlot(slot, false);
+                setSpoutSolenoid(slot, false);
                 setSingleDispenseButtonLight(slot, false);
                 stopPump(slot);
                 pumpCycle_state[slot_index] = state_idle;
@@ -1488,7 +1529,7 @@ void pcb::EN134_PumpCycle_refresh(uint8_t slots)
                 {
                     pumpCycle_state[slot_index] = state_button_pressed;
                     pump_start_delay_start_epoch[slot_index] = now_epoch_millis;
-                    setSolenoidOnePerSlot(slot, true);
+                    setSpoutSolenoid(slot, true);
                     setSingleDispenseButtonLight(slot, true);
                 }
             }
@@ -1571,7 +1612,7 @@ void pcb::EN134_PumpCycle_refresh(uint8_t slots)
                 if (now_epoch_millis > (solenoid_stop_delay_start_epoch[slot_index] + SOLENOID_STOP_DELAY_MILLIS))
                 {
                     pumpCycle_state[slot_index] = state_slot_enabled;
-                    setSolenoidOnePerSlot(slot, false);
+                    setSpoutSolenoid(slot, false);
                     setSingleDispenseButtonLight(slot, false);
                 }
             }
@@ -1977,7 +2018,7 @@ void pcb::setSolenoidFromArray(uint8_t slot, uint8_t position, bool onElseOff)
     if (isValid)
     {
         setMCP23017Output(slot, solenoid_positions[position - 1], onElseOff, solenoid_positions_register[position - 1]);
-        debugOutput::sendMessage("Pcb: Solenoid array. Position: " + std::to_string(position) + ". Slot: " + std::to_string(slot) + ". Enabled: " + std::to_string(onElseOff), MSG_ERROR);
+        debugOutput::sendMessage("Pcb: Solenoid array. Position: " + std::to_string(position) + ". Slot: " + std::to_string(slot) + ". Enabled: " + std::to_string(onElseOff), MSG_INFO);
     }
 }
 
@@ -1988,7 +2029,7 @@ void pcb::disableAllSolenoidsOfSlot(uint8_t slot)
     case (EN134_4SLOTS):
     case (EN134_8SLOTS):
     {
-        setSolenoidOnePerSlot(slot, false);
+        setSpoutSolenoid(slot, false);
     };
     break;
     case (EN258_4SLOTS):
@@ -2015,7 +2056,7 @@ void pcb::disableAllSolenoidsOfSlot(uint8_t slot)
     }
 }
 
-void pcb::setSolenoidOnePerSlot(uint8_t slot, bool onElseOff)
+void pcb::setSpoutSolenoid(uint8_t slot, bool onElseOff)
 {
     switch (pcb_version)
     {
@@ -2032,6 +2073,13 @@ void pcb::setSolenoidOnePerSlot(uint8_t slot, bool onElseOff)
         setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_SOLENOID, onElseOff);
     };
     break;
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
+    {
+        setSolenoidFromArray(slot, EN258_SOLENOID_SPOUT, false);
+    }
+    break;
+
     default:
     {
         debugOutput::sendMessage("Pcb: No single solenoid function available for this pcb.", MSG_ERROR);

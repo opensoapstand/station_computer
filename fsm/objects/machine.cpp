@@ -32,6 +32,19 @@ machine::machine()
     m_button_animation_program = 0;
 }
 
+void machine::initProductDispensers()
+{
+
+    for (int slot_index = 0; slot_index < PRODUCT_DISPENSERS_MAX; slot_index++)
+    {
+        debugOutput::sendMessage("Init dispenser " + to_string(slot_index + 1), MSG_INFO);
+        // m_g_machine.m_productDDDDDispensers[slot_index].setup(&this, g_pnumbers);
+        m_productDDDDDispensers[slot_index].setup(control_pcb, m_pnumbers);
+        m_productDDDDDispensers[slot_index].setSlot(slot_index + 1);
+        m_productDDDDDispensers[slot_index].setBasePNumberAsSelectedProduct();
+    }
+}
+
 machine::HardwareVersion machine::getHardwareVersion()
 {
     return m_hardware_version;
@@ -58,21 +71,21 @@ void machine::setHardwareVersionFromString(const std::string &version)
     }
 }
 
-void machine::setup()
+void machine::setup(product* pnumbers)
 {
-    // if ((the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON) && this->slot == 4)
+    // if ((m_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON) && this->slot == 4)
     // {
     //     m_pDispenseButton4[0]->writePin(!enableElseDisable);
     // }
     // else
     // {
-    //     this->the_pcb->setSingleDispenseButtonLight(slot, enableElseDisable);
+    //     this->m_pcb->setSingleDispenseButtonLight(slot, enableElseDisable);
     // }
     //  if (control_pcb == nullptr)
     // {
     control_pcb = new pcb();
     // }
-
+    m_pnumbers = pnumbers;
     receipt_printer = new Adafruit_Thermal();
     control_pcb->setup();
     control_pcb->setPumpPWM(DEFAULT_PUMP_PWM);
@@ -218,6 +231,43 @@ void machine::refreshButtonLightAnimation()
     }
     }
     m_button_lights_behaviour_memory = m_button_lights_behaviour;
+}
+
+void machine::setMultiDispenseButtonLight(int slot, bool enableElseDisable)
+{
+    // output has to be set low for light to be on.
+    debugOutput::sendMessage("slot light: " + to_string(slot) + "on else off: " + to_string(enableElseDisable), MSG_INFO);
+
+    if (control_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON)
+    {
+        // if (getMultiDispenseButtonEnabled())
+        // {
+
+        //     if (slot == 4)
+        //     {
+        //         m_pDispenseButton4[0]->writePin(!enableElseDisable);
+        //     }
+        //     else
+        //     {
+
+        //         this->control_pcb->setSingleDispenseButtonLight(slot, enableElseDisable);
+        //     }
+        // }
+        // else
+        // {
+        //     this->control_pcb->setSingleDispenseButtonLight(1, enableElseDisable);
+        // }
+
+        debugOutput::sendMessage("ASSERT ERROR: functionality gone! Deprecated. ", MSG_ERROR);
+    }
+    else if (control_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_NO_PIC)
+    {
+        this->control_pcb->setSingleDispenseButtonLight(1, enableElseDisable);
+    }
+    else
+    {
+        this->control_pcb->setSingleDispenseButtonLight(slot, enableElseDisable);
+    }
 }
 
 void machine::refreshButtonLightAnimationCaterpillar()

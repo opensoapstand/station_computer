@@ -40,7 +40,7 @@ private:
     int slot;
     int slot_index;
 
-    dispenser *productDispensers;
+    // dispenser *productDispensers;
     bool flushCommand;
     char size;
 };

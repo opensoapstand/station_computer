@@ -95,6 +95,14 @@
 #define MCP23017_EN258_GPB6_PIN_OUT_SOLENOID_4 6
 #define MCP23017_EN258_GPB7_PIN_OUT_SOLENOID_5 7
 
+#define EN258_SOLENOID_BASE 2
+#define EN258_SOLENOID_ADDITIVE_1 3
+#define EN258_SOLENOID_ADDITIVE_2 4
+#define EN258_SOLENOID_ADDITIVE_3 5
+#define EN258_SOLENOID_ADDITIVE_4 6
+#define EN258_SOLENOID_ADDITIVE_5 7
+#define EN258_SOLENOID_SPOUT 8
+
 
 #define PUMP_START_DELAY_MILLIS 100
 #define PUMP_STOP_BEFORE_BACKTRACK_TIME_MILLIS 0
@@ -151,11 +159,12 @@ public:
     bool isTemperatureSensorMCP9808Available_1();
     bool isTemperatureSensorMCP9808Available_2(); // 2nd sensor
     bool isTemperatureSensorADS7830Available();   // 2nd sensor
-
     
     unsigned char getPumpPWM();
     bool setPumpPWM(uint8_t pwm_val);
     bool setPumpSpeedPercentage(uint8_t speed_percentage);
+
+    void setDispenseButtonLightsAllOff();
     bool setPumpsDisableAll();
     bool setPumpEnable(uint8_t slot);
     void independentDispensingRefresh();
@@ -173,15 +182,15 @@ public:
     bool getDispenseButtonEdge(uint8_t slot);
     bool getDispenseButtonEdgePositive(uint8_t slot);
     bool getDispenseButtonEdgeNegative(uint8_t slot);
-    void virtualButtonPressHack(uint8_t slot);
-    void virtualButtonUnpressHack(uint8_t slot);
+    // void virtualButtonPressHack(uint8_t slot);
+    // void virtualButtonUnpressHack(uint8_t slot);
     void dispenseButtonRefresh();
     void dispenseButtonRefreshPerSlot(uint8_t slot);
     bool getDispenseButtonState(uint8_t slot);
 
     void disableAllSolenoidsOfSlot(uint8_t slot);
     void setSolenoidFromArray(uint8_t slot, uint8_t position, bool onElseOff);
-    void setSolenoidOnePerSlot(uint8_t slot, bool onElseOff);
+    void setSpoutSolenoid(uint8_t slot, bool onElseOff);
     uint64_t getFlowSensorTotalPulses(uint8_t slot);
     uint64_t getFlowSensorPulsesSinceEnabling(uint8_t slot);
     void resetFlowSensorTotalPulses(uint8_t slot);

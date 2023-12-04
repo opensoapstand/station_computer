@@ -14,6 +14,7 @@
 //***************************************
 #include "dispenser.h"
 #include <chrono>
+#include <sstream> 
 // #include "machine.h"
 
 #define ACTIVATION_TIME 5
@@ -24,7 +25,7 @@
 
 #define MAX_BUF 64
 
-// pcb *dispenser::the_pcb = nullptr;
+// pcb *dispenser::m_pcb = nullptr;
 
 const char *DISPENSE_BEHAVIOUR_STRINGS[] = {
     "FLOW_STATE_UNAVAILABLE",
@@ -85,24 +86,26 @@ dispenser::dispenser()
     // do it here.  Note that the pointer is declared as static so we
     // will only ever create one pcb() class no matter how many
     // times we create a dispenser() class.
-    // if (the_pcb == nullptr)
+    // if (m_pcb == nullptr)
     // {
-    //     the_pcb = new pcb();
+    //     m_pcb = new pcb();
     // }
     dispense_state = FLOW_STATE_UNAVAILABLE;
     previous_dispense_state = FLOW_STATE_UNAVAILABLE;
 }
 
-DF_ERROR dispenser::setup(machine *machine, product *pnumbers)
+DF_ERROR dispenser::setup(pcb *pcb, product *pnumbers)
+// DF_ERROR dispenser::setup(machine *machine, product *pnumbers)
 {
     // Set the pump PWM value to a nominal value
 
-    m_machine = machine;
+    // m_machine = machine;
     m_pnumbers = pnumbers;
 
-    the_pcb = m_machine->getPcb();
+    m_pcb = pcb;
+    // m_pcb = m_machine->getPcb();
 
-    the_pcb->setPumpPWM(DEFAULT_PUMP_PWM);
+    m_pcb->setPumpPWM(DEFAULT_PUMP_PWM);
 
     m_pFlowsenor[NUM_FLOWSENSOR] = nullptr;
 
@@ -115,7 +118,7 @@ DF_ERROR dispenser::setup(machine *machine, product *pnumbers)
 void dispenser::refresh()
 {
 
-    the_pcb->pcb_refresh();
+    m_pcb->pcb_refresh();
 
     // periodical polling refresh  (because the dispense button has no interrupt trigger (i2c))
     bool egde = dispenseButtonValueMemory != getDispenseButtonValue();
@@ -145,57 +148,21 @@ dispenser::~dispenser()
 {
     debugOutput::sendMessage("~dispenser", MSG_INFO);
 
-    delete the_pcb;
-    the_pcb = nullptr;
+    delete m_pcb;
+    m_pcb = nullptr;
 
     using namespace std::chrono;
     previous_status_update_allowed_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }
 
-
-void dispenser::setAllDispenseButtonLightsOff()
-{
-    for (int slot = 1; slot < 5; slot++)
-    {
-        debugOutput::sendMessage("slot light off: " + to_string(slot), MSG_INFO);
-        setMultiDispenseButtonLight(slot, false);
-    }
-}
-
-void dispenser::setMultiDispenseButtonLight(int slot, bool enableElseDisable)
-{
-    // output has to be set low for light to be on.
-    debugOutput::sendMessage("slot light: " + to_string(slot) + "on else off: " + to_string(enableElseDisable), MSG_INFO);
-
-    if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON)
-    {
-        if (m_machine->getMultiDispenseButtonEnabled())
-        {
-
-            if (m_slot == 4)
-            {
-                m_pDispenseButton4[0]->writePin(!enableElseDisable);
-            }
-            else
-            {
-
-                this->the_pcb->setSingleDispenseButtonLight(slot, enableElseDisable);
-            }
-        }
-        else
-        {
-            this->the_pcb->setSingleDispenseButtonLight(1, enableElseDisable);
-        }
-    }
-    else if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_NO_PIC)
-    {
-        this->the_pcb->setSingleDispenseButtonLight(1, enableElseDisable);
-    }
-    else
-    {
-        this->the_pcb->setSingleDispenseButtonLight(slot, enableElseDisable);
-    }
-}
+// void dispenser::setAllDispenseButtonLightsOff()
+// {
+//     for (int slot = 1; slot < 5; slot++)
+//     {
+//         debugOutput::sendMessage("slot light off: " + to_string(slot), MSG_INFO);
+//         setMultiDispenseButtonLight(slot, false);
+//     }
+// }
 
 DF_ERROR dispenser::setSlot(int slot)
 {
@@ -248,7 +215,7 @@ DF_ERROR dispenser::loadGeneralProperties()
     // loadPumpReversalEnabledFromDb();
     // usleep(20000);
 
-    //  the_pcb->setSingleDispenseButtonLight(this->slot, false);
+    //  m_pcb->setSingleDispenseButtonLight(this->slot, false);
 
     // resetVolumeDispensed();
 }
@@ -353,8 +320,8 @@ DF_ERROR dispenser::startDispense()
     dispense_start_timestamp_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
     dispenseButtonTimingreset();
 
-    this->the_pcb->flowSensorEnable(m_slot);
-    this->the_pcb->resetFlowSensorTotalPulses(m_slot);
+    this->m_pcb->flowSensorEnable(m_slot);
+    this->m_pcb->resetFlowSensorTotalPulses(m_slot);
 
     dispense_state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
     previous_dispense_state = FLOW_STATE_UNAVAILABLE;
@@ -365,6 +332,44 @@ DF_ERROR dispenser::startDispense()
     initFlowRateCalculation();
 
     return e_ret = OK;
+}
+
+void dispenser::setDispenseButtonLight(bool onElseOff)
+{
+    switch (m_pcb->get_pcb_version())
+    {
+
+    case (pcb::PcbVersion::DSED8344_NO_PIC):
+    {
+        debugOutput::sendMessage("No dispense button light. Deprecated ", MSG_WARNING);
+    }
+
+    break;
+    case pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON:
+    {
+        debugOutput::sendMessage("No dispense button light. Deprecated ", MSG_WARNING);
+    }
+    break;
+    case (pcb::PcbVersion::EN134_4SLOTS):
+    case (pcb::PcbVersion::EN134_8SLOTS):
+    {
+
+        m_pcb->setSingleDispenseButtonLight(getSlot(), onElseOff);
+    }
+    break;
+    case (pcb::PcbVersion::EN258_4SLOTS):
+    case (pcb::PcbVersion::EN258_8SLOTS):
+    {
+
+        m_pcb->setSingleDispenseButtonLight(getSlot(), onElseOff);
+    }
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Pcb not comptible. ", MSG_WARNING);
+    }
+    break;
+    }
 }
 
 // Reset values onEntry()
@@ -378,32 +383,50 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
 
     resetVolumeDispensed();
 
-    // if (the_pcb->get_pcb_version() == 2){
-    if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON)
+    // if (m_pcb->get_pcb_version() == 2){
+    switch (m_pcb->get_pcb_version())
     {
-        if (m_machine->getMultiDispenseButtonEnabled())
-        {
-            setMultiDispenseButtonLight(getSlot(), true);
-        }
-        else
-        {
-            setMultiDispenseButtonLight(1, true);
-        }
-        setPumpEnable(); // Added at time of EN-134 integration. Why did things work earlier onwards?
+
+    case (pcb::PcbVersion::DSED8344_NO_PIC):
+    {
+        // setMultiDispenseButtonLight(getSlot(), true);
     }
-    else if (the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS || the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_8SLOTS)
+
+    break;
+    case pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON:
     {
-        the_pcb->sendEN134DefaultConfigurationToPCA9534(getSlot(), true);
+        // if (m_machine->getMultiDispenseButtonEnabled())
+        // {
+        //     setMultiDispenseButtonLight(getSlot(), true);
+        // }
+        // else
+        // {
+        //     setMultiDispenseButtonLight(1, true);
+        // }
+        // setPumpEnable(); // Added at time of EN-134 integration. Why did things work earlier onwards?
+    }
+    break;
+    case (pcb::PcbVersion::EN134_4SLOTS):
+    case (pcb::PcbVersion::EN134_8SLOTS):
+    {
+
+        m_pcb->sendEN134DefaultConfigurationToPCA9534(getSlot(), true);
         setPumpEnable();
-        setMultiDispenseButtonLight(getSlot(), true);
+        m_pcb->setSingleDispenseButtonLight(getSlot(), true);
     }
-    else if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_NO_PIC)
+    break;
+    case (pcb::PcbVersion::EN258_4SLOTS):
+    case (pcb::PcbVersion::EN258_8SLOTS):
     {
-        setMultiDispenseButtonLight(getSlot(), true);
+
+        m_pcb->setSingleDispenseButtonLight(getSlot(), true);
     }
-    else
+    break;
+    default:
     {
-        debugOutput::sendMessage("No dispense button light enabled. ", MSG_WARNING);
+        debugOutput::sendMessage("Pcb not comptible. ", MSG_WARNING);
+    }
+    break;
     }
 
     // Set Start Time
@@ -413,13 +436,14 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
 
     return dfRet;
 }
+
 DF_ERROR dispenser::stopDispense()
 {
     debugOutput::sendMessage("stop dispense actions...", MSG_INFO);
 
-    setAllDispenseButtonLightsOff();
+    m_pcb->setDispenseButtonLightsAllOff();
 
-    the_pcb->flowSensorsDisableAll();
+    m_pcb->flowSensorsDisableAll();
 
     // Set End time
     time(&rawtime);
@@ -496,14 +520,14 @@ DF_ERROR dispenser::initGlobalFlowsensorIO(int pin, int pos)
     return e_ret;
 }
 
-DF_ERROR dispenser::initDispenseButton4Light()
-{
-    if (the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON)
-    {
-        m_pDispenseButton4[0] = new FSModdyseyx86GPIO(IO_PIN_BUTTON_4);
-        m_pDispenseButton4[0]->setPinAsInputElseOutput(false);
-    }
-}
+// DF_ERROR dispenser::initDispenseButton4Light()
+// {
+//     if (m_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON)
+//     {
+//         m_pDispenseButton4[0] = new FSModdyseyx86GPIO(IO_PIN_BUTTON_4);
+//         m_pDispenseButton4[0]->setPinAsInputElseOutput(false);
+//     }
+// }
 
 // DF_ERROR dispenser::initButtonsShutdownAndMaintenance()
 // {
@@ -534,7 +558,7 @@ DF_ERROR dispenser::setPump(int mcpAddress, int pin, int position)
 DF_ERROR dispenser::setPumpDirectionForward()
 {
     debugOutput::sendMessage("Pump direction: Forward.", MSG_INFO);
-    the_pcb->setPumpDirection(this->m_slot, true);
+    m_pcb->setPumpDirection(this->m_slot, true);
 }
 
 bool dispenser::getIsStatusUpdateAllowed()
@@ -570,7 +594,7 @@ bool dispenser::getDispenseButtonEdgePositive()
 
 bool dispenser::getDispenseButtonValue()
 {
-    the_pcb->getDispenseButtonStateDebounced(m_slot);
+    m_pcb->getDispenseButtonStateDebounced(m_slot);
 }
 
 void dispenser::dispenseButtonTimingreset()
@@ -622,23 +646,23 @@ uint64_t dispenser::getButtonPressedCurrentPressMillis()
     return dispense_button_current_press_millis;
 }
 
-void dispenser::setSolenoidOnePerSlot(bool openElseClosed)
+void dispenser::setSpoutSolenoid(bool openElseClosed)
 {
-    the_pcb->setSolenoidOnePerSlot(this->m_slot, openElseClosed);
+    m_pcb->setSpoutSolenoid(this->m_slot, openElseClosed);
 }
 
 // Reverse pump: Turn forward pin LOW - Reverse pin HIGH
 DF_ERROR dispenser::setPumpDirectionReverse()
 {
     DF_ERROR e_ret = OK;
-    if (!m_machine->getPumpReversalEnabled())
+    if (!m_isPumpReversalEnabled)
     {
         debugOutput::sendMessage("Pump reversal not allowed. Will not execute command.", MSG_WARNING);
 
         return e_ret;
     }
     debugOutput::sendMessage("Pump direction: reverse", MSG_INFO);
-    the_pcb->setPumpDirection(this->m_slot, false);
+    m_pcb->setPumpDirection(this->m_slot, false);
 }
 
 // Stops pumping: Turn forward pin LOW - Reverse pin LOW
@@ -646,7 +670,7 @@ DF_ERROR dispenser::setPumpsDisableAll()
 {
     // m_machine->pcb24VPowerSwitch(false);
     debugOutput::sendMessage("Pump disable: all.", MSG_INFO);
-    the_pcb->setPumpsDisableAll();
+    m_pcb->setPumpsDisableAll();
     m_isSlotEnabled = false;
     isPumpSoftStarting = false;
     pwm_actual_set_speed = 0;
@@ -654,7 +678,7 @@ DF_ERROR dispenser::setPumpsDisableAll()
 
 void dispenser::reversePumpForSetTimeMillis(int millis)
 {
-    if (m_machine->getPumpReversalEnabled())
+    if (m_isPumpReversalEnabled)
     {
         if (millis > 0)
         {
@@ -664,7 +688,7 @@ void dispenser::reversePumpForSetTimeMillis(int millis)
             debugOutput::sendMessage("Pump auto retraction. Reverse time millis: " + to_string(millis), MSG_INFO);
             pumpSlowStart(false);
 
-            the_pcb->virtualButtonPressHack(this->m_slot);
+            // m_pcb->virtualButtonPressHack(this->m_slot);
             // ideally, a certain volume is retracted. --> on-time depends on speed
 
             using namespace std::chrono;
@@ -681,7 +705,7 @@ void dispenser::reversePumpForSetTimeMillis(int millis)
             }
 
             // usleep(millis * 1000);
-            the_pcb->virtualButtonUnpressHack(this->m_slot); // needed! To have the button pressing sequence right. (fake button presses can mess the button detection up)
+            // m_pcb->virtualButtonUnpressHack(this->m_slot); // needed! To have the button pressing sequence right. (fake button presses can mess the button detection up)
 
             pumpSlowStopBlocking();
 
@@ -738,10 +762,19 @@ DF_ERROR dispenser::pumpSlowStartHandler()
     }
 }
 
+void dispenser::setPumpReversalEnabled(bool isEnabled)
+{
+    m_isPumpReversalEnabled = isEnabled;
+};
+void dispenser::setPumpSlowStartStopEnabled(bool isEnabled)
+{
+    m_isPumpSlowStartStopEnabled = isEnabled;
+}
+
 DF_ERROR dispenser::pumpSlowStart(bool forwardElseReverse)
 {
 
-    if (!forwardElseReverse && !m_machine->getPumpReversalEnabled())
+    if (!forwardElseReverse && !m_isPumpReversalEnabled)
     {
         debugOutput::sendMessage("Pump reversal not allowed. Will not execute command.", MSG_WARNING);
         DF_ERROR e_ret = OK;
@@ -766,7 +799,7 @@ DF_ERROR dispenser::pumpSlowStart(bool forwardElseReverse)
     }
     usleep(10000); // make sure direction is set well
     setPumpEnable();
-    if (SLOW_START_INCREASE_PERIOD_MILLIS == 0 || !m_machine->getPumpSlowStartStopEnabled())
+    if (SLOW_START_INCREASE_PERIOD_MILLIS == 0 || !m_isPumpSlowStartStopEnabled)
     {
         debugOutput::sendMessage("Pump instant start", MSG_INFO);
         setPumpPWM(target_pwm, true);
@@ -786,7 +819,7 @@ DF_ERROR dispenser::pumpSlowStopBlocking()
     isPumpSoftStarting = false;
     if (pwm_actual_set_speed > 0)
     {
-        if (SLOW_STOP_PERIOD_MILLIS == 0 || !m_machine->getPumpSlowStartStopEnabled())
+        if (SLOW_STOP_PERIOD_MILLIS == 0 || !m_isPumpSlowStartStopEnabled)
         {
             debugOutput::sendMessage("Pump instant stop", MSG_INFO);
             // no slow stop
@@ -794,14 +827,14 @@ DF_ERROR dispenser::pumpSlowStopBlocking()
         else
         {
             debugOutput::sendMessage("Pump slow stop. from " + to_string(pwm_actual_set_speed) + " to " + to_string(0), MSG_INFO);
-            the_pcb->virtualButtonPressHack(this->m_slot);
+            // m_pcb->virtualButtonPressHack(this->m_slot);
 
             for (int i = pwm_actual_set_speed; i >= 0; --i)
             {
                 setPumpPWM(i, false);
                 usleep(SLOW_STOP_PERIOD_MILLIS * 1000); // one second ramp up to full speed --> 255 steps ==> 4ms per step.
             }
-            the_pcb->virtualButtonUnpressHack(this->m_slot);
+            // m_pcb->virtualButtonUnpressHack(this->m_slot);
         }
     }
     else
@@ -817,7 +850,7 @@ DF_ERROR dispenser::setPumpEnable()
     // still needs dispense button to actually get the pump to start
     debugOutput::sendMessage("Pump enable position: " + to_string(this->m_slot), MSG_INFO);
     // m_machine->pcb24VPowerSwitch(true);
-    the_pcb->setPumpEnable(this->m_slot); // pump 1 to 4
+    m_pcb->setPumpEnable(this->m_slot); // pump 1 to 4
     m_isSlotEnabled = true;
 }
 
@@ -827,12 +860,12 @@ DF_ERROR dispenser::setPumpPWM(uint8_t value, bool enableLog)
     {
         debugOutput::sendMessage("Pump set speed. PWM [0..255]: " + to_string(value), MSG_INFO);
     }
-    the_pcb->setPumpPWM((unsigned char)value);
+    m_pcb->setPumpPWM((unsigned char)value);
 }
 
 unsigned short dispenser::getPumpSpeed()
 {
-    the_pcb->getPumpPWM();
+    m_pcb->getPumpPWM();
 }
 
 // void dispenser::loadPumpReversalEnabledFromDb()
@@ -855,7 +888,6 @@ unsigned short dispenser::getPumpSpeed()
 
 //     debugOutput::sendMessage("Pump reversal enabled? : " + to_string(m_isPumpReversalEnabled), MSG_INFO);
 // }
-
 
 // void dispenser::loadPumpRampingEnabledFromDb()
 // {
@@ -955,7 +987,6 @@ void dispenser::analyseSlotState()
 
 //     debugOutput::sendMessage("Empty container detection enabled? : " + to_string(m_isEmptyContainerDetectionEnabled), MSG_INFO);
 // }
-
 
 double dispenser::getVolumeDeltaAndReset()
 {

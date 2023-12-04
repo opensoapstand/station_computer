@@ -50,7 +50,7 @@ std::string stateStrings[FSM_MAX + 1] = {
 messageMediator *g_pMessaging;           // debug through local network
 stateVirtual *g_stateArray[FSM_MAX + 1]; // an object for every state
 
-dispenser g_productDispensers[PRODUCT_DISPENSERS_MAX];
+// dispenser m_productDDDDDispensers[PRODUCT_DISPENSERS_MAX];
 product g_pnumbers[PNUMBERS_COUNT];
 machine g_machine;
 
@@ -103,13 +103,13 @@ int main(int argc, char *argv[])
     // process program arguments
     for (int i = 1; i < argc; i++)
     {
+        debugOutput::sendMessage("Process argument: " + std::string(argv[i]), MSG_INFO);
         if (std::string(argv[i]) == "standalone")
         {
             g_connect_to_ui = false;
             debugOutput::sendMessage("Running in standalone mode", MSG_INFO);
             
         }
-        debugOutput::sendMessage("argument: " + std::string(argv[i]), MSG_INFO);
     }
 
     if (OK == initObjects())
@@ -141,7 +141,7 @@ DF_ERROR stateLoop()
         // the pcb inputs are not interrupt driven. So, periodical updates are required
         for (uint8_t slot_index = 0; slot_index < PRODUCT_DISPENSERS_MAX; slot_index++)
         {
-            g_productDispensers[slot_index].refresh();
+            g_machine.m_productDDDDDispensers[slot_index].refresh();
         }
 
         if (fsmState == STATE_DUMMY)
@@ -204,7 +204,7 @@ DF_ERROR initObjects()
 
     debugOutput::sendMessage("message mediator set up.", MSG_INFO);
 
-    g_machine.setup();
+    g_machine.setup(g_pnumbers);
     g_pMessaging->setMachine(&g_machine);
 
     debugOutput::sendMessage("Machine set up.", MSG_INFO);
@@ -215,13 +215,7 @@ DF_ERROR initObjects()
         g_pnumbers[pnumber].init(pnumber);
     }
 
-    for (int slot_index = 0; slot_index < PRODUCT_DISPENSERS_MAX; slot_index++)
-    {
-        debugOutput::sendMessage("Init dispenser " + to_string(slot_index + 1), MSG_INFO);
-        g_productDispensers[slot_index].setup(&g_machine, g_pnumbers);
-        g_productDispensers[slot_index].setSlot(slot_index + 1);
-        g_productDispensers[slot_index].setBasePNumberAsSelectedProduct();
-    }
+  
 
     dfRet = createStateArray();
     if (OK != dfRet)

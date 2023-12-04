@@ -36,7 +36,7 @@ public:
 private:
     int dispenser_index;
     char size;
-    dispenser *productDispensers;
+    // dispenser *productDispensers;
 };
 
 #endif

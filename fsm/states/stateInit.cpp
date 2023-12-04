@@ -103,7 +103,7 @@ DF_ERROR stateInit::onExit()
 DF_ERROR stateInit::dispenserSetup()
 {
     int idx;
-    dispenser *productDispensers = g_productDispensers;
+    // dispenser *productDispensers = g_productDispensers;
 
     debugOutput::sendMessage("Setting up control board.", MSG_INFO);
 
@@ -113,31 +113,31 @@ DF_ERROR stateInit::dispenserSetup()
 #ifndef __arm__
     for (idx = 0; idx < 4; idx++)
     {
-        productDispensers[idx].initGlobalFlowsensorIO(IO_PIN_FLOW_SENSOR, idx);
+        g_machine.m_productDDDDDispensers[idx].initGlobalFlowsensorIO(IO_PIN_FLOW_SENSOR, idx);
     }
 #else
-    productDispensers[0].initGlobalFlowsensorIO(17, 0);
+    g_machine.m_productDDDDDispensers[0].initGlobalFlowsensorIO(17, 0);
 #endif
 
     // Set up the four dispensers
     for (idx = 0; idx < 4; idx++)
     {
-        productDispensers[idx].setPump(0, 0, idx);
-        productDispensers[idx].loadGeneralProperties();
+        g_machine.m_productDDDDDispensers[idx].setPump(0, 0, idx);
+        g_machine.m_productDDDDDispensers[idx].loadGeneralProperties();
     }
     g_machine.loadGeneralProperties();
 
-    // productDispensers[0].initButtonsShutdownAndMaintenance(); // todo: this is a hack for the maintenance and power button. It should not be part of the dispenser class
+    // g_machine.m_productDDDDDispensers[0].initButtonsShutdownAndMaintenance(); // todo: this is a hack for the maintenance and power button. It should not be part of the dispenser class
 
     // needs to be set up only once. Dispenser index is only important for the button 4 index.
 
     if (g_machine.control_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON) //&& this->slot == 4
     {
-        if (g_machine.getMultiDispenseButtonEnabled())
-        {
-            productDispensers[3].initDispenseButton4Light(); // THE DISPENSER SLOT MUST REPRESENT THE BUTTON. It's dirty and I know it.
-            productDispensers[3].setAllDispenseButtonLightsOff();
-        }
+        // if (g_machine.getMultiDispenseButtonEnabled())
+        // {
+        //     g_machine.m_productDDDDDispensers[3].initDispenseButton4Light(); // THE DISPENSER SLOT MUST REPRESENT THE BUTTON. It's dirty and I know it.
+        //        g_machine.control_pcb->setDispenseButtonLightsAllOff();
+        // }
     }
     else if (g_machine.control_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS || g_machine.control_pcb->get_pcb_version() == pcb::PcbVersion::EN134_8SLOTS)
     {

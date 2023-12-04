@@ -20,6 +20,7 @@
 // #include "../components/dsed8344.h"
 #include "../components/fsmodysseyx86gpio.h"
 #include "../components/pcb.h"
+#include "dispenser.h"
 #include "product.h"
 #include <sqlite3.h>
 #include <map>
@@ -30,6 +31,8 @@
 class machine
 {
 public:
+    dispenser m_productDDDDDispensers[PRODUCT_DISPENSERS_MAX];
+
     enum HardwareVersion
     {
         SS09,
@@ -47,17 +50,18 @@ public:
     void print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string char_units_formatted, string paymentMethod, string plu, string promoCode, bool sleep_until_printed);
     gpio *switch_24V;
     bool power24VEnabled = false;
-    void setup();
+    void setup(product *pnumbers);
     pcb *getPcb();
 
     pcb *control_pcb;
     Adafruit_Thermal *receipt_printer;
     void setButtonLightsBehaviour(Button_lights_behaviour behaviour);
-
+    void initProductDispensers();
     void refreshButtonLightAnimationCaterpillar();
     void refreshButtonLightAnimationPingPong();
     void refreshButtonLightAnimation();
     void resetButtonLightAnimation();
+    void setMultiDispenseButtonLight(int slot, bool enableElseDisable);
     Button_lights_behaviour m_button_lights_behaviour;
     Button_lights_behaviour m_button_lights_behaviour_memory;
     uint64_t m_lights_animation_most_recent_step_millis;
@@ -82,6 +86,7 @@ public:
     bool getPumpSlowStartStopEnabled();
 
 private:
+    product *m_pnumbers;
     void setHardwareVersionFromString(const std::string &version);
     bool m_isMultiButtonEnabled = false;
     int m_button_animation_program;

@@ -82,7 +82,7 @@ public:
     void flowSensorsDisableAll();
     void flowSensorRefresh();
 
-    void setSolenoidOnePerSlot(uint8_t slot, bool onElseOff);
+    void setSpoutSolenoid(uint8_t slot, bool onElseOff);
 
 
 

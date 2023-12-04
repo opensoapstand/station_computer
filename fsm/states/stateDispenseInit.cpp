@@ -44,7 +44,7 @@ DF_ERROR stateDispenseInit::onEntry()
     m_state_requested = STATE_DISPENSE_INIT;
     DF_ERROR e_ret = OK;
 
-    productDispensers = g_productDispensers;
+    // productDispensers = g_productDispensers;
 
     size = m_pMessaging->getRequestedSize();
     if (size == SIZE_DUMMY){
@@ -60,7 +60,7 @@ DF_ERROR stateDispenseInit::onEntry()
 
     debugOutput::sendMessage("dispense init, we (re)load parameters from database.", MSG_INFO);
 
-    bool success = this->productDispensers[dispenser_index].getSelectedProduct()->loadParameters();
+    bool success = g_machine.m_productDDDDDispensers[dispenser_index].getSelectedProduct()->loadParameters();
     if (!success)
     {
         debugOutput::sendMessage("Did not reload parameters from database", MSG_INFO);
@@ -75,27 +75,27 @@ DF_ERROR stateDispenseInit::onAction()
 {
 
     DF_ERROR e_ret = OK;
-    this->productDispensers[dispenser_index].loadGeneralProperties();
+    g_machine.m_productDDDDDispensers[dispenser_index].loadGeneralProperties();
     g_machine.loadGeneralProperties();
-    debugOutput::sendMessage(std::string("SLOT dispenesrs erstate: ") + productDispensers[dispenser_index].getSlotStateAsString(),
+    debugOutput::sendMessage(std::string("SLOT dispenesrs erstate: ") + g_machine.m_productDDDDDispensers[dispenser_index].getSlotStateAsString(),
                              MSG_INFO);
 
 
     debugOutput::sendMessage("Chosen dispenser slot: " +
-                                 std::to_string(productDispensers[dispenser_index].getSlot()) +
+                                 std::to_string(g_machine.m_productDDDDDispensers[dispenser_index].getSlot()) +
                                  " target volume: " +
-                                 std::to_string(productDispensers[dispenser_index].getSelectedProduct()->getTargetVolume(size)),
+                                 std::to_string(g_machine.m_productDDDDDispensers[dispenser_index].getSelectedProduct()->getTargetVolume(size)),
                              MSG_INFO);
 
-    productDispensers[dispenser_index].initDispense(
-        productDispensers[dispenser_index].getSelectedProduct()->getTargetVolume(size)
-        ,productDispensers[dispenser_index].getSelectedProduct()->getPrice(size)
+    g_machine.m_productDDDDDispensers[dispenser_index].initDispense(
+        g_machine.m_productDDDDDispensers[dispenser_index].getSelectedProduct()->getTargetVolume(size)
+        ,g_machine.m_productDDDDDispensers[dispenser_index].getSelectedProduct()->getPrice(size)
         );
 
-    // productDispensers[dispenser_index].getSelectedProduct()->productInfo();
-    // productDispensers[dispenser_index].getSelectedProduct()->productVolumeInfo();
+    // g_machine.m_productDDDDDispensers[dispenser_index].getSelectedProduct()->productInfo();
+    // g_machine.m_productDDDDDispensers[dispenser_index].getSelectedProduct()->productVolumeInfo();
 
-    productDispensers[dispenser_index].startDispense();
+    g_machine.m_productDDDDDispensers[dispenser_index].startDispense();
     
 
     

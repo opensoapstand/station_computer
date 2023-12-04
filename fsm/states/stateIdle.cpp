@@ -22,7 +22,7 @@
 // Default CTOR
 stateIdle::stateIdle()
 {
-   productDispensers = g_productDispensers;
+   // productDispensers = g_productDispensers;
 }
 
 // CTOR Linked to IP Thread Socket Listener
@@ -134,8 +134,8 @@ DF_ERROR stateIdle::onAction()
       {
          
          debugOutput::sendMessage("Before reload parameters from product", MSG_INFO);
-         bool success = this->productDispensers[0].getSelectedProduct()->loadParameters();
-         this->productDispensers[0].loadGeneralProperties();
+         bool success = g_machine.m_productDDDDDispensers[0].getSelectedProduct()->loadParameters();
+         g_machine.m_productDDDDDispensers[0].loadGeneralProperties();
          g_machine.loadGeneralProperties();
 
          debugOutput::sendMessage("After" + to_string(success), MSG_INFO);

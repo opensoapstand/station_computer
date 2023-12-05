@@ -696,7 +696,7 @@ bool product::reloadParametersFromDb()
         isEnabledSizes[i] = false;
     }
 
-    syncSoftwareVersionWithDb();
+    // syncSoftwareVersionWithDb();
 
     if (!isColumnInTable("products", "is_enabled_custom_discount"))
     {

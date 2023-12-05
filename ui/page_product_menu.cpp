@@ -170,7 +170,6 @@ void page_product_menu::showEvent(QShowEvent *event)
     }
 
     select_base_product_in_menu(0);
-
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_product_menu_title);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_to_idle);
 
@@ -361,6 +360,7 @@ void page_product_menu::displayDispenseProductsMenu()
 
             pushButtons_dispense_product[sub_menu_index]->show();
             labels_dispense_product_picture[sub_menu_index]->show();
+            labels_dispense_product_name[sub_menu_index]->show();
             pushButtons_dispense_product[sub_menu_index]->raise();
         }else{
             qDebug() << "Set up sub menu for item: " << sub_menu_index + 1 << "Invalid pnumber product. Will hide option. ";

@@ -32,6 +32,34 @@ machine::machine()
     m_button_animation_program = 0;
 }
 
+
+void machine::setup(product* pnumbers)
+{
+    // if ((m_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON) && this->slot == 4)
+    // {
+    //     m_pDispenseButton4[0]->writePin(!enableElseDisable);
+    // }
+    // else
+    // {
+    //     this->m_pcb->setSingleDispenseButtonLight(slot, enableElseDisable);
+    // }
+    //  if (control_pcb == nullptr)
+    // {
+    control_pcb = new pcb();
+    // }
+    m_pnumbers = pnumbers;
+    receipt_printer = new Adafruit_Thermal();
+    control_pcb->setup();
+    control_pcb->setPumpPWM(DEFAULT_PUMP_PWM);
+    // the 24V power has a master on/off switch
+    switch_24V = new FSModdyseyx86GPIO(IO_PIN_ENABLE_24V);
+    power24VEnabled = false;
+    switch_24V->setPinAsInputElseOutput(false); // set as output
+    syncSoftwareVersionWithDb();
+    initProductDispensers();
+}
+
+
 void machine::initProductDispensers()
 {
 
@@ -69,31 +97,6 @@ void machine::setHardwareVersionFromString(const std::string &version)
     {
         m_hardware_version = UNKNOWN;
     }
-}
-
-void machine::setup(product* pnumbers)
-{
-    // if ((m_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON) && this->slot == 4)
-    // {
-    //     m_pDispenseButton4[0]->writePin(!enableElseDisable);
-    // }
-    // else
-    // {
-    //     this->m_pcb->setSingleDispenseButtonLight(slot, enableElseDisable);
-    // }
-    //  if (control_pcb == nullptr)
-    // {
-    control_pcb = new pcb();
-    // }
-    m_pnumbers = pnumbers;
-    receipt_printer = new Adafruit_Thermal();
-    control_pcb->setup();
-    control_pcb->setPumpPWM(DEFAULT_PUMP_PWM);
-    // the 24V power has a master on/off switch
-    switch_24V = new FSModdyseyx86GPIO(IO_PIN_ENABLE_24V);
-    power24VEnabled = false;
-    switch_24V->setPinAsInputElseOutput(false); // set as output
-    syncSoftwareVersionWithDb();
 }
 
 void machine::loadGeneralProperties()

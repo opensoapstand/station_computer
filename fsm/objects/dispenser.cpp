@@ -98,10 +98,8 @@ DF_ERROR dispenser::setup(pcb *pcb, product *pnumbers)
 // DF_ERROR dispenser::setup(machine *machine, product *pnumbers)
 {
     // Set the pump PWM value to a nominal value
-
     // m_machine = machine;
     m_pnumbers = pnumbers;
-
     m_pcb = pcb;
     // m_pcb = m_machine->getPcb();
 

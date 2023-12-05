@@ -55,7 +55,7 @@
 
 #define TEMPERATURE_OPTIONAL_EXTERNAL_MCP9808_1_ADDRESS 0b0011000 // EN134 EN258
 #define TEMPERATURE_OPTIONAL_EXTERNAL_MCP9808_2_ADDRESS 0b0011001 // EN134 EN258
-#define TEMPERATURE_ADC_ADS7830 0b1001000                        // EN258
+#define TEMPERATURE_ADC_ADS7830 0b1001000                         // EN258
 
 #define DUMMY_ADDRESS 0b0100011
 
@@ -71,8 +71,6 @@
 #define PCA9534_EN134_PIN_OUT_BUTTON_LED_LOW_IS_ON 5
 #define PCA9534_EN134_PIN_IN_FLOW_SENSOR_TICKS 6
 #define PCA9534_EN134_PIN_OUT_FLOW_SENSOR_ENABLE 7
-
-
 
 #define MCP23017_REGISTER_GPA 0x09
 #define MCP23017_REGISTER_GPB 0x19
@@ -102,7 +100,6 @@
 #define EN258_SOLENOID_ADDITIVE_4 6
 #define EN258_SOLENOID_ADDITIVE_5 7
 #define EN258_SOLENOID_SPOUT 8
-
 
 #define PUMP_START_DELAY_MILLIS 100
 #define PUMP_STOP_BEFORE_BACKTRACK_TIME_MILLIS 0
@@ -159,7 +156,8 @@ public:
     bool isTemperatureSensorMCP9808Available_1();
     bool isTemperatureSensorMCP9808Available_2(); // 2nd sensor
     bool isTemperatureSensorADS7830Available();   // 2nd sensor
-    
+    std::string toString(PcbVersion version);
+
     unsigned char getPumpPWM();
     bool setPumpPWM(uint8_t pwm_val);
     bool setPumpSpeedPercentage(uint8_t speed_percentage);
@@ -198,7 +196,7 @@ public:
     void flowSensorEnable(uint8_t slot);
     void flowSensorsDisableAll();
     // PcbVersion enum PcbVersion;
-    enum PcbVersion pcb_version;
+
     uint8_t PCA9534ReadRegisterFromSlot(uint8_t slot, uint8_t reg);
 
     void PCA9534SendByteToSlot(uint8_t slot, unsigned char reg, unsigned char byte);
@@ -221,9 +219,10 @@ public:
     void setMCP23017Register(uint8_t slot, uint8_t reg, uint8_t value);
     void setFlowSensorTypeEN258(uint8_t slot, bool isDigmesaElseAichi);
     bool getFlowSensorTypeEN258DigmesaElseAichi(uint8_t slot);
+
+    PcbVersion pcb_version;
+    
 private:
-
-
     bool flowSensorDigmesaElseAichi[MAX_SLOT_COUNT];
     bool dispenseButtonStateMemory[MAX_SLOT_COUNT];
     bool dispenseButtonIsDebounced[MAX_SLOT_COUNT];

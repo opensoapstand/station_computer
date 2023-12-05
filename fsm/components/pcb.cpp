@@ -56,6 +56,8 @@ pcb::pcb(void)
     i2c_bus_name[strlen(i2c_bus_name) - 1] = 0;
 
 #endif
+    pcb_version = INVALID;
+    get_pcb_version();
 }
 
 // Constructor where you can specify the name of the I2C bus
@@ -350,6 +352,29 @@ void pcb::setup()
 pcb::PcbVersion pcb::get_pcb_version(void)
 {
     return pcb_version;
+}
+
+std::string pcb::toString(PcbVersion version)
+{
+    switch (version)
+    {
+    case INVALID:
+        return "INVALID";
+    case DSED8344_NO_PIC:
+        return "DSED8344_NO_PIC";
+    case DSED8344_PIC_MULTIBUTTON:
+        return "DSED8344_PIC_MULTIBUTTON";
+    case EN134_4SLOTS:
+        return "EN134_4SLOTS";
+    case EN134_8SLOTS:
+        return "EN134_8SLOTS";
+    case EN258_4SLOTS:
+        return "EN258_4SLOTS";
+    case EN258_8SLOTS:
+        return "EN258_8SLOTS";
+    default:
+        return "Unknown pcb Version";
+    }
 }
 
 bool pcb::define_pcb_version(void)
@@ -761,7 +786,7 @@ void pcb::initialize_pcb()
             }
         }
 
-        debugOutput::sendMessage("Initialized.", MSG_INFO);
+        debugOutput::sendMessage("Initialized. EN-258 4 slots", MSG_INFO);
     };
     break;
     case (EN258_8SLOTS):
@@ -775,6 +800,9 @@ void pcb::initialize_pcb()
     }
     break;
     }
+
+    debugOutput::sendMessage("pcb initialized. version: " + toString(pcb_version), MSG_INFO);
+    get_pcb_version();
 }
 
 bool pcb::isTemperatureSensorMCP9808Available_1()

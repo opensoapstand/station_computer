@@ -54,7 +54,7 @@ stateVirtual *g_stateArray[FSM_MAX + 1]; // an object for every state
 product g_pnumbers[PNUMBERS_COUNT];
 machine g_machine;
 
-bool g_connect_to_ui=true;
+bool g_connect_to_ui = true;
 
 DF_ERROR initObjects();
 DF_ERROR createStateArray();
@@ -108,27 +108,54 @@ int main(int argc, char *argv[])
         {
             g_connect_to_ui = false;
             debugOutput::sendMessage("Running in standalone mode", MSG_INFO);
-            
         }
     }
 
-    if (OK == initObjects())
-    {
-        debugOutput::sendMessage("Init objects done", MSG_INFO);
-        dfRet = g_pMessaging->createThreads(kbThread, ipThread);
+    dfRet = initObjects();
+    if (OK != dfRet)return dfRet;
+    
+    dfRet = g_pMessaging->createThreads(kbThread, ipThread);
+    if (OK != dfRet)return dfRet;
 
-        if (OK == dfRet)
-        {
-            dfRet = stateLoop();
-        }
-    }
+    dfRet = stateLoop();
+    if (OK != dfRet)return dfRet;
 
     return dfRet;
 }
 
-/*
- * Poll for State changes: States outlined in DF_FSM
- */
+DF_ERROR initObjects()
+{
+    DF_ERROR dfRet = OK;
+
+    g_pMessaging = new messageMediator();
+
+    if (g_pMessaging == nullptr)
+    {
+        debugOutput::sendMessage("**************Failed to allocate messageMediator", MSG_ERROR);
+    }
+    g_pMessaging->setSendingBehaviour(g_connect_to_ui);
+
+    debugOutput::sendMessage("message mediator set up.", MSG_INFO);
+
+    g_machine.setup(g_pnumbers);
+    g_pMessaging->setMachine(&g_machine);
+
+    debugOutput::sendMessage("Machine set up.", MSG_INFO);
+
+    for (int pnumber = 0; pnumber < PNUMBERS_COUNT; pnumber++)
+    {
+        debugOutput::sendMessage("Load pnumber " + to_string(pnumber), MSG_INFO);
+        g_pnumbers[pnumber].init(pnumber);
+    }
+
+    dfRet = createStateArray();
+    if (OK != dfRet)
+    {
+        debugOutput::sendMessage("Error at set up.", MSG_ERROR);
+    }
+    debugOutput::sendMessage("Init objects done", MSG_INFO);
+    return dfRet;
+}
 
 DF_ERROR stateLoop()
 {
@@ -138,6 +165,7 @@ DF_ERROR stateLoop()
 
     while (OK == dfRet) // while no error has occurred
     {
+        g_machine.getPcb()->get_pcb_version();
         // the pcb inputs are not interrupt driven. So, periodical updates are required
         for (uint8_t slot_index = 0; slot_index < PRODUCT_DISPENSERS_MAX; slot_index++)
         {
@@ -183,44 +211,5 @@ DF_ERROR stateLoop()
         usleep(1000); // micros! 1 ms delay to slow down refresh rate
     }
     debugOutput::sendMessage("State machine ENDED. ", MSG_INFO);
-    return dfRet;
-}
-
-/*
- * Mutex Setting; Spin up Threads
- */
-DF_ERROR initObjects()
-{
-    DF_ERROR dfRet = OK;
-
-    // g_pMessaging = NULL;
-    g_pMessaging = new messageMediator();
-
-    if (g_pMessaging == nullptr)
-    {
-        debugOutput::sendMessage("**************Failed to allocate messageMediator", MSG_ERROR);
-    }
-    g_pMessaging->setSendingBehaviour(g_connect_to_ui);
-
-    debugOutput::sendMessage("message mediator set up.", MSG_INFO);
-
-    g_machine.setup(g_pnumbers);
-    g_pMessaging->setMachine(&g_machine);
-
-    debugOutput::sendMessage("Machine set up.", MSG_INFO);
-
-    for (int pnumber = 0; pnumber < PNUMBERS_COUNT; pnumber++)
-    {
-        debugOutput::sendMessage("Load pnumber " + to_string(pnumber), MSG_INFO);
-        g_pnumbers[pnumber].init(pnumber);
-    }
-
-  
-
-    dfRet = createStateArray();
-    if (OK != dfRet)
-    {
-        debugOutput::sendMessage("Error at set up.", MSG_ERROR);
-    }
     return dfRet;
 }

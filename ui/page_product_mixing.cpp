@@ -13,17 +13,16 @@
 //
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
-
-#include "page_product.h"
-#include "ui_page_product.h"
+#include "page_product_mixing.h"
+#include "ui_page_product_mixing.h"
 
 using json = nlohmann::json;
-QString transactionLogging = "";
 extern bool promoApplied;
 
+
 // CTOR
-page_product::page_product(QWidget *parent) : QWidget(parent),
-                                              ui(new Ui::page_product)
+page_product_mixing::page_product_mixing(QWidget *parent) : QWidget(parent),
+                                              ui(new Ui::page_product_mixing)
 {
     ui->setupUi(this);
 
@@ -58,7 +57,7 @@ page_product::page_product(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void page_product::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_payment_tap_serial *page_payment_tap_serial, page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product_overview *page_Overview, statusbar *p_statusbar, page_product_menu *page_product_menu)
+void page_product_mixing::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_payment_tap_serial *page_payment_tap_serial, page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product_overview *page_Overview, statusbar *p_statusbar, page_product_menu *page_product_menu)
 {
     this->p_page_product_menu = page_product_menu;
     this->p_page_select_product = pageSelect;
@@ -75,13 +74,13 @@ void page_product::setPage(page_select_product *pageSelect, page_dispenser *page
 }
 
 // DTOR
-page_product::~page_product()
+page_product_mixing::~page_product_mixing()
 {
     delete ui;
 }
 
 /* GUI */
-void page_product::showEvent(QShowEvent *event)
+void page_product_mixing::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
@@ -124,11 +123,11 @@ void page_product::showEvent(QShowEvent *event)
     reset_and_show_page_elements();
 }
 
-void page_product::resizeEvent(QResizeEvent *event)
+void page_product_mixing::resizeEvent(QResizeEvent *event)
 {
 }
 
-void page_product::onSelectTimeoutTick()
+void page_product_mixing::onSelectTimeoutTick()
 {
     if (--_selectIdleTimeoutSec >= 0)
     {
@@ -140,7 +139,7 @@ void page_product::onSelectTimeoutTick()
     }
 }
 
-void page_product::reset_and_show_page_elements()
+void page_product_mixing::reset_and_show_page_elements()
 {
 
     // general setup
@@ -373,7 +372,7 @@ void page_product::reset_and_show_page_elements()
     qDebug() << "-------------------------- END LOAD PRODUCTS ----------------";
 }
 
-bool page_product::stopSelectTimers()
+bool page_product_mixing::stopSelectTimers()
 {
     if (selectIdleTimer != nullptr)
     {
@@ -386,7 +385,7 @@ bool page_product::stopSelectTimers()
     }
 }
 
-void page_product::hideCurrentPageAndShowProductMenu()
+void page_product_mixing::hideCurrentPageAndShowProductMenu()
 {
     if (p_page_idle->thisMachine->getHardwareMajorVersion().startsWith("AP2"))
     {
@@ -398,7 +397,7 @@ void page_product::hideCurrentPageAndShowProductMenu()
     }
 }
     
-void page_product::hideCurrentPageAndShowProvided(QWidget *pageToShow)
+void page_product_mixing::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
 
     selectIdleTimer->stop();
@@ -409,19 +408,19 @@ void page_product::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
 }
 
-void page_product::on_pushButton_to_help_clicked()
+void page_product_mixing::on_pushButton_to_help_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_help);
 }
 
-void page_product::on_pushButton_order_custom_clicked()
+void page_product_mixing::on_pushButton_order_custom_clicked()
 {
     qDebug() << "Button custom clicked ";
     p_page_idle->thisMachine->getSelectedProduct()->setSelectedSize(SIZE_CUSTOM_INDEX);
     hideCurrentPageAndShowProvided(p_page_overview);
 }
 
-void page_product::on_pushButton_order_medium_clicked()
+void page_product_mixing::on_pushButton_order_medium_clicked()
 {
     qDebug() << "Button medium clicked";
     p_page_idle->thisMachine->getSelectedProduct()->setSelectedSize(SIZE_MEDIUM_INDEX);
@@ -429,7 +428,7 @@ void page_product::on_pushButton_order_medium_clicked()
 }
 
 // on_Small_Order button listener
-void page_product::on_pushButton_order_small_clicked()
+void page_product_mixing::on_pushButton_order_small_clicked()
 {
     qDebug() << "Button small clicked";
     p_page_idle->thisMachine->getSelectedProduct()->setSelectedSize(SIZE_SMALL_INDEX);
@@ -437,32 +436,32 @@ void page_product::on_pushButton_order_small_clicked()
 }
 
 // on_Large_Order button listener
-void page_product::on_pushButton_order_big_clicked()
+void page_product_mixing::on_pushButton_order_big_clicked()
 {
     qDebug() << "Button big clicked";
     p_page_idle->thisMachine->getSelectedProduct()->setSelectedSize(SIZE_LARGE_INDEX);
     hideCurrentPageAndShowProvided(p_page_overview);
 }
 
-size_t WriteCallback_coupon(char *contents, size_t size, size_t nmemb, void *userp)
+size_t page_product_mixing::WriteCallback_coupon(char *contents, size_t size, size_t nmemb, void *userp)
 {
     ((std::string *)userp)->append((char *)contents, size * nmemb);
     return size * nmemb;
 }
 
-void page_product::on_pushButton_previous_page_clicked()
+void page_product_mixing::on_pushButton_previous_page_clicked()
 {
     hideCurrentPageAndShowProductMenu();
 }
 
-void page_product::on_pushButton_continue_clicked()
+void page_product_mixing::on_pushButton_continue_clicked()
 {
     // which size is enabled? select that size
     p_page_idle->thisMachine->getSelectedProduct()->setSelectedSize(default_size);
     hideCurrentPageAndShowProvided(p_page_overview);
 }
 
-void page_product::on_pushButton_back_clicked()
+void page_product_mixing::on_pushButton_back_clicked()
 {
     hideCurrentPageAndShowProductMenu();
 }

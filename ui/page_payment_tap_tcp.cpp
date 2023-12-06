@@ -17,6 +17,7 @@
 #include "ui_page_payment_tap_tcp.h"
 
 #include "page_product.h"
+#include "page_product_mixing.h"
 #include "page_dispenser.h"
 #include "page_idle.h"
 #include "payment/commands.h"

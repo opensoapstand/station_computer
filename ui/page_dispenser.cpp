@@ -20,6 +20,7 @@
 #include "page_idle.h"
 #include "page_end.h"
 #include "page_product.h"
+#include "page_product_mixing.h"
 #include "payment/commands.h"
 
 extern QString transactionLogging;

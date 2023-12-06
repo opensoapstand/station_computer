@@ -21,6 +21,7 @@
 #include "page_error_wifi.h"
 #include "page_help.h"
 #include "page_product.h"
+#include "page_product_mixing.h"
 #include "page_payment_tap_serial.h"
 #include "page_email.h"
 

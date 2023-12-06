@@ -22,6 +22,7 @@
 #include "page_product_menu.h"
 #include "page_select_product.h"
 #include "page_product.h"
+#include "page_product_mixing.h"
 #include "page_qr_payment.h"
 #include "page_payment_tap_tcp.h"
 #include "page_payment_tap_serial.h"

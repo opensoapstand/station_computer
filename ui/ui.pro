@@ -43,6 +43,7 @@ HEADERS += \
     page_payment_tap_tcp.h \
     page_payment_tap_serial.h \
     page_product.h \
+    page_product_mixing.h \
     posm/enums.h \
     posm/lrcgenerator.h \
     posm/mcommunication.h \
@@ -85,6 +86,7 @@ SOURCES += \
     page_payment_tap_tcp.cpp \
     page_payment_tap_serial.cpp \
     page_product.cpp \
+    page_product_mixing.cpp \
     posm/lrcgenerator.cpp \
     posm/mcommunication.cpp \
     page_productOverview.cpp \

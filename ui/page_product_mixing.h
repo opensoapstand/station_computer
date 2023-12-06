@@ -1,6 +1,6 @@
 //***************************************
 //
-// page_product.h
+// page_product_mixing.h
 // GUI class for user to select size and
 // payment for drink.
 //
@@ -50,12 +50,13 @@ class page_product_menu;
 
 namespace Ui
 {
-    class page_product;
+    class page_product_mixing;
 }
 
-class page_product : public QWidget
+class page_product_mixing : public QWidget
 {
     Q_OBJECT
+    QString transactionLogging;
 
 public:
     QPushButton *orderSizeButtons[4];
@@ -63,9 +64,10 @@ public:
     QLabel *orderSizeLabelsVolume[4];
     QLabel *orderSizeBackgroundLabels[4];
 
-    explicit page_product(QWidget *parent = nullptr);
+    explicit page_product_mixing(QWidget *parent = nullptr);
     void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_payment_tap_serial *page_payment_tap_serial, page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product_overview *page_Overview, statusbar *p_statusbar, page_product_menu *page_product_menu);
-    ~page_product();
+    ~page_product_mixing();
+    size_t WriteCallback_coupon(char *contents, size_t size, size_t nmemb, void *userp);
 
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
@@ -85,7 +87,6 @@ private slots:
     void on_pushButton_order_big_clicked();
     void on_pushButton_to_help_clicked();
     void onSelectTimeoutTick();
-
     void on_pushButton_order_custom_clicked();
 
     void on_pushButton_order_medium_clicked();
@@ -250,7 +251,7 @@ private:
     int default_size;
 
     std::string readBuffer;
-    Ui::page_product *ui;
+    Ui::page_product_mixing *ui;
     page_product_menu *p_page_product_menu;
     page_select_product *p_page_select_product;
     page_qr_payment *paymentPage;

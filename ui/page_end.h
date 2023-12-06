@@ -82,6 +82,7 @@ private:
     struct tm *timeinfo;
 
     void sendDispenseEndToCloud();
+    void sendTransactionToCloud();
     void sendTapOrderToCloud();
     void transactionToFile(char *curl_params);
 

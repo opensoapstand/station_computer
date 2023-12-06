@@ -178,11 +178,11 @@ void messageMediator::setMachine(machine *machine)
 
       if (m_machine == nullptr)
       {
-         debugOutput::sendMessage("normal TO BE NULLPTR AT START ", MSG_ERROR);
+         //debugOutput::sendMessage("normal TO BE NULLPTR AT START ", MSG_INFO);
       }
       else
       {
-         debugOutput::sendMessage("not nullptr at start ", MSG_ERROR);
+         debugOutput::sendMessage("ASSERT ERROR: m_machine Not nullptr at init. Reinit??", MSG_WARNING);
       }
       this->m_machine = machine;
    }

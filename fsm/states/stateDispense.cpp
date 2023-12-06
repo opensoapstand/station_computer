@@ -59,13 +59,6 @@ DF_ERROR stateDispense::onEntry()
 
    if (m_pMessaging->getAction() == ACTION_AUTOFILL)
    {
-      // if (g_machine.m_productDDDDDispensers[slot_index].m_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
-      // {
-      // }
-      // else
-      // {
-      //    g_machine.m_productDDDDDispensers[slot_index].m_pcb->virtualButtonPressHack(this->slot);
-      // }
       startPumping();
    }
 
@@ -186,6 +179,7 @@ void stateDispense::startPumping()
    case (machine::HardwareVersion::SS1):
    case (machine::HardwareVersion::SS2):
    {
+      debugOutput::sendMessage("start pumping SS2.", MSG_INFO);
       g_machine.m_productDDDDDispensers[slot_index].m_pcb->setPumpSpeedPercentage(0); // pump speed is inverted!
       g_machine.m_productDDDDDispensers[slot_index].m_pcb->setPumpDirection(slot, true);
 
@@ -195,12 +189,13 @@ void stateDispense::startPumping()
    break;
    case (machine::HardwareVersion::SS09):
    {
+      debugOutput::sendMessage("start pumping SS09.", MSG_INFO);
       g_machine.m_productDDDDDispensers[slot_index].pumpSlowStart(true);
    }
    break;
    case (machine::HardwareVersion::AP2):
    {
-      debugOutput::sendMessage("start pumping dummy.", MSG_ERROR);
+      debugOutput::sendMessage("start pumping AP2.", MSG_INFO);
       g_machine.m_productDDDDDispensers[slot_index].m_pcb->startPump(slot);
       g_machine.m_productDDDDDispensers[slot_index].m_pcb->setSpoutSolenoid(slot, true);
    }

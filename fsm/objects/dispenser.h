@@ -76,8 +76,8 @@ public:
       DF_ERROR setSlot(int slot);
       int getSlot();
 
-      DF_ERROR setPump(int mcpAddress, int pin, int position);
-      DF_ERROR initGlobalFlowsensorIO(int pinint, int pos);
+      // DF_ERROR setPump(int mcpAddress, int pin, int position);
+      DF_ERROR initGlobalFlowsensorIO(int pinint);
       // DF_ERROR initDispenseButton4Light();
 
       unsigned short getPumpSpeed();
@@ -151,7 +151,7 @@ public:
 
       DF_ERROR loadGeneralProperties();
 
-      bool loadParametersFromDb();
+      bool loadDispenserParametersFromDb();
 
       // void loadEmptyContainerDetectionEnabledFromDb();
       void analyseSlotState();
@@ -265,7 +265,7 @@ private:
       // Pointers to Addresses set in State Init
 
       // gpio *m_pSolenoid[NUM_SOLENOID]; // air,product, and water solenoid control
-      gpio *m_pFlowsenor[NUM_FLOWSENSOR];
+      gpio* m_pFlowsensor;
       // gpio *m_pPump[NUM_PUMP]; // forward and reverse pin control
       gpio *m_pButtonPowerOff[1];
       gpio *m_pButtonDisplayMaintenanceMode[1];

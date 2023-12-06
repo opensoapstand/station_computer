@@ -751,7 +751,7 @@ std::string product::dbFieldAsValidString(sqlite3_stmt *stmt, int column_index)
 bool product::loadParameters()
 {
     bool success = true;
-    success &= loadParametersFromDb();
+    success &= loadProductParametersFromDb();
     success &= loadParametersFromCsv();
     return success;
 }
@@ -762,7 +762,7 @@ bool product::loadParametersFromCsv()
     return true;
 }
 
-bool product::loadParametersFromDb()
+bool product::loadProductParametersFromDb()
 {
 
     for (uint8_t i = 0; i < 4; i++)
@@ -888,21 +888,20 @@ bool product::loadParametersFromDb()
         m_status_text = product::dbFieldAsValidString(stmt, 38);
 
         status = sqlite3_step(stmt); // next record
-        // every sqlite3_step returns a row. if it returns 0, it's run over all the rows.
+        // every sqlite3_step returns a row. if status is 101=SQLITE_DONE, it's run over all the rows.
     }
 
     m_pnumber_loaded_from_db = false;
     if (numberOfRecordsFound == 1)
     {
-
-        debugOutput::sendMessage("DB status: " + to_string(status), MSG_INFO);
-        debugOutput::sendMessage("target vaolume serial number: : " + m_pnumber, MSG_INFO);
-        debugOutput::sendMessage("mix pnumbers: : " + m_mix_pnumbers, MSG_INFO);
-        debugOutput::sendMessage("mix ratios: : " + m_mix_ratios, MSG_INFO);
-        debugOutput::sendMessage("target vaolume s: : " + to_string(m_nVolumeTarget_s), MSG_INFO);
-        debugOutput::sendMessage("target vaolume medium: : " + to_string(m_nVolumeTarget_m), MSG_INFO);
-        debugOutput::sendMessage("target vaolume l: : " + to_string(m_nVolumeTarget_l), MSG_INFO);
-        debugOutput::sendMessage("target vaolume custom: : " + to_string(m_price_custom_per_ml), MSG_INFO);
+        debugOutput::sendMessage("DB loading ok. Found one match. status: " + to_string(status), MSG_INFO);
+        debugOutput::sendMessage("DB target volume serial number: : " + m_pnumber, MSG_INFO);
+        debugOutput::sendMessage("DB mix pnumbers: : " + m_mix_pnumbers, MSG_INFO);
+        debugOutput::sendMessage("DB default mix ratios: : " + m_mix_ratios, MSG_INFO);
+        debugOutput::sendMessage("DB target volume small:  " + to_string(m_nVolumeTarget_s), MSG_INFO);
+        debugOutput::sendMessage("DB target volume medium: " + to_string(m_nVolumeTarget_m), MSG_INFO);
+        debugOutput::sendMessage("DB target volume large : " + to_string(m_nVolumeTarget_l), MSG_INFO);
+        debugOutput::sendMessage("DB target volume custom: " + to_string(m_price_custom_per_ml), MSG_INFO);
         m_pnumber_loaded_from_db = true;
     }
     else if (numberOfRecordsFound > 1)

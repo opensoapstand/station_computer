@@ -105,7 +105,7 @@ DF_ERROR dispenser::setup(pcb *pcb, product *pnumbers)
 
     m_pcb->setPumpPWM(DEFAULT_PUMP_PWM);
 
-    m_pFlowsenor[NUM_FLOWSENSOR] = nullptr;
+    // m_pFlowsensor[NUM_FLOWSENSOR] = nullptr;
 
     millisAtLastCheck = MILLIS_INIT_DUMMY;
     previousDispensedVolume = 0;
@@ -199,10 +199,10 @@ bool dispenser::setSelectedProduct(int pnumber)
 DF_ERROR dispenser::loadGeneralProperties()
 {
 
-    debugOutput::sendMessage("Load general properties:", MSG_INFO);
+    debugOutput::sendMessage("Dispenser: Load general properties:", MSG_INFO);
     // ******* Sleep time between DB calls solved inconsistend readings from db!!!****
     usleep(20000);
-    loadParametersFromDb();
+    loadDispenserParametersFromDb();
     usleep(20000);
     analyseSlotState();
     usleep(20000);
@@ -223,7 +223,7 @@ int dispenser::getBasePNumber()
     return m_base_pnumber;
 }
 
-bool dispenser::loadParametersFromDb()
+bool dispenser::loadDispenserParametersFromDb()
 {
     int rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
@@ -314,6 +314,7 @@ bool dispenser::loadParametersFromDb()
 
 DF_ERROR dispenser::startDispense()
 {
+    debugOutput::sendMessage("Dispense start at slot " + to_string(this->m_slot), MSG_INFO);
     using namespace std::chrono;
     dispense_start_timestamp_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
     dispenseButtonTimingreset();
@@ -321,14 +322,14 @@ DF_ERROR dispenser::startDispense()
     this->m_pcb->flowSensorEnable(m_slot);
     this->m_pcb->resetFlowSensorTotalPulses(m_slot);
 
+    // init state
     dispense_state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
-    previous_dispense_state = FLOW_STATE_UNAVAILABLE;
+    previous_dispense_state = FLOW_STATE_UNAVAILABLE; // hack needed to create edge
 
-    DF_ERROR e_ret = ERROR_MECH_PRODUCT_FAULT;
-    debugOutput::sendMessage("Dispense start at slot " + to_string(this->m_slot), MSG_INFO);
 
     initFlowRateCalculation();
 
+    DF_ERROR e_ret = ERROR_MECH_PRODUCT_FAULT;
     return e_ret = OK;
 }
 
@@ -417,6 +418,7 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
     case (pcb::PcbVersion::EN258_8SLOTS):
     {
 
+        setPumpEnable();
         m_pcb->setSingleDispenseButtonLight(getSlot(), true);
     }
     break;
@@ -491,29 +493,37 @@ double dispenser::getVolumeDispensed()
 }
 
 // TODO: Call this function on Dispense onEntry()
-DF_ERROR dispenser::initGlobalFlowsensorIO(int pin, int pos)
+DF_ERROR dispenser::initGlobalFlowsensorIO(int pin)
 {
     DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
     // *m_pIsDispensing = false;
-    std::string msg = "Dispenser::initGlobalFlowsensorIO. Position: " + std::to_string(pos) + " (pin: " + std::to_string(pin) + ")";
+    std::string msg = "Dispenser::initGlobalFlowsensorIO. Position: " + std::to_string(getSlot()) + " (pin: " + std::to_string(pin) + ")";
     // debugOutput::sendMessage("-----dispenser::initGlobalFlowsensorIO-----", MSG_INFO);
     debugOutput::sendMessage(msg, MSG_INFO);
 
-    if ((pos >= 0) && (pos < 4))
-    {
+
+    m_pFlowsensor = new FSModdyseyx86GPIO();
+    m_pFlowsensor->setPinNumber(pin);
+    m_pFlowsensor->setPinAsInputElseOutput(true);
+    m_pFlowsensor->registerProduct(getSelectedProduct());
+    m_pFlowsensor->startListener_flowsensor();
+    e_ret = OK;
+
+    // if ((slotindex >= 0) && (slotindex < 4))
+    // {
         // Instantiate, set input, spin up a flowsensor thread.
         // gets created at every instance. Which is not ok as there is only one pin that gets looked at multiple times. Hence, if there are four slots, for every tick, things will get triggered four times (even an edge) because it's processed four times (but seems to work)
-        m_pFlowsenor[pos] = new FSModdyseyx86GPIO(pin);
-        m_pFlowsenor[pos]->setPinAsInputElseOutput(true);
-        m_pFlowsenor[pos]->registerProduct(getSelectedProduct());
-        m_pFlowsenor[pos]->startListener_flowsensor();
-        e_ret = OK;
-    }
-    else
-    {
-        return e_ret = ERROR_MECH_FS_FAULT;
-    }
+        // m_pFlowsensor[slotindex] = new FSModdyseyx86GPIO(pin);
+        // m_pFlowsensor[slotindex]->setPinAsInputElseOutput(true);
+        // m_pFlowsensor[slotindex]->registerProduct(getSelectedProduct());
+        // m_pFlowsensor[slotindex]->startListener_flowsensor();
+        // e_ret = OK;
+    // }
+    // else
+    // {
+    //     return e_ret = ERROR_MECH_FS_FAULT;
+    // }
 
     return e_ret;
 }
@@ -541,15 +551,15 @@ DF_ERROR dispenser::initGlobalFlowsensorIO(int pin, int pos)
 // }
 
 // TODO: Call this function on Dispense onEntry()
-DF_ERROR dispenser::setPump(int mcpAddress, int pin, int position)
-{
-    DF_ERROR e_ret = ERROR_BAD_PARAMS; // reset variable
+// DF_ERROR dispenser::setPump(int mcpAddress, int pin, int position)
+// {
+//     DF_ERROR e_ret = ERROR_BAD_PARAMS; // reset variable
 
-    // Save the pump number of this instance
-    pump_position = (unsigned char)(position + 1);
+//     // Save the pump number of this instance
+//     pump_position = (unsigned char)(position + 1);
 
-    return e_ret = OK;
-}
+//     return e_ret = OK;
+// }
 
 // TODO: Refactor Pumping with switch and ternary in future...keep seperate for ease of testing.
 // Reverse pump: Turn forward pin HIGH - Reverse pin LOW

@@ -681,7 +681,6 @@ void pcb::sendByteIfNotSetToSlot(uint8_t slot, unsigned char reg, unsigned char 
 void pcb::initialize_pcb()
 {
     // set initial values. depending on pcb version
-
     switch (pcb_version)
     {
 
@@ -742,7 +741,6 @@ void pcb::initialize_pcb()
     break;
     case (EN258_4SLOTS):
     {
-
         for (uint8_t slot = 1; slot <= 4; slot++)
         {
             uint8_t IOCON_value;
@@ -766,21 +764,19 @@ void pcb::initialize_pcb()
 
             if (getFlowSensorTypeEN258DigmesaElseAichi(slot))
             {
-                debugOutput::sendMessage("Flow sensor set to DIGMESA.", MSG_INFO);
+                debugOutput::sendMessage("Pcb: Slot: " + to_string(slot) + "Flow sensor set to DIGMESA.", MSG_INFO);
             }
             else
             {
-                debugOutput::sendMessage("Flow sensor set to AICHI.", MSG_INFO);
+                debugOutput::sendMessage("Pcb: Slot: " + to_string(slot) + "Flow sensor set to AICHI.", MSG_INFO);
             }
         }
 
         setPumpsDisableAll();
         for (uint8_t slot = 1; slot <= 4; slot++)
         {
-
             for (uint8_t position = 1; position <= 8; position++)
             {
-
                 setSolenoidFromArray(slot, position, false);
                 setSingleDispenseButtonLight(slot, false);
             }

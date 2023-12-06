@@ -70,6 +70,30 @@ FSModdyseyx86GPIO::FSModdyseyx86GPIO()
  */
 FSModdyseyx86GPIO::FSModdyseyx86GPIO(int pinNumber)
 {
+        setPinNumber(pinNumber);
+}
+
+// DTOR
+FSModdyseyx86GPIO::~FSModdyseyx86GPIO()
+{
+        debugOutput::sendMessage("~FSModdyseyx86GPIO", MSG_INFO);
+        int fd, len;
+        char buf[MAX_BUF];
+
+        fd = open(SYSFS_GPIO_DIR "/unexport", O_WRONLY);
+        if (fd < 0)
+        {
+                debugOutput::sendMessage("~FSModdyseyx86GPIO could not close the gpio", MSG_ERROR);
+                return;
+        }
+
+        len = snprintf(buf, sizeof(buf), "%d", m_nPin);
+        write(fd, buf, len);
+        close(fd);
+        return;
+}
+
+void FSModdyseyx86GPIO::setPinNumber(int pinNumber){
         std::string msg = "FSModdyseyx86GPIO constructor for pin:" + std::to_string(pinNumber);
         debugOutput::sendMessage(msg, MSG_INFO);
 
@@ -110,29 +134,7 @@ FSModdyseyx86GPIO::FSModdyseyx86GPIO(int pinNumber)
 
         /* -------------------------------------------------------------------------------------- */
 
-        return;
 }
-
-// DTOR
-FSModdyseyx86GPIO::~FSModdyseyx86GPIO()
-{
-        debugOutput::sendMessage("~FSModdyseyx86GPIO", MSG_INFO);
-        int fd, len;
-        char buf[MAX_BUF];
-
-        fd = open(SYSFS_GPIO_DIR "/unexport", O_WRONLY);
-        if (fd < 0)
-        {
-                debugOutput::sendMessage("~FSModdyseyx86GPIO could not close the gpio", MSG_ERROR);
-                return;
-        }
-
-        len = snprintf(buf, sizeof(buf), "%d", m_nPin);
-        write(fd, buf, len);
-        close(fd);
-        return;
-}
-
 // // Setter for flow sensor on Odyssey GPIO Pin
 // DF_ERROR FSModdyseyx86GPIO::setFlowPin(int pinNumber)
 // {

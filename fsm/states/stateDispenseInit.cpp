@@ -44,8 +44,6 @@ DF_ERROR stateDispenseInit::onEntry()
     m_state_requested = STATE_DISPENSE_INIT;
     DF_ERROR e_ret = OK;
 
-    // productDispensers = g_productDispensers;
-
     size = m_pMessaging->getRequestedSize();
     if (size == SIZE_DUMMY){
         debugOutput::sendMessage("ASSERT ERROR: Size not set. Will not continue.",  MSG_ERROR);
@@ -53,14 +51,18 @@ DF_ERROR stateDispenseInit::onEntry()
     }
 
     dispenser_index = m_pMessaging->getRequestedSlot() - 1;
+
     if (dispenser_index == PRODUCT_SLOT_DUMMY){
         debugOutput::sendMessage("ASSERT ERROR: Slot number not set. Will not continue.",  MSG_ERROR);
         m_state_requested = STATE_IDLE;
     }
 
-    debugOutput::sendMessage("dispense init, we (re)load parameters from database.", MSG_INFO);
+    debugOutput::sendMessage("Dispense init: (re)load relevant parameters from database.", MSG_INFO);
 
+    g_machine.loadGeneralProperties();
+    g_machine.m_productDDDDDispensers[dispenser_index].loadGeneralProperties();
     bool success = g_machine.m_productDDDDDispensers[dispenser_index].getSelectedProduct()->loadParameters();
+
     if (!success)
     {
         debugOutput::sendMessage("Did not reload parameters from database", MSG_INFO);
@@ -75,16 +77,12 @@ DF_ERROR stateDispenseInit::onAction()
 {
 
     DF_ERROR e_ret = OK;
-    g_machine.m_productDDDDDispensers[dispenser_index].loadGeneralProperties();
-    g_machine.loadGeneralProperties();
-    debugOutput::sendMessage(std::string("SLOT dispenesrs erstate: ") + g_machine.m_productDDDDDispensers[dispenser_index].getSlotStateAsString(),
-                             MSG_INFO);
-
-
     debugOutput::sendMessage("Chosen dispenser slot: " +
                                  std::to_string(g_machine.m_productDDDDDispensers[dispenser_index].getSlot()) +
                                  " target volume: " +
                                  std::to_string(g_machine.m_productDDDDDispensers[dispenser_index].getSelectedProduct()->getTargetVolume(size)),
+                             MSG_INFO);
+    debugOutput::sendMessage(std::string("Dispenser slot state: ") + g_machine.m_productDDDDDispensers[dispenser_index].getSlotStateAsString(),
                              MSG_INFO);
 
     g_machine.m_productDDDDDispensers[dispenser_index].initDispense(

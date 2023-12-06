@@ -110,45 +110,49 @@ DF_ERROR stateInit::dispenserSetup()
     // We only need one flow sensor interrupt pin since only one pump
     // is ever active at a time.  The flow sensors are all connected
     // to the same pin in the hardware.
-#ifndef __arm__
-    for (idx = 0; idx < 4; idx++)
-    {
-        g_machine.m_productDDDDDispensers[idx].initGlobalFlowsensorIO(IO_PIN_FLOW_SENSOR, idx);
-    }
-#else
-    g_machine.m_productDDDDDispensers[0].initGlobalFlowsensorIO(17, 0);
-#endif
 
-    // Set up the four dispensers
-    for (idx = 0; idx < 4; idx++)
-    {
-        g_machine.m_productDDDDDispensers[idx].setPump(0, 0, idx);
-        g_machine.m_productDDDDDispensers[idx].loadGeneralProperties();
-    }
+   
     g_machine.loadGeneralProperties();
 
     // g_machine.m_productDDDDDispensers[0].initButtonsShutdownAndMaintenance(); // todo: this is a hack for the maintenance and power button. It should not be part of the dispenser class
 
     // needs to be set up only once. Dispenser index is only important for the button 4 index.
+    switch (g_machine.control_pcb->get_pcb_version())
+    {
 
-    if (g_machine.control_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON) //&& this->slot == 4
+    case (pcb::PcbVersion::DSED8344_NO_PIC):
     {
-        // if (g_machine.getMultiDispenseButtonEnabled())
-        // {
-        //     g_machine.m_productDDDDDispensers[3].initDispenseButton4Light(); // THE DISPENSER SLOT MUST REPRESENT THE BUTTON. It's dirty and I know it.
-        //        g_machine.control_pcb->setDispenseButtonLightsAllOff();
-        // }
     }
-    else if (g_machine.control_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS || g_machine.control_pcb->get_pcb_version() == pcb::PcbVersion::EN134_8SLOTS)
+
+    break;
+    case pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON:
     {
-        // debugOutput::sendMessage(" Enable 24V", MSG_INFO);
-        // g_machine.pcb24VPowerSwitch(true);
-        g_machine.pcb24VPowerSwitch(false);
     }
-    else
+    break;
+    case (pcb::PcbVersion::EN134_4SLOTS):
+    case (pcb::PcbVersion::EN134_8SLOTS):
     {
-        debugOutput::sendMessage(" Unknown PCB (OLD?).", MSG_ERROR);
+    // Set up the four dispensers
+   
     }
+    break;
+    case (pcb::PcbVersion::EN258_4SLOTS):
+    case (pcb::PcbVersion::EN258_8SLOTS):
+    {
+
+         g_machine.pcb24VPowerSwitch(false);
+    }
+    break;
+    default:
+    {
+        debugOutput::sendMessage("stateInit: Pcb not comptible. ", MSG_WARNING);
+    }
+    break;
+    }
+
+
+
+
 
     debugOutput::sendMessage("Dispenser intialized.", MSG_INFO);
 

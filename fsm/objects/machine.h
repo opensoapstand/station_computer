@@ -76,7 +76,7 @@ public:
     bool getMultiDispenseButtonEnabled();
 
     void loadGeneralProperties();
-    void loadParametersFromDb();
+    void loadMachineParametersFromDb();
     string getMachineId();
 
     static int convertPStringToPNumber(const std::string &inputString);
@@ -84,6 +84,7 @@ public:
     bool getPumpReversalEnabled();
     bool getEmptyContainerDetectionEnabled();
     bool getPumpSlowStartStopEnabled();
+    int getDispensersCount();
 
 private:
     product *m_pnumbers;

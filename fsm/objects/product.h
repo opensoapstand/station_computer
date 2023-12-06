@@ -84,7 +84,7 @@ public:
         // double getVolPerTickFromDB();
         bool loadParameters();
         bool loadParametersFromCsv();
-        bool loadParametersFromDb();
+        bool loadProductParametersFromDb();
 
 
         bool testParametersFromDb();

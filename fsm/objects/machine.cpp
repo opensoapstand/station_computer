@@ -32,21 +32,9 @@ machine::machine()
     m_button_animation_program = 0;
 }
 
-
-void machine::setup(product* pnumbers)
+void machine::setup(product *pnumbers)
 {
-    // if ((m_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON) && this->slot == 4)
-    // {
-    //     m_pDispenseButton4[0]->writePin(!enableElseDisable);
-    // }
-    // else
-    // {
-    //     this->m_pcb->setSingleDispenseButtonLight(slot, enableElseDisable);
-    // }
-    //  if (control_pcb == nullptr)
-    // {
     control_pcb = new pcb();
-    // }
     m_pnumbers = pnumbers;
     receipt_printer = new Adafruit_Thermal();
     control_pcb->setup();
@@ -57,19 +45,36 @@ void machine::setup(product* pnumbers)
     switch_24V->setPinAsInputElseOutput(false); // set as output
     syncSoftwareVersionWithDb();
     initProductDispensers();
+    loadGeneralProperties();
 }
 
+int machine::getDispensersCount()
+{
+    // slots, dispensers, lines,... it's all the same
+    return 4;
+}
 
 void machine::initProductDispensers()
 {
-
-    for (int slot_index = 0; slot_index < PRODUCT_DISPENSERS_MAX; slot_index++)
+    for (int slot_index = 0; slot_index < getDispensersCount(); slot_index++)
     {
         debugOutput::sendMessage("Init dispenser " + to_string(slot_index + 1), MSG_INFO);
         // m_g_machine.m_productDDDDDispensers[slot_index].setup(&this, g_pnumbers);
         m_productDDDDDispensers[slot_index].setup(control_pcb, m_pnumbers);
         m_productDDDDDispensers[slot_index].setSlot(slot_index + 1);
         m_productDDDDDispensers[slot_index].setBasePNumberAsSelectedProduct();
+        m_productDDDDDispensers[slot_index].initGlobalFlowsensorIO(IO_PIN_FLOW_SENSOR);
+    }
+}
+
+void machine::loadGeneralProperties()
+{
+    loadMachineParametersFromDb();
+    usleep(20000);
+    for (int slot_index = 0; slot_index < getDispensersCount(); slot_index++)
+    {
+        m_productDDDDDispensers[slot_index].loadGeneralProperties();
+        
     }
 }
 
@@ -97,13 +102,6 @@ void machine::setHardwareVersionFromString(const std::string &version)
     {
         m_hardware_version = UNKNOWN;
     }
-}
-
-void machine::loadGeneralProperties()
-{
-    // loadButtonPropertiesFromDb();
-    loadParametersFromDb();
-    usleep(20000);
 }
 
 pcb *machine::getPcb()
@@ -623,39 +621,41 @@ int machine::convertPStringToPNumber(const std::string &inputString)
     return -1;
 }
 
-void machine::loadParametersFromDb()
+void machine::loadMachineParametersFromDb()
 {
+    debugOutput::sendMessage("Machine load db par", MSG_INFO);
+
     int rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT "
-                        "machine_id"
-                        "soapstand_customer_id"
-                        "template"
-                        "location"
-                        "controller_type"
-                        "controller_id"
-                        "screen_type"
-                        "screen_id"
-                        "has_receipt_printer"
-                        "receipt_printer_is_online"
-                        "receipt_printer_has_paper"
-                        "has_tap_payment"
-                        "hardware_version"
-                        "software_version"
-                        "aws_port"
-                        "coupons_enabled"
-                        "has_empty_detection"
-                        "enable_pump_ramping"
-                        "enable_pump_reversal"
-                        "dispense_buttons_count"
-                        "maintenance_pwd"
-                        "show_transactions"
-                        "help_text_html"
-                        "idle_page_type"
-                        "admin_pwd"
-                        "alert_temperature"
-                        "software_version_controller"
-                        "is_enabled"
+                        "machine_id,"
+                        "soapstand_customer_id,"
+                        "template,"
+                        "location,"
+                        "controller_type,"
+                        "controller_id,"
+                        "screen_type,"
+                        "screen_id,"
+                        "has_receipt_printer,"
+                        "receipt_printer_is_online,"
+                        "receipt_printer_has_paper,"
+                        "has_tap_payment,"
+                        "hardware_version,"
+                        "software_version,"
+                        "aws_port,"
+                        "coupons_enabled,"
+                        "has_empty_detection,"
+                        "enable_pump_ramping,"
+                        "enable_pump_reversal,"
+                        "dispense_buttons_count,"
+                        "maintenance_pwd,"
+                        "show_transactions,"
+                        "help_text_html,"
+                        "idle_page_type,"
+                        "admin_pwd,"
+                        "alert_temperature,"
+                        "software_version_controller,"
+                        "is_enabled,"
                         "status_text"
                         " FROM machine"
                         ";";
@@ -730,5 +730,7 @@ void machine::loadParametersFromDb()
         debugOutput::sendMessage("Multiple dispense buttons enabled? : " + to_string(m_isMultiButtonEnabled), MSG_INFO);
         debugOutput::sendMessage("Animation program number (0=no animation)? : " + to_string(m_button_animation_program), MSG_INFO);
         setHardwareVersionFromString(m_hardware_version_str);
+        status = sqlite3_step(stmt); // next record
     }
+    debugOutput::sendMessage("Machine load db: finished. status: " + to_string(status), MSG_INFO);
 }

@@ -53,10 +53,6 @@ DF_ERROR stateDispense::onEntry()
    size = m_pMessaging->getRequestedSize();
    slot_index = slot - 1;
 
-   g_machine.m_productDispensers[slot_index].resetDispenseButton();
-
-   // g_machine.m_productDispensers[slot_index].getSelectedProduct()->productVolumeInfo();
-
    if (m_pMessaging->getAction() == ACTION_AUTOFILL)
    {
       startPumping();
@@ -65,12 +61,6 @@ DF_ERROR stateDispense::onEntry()
    return e_ret;
 }
 
-DF_ERROR stateDispense::rectractProductBlocking()
-{
-   DF_ERROR e_ret = OK;
-   g_machine.m_productDispensers[slot_index].reversePumpForSetTimeMillis(g_machine.m_productDispensers[slot_index].getSelectedProduct()->getRetractionTimeMillis());
-   return e_ret;
-}
 
 DF_ERROR stateDispense::onAction()
 {
@@ -110,7 +100,7 @@ DF_ERROR stateDispense::onAction()
 
    if (g_machine.m_productDispensers[slot_index].getIsStatusUpdateAllowed())
    {
-      double volume = g_machine.m_productDispensers[slot_index].getVolumeDispensed();
+      double volume = g_machine.m_productDispensers[slot_index].getDispenserVolumeDispensed();
 
       Time_val avg_02s = g_machine.m_productDispensers[slot_index].getAveragedFlowRate(1000);
       double flowrate = avg_02s.value;
@@ -128,6 +118,7 @@ DF_ERROR stateDispense::onAction()
       // update of the actual dispense
       const char *dispenseStatusStr = g_machine.m_productDispensers[slot_index].getDispenseStatusAsString();
       debugOutput::sendMessage(dispenseStatusStr, MSG_INFO);
+      debugOutput::sendMessage(to_string( g_machine.m_productDispensers[slot_index].m_pcb->getFlowSensorPulsesSinceEnabling(slot)), MSG_INFO);
 #endif
    }
 
@@ -163,7 +154,7 @@ DF_ERROR stateDispense::onAction()
 
    if (g_machine.m_productDispensers[slot_index].getIsDispenseTargetReached())
    {
-      debugOutput::sendMessage("Stop dispensing. Requested volume reached. " + to_string(g_machine.m_productDispensers[slot_index].getVolumeDispensed()), MSG_INFO);
+      debugOutput::sendMessage("Stop dispensing. Requested volume reached. " + to_string(g_machine.m_productDispensers[slot_index].getDispenserVolumeDispensed()), MSG_INFO);
       m_state_requested = STATE_DISPENSE_END;
       stopPumping();
       return e_ret = OK;
@@ -210,19 +201,6 @@ void stateDispense::startPumping()
    }
    break;
    }
-
-   // if (g_machine.m_productDispensers[slot_index].m_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
-   // {
-   //    g_machine.m_productDispensers[slot_index].m_pcb->setPumpSpeedPercentage(0);
-   //    g_machine.m_productDispensers[slot_index].m_pcb->setPumpDirection(slot, true);
-
-   //    g_machine.m_productDispensers[slot_index].m_pcb->startPump(slot);
-   //    g_machine.m_productDispensers[slot_index].m_pcb->setSpoutSolenoid(slot, true);
-   // }
-   // else
-   // {
-   //    g_machine.m_productDispensers[slot_index].pumpSlowStart(true);
-   // }
 }
 
 void stateDispense::stopPumping()
@@ -270,6 +248,13 @@ void stateDispense::stopPumping()
    }
    break;
    }
+}
+
+DF_ERROR stateDispense::rectractProductBlocking()
+{
+   DF_ERROR e_ret = OK;
+   g_machine.m_productDispensers[slot_index].reversePumpForSetTimeMillis(g_machine.m_productDispensers[slot_index].getSelectedProduct()->getRetractionTimeMillis());
+   return e_ret;
 }
 
 // Actions on leaving Dispense state

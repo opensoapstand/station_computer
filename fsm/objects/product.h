@@ -89,7 +89,7 @@ public:
 
         bool testParametersFromDb();
 
-        double getVolumeDispensed();
+        double getProductVolumeDispensed();
         void customDispenseDiscountData(bool* isEnabled, double* discountVolume, double* discountPrice);
         void setVolumeDispensed(double volume);
         bool isDbValid();
@@ -114,8 +114,8 @@ public:
         int getSlot();
 
         double getVolumeRemaining();
-        double getVolumeDispensedTotalEver();
-        double getVolumeDispensedSinceLastRestock();
+        double getProductVolumeDispensedTotalEver();
+        double getProductVolumeDispensedSinceLastRestock();
         double getVolumeFull();
         double getThresholdFlow();
         double getThresholdFlow_max_allowed();

@@ -304,7 +304,7 @@ DF_ERROR stateManualPump::onAction()
       {
          // debugOutput::sendMessage("button: " + to_string(g_machine.m_productDispensers[m_active_pump_index].getDispenseButtonValue()), MSG_INFO);
 
-         double volume = g_machine.m_productDispensers[m_active_pump_index].getVolumeDispensed();
+         double volume = g_machine.m_productDispensers[m_active_pump_index].getDispenserVolumeDispensed();
 
          // instant flow rate
          double flowRate = g_machine.m_productDispensers[m_active_pump_index].getInstantFlowRate();
@@ -431,7 +431,7 @@ DF_ERROR stateManualPump::pumpFlowTest()
    Time_val avg_02s = g_machine.m_productDispensers[m_active_pump_index].getAveragedFlowRate(2000);
    Time_val avg_05s = g_machine.m_productDispensers[m_active_pump_index].getAveragedFlowRate(5000);
 
-   double totalVolume = g_machine.m_productDispensers[m_active_pump_index].getVolumeDispensed();
+   double totalVolume = g_machine.m_productDispensers[m_active_pump_index].getDispenserVolumeDispensed();
    if (triggerOutputData)
    {
 
@@ -598,7 +598,7 @@ DF_ERROR stateManualPump::autofillPresetQuantity()
    }
    else if (m_state_auto_pump == AUTO_PUMP_STATE_PUMPING)
    {
-      double totalVolume = g_machine.m_productDispensers[m_active_pump_index].getVolumeDispensed();
+      double totalVolume = g_machine.m_productDispensers[m_active_pump_index].getDispenserVolumeDispensed();
       if (totalVolume > 500)
       {
          m_state_auto_pump = AUTO_PUMP_STATE_FINISHED;

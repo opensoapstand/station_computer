@@ -163,15 +163,12 @@ DF_ERROR stateLoop()
     DF_FSM fsmState = STATE_INIT;
     DF_FSM previousState = STATE_DUMMY;
 
+    // g_machine.getPcb()->get_pcb_version();
+
     while (OK == dfRet) // while no error has occurred
     {
-        g_machine.getPcb()->get_pcb_version();
-        // the pcb inputs are not interrupt driven. So, periodical updates are required
-        for (uint8_t slot_index = 0; slot_index < PRODUCT_DISPENSERS_MAX; slot_index++)
-        {
-            g_machine.m_productDispensers[slot_index].refresh();
-        }
-
+       
+        g_machine.refresh();
         if (fsmState == STATE_DUMMY)
         {
             debugOutput::sendMessage("ERROR STATE " + fsmState, MSG_STATE);

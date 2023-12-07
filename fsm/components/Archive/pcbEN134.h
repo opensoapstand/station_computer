@@ -84,10 +84,6 @@ public:
 
     void setSpoutSolenoid(uint8_t slot, bool onElseOff);
 
-
-
-
-
 private:
     bool getDispenseButtonState(uint8_t slot);
     bool is_initialized;

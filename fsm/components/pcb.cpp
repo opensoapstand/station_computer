@@ -307,11 +307,9 @@ uint8_t pcb::get_MCP23017_address_from_slot(uint8_t slot)
 ////////////////////////
 void pcb::pcb_refresh()
 {
-
     usleep(100);
     if (get_pcb_version() != INVALID)
     {
-
         dispenseButtonRefresh();
         refreshFlowSensors();
         // independentDispensingRefresh(); // ATTENTION:  this is the state machine. involves more than just pumps....
@@ -649,11 +647,11 @@ bool pcb::define_pcb_version(void)
 
 void pcb::sendEN134DefaultConfigurationToPCA9534(uint8_t slot, bool reportIfModified)
 {
-    debugOutput::sendMessage("Default config sent to PCA9534", MSG_INFO);
     // sendByteIfNotSetToSlot(slot, 0x01, 0b00100000, reportIfModified); // BAAAD load  this to emulate a glitch in the chip
     // sendByteIfNotSetToSlot(slot, 0x03, 0b11111111, reportIfModified); //BAAAD load  this to emulate a glitch in the chip
     sendByteIfNotSetToSlot(slot, 0x01, 0b00100000, reportIfModified);
     sendByteIfNotSetToSlot(slot, 0x03, 0b01011000, reportIfModified);
+    debugOutput::sendMessage("Default config sent to PCA9534 for slot: " + to_string(slot), MSG_INFO);
 }
 
 void pcb::sendByteIfNotSetToSlot(uint8_t slot, unsigned char reg, unsigned char value, bool reportIfModified)
@@ -728,8 +726,9 @@ void pcb::initialize_pcb()
         // Initialize the PCA9534
         for (uint8_t slot = 1; slot <= 8; slot++)
         {
-            SendByte(get_PCA9534_address_from_slot(slot), 0x01, 0b00100000); // Output pin values register (has no influence on input values)
-            SendByte(get_PCA9534_address_from_slot(slot), 0x03, 0b01011000); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
+            // SendByte(get_PCA9534_address_from_slot(slot), 0x01, 0b00100000); // Output pin values register (has no influence on input values)
+            // SendByte(get_PCA9534_address_from_slot(slot), 0x03, 0b01011000); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
+            sendEN134DefaultConfigurationToPCA9534(slot, true);
         }
         setPumpsDisableAll();
         for (uint8_t slot = 1; slot <= 8; slot++)
@@ -759,17 +758,6 @@ void pcb::initialize_pcb()
 
             setMCP23017Register(slot, MCP23017_REGISTER_GPA, GPIOA_value); // GPIOA (IOCON.bank = 1 // button off (0 for ON)
             setMCP23017Register(slot, MCP23017_REGISTER_GPB, GPIOB_value); // GPIOB (IOCON.bank = 1 // button off (0 for ON)
-
-            setFlowSensorTypeEN258(slot, true);
-
-            if (getFlowSensorTypeEN258DigmesaElseAichi(slot))
-            {
-                debugOutput::sendMessage("Pcb: Slot: " + to_string(slot) + "Flow sensor set to DIGMESA.", MSG_INFO);
-            }
-            else
-            {
-                debugOutput::sendMessage("Pcb: Slot: " + to_string(slot) + "Flow sensor set to AICHI.", MSG_INFO);
-            }
         }
 
         setPumpsDisableAll();
@@ -781,8 +769,6 @@ void pcb::initialize_pcb()
                 setSingleDispenseButtonLight(slot, false);
             }
         }
-
-        debugOutput::sendMessage("Initialized. EN-258 4 slots", MSG_INFO);
     };
     break;
     case (EN258_8SLOTS):
@@ -797,8 +783,8 @@ void pcb::initialize_pcb()
     break;
     }
 
+    setFlowSensorTypeDefaults();
     debugOutput::sendMessage("pcb initialized. version: " + toString(pcb_version), MSG_INFO);
-    get_pcb_version();
 }
 
 bool pcb::isTemperatureSensorMCP9808Available_1()
@@ -1205,7 +1191,7 @@ void pcb::dispenseButtonRefreshPerSlot(uint8_t slot)
     {
         dispenseButtonDebounceStartEpoch[slot_index] = now_epoch_millis;
         dispenseButtonIsDebounced[slot_index] = false;
-        debugOutput::sendMessage("*****************edge detected!" + std::to_string(dispenseButtonDebounceStartEpoch[slot_index]) + "state: " + std::to_string(state), MSG_INFO);
+        debugOutput::sendMessage("Pcb: Slot: " + std::to_string(slot) + " . Button edge detected!" + std::to_string(dispenseButtonDebounceStartEpoch[slot_index]) + "state: " + std::to_string(state), MSG_INFO);
     }
 
     positive_edge_detected[slot_index] = false;
@@ -1265,8 +1251,8 @@ void pcb::flowSensorEnable(uint8_t slot)
     case (EN134_4SLOTS):
     case (EN134_8SLOTS):
     {
-        // disable all to be sure
-        flowSensorsDisableAll();
+        
+        flowSensorsDisableAll(); // reset flow sensor pulse count
         // enable only the active slot flow sensor
         setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_FLOW_SENSOR_ENABLE, true);
     };
@@ -1274,6 +1260,7 @@ void pcb::flowSensorEnable(uint8_t slot)
     case (EN258_4SLOTS):
     case (EN258_8SLOTS):
     {
+        flowSensorsDisableAll(); // reset flow sensor pulse count
         // enable not needed for EN258 board.
     };
     break;
@@ -1287,6 +1274,33 @@ void pcb::flowSensorEnable(uint8_t slot)
     // Only one sensor can be enabled at a time to be safe (it causes the pulses to be combined from all sensors to a separate input in the Odyssey.)
 }
 
+int pcb::getSlotCountByPcbType()
+{
+    switch (get_pcb_version())
+    {
+
+    case (DSED8344_PIC_MULTIBUTTON):
+    case (DSED8344_NO_PIC):
+    case (EN258_4SLOTS):
+    case (EN134_4SLOTS):
+    {
+        return 4;
+    }
+    break;
+    case (EN258_8SLOTS):
+    case (EN134_8SLOTS):
+    {
+        return 8;
+    };
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Pcb: Unrecognized pcb.", MSG_ERROR);
+        return 1;
+    }
+    break;
+    }
+}
 void pcb::flowSensorsDisableAll()
 {
     switch (pcb_version)
@@ -1301,27 +1315,24 @@ void pcb::flowSensorsDisableAll()
     };
     break;
     case (EN134_4SLOTS):
+    case (EN134_8SLOTS):
     {
-        for (uint8_t slot = 1; slot <= 4; slot++)
+        for (uint8_t slot = 1; slot <= getSlotCountByPcbType(); slot++)
         {
             setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_FLOW_SENSOR_ENABLE, false);
             flow_sensor_pulses_since_enable[slot - 1] = 0;
         }
     }
     break;
-    case (EN134_8SLOTS):
-    {
-        for (uint8_t slot = 1; slot <= 8; slot++)
-        {
-            setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_FLOW_SENSOR_ENABLE, false);
-            flow_sensor_pulses_since_enable[slot - 1] = 0;
-        }
-    };
     break;
     case (EN258_4SLOTS):
     case (EN258_8SLOTS):
     {
-        // enable not needed for EN258 board.
+        // enable of pins not needed for EN258 board.
+        for (uint8_t slot = 1; slot <= getSlotCountByPcbType(); slot++)
+        {
+            flow_sensor_pulses_since_enable[slot - 1] = 0;
+        }
     };
     break;
     default:
@@ -1377,19 +1388,90 @@ uint64_t pcb::getFlowSensorPulsesSinceEnabling(uint8_t slot)
     uint8_t slot_index = slot - 1;
     return flow_sensor_pulses_since_enable[slot_index];
 }
+
 uint64_t pcb::getFlowSensorTotalPulses(uint8_t slot)
 {
     // warning: the flow sensor ticks also come in straight to the Odyssey IO. The controller handles the volume calculation from there not from here. The advantage: no missed pulses (interrupt per pulse),the disadvantage: every slot uses the same pin.
     uint8_t slot_index = slot - 1;
     return flow_sensor_total_pulses[slot_index];
 }
-bool pcb::getFlowSensorTypeEN258DigmesaElseAichi(uint8_t slot)
+
+pcb::FlowSensorType pcb::getFlowSensorType(uint8_t slot)
 {
-    return flowSensorDigmesaElseAichi[slot];
+    return flowSensorsType[slot - 1];
 }
-void pcb::setFlowSensorTypeEN258(uint8_t slot, bool isDigmesaElseAichi)
+
+void pcb::setFlowSensorTypeDefaults()
 {
-    flowSensorDigmesaElseAichi[slot] = isDigmesaElseAichi;
+    switch (pcb_version)
+    {
+    case (EN134_4SLOTS):
+    {
+        for (uint8_t slot = 1; slot <= getSlotCountByPcbType(); slot++)
+        {
+            setFlowSensorType(slot, pcb::AICHI);
+        }
+    };
+    break;
+    case (EN258_4SLOTS):
+    {
+        for (uint8_t slot = 1; slot <= getSlotCountByPcbType(); slot++)
+        {
+            setFlowSensorType(slot, pcb::DIGMESA);
+        }
+    };
+    break;
+    default:
+    {
+        // pcb::FlowSensorType::AICHI
+        for (uint8_t slot = 1; slot <= getSlotCountByPcbType(); slot++)
+        {
+            setFlowSensorType(slot, pcb::NOTSET);
+        }
+        debugOutput::sendMessage("Pcb: No default flowsensors to set for this pcb", MSG_ERROR);
+    }
+    break;
+    }
+}
+
+void pcb::setFlowSensorType(uint8_t slot, FlowSensorType sensorType)
+{
+    switch (sensorType)
+    {
+    case pcb::AICHI:
+        debugOutput::sendMessage("Pcb: Slot: " + to_string(slot) + ". Flow sensor set to AICHI.", MSG_INFO);
+        break;
+    case pcb::DIGMESA:
+        debugOutput::sendMessage("Pcb: Slot: " + to_string(slot) + ". Flow sensor set to DIGMESA.", MSG_INFO);
+        break;
+    default:
+        debugOutput::sendMessage("Pcb: ASSERT ERROR. Slot: " + to_string(slot) + "Unknown flow sensor type!", MSG_ERROR);
+    }
+
+    switch (pcb_version)
+    {
+    case (EN134_4SLOTS):
+    case (EN134_8SLOTS):
+    {
+        if (sensorType == pcb::DIGMESA)
+        {
+            debugOutput::sendMessage("Pcb: WARNING: digmesa flowsensor selected for AICHI only pcb. Ensure cable pinout is configured correctly, with added resistor!", MSG_ERROR);
+        }
+        flowSensorsType[slot - 1] = sensorType;
+    };
+    break;
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
+    {
+        flowSensorsType[slot - 1] = sensorType;
+    };
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Pcb: No flowsensors to set on this pcb", MSG_ERROR);
+    }
+    break;
+    }
 }
 
 void pcb::refreshFlowSensor(uint8_t slot)
@@ -1413,13 +1495,22 @@ void pcb::refreshFlowSensor(uint8_t slot)
     {
         // debugOutput::sendMessage("wARNING: todo: set manually which flow sensor is being used! BEST to only use one pin. or it will be a hassle in the future (define which sensor is used,....)", MSG_ERROR);
 
-        if (getFlowSensorTypeEN258DigmesaElseAichi(slot))
+        switch (getFlowSensorType(slot))
+        {
+        case (pcb::DIGMESA):
         {
             state = getMCP23017Input(slot, MCP23017_EN258_GPA7_PIN_OUT_FLOW_SENSOR_DIGMESA, MCP23017_REGISTER_GPA);
         }
-        else
+        break;
+        case (pcb::AICHI):
         {
             state = getMCP23017Input(slot, MCP23017_EN258_GPA6_PIN_IN_FLOW_SENSOR_AICHI, MCP23017_REGISTER_GPA);
+        }
+        break;
+        default:
+        {
+            debugOutput::sendMessage("Pcb: ASSERT ERROR No flowsensors configured.", MSG_ERROR);
+        }
         }
     };
     break;
@@ -1442,7 +1533,7 @@ void pcb::refreshFlowSensor(uint8_t slot)
         {
             flow_sensor_total_pulses[slot_index]++;
             flow_sensor_pulses_since_enable[slot_index]++;
-            // debugOutput::sendMessage("Flow sensor pulse detected by PCA chip. Slot: " + to_string(slot) + ". Pulse total: " + to_string(flow_sensor_pulses_since_enable[slot_index]), MSG_INFO);
+            debugOutput::sendMessage("Flow sensor pulse detected by PCA chip. Slot: " + to_string(slot) + ". Pulse total: " + to_string(flow_sensor_pulses_since_enable[slot_index]), MSG_INFO);
             flowSensorTickReceivedEpoch[slot_index] = now_epoch_millis;
         }
         flowSensorStateMemory[slot_index] = state;

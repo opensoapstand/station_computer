@@ -14,7 +14,7 @@
 //***************************************
 #include "dispenser.h"
 #include <chrono>
-#include <sstream> 
+#include <sstream>
 // #include "machine.h"
 
 #define ACTIVATION_TIME 5
@@ -116,13 +116,13 @@ DF_ERROR dispenser::setup(pcb *pcb, product *pnumbers)
 void dispenser::refresh()
 {
 
-    m_pcb->pcb_refresh();
+    // m_pcb->pcb_refresh(); // do pcb refresh in machine class.
 
     // periodical polling refresh  (because the dispense button has no interrupt trigger (i2c))
-    bool egde = dispenseButtonValueMemory != getDispenseButtonValue();
-    dispenseButtonValueEdgePositive = getDispenseButtonValue() && egde;
-    dispenseButtonValueEdgeNegative = (!getDispenseButtonValue()) && egde;
-    dispenseButtonValueMemory = getDispenseButtonValue();
+    // bool egde = dispenseButtonValueMemory != getDispenseButtonValue();
+    // dispenseButtonValueEdgePositive = getDispenseButtonValue() && egde;
+    // dispenseButtonValueEdgeNegative = (!getDispenseButtonValue()) && egde;
+    // dispenseButtonValueMemory = getDispenseButtonValue();
 
     // status update time
     using namespace std::chrono;
@@ -365,7 +365,6 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
 
     resetVolumeDispensed();
 
-    // if (m_pcb->get_pcb_version() == 2){
     switch (m_pcb->get_pcb_version())
     {
 
@@ -446,7 +445,7 @@ bool dispenser::getIsDispenseTargetReached()
 {
     bool bRet = false;
 
-    if (m_nVolumeTarget <= getVolumeDispensed())
+    if (m_nVolumeTarget <= getDispenserVolumeDispensed())
     {
         bRet = true;
     }
@@ -460,7 +459,7 @@ void dispenser::resetVolumeDispensed()
 
 void dispenser::subtractFromVolumeDispensed(double volume_to_distract)
 {
-    double volume = getSelectedProduct()->getVolumeDispensed();
+    double volume = getSelectedProduct()->getProductVolumeDispensed();
     getSelectedProduct()->setVolumeDispensed(volume - volume_to_distract);
 }
 
@@ -469,10 +468,10 @@ double dispenser::getVolumeRemaining()
     return getSelectedProduct()->getVolumeRemaining();
 }
 
-double dispenser::getVolumeDispensed()
+double dispenser::getDispenserVolumeDispensed()
 {
     // return m_nVolumeDispensed;
-    return getSelectedProduct()->getVolumeDispensed();
+    return getSelectedProduct()->getProductVolumeDispensed();
 }
 
 // TODO: Call this function on Dispense onEntry()
@@ -485,7 +484,6 @@ DF_ERROR dispenser::initGlobalFlowsensorIO(int pin)
     // debugOutput::sendMessage("-----dispenser::initGlobalFlowsensorIO-----", MSG_INFO);
     debugOutput::sendMessage(msg, MSG_INFO);
 
-
     m_pFlowsensor = new FSModdyseyx86GPIO();
     m_pFlowsensor->setPinNumber(pin);
     m_pFlowsensor->setPinAsInputElseOutput(true);
@@ -495,13 +493,13 @@ DF_ERROR dispenser::initGlobalFlowsensorIO(int pin)
 
     // if ((slotindex >= 0) && (slotindex < 4))
     // {
-        // Instantiate, set input, spin up a flowsensor thread.
-        // gets created at every instance. Which is not ok as there is only one pin that gets looked at multiple times. Hence, if there are four slots, for every tick, things will get triggered four times (even an edge) because it's processed four times (but seems to work)
-        // m_pFlowsensor[slotindex] = new FSModdyseyx86GPIO(pin);
-        // m_pFlowsensor[slotindex]->setPinAsInputElseOutput(true);
-        // m_pFlowsensor[slotindex]->registerProduct(getSelectedProduct());
-        // m_pFlowsensor[slotindex]->startListener_flowsensor();
-        // e_ret = OK;
+    // Instantiate, set input, spin up a flowsensor thread.
+    // gets created at every instance. Which is not ok as there is only one pin that gets looked at multiple times. Hence, if there are four slots, for every tick, things will get triggered four times (even an edge) because it's processed four times (but seems to work)
+    // m_pFlowsensor[slotindex] = new FSModdyseyx86GPIO(pin);
+    // m_pFlowsensor[slotindex]->setPinAsInputElseOutput(true);
+    // m_pFlowsensor[slotindex]->registerProduct(getSelectedProduct());
+    // m_pFlowsensor[slotindex]->startListener_flowsensor();
+    // e_ret = OK;
     // }
     // else
     // {
@@ -568,19 +566,21 @@ void dispenser::logUpdateIfAllowed(string message)
     }
 }
 
-void dispenser::resetDispenseButton()
-{
-    dispenseButtonValueMemory = false;
-}
+// void dispenser::resetDispenseButton()
+// {
+//     dispenseButtonValueMemory = false;
+// }
 
 bool dispenser::getDispenseButtonEdgeNegative()
 {
-    return dispenseButtonValueEdgeNegative;
+    // return dispenseButtonValueEdgeNegative;
+    return m_pcb->getDispenseButtonEdgeNegative(m_slot);
 }
 
 bool dispenser::getDispenseButtonEdgePositive()
 {
-    return dispenseButtonValueEdgePositive;
+    // return dispenseButtonValueEdgePositive;
+    return m_pcb->getDispenseButtonEdgePositive(m_slot);
 }
 
 bool dispenser::getDispenseButtonValue()
@@ -674,7 +674,7 @@ void dispenser::reversePumpForSetTimeMillis(int millis)
         if (millis > 0)
         {
             // get volume before
-            double volume_before = getVolumeDispensed();
+            double volume_before = getDispenserVolumeDispensed();
 
             debugOutput::sendMessage("Pump auto retraction. Reverse time millis: " + to_string(millis), MSG_INFO);
             pumpSlowStart(false);
@@ -704,7 +704,7 @@ void dispenser::reversePumpForSetTimeMillis(int millis)
             setPumpDirectionForward();
 
             // get volume after
-            double volume_after = getVolumeDispensed();
+            double volume_after = getDispenserVolumeDispensed();
 
             // vol diff
             double volume_diff = volume_after - volume_before;
@@ -955,7 +955,7 @@ void dispenser::analyseSlotState()
     {
         setSlotState(SLOT_STATE_AVAILABLE);
     }
-    debugOutput::sendMessage("Dispenser state loaded from db: " + std::string(getSlotStateAsString()) + "(db value: " + std::string(slotStateText) + ")", MSG_INFO);
+    debugOutput::sendMessage("Dispenser: Slot " + std::to_string(getSlot()) + ". State (loaded from db): " + std::string(getSlotStateAsString()) + "(db value: " + std::string(slotStateText) + ")", MSG_INFO);
 }
 
 // void dispenser::loadEmptyContainerDetectionEnabledFromDb()
@@ -983,7 +983,7 @@ double dispenser::getVolumeDeltaAndReset()
 {
     // will get volumeDelta since last call of this function
 
-    double currentVolume = getVolumeDispensed();
+    double currentVolume = getDispenserVolumeDispensed();
     double deltaVolume = currentVolume - previousDispensedVolume;
     previousDispensedVolume = currentVolume;
     return deltaVolume;
@@ -1021,10 +1021,10 @@ double dispenser::getInstantFlowRate()
     return flowRate;
 }
 
-Time_val dispenser::getVolumeDispensedNow()
+Time_val dispenser::getDispenserVolumeDispensedNow()
 {
     Time_val tv;
-    tv.value = getVolumeDispensed();
+    tv.value = getDispenserVolumeDispensed();
     using namespace std::chrono;
     uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
@@ -1132,11 +1132,11 @@ DF_ERROR dispenser::updateRunningAverageWindow()
 {
     DF_ERROR e_ret;
 
-    Time_val tv = getVolumeDispensedNow();
+    Time_val tv = getDispenserVolumeDispensedNow();
 
     flowRateBuffer[flowRateBufferIndex].time_millis = tv.time_millis;
     flowRateBuffer[flowRateBufferIndex].value = tv.value;
-    // debugOutput::sendMessage("updateRunningAverageWindow: index: " + to_string(flowRateBufferIndex) + " " + to_string(tv.time_millis) + ": " + to_string(tv.value), MSG_INFO);
+    debugOutput::sendMessage("updateRunningAverageWindow: index: " + to_string(flowRateBufferIndex) + " " + to_string(tv.time_millis) + ": " + to_string(tv.value), MSG_INFO);
 
     flowRateBufferIndex++;
     if (flowRateBufferIndex >= RUNNING_AVERAGE_WINDOW_LENGTH)

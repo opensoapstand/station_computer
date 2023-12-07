@@ -61,7 +61,6 @@ DF_ERROR stateInit::onAction()
 {
     // DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
-
     DF_ERROR e_ret = OK;
 
     debugOutput::sendMessage("Use database at: " + std::to_string(1) + CONFIG_DB_PATH, MSG_INFO);
@@ -111,7 +110,6 @@ DF_ERROR stateInit::dispenserSetup()
     // is ever active at a time.  The flow sensors are all connected
     // to the same pin in the hardware.
 
-   
     g_machine.loadGeneralProperties();
 
     // g_machine.m_productDispensers[0].initButtonsShutdownAndMaintenance(); // todo: this is a hack for the maintenance and power button. It should not be part of the dispenser class
@@ -132,15 +130,18 @@ DF_ERROR stateInit::dispenserSetup()
     case (pcb::PcbVersion::EN134_4SLOTS):
     case (pcb::PcbVersion::EN134_8SLOTS):
     {
-    // Set up the four dispensers
-   
+        // Set up the four dispensers
     }
     break;
     case (pcb::PcbVersion::EN258_4SLOTS):
     case (pcb::PcbVersion::EN258_8SLOTS):
     {
 
-         g_machine.pcb24VPowerSwitch(false);
+        g_machine.pcb24VPowerSwitch(false);
+        for (int slot = 1; slot <= g_machine.getPcb()->getSlotCountByPcbType(); slot++)
+        {
+            g_machine.getPcb()->setFlowSensorType(slot, pcb::FlowSensorType::AICHI);
+        }
     }
     break;
     default:
@@ -149,10 +150,6 @@ DF_ERROR stateInit::dispenserSetup()
     }
     break;
     }
-
-
-
-
 
     debugOutput::sendMessage("Dispenser intialized.", MSG_INFO);
 
@@ -163,7 +160,5 @@ DF_ERROR stateInit::dispenserSetup()
 DF_ERROR stateInit::setProducts()
 {
 
-  
-    
     return OK;
 }

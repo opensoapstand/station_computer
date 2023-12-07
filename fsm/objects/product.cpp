@@ -139,7 +139,7 @@ void product::setVolumeDispensed(double volume)
 {
     m_nVolumeDispensed = volume;
 }
-double product::getVolumeDispensed()
+double product::getProductVolumeDispensed()
 {
     return m_nVolumeDispensed;
 }
@@ -189,13 +189,13 @@ double product::getVolumeRemaining()
 {
     return m_nVolumeRemaining;
 }
-double product::getVolumeDispensedTotalEver()
+double product::getProductVolumeDispensedTotalEver()
 {
     // total volume ever dispensed by this slot.
     return m_nVolumeDispensedTotalEver;
 }
 
-double product::getVolumeDispensedSinceLastRestock()
+double product::getProductVolumeDispensedSinceLastRestock()
 {
     return m_nVolumeDispensedSinceRestock;
 }

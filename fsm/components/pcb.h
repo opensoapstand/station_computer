@@ -144,6 +144,13 @@ public:
         EN258_8SLOTS
     };
 
+    enum FlowSensorType
+    {
+        NOTSET,
+        AICHI,
+        DIGMESA
+    };
+
     pcb(void);
     pcb(const char *);
     ~pcb();
@@ -161,7 +168,7 @@ public:
     unsigned char getPumpPWM();
     bool setPumpPWM(uint8_t pwm_val);
     bool setPumpSpeedPercentage(uint8_t speed_percentage);
-
+    int getSlotCountByPcbType();
     void setDispenseButtonLightsAllOff();
     bool setPumpsDisableAll();
     bool setPumpEnable(uint8_t slot);
@@ -189,13 +196,16 @@ public:
     void disableAllSolenoidsOfSlot(uint8_t slot);
     void setSolenoidFromArray(uint8_t slot, uint8_t position, bool onElseOff);
     void setSpoutSolenoid(uint8_t slot, bool onElseOff);
-    uint64_t getFlowSensorTotalPulses(uint8_t slot);
-    uint64_t getFlowSensorPulsesSinceEnabling(uint8_t slot);
-    void resetFlowSensorTotalPulses(uint8_t slot);
+
+    void setFlowSensorTypeDefaults();
+    void setFlowSensorType(uint8_t slot, FlowSensorType sensorType);
+    FlowSensorType getFlowSensorType(uint8_t slot);
     void refreshFlowSensors();
     void flowSensorEnable(uint8_t slot);
     void flowSensorsDisableAll();
-    // PcbVersion enum PcbVersion;
+    uint64_t getFlowSensorTotalPulses(uint8_t slot);
+    uint64_t getFlowSensorPulsesSinceEnabling(uint8_t slot);
+    void resetFlowSensorTotalPulses(uint8_t slot);
 
     uint8_t PCA9534ReadRegisterFromSlot(uint8_t slot, uint8_t reg);
 
@@ -217,13 +227,11 @@ public:
     uint8_t get_MCP23017_address_from_slot(uint8_t slot);
     uint8_t getMCP23017Register(uint8_t slot, uint8_t reg);
     void setMCP23017Register(uint8_t slot, uint8_t reg, uint8_t value);
-    void setFlowSensorTypeEN258(uint8_t slot, bool isDigmesaElseAichi);
-    bool getFlowSensorTypeEN258DigmesaElseAichi(uint8_t slot);
 
     PcbVersion pcb_version;
-    
+
 private:
-    bool flowSensorDigmesaElseAichi[MAX_SLOT_COUNT];
+    FlowSensorType flowSensorsType[MAX_SLOT_COUNT];
     bool dispenseButtonStateMemory[MAX_SLOT_COUNT];
     bool dispenseButtonIsDebounced[MAX_SLOT_COUNT];
     bool dispenseButtonStateDebounced[MAX_SLOT_COUNT];

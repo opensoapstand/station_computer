@@ -765,7 +765,7 @@ void runMainTest()
 
         for (uint8_t slot = 1; slot <= 4; slot++)
         {
-            pcb_to_test->setFlowSensorTypeEN258(slot, false);
+            pcb_to_test->setFlowSensorType(slot, pcb::AICHI);
             pcb_to_test->resetFlowSensorTotalPulses(slot);
         }
 

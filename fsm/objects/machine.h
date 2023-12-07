@@ -44,6 +44,7 @@ public:
     };
 
     machine();
+    void refresh();
     void pcb24VPowerSwitch(bool enableElseDisable);
     bool getPcb24VPowerSwitchStatus();
     // void print_text(string text);

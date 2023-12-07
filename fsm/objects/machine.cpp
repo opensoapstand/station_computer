@@ -74,7 +74,6 @@ void machine::loadGeneralProperties()
     for (int slot_index = 0; slot_index < getDispensersCount(); slot_index++)
     {
         m_productDispensers[slot_index].loadGeneralProperties();
-        
     }
 }
 
@@ -112,6 +111,16 @@ pcb *machine::getPcb()
 // // nothing here.
 //     debugOutput::sendMessage("*** global machine test message", MSG_INFO);
 // }
+
+void machine::refresh()
+{
+    control_pcb->pcb_refresh();
+    // the pcb inputs are not interrupt driven. So, periodical updates are required
+    for (uint8_t slot_index = 0; slot_index < PRODUCT_DISPENSERS_MAX; slot_index++)
+    {
+        m_productDispensers[slot_index].refresh();
+    }
+}
 
 void machine::syncSoftwareVersionWithDb()
 {
@@ -704,7 +713,7 @@ void machine::loadMachineParametersFromDb()
         m_is_enabled = sqlite3_column_int(stmt, 27);
         m_status_text = product::dbFieldAsValidString(stmt, 28);
 
-        if (numberOfRecordsFound != 0)
+        if (numberOfRecordsFound > 1)
         {
             // assert error
             debugOutput::sendMessage("ASSERT Error: Machine table must have exactly one row. Found rows: " + std::to_string(numberOfRecordsFound), MSG_ERROR);

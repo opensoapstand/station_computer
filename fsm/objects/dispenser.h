@@ -116,18 +116,18 @@ public:
       bool getIsDispenseTargetReached();
 
       void subtractFromVolumeDispensed(double volume_to_distract);
-      double getVolumeDispensed();
+      double getDispenserVolumeDispensed();
       double getVolumeRemaining();
       void resetVolumeDispensed();
       void initFlowRateCalculation();
-      Time_val getVolumeDispensedNow();
+      Time_val getDispenserVolumeDispensedNow();
       double getVolumeDeltaAndReset();
 
       double getInstantFlowRate();
       DF_ERROR updateRunningAverageWindow();
       Time_val getAveragedFlowRate(uint64_t window_length_millis);
 
-      void resetDispenseButton();
+      // void resetDispenseButton();
       bool getDispenseButtonValue();
       bool getDispenseButtonEdgeNegative();
       bool getDispenseButtonEdgePositive();
@@ -143,7 +143,7 @@ public:
 
       // bool reader = true;
 
-      // double getVolumeDispensedPreviously();
+      // double getProductVolumeDispensedPreviously();
       // void setVolumeDispensedPreviously(double volume);
       // Interrupt Helpers
       // double getVolumeSinceLastPoll();
@@ -192,9 +192,9 @@ private:
       string m_status_text;
 
 
-      bool dispenseButtonValueMemory;
-      bool dispenseButtonValueEdgePositive;
-      bool dispenseButtonValueEdgeNegative;
+      // bool dispenseButtonValueMemory;
+      // bool dispenseButtonValueEdgePositive;
+      // bool dispenseButtonValueEdgeNegative;
 
       bool isPumpSoftStarting;
 

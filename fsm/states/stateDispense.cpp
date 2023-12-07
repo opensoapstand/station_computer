@@ -120,11 +120,15 @@ DF_ERROR stateDispense::onAction()
       const char *statusStringChar = g_machine.m_productDispensers[slot_index].getSlotStateAsString();
       std::string statusString(statusStringChar);
       std::string message = "dispenseupdate|" + std::to_string(volume) + "|" + std::to_string(flowrate) + "|" + statusString;
+#define PRINT_STATUS
+
+#ifdef PRINT_STATUS
       m_pMessaging->sendMessageOverIP(message, true); // send to UI
 
       // update of the actual dispense
       const char *dispenseStatusStr = g_machine.m_productDispensers[slot_index].getDispenseStatusAsString();
       debugOutput::sendMessage(dispenseStatusStr, MSG_INFO);
+#endif
    }
 
    if (m_pMessaging->getAction() == ACTION_RESET)

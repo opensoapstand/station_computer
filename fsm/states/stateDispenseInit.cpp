@@ -90,12 +90,7 @@ DF_ERROR stateDispenseInit::onAction()
         ,g_machine.m_productDispensers[dispenser_index].getSelectedProduct()->getPrice(size)
         );
 
-    // g_machine.m_productDispensers[dispenser_index].getSelectedProduct()->productInfo();
-    // g_machine.m_productDispensers[dispenser_index].getSelectedProduct()->productVolumeInfo();
-
     g_machine.m_productDispensers[dispenser_index].startDispense();
-    
-
     
     m_state_requested = STATE_DISPENSE;
     return e_ret;

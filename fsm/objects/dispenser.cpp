@@ -198,7 +198,6 @@ bool dispenser::setSelectedProduct(int pnumber)
 
 DF_ERROR dispenser::loadGeneralProperties()
 {
-
     debugOutput::sendMessage("Dispenser: Load general properties:", MSG_INFO);
     // ******* Sleep time between DB calls solved inconsistend readings from db!!!****
     usleep(20000);
@@ -206,16 +205,6 @@ DF_ERROR dispenser::loadGeneralProperties()
     usleep(20000);
     analyseSlotState();
     usleep(20000);
-    // loadEmptyContainerDetectionEnabledFromDb();
-    // usleep(20000);
-    // loadPumpRampingEnabledFromDb();
-    // usleep(20000);
-    // loadPumpReversalEnabledFromDb();
-    // usleep(20000);
-
-    //  m_pcb->setSingleDispenseButtonLight(this->slot, false);
-
-    // resetVolumeDispensed();
 }
 
 int dispenser::getBasePNumber()
@@ -253,11 +242,6 @@ bool dispenser::loadDispenserParametersFromDb()
         numberOfRecordsFound++;
 
         debugOutput::sendMessage("Record found for slot : " + std::to_string(getSlot()), MSG_INFO);
-
-        // int columns_count = sqlite3_data_count(stmt);
-        // debugOutput::sendMessage("colll count:  " + to_string(columns_count), MSG_INFO);
-
-        // m_pnumber = std::stoi(product::dbFieldAsValidString(stmt, 0));
 
         dispense_numbers_str = product::dbFieldAsValidString(stmt, 1);
         base_pnumber_str = product::dbFieldAsValidString(stmt, 2);
@@ -325,7 +309,6 @@ DF_ERROR dispenser::startDispense()
     // init state
     dispense_state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
     previous_dispense_state = FLOW_STATE_UNAVAILABLE; // hack needed to create edge
-
 
     initFlowRateCalculation();
 

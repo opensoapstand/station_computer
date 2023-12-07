@@ -2100,7 +2100,7 @@ void pcb::setSpoutSolenoid(uint8_t slot, bool onElseOff)
     case (EN258_4SLOTS):
     case (EN258_8SLOTS):
     {
-        setSolenoidFromArray(slot, EN258_SOLENOID_SPOUT, false);
+        setSolenoidFromArray(slot, EN258_SOLENOID_SPOUT, onElseOff);
     }
     break;
 

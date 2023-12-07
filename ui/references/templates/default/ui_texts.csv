@@ -59,6 +59,8 @@ page_product->custom_volume,Custom Volume
 page_product_overview->pushButton_select_product_page,<- back
 page_product_overview->label_discount_tag,Discount
 page_product_overview->pushButton_continue,Continue
+page_product_overview->pushButton_continue->tapSerial,Pay with TAP
+page_product_overview->pushButton_continue_1->tapSerial,Pay with QR
 page_product_overview->label_pay,efijaiefj
 page_product_overview->label_total->non_custom_volume,Total
 page_product_overview->label_total->custom_volume,Price for maximum %1

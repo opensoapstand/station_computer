@@ -42,12 +42,12 @@ line-height: 29px;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_continue">
+  <widget class="QPushButton" name="pushButton_continue_1">
    <property name="geometry">
     <rect>
-     <x>188</x>
+     <x>568</x>
      <y>1541</y>
-     <width>740</width>
+     <width>360</width>
      <height>92</height>
     </rect>
    </property>
@@ -2064,8 +2064,35 @@ text-align: center;</string>
     <enum>Qt::Horizontal</enum>
    </property>
   </widget>
+  <widget class="QPushButton" name="pushButton_continue">
+   <property name="geometry">
+    <rect>
+     <x>188</x>
+     <y>1541</y>
+     <width>360</width>
+     <height>92</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Montserrat</family>
+     <pointsize>-1</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
   <zorder>label_help</zorder>
-  <zorder>pushButton_continue</zorder>
+  <zorder>pushButton_continue_1</zorder>
   <zorder>label_invoice_box</zorder>
   <zorder>label_invoice_price</zorder>
   <zorder>lineEdit_promo_code</zorder>
@@ -2085,6 +2112,7 @@ text-align: center;</string>
   <zorder>label_gif</zorder>
   <zorder>pushButton_to_help</zorder>
   <zorder>line_invoice</zorder>
+  <zorder>pushButton_continue</zorder>
  </widget>
  <resources/>
  <connections/>

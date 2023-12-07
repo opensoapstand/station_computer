@@ -100,7 +100,6 @@ QByteArray DfUiCommThread::readyRead()
         QByteArray first_part = Data.mid(0, first_delim_pos);
         QByteArray second_part = Data.mid(first_delim_pos + 1, second_delim_pos - first_delim_pos - 1);
         QByteArray third_part = Data.mid(second_delim_pos + 1);
-
         double temperature_1 = second_part.toDouble();
         double temperature_2 = third_part.toDouble();
 

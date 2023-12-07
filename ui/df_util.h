@@ -96,6 +96,7 @@ using namespace std;
 #define PAGE_PRODUCT_MENU_CSS                           "page_product_menu.css"
 #define PAGE_SELECT_PRODUCT_CSS                         "page_select_product.css"
 #define PAGE_PRODUCT_CSS                                "page_product.css"
+#define PAGE_PRODUCT_MIXING_CSS                         "page_product_mixing.css"
 #define PAGE_DISPENSER_CSS                              "page_dispenser.css"
 #define PAGE_PRODUCT_OVERVIEW_CSS                       "page_product_overview.css"
 #define PAGE_END_CSS                                    "page_end.css"

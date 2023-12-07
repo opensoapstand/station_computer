@@ -88,7 +88,7 @@ void page_product_mixing::showEvent(QShowEvent *event)
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
 
-    QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_PRODUCT_CSS);
+    QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_PRODUCT_MIXING_CSS);
 
     ui->label_product_title->setProperty("class", "title");
     ui->label_product_title->setStyleSheet(styleSheet);
@@ -153,6 +153,20 @@ void page_product_mixing::reset_and_show_page_elements()
     ui->pushButton_continue->hide();
 
     p_page_idle->thisMachine->addPictureToLabel(ui->label_product_photo, p_page_idle->thisMachine->getSelectedProduct()->getProductPicturePath());
+    QString picturePath = p_page_idle->thisMachine->getSelectedProduct()->getProductPicturePath();
+    qDebug() << "############## PICTURE PATHijijpjpjpjji: ";
+    
+    qDebug() << "############## PICTURE PATH: " << picturePath;
+    ui->label_product_photo->setStyleSheet("QLabel {"
+                     "border-radius: 10px;"
+                     "background-image: url(/home/df-admin/production/references/products/P-91.png);"
+                     "border: 1px solid red;"
+                     "background-repeat: no-repeat;"
+                     "background-size: cover;"
+                     "background-clip: content;"
+                     "}");
+    // ui->label_product_photo->setProperty("background-image", QString("url(%1)").arg(picturePath));
+    // qDebug() << QString("url(%1)").arg(picturePath);
 
     ui->label_product_title->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductName());
     ui->label_product_ingredients->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductIngredients());
@@ -263,10 +277,10 @@ void page_product_mixing::reset_and_show_page_elements()
             orderSizeLabelsVolume[i]->show();
             orderSizeBackgroundLabels[i]->show();
             orderSizeButtons[i]->show();
-            p_page_idle->thisMachine->addCssClassToObject(orderSizeLabelsVolume[i], "orderSizeLabelsVolume", PAGE_PRODUCT_CSS);
-            p_page_idle->thisMachine->addCssClassToObject(orderSizeBackgroundLabels[i], "orderSizeBackgroundLabels", PAGE_PRODUCT_CSS);
-            p_page_idle->thisMachine->addCssClassToObject(orderSizeButtons[i], "orderSizeButtons", PAGE_PRODUCT_CSS);
-            p_page_idle->thisMachine->addCssClassToObject(orderSizeLabelsPrice[i], "orderSizeLabelsPrice", PAGE_PRODUCT_CSS);
+            p_page_idle->thisMachine->addCssClassToObject(orderSizeLabelsVolume[i], "orderSizeLabelsVolume", PAGE_PRODUCT_MIXING_CSS);
+            p_page_idle->thisMachine->addCssClassToObject(orderSizeBackgroundLabels[i], "orderSizeBackgroundLabels", PAGE_PRODUCT_MIXING_CSS);
+            p_page_idle->thisMachine->addCssClassToObject(orderSizeButtons[i], "orderSizeButtons", PAGE_PRODUCT_MIXING_CSS);
+            p_page_idle->thisMachine->addCssClassToObject(orderSizeLabelsPrice[i], "orderSizeLabelsPrice", PAGE_PRODUCT_MIXING_CSS);
 
             double price = p_page_idle->thisMachine->getSelectedProduct()->getBasePrice(product_sizes[i]);
 

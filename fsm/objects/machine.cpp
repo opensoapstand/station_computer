@@ -59,11 +59,11 @@ void machine::initProductDispensers()
     for (int slot_index = 0; slot_index < getDispensersCount(); slot_index++)
     {
         debugOutput::sendMessage("Init dispenser " + to_string(slot_index + 1), MSG_INFO);
-        // m_g_machine.m_productDDDDDispensers[slot_index].setup(&this, g_pnumbers);
-        m_productDDDDDispensers[slot_index].setup(control_pcb, m_pnumbers);
-        m_productDDDDDispensers[slot_index].setSlot(slot_index + 1);
-        m_productDDDDDispensers[slot_index].setBasePNumberAsSelectedProduct();
-        m_productDDDDDispensers[slot_index].initGlobalFlowsensorIO(IO_PIN_FLOW_SENSOR);
+        // m_g_machine.m_productDispensers[slot_index].setup(&this, g_pnumbers);
+        m_productDispensers[slot_index].setup(control_pcb, m_pnumbers);
+        m_productDispensers[slot_index].setSlot(slot_index + 1);
+        m_productDispensers[slot_index].setBasePNumberAsSelectedProduct();
+        m_productDispensers[slot_index].initGlobalFlowsensorIO(IO_PIN_FLOW_SENSOR);
     }
 }
 
@@ -73,7 +73,7 @@ void machine::loadGeneralProperties()
     usleep(20000);
     for (int slot_index = 0; slot_index < getDispensersCount(); slot_index++)
     {
-        m_productDDDDDispensers[slot_index].loadGeneralProperties();
+        m_productDispensers[slot_index].loadGeneralProperties();
         
     }
 }

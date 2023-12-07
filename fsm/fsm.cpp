@@ -50,7 +50,7 @@ std::string stateStrings[FSM_MAX + 1] = {
 messageMediator *g_pMessaging;           // debug through local network
 stateVirtual *g_stateArray[FSM_MAX + 1]; // an object for every state
 
-// dispenser m_productDDDDDispensers[PRODUCT_DISPENSERS_MAX];
+// dispenser m_productDispensers[PRODUCT_DISPENSERS_MAX];
 product g_pnumbers[PNUMBERS_COUNT];
 machine g_machine;
 
@@ -169,7 +169,7 @@ DF_ERROR stateLoop()
         // the pcb inputs are not interrupt driven. So, periodical updates are required
         for (uint8_t slot_index = 0; slot_index < PRODUCT_DISPENSERS_MAX; slot_index++)
         {
-            g_machine.m_productDDDDDispensers[slot_index].refresh();
+            g_machine.m_productDispensers[slot_index].refresh();
         }
 
         if (fsmState == STATE_DUMMY)

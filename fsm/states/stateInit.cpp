@@ -114,7 +114,7 @@ DF_ERROR stateInit::dispenserSetup()
    
     g_machine.loadGeneralProperties();
 
-    // g_machine.m_productDDDDDispensers[0].initButtonsShutdownAndMaintenance(); // todo: this is a hack for the maintenance and power button. It should not be part of the dispenser class
+    // g_machine.m_productDispensers[0].initButtonsShutdownAndMaintenance(); // todo: this is a hack for the maintenance and power button. It should not be part of the dispenser class
 
     // needs to be set up only once. Dispenser index is only important for the button 4 index.
     switch (g_machine.control_pcb->get_pcb_version())

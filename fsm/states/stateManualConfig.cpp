@@ -87,8 +87,8 @@ DF_ERROR stateManualConfig::onAction()
       }
       else if ('2' == m_pMessaging->getAction())
       {
-         g_machine.m_productDDDDDispensers[m_active_pump_index].m_pcb->PCA9534SendByteToSlot(m_active_pump_index + 1, 0x01, 0b00100000); // Output pin values register (has no influence on input values)
-         g_machine.m_productDDDDDispensers[m_active_pump_index].m_pcb->PCA9534SendByteToSlot(m_active_pump_index + 1, 0x03, 0b01011000); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
+         g_machine.m_productDispensers[m_active_pump_index].m_pcb->PCA9534SendByteToSlot(m_active_pump_index + 1, 0x01, 0b00100000); // Output pin values register (has no influence on input values)
+         g_machine.m_productDispensers[m_active_pump_index].m_pcb->PCA9534SendByteToSlot(m_active_pump_index + 1, 0x03, 0b01011000); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
          debugOutput::sendMessage("Sent EN-134 default configuration to PCA9534 of slot: " + to_string(m_active_pump_index+1), MSG_INFO);
          readRelevantRegisters();
       }
@@ -152,9 +152,9 @@ std::string uint8ToBinaryString(uint8_t x)
 void stateManualConfig::readRelevantRegisters()
 {
    uint8_t val;
-   val = g_machine.m_productDDDDDispensers[m_active_pump_index].m_pcb->PCA9534ReadRegisterFromSlot(m_active_pump_index + 1, 0x03);
+   val = g_machine.m_productDispensers[m_active_pump_index].m_pcb->PCA9534ReadRegisterFromSlot(m_active_pump_index + 1, 0x03);
    debugOutput::sendMessage("Pin direction register 0x03: " + to_string(val) + "(" + uint8ToBinaryString(val) + ")", MSG_INFO);
-   val = g_machine.m_productDDDDDispensers[m_active_pump_index].m_pcb->PCA9534ReadRegisterFromSlot(m_active_pump_index + 1, 0x01);
+   val = g_machine.m_productDispensers[m_active_pump_index].m_pcb->PCA9534ReadRegisterFromSlot(m_active_pump_index + 1, 0x01);
    debugOutput::sendMessage("Pin output val reg     0x01: " + to_string(val) + "(" + uint8ToBinaryString(val) + ")", MSG_INFO);
 }
 

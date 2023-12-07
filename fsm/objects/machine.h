@@ -31,7 +31,7 @@
 class machine
 {
 public:
-    dispenser m_productDDDDDispensers[PRODUCT_DISPENSERS_MAX];
+    dispenser m_productDispensers[PRODUCT_DISPENSERS_MAX];
 
     enum HardwareVersion
     {

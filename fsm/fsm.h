@@ -15,7 +15,7 @@
 #include "objects/product.h"
 #include "objects/machine.h"
 
-// extern dispenser g_g_machine.m_productDDDDDispensers[PRODUCT_DISPENSERS_MAX];
+// extern dispenser g_g_machine.m_productDispensers[PRODUCT_DISPENSERS_MAX];
 extern product g_pnumbers[PNUMBERS_COUNT];
 extern machine g_machine;
 

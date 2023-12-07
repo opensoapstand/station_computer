@@ -975,6 +975,20 @@ QString machine::getHelpPageHtmlText()
     return m_help_text_html;
 }
 
+void machine::resetTransactionLogging(){
+    transactionLogging = "";
+
+}
+
+void machine::addToTransactionLogging(QString text){
+    transactionLogging += text;
+    qDebug() << "Transaction Logging: " << transactionLogging;
+}
+
+QString machine::getTransactionLogging(){
+    return transactionLogging;
+}
+
 void machine::loadMachineParameterFromDb()
 {
     qDebug() << "DB call: Load all machine parameters";

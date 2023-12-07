@@ -141,6 +141,8 @@ int main(int argc, char *argv[])
     page_select_product *p_page_select_product = new page_select_product();
     qDebug() << "Constructor page_product";
     page_product *p_page_product = new page_product();
+    qDebug() << "Constructor page_product_mixing";
+    page_product_mixing *p_page_product_mixing = new page_product_mixing();
     qDebug() << "Constructor page_qr_payment";
     page_qr_payment *p_page_payment_qr = new page_qr_payment();
     qDebug() << "Constructor page_payment_tap_tcp";
@@ -233,9 +235,10 @@ int main(int argc, char *argv[])
     p_page_maintenance->setPage(p_page_idle, p_page_maintenance_product, p_page_maintenance_general, p_page_select_product, p_page_product, p_statusbar);
     p_page_idle->setPage(p_page_select_product, p_page_maintenance, p_page_maintenance_general, p_page_idle_products, p_page_wifi_error, p_statusbar, p_page_product_menu);
     p_page_idle_products->setPage(p_page_idle, p_page_select_product);
-    p_page_product_menu->setPage(p_page_product, p_page_idle_products, p_page_idle, p_page_maintenance, p_page_help, p_statusbar);
+    p_page_product_menu->setPage(p_page_product, p_page_product_mixing, p_page_idle_products, p_page_idle, p_page_maintenance, p_page_help, p_statusbar);
     p_page_select_product->setPage(p_page_product, p_page_idle_products, p_page_idle, p_page_maintenance, p_page_help, p_statusbar);
     p_page_product->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_help, p_page_product_overview, p_statusbar,p_page_product_menu);
+    p_page_product_mixing->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_help, p_page_product_overview, p_statusbar,p_page_product_menu);
     p_page_payment_qr->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help, p_statusbar);
     p_page_payment_tap_tcp->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help, p_statusbar);
     p_page_payment_tap_serial->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help, p_statusbar);

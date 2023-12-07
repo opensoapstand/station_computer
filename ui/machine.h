@@ -242,6 +242,10 @@ public:
     QVector<int> getAllUniqueDispensePNumbers();
     QVector<int> getAllDispensePNumbersFromSlot(int slot);
 
+    void resetTransactionLogging();
+    void addToTransactionLogging(QString text);
+    QString getTransactionLogging();
+
 public slots:
 
 signals:
@@ -276,6 +280,8 @@ private:
     QString m_pump_id_slots[MAX_SLOT_COUNT];
     int m_is_enabled_slots[MAX_SLOT_COUNT];
     QString m_status_text_slots[MAX_SLOT_COUNT];
+    QString transactionLogging;
+
 
 };
 

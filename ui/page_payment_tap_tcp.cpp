@@ -23,7 +23,7 @@
 #include "payment/commands.h"
 #include "payment/setup_Tap.h"
 
-extern QString transactionLogging;
+// extern QString transactionLogging;
 extern std::string CTROUTD;
 extern std::string MAC_KEY;
 extern std::string MAC_LABEL;
@@ -399,7 +399,7 @@ bool page_payment_tap_tcp::exitConfirm()
         case QMessageBox::Yes:
         {
             // resetPaymentPage();
-            // transactionLogging = "";
+            // p_page_idle->thisMachine->resetTransactionLogging();
             return true;
         }
         break;
@@ -414,7 +414,7 @@ bool page_payment_tap_tcp::exitConfirm()
     {
         // exit, no questions asked.
         // resetPaymentPage();
-        // transactionLogging = "";
+        // p_page_idle->thisMachine->resetTransactionLogging();
         return true;
     }
 }
@@ -464,7 +464,8 @@ void page_payment_tap_tcp::resetPaymentPage()
     ui->label_title->hide();
 
     stopPayTimers();
-    transactionLogging = "";
+    p_page_idle->thisMachine->resetTransactionLogging();
+    // transactionLogging = "";
     response = true;
     qDebug() << "Cancelled";
 }

@@ -21,7 +21,7 @@
 #include "page_dispenser.h"
 #include "page_idle.h"
 
-extern QString transactionLogging;
+// extern QString transactionLogging;
 
 // CTOR
 
@@ -161,7 +161,8 @@ void page_qr_payment::setupQrOrder()
     if (createOrderIdAndSendToBackend())
     {
 
-        transactionLogging += "\n 2: QR code - True";
+        p_page_idle->thisMachine->addToTransactionLogging("\n 2: QR code - True");
+        // transactionLogging += "\n 2: QR code - True";
         QPixmap map(360, 360);
         map.fill(QColor("black"));
         QPainter painter(&map);
@@ -230,7 +231,7 @@ bool page_qr_payment::createOrderIdAndSendToBackend()
 
     // send order details to backend
     QString curl_order_parameters_string = "orderId=" + orderId + "&size=" + drinkSize + "&MachineSerialNumber=" + MachineSerialNumber +
-                                           "&contents=" + contents + "&price=" + price + "&productId=" + productId + "&quantity_requested=" + quantity_requested + "&size_unit=" + productUnits + "&logging=" + transactionLogging;
+                                           "&contents=" + contents + "&price=" + price + "&productId=" + productId + "&quantity_requested=" + quantity_requested + "&size_unit=" + productUnits + "&logging=" + p_page_idle->thisMachine->getTransactionLogging();
     curl_order_parameters = curl_order_parameters_string.toLocal8Bit();
 
     curl1 = curl_easy_init();
@@ -312,7 +313,8 @@ void page_qr_payment::isQrProcessedCheckOnline()
 
         if (readBuffer == "true")
         {
-            transactionLogging += "\n 4: Order Paid - True";
+            p_page_idle->thisMachine->addToTransactionLogging("\n 4: Order Paid - True");
+            // transactionLogging += "\n 4: Order Paid - True";
             qDebug() << "QR processed. It's time to dispense.";
             proceed_to_dispense();
             state_payment = s_payment_done;
@@ -325,9 +327,11 @@ void page_qr_payment::isQrProcessedCheckOnline()
         }
         else if (readBuffer == "In progress")
         {
-            if (!transactionLogging.contains("\n 3: QR Scanned - True"))
+            
+            if (!p_page_idle->thisMachine->getTransactionLogging().contains("\n 3: QR Scanned - True"))
             {
-                transactionLogging += "\n 3: QR Scanned - True";
+                p_page_idle->thisMachine->addToTransactionLogging("\n 3: QR Scanned - True");
+                // transactionLogging += "\n 3: QR Scanned - True";
             }
             qDebug() << "Wait for QR processed. User must have finished transaction to continue.";
             // user scanned qr code and is processing transaction. Delete qr code and make it harder for user to leave page.
@@ -385,7 +389,8 @@ void page_qr_payment::onTimeoutTick()
     else
     {
         qDebug() << "Timer Done!" << _pageTimeoutCounterSecondsLeft;
-        transactionLogging += "\n 5: Timeout - True";
+        p_page_idle->thisMachine->addToTransactionLogging("\n 5: Timeout - True");
+        // transactionLogging += "\n 5: Timeout - True";
 
         idlePaymentTimeout();
     }
@@ -571,7 +576,8 @@ void page_qr_payment::idlePaymentTimeout()
 
 void page_qr_payment::resetPaymentPage()
 {
-    transactionLogging = "";
+    p_page_idle->thisMachine->resetTransactionLogging();
+    // transactionLogging = "";
     paymentEndTimer->stop();
     qrPeriodicalCheckTimer->stop();
     showErrorTimer->stop();

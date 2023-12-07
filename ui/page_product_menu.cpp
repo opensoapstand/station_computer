@@ -110,9 +110,10 @@ page_product_menu::page_product_menu(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference
  */
-void page_product_menu::setPage(page_product *p_page_product, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp, statusbar *p_statusbar)
+void page_product_menu::setPage(page_product *p_page_product, page_product_mixing *p_page_product_mixing, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp, statusbar *p_statusbar)
 {
     this->p_page_product = p_page_product;
+    this->p_page_product_mixing = p_page_product_mixing;
     this->p_page_idle = pageIdle;
     this->p_page_maintenance = pageMaintenance;
     this->p_page_help = pageHelp;
@@ -403,7 +404,8 @@ void page_product_menu::select_product(int option)
         p_page_idle->thisMachine->setSelectedProductByOption(option);
         p_page_idle->thisMachine->setSelectedSlotFromSelectedProduct();
 
-        hideCurrentPageAndShowProvided(p_page_product);
+        // hideCurrentPageAndShowProvided(p_page_product);
+        hideCurrentPageAndShowProvided(p_page_product_mixing);
     }
     else
     {

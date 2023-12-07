@@ -17,6 +17,7 @@ FORMS += \
     page_payment_tap_tcp.ui \
     page_payment_tap_serial.ui \
     page_product.ui \
+    page_product_mixing.ui \
     page_product_menu.ui \
     page_select_product.ui \
     page_end.ui \

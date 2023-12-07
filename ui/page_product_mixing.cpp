@@ -1,24 +1,23 @@
 
 //***************************************
 //
-// page_product.cpp
+// page_product_mixing.cpp
 // GUI class for user to select size and
 // payment for drink.
 //
-// Allows navigation to First product page
-// payment page and page_idle page
+// Allows for product mixing + additivies
+//
 //
 // created: 05-04-2022
 // by: Lode Ameije, Ash Singla, Jordan Wang & Daniel Delgado
 //
-// copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
+// copyright 2023 by Drinkfill Beverages Ltd
+// all rights reserved
 //***************************************
 #include "page_product_mixing.h"
 #include "ui_page_product_mixing.h"
 
 using json = nlohmann::json;
-extern bool promoApplied;
-
 
 // CTOR
 page_product_mixing::page_product_mixing(QWidget *parent) : QWidget(parent),
@@ -50,7 +49,6 @@ page_product_mixing::page_product_mixing(QWidget *parent) : QWidget(parent),
     selectIdleTimer->setInterval(40);
     connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
 
-    transactionLogging = "";
     statusbarLayout = new QVBoxLayout(this);
 }
 
@@ -119,6 +117,9 @@ void page_product_mixing::showEvent(QShowEvent *event)
         orderSizeButtons[i]->setStyleSheet(styleSheet);
         orderSizeBackgroundLabels[i]->setStyleSheet(styleSheet);
     }
+
+    p_page_idle->thisMachine->resetTransactionLogging();
+    // transactionLogging = "";
 
     reset_and_show_page_elements();
 }

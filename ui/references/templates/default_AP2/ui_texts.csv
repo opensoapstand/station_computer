@@ -37,9 +37,11 @@ page_select_product->label_pick_soap,Discover our Beverages
 page_select_product->pushButton_to_idle,←back
 page_select_product->no_text,
 
-
 # Page_product 
 page_product->pushButton_back,←back
+
+#page_product_mixing
+page_product_mixing->pushButton_back,←←←←back
 
 # page_product_overview
 page_product_overview->pushButton_select_product_page,←back

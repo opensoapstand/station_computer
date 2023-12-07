@@ -23,7 +23,7 @@
 #include "page_product_mixing.h"
 #include "payment/commands.h"
 
-extern QString transactionLogging;
+// extern QString transactionLogging;
 // extern std::string CTROUTD;
 extern std::string MAC_KEY;
 extern std::string MAC_LABEL;
@@ -141,7 +141,8 @@ void page_dispenser::showEvent(QShowEvent *event)
     ui->label_press->setStyleSheet(styleSheet);
     ui->label_dispense_message->setStyleSheet(styleSheet);
 
-    transactionLogging += "\n 6: Station Unlocked - True";
+    p_page_idle->thisMachine->addToTransactionLogging("\n 6: Station Unlocked - True");
+    // transactionLogging += "\n 6: Station Unlocked - True";
 
     animationStepForwardElseBackward = true;
 
@@ -635,7 +636,8 @@ void page_dispenser::fsmReceiveTargetVolumeReached()
         qDebug() << "Target reached from controller.";
         this->isDispensing = false;
         updateVolumeDisplayed(p_page_idle->thisMachine->getSelectedProduct()->getVolumeOfSelectedSize(), true); // make sure the fill bottle graphics are completed
-        transactionLogging += "\n 8: Target Reached - True";
+        p_page_idle->thisMachine->addToTransactionLogging("\n 8: Target Reached - True");
+        // transactionLogging += "\n 8: Target Reached - True";
         dispensing_end_admin();
     }
     else
@@ -663,7 +665,8 @@ void page_dispenser::on_cancelButton_clicked()
     qDebug() << "Pressed cancel dispensing.";
     if (this->isDispensing)
     {
-        transactionLogging += "\n 7: Cancel Button - True";
+        p_page_idle->thisMachine->addToTransactionLogging("\n 7: Cancel Button - True");
+        // transactionLogging += "\n 7: Cancel Button - True";
         force_finish_dispensing();
     }
 }
@@ -677,8 +680,8 @@ void page_dispenser::on_pushButton_debug_Button_clicked()
 void page_dispenser::on_pushButton_abort_clicked()
 {
     qDebug() << "Pressed button abort/complete";
-
-    transactionLogging += "\n 7: Complete Button - True";
+    p_page_idle->thisMachine->addToTransactionLogging("\n 7: Complete Button - True");
+    // transactionLogging += "\n 7: Complete Button - True";
     if (p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl() < MINIMUM_DISPENSE_VOLUME_ML)
     {
         msgBox_abort = new QMessageBox();

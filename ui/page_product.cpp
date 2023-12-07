@@ -18,8 +18,6 @@
 #include "ui_page_product.h"
 
 using json = nlohmann::json;
-QString transactionLogging = "";
-extern bool promoApplied;
 
 // CTOR
 page_product::page_product(QWidget *parent) : QWidget(parent),
@@ -51,7 +49,6 @@ page_product::page_product(QWidget *parent) : QWidget(parent),
     selectIdleTimer->setInterval(40);
     connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
 
-    transactionLogging = "";
     statusbarLayout = new QVBoxLayout(this);
 }
 
@@ -120,6 +117,8 @@ void page_product::showEvent(QShowEvent *event)
         orderSizeButtons[i]->setStyleSheet(styleSheet);
         orderSizeBackgroundLabels[i]->setStyleSheet(styleSheet);
     }
+    p_page_idle->thisMachine->resetTransactionLogging();
+    // transactionLogging = "";
 
     reset_and_show_page_elements();
 }

@@ -13,8 +13,8 @@
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
-#ifndef PAYSELECT_H
-#define PAYSELECT_H
+#ifndef PAYSELECTMIX_H
+#define PAYSELECTMIX_H
 
 #include "df_util.h"
 #include <iostream>
@@ -29,7 +29,6 @@
 #include "page_payment_tap_tcp.h"
 #include "page_qr_payment.h"
 #include "page_select_product.h"
-#include "page_productOverview.h"
 #include "dispenser_slot.h"
 #include "page_idle.h"
 #include "page_error_wifi.h"
@@ -56,7 +55,6 @@ namespace Ui
 class page_product_mixing : public QWidget
 {
     Q_OBJECT
-    QString transactionLogging;
 
 public:
     QPushButton *orderSizeButtons[4];
@@ -274,4 +272,4 @@ private:
     QVBoxLayout *statusbarLayout;
 };
 
-#endif // PAYSELECT_H
+#endif // PAYSELECTMIX_H

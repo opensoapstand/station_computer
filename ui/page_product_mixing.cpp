@@ -90,6 +90,9 @@ void page_product_mixing::showEvent(QShowEvent *event)
 
     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_PRODUCT_MIXING_CSS);
 
+    QString picturePath = p_page_idle->thisMachine->getSelectedProduct()->getProductPicturePath();
+    styleSheet.replace("%IMAGE_PATH%", picturePath);
+
     ui->label_product_title->setProperty("class", "title");
     ui->label_product_title->setStyleSheet(styleSheet);
     ui->pushButton_back->setStyleSheet(styleSheet); // pushbutton
@@ -152,19 +155,26 @@ void page_product_mixing::reset_and_show_page_elements()
     ui->label_product_ingredients->setWordWrap(true);
     ui->pushButton_continue->hide();
 
-    p_page_idle->thisMachine->addPictureToLabel(ui->label_product_photo, p_page_idle->thisMachine->getSelectedProduct()->getProductPicturePath());
+    // p_page_idle->thisMachine->addPictureToLabel(ui->label_product_photo, p_page_idle->thisMachine->getSelectedProduct()->getProductPicturePath());
     QString picturePath = p_page_idle->thisMachine->getSelectedProduct()->getProductPicturePath();
-    qDebug() << "############## PICTURE PATHijijpjpjpjji: ";
-    
     qDebug() << "############## PICTURE PATH: " << picturePath;
-    ui->label_product_photo->setStyleSheet("QLabel {"
-                     "border-radius: 10px;"
-                     "background-image: url(/home/df-admin/production/references/products/P-91.png);"
-                     "border: 1px solid red;"
-                     "background-repeat: no-repeat;"
-                     "background-size: cover;"
-                     "background-clip: content;"
-                     "}");
+    // ui->label_product_photo->setStyleSheet("QLabel {"
+    //                  "border-radius: 10px;"
+    //                  "background-image: url(/home/df-admin/production/references/products/P-91.png);"
+    //                  "border: 1px solid red;"
+    //                  "background-repeat: no-repeat;"
+    //                  "background-size: cover;"
+    //                  "background-clip: content;"
+    //                  "}");
+    // ui->label_product_photo->setStyleSheet(QString("QLabel {"
+    //                             "border-radius: 10px;"
+    //                             "background-image: url(%1);"
+    //                             "background-repeat: no-repeat;"
+    //                             "background-size: cover;"
+    //                             "background-clip: content;"
+    //                             "border: 1px solid blue;"
+    //                             "}").arg(picturePath));
+    ///home/df-admin/production/references/products/P-91.png
     // ui->label_product_photo->setProperty("background-image", QString("url(%1)").arg(picturePath));
     // qDebug() << QString("url(%1)").arg(picturePath);
 

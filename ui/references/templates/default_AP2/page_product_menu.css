@@ -54,8 +54,13 @@ QLabel {
     border: 0px;
 }
 
-.label_base_product_picture{
-}
+/* .label_base_product_picture{
+    border: 1px solid purple;
+    border-radius: 50%;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-clip: content;
+} */
 
 .label_base_product_name{
     color: #003840;
@@ -148,4 +153,15 @@ QLabel {
 
 .label_product_photo {
     /* border: 1px solid black;  */
+}
+
+#label_base_product_picture_2{
+    background-image: url(%IMAGE_PATH%);
+    border: 1px solid purple;
+    border-radius: 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-clip: content;
+    width: 120px;
+    height: 120px;
 }

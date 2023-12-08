@@ -107,11 +107,12 @@
 }
 
 #label_product_photo {
-   /* border: 1px solid black;
+   background-image: url(%IMAGE_PATH%);
+   border: 1px solid orange;
    border-radius: 50%;
    background-repeat: no-repeat;
-   background-size: cover;
-   background-clip: content; */
+   background-size: contain;
+   background-clip: content;
 }
 
 #label_product_ingredients_title {

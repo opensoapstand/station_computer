@@ -1114,8 +1114,28 @@ void machine::addPictureToLabel(QLabel *label, QString picturePath)
         int w = label->width();
         int h = label->height();
 
-        // // set a scaled pixmap to a w x h window keeping its aspect ratio
+        // // // set a scaled pixmap to a w x h window keeping its aspect ratio
         label->setPixmap(picture.scaled(w, h, Qt::KeepAspectRatio));
+
+        // QPixmap target = QPixmap(w, h);
+        // target.fill(Qt::transparent);
+
+        // QPixmap p;
+        // p.load(picturePath);
+        // p.scaled(w, h, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+
+
+        // QPainter painter (&target);
+
+        // painter.setRenderHint(QPainter::Antialiasing, true);
+        // painter.setRenderHint(QPainter::HighQualityAntialiasing, true);
+        // painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
+
+        // QPainterPath path = QPainterPath();
+        // path.addRoundedRect(200, 200, 200, 200, 100, 100);
+        // painter.setClipPath(path);
+        // painter.drawPixmap(200, 200, p);
+        // label->setPixmap(target);
     }
     else
     {

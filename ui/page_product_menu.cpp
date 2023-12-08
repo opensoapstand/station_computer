@@ -159,10 +159,14 @@ void page_product_menu::showEvent(QShowEvent *event)
         labels_base_product_bg[slot_index]->setStyleSheet(styleSheet);
         pushButtons_base_product[slot_index]->setProperty("class", "pushButton_base_product");
         pushButtons_base_product[slot_index]->setStyleSheet(styleSheet);
+        
+        // QString picturePath = p_page_idle->thisMachine->getSlotBaseProduct(slot_index + 1)->getProductPicturePath();
+        // styleSheet.replace("%IMAGE_PATH%", picturePath);
+        
+        p_page_idle->thisMachine->addPictureToLabel(labels_base_product_picture[slot_index], p_page_idle->thisMachine->getSlotBaseProduct(slot_index + 1)->getProductPicturePath());
         labels_base_product_picture[slot_index]->setProperty("class", "label_base_product_picture");
         labels_base_product_picture[slot_index]->setStyleSheet(styleSheet);
         qDebug() << p_page_idle->thisMachine->getSlotBaseProduct(slot_index + 1)->getProductPicturePath();
-        p_page_idle->thisMachine->addPictureToLabel(labels_base_product_picture[slot_index], p_page_idle->thisMachine->getSlotBaseProduct(slot_index + 1)->getProductPicturePath());
 
         labels_base_product_name[slot_index]->setProperty("class", "label_base_product_name");
         labels_base_product_name[slot_index]->setStyleSheet(styleSheet);

@@ -304,7 +304,7 @@ DF_ERROR dispenser::startDispense()
     dispenseButtonTimingreset();
 
     this->m_pcb->flowSensorEnable(m_slot);
-    this->m_pcb->resetFlowSensorTotalPulses(m_slot);
+    this->m_pcb->resetFlowSensorPulsesForDispenser(m_slot);
 
     // init state
     dispense_state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
@@ -363,7 +363,7 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
 
     m_price = nPrice;
 
-    resetVolumeDispensed();
+    resetProductVolumeDispensed();
 
     switch (m_pcb->get_pcb_version())
     {
@@ -445,34 +445,37 @@ bool dispenser::getIsDispenseTargetReached()
 {
     bool bRet = false;
 
-    if (m_nVolumeTarget <= getDispenserVolumeDispensed())
+    if (m_nVolumeTarget <= getProductVolumeDispensed())
     {
         bRet = true;
     }
     return bRet;
 }
 
-void dispenser::resetVolumeDispensed()
+void dispenser::resetProductVolumeDispensed()
 {
-    getSelectedProduct()->resetVolumeDispensed();
+    getSelectedProduct()->resetProductVolumeDispensed();
 }
 
-void dispenser::subtractFromVolumeDispensed(double volume_to_distract)
+void dispenser::subtractFromProductVolumeDispensed(double volume_to_distract)
 {
     double volume = getSelectedProduct()->getProductVolumeDispensed();
     getSelectedProduct()->setVolumeDispensed(volume - volume_to_distract);
 }
 
-double dispenser::getVolumeRemaining()
+double dispenser::getProductVolumeRemaining()
 {
-    return getSelectedProduct()->getVolumeRemaining();
+    return getSelectedProduct()->getProductVolumeRemaining();
 }
 
-double dispenser::getDispenserVolumeDispensed()
+double dispenser::getProductVolumeDispensed()
 {
     // return m_nVolumeDispensed;
     return getSelectedProduct()->getProductVolumeDispensed();
 }
+
+
+
 
 // TODO: Call this function on Dispense onEntry()
 DF_ERROR dispenser::initGlobalFlowsensorIO(int pin)
@@ -674,7 +677,7 @@ void dispenser::reversePumpForSetTimeMillis(int millis)
         if (millis > 0)
         {
             // get volume before
-            double volume_before = getDispenserVolumeDispensed();
+            double volume_before = getProductVolumeDispensed();
 
             debugOutput::sendMessage("Pump auto retraction. Reverse time millis: " + to_string(millis), MSG_INFO);
             pumpSlowStart(false);
@@ -704,12 +707,12 @@ void dispenser::reversePumpForSetTimeMillis(int millis)
             setPumpDirectionForward();
 
             // get volume after
-            double volume_after = getDispenserVolumeDispensed();
+            double volume_after = getProductVolumeDispensed();
 
             // vol diff
             double volume_diff = volume_after - volume_before;
 
-            subtractFromVolumeDispensed(volume_diff);
+            subtractFromProductVolumeDispensed(volume_diff);
             debugOutput::sendMessage("Retraction done. WARNING: check volume change correction subtraction. Volume reversed:  " + to_string(volume_diff), MSG_INFO);
         }
         else
@@ -983,7 +986,7 @@ double dispenser::getVolumeDeltaAndReset()
 {
     // will get volumeDelta since last call of this function
 
-    double currentVolume = getDispenserVolumeDispensed();
+    double currentVolume = getProductVolumeDispensed();
     double deltaVolume = currentVolume - previousDispensedVolume;
     previousDispensedVolume = currentVolume;
     return deltaVolume;
@@ -1021,10 +1024,10 @@ double dispenser::getInstantFlowRate()
     return flowRate;
 }
 
-Time_val dispenser::getDispenserVolumeDispensedNow()
+Time_val dispenser::getProductVolumeDispensedNow()
 {
     Time_val tv;
-    tv.value = getDispenserVolumeDispensed();
+    tv.value = getProductVolumeDispensed();
     using namespace std::chrono;
     uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
@@ -1132,7 +1135,7 @@ DF_ERROR dispenser::updateRunningAverageWindow()
 {
     DF_ERROR e_ret;
 
-    Time_val tv = getDispenserVolumeDispensedNow();
+    Time_val tv = getProductVolumeDispensedNow();
 
     flowRateBuffer[flowRateBufferIndex].time_millis = tv.time_millis;
     flowRateBuffer[flowRateBufferIndex].value = tv.value;

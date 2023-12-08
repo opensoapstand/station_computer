@@ -122,31 +122,37 @@ double product::getVolumePerTick()
 {
     return m_nVolumePerTick;
 }
+// void product::registerFlowSensorTickFromPcb()
+// {
+//     // tick from flowsensor interrupt will increase dispensed volume.
+//     // cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
+//     cout << "Flow TICK from pcb." << endl;
+//     m_nVolumeDispensed += getVolumePerTick() * m_concentration_multiplier;
+// }
 
-bool product::registerFlowSensorTick()
+void product::registerFlowSensorTickFromInterrupt()
 {
     // tick from flowsensor interrupt will increase dispensed volume.
-    //    cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
-    // cout << getVolumePerTick()<< endl;
-    // cout << "TICKTICK"<< endl;
-    // cout << m_concentration_multiplier <<endl;
-
+    // cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
+    cout << "Interrupt flow TICKTICK" << endl;
     m_nVolumeDispensed += getVolumePerTick() * m_concentration_multiplier;
-
-    // m_nVolumeDispensed += 100.0;
 }
+
 void product::setVolumeDispensed(double volume)
 {
     m_nVolumeDispensed = volume;
 }
+
 double product::getProductVolumeDispensed()
 {
     return m_nVolumeDispensed;
 }
-void product::resetVolumeDispensed()
+
+void product::resetProductVolumeDispensed()
 {
     m_nVolumeDispensed = 0;
 }
+
 double product::getThresholdFlow()
 {
     // minimum threshold to consider dispensing.
@@ -157,8 +163,8 @@ double product::getThresholdFlow_max_allowed()
 
     if (m_nThresholdFlow_maximum_allowed < getThresholdFlow())
     {
-        // 2023-11: in the db, column "calibration_const" was reused to hold this variable, for AP. if not set, set it to an arbitray high value 
-                return 1000.0; // 1L per second. magic number
+        // 2023-11: in the db, column "calibration_const" was reused to hold this variable, for AP. if not set, set it to an arbitray high value
+        return 1000.0; // 1L per second. magic number
     }
     else
     {
@@ -185,7 +191,7 @@ double product::getVolumeFull()
 {
     return m_nVolumeFull;
 }
-double product::getVolumeRemaining()
+double product::getProductVolumeRemaining()
 {
     return m_nVolumeRemaining;
 }

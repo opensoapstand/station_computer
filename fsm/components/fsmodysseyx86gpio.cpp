@@ -331,7 +331,7 @@ void FSModdyseyx86GPIO::monitorGPIO_Flowsensor(bool *abortLoop)
                         if (flowsensor_stable_state)
                         {
                                 // pos edge
-                                m_pDispenser->registerFlowSensorTick(); // trigger the callback
+                                m_pDispenser->registerFlowSensorTickFromInterrupt(); // trigger the callback
                                 // debugOutput::sendMessage("Flow tick received interrupt!", MSG_INFO);
                         }
                         else

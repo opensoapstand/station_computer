@@ -203,9 +203,9 @@ public:
     void refreshFlowSensors();
     void flowSensorEnable(uint8_t slot);
     void flowSensorsDisableAll();
-    uint64_t getFlowSensorTotalPulses(uint8_t slot);
+    uint64_t getFlowSensorPulsesForDispenser(uint8_t slot);
     uint64_t getFlowSensorPulsesSinceEnabling(uint8_t slot);
-    void resetFlowSensorTotalPulses(uint8_t slot);
+    void resetFlowSensorPulsesForDispenser(uint8_t slot);
 
     uint8_t PCA9534ReadRegisterFromSlot(uint8_t slot, uint8_t reg);
 
@@ -241,12 +241,12 @@ private:
 
     bool slotEnabled[MAX_SLOT_COUNT]; // in SED8433 this is not needed(pump ON =  pump enable  with button hardwired on pcb ). in EN-134: this enable high AND button press -> pump ON
     // bool slotEnabledMemory[MAX_SLOT_COUNT];
-    void refreshFlowSensor(uint8_t slot);
+    void pollFlowSensor(uint8_t slot);
 
     uint64_t flowSensorTickReceivedEpoch[MAX_SLOT_COUNT];
     bool flowSensorStateMemory[MAX_SLOT_COUNT];
 
-    uint64_t flow_sensor_total_pulses[MAX_SLOT_COUNT];
+    uint64_t flow_sensor_pulses_for_dispenser[MAX_SLOT_COUNT];
     uint64_t flow_sensor_pulses_since_enable[MAX_SLOT_COUNT];
 
     uint64_t button_[MAX_SLOT_COUNT];

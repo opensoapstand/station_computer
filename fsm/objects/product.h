@@ -94,7 +94,7 @@ public:
         void setVolumeDispensed(double volume);
         bool isDbValid();
 
-        void resetVolumeDispensed();
+        void resetProductVolumeDispensed();
 
         int sizeCharToSizeIndex(char size);
         char sizeIndexToSizeChar(int sizeIndex);
@@ -110,10 +110,11 @@ public:
         bool isShowTransactionsInMachineTable();
         void executeSQLStatement(string sql_string);
 
-        bool registerFlowSensorTick();
+        // void registerFlowSensorTickFromPcb();
+        void registerFlowSensorTickFromInterrupt();
         int getSlot();
 
-        double getVolumeRemaining();
+        double getProductVolumeRemaining();
         double getProductVolumeDispensedTotalEver();
         double getProductVolumeDispensedSinceLastRestock();
         double getVolumeFull();

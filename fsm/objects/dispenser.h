@@ -115,12 +115,12 @@ public:
 
       bool getIsDispenseTargetReached();
 
-      void subtractFromVolumeDispensed(double volume_to_distract);
-      double getDispenserVolumeDispensed();
-      double getVolumeRemaining();
-      void resetVolumeDispensed();
+      void subtractFromProductVolumeDispensed(double volume_to_distract);
+      double getProductVolumeDispensed();
+      double getProductVolumeRemaining();
+      void resetProductVolumeDispensed();
       void initFlowRateCalculation();
-      Time_val getDispenserVolumeDispensedNow();
+      Time_val getProductVolumeDispensedNow();
       double getVolumeDeltaAndReset();
 
       double getInstantFlowRate();
@@ -147,7 +147,7 @@ public:
       // void setVolumeDispensedPreviously(double volume);
       // Interrupt Helpers
       // double getVolumeSinceLastPoll();
-      // bool registerFlowSensorTick();
+      // void registerFlowSensorTickFromInterrupt();
 
       DF_ERROR loadGeneralProperties();
 
@@ -252,6 +252,8 @@ private:
 
       bool m_isSlotEnabled;
       bool *m_pIsDispensing;
+
+      uint16_t m_flow_sensor_pulses;
 
       bool m_isDispenseNew;
 

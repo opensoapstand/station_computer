@@ -1345,30 +1345,22 @@ void pcb::flowSensorsDisableAll()
 
 void pcb::refreshFlowSensors()
 {
-    // this is only need if flow rates are read from the PCA9534.
-    // there is a specific line that goes the the Odyssey as an interrupt (which is how the soapstand app traditionally worked)
-    // then, the reading of the register is not needed
+    // this is: Polling: periodically read flow rates 
+    // this is not: Interrupt:  there is a specific line that goes the the Odyssey as an interrupt (which is how the soapstand app traditionally worked)
+    // if the interrupt is in use then, the reading of the register is not needed
 
     switch (pcb_version)
     {
     case (EN258_4SLOTS):
     case (EN134_4SLOTS):
-    {
-        for (uint8_t slot = 1; slot <= 4; slot++)
-        {
-            refreshFlowSensor(slot);
-        }
-    };
-    break;
     case (EN258_8SLOTS):
     case (EN134_8SLOTS):
     {
-        for (uint8_t slot = 1; slot <= 8; slot++)
+        for (uint8_t slot = 1; slot <= getSlotCountByPcbType(); slot++)
         {
-            refreshFlowSensor(slot);
+            pollFlowSensor(slot);
         }
     };
-    break;
     default:
     {
         debugOutput::sendMessage("Pcb: No flowsensors to refresh on this pcb", MSG_ERROR);
@@ -1377,11 +1369,6 @@ void pcb::refreshFlowSensors()
     }
 }
 
-void pcb::resetFlowSensorTotalPulses(uint8_t slot)
-{
-    uint8_t slot_index = slot - 1;
-    flow_sensor_total_pulses[slot_index] = 0;
-}
 
 uint64_t pcb::getFlowSensorPulsesSinceEnabling(uint8_t slot)
 {
@@ -1389,11 +1376,17 @@ uint64_t pcb::getFlowSensorPulsesSinceEnabling(uint8_t slot)
     return flow_sensor_pulses_since_enable[slot_index];
 }
 
-uint64_t pcb::getFlowSensorTotalPulses(uint8_t slot)
+void pcb::resetFlowSensorPulsesForDispenser(uint8_t slot)
+{
+    uint8_t slot_index = slot - 1;
+    flow_sensor_pulses_for_dispenser[slot_index] = 0;
+}
+
+uint64_t pcb::getFlowSensorPulsesForDispenser(uint8_t slot)
 {
     // warning: the flow sensor ticks also come in straight to the Odyssey IO. The controller handles the volume calculation from there not from here. The advantage: no missed pulses (interrupt per pulse),the disadvantage: every slot uses the same pin.
     uint8_t slot_index = slot - 1;
-    return flow_sensor_total_pulses[slot_index];
+    return flow_sensor_pulses_for_dispenser[slot_index];
 }
 
 pcb::FlowSensorType pcb::getFlowSensorType(uint8_t slot)
@@ -1474,7 +1467,7 @@ void pcb::setFlowSensorType(uint8_t slot, FlowSensorType sensorType)
     }
 }
 
-void pcb::refreshFlowSensor(uint8_t slot)
+void pcb::pollFlowSensor(uint8_t slot)
 {
     if (slot == 0)
     {
@@ -1531,7 +1524,7 @@ void pcb::refreshFlowSensor(uint8_t slot)
 
         if (flowSensorStateMemory[slot_index] != state)
         {
-            flow_sensor_total_pulses[slot_index]++;
+            flow_sensor_pulses_for_dispenser[slot_index]++;
             flow_sensor_pulses_since_enable[slot_index]++;
             debugOutput::sendMessage("Flow sensor pulse detected by PCA chip. Slot: " + to_string(slot) + ". Pulse total: " + to_string(flow_sensor_pulses_since_enable[slot_index]), MSG_INFO);
             flowSensorTickReceivedEpoch[slot_index] = now_epoch_millis;

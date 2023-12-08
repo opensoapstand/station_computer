@@ -100,7 +100,7 @@ DF_ERROR stateDispense::onAction()
 
    if (g_machine.m_productDispensers[slot_index].getIsStatusUpdateAllowed())
    {
-      double volume = g_machine.m_productDispensers[slot_index].getDispenserVolumeDispensed();
+      double volume = g_machine.m_productDispensers[slot_index].getProductVolumeDispensed();
 
       Time_val avg_02s = g_machine.m_productDispensers[slot_index].getAveragedFlowRate(1000);
       double flowrate = avg_02s.value;
@@ -154,7 +154,7 @@ DF_ERROR stateDispense::onAction()
 
    if (g_machine.m_productDispensers[slot_index].getIsDispenseTargetReached())
    {
-      debugOutput::sendMessage("Stop dispensing. Requested volume reached. " + to_string(g_machine.m_productDispensers[slot_index].getDispenserVolumeDispensed()), MSG_INFO);
+      debugOutput::sendMessage("Stop dispensing. Requested volume reached. " + to_string(g_machine.m_productDispensers[slot_index].getProductVolumeDispensed()), MSG_INFO);
       m_state_requested = STATE_DISPENSE_END;
       stopPumping();
       return e_ret = OK;

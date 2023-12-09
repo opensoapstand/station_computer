@@ -180,6 +180,7 @@ public:
     QString getHardwareMajorVersion();
 
     void addPictureToLabel(QLabel *label, QString picturePath);
+    void addPictureToLabelCircle(QLabel *label, QString picturePath);
     void addPictureToButton(QPushButton *button, QString picturePath);
     void addClientLogoToLabel(QLabel *label);
     void setBackgroundPictureFromTemplateToPage(QWidget *page, QString imageName);

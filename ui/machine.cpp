@@ -1113,35 +1113,35 @@ void machine::addPictureToLabel(QLabel *label, QString picturePath)
 
         int w = label->width();
         int h = label->height();
-
         // // // set a scaled pixmap to a w x h window keeping its aspect ratio
-        label->setPixmap(picture.scaled(w, h, Qt::KeepAspectRatio));
-
-        // QPixmap target = QPixmap(w, h);
-        // target.fill(Qt::transparent);
-
-        // QPixmap p;
-        // p.load(picturePath);
-        // p.scaled(w, h, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
-
-
-        // QPainter painter (&target);
-
-        // painter.setRenderHint(QPainter::Antialiasing, true);
-        // painter.setRenderHint(QPainter::HighQualityAntialiasing, true);
-        // painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
-
-        // QPainterPath path = QPainterPath();
-        // path.addRoundedRect(200, 200, 200, 200, 100, 100);
-        // painter.setClipPath(path);
-        // painter.drawPixmap(200, 200, p);
-        // label->setPixmap(target);
+        label->setPixmap(picture.scaled(w, h, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     }
     else
     {
         qDebug() << "Can't add picture to label: " << label->objectName() << " " << picturePath;
     }
 }
+
+void machine::addPictureToLabelCircle(QLabel *label, QString picturePath){
+    if (df_util::pathExists(picturePath))
+    {
+        QPixmap picture(picturePath);
+
+        int w = label->width();
+        int h = label->height();
+        QRect *rct = new QRect(0, 0, w, h);
+        QRegion *reg = new QRegion(*rct, QRegion::Ellipse);
+        // // // set a scaled pixmap to a w x h window keeping its aspect ratio
+        picture = picture.transformed(QTransform());
+        label->setPixmap(picture.scaled(w, h, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        label->setMask(*reg);
+    }
+    else
+    {
+        qDebug() << "Can't add picture to label: " << label->objectName() << " " << picturePath;
+    }
+}
+
 
 void machine::addCssClassToObject(QWidget *element, QString classname, QString css_file_name)
 {

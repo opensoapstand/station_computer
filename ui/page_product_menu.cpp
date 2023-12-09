@@ -163,7 +163,7 @@ void page_product_menu::showEvent(QShowEvent *event)
         // QString picturePath = p_page_idle->thisMachine->getSlotBaseProduct(slot_index + 1)->getProductPicturePath();
         // styleSheet.replace("%IMAGE_PATH%", picturePath);
         
-        p_page_idle->thisMachine->addPictureToLabel(labels_base_product_picture[slot_index], p_page_idle->thisMachine->getSlotBaseProduct(slot_index + 1)->getProductPicturePath());
+        p_page_idle->thisMachine->addPictureToLabelCircle(labels_base_product_picture[slot_index], p_page_idle->thisMachine->getSlotBaseProduct(slot_index + 1)->getProductPicturePath());
         labels_base_product_picture[slot_index]->setProperty("class", "label_base_product_picture");
         labels_base_product_picture[slot_index]->setStyleSheet(styleSheet);
         qDebug() << p_page_idle->thisMachine->getSlotBaseProduct(slot_index + 1)->getProductPicturePath();
@@ -350,7 +350,14 @@ void page_product_menu::displayDispenseProductsMenu()
         if (p_page_idle->thisMachine->isOptionExisting(option_index + 1))
         {
             pnumberproduct *dispenseProduct = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1);
-            p_page_idle->thisMachine->addPictureToLabel(labels_dispense_product_picture[sub_menu_index], dispenseProduct->getProductPicturePath());
+            // p_page_idle->thisMachine->addPictureToLabel(labels_dispense_product_picture[sub_menu_index], dispenseProduct->getProductPicturePath());
+
+            QString picturePath = dispenseProduct->getProductPicturePath();
+            // QString image_path_for_position = "%IMAGE_PATH%1%".arg(std::to_string(option_index));
+            
+            // styleSheet.replace(image_path_for_position, picturePath);
+            styleSheet.replace("%IMAGE_PATH%", picturePath);
+
 
             qDebug() << "Set up sub menu for item: " << sub_menu_index + 1 << " which is option: " << option_index + 1 << " which has pnumber; " << p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getPNumber();
 

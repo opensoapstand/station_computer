@@ -155,13 +155,12 @@ QLabel {
     /* border: 1px solid black;  */
 }
 
-#label_base_product_picture_2{
+.label_base_product_picture {
     background-image: url(%IMAGE_PATH%);
-    border: 1px solid purple;
+    border: 1px solid orange;
     border-radius: 50%;
     background-repeat: no-repeat;
     background-size: cover;
+    background-position: center;
     background-clip: content;
-    width: 120px;
-    height: 120px;
 }

@@ -331,7 +331,7 @@ DF_ERROR dispenser::startDispense()
     dispenseButtonTimingreset();
 
     this->m_pcb->flowSensorEnable(m_slot);
-    this->m_pcb->resetFlowSensorPulsesForDispenser(m_slot);
+    // this->m_pcb->resetFlowSensorPulsesForDispenser(m_slot);
 
     // init state
     dispense_state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
@@ -478,17 +478,15 @@ double dispenser::getDispenserVolumeDispensed()
 
 void dispenser::linkActiveProductVolumeUpdate()
 {
-
     product *active_product = getActiveProduct();
     auto lambdaFunc = [active_product]()
     { active_product->registerFlowSensorTickFromPcb(); };
-    m_pcb->registerFlowSensorTickCallback(lambdaFunc);
-    
+    m_pcb->registerFlowSensorTickCallback(getSlot(), lambdaFunc);
 }
 
 void dispenser::resetDispenserVolumeDispensed()
 {
-    return m_pcb->resetFlowSensorPulsesForDispenser(m_slot);
+    // return m_pcb->resetFlowSensorPulsesForDispenser(m_slot); 
 }
 bool dispenser::isDispenserVolumeTargetReached()
 {

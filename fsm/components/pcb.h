@@ -204,9 +204,9 @@ public:
     void refreshFlowSensors();
     void flowSensorEnable(uint8_t slot);
     void flowSensorsDisableAll();
-    uint64_t getFlowSensorPulsesForDispenser(uint8_t slot);
+    // uint64_t getFlowSensorPulsesForDispenser(uint8_t slot);
     uint64_t getFlowSensorPulsesSinceEnabling(uint8_t slot);
-    void resetFlowSensorPulsesForDispenser(uint8_t slot);
+    // void resetFlowSensorPulsesForDispenser(uint8_t slot);
 
     uint8_t PCA9534ReadRegisterFromSlot(uint8_t slot, uint8_t reg);
 
@@ -229,12 +229,13 @@ public:
     uint8_t getMCP23017Register(uint8_t slot, uint8_t reg);
     void setMCP23017Register(uint8_t slot, uint8_t reg, uint8_t value);
 
-    void registerFlowSensorTickCallback(std::function<void()> callback);
+    void registerFlowSensorTickCallback(int slot, std::function<void()> callback);
     PcbVersion pcb_version;
 
 private:
 
-    std::function<void()> flowSensorTickCallback;
+    std::function<void()> flowSensorTickCallbacks[MAX_SLOT_COUNT];
+
     FlowSensorType flowSensorsType[MAX_SLOT_COUNT];
     bool dispenseButtonStateMemory[MAX_SLOT_COUNT];
     bool dispenseButtonIsDebounced[MAX_SLOT_COUNT];
@@ -251,7 +252,7 @@ private:
     bool flowSensorStateMemory[MAX_SLOT_COUNT];
 
 
-    uint64_t flow_sensor_pulses_for_dispenser[MAX_SLOT_COUNT];
+    // uint64_t flow_sensor_pulses_for_dispenser[MAX_SLOT_COUNT];
     uint64_t flow_sensor_pulses_since_enable[MAX_SLOT_COUNT];
 
     uint64_t button_[MAX_SLOT_COUNT];

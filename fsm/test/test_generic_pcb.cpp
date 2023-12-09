@@ -208,7 +208,7 @@ void board_test(pcb *connected_pcb)
             if (next_step)
             {
                 dispense_state = dispense_activate_solenoid;
-                total_flow_pulses_count = connected_pcb->getFlowSensorPulsesForDispenser(active_slot);
+                total_flow_pulses_count = connected_pcb->getFlowSensorPulsesSinceEnabling(active_slot);
 
                 debugOutput::sendMessage("---- Start of dispense cycle " + to_string(dispense_cycle_count) + "---- . Total number of flow sensor pulses since program start: " + to_string(total_flow_pulses_count), MSG_INFO);
                 // connected_pcb->resetFlowSensorPulsesForDispenser(active_slot);
@@ -763,10 +763,11 @@ void runMainTest()
         //     // pcb_to_test->setMCP23017Output(1, MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON, !light, MCP23017_REGISTER_GPB);
         // }
 
+        pcb_to_test->flowSensorsDisableAll();
         for (uint8_t slot = 1; slot <= 4; slot++)
         {
             pcb_to_test->setFlowSensorType(slot, pcb::AICHI);
-            pcb_to_test->resetFlowSensorPulsesForDispenser(slot);
+            // pcb_to_test->resetFlowSensorPulsesForDispenser(slot);
         }
 
         while (true)
@@ -789,8 +790,8 @@ void runMainTest()
                     pcb_to_test->setSingleDispenseButtonLight(slot, false);
                     pcb_to_test->setPumpsDisableAll();
                     pcb_to_test->setSolenoidFromArray(slot, 8, false);
-                    debugOutput::sendMessage("Flow sensor pulses during button press: " + std::to_string(pcb_to_test->getFlowSensorPulsesForDispenser(slot)), MSG_INFO);
-                    pcb_to_test->resetFlowSensorPulsesForDispenser(slot);
+                    debugOutput::sendMessage("Flow sensor pulses during button press: " + std::to_string(pcb_to_test->getFlowSensorPulsesSinceEnabling(slot)), MSG_INFO);
+                    // pcb_to_test->resetFlowSensorPulsesForDispenser(slot);
                 }
             }
         }

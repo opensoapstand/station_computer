@@ -782,8 +782,9 @@ void pcb::initialize_pcb()
     }
     break;
     }
-
+    
     setFlowSensorTypeDefaults();
+    flowSensorsDisableAll();
     debugOutput::sendMessage("pcb initialized. version: " + toString(pcb_version), MSG_INFO);
 }
 
@@ -1376,18 +1377,18 @@ uint64_t pcb::getFlowSensorPulsesSinceEnabling(uint8_t slot)
     return flow_sensor_pulses_since_enable[slot_index];
 }
 
-void pcb::resetFlowSensorPulsesForDispenser(uint8_t slot)
-{
-    uint8_t slot_index = slot - 1;
-    flow_sensor_pulses_for_dispenser[slot_index] = 0;
-}
+// void pcb::resetFlowSensorPulsesForDispenser(uint8_t slot)
+// {
+//     uint8_t slot_index = slot - 1;
+//     flow_sensor_pulses_for_dispenser[slot_index] = 0;
+// }
 
-uint64_t pcb::getFlowSensorPulsesForDispenser(uint8_t slot)
-{
-    // warning: the flow sensor ticks also come in straight to the Odyssey IO. The controller handles the volume calculation from there not from here. The advantage: no missed pulses (interrupt per pulse),the disadvantage: every slot uses the same pin.
-    uint8_t slot_index = slot - 1;
-    return flow_sensor_pulses_for_dispenser[slot_index];
-}
+// uint64_t pcb::getFlowSensorPulsesForDispenser(uint8_t slot)
+// {
+//     // warning: the flow sensor ticks also come in straight to the Odyssey IO. The controller handles the volume calculation from there not from here. The advantage: no missed pulses (interrupt per pulse),the disadvantage: every slot uses the same pin.
+//     uint8_t slot_index = slot - 1;
+//     return flow_sensor_pulses_for_dispenser[slot_index];
+// }
 
 pcb::FlowSensorType pcb::getFlowSensorType(uint8_t slot)
 {
@@ -1467,9 +1468,10 @@ void pcb::setFlowSensorType(uint8_t slot, FlowSensorType sensorType)
     }
 }
 
-void pcb::registerFlowSensorTickCallback(std::function<void()> callback)
+void pcb::registerFlowSensorTickCallback(int slot, std::function<void()> callback)
 {
-    flowSensorTickCallback = callback;
+
+    flowSensorTickCallbacks[slot-1] = callback;
 }
 
 void pcb::pollFlowSensor(uint8_t slot)
@@ -1529,12 +1531,13 @@ void pcb::pollFlowSensor(uint8_t slot)
 
         if (flowSensorStateMemory[slot_index] != state)
         {
-            flow_sensor_pulses_for_dispenser[slot_index]++;
+            // flow_sensor_pulses_for_dispenser[slot_index]++;
 
-            if (flowSensorTickCallback)
+            if (flowSensorTickCallbacks[slot_index])
             {
-                flowSensorTickCallback();
+                flowSensorTickCallbacks[slot_index]();
             }
+
             flow_sensor_pulses_since_enable[slot_index]++;
             debugOutput::sendMessage("Flow sensor pulse detected by PCA chip. Slot: " + to_string(slot) + ". Pulse total: " + to_string(flow_sensor_pulses_since_enable[slot_index]), MSG_INFO);
             flowSensorTickReceivedEpoch[slot_index] = now_epoch_millis;

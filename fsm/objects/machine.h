@@ -54,6 +54,10 @@ public:
     void setup(product *pnumbers);
     pcb *getPcb();
 
+    void setFlowSensorCallBack(int slot);
+    
+
+
     pcb *control_pcb;
     Adafruit_Thermal *receipt_printer;
     void setButtonLightsBehaviour(Button_lights_behaviour behaviour);

@@ -67,10 +67,16 @@ public:
       void refresh();
       // void initDispenser(int slot);
 
+
+      // product setting
+      // selected product
       product *getSelectedProduct();
       bool setSelectedProduct(int pnumber);
       void setBasePNumberAsSelectedProduct();
 
+      // active product
+      product* getActiveProduct();
+      void linkActiveProductVolumeUpdate();
      
       // DF_ERROR initButtonsShutdownAndMaintenance();
       DF_ERROR setSlot(int slot);
@@ -112,20 +118,26 @@ public:
       void updateSlotState();
 
       int getBasePNumber();
+      int getAdditivePNumber(int position);
 
-      bool getIsDispenseTargetReached();
+      // dispenser flow 
+      void resetDispenserVolumeDispensed();
+      double getDispenserVolumeDispensed();
+      bool isDispenserVolumeTargetReached();
 
-      void subtractFromProductVolumeDispensed(double volume_to_distract);
+      // product flow 
+      bool isProductVolumeTargetReached();
       double getProductVolumeDispensed();
       double getProductVolumeRemaining();
       void resetProductVolumeDispensed();
-      void initFlowRateCalculation();
-      Time_val getProductVolumeDispensedNow();
-      double getVolumeDeltaAndReset();
+      void subtractFromProductVolumeDispensed(double volume_to_distract);
+      void initProductFlowRateCalculation();
+      Time_val createAndGetProductVolumeDispensedDatapoint();
+      double getProductVolumeDeltaAndReset();
 
-      double getInstantFlowRate();
-      DF_ERROR updateRunningAverageWindow();
-      Time_val getAveragedFlowRate(uint64_t window_length_millis);
+      double getProductFlowRateInstantaneous();
+      DF_ERROR updateProductFlowRateRunningAverageWindow();
+      Time_val getAveragedProductFlowRate(uint64_t window_length_millis);
 
       // void resetDispenseButton();
       bool getDispenseButtonValue();
@@ -137,17 +149,8 @@ public:
       uint64_t getButtonPressedTotalMillis();
       uint64_t getButtonPressedCurrentPressMillis();
 
-      // void setm_pIsDispenseDone() { *m_pIsDispensing = false; }
-      // void setm_pIsDispensing() { *m_pIsDispensing = true; }
-      // void setm_pRestartDispense() { *m_pIsDispensing = false; }
-
-      // bool reader = true;
-
-      // double getProductVolumeDispensedPreviously();
-      // void setVolumeDispensedPreviously(double volume);
-      // Interrupt Helpers
-      // double getVolumeSinceLastPoll();
       // void registerFlowSensorTickFromInterrupt();
+
 
       DF_ERROR loadGeneralProperties();
 
@@ -202,6 +205,7 @@ private:
       // double m_nVolumeDispensedSinceLastPoll;
       double m_nTickCount;
       double m_nVolumeTarget;
+      double m_dispenserVolumeTarget;
       char m_nStartTime[50];
       char m_nEndTime[50];
 

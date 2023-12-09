@@ -111,6 +111,8 @@ DF_ERROR dispenser::setup(pcb *pcb, product *pnumbers)
     previousDispensedVolume = 0;
     isPumpSoftStarting = false;
     pwm_actual_set_speed = 0;
+    resetDispenserVolumeDispensed();
+    resetProductVolumeDispensed();
 }
 
 void dispenser::refresh()
@@ -186,14 +188,23 @@ void dispenser::setBasePNumberAsSelectedProduct()
 
 bool dispenser::setSelectedProduct(int pnumber)
 {
+    // WARNING: this is about dispensePNumbers! use active PNumber for the pnumber that's actually being dispensed.
 
     // to do check if number is available.
-    bool is_pnumber_available = true;
-    if (is_pnumber_available)
+    bool is_selected_product_a_valid_dispense_p_number = true;
+
+    if (is_selected_product_a_valid_dispense_p_number)
     {
         m_selected_pnumber = pnumber;
     }
-    return is_pnumber_available;
+    return is_selected_product_a_valid_dispense_p_number;
+}
+
+product *dispenser::getActiveProduct()
+{
+    // set the product that will actually be dispensed. (base or additive)
+    // for now, just base product.
+    return &m_pnumbers[getBasePNumber()];
 }
 
 DF_ERROR dispenser::loadGeneralProperties()
@@ -210,6 +221,22 @@ DF_ERROR dispenser::loadGeneralProperties()
 int dispenser::getBasePNumber()
 {
     return m_base_pnumber;
+}
+
+int dispenser::getAdditivePNumber(int position)
+{
+    // starts from 1
+    // additive 1, additive 2, ...
+    if (position == 0)
+    {
+        debugOutput::sendMessage("ASSERT ERROR Dispenser: Additive position cannot be zero. Starts from 1.", MSG_ERROR);
+    }
+    if (position > m_additive_pnumbers_count)
+    {
+        debugOutput::sendMessage("ASSERT ERROR Dispenser: Additive number not existing. Requested:" + std::to_string(position) + " Max: " + std::to_string(m_additive_pnumbers_count), MSG_ERROR);
+    }
+
+    return m_additive_pnumbers[position - 1];
 }
 
 bool dispenser::loadDispenserParametersFromDb()
@@ -310,7 +337,7 @@ DF_ERROR dispenser::startDispense()
     dispense_state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
     previous_dispense_state = FLOW_STATE_UNAVAILABLE; // hack needed to create edge
 
-    initFlowRateCalculation();
+    initProductFlowRateCalculation();
 
     DF_ERROR e_ret = ERROR_MECH_PRODUCT_FAULT;
     return e_ret = OK;
@@ -359,7 +386,7 @@ DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
 {
 
     DF_ERROR dfRet = ERROR_BAD_PARAMS;
-    m_nVolumeTarget = nVolumeToDispense;
+    m_dispenserVolumeTarget = nVolumeToDispense;
 
     m_price = nPrice;
 
@@ -441,7 +468,36 @@ string dispenser::getDispenseEndTime()
     return m_nEndTime;
 }
 
-bool dispenser::getIsDispenseTargetReached()
+/////////////////////////////////////////////////////////////////////////
+// dispenser volume
+
+double dispenser::getDispenserVolumeDispensed()
+{
+    // return m_pcb->getFlowSensorPulsesForDispenser(m_slot) // this justreturns ticks. not volume. should be an addition of all the volumes already dispensed.;
+}
+
+void dispenser::linkActiveProductVolumeUpdate()
+{
+
+    product *active_product = getActiveProduct();
+    auto lambdaFunc = [active_product]()
+    { active_product->registerFlowSensorTickFromPcb(); };
+    m_pcb->registerFlowSensorTickCallback(lambdaFunc);
+    
+}
+
+void dispenser::resetDispenserVolumeDispensed()
+{
+    return m_pcb->resetFlowSensorPulsesForDispenser(m_slot);
+}
+bool dispenser::isDispenserVolumeTargetReached()
+{
+    return m_dispenserVolumeTarget <= getDispenserVolumeDispensed();
+}
+
+/////////////////////////////////////////////////////////////////////////
+// product volume
+bool dispenser::isProductVolumeTargetReached()
 {
     bool bRet = false;
 
@@ -473,9 +529,6 @@ double dispenser::getProductVolumeDispensed()
     // return m_nVolumeDispensed;
     return getSelectedProduct()->getProductVolumeDispensed();
 }
-
-
-
 
 // TODO: Call this function on Dispense onEntry()
 DF_ERROR dispenser::initGlobalFlowsensorIO(int pin)
@@ -982,7 +1035,7 @@ void dispenser::analyseSlotState()
 //     debugOutput::sendMessage("Empty container detection enabled? : " + to_string(m_isEmptyContainerDetectionEnabled), MSG_INFO);
 // }
 
-double dispenser::getVolumeDeltaAndReset()
+double dispenser::getProductVolumeDeltaAndReset()
 {
     // will get volumeDelta since last call of this function
 
@@ -992,7 +1045,7 @@ double dispenser::getVolumeDeltaAndReset()
     return deltaVolume;
 }
 
-void dispenser::initFlowRateCalculation()
+void dispenser::initProductFlowRateCalculation()
 {
     flowRateBufferIndex = 0;
     for (uint16_t i = 0; i < RUNNING_AVERAGE_WINDOW_LENGTH; i++)
@@ -1001,12 +1054,11 @@ void dispenser::initFlowRateCalculation()
         flowRateBuffer[i].value = 0;
     }
 }
-double dispenser::getInstantFlowRate()
+double dispenser::getProductFlowRateInstantaneous()
 {
-
     using namespace std::chrono;
     uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    double volumeDelta = getVolumeDeltaAndReset();
+    double volumeDelta = getProductVolumeDeltaAndReset();
     double flowRate = 0;
     if (millisAtLastCheck != MILLIS_INIT_DUMMY)
     {
@@ -1024,7 +1076,7 @@ double dispenser::getInstantFlowRate()
     return flowRate;
 }
 
-Time_val dispenser::getProductVolumeDispensedNow()
+Time_val dispenser::createAndGetProductVolumeDispensedDatapoint()
 {
     Time_val tv;
     tv.value = getProductVolumeDispensed();
@@ -1035,7 +1087,7 @@ Time_val dispenser::getProductVolumeDispensedNow()
     return tv;
 }
 
-Time_val dispenser::getAveragedFlowRate(uint64_t window_length_millis)
+Time_val dispenser::getAveragedProductFlowRate(uint64_t window_length_millis)
 {
     // check for most recent datapoint
     // check for earliest datapoint
@@ -1131,15 +1183,15 @@ Time_val dispenser::getAveragedFlowRate(uint64_t window_length_millis)
     return result;
 }
 
-DF_ERROR dispenser::updateRunningAverageWindow()
+DF_ERROR dispenser::updateProductFlowRateRunningAverageWindow()
 {
     DF_ERROR e_ret;
 
-    Time_val tv = getProductVolumeDispensedNow();
+    Time_val tv = createAndGetProductVolumeDispensedDatapoint();
 
     flowRateBuffer[flowRateBufferIndex].time_millis = tv.time_millis;
     flowRateBuffer[flowRateBufferIndex].value = tv.value;
-    debugOutput::sendMessage("updateRunningAverageWindow: index: " + to_string(flowRateBufferIndex) + " " + to_string(tv.time_millis) + ": " + to_string(tv.value), MSG_INFO);
+    debugOutput::sendMessage("updateProductFlowRateRunningAverageWindow: index: " + to_string(flowRateBufferIndex) + " " + to_string(tv.time_millis) + ": " + to_string(tv.value), MSG_INFO);
 
     flowRateBufferIndex++;
     if (flowRateBufferIndex >= RUNNING_AVERAGE_WINDOW_LENGTH)
@@ -1285,7 +1337,7 @@ Dispense_behaviour dispenser::getDispenseStatus()
     using namespace std::chrono;
     uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
     uint64_t dispense_time_millis = millis_since_epoch - dispense_start_timestamp_epoch;
-    Time_val avg = getAveragedFlowRate(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS);
+    Time_val avg = getAveragedProductFlowRate(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS);
 
     // restricted status update
     // logUpdateIfAllowed("Dispense flowRate " + to_string(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS) + "ms avg [ml/s]: " + to_string(avg.value) + " Dispense state time: " + to_string(dispense_time_millis));
@@ -1295,7 +1347,7 @@ Dispense_behaviour dispenser::getDispenseStatus()
 
 void dispenser::updateDispenseStatus()
 {
-    Time_val avg = getAveragedFlowRate(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS);
+    Time_val avg = getAveragedProductFlowRate(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS);
 
     // debugOutput::sendMessage("minimummmmm: " + to_string(getSelectedProduct()->getThresholdFlow()), MSG_INFO);
     // debugOutput::sendMessage("maximummmmm ml/s: " + to_string(getSelectedProduct()->getThresholdFlow_max_allowed()), MSG_INFO);

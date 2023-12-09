@@ -110,7 +110,7 @@ public:
         bool isShowTransactionsInMachineTable();
         void executeSQLStatement(string sql_string);
 
-        // void registerFlowSensorTickFromPcb();
+        void registerFlowSensorTickFromPcb();
         void registerFlowSensorTickFromInterrupt();
         int getSlot();
 

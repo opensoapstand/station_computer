@@ -94,7 +94,7 @@ DF_ERROR stateDispense::onAction()
 
    // Send amount dispensed to UI (to show in Maintenance Mode, and/or animate filling)
 
-   g_machine.m_productDispensers[slot_index].updateRunningAverageWindow();
+   g_machine.m_productDispensers[slot_index].updateProductFlowRateRunningAverageWindow();
    g_machine.m_productDispensers[slot_index].updateDispenseStatus();
    g_machine.m_productDispensers[slot_index].updateSlotState();
 
@@ -102,7 +102,7 @@ DF_ERROR stateDispense::onAction()
    {
       double volume = g_machine.m_productDispensers[slot_index].getProductVolumeDispensed();
 
-      Time_val avg_02s = g_machine.m_productDispensers[slot_index].getAveragedFlowRate(1000);
+      Time_val avg_02s = g_machine.m_productDispensers[slot_index].getAveragedProductFlowRate(1000);
       double flowrate = avg_02s.value;
       // const char *statusStringChar = g_machine.m_productDispensers[slot_index].getDispenseStatusAsString();
       // std::string statusString(statusStringChar);
@@ -152,7 +152,7 @@ DF_ERROR stateDispense::onAction()
       }
    }
 
-   if (g_machine.m_productDispensers[slot_index].getIsDispenseTargetReached())
+   if (g_machine.m_productDispensers[slot_index].isProductVolumeTargetReached())
    {
       debugOutput::sendMessage("Stop dispensing. Requested volume reached. " + to_string(g_machine.m_productDispensers[slot_index].getProductVolumeDispensed()), MSG_INFO);
       m_state_requested = STATE_DISPENSE_END;

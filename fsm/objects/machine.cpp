@@ -23,6 +23,7 @@
 #include <sstream>
 #include <iomanip>
 
+
 using namespace std;
 
 machine::machine()
@@ -64,6 +65,7 @@ void machine::initProductDispensers()
         m_productDispensers[slot_index].setSlot(slot_index + 1);
         m_productDispensers[slot_index].setBasePNumberAsSelectedProduct();
         m_productDispensers[slot_index].initGlobalFlowsensorIO(IO_PIN_FLOW_SENSOR);
+        setFlowSensorCallBack(slot_index + 1);
     }
 }
 
@@ -120,6 +122,13 @@ void machine::refresh()
     {
         m_productDispensers[slot_index].refresh();
     }
+}
+
+void machine::setFlowSensorCallBack(int slot)
+{
+    int slot_index = slot -1 ;
+    // control_pcb->registerFlowSensorTickCallback(std::bind(&dispenser::registerFlowSensorTickCallback, &m_productDispensers[slot_index]));
+    m_productDispensers[slot_index].linkActiveProductVolumeUpdate();
 }
 
 void machine::syncSoftwareVersionWithDb()

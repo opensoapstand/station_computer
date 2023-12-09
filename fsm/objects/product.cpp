@@ -122,13 +122,13 @@ double product::getVolumePerTick()
 {
     return m_nVolumePerTick;
 }
-// void product::registerFlowSensorTickFromPcb()
-// {
-//     // tick from flowsensor interrupt will increase dispensed volume.
-//     // cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
-//     cout << "Flow TICK from pcb." << endl;
-//     m_nVolumeDispensed += getVolumePerTick() * m_concentration_multiplier;
-// }
+void product::registerFlowSensorTickFromPcb()
+{
+    // tick from flowsensor interrupt will increase dispensed volume.
+    // cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
+    cout << "Flow poll TICK from pcb." << endl;
+    m_nVolumeDispensed += getVolumePerTick() * m_concentration_multiplier;
+}
 
 void product::registerFlowSensorTickFromInterrupt()
 {

@@ -74,7 +74,7 @@ DF_ERROR stateDispenseEnd::onAction()
     // send dispensed volume to ui (will be used to write to portal)
     usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
 
-    if (g_machine.m_productDispensers[m_slot_index].getIsDispenseTargetReached())
+    if (g_machine.m_productDispensers[m_slot_index].isProductVolumeTargetReached())
     {
         usleep(100000);                                      // send message delay (pause from previous message) desperate attempt to prevent crashes
         m_pMessaging->sendMessageOverIP("Target Hit", true); // send to UI

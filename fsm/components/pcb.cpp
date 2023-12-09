@@ -1251,7 +1251,7 @@ void pcb::flowSensorEnable(uint8_t slot)
     case (EN134_4SLOTS):
     case (EN134_8SLOTS):
     {
-        
+
         flowSensorsDisableAll(); // reset flow sensor pulse count
         // enable only the active slot flow sensor
         setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_FLOW_SENSOR_ENABLE, true);
@@ -1324,7 +1324,7 @@ void pcb::flowSensorsDisableAll()
         }
     }
     break;
-    break;
+        break;
     case (EN258_4SLOTS):
     case (EN258_8SLOTS):
     {
@@ -1345,7 +1345,7 @@ void pcb::flowSensorsDisableAll()
 
 void pcb::refreshFlowSensors()
 {
-    // this is: Polling: periodically read flow rates 
+    // this is: Polling: periodically read flow rates
     // this is not: Interrupt:  there is a specific line that goes the the Odyssey as an interrupt (which is how the soapstand app traditionally worked)
     // if the interrupt is in use then, the reading of the register is not needed
 
@@ -1361,6 +1361,7 @@ void pcb::refreshFlowSensors()
             pollFlowSensor(slot);
         }
     };
+    break;
     default:
     {
         debugOutput::sendMessage("Pcb: No flowsensors to refresh on this pcb", MSG_ERROR);
@@ -1368,7 +1369,6 @@ void pcb::refreshFlowSensors()
     break;
     }
 }
-
 
 uint64_t pcb::getFlowSensorPulsesSinceEnabling(uint8_t slot)
 {
@@ -1467,6 +1467,11 @@ void pcb::setFlowSensorType(uint8_t slot, FlowSensorType sensorType)
     }
 }
 
+void pcb::registerFlowSensorTickCallback(std::function<void()> callback)
+{
+    flowSensorTickCallback = callback;
+}
+
 void pcb::pollFlowSensor(uint8_t slot)
 {
     if (slot == 0)
@@ -1525,6 +1530,11 @@ void pcb::pollFlowSensor(uint8_t slot)
         if (flowSensorStateMemory[slot_index] != state)
         {
             flow_sensor_pulses_for_dispenser[slot_index]++;
+
+            if (flowSensorTickCallback)
+            {
+                flowSensorTickCallback();
+            }
             flow_sensor_pulses_since_enable[slot_index]++;
             debugOutput::sendMessage("Flow sensor pulse detected by PCA chip. Slot: " + to_string(slot) + ". Pulse total: " + to_string(flow_sensor_pulses_since_enable[slot_index]), MSG_INFO);
             flowSensorTickReceivedEpoch[slot_index] = now_epoch_millis;

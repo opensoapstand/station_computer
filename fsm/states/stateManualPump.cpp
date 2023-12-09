@@ -146,7 +146,7 @@ DF_ERROR stateManualPump::onAction()
             g_machine.m_productDispensers[m_active_pump_index].m_pcb->flowSensorEnable(m_active_pump_index + 1);
             //   g_machine.m_productDispensers[m_active_pump_index].m_pcb->resetFlowSensorPulsesForDispenser(m_active_pump_index + 1);
 
-            g_machine.m_productDispensers[m_active_pump_index].initFlowRateCalculation();
+            g_machine.m_productDispensers[m_active_pump_index].initProductFlowRateCalculation();
             isCyclicTestingPumpOn = false;
             using namespace std::chrono;
             uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
@@ -191,7 +191,7 @@ DF_ERROR stateManualPump::onAction()
          isFlowTest = !isFlowTest;
          if (isFlowTest)
          {
-            g_machine.m_productDispensers[m_active_pump_index].initFlowRateCalculation();
+            g_machine.m_productDispensers[m_active_pump_index].initProductFlowRateCalculation();
             using namespace std::chrono;
             startFlowTestMillis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
             g_machine.m_productDispensers[m_active_pump_index].setPumpEnable();
@@ -307,11 +307,11 @@ DF_ERROR stateManualPump::onAction()
          double volume = g_machine.m_productDispensers[m_active_pump_index].getProductVolumeDispensed();
 
          // instant flow rate
-         double flowRate = g_machine.m_productDispensers[m_active_pump_index].getInstantFlowRate();
+         double flowRate = g_machine.m_productDispensers[m_active_pump_index].getProductFlowRateInstantaneous();
 
          // flow rate windowed avg
-         g_machine.m_productDispensers[m_active_pump_index].updateRunningAverageWindow();
-         Time_val avg_1s = g_machine.m_productDispensers[m_active_pump_index].getAveragedFlowRate(1000);
+         g_machine.m_productDispensers[m_active_pump_index].updateProductFlowRateRunningAverageWindow();
+         Time_val avg_1s = g_machine.m_productDispensers[m_active_pump_index].getAveragedProductFlowRate(1000);
 
          if (triggerOutputData)
          {
@@ -423,13 +423,13 @@ DF_ERROR stateManualPump::pumpFlowTest()
    // {
 
    // instant flow rate
-   double flowRate = g_machine.m_productDispensers[m_active_pump_index].getInstantFlowRate();
+   double flowRate = g_machine.m_productDispensers[m_active_pump_index].getProductFlowRateInstantaneous();
 
    // flow rate windowed avg
-   g_machine.m_productDispensers[m_active_pump_index].updateRunningAverageWindow();
-   Time_val avg_1s = g_machine.m_productDispensers[m_active_pump_index].getAveragedFlowRate(1000);
-   Time_val avg_02s = g_machine.m_productDispensers[m_active_pump_index].getAveragedFlowRate(2000);
-   Time_val avg_05s = g_machine.m_productDispensers[m_active_pump_index].getAveragedFlowRate(5000);
+   g_machine.m_productDispensers[m_active_pump_index].updateProductFlowRateRunningAverageWindow();
+   Time_val avg_1s = g_machine.m_productDispensers[m_active_pump_index].getAveragedProductFlowRate(1000);
+   Time_val avg_02s = g_machine.m_productDispensers[m_active_pump_index].getAveragedProductFlowRate(2000);
+   Time_val avg_05s = g_machine.m_productDispensers[m_active_pump_index].getAveragedProductFlowRate(5000);
 
    double totalVolume = g_machine.m_productDispensers[m_active_pump_index].getProductVolumeDispensed();
    if (triggerOutputData)

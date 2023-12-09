@@ -27,6 +27,7 @@
 #include <string.h>
 #include <errno.h>
 #include "../dftypes.h"
+#include <functional>
 
 #include "../objects/debugOutput.h"
 
@@ -228,9 +229,12 @@ public:
     uint8_t getMCP23017Register(uint8_t slot, uint8_t reg);
     void setMCP23017Register(uint8_t slot, uint8_t reg, uint8_t value);
 
+    void registerFlowSensorTickCallback(std::function<void()> callback);
     PcbVersion pcb_version;
 
 private:
+
+    std::function<void()> flowSensorTickCallback;
     FlowSensorType flowSensorsType[MAX_SLOT_COUNT];
     bool dispenseButtonStateMemory[MAX_SLOT_COUNT];
     bool dispenseButtonIsDebounced[MAX_SLOT_COUNT];
@@ -245,6 +249,7 @@ private:
 
     uint64_t flowSensorTickReceivedEpoch[MAX_SLOT_COUNT];
     bool flowSensorStateMemory[MAX_SLOT_COUNT];
+
 
     uint64_t flow_sensor_pulses_for_dispenser[MAX_SLOT_COUNT];
     uint64_t flow_sensor_pulses_since_enable[MAX_SLOT_COUNT];

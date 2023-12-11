@@ -333,7 +333,10 @@ void page_dispenser::dispensing_end_admin()
     {
         this->cancelPayment = true;
     }
-    if (this->cancelPayment && (paymentMethod == PAYMENT_TAP_TCP || paymentMethod == PAYMENT_TAP_SERIAL))
+    if(price== 0.0){
+        qDebug() << "Free email order";
+    }
+    else if (this->cancelPayment && (paymentMethod == PAYMENT_TAP_TCP || paymentMethod == PAYMENT_TAP_SERIAL))
     {
         ui->label_indicate_active_spout->hide();
         ui->label_to_refill->hide();

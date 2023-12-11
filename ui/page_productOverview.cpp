@@ -529,7 +529,7 @@ void page_product_overview::on_pushButton_continue_clicked()
     QString paymentMethod = p_page_idle->thisMachine->selectedProduct->getPaymentMethod();
     double selectedPrice = p_page_idle->thisMachine->selectedProduct->getBasePrice();
     double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
-    if (paymentMethod == PAYMENT_QR && (selectedPrice == 0.0 || finalPrice == 0.0) )
+    if (selectedPrice == 0.0 || finalPrice == 0.0)
     {
         hideCurrentPageAndShowProvided(p_page_email);
 

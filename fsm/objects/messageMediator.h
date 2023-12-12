@@ -78,8 +78,12 @@ public:
    // static ServerSocket *fsm_comm_socket;
    // bool m_handlingRequest;
    // bool isBusySendingMessage();
+ 
+   DF_ERROR setSendingBehaviour(bool enableElseDisableSending);
 
 private:
+
+   bool m_enable_sending=true;
    int messageIP;
    static bool m_fExitThreads;
 

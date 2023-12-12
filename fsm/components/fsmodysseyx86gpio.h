@@ -22,8 +22,10 @@ class FSModdyseyx86GPIO : public gpio
 {
 public:
 	FSModdyseyx86GPIO();
-	FSModdyseyx86GPIO(int address);
+	FSModdyseyx86GPIO(int pinNumber);
 	~FSModdyseyx86GPIO();
+
+	void setPinNumber(int pinNumber);
 
 	DF_ERROR setPinAsInputElseOutput(bool input);
 	DF_ERROR readPin(bool *level);
@@ -39,6 +41,7 @@ private:
 	// struct pollfd pfd;
 
 	double tickcounter;
+	// int m_nPin;
 
 	char flowsensor_state_memory;
 	char button_state_memory;

@@ -30,7 +30,7 @@ public:
     stateManualPrinter(messageMediator *message); //debug through local network
     ~stateManualPrinter();
 
-    dispenser *productDispensers;
+    // dispenser *productDispensers;
 
     sqlite3 *db;
     int rc;

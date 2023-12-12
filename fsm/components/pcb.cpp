@@ -56,6 +56,8 @@ pcb::pcb(void)
     i2c_bus_name[strlen(i2c_bus_name) - 1] = 0;
 
 #endif
+    pcb_version = INVALID;
+    get_pcb_version();
 }
 
 // Constructor where you can specify the name of the I2C bus
@@ -305,11 +307,9 @@ uint8_t pcb::get_MCP23017_address_from_slot(uint8_t slot)
 ////////////////////////
 void pcb::pcb_refresh()
 {
-
     usleep(100);
     if (get_pcb_version() != INVALID)
     {
-
         dispenseButtonRefresh();
         refreshFlowSensors();
         // independentDispensingRefresh(); // ATTENTION:  this is the state machine. involves more than just pumps....
@@ -350,6 +350,29 @@ void pcb::setup()
 pcb::PcbVersion pcb::get_pcb_version(void)
 {
     return pcb_version;
+}
+
+std::string pcb::toString(PcbVersion version)
+{
+    switch (version)
+    {
+    case INVALID:
+        return "INVALID";
+    case DSED8344_NO_PIC:
+        return "DSED8344_NO_PIC";
+    case DSED8344_PIC_MULTIBUTTON:
+        return "DSED8344_PIC_MULTIBUTTON";
+    case EN134_4SLOTS:
+        return "EN134_4SLOTS";
+    case EN134_8SLOTS:
+        return "EN134_8SLOTS";
+    case EN258_4SLOTS:
+        return "EN258_4SLOTS";
+    case EN258_8SLOTS:
+        return "EN258_8SLOTS";
+    default:
+        return "Unknown pcb Version";
+    }
 }
 
 bool pcb::define_pcb_version(void)
@@ -624,11 +647,11 @@ bool pcb::define_pcb_version(void)
 
 void pcb::sendEN134DefaultConfigurationToPCA9534(uint8_t slot, bool reportIfModified)
 {
-    debugOutput::sendMessage("Default config sent to PCA9534", MSG_INFO);
     // sendByteIfNotSetToSlot(slot, 0x01, 0b00100000, reportIfModified); // BAAAD load  this to emulate a glitch in the chip
     // sendByteIfNotSetToSlot(slot, 0x03, 0b11111111, reportIfModified); //BAAAD load  this to emulate a glitch in the chip
     sendByteIfNotSetToSlot(slot, 0x01, 0b00100000, reportIfModified);
     sendByteIfNotSetToSlot(slot, 0x03, 0b01011000, reportIfModified);
+    debugOutput::sendMessage("Default config sent to PCA9534 for slot: " + to_string(slot), MSG_INFO);
 }
 
 void pcb::sendByteIfNotSetToSlot(uint8_t slot, unsigned char reg, unsigned char value, bool reportIfModified)
@@ -656,7 +679,6 @@ void pcb::sendByteIfNotSetToSlot(uint8_t slot, unsigned char reg, unsigned char 
 void pcb::initialize_pcb()
 {
     // set initial values. depending on pcb version
-
     switch (pcb_version)
     {
 
@@ -694,7 +716,7 @@ void pcb::initialize_pcb()
         setPumpsDisableAll();
         for (uint8_t slot = 1; slot <= 4; slot++)
         {
-            setSolenoidOnePerSlot(slot, false);
+            setSpoutSolenoid(slot, false);
             setSingleDispenseButtonLight(slot, false);
         }
     };
@@ -704,20 +726,20 @@ void pcb::initialize_pcb()
         // Initialize the PCA9534
         for (uint8_t slot = 1; slot <= 8; slot++)
         {
-            SendByte(get_PCA9534_address_from_slot(slot), 0x01, 0b00100000); // Output pin values register (has no influence on input values)
-            SendByte(get_PCA9534_address_from_slot(slot), 0x03, 0b01011000); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
+            // SendByte(get_PCA9534_address_from_slot(slot), 0x01, 0b00100000); // Output pin values register (has no influence on input values)
+            // SendByte(get_PCA9534_address_from_slot(slot), 0x03, 0b01011000); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
+            sendEN134DefaultConfigurationToPCA9534(slot, true);
         }
         setPumpsDisableAll();
         for (uint8_t slot = 1; slot <= 8; slot++)
         {
-            setSolenoidOnePerSlot(slot, false);
+            setSpoutSolenoid(slot, false);
             setSingleDispenseButtonLight(slot, false);
         }
     };
     break;
     case (EN258_4SLOTS):
     {
-
         for (uint8_t slot = 1; slot <= 4; slot++)
         {
             uint8_t IOCON_value;
@@ -736,32 +758,17 @@ void pcb::initialize_pcb()
 
             setMCP23017Register(slot, MCP23017_REGISTER_GPA, GPIOA_value); // GPIOA (IOCON.bank = 1 // button off (0 for ON)
             setMCP23017Register(slot, MCP23017_REGISTER_GPB, GPIOB_value); // GPIOB (IOCON.bank = 1 // button off (0 for ON)
-
-            setFlowSensorTypeEN258(slot, true);
-
-            if (getFlowSensorTypeEN258DigmesaElseAichi(slot))
-            {
-                debugOutput::sendMessage("Flow sensor set to DIGMESA.", MSG_INFO);
-            }
-            else
-            {
-                debugOutput::sendMessage("Flow sensor set to AICHI.", MSG_INFO);
-            }
         }
 
         setPumpsDisableAll();
         for (uint8_t slot = 1; slot <= 4; slot++)
         {
-
             for (uint8_t position = 1; position <= 8; position++)
             {
-
                 setSolenoidFromArray(slot, position, false);
                 setSingleDispenseButtonLight(slot, false);
             }
         }
-
-        debugOutput::sendMessage("Initialized.", MSG_INFO);
     };
     break;
     case (EN258_8SLOTS):
@@ -775,6 +782,10 @@ void pcb::initialize_pcb()
     }
     break;
     }
+    
+    setFlowSensorTypeDefaults();
+    flowSensorsDisableAll();
+    debugOutput::sendMessage("pcb initialized. version: " + toString(pcb_version), MSG_INFO);
 }
 
 bool pcb::isTemperatureSensorMCP9808Available_1()
@@ -834,6 +845,47 @@ bool pcb::isSlotAvailable(uint8_t slot)
 ///////////////////////////////////////////////////////////////////////////
 // BUTTON FUNCTIONS
 ///////////////////////////////////////////////////////////////////////////
+
+void pcb::setDispenseButtonLightsAllOff()
+{
+    switch (pcb_version)
+    {
+
+    case (DSED8344_NO_PIC):
+    {
+        setPCA9534Output(1, 6, true);
+    };
+    break;
+    case (DSED8344_PIC_MULTIBUTTON):
+    case (EN134_4SLOTS):
+    case (EN258_4SLOTS):
+    {
+        debugOutput::sendMessage("All 4 button lights off.", MSG_INFO);
+
+        for (int slot = 1; slot < 5; slot++)
+        {
+            setSingleDispenseButtonLight(slot, false);
+        }
+    };
+    break;
+    case (EN134_8SLOTS):
+    case (EN258_8SLOTS):
+    {
+        debugOutput::sendMessage("All 8 button lights off.", MSG_INFO);
+
+        for (int slot = 1; slot < 9; slot++)
+        {
+            setSingleDispenseButtonLight(slot, false);
+        }
+    };
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Error PCB NOT VALID!!setSingleDispenseButtonLight", MSG_ERROR);
+    }
+    break;
+    }
+}
 
 void pcb::setSingleDispenseButtonLight(uint8_t slot, bool onElseOff)
 {
@@ -928,65 +980,65 @@ void pcb::setSingleDispenseButtonLight(uint8_t slot, bool onElseOff)
 
 } // End of setSingleDispenseButtonLight()
 
-void pcb::virtualButtonPressHack(uint8_t slot)
-{
+// void pcb::virtualButtonPressHack(uint8_t slot)
+// {
 
-    switch (pcb_version)
-    {
+//     switch (pcb_version)
+//     {
 
-    case (DSED8344_NO_PIC):
-    {
-    };
-    case (DSED8344_PIC_MULTIBUTTON):
-    {
-        // // WARNING: This overrides the physical dispense button. As such, there is no fail safe mechanism.
-        // // If the program crashes while the button is pressed, it might keep on dispensing *forever*.
-        // unsigned char reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x03);
-        // reg_value = reg_value & 0b01111111;
-        // SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x03, reg_value); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
+//     case (DSED8344_NO_PIC):
+//     {
+//     };
+//     case (DSED8344_PIC_MULTIBUTTON):
+//     {
+//         // // WARNING: This overrides the physical dispense button. As such, there is no fail safe mechanism.
+//         // // If the program crashes while the button is pressed, it might keep on dispensing *forever*.
+//         // unsigned char reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x03);
+//         // reg_value = reg_value & 0b01111111;
+//         // SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x03, reg_value); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
 
-        // reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01);
-        // reg_value = reg_value & 0b01111111; // virtual button press
-        // SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01, reg_value);
-    };
-    break;
-    case (EN134_4SLOTS):
-    case (EN134_8SLOTS):
-    {
-    };
-    break;
-    default:
-    {
-        debugOutput::sendMessage("Error PCB NOT VALID!!3", MSG_ERROR);
-    }
-    break;
-    }
-}
+//         // reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01);
+//         // reg_value = reg_value & 0b01111111; // virtual button press
+//         // SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01, reg_value);
+//     };
+//     break;
+//     case (EN134_4SLOTS):
+//     case (EN134_8SLOTS):
+//     {
+//     };
+//     break;
+//     default:
+//     {
+//         debugOutput::sendMessage("Error PCB NOT VALID!!3", MSG_ERROR);
+//     }
+//     break;
+//     }
+// }
 
-void pcb::virtualButtonUnpressHack(uint8_t slot)
-{
-    switch (pcb_version)
-    {
+// void pcb::virtualButtonUnpressHack(uint8_t slot)
+// {
+//     switch (pcb_version)
+//     {
 
-    case (DSED8344_NO_PIC):
-    {
-    };
-    case (DSED8344_PIC_MULTIBUTTON):
-    {
-    };
-    break;
-    case (EN134_4SLOTS):
-    case (EN134_8SLOTS):
-    {
-    };
-    break;
-    default:
-    {
-        debugOutput::sendMessage("Error PCB NOT VALID!!4", MSG_ERROR);
-    }
-    break;
-    }
-}
+//     case (DSED8344_NO_PIC):
+//     {
+//     };
+//     case (DSED8344_PIC_MULTIBUTTON):
+//     {
+//     };
+//     break;
+//     case (EN134_4SLOTS):
+//     case (EN134_8SLOTS):
+//     {
+//     };
+//     break;
+//     default:
+//     {
+//         debugOutput::sendMessage("Error PCB NOT VALID!!4", MSG_ERROR);
+//     }
+//     break;
+//     }
+// }
 
 bool pcb::getDispenseButtonState(uint8_t slot)
 {
@@ -1140,7 +1192,7 @@ void pcb::dispenseButtonRefreshPerSlot(uint8_t slot)
     {
         dispenseButtonDebounceStartEpoch[slot_index] = now_epoch_millis;
         dispenseButtonIsDebounced[slot_index] = false;
-        debugOutput::sendMessage("*****************edge detected!" + std::to_string(dispenseButtonDebounceStartEpoch[slot_index]) + "state: " + std::to_string(state), MSG_INFO);
+        debugOutput::sendMessage("Pcb: Slot: " + std::to_string(slot) + " . Button edge detected!" + std::to_string(dispenseButtonDebounceStartEpoch[slot_index]) + "state: " + std::to_string(state), MSG_INFO);
     }
 
     positive_edge_detected[slot_index] = false;
@@ -1200,10 +1252,17 @@ void pcb::flowSensorEnable(uint8_t slot)
     case (EN134_4SLOTS):
     case (EN134_8SLOTS):
     {
-        // disable all to be sure
-        flowSensorsDisableAll();
+
+        flowSensorsDisableAll(); // reset flow sensor pulse count
         // enable only the active slot flow sensor
         setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_FLOW_SENSOR_ENABLE, true);
+    };
+    break;
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
+    {
+        flowSensorsDisableAll(); // reset flow sensor pulse count
+        // enable not needed for EN258 board.
     };
     break;
     default:
@@ -1216,6 +1275,33 @@ void pcb::flowSensorEnable(uint8_t slot)
     // Only one sensor can be enabled at a time to be safe (it causes the pulses to be combined from all sensors to a separate input in the Odyssey.)
 }
 
+int pcb::getSlotCountByPcbType()
+{
+    switch (get_pcb_version())
+    {
+
+    case (DSED8344_PIC_MULTIBUTTON):
+    case (DSED8344_NO_PIC):
+    case (EN258_4SLOTS):
+    case (EN134_4SLOTS):
+    {
+        return 4;
+    }
+    break;
+    case (EN258_8SLOTS):
+    case (EN134_8SLOTS):
+    {
+        return 8;
+    };
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Pcb: Unrecognized pcb.", MSG_ERROR);
+        return 1;
+    }
+    break;
+    }
+}
 void pcb::flowSensorsDisableAll()
 {
     switch (pcb_version)
@@ -1230,19 +1316,22 @@ void pcb::flowSensorsDisableAll()
     };
     break;
     case (EN134_4SLOTS):
+    case (EN134_8SLOTS):
     {
-        for (uint8_t slot = 1; slot <= 4; slot++)
+        for (uint8_t slot = 1; slot <= getSlotCountByPcbType(); slot++)
         {
             setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_FLOW_SENSOR_ENABLE, false);
             flow_sensor_pulses_since_enable[slot - 1] = 0;
         }
     }
     break;
-    case (EN134_8SLOTS):
+        break;
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
     {
-        for (uint8_t slot = 1; slot <= 8; slot++)
+        // enable of pins not needed for EN258 board.
+        for (uint8_t slot = 1; slot <= getSlotCountByPcbType(); slot++)
         {
-            setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_FLOW_SENSOR_ENABLE, false);
             flow_sensor_pulses_since_enable[slot - 1] = 0;
         }
     };
@@ -1257,27 +1346,20 @@ void pcb::flowSensorsDisableAll()
 
 void pcb::refreshFlowSensors()
 {
-    // this is only need if flow rates are read from the PCA9534.
-    // there is a specific line that goes the the Odyssey as an interrupt (which is how the soapstand app traditionally worked)
-    // then, the reading of the register is not needed
+    // this is: Polling: periodically read flow rates
+    // this is not: Interrupt:  there is a specific line that goes the the Odyssey as an interrupt (which is how the soapstand app traditionally worked)
+    // if the interrupt is in use then, the reading of the register is not needed
 
     switch (pcb_version)
     {
     case (EN258_4SLOTS):
     case (EN134_4SLOTS):
-    {
-        for (uint8_t slot = 1; slot <= 4; slot++)
-        {
-            refreshFlowSensor(slot);
-        }
-    };
-    break;
     case (EN258_8SLOTS):
     case (EN134_8SLOTS):
     {
-        for (uint8_t slot = 1; slot <= 8; slot++)
+        for (uint8_t slot = 1; slot <= getSlotCountByPcbType(); slot++)
         {
-            refreshFlowSensor(slot);
+            pollFlowSensor(slot);
         }
     };
     break;
@@ -1289,33 +1371,110 @@ void pcb::refreshFlowSensors()
     }
 }
 
-void pcb::resetFlowSensorTotalPulses(uint8_t slot)
-{
-    uint8_t slot_index = slot - 1;
-    flow_sensor_total_pulses[slot_index] = 0;
-}
-
 uint64_t pcb::getFlowSensorPulsesSinceEnabling(uint8_t slot)
 {
     uint8_t slot_index = slot - 1;
     return flow_sensor_pulses_since_enable[slot_index];
 }
-uint64_t pcb::getFlowSensorTotalPulses(uint8_t slot)
+
+// void pcb::resetFlowSensorPulsesForDispenser(uint8_t slot)
+// {
+//     uint8_t slot_index = slot - 1;
+//     flow_sensor_pulses_for_dispenser[slot_index] = 0;
+// }
+
+// uint64_t pcb::getFlowSensorPulsesForDispenser(uint8_t slot)
+// {
+//     // warning: the flow sensor ticks also come in straight to the Odyssey IO. The controller handles the volume calculation from there not from here. The advantage: no missed pulses (interrupt per pulse),the disadvantage: every slot uses the same pin.
+//     uint8_t slot_index = slot - 1;
+//     return flow_sensor_pulses_for_dispenser[slot_index];
+// }
+
+pcb::FlowSensorType pcb::getFlowSensorType(uint8_t slot)
 {
-    // warning: the flow sensor ticks also come in straight to the Odyssey IO. The controller handles the volume calculation from there not from here. The advantage: no missed pulses (interrupt per pulse),the disadvantage: every slot uses the same pin.
-    uint8_t slot_index = slot - 1;
-    return flow_sensor_total_pulses[slot_index];
-}
-bool pcb::getFlowSensorTypeEN258DigmesaElseAichi(uint8_t slot)
-{
-    return flowSensorDigmesaElseAichi[slot];
-}
-void pcb::setFlowSensorTypeEN258(uint8_t slot, bool isDigmesaElseAichi)
-{
-    flowSensorDigmesaElseAichi[slot] = isDigmesaElseAichi;
+    return flowSensorsType[slot - 1];
 }
 
-void pcb::refreshFlowSensor(uint8_t slot)
+void pcb::setFlowSensorTypeDefaults()
+{
+    switch (pcb_version)
+    {
+    case (EN134_4SLOTS):
+    {
+        for (uint8_t slot = 1; slot <= getSlotCountByPcbType(); slot++)
+        {
+            setFlowSensorType(slot, pcb::AICHI);
+        }
+    };
+    break;
+    case (EN258_4SLOTS):
+    {
+        for (uint8_t slot = 1; slot <= getSlotCountByPcbType(); slot++)
+        {
+            setFlowSensorType(slot, pcb::DIGMESA);
+        }
+    };
+    break;
+    default:
+    {
+        // pcb::FlowSensorType::AICHI
+        for (uint8_t slot = 1; slot <= getSlotCountByPcbType(); slot++)
+        {
+            setFlowSensorType(slot, pcb::NOTSET);
+        }
+        debugOutput::sendMessage("Pcb: No default flowsensors to set for this pcb", MSG_ERROR);
+    }
+    break;
+    }
+}
+
+void pcb::setFlowSensorType(uint8_t slot, FlowSensorType sensorType)
+{
+    switch (sensorType)
+    {
+    case pcb::AICHI:
+        debugOutput::sendMessage("Pcb: Slot: " + to_string(slot) + ". Flow sensor set to AICHI.", MSG_INFO);
+        break;
+    case pcb::DIGMESA:
+        debugOutput::sendMessage("Pcb: Slot: " + to_string(slot) + ". Flow sensor set to DIGMESA.", MSG_INFO);
+        break;
+    default:
+        debugOutput::sendMessage("Pcb: ASSERT ERROR. Slot: " + to_string(slot) + "Unknown flow sensor type!", MSG_ERROR);
+    }
+
+    switch (pcb_version)
+    {
+    case (EN134_4SLOTS):
+    case (EN134_8SLOTS):
+    {
+        if (sensorType == pcb::DIGMESA)
+        {
+            debugOutput::sendMessage("Pcb: WARNING: digmesa flowsensor selected for AICHI only pcb. Ensure cable pinout is configured correctly, with added resistor!", MSG_ERROR);
+        }
+        flowSensorsType[slot - 1] = sensorType;
+    };
+    break;
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
+    {
+        flowSensorsType[slot - 1] = sensorType;
+    };
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Pcb: No flowsensors to set on this pcb", MSG_ERROR);
+    }
+    break;
+    }
+}
+
+void pcb::registerFlowSensorTickCallback(int slot, std::function<void()> callback)
+{
+
+    flowSensorTickCallbacks[slot-1] = callback;
+}
+
+void pcb::pollFlowSensor(uint8_t slot)
 {
     if (slot == 0)
     {
@@ -1336,13 +1495,22 @@ void pcb::refreshFlowSensor(uint8_t slot)
     {
         // debugOutput::sendMessage("wARNING: todo: set manually which flow sensor is being used! BEST to only use one pin. or it will be a hassle in the future (define which sensor is used,....)", MSG_ERROR);
 
-        if (getFlowSensorTypeEN258DigmesaElseAichi(slot))
+        switch (getFlowSensorType(slot))
+        {
+        case (pcb::DIGMESA):
         {
             state = getMCP23017Input(slot, MCP23017_EN258_GPA7_PIN_OUT_FLOW_SENSOR_DIGMESA, MCP23017_REGISTER_GPA);
         }
-        else
+        break;
+        case (pcb::AICHI):
         {
             state = getMCP23017Input(slot, MCP23017_EN258_GPA6_PIN_IN_FLOW_SENSOR_AICHI, MCP23017_REGISTER_GPA);
+        }
+        break;
+        default:
+        {
+            debugOutput::sendMessage("Pcb: ASSERT ERROR No flowsensors configured.", MSG_ERROR);
+        }
         }
     };
     break;
@@ -1363,9 +1531,15 @@ void pcb::refreshFlowSensor(uint8_t slot)
 
         if (flowSensorStateMemory[slot_index] != state)
         {
-            flow_sensor_total_pulses[slot_index]++;
+            // flow_sensor_pulses_for_dispenser[slot_index]++;
+
+            if (flowSensorTickCallbacks[slot_index])
+            {
+                flowSensorTickCallbacks[slot_index]();
+            }
+
             flow_sensor_pulses_since_enable[slot_index]++;
-            // debugOutput::sendMessage("Flow sensor pulse detected by PCA chip. Slot: " + to_string(slot) + ". Pulse total: " + to_string(flow_sensor_pulses_since_enable[slot_index]), MSG_INFO);
+            debugOutput::sendMessage("Flow sensor pulse detected by PCA chip. Slot: " + to_string(slot) + ". Pulse total: " + to_string(flow_sensor_pulses_since_enable[slot_index]), MSG_INFO);
             flowSensorTickReceivedEpoch[slot_index] = now_epoch_millis;
         }
         flowSensorStateMemory[slot_index] = state;
@@ -1428,7 +1602,7 @@ void pcb::EN134_PumpCycle_refresh(uint8_t slots)
 
             case state_init:
             {
-                setSolenoidOnePerSlot(slot, false);
+                setSpoutSolenoid(slot, false);
                 setSingleDispenseButtonLight(slot, false);
                 stopPump(slot);
                 pumpCycle_state[slot_index] = state_idle;
@@ -1476,7 +1650,7 @@ void pcb::EN134_PumpCycle_refresh(uint8_t slots)
                 {
                     pumpCycle_state[slot_index] = state_button_pressed;
                     pump_start_delay_start_epoch[slot_index] = now_epoch_millis;
-                    setSolenoidOnePerSlot(slot, true);
+                    setSpoutSolenoid(slot, true);
                     setSingleDispenseButtonLight(slot, true);
                 }
             }
@@ -1559,7 +1733,7 @@ void pcb::EN134_PumpCycle_refresh(uint8_t slots)
                 if (now_epoch_millis > (solenoid_stop_delay_start_epoch[slot_index] + SOLENOID_STOP_DELAY_MILLIS))
                 {
                     pumpCycle_state[slot_index] = state_slot_enabled;
-                    setSolenoidOnePerSlot(slot, false);
+                    setSpoutSolenoid(slot, false);
                     setSingleDispenseButtonLight(slot, false);
                 }
             }
@@ -1964,8 +2138,8 @@ void pcb::setSolenoidFromArray(uint8_t slot, uint8_t position, bool onElseOff)
 
     if (isValid)
     {
-        setMCP23017Output(slot, solenoid_positions[position - 1], onElseOff, solenoid_positions_register[position - 1]); 
-        debugOutput::sendMessage("Pcb: Solenoid array. Position: " + std::to_string(position) + ". Slot: " + std::to_string(slot) + ". Enabled: " + std::to_string(onElseOff), MSG_ERROR);
+        setMCP23017Output(slot, solenoid_positions[position - 1], onElseOff, solenoid_positions_register[position - 1]);
+        debugOutput::sendMessage("Pcb: Solenoid array. Position: " + std::to_string(position) + ". Slot: " + std::to_string(slot) + ". Enabled: " + std::to_string(onElseOff), MSG_INFO);
     }
 }
 
@@ -1976,7 +2150,7 @@ void pcb::disableAllSolenoidsOfSlot(uint8_t slot)
     case (EN134_4SLOTS):
     case (EN134_8SLOTS):
     {
-        setSolenoidOnePerSlot(slot, false);
+        setSpoutSolenoid(slot, false);
     };
     break;
     case (EN258_4SLOTS):
@@ -2003,7 +2177,7 @@ void pcb::disableAllSolenoidsOfSlot(uint8_t slot)
     }
 }
 
-void pcb::setSolenoidOnePerSlot(uint8_t slot, bool onElseOff)
+void pcb::setSpoutSolenoid(uint8_t slot, bool onElseOff)
 {
     switch (pcb_version)
     {
@@ -2020,6 +2194,13 @@ void pcb::setSolenoidOnePerSlot(uint8_t slot, bool onElseOff)
         setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_SOLENOID, onElseOff);
     };
     break;
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
+    {
+        setSolenoidFromArray(slot, EN258_SOLENOID_SPOUT, onElseOff);
+    }
+    break;
+
     default:
     {
         debugOutput::sendMessage("Pcb: No single solenoid function available for this pcb.", MSG_ERROR);

@@ -44,7 +44,7 @@ public:
 
     string toString();
 
-    dispenser *productDispensers;
+    // dispenser *productDispensers;
 
     DF_ERROR onEntry();
     DF_ERROR onAction();

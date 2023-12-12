@@ -36,7 +36,7 @@ void board_test()
 //     connected_pcb->setPumpDirection(SLOT, true);
 //     // connected_pcb->setPumpDirection(SLOT, false);
 //     connected_pcb->setPumpEnable(SLOT);
-//     // connected_pcb->setSolenoidOnePerSlot(SLOT, true);
+//     // connected_pcb->setSpoutSolenoid(SLOT, true);
 //     // connected_pcb->setSingleDispenseButtonLight(SLOT, true);
 //     //     debugOutput::sendMessage("started. press button to stop", MSG_INFO);
 //     using namespace std::chrono;
@@ -52,7 +52,7 @@ void board_test()
 //         // if (connected_pcb->getDispenseButtonEdgePositive(SLOT))
 //         // {
 //         //     connected_pcb->setPumpsDisableAll();
-//         //     connected_pcb->setSolenoidOnePerSlot(SLOT, false);
+//         //     connected_pcb->setSpoutSolenoid(SLOT, false);
 //         //     debugOutput::sendMessage("button pressed. finish up", MSG_INFO);
 //         //     connected_pcb->setSingleDispenseButtonLight(SLOT, false);
 //         //     return;
@@ -115,7 +115,7 @@ void board_test()
 //         // if (connected_pcb->getDispenseButtonEdgePositive(SLOT))
 //         // {
 //         //     connected_pcb->setPumpsDisableAll();
-//         //     connected_pcb->setSolenoidOnePerSlot(SLOT, false);
+//         //     connected_pcb->setSpoutSolenoid(SLOT, false);
 //         //     debugOutput::sendMessage("button pressed. finish up", MSG_INFO);
 //         //     connected_pcb->setSingleDispenseButtonLight(SLOT, false);
 //         //     return;

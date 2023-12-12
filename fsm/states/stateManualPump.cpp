@@ -48,15 +48,16 @@ DF_ERROR stateManualPump::onEntry()
    m_state_requested = STATE_MANUAL_PUMP;
    m_state_auto_pump = AUTO_PUMP_STATE_IDLE;
    DF_ERROR e_ret = OK;
-   productDispensers = g_productDispensers;
+   // productDispensers = g_productDispensers;
 
    // default pump setting
    m_active_pump_index = 0; // pump 1 is activated by default
    debugOutput::sendMessage("Pump testing. Active dispenser pump: " + to_string(m_active_pump_index + 1), MSG_INFO);
-   productDispensers[m_active_pump_index].setPumpDirectionForward();
-   productDispensers[m_active_pump_index].setPumpPWM(255, true);
+   g_machine.m_productDispensers[m_active_pump_index].setPumpDirectionForward();
+   g_machine.m_productDispensers[m_active_pump_index].setPumpPWM(255, true);
 
-   productDispensers[m_active_pump_index].setAllDispenseButtonLightsOff();
+
+   g_machine.control_pcb->setDispenseButtonLightsAllOff();
 
    isFlowTest = false;
    isCyclicTesting = false;
@@ -91,9 +92,9 @@ DF_ERROR stateManualPump::onAction()
       else if ('0' == m_pMessaging->getAction() || ACTION_QUIT == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Exit pump test", MSG_INFO);
-         productDispensers[m_active_pump_index].setPumpsDisableAll();
-         productDispensers[m_active_pump_index].setAllDispenseButtonLightsOff();
-         productDispensers[m_active_pump_index].the_pcb->virtualButtonUnpressHack(m_active_pump_index + 1);
+         g_machine.m_productDispensers[m_active_pump_index].setPumpsDisableAll();
+            g_machine.control_pcb->setDispenseButtonLightsAllOff();
+         // g_machine.m_productDispensers[m_active_pump_index].m_pcb->virtualButtonUnpressHack(m_active_pump_index + 1);
 
          m_state_requested = STATE_IDLE;
       }
@@ -101,33 +102,34 @@ DF_ERROR stateManualPump::onAction()
       else if ('1' == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Enable dispenser pump " + to_string(m_active_pump_index + 1) + "(press dispense button to make pump actually work)", MSG_INFO);
-         productDispensers[m_active_pump_index].startDispense();
-         productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
-         productDispensers[m_active_pump_index].setMultiDispenseButtonLight(m_active_pump_index + 1, true);
+         g_machine.m_productDispensers[m_active_pump_index].startDispense();
+         g_machine.m_productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
+         // g_machine.m_productDispensers[m_active_pump_index].setMultiDispenseButtonLight(m_active_pump_index + 1, true);
+         g_machine.control_pcb->setSingleDispenseButtonLight(m_active_pump_index + 1, true);
       }
 
       else if ('2' == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Disable dispenser pump " + to_string(m_active_pump_index + 1), MSG_INFO);
 
-         productDispensers[m_active_pump_index].setPumpsDisableAll();
-         productDispensers[m_active_pump_index].stopDispense();
+         g_machine.m_productDispensers[m_active_pump_index].setPumpsDisableAll();
+         g_machine.m_productDispensers[m_active_pump_index].stopDispense();
       }
 
       else if ('3' == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Direction forward dispenser pump " + to_string(m_active_pump_index + 1), MSG_INFO);
-         productDispensers[m_active_pump_index].setPumpDirectionForward();
+         g_machine.m_productDispensers[m_active_pump_index].setPumpDirectionForward();
       }
       else if ('4' == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Direction backward pump " + to_string(m_active_pump_index + 1), MSG_INFO);
-         productDispensers[m_active_pump_index].setPumpDirectionReverse();
+         g_machine.m_productDispensers[m_active_pump_index].setPumpDirectionReverse();
       }
 
       else if ('5' == m_pMessaging->getAction())
       {
-         productDispensers[m_active_pump_index].resetVolumeDispensed();
+         g_machine.m_productDispensers[m_active_pump_index].resetSelectedProductVolumeDispensed();
          dispenseButtonValueMemory = false;
          iscustomVolumeDispenseTest = !iscustomVolumeDispenseTest;
          debugOutput::sendMessage("Custom volume dispense pump model test active? : " + to_string(iscustomVolumeDispenseTest), MSG_INFO);
@@ -135,16 +137,16 @@ DF_ERROR stateManualPump::onAction()
 
       else if ('6' == m_pMessaging->getAction())
       {
-         productDispensers[m_active_pump_index].resetVolumeDispensed();
+         g_machine.m_productDispensers[m_active_pump_index].resetSelectedProductVolumeDispensed();
          isCyclicTesting = !isCyclicTesting;
          debugOutput::sendMessage("Toggle cyclic pump test. Enabled?: " + to_string(isCyclicTesting), MSG_INFO);
 
          if (isCyclicTesting)
          {
-            productDispensers[m_active_pump_index].the_pcb->flowSensorEnable(m_active_pump_index + 1);
-            //   productDispensers[m_active_pump_index].the_pcb->resetFlowSensorTotalPulses(m_active_pump_index + 1);
+            g_machine.m_productDispensers[m_active_pump_index].m_pcb->flowSensorEnable(m_active_pump_index + 1);
+            //   g_machine.m_productDispensers[m_active_pump_index].m_pcb->resetFlowSensorPulsesForDispenser(m_active_pump_index + 1);
 
-            productDispensers[m_active_pump_index].initFlowRateCalculation();
+            g_machine.m_productDispensers[m_active_pump_index].initProductFlowRateCalculation();
             isCyclicTestingPumpOn = false;
             using namespace std::chrono;
             uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
@@ -154,25 +156,25 @@ DF_ERROR stateManualPump::onAction()
          }
          else
          {
-            productDispensers[m_active_pump_index].the_pcb->flowSensorsDisableAll();
+            g_machine.m_productDispensers[m_active_pump_index].m_pcb->flowSensorsDisableAll();
 
-            productDispensers[m_active_pump_index].setPumpsDisableAll();
+            g_machine.m_productDispensers[m_active_pump_index].setPumpsDisableAll();
          }
       }
       else if ('7' == m_pMessaging->getAction())
       {
-         productDispensers[m_active_pump_index].reversePumpForSetTimeMillis(500);
+         g_machine.m_productDispensers[m_active_pump_index].reversePumpForSetTimeMillis(500);
       }
       else if ('8' == m_pMessaging->getAction())
       {
 
          // Pump specific test
-         // productDispensers[m_active_pump_index].resetVolumeDispensed();
+         // g_machine.m_productDispensers[m_active_pump_index].resetSelectedProductVolumeDispensed();
          // debugOutput::sendMessage("Do pump test", MSG_INFO);
          // pumpTest();
 
          // auto pump test
-         productDispensers[m_active_pump_index].resetVolumeDispensed();
+         g_machine.m_productDispensers[m_active_pump_index].resetSelectedProductVolumeDispensed();
 
          if (m_state_auto_pump == AUTO_PUMP_STATE_IDLE)
          {
@@ -189,30 +191,30 @@ DF_ERROR stateManualPump::onAction()
          isFlowTest = !isFlowTest;
          if (isFlowTest)
          {
-            productDispensers[m_active_pump_index].initFlowRateCalculation();
+            g_machine.m_productDispensers[m_active_pump_index].initProductFlowRateCalculation();
             using namespace std::chrono;
             startFlowTestMillis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-            productDispensers[m_active_pump_index].setPumpEnable();
+            g_machine.m_productDispensers[m_active_pump_index].setPumpEnable();
             debugOutput::sendMessage("Flow measuring test enabled: True. Can be combined with cyclic test, if not, keep dispense button pressed. Will display test data in csv format.", MSG_INFO);
          }
          else
          {
             debugOutput::sendMessage("Flow measuring test enabled: False.", MSG_INFO);
-            productDispensers[m_active_pump_index].setPumpsDisableAll();
+            g_machine.m_productDispensers[m_active_pump_index].setPumpsDisableAll();
          }
-         productDispensers[m_active_pump_index].resetVolumeDispensed();
+         g_machine.m_productDispensers[m_active_pump_index].resetSelectedProductVolumeDispensed();
       }
 
       else if (ACTION_MANUAL_PUMP_SET == m_pMessaging->getAction())
       {
-         productDispensers[m_active_pump_index].setAllDispenseButtonLightsOff();
-         productDispensers[m_active_pump_index].setPumpsDisableAll();
+            g_machine.control_pcb->setDispenseButtonLightsAllOff();
+         g_machine.m_productDispensers[m_active_pump_index].setPumpsDisableAll();
          // float PWM_value_byte = 3.12345;
          int val = m_pMessaging->getCommandValue();
          debugOutput::sendMessage("Value is pump number 1,2,3 or 4 :" + to_string((uint8_t)val), MSG_INFO);
          m_active_pump_index = ((uint8_t)val) - 1;
 
-         productDispensers[m_active_pump_index].resetVolumeDispensed();
+         g_machine.m_productDispensers[m_active_pump_index].resetSelectedProductVolumeDispensed();
       }
       else if (ACTION_MANUAL_PUMP_PWM_SET == m_pMessaging->getAction())
       {
@@ -229,7 +231,7 @@ DF_ERROR stateManualPump::onAction()
          {
             // float PWM_value_byte = 3.12345;
             debugOutput::sendMessage("PWM value to set (should be in range [0..255]): " + to_string((uint8_t)val), MSG_INFO);
-            productDispensers[m_active_pump_index].setPumpPWM((uint8_t)val, true);
+            g_machine.m_productDispensers[m_active_pump_index].setPumpPWM((uint8_t)val, true);
          }
       }
       else
@@ -298,18 +300,18 @@ DF_ERROR stateManualPump::onAction()
    else
    {
       // manual
-      if (productDispensers[m_active_pump_index].getDispenseButtonValue())
+      if (g_machine.m_productDispensers[m_active_pump_index].getDispenseButtonValue())
       {
-         // debugOutput::sendMessage("button: " + to_string(productDispensers[m_active_pump_index].getDispenseButtonValue()), MSG_INFO);
+         // debugOutput::sendMessage("button: " + to_string(g_machine.m_productDispensers[m_active_pump_index].getDispenseButtonValue()), MSG_INFO);
 
-         double volume = productDispensers[m_active_pump_index].getVolumeDispensed();
+         double volume = g_machine.m_productDispensers[m_active_pump_index].getSelectedProductVolumeDispensed();
 
          // instant flow rate
-         double flowRate = productDispensers[m_active_pump_index].getInstantFlowRate();
+         double flowRate = g_machine.m_productDispensers[m_active_pump_index].getProductFlowRateInstantaneous();
 
          // flow rate windowed avg
-         productDispensers[m_active_pump_index].updateRunningAverageWindow();
-         Time_val avg_1s = productDispensers[m_active_pump_index].getAveragedFlowRate(1000);
+         g_machine.m_productDispensers[m_active_pump_index].updateActiveProductFlowRateRunningAverageWindow();
+         Time_val avg_1s = g_machine.m_productDispensers[m_active_pump_index].getAveragedProductFlowRate(1000);
 
          if (triggerOutputData)
          {
@@ -320,9 +322,9 @@ DF_ERROR stateManualPump::onAction()
 
             // usleep(500000);
 
-            if (productDispensers[m_active_pump_index].isSlotEnabled())
+            if (g_machine.m_productDispensers[m_active_pump_index].isSlotEnabled())
             {
-               unsigned short speed = productDispensers[m_active_pump_index].getPumpSpeed();
+               unsigned short speed = g_machine.m_productDispensers[m_active_pump_index].getPumpSpeed();
                string value = std::to_string(speed);
                string msg = "Pump speed: " + value;
                debugOutput::sendMessage(msg, MSG_INFO);
@@ -337,20 +339,20 @@ DF_ERROR stateManualPump::onAction()
          }
          // debugOutput::sendMessage("d", MSG_INFO);
       }
-      if (productDispensers[m_active_pump_index].getDispenseButtonEdgePositive())
+      if (g_machine.m_productDispensers[m_active_pump_index].getDispenseButtonEdgePositive())
       {
-         if (productDispensers[m_active_pump_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
+         if (g_machine.m_productDispensers[m_active_pump_index].m_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
          {
-            productDispensers[m_active_pump_index].the_pcb->startPump(m_active_pump_index + 1);
-            productDispensers[m_active_pump_index].setSolenoidOnePerSlot(true);
+            g_machine.m_productDispensers[m_active_pump_index].m_pcb->startPump(m_active_pump_index + 1);
+            g_machine.m_productDispensers[m_active_pump_index].setSpoutSolenoid(true);
          }
       }
-      if (productDispensers[m_active_pump_index].getDispenseButtonEdgeNegative())
+      if (g_machine.m_productDispensers[m_active_pump_index].getDispenseButtonEdgeNegative())
       {
-         if (productDispensers[m_active_pump_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
+         if (g_machine.m_productDispensers[m_active_pump_index].m_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
          {
-            productDispensers[m_active_pump_index].the_pcb->stopPump(m_active_pump_index + 1);
-            productDispensers[m_active_pump_index].setSolenoidOnePerSlot(false);
+            g_machine.m_productDispensers[m_active_pump_index].m_pcb->stopPump(m_active_pump_index + 1);
+            g_machine.m_productDispensers[m_active_pump_index].setSpoutSolenoid(false);
          }
       }
    }
@@ -365,7 +367,7 @@ DF_ERROR stateManualPump::customVolumeDispenseTest()
 
    // 1. pump with retraction at end
    // when button press has negative edge, retract motor. for time x
-   dispenseButtonValue = productDispensers[m_active_pump_index].getDispenseButtonValue();
+   dispenseButtonValue = g_machine.m_productDispensers[m_active_pump_index].getDispenseButtonValue();
 
    if (!dispenseButtonValue && dispenseButtonValueMemory)
    {
@@ -376,14 +378,14 @@ DF_ERROR stateManualPump::customVolumeDispenseTest()
    {
       debugOutput::sendMessage("Start Dispensing", MSG_INFO);
 
-      // productDispensers[m_active_pump_index].setPumpPWM(125, true);
+      // g_machine.m_productDispensers[m_active_pump_index].setPumpPWM(125, true);
 
       isDispensing = true;
       using namespace std::chrono;
       startDispensingEpochMillis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
-      productDispensers[m_active_pump_index].setPumpDirectionForward();
-      productDispensers[m_active_pump_index].setPumpEnable();
+      g_machine.m_productDispensers[m_active_pump_index].setPumpDirectionForward();
+      g_machine.m_productDispensers[m_active_pump_index].setPumpEnable();
    }
 
    using namespace std::chrono;
@@ -393,9 +395,9 @@ DF_ERROR stateManualPump::customVolumeDispenseTest()
       debugOutput::sendMessage("End Dispensing. Activate retract millis: " + to_string(retract_time_millis), MSG_INFO);
 
       isDispensing = false;
-      // productDispensers[m_active_pump_index].setPumpsDisableAll();
-      productDispensers[m_active_pump_index].setPumpDirectionReverse();
-      productDispensers[m_active_pump_index].setPumpEnable();
+      // g_machine.m_productDispensers[m_active_pump_index].setPumpsDisableAll();
+      g_machine.m_productDispensers[m_active_pump_index].setPumpDirectionReverse();
+      g_machine.m_productDispensers[m_active_pump_index].setPumpEnable();
       using namespace std::chrono;
       startRetractingEpochMillis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
       isRetracting = true;
@@ -405,7 +407,7 @@ DF_ERROR stateManualPump::customVolumeDispenseTest()
    if (millis_epoch - startRetractingEpochMillis >= retract_time_millis && isRetracting)
    {
       debugOutput::sendMessage("End retraction.", MSG_INFO);
-      productDispensers[m_active_pump_index].setPumpsDisableAll();
+      g_machine.m_productDispensers[m_active_pump_index].setPumpsDisableAll();
       isRetracting = false;
    }
 
@@ -417,19 +419,19 @@ DF_ERROR stateManualPump::customVolumeDispenseTest()
 
 DF_ERROR stateManualPump::pumpFlowTest()
 {
-   // if (productDispensers[m_active_pump_index].getDispenseButtonValue() & productDispensers[m_active_pump_index].isSlotEnabled())
+   // if (g_machine.m_productDispensers[m_active_pump_index].getDispenseButtonValue() & g_machine.m_productDispensers[m_active_pump_index].isSlotEnabled())
    // {
 
    // instant flow rate
-   double flowRate = productDispensers[m_active_pump_index].getInstantFlowRate();
+   double flowRate = g_machine.m_productDispensers[m_active_pump_index].getProductFlowRateInstantaneous();
 
    // flow rate windowed avg
-   productDispensers[m_active_pump_index].updateRunningAverageWindow();
-   Time_val avg_1s = productDispensers[m_active_pump_index].getAveragedFlowRate(1000);
-   Time_val avg_02s = productDispensers[m_active_pump_index].getAveragedFlowRate(2000);
-   Time_val avg_05s = productDispensers[m_active_pump_index].getAveragedFlowRate(5000);
+   g_machine.m_productDispensers[m_active_pump_index].updateActiveProductFlowRateRunningAverageWindow();
+   Time_val avg_1s = g_machine.m_productDispensers[m_active_pump_index].getAveragedProductFlowRate(1000);
+   Time_val avg_02s = g_machine.m_productDispensers[m_active_pump_index].getAveragedProductFlowRate(2000);
+   Time_val avg_05s = g_machine.m_productDispensers[m_active_pump_index].getAveragedProductFlowRate(5000);
 
-   double totalVolume = productDispensers[m_active_pump_index].getVolumeDispensed();
+   double totalVolume = g_machine.m_productDispensers[m_active_pump_index].getSelectedProductVolumeDispensed();
    if (triggerOutputData)
    {
 
@@ -450,20 +452,20 @@ DF_ERROR stateManualPump::pumpCyclicTestCycleStart()
 {
    pump_test_cycle_count++;
 
-   int speed = productDispensers[m_active_pump_index].getSelectedProduct()->getPWM();
+   int speed = g_machine.m_productDispensers[m_active_pump_index].getSelectedProduct()->getPWM();
 
    debugOutput::sendMessage("Pump speed for test: " + to_string(speed), MSG_INFO);
 
-   if (productDispensers[m_active_pump_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
-   {
-      productDispensers[m_active_pump_index].the_pcb->startPump(m_active_pump_index + 1);
-      productDispensers[m_active_pump_index].setSolenoidOnePerSlot(true);
-   }
-   else
-   {
-      productDispensers[m_active_pump_index].the_pcb->virtualButtonPressHack(m_active_pump_index + 1);
-      productDispensers[m_active_pump_index].pumpSlowStart(true);
-   }
+   // if (g_machine.m_productDispensers[m_active_pump_index].m_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
+   // {
+      g_machine.m_productDispensers[m_active_pump_index].m_pcb->startPump(m_active_pump_index + 1);
+      g_machine.m_productDispensers[m_active_pump_index].setSpoutSolenoid(true);
+   // }
+   // else
+   // {
+   //    g_machine.m_productDispensers[m_active_pump_index].m_pcb->virtualButtonPressHack(m_active_pump_index + 1);
+   //    g_machine.m_productDispensers[m_active_pump_index].pumpSlowStart(true);
+   // }
 
    isCyclicTestingPumpOn = true;
 }
@@ -471,16 +473,16 @@ DF_ERROR stateManualPump::pumpCyclicTestCycleStart()
 DF_ERROR stateManualPump::pumpCyclicTestCycleFinish()
 {
 
-   if (productDispensers[m_active_pump_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
-   {
-      productDispensers[m_active_pump_index].the_pcb->stopPump(m_active_pump_index + 1);
-      productDispensers[m_active_pump_index].setSolenoidOnePerSlot(false);
-   }
-   else
-   {
-      productDispensers[m_active_pump_index].the_pcb->virtualButtonUnpressHack(m_active_pump_index + 1);
-      productDispensers[m_active_pump_index].pumpSlowStopBlocking();
-   }
+   // if (g_machine.m_productDispensers[m_active_pump_index].m_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
+   // {
+      g_machine.m_productDispensers[m_active_pump_index].m_pcb->stopPump(m_active_pump_index + 1);
+      g_machine.m_productDispensers[m_active_pump_index].setSpoutSolenoid(false);
+   // }
+   // else
+   // {
+   //    // g_machine.m_productDispensers[m_active_pump_index].m_pcb->virtualButtonUnpressHack(m_active_pump_index + 1);
+   //    g_machine.m_productDispensers[m_active_pump_index].pumpSlowStopBlocking();
+   // }
    isCyclicTestingPumpOn = false;
 }
 
@@ -497,7 +499,7 @@ DF_ERROR stateManualPump::pumpCyclicTest()
       if (cyclicTestPeriodStartEpochMillis + CYCLIC_PUMP_TEST_ON_CYCLE_MILLIS < now)
       {
          cyclicTestPeriodStartEpochMillis = now; //  + 2 * OFF_CYCLE_MILLIS
-         // productDispensers[m_active_pump_index].setPumpsDisableAll();
+         // g_machine.m_productDispensers[m_active_pump_index].setPumpsDisableAll();
          pumpCyclicTestCycleFinish();
          cyclicTestPeriodStartEpochMillis = now;
       }
@@ -528,9 +530,9 @@ DF_ERROR stateManualPump::pumpCyclicTest()
 //       if (cyclicTestPeriodStartEpochMillis + CYCLIC_PUMP_TEST_ON_CYCLE_MILLIS < now)
 //       {
 //          cyclicTestPeriodStartEpochMillis = now; //  + 2 * OFF_CYCLE_MILLIS
-//          // productDispensers[m_active_pump_index].setPumpsDisableAll();
-//          productDispensers[m_active_pump_index].the_8344->virtualButtonUnpressHack();
-//          productDispensers[m_active_pump_index].pumpSlowStopBlocking();
+//          // g_machine.m_productDispensers[m_active_pump_index].setPumpsDisableAll();
+//          g_machine.m_productDispensers[m_active_pump_index].the_8344->virtualButtonUnpressHack();
+//          g_machine.m_productDispensers[m_active_pump_index].pumpSlowStopBlocking();
 
 //          isCyclicTestingPumpOn = false;
 //          cyclicTestPeriodStartEpochMillis = now;
@@ -545,17 +547,17 @@ DF_ERROR stateManualPump::pumpCyclicTest()
 //          debugOutput::sendMessage("\n******************************\n******PUMP CYCLING TESTING******\n*****************\n  cycle: " + to_string(pump_test_cycle_count), MSG_INFO);
 //          pump_test_cycle_count++;
 
-//          productDispensers[m_active_pump_index].the_8344->virtualButtonPressHack();
+//          g_machine.m_productDispensers[m_active_pump_index].the_8344->virtualButtonPressHack();
 
-//          // productDispensers[m_active_pump_index].setPumpDirectionForward();
+//          // g_machine.m_productDispensers[m_active_pump_index].setPumpDirectionForward();
 
-//          int speed = productDispensers[m_active_pump_index].getSelectedProduct()->getPWM();
+//          int speed = g_machine.m_productDispensers[m_active_pump_index].getSelectedProduct()->getPWM();
 
 //          debugOutput::sendMessage("Pump speed for test: " + to_string(speed), MSG_INFO);
-//          // productDispensers[m_active_pump_index].setPumpPWM(speed, true);
-//          // productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
+//          // g_machine.m_productDispensers[m_active_pump_index].setPumpPWM(speed, true);
+//          // g_machine.m_productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
 
-//          productDispensers[m_active_pump_index].pumpSlowStart(true);
+//          g_machine.m_productDispensers[m_active_pump_index].pumpSlowStart(true);
 
 //          isCyclicTestingPumpOn = true;
 //          cyclicTestPeriodStartEpochMillis = now;
@@ -574,36 +576,36 @@ DF_ERROR stateManualPump::autofillPresetQuantity()
    else if (m_state_auto_pump == AUTO_PUMP_STATE_INIT)
    {
       // pump should be enabled first.
-      // productDispensers[m_active_pump_index].startDispense();
-      // productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
-      // productDispensers[m_active_pump_index].setMultiDispenseButtonLight(m_active_pump_index + 1, true);
+      // g_machine.m_productDispensers[m_active_pump_index].startDispense();
+      // g_machine.m_productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
+      
 
-      int speed = productDispensers[m_active_pump_index].getSelectedProduct()->getPWM();
+      int speed = g_machine.m_productDispensers[m_active_pump_index].getSelectedProduct()->getPWM();
       debugOutput::sendMessage("Pump auto start: " + to_string(speed), MSG_INFO);
-      if (productDispensers[m_active_pump_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
-      {
-         productDispensers[m_active_pump_index].the_pcb->startPump(m_active_pump_index + 1);
-         productDispensers[m_active_pump_index].setSolenoidOnePerSlot(true);
-      }
-      else
-      {
-         productDispensers[m_active_pump_index].the_pcb->virtualButtonPressHack(m_active_pump_index + 1);
-         productDispensers[m_active_pump_index].pumpSlowStart(true);
-      }
+      // if (g_machine.m_productDispensers[m_active_pump_index].m_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
+      // {
+         g_machine.m_productDispensers[m_active_pump_index].m_pcb->startPump(m_active_pump_index + 1);
+         g_machine.m_productDispensers[m_active_pump_index].setSpoutSolenoid(true);
+      // }
+      // else
+      // {
+      //    g_machine.m_productDispensers[m_active_pump_index].m_pcb->virtualButtonPressHack(m_active_pump_index + 1);
+      //    g_machine.m_productDispensers[m_active_pump_index].pumpSlowStart(true);
+      // }
 
       cyclicTestPeriodStartEpochMillis = now;
       m_state_auto_pump = AUTO_PUMP_STATE_PUMPING;
    }
    else if (m_state_auto_pump == AUTO_PUMP_STATE_PUMPING)
    {
-      double totalVolume = productDispensers[m_active_pump_index].getVolumeDispensed();
+      double totalVolume = g_machine.m_productDispensers[m_active_pump_index].getSelectedProductVolumeDispensed();
       if (totalVolume > 500)
       {
          m_state_auto_pump = AUTO_PUMP_STATE_FINISHED;
          debugOutput::sendMessage("Pump auto requested volume reached.", MSG_INFO);
       }
 
-      if (productDispensers[m_active_pump_index].getDispenseButtonValue())
+      if (g_machine.m_productDispensers[m_active_pump_index].getDispenseButtonValue())
       {
          debugOutput::sendMessage("Interrupt auto fill process with button.", MSG_INFO);
          m_state_auto_pump = AUTO_PUMP_STATE_FINISHED;
@@ -613,17 +615,17 @@ DF_ERROR stateManualPump::autofillPresetQuantity()
    {
       debugOutput::sendMessage("Pump auto finished.", MSG_INFO);
 
-      if (productDispensers[m_active_pump_index].the_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
-      {
-         productDispensers[m_active_pump_index].the_pcb->stopPump(m_active_pump_index + 1);
-         productDispensers[m_active_pump_index].setSolenoidOnePerSlot(false);
-      }
-      else
-      {
+      // if (g_machine.m_productDispensers[m_active_pump_index].m_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
+      // {
+         g_machine.m_productDispensers[m_active_pump_index].m_pcb->stopPump(m_active_pump_index + 1);
+         g_machine.m_productDispensers[m_active_pump_index].setSpoutSolenoid(false);
+      // }
+      // else
+      // {
 
-         productDispensers[m_active_pump_index].pumpSlowStopBlocking();
-         productDispensers[m_active_pump_index].the_pcb->virtualButtonUnpressHack(m_active_pump_index + 1);
-      }
+      //    g_machine.m_productDispensers[m_active_pump_index].pumpSlowStopBlocking();
+      //    g_machine.m_productDispensers[m_active_pump_index].m_pcb->virtualButtonUnpressHack(m_active_pump_index + 1);
+      // }
 
       m_state_auto_pump = AUTO_PUMP_STATE_IDLE;
    }
@@ -633,31 +635,31 @@ DF_ERROR stateManualPump::pumpTest()
 {
    debugOutput::sendMessage("pump test", MSG_INFO);
 
-   productDispensers[m_active_pump_index].setPumpDirectionForward();
-   productDispensers[m_active_pump_index].setPumpPWM(125, true);
-   productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
+   g_machine.m_productDispensers[m_active_pump_index].setPumpDirectionForward();
+   g_machine.m_productDispensers[m_active_pump_index].setPumpPWM(125, true);
+   g_machine.m_productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
    usleep(1000000);                                        // press button to have the pump pumping.
-   productDispensers[m_active_pump_index].setPumpDirectionForward();
-   productDispensers[m_active_pump_index].setPumpPWM(255, true);
-   productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
+   g_machine.m_productDispensers[m_active_pump_index].setPumpDirectionForward();
+   g_machine.m_productDispensers[m_active_pump_index].setPumpPWM(255, true);
+   g_machine.m_productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
    usleep(1000000);                                        // press
 
-   productDispensers[m_active_pump_index].setPumpsDisableAll();
+   g_machine.m_productDispensers[m_active_pump_index].setPumpsDisableAll();
 
-   productDispensers[m_active_pump_index].setPumpDirectionReverse();
-   productDispensers[m_active_pump_index].setPumpPWM(125, true);
-   productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
+   g_machine.m_productDispensers[m_active_pump_index].setPumpDirectionReverse();
+   g_machine.m_productDispensers[m_active_pump_index].setPumpPWM(125, true);
+   g_machine.m_productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
    usleep(1000000);                                        // press button to have the pump pumping.
-   productDispensers[m_active_pump_index].setPumpsDisableAll();
+   g_machine.m_productDispensers[m_active_pump_index].setPumpsDisableAll();
 }
 
 // Advances to Dispense Idle
 DF_ERROR stateManualPump::onExit()
 {
    DF_ERROR e_ret = OK;
-   productDispensers[m_active_pump_index].setPumpsDisableAll();
-   productDispensers[m_active_pump_index].setAllDispenseButtonLightsOff();
-   productDispensers[m_active_pump_index].the_pcb->virtualButtonUnpressHack(m_active_pump_index + 1);
+   g_machine.m_productDispensers[m_active_pump_index].setPumpsDisableAll();
+      g_machine.control_pcb->setDispenseButtonLightsAllOff();
+   // g_machine.m_productDispensers[m_active_pump_index].m_pcb->virtualButtonUnpressHack(m_active_pump_index + 1);
    g_machine.pcb24VPowerSwitch(false);
 
    return e_ret;

@@ -790,7 +790,7 @@ void runMainTest()
                     pcb_to_test->setSingleDispenseButtonLight(slot, false);
                     pcb_to_test->setPumpsDisableAll();
                     pcb_to_test->setSolenoidFromArray(slot, 8, false);
-                    debugOutput::sendMessage("Flow sensor pulses during button press: " + std::to_string(pcb_to_test->getFlowSensorPulsesSinceEnabling(slot)), MSG_INFO);
+                    // debugOutput::sendMessage("Flow sensor pulses during button press: " + std::to_string(pcb_to_test->getFlowSensorPulsesSinceEnabling(slot)), MSG_INFO);
                     // pcb_to_test->resetFlowSensorPulsesForDispenser(slot);
                 }
             }

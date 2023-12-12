@@ -63,9 +63,14 @@ void machine::initProductDispensers()
         // m_g_machine.m_productDispensers[slot_index].setup(&this, g_pnumbers);
         m_productDispensers[slot_index].setup(control_pcb, m_pnumbers);
         m_productDispensers[slot_index].setSlot(slot_index + 1);
-        m_productDispensers[slot_index].setBasePNumberAsSelectedProduct();
         m_productDispensers[slot_index].initGlobalFlowsensorIO(IO_PIN_FLOW_SENSOR);
         setFlowSensorCallBack(slot_index + 1);
+
+
+        debugOutput::sendMessage("TEMPORARY HACK: base number is the selected product (pDispense). ", MSG_INFO);
+        m_productDispensers[slot_index].setBasePNumberAsSelectedProduct();
+
+
     }
 }
 

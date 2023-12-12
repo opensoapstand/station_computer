@@ -112,7 +112,8 @@ DF_ERROR dispenser::setup(pcb *pcb, product *pnumbers)
     isPumpSoftStarting = false;
     pwm_actual_set_speed = 0;
     resetDispenserVolumeDispensed();
-    resetProductVolumeDispensed();
+    resetActiveProductVolumeDispensed();
+    resetSelectedProductVolumeDispensed();
 }
 
 void dispenser::refresh()
@@ -184,6 +185,7 @@ product *dispenser::getSelectedProduct()
 void dispenser::setBasePNumberAsSelectedProduct()
 {
     setSelectedProduct(getBasePNumber());
+    m_active_pnumber = getBasePNumber();
 }
 
 bool dispenser::setSelectedProduct(int pnumber)
@@ -200,11 +202,31 @@ bool dispenser::setSelectedProduct(int pnumber)
     return is_selected_product_a_valid_dispense_p_number;
 }
 
+void dispenser::setSelectedSizeAsChar(char size)
+{
+    m_selectedSizeAsChar = size;
+};
+
+char dispenser::getSelectedSizeAsChar()
+{
+    return m_selectedSizeAsChar;
+}
+
+double dispenser::getSelectedSizeAsVolume()
+{
+    return getSelectedProduct()->getTargetVolume();
+}
+
+product *dispenser::getProductFromPNumber(int pnumber)
+{
+    return &m_pnumbers[m_active_pnumber];
+}
+
 product *dispenser::getActiveProduct()
 {
     // set the product that will actually be dispensed. (base or additive)
     // for now, just base product.
-    return &m_pnumbers[getBasePNumber()];
+    return &m_pnumbers[m_active_pnumber];
 }
 
 DF_ERROR dispenser::loadGeneralProperties()
@@ -216,6 +238,16 @@ DF_ERROR dispenser::loadGeneralProperties()
     usleep(20000);
     analyseSlotState();
     usleep(20000);
+}
+
+int dispenser::getSelectedPNumber()
+{
+    return m_selected_pnumber;
+}
+
+int dispenser::getActivePNumber()
+{
+    return m_active_pnumber;
 }
 
 int dispenser::getBasePNumber()
@@ -382,15 +414,19 @@ void dispenser::setDispenseButtonLight(bool onElseOff)
 }
 
 // Reset values onEntry()
-DF_ERROR dispenser::initDispense(int nVolumeToDispense, double nPrice)
+DF_ERROR dispenser::initDispense(char size, double nPrice)
 {
 
     DF_ERROR dfRet = ERROR_BAD_PARAMS;
-    m_dispenserVolumeTarget = nVolumeToDispense;
+    getSelectedProduct()->setTargetVolumeFromSize(size);
+
+    m_dispenserVolumeTarget = getSelectedProduct()->getTargetVolume();
 
     m_price = nPrice;
 
-    resetProductVolumeDispensed();
+    resetDispenserVolumeDispensed();
+    resetActiveProductVolumeDispensed();
+    resetSelectedProductVolumeDispensed();
 
     switch (m_pcb->get_pcb_version())
     {
@@ -474,6 +510,7 @@ string dispenser::getDispenseEndTime()
 double dispenser::getDispenserVolumeDispensed()
 {
     // return m_pcb->getFlowSensorPulsesForDispenser(m_slot) // this justreturns ticks. not volume. should be an addition of all the volumes already dispensed.;
+    return m_dispenser_volume_dispensed;
 }
 
 void dispenser::linkActiveProductVolumeUpdate()
@@ -486,47 +523,117 @@ void dispenser::linkActiveProductVolumeUpdate()
 
 void dispenser::resetDispenserVolumeDispensed()
 {
-    // return m_pcb->resetFlowSensorPulsesForDispenser(m_slot); 
+    m_dispenser_volume_dispensed = 0;
+    // return m_pcb->resetFlowSensorPulsesForDispenser(m_slot);
 }
+
 bool dispenser::isDispenserVolumeTargetReached()
 {
     return m_dispenserVolumeTarget <= getDispenserVolumeDispensed();
 }
 
 /////////////////////////////////////////////////////////////////////////
-// product volume
-bool dispenser::isProductVolumeTargetReached()
+// active product volume
+bool dispenser::isActiveProductVolumeTargetReached()
 {
+    return isProductVolumeTargetReached(getActivePNumber());
+}
+
+void dispenser::resetActiveProductVolumeDispensed()
+{
+    resetProductVolumeDispensed(getActivePNumber());
+}
+
+void dispenser::subtractActiveFromProductVolumeDispensed(double volume_to_distract)
+{
+    subtractFromProductVolumeDispensed(getActivePNumber(), volume_to_distract);
+}
+
+double dispenser::getActiveProductVolumeRemaining()
+{
+    return getProductVolumeRemaining(getActivePNumber());
+}
+
+double dispenser::getActiveProductVolumeDispensed()
+{
+    // return m_nVolumeDispensed;
+    return getProductVolumeDispensed(getActivePNumber());
+}
+
+/////////////////////////////////////////////////////////////////////////
+// selected product volume
+bool dispenser::isSelectedProductVolumeTargetReached()
+{
+    return isProductVolumeTargetReached(getSelectedPNumber());
+}
+
+void dispenser::resetSelectedProductVolumeDispensed()
+{
+    resetProductVolumeDispensed(getSelectedPNumber());
+}
+
+void dispenser::subtractSelectedFromProductVolumeDispensed(double volume_to_distract)
+{
+    subtractFromProductVolumeDispensed(getSelectedPNumber(), volume_to_distract);
+}
+
+double dispenser::getSelectedProductVolumeRemaining()
+{
+    return getProductVolumeRemaining(getSelectedPNumber());
+}
+
+double dispenser::getSelectedProductVolumeDispensed()
+{
+    // return m_nVolumeDispensed;
+    return getProductVolumeDispensed(getSelectedPNumber());
+}
+
+/////////////////////////////////////////////////////////////////////////
+// product volume
+
+double dispenser::getProductTargetVolume(int pnumber)
+{
+    return getProductFromPNumber(pnumber)->getTargetVolume();
+}
+
+bool dispenser::isProductVolumeTargetReached(int pnumber)
+{
+
+    // check pnumber part of dispenser.
+
     bool bRet = false;
 
-    if (m_nVolumeTarget <= getProductVolumeDispensed())
+    if (getProductTargetVolume(pnumber) <= getProductVolumeDispensed(pnumber))
     {
         bRet = true;
     }
     return bRet;
 }
 
-void dispenser::resetProductVolumeDispensed()
+void dispenser::resetProductVolumeDispensed(int pnumber)
 {
-    getSelectedProduct()->resetProductVolumeDispensed();
+    getProductFromPNumber(pnumber)->resetVolumeDispensed();
 }
 
-void dispenser::subtractFromProductVolumeDispensed(double volume_to_distract)
+void dispenser::subtractFromProductVolumeDispensed(int pnumber, double volume_to_distract)
 {
-    double volume = getSelectedProduct()->getProductVolumeDispensed();
-    getSelectedProduct()->setVolumeDispensed(volume - volume_to_distract);
+    double volume = getProductVolumeDispensed(pnumber);
+    getProductFromPNumber(pnumber)->setVolumeDispensed(volume - volume_to_distract);
 }
 
-double dispenser::getProductVolumeRemaining()
+double dispenser::getProductVolumeRemaining(int pnumber)
 {
-    return getSelectedProduct()->getProductVolumeRemaining();
+    return getProductFromPNumber(pnumber)->getVolumeRemaining();
 }
 
-double dispenser::getProductVolumeDispensed()
+double dispenser::getProductVolumeDispensed(int pnumber)
 {
     // return m_nVolumeDispensed;
-    return getSelectedProduct()->getProductVolumeDispensed();
+    return getProductFromPNumber(pnumber)->getVolumeDispensed();
 }
+
+////////////////////////////////////////////////////////////
+// I/O
 
 // TODO: Call this function on Dispense onEntry()
 DF_ERROR dispenser::initGlobalFlowsensorIO(int pin)
@@ -728,7 +835,7 @@ void dispenser::reversePumpForSetTimeMillis(int millis)
         if (millis > 0)
         {
             // get volume before
-            double volume_before = getProductVolumeDispensed();
+            double volume_before = getActiveProductVolumeDispensed();
 
             debugOutput::sendMessage("Pump auto retraction. Reverse time millis: " + to_string(millis), MSG_INFO);
             pumpSlowStart(false);
@@ -758,12 +865,12 @@ void dispenser::reversePumpForSetTimeMillis(int millis)
             setPumpDirectionForward();
 
             // get volume after
-            double volume_after = getProductVolumeDispensed();
+            double volume_after = getActiveProductVolumeDispensed();
 
             // vol diff
             double volume_diff = volume_after - volume_before;
 
-            subtractFromProductVolumeDispensed(volume_diff);
+            subtractFromProductVolumeDispensed(getActivePNumber(), volume_diff);
             debugOutput::sendMessage("Retraction done. WARNING: check volume change correction subtraction. Volume reversed:  " + to_string(volume_diff), MSG_INFO);
         }
         else
@@ -1037,7 +1144,7 @@ double dispenser::getProductVolumeDeltaAndReset()
 {
     // will get volumeDelta since last call of this function
 
-    double currentVolume = getProductVolumeDispensed();
+    double currentVolume = getActiveProductVolumeDispensed();
     double deltaVolume = currentVolume - previousDispensedVolume;
     previousDispensedVolume = currentVolume;
     return deltaVolume;
@@ -1074,10 +1181,10 @@ double dispenser::getProductFlowRateInstantaneous()
     return flowRate;
 }
 
-Time_val dispenser::createAndGetProductVolumeDispensedDatapoint()
+Time_val dispenser::createAndGetActiveProductVolumeDispensedDatapoint()
 {
     Time_val tv;
-    tv.value = getProductVolumeDispensed();
+    tv.value = getActiveProductVolumeDispensed();
     using namespace std::chrono;
     uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
@@ -1181,15 +1288,15 @@ Time_val dispenser::getAveragedProductFlowRate(uint64_t window_length_millis)
     return result;
 }
 
-DF_ERROR dispenser::updateProductFlowRateRunningAverageWindow()
+DF_ERROR dispenser::updateActiveProductFlowRateRunningAverageWindow()
 {
     DF_ERROR e_ret;
 
-    Time_val tv = createAndGetProductVolumeDispensedDatapoint();
+    Time_val tv = createAndGetActiveProductVolumeDispensedDatapoint();
 
     flowRateBuffer[flowRateBufferIndex].time_millis = tv.time_millis;
     flowRateBuffer[flowRateBufferIndex].value = tv.value;
-    debugOutput::sendMessage("updateProductFlowRateRunningAverageWindow: index: " + to_string(flowRateBufferIndex) + " " + to_string(tv.time_millis) + ": " + to_string(tv.value), MSG_INFO);
+    // debugOutput::sendMessage("updateActiveProductFlowRateRunningAverageWindow: index: " + to_string(flowRateBufferIndex) + " " + to_string(tv.time_millis) + ": " + to_string(tv.value), MSG_INFO);
 
     flowRateBufferIndex++;
     if (flowRateBufferIndex >= RUNNING_AVERAGE_WINDOW_LENGTH)

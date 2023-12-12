@@ -62,19 +62,19 @@ DF_ERROR stateDispenseEnd::onAction()
     g_machine.m_productDispensers[m_slot_index].stopDispense();
 
     // handle minimum dispensing
-    bool is_valid_dispense = g_machine.m_productDispensers[m_slot_index].getProductVolumeDispensed() >= MINIMUM_DISPENSE_VOLUME_ML;
+    bool is_valid_dispense = g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed() >= MINIMUM_DISPENSE_VOLUME_ML;
 
     if (!is_valid_dispense)
     {
-        g_machine.m_productDispensers[m_slot_index].resetProductVolumeDispensed();
+        g_machine.m_productDispensers[m_slot_index].resetSelectedProductVolumeDispensed();
 
-        debugOutput::sendMessage("Not a valid dispense. Volume set to zero. " + std::to_string(g_machine.m_productDispensers[m_slot_index].getProductVolumeDispensed()), MSG_STATE);
+        debugOutput::sendMessage("Not a valid dispense. Volume set to zero. " + std::to_string(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed()), MSG_STATE);
     }
 
     // send dispensed volume to ui (will be used to write to portal)
     usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
 
-    if (g_machine.m_productDispensers[m_slot_index].isProductVolumeTargetReached())
+    if (g_machine.m_productDispensers[m_slot_index].isSelectedProductVolumeTargetReached())
     {
         usleep(100000);                                      // send message delay (pause from previous message) desperate attempt to prevent crashes
         m_pMessaging->sendMessageOverIP("Target Hit", true); // send to UI
@@ -84,7 +84,7 @@ DF_ERROR stateDispenseEnd::onAction()
 
     // bool empty_stock_detected = false;
     // // handle empty container detection
-    // if (m_pMessaging->getRequestedSize() == SIZE_EMPTY_CONTAINER_DETECTED_CHAR)
+    // if (size == SIZE_EMPTY_CONTAINER_DETECTED_CHAR)
     // {
     //     empty_stock_detected = true;
     //     debugOutput::sendMessage("WARNING: Empty container detected. Will set remaining volume to zero.", MSG_INFO);
@@ -94,14 +94,14 @@ DF_ERROR stateDispenseEnd::onAction()
 
     // crash test ok until here.
     // SIZE_TEST_CHAR is sent during Maintenance Mode dispenses - we do not want to record these in the transaction database, or print receipts...
-    if (m_pMessaging->getRequestedSize() == SIZE_TEST_CHAR)
+    if (g_machine.m_productDispensers[m_slot_index].getSelectedSizeAsChar() == SIZE_TEST_CHAR)
     {
-        // debugOutput::sendMessage("Not a transaction: Test dispensing. (" + to_string(g_machine.m_productDispensers[m_slot_index].getProductVolumeDispensed()) + "ml).", MSG_INFO);
+        // debugOutput::sendMessage("Not a transaction: Test dispensing. (" + to_string(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed()) + "ml).", MSG_INFO);
         // dispenseEndUpdateDB(false); // update the db dispense statistics
     }
     else if (!is_valid_dispense)
     {
-        debugOutput::sendMessage("Not a transaction: No minimum quantity of product dispensed (" + to_string(g_machine.m_productDispensers[m_slot_index].getProductVolumeDispensed()) + "ml). ", MSG_INFO);
+        debugOutput::sendMessage("Not a transaction: No minimum quantity of product dispensed (" + to_string(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed()) + "ml). ", MSG_INFO);
 
         // check for technical problems
         dispenseEndUpdateDB(false); // update the db dispense statistics
@@ -127,7 +127,7 @@ DF_ERROR stateDispenseEnd::onAction()
             bool success = false;
             // make sure to do this after dispenseEndUpdateDB
             // at that point remaining product volume is already updated in db, and in Product
-            success = sendTransactionToCloud(g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getProductVolumeRemaining());
+            success = sendTransactionToCloud(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeRemaining());
         }
 #else
         debugOutput::sendMessage("NOT SENDING transaction to cloud.", MSG_INFO);
@@ -136,7 +136,7 @@ DF_ERROR stateDispenseEnd::onAction()
 
     double price = getFinalPrice();
     debugOutput::sendMessage("Post dispense final price: " + to_string(price), MSG_INFO);
-    double volume = g_machine.m_productDispensers[m_slot_index].getProductVolumeDispensed();
+    double volume = g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed();
     std::string message = "finalVolumeDispensed|" + std::to_string(volume) + "|";
     m_pMessaging->sendMessageOverIP(message, true); // send to UI
 
@@ -152,16 +152,16 @@ DF_ERROR stateDispenseEnd::onAction()
 void stateDispenseEnd::adjustSizeToDispensedVolume()
 {
     if (
-        (m_pMessaging->getRequestedSize() == SIZE_SMALL_CHAR ||
-         m_pMessaging->getRequestedSize() == SIZE_MEDIUM_CHAR ||
-         m_pMessaging->getRequestedSize() == SIZE_LARGE_CHAR) &&
+        (g_machine.m_productDispensers[m_slot_index].getSelectedSizeAsChar() == SIZE_SMALL_CHAR ||
+         g_machine.m_productDispensers[m_slot_index].getSelectedSizeAsChar() == SIZE_MEDIUM_CHAR ||
+         g_machine.m_productDispensers[m_slot_index].getSelectedSizeAsChar() == SIZE_LARGE_CHAR) &&
         g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getIsSizeEnabled(SIZE_CUSTOM_CHAR))
     {
         // if custom volume is enabled, always revert back to the actual volume that's dispensed.
         m_pMessaging->setRequestedSize(SIZE_CUSTOM_CHAR);
         debugOutput::sendMessage("Custom volume is enabled, so we will always revert to it to calculate actual price.", MSG_INFO);
     }
-    else if (m_pMessaging->getRequestedSize() == SIZE_EMPTY_CONTAINER_DETECTED_CHAR)
+    else if (g_machine.m_productDispensers[m_slot_index].getSelectedSizeAsChar() == SIZE_EMPTY_CONTAINER_DETECTED_CHAR)
     {
         // check requested volume versus dispensed volume.
         // go down to next next allowed volume
@@ -199,7 +199,7 @@ char stateDispenseEnd::dispensedVolumeToSmallestFixedSize()
     // check real dispensed volume compared to available fixed sizes.
     // if dispensed volume is lower than small size, will return "SIZE_SMALLER_THAN_SMALL"
 
-    double dispensed_volume = g_machine.m_productDispensers[m_slot_index].getProductVolumeDispensed();
+    double dispensed_volume = g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed();
 
     char sizes_big_to_small[3] = {SIZE_LARGE_CHAR, SIZE_MEDIUM_CHAR, SIZE_SMALL_CHAR};
     char fixed_size;
@@ -212,7 +212,7 @@ char stateDispenseEnd::dispensedVolumeToSmallestFixedSize()
         {
             // debugOutput::sendMessage("check volume (dispensed vs target volume)" + to_string(fixed_size), MSG_INFO);
             // as long as the fixed volume is higher than the dispensed volume, go to next lowest size
-            fixed_volume = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getTargetVolume(fixed_size);
+            fixed_volume = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getVolumeFromSize(fixed_size);
 
             lowest_fixed_size = fixed_size;
             if (dispensed_volume >= fixed_volume)
@@ -298,7 +298,7 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
 {
     DF_ERROR e_ret = OK;
 
-    // std::string volume_remaining = to_string(g_machine.m_productDispensers[m_slot_index].getProductVolumeRemaining());
+    // std::string volume_remaining = to_string(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeRemaining());
     // char EndTime[50];
     // time(&rawtime);
     // timeinfo = localtime(&rawtime);
@@ -309,7 +309,7 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
     double price = getFinalPrice();
     std::string price_string = to_string(price);
     debugOutput::sendMessage("Final price" + price_string, MSG_INFO);
-    std::string target_volume = to_string(g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getTargetVolume(m_pMessaging->getRequestedSize()));
+    std::string target_volume = to_string(g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getTargetVolume());
     std::string product = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->m_name;
     // std::string machine_id = getMachineID();
     std::string machine_id = g_machine.getMachineId();
@@ -324,7 +324,7 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
     std::string pnumber = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getPNumberAsPString();
     double volume_remaining_converted;
     std::string dispensed_volume_units_converted;
-    double dispensed_volume = ceil(g_machine.m_productDispensers[m_slot_index].getProductVolumeDispensed());
+    double dispensed_volume = ceil(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed());
     if (dispensed_volume <= g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getVolumePerTick())
     {
         dispensed_volume_units_converted = "0";
@@ -338,7 +338,7 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
     volume_remaining_converted = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->convertVolumeMetricToDisplayUnits(volume_remaining);
     volume_remaining_units_converted_string = to_string(volume_remaining_converted);
 
-    std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&size_unit=" + units + "&price=" + price_string + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + end_time + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer&volume_remaining_ml=" + to_string(volume_remaining) + "&quantity_dispensed_ml=" + to_string(g_machine.m_productDispensers[m_slot_index].getProductVolumeDispensed()) + "&volume_remaining=" + volume_remaining_units_converted_string + "&coupon=" + coupon + "&buttonDuration=" + button_press_duration + "&buttonTimes=" + dispense_button_count + "&pnumber=" + pnumber;
+    std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&size_unit=" + units + "&price=" + price_string + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + end_time + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer&volume_remaining_ml=" + to_string(volume_remaining) + "&quantity_dispensed_ml=" + to_string(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed()) + "&volume_remaining=" + volume_remaining_units_converted_string + "&coupon=" + coupon + "&buttonDuration=" + button_press_duration + "&buttonTimes=" + dispense_button_count + "&pnumber=" + pnumber;
     char buffer[1080];
     strcpy(buffer, curl_param.c_str());
 
@@ -530,15 +530,15 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     price = getFinalPrice();
     price_string = to_string(price);
 
-    target_volume = to_string(ceil(g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getTargetVolume(m_pMessaging->getRequestedSize())));
-    char size = m_pMessaging->getRequestedSize();
+    target_volume = to_string(ceil(g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getTargetVolume()));
+    char size = g_machine.m_productDispensers[m_slot_index].getSelectedSizeAsChar();
 
     // everything rounded to the ml.
     double volume_dispensed_since_restock = ceil(g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getProductVolumeDispensedSinceLastRestock());
     double volume_dispensed_total_ever = ceil(g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getProductVolumeDispensedTotalEver());
-    double volume_remaining = ceil(g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getProductVolumeRemaining());
+    double volume_remaining = ceil(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeRemaining());
 
-    double dispensed_volume = ceil(g_machine.m_productDispensers[m_slot_index].getProductVolumeDispensed());
+    double dispensed_volume = ceil(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed());
 
     double updated_volume_remaining;
     double updated_volume_dispensed_since_restock;
@@ -618,7 +618,7 @@ double stateDispenseEnd::getFinalPrice()
 {
     // for fixed prices: will return fixed price
     // for custom volumes: will return price calculated from dispensed volume
-    char size = m_pMessaging->getRequestedSize();
+    char size = g_machine.m_productDispensers[m_slot_index].getSelectedSizeAsChar();
     double price_per_ml;
     double volume_dispensed;
     double price;
@@ -629,7 +629,7 @@ double stateDispenseEnd::getFinalPrice()
         bool isDiscountEnabled;
         double discountVolume;
         double discountPrice;
-        volume_dispensed = g_machine.m_productDispensers[m_slot_index].getProductVolumeDispensed();
+        volume_dispensed = g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed();
         g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->customDispenseDiscountData(&isDiscountEnabled, &discountVolume, &discountPrice);
 
         if (isDiscountEnabled && (volume_dispensed > discountVolume))
@@ -677,27 +677,28 @@ DF_ERROR stateDispenseEnd::setup_and_print_receipt()
     debugOutput::sendMessage("Price final for receipt:" + to_string(price), MSG_INFO);
 
     double volume_dispensed;
+    char size = g_machine.m_productDispensers[m_slot_index].getSelectedSizeAsChar();
 
-    if (m_pMessaging->getRequestedSize() == 's')
+    if (size == 's')
     {
         volume_dispensed = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->m_nVolumeTarget_s;
     }
-    else if (m_pMessaging->getRequestedSize() == 'm')
+    else if (size == 'm')
     {
         volume_dispensed = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->m_nVolumeTarget_m;
     }
-    else if (m_pMessaging->getRequestedSize() == 'l')
+    else if (size == 'l')
     {
         volume_dispensed = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->m_nVolumeTarget_l;
     }
-    else if (m_pMessaging->getRequestedSize() == 'c')
+    else if (size == 'c')
     {
         bool isDiscountEnabled;
         double discountVolume;
         double discountPrice;
         g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->customDispenseDiscountData(&isDiscountEnabled, &discountVolume, &discountPrice);
 
-        volume_dispensed = g_machine.m_productDispensers[m_slot_index].getProductVolumeDispensed();
+        volume_dispensed = g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed();
         if (isDiscountEnabled && (volume_dispensed > discountVolume))
         {
             // with price reduction at larger quantities
@@ -708,20 +709,20 @@ DF_ERROR stateDispenseEnd::setup_and_print_receipt()
             price_per_ml = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getPrice(SIZE_CUSTOM_CHAR);
         }
     }
-    else if (m_pMessaging->getRequestedSize() == 't')
+    else if (size == 't')
     {
-        volume_dispensed = g_machine.m_productDispensers[m_slot_index].getProductVolumeDispensed();
+        volume_dispensed = g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed();
         // normal
-        // price_per_ml = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getPrice(m_pMessaging->getRequestedSize());
+        // price_per_ml = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getPrice(size);
         // with reduction for larger quantities
         price_per_ml = 0;
     }
     else
     {
-        debugOutput::sendMessage("invalid size provided" + m_pMessaging->getRequestedSize(), MSG_INFO);
+        debugOutput::sendMessage("invalid size provided" + size, MSG_INFO);
     }
 
-    std::string plu = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getFinalPLU(m_pMessaging->getRequestedSize(), price);
+    std::string plu = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getFinalPLU(size, price);
 
     // convert units
     if (units == "oz")
@@ -759,7 +760,7 @@ DF_ERROR stateDispenseEnd::setup_and_print_receipt()
 
     double price_per_unit;
     // add base price
-    if (m_pMessaging->getRequestedSize() == 'c' || m_pMessaging->getRequestedSize() == 't')
+    if (size == 'c' || size == 't')
     {
         if (base_unit == "l")
         {
@@ -776,7 +777,7 @@ DF_ERROR stateDispenseEnd::setup_and_print_receipt()
 
         receipt_volume_formatted = receipt_volume_formatted + units + " @$" + receipt_price_per_unit + "/" + base_unit;
     }
-    // else if (m_pMessaging->getRequestedSize() == 't')
+    // else if (size == 't')
     // {
     //     receipt_volume_formatted = receipt_volume_formatted + units + " @" + receipt_price_per_ml + "$/" + base_unit;
     // }

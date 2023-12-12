@@ -50,7 +50,6 @@ DF_ERROR stateDispense::onEntry()
    // productDispensers = g_productDispensers;
    DF_ERROR e_ret = OK;
    slot = m_pMessaging->getRequestedSlot();
-   size = m_pMessaging->getRequestedSize();
    slot_index = slot - 1;
 
    if (m_pMessaging->getAction() == ACTION_AUTOFILL)
@@ -94,13 +93,13 @@ DF_ERROR stateDispense::onAction()
 
    // Send amount dispensed to UI (to show in Maintenance Mode, and/or animate filling)
 
-   g_machine.m_productDispensers[slot_index].updateProductFlowRateRunningAverageWindow();
+   g_machine.m_productDispensers[slot_index].updateActiveProductFlowRateRunningAverageWindow();
    g_machine.m_productDispensers[slot_index].updateDispenseStatus();
    g_machine.m_productDispensers[slot_index].updateSlotState();
 
    if (g_machine.m_productDispensers[slot_index].getIsStatusUpdateAllowed())
    {
-      double volume = g_machine.m_productDispensers[slot_index].getProductVolumeDispensed();
+      double volume = g_machine.m_productDispensers[slot_index].getSelectedProductVolumeDispensed();
 
       Time_val avg_02s = g_machine.m_productDispensers[slot_index].getAveragedProductFlowRate(1000);
       double flowrate = avg_02s.value;
@@ -152,9 +151,9 @@ DF_ERROR stateDispense::onAction()
       }
    }
 
-   if (g_machine.m_productDispensers[slot_index].isProductVolumeTargetReached())
+   if (g_machine.m_productDispensers[slot_index].isSelectedProductVolumeTargetReached())
    {
-      debugOutput::sendMessage("Stop dispensing. Requested volume reached. " + to_string(g_machine.m_productDispensers[slot_index].getProductVolumeDispensed()), MSG_INFO);
+      debugOutput::sendMessage("Stop dispensing. Requested volume reached. " + to_string(g_machine.m_productDispensers[slot_index].getSelectedProductVolumeDispensed()), MSG_INFO);
       m_state_requested = STATE_DISPENSE_END;
       stopPumping();
       return e_ret = OK;

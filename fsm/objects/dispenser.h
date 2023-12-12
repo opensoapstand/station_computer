@@ -72,7 +72,14 @@ public:
       // selected product
       product *getSelectedProduct();
       bool setSelectedProduct(int pnumber);
+
+      void setSelectedSizeAsChar(char size);
+      char getSelectedSizeAsChar();
+      double getSelectedSizeAsVolume();
+
       void setBasePNumberAsSelectedProduct();
+
+      product* getProductFromPNumber(int pnumber);
 
       // active product
       product* getActiveProduct();
@@ -108,7 +115,7 @@ public:
 
       void addDispenseButtonPress();
       DF_ERROR startDispense();
-      DF_ERROR initDispense(int nVolumeToDispense, double nPrice);
+      DF_ERROR initDispense(char size, double nPrice);
       DF_ERROR stopDispense();
       string getDispenseStartTime();
       string getDispenseEndTime();
@@ -118,6 +125,8 @@ public:
       void updateSlotState();
 
       int getBasePNumber();
+      int getActivePNumber();
+      int getSelectedPNumber();
       int getAdditivePNumber(int position);
 
       // dispenser flow 
@@ -126,17 +135,31 @@ public:
       bool isDispenserVolumeTargetReached();
 
       // product flow 
-      bool isProductVolumeTargetReached();
-      double getProductVolumeDispensed();
-      double getProductVolumeRemaining();
-      void resetProductVolumeDispensed();
-      void subtractFromProductVolumeDispensed(double volume_to_distract);
+      bool isActiveProductVolumeTargetReached();
+      double getActiveProductVolumeDispensed();
+      double getActiveProductVolumeRemaining();
+      void resetActiveProductVolumeDispensed();
+      void subtractActiveFromProductVolumeDispensed(double volume_to_distract);
+
+      bool isSelectedProductVolumeTargetReached();
+      double getSelectedProductVolumeDispensed();
+      double getSelectedProductVolumeRemaining();
+      void resetSelectedProductVolumeDispensed();
+      void subtractSelectedFromProductVolumeDispensed(double volume_to_distract);
+      
+      bool isProductVolumeTargetReached(int pnumber);
+      double getProductTargetVolume(int pnumber);
+      double getProductVolumeDispensed(int pnumber);
+      double getProductVolumeRemaining(int pnumber);
+      void resetProductVolumeDispensed(int pnumber);
+      void subtractFromProductVolumeDispensed(int pnumber, double volume_to_distract);
+
       void initProductFlowRateCalculation();
-      Time_val createAndGetProductVolumeDispensedDatapoint();
+      Time_val createAndGetActiveProductVolumeDispensedDatapoint();
       double getProductVolumeDeltaAndReset();
 
       double getProductFlowRateInstantaneous();
-      DF_ERROR updateProductFlowRateRunningAverageWindow();
+      DF_ERROR updateActiveProductFlowRateRunningAverageWindow();
       Time_val getAveragedProductFlowRate(uint64_t window_length_millis);
 
       // void resetDispenseButton();
@@ -183,6 +206,13 @@ private:
       bool m_isPumpReversalEnabled;
       bool m_isPumpSlowStartStopEnabled;
 
+      char m_selectedSizeAsChar;
+
+               
+      int m_selected_pnumber;
+      int m_active_pnumber;
+
+
       int m_dispense_pnumbers_count;
       int* m_dispense_pnumbers;
       int m_additive_pnumbers_count;
@@ -204,7 +234,8 @@ private:
       bool isDispenseFinished;
       // double m_nVolumeDispensedSinceLastPoll;
       double m_nTickCount;
-      double m_nVolumeTarget;
+      // double m_nVolumeTarget;
+      double m_dispenser_volume_dispensed;
       double m_dispenserVolumeTarget;
       char m_nStartTime[50];
       char m_nEndTime[50];
@@ -264,7 +295,6 @@ private:
       sqlite3 *db;
       int rc;
 
-      int m_selected_pnumber;
 
       DF_ERROR *m_pthreadError;
 

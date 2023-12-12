@@ -48,8 +48,12 @@ public:
 
         double getVolumePerTick();
 
-        double getTargetVolume(char size);
+        double getVolumeFromSize(char size);
         char getSizeCharFromTargetVolume(double volume);
+        void setTargetVolume(double volume);
+        double setTargetVolumeFromSize(char size);
+        double getTargetVolume();
+
         double getPrice(char size);
         // double getCustomVolumePriceDependingOnDispensedVolume(double volume);
         string getDisplayUnits();
@@ -89,12 +93,12 @@ public:
 
         bool testParametersFromDb();
 
-        double getProductVolumeDispensed();
+        double getVolumeDispensed();
         void customDispenseDiscountData(bool* isEnabled, double* discountVolume, double* discountPrice);
         void setVolumeDispensed(double volume);
         bool isDbValid();
 
-        void resetProductVolumeDispensed();
+        void resetVolumeDispensed();
 
         int sizeCharToSizeIndex(char size);
         char sizeIndexToSizeChar(int sizeIndex);
@@ -114,7 +118,7 @@ public:
         void registerFlowSensorTickFromInterrupt();
         int getSlot();
 
-        double getProductVolumeRemaining();
+        double getVolumeRemaining();
         double getProductVolumeDispensedTotalEver();
         double getProductVolumeDispensedSinceLastRestock();
         double getVolumeFull();
@@ -137,6 +141,10 @@ public:
         double m_nVolumeTarget_c_max; // custom volume dispensing: max
 
         double m_nVolumeTarget_t = 10000000; // test dispense (infinite)
+
+
+        double m_nVolumeTarget;
+
         // double m_price;
         double m_price_small;
         double m_price_medium;

@@ -129,7 +129,7 @@ DF_ERROR stateManualPump::onAction()
 
       else if ('5' == m_pMessaging->getAction())
       {
-         g_machine.m_productDispensers[m_active_pump_index].resetProductVolumeDispensed();
+         g_machine.m_productDispensers[m_active_pump_index].resetSelectedProductVolumeDispensed();
          dispenseButtonValueMemory = false;
          iscustomVolumeDispenseTest = !iscustomVolumeDispenseTest;
          debugOutput::sendMessage("Custom volume dispense pump model test active? : " + to_string(iscustomVolumeDispenseTest), MSG_INFO);
@@ -137,7 +137,7 @@ DF_ERROR stateManualPump::onAction()
 
       else if ('6' == m_pMessaging->getAction())
       {
-         g_machine.m_productDispensers[m_active_pump_index].resetProductVolumeDispensed();
+         g_machine.m_productDispensers[m_active_pump_index].resetSelectedProductVolumeDispensed();
          isCyclicTesting = !isCyclicTesting;
          debugOutput::sendMessage("Toggle cyclic pump test. Enabled?: " + to_string(isCyclicTesting), MSG_INFO);
 
@@ -169,12 +169,12 @@ DF_ERROR stateManualPump::onAction()
       {
 
          // Pump specific test
-         // g_machine.m_productDispensers[m_active_pump_index].resetProductVolumeDispensed();
+         // g_machine.m_productDispensers[m_active_pump_index].resetSelectedProductVolumeDispensed();
          // debugOutput::sendMessage("Do pump test", MSG_INFO);
          // pumpTest();
 
          // auto pump test
-         g_machine.m_productDispensers[m_active_pump_index].resetProductVolumeDispensed();
+         g_machine.m_productDispensers[m_active_pump_index].resetSelectedProductVolumeDispensed();
 
          if (m_state_auto_pump == AUTO_PUMP_STATE_IDLE)
          {
@@ -202,7 +202,7 @@ DF_ERROR stateManualPump::onAction()
             debugOutput::sendMessage("Flow measuring test enabled: False.", MSG_INFO);
             g_machine.m_productDispensers[m_active_pump_index].setPumpsDisableAll();
          }
-         g_machine.m_productDispensers[m_active_pump_index].resetProductVolumeDispensed();
+         g_machine.m_productDispensers[m_active_pump_index].resetSelectedProductVolumeDispensed();
       }
 
       else if (ACTION_MANUAL_PUMP_SET == m_pMessaging->getAction())
@@ -214,7 +214,7 @@ DF_ERROR stateManualPump::onAction()
          debugOutput::sendMessage("Value is pump number 1,2,3 or 4 :" + to_string((uint8_t)val), MSG_INFO);
          m_active_pump_index = ((uint8_t)val) - 1;
 
-         g_machine.m_productDispensers[m_active_pump_index].resetProductVolumeDispensed();
+         g_machine.m_productDispensers[m_active_pump_index].resetSelectedProductVolumeDispensed();
       }
       else if (ACTION_MANUAL_PUMP_PWM_SET == m_pMessaging->getAction())
       {
@@ -304,13 +304,13 @@ DF_ERROR stateManualPump::onAction()
       {
          // debugOutput::sendMessage("button: " + to_string(g_machine.m_productDispensers[m_active_pump_index].getDispenseButtonValue()), MSG_INFO);
 
-         double volume = g_machine.m_productDispensers[m_active_pump_index].getProductVolumeDispensed();
+         double volume = g_machine.m_productDispensers[m_active_pump_index].getSelectedProductVolumeDispensed();
 
          // instant flow rate
          double flowRate = g_machine.m_productDispensers[m_active_pump_index].getProductFlowRateInstantaneous();
 
          // flow rate windowed avg
-         g_machine.m_productDispensers[m_active_pump_index].updateProductFlowRateRunningAverageWindow();
+         g_machine.m_productDispensers[m_active_pump_index].updateActiveProductFlowRateRunningAverageWindow();
          Time_val avg_1s = g_machine.m_productDispensers[m_active_pump_index].getAveragedProductFlowRate(1000);
 
          if (triggerOutputData)
@@ -426,12 +426,12 @@ DF_ERROR stateManualPump::pumpFlowTest()
    double flowRate = g_machine.m_productDispensers[m_active_pump_index].getProductFlowRateInstantaneous();
 
    // flow rate windowed avg
-   g_machine.m_productDispensers[m_active_pump_index].updateProductFlowRateRunningAverageWindow();
+   g_machine.m_productDispensers[m_active_pump_index].updateActiveProductFlowRateRunningAverageWindow();
    Time_val avg_1s = g_machine.m_productDispensers[m_active_pump_index].getAveragedProductFlowRate(1000);
    Time_val avg_02s = g_machine.m_productDispensers[m_active_pump_index].getAveragedProductFlowRate(2000);
    Time_val avg_05s = g_machine.m_productDispensers[m_active_pump_index].getAveragedProductFlowRate(5000);
 
-   double totalVolume = g_machine.m_productDispensers[m_active_pump_index].getProductVolumeDispensed();
+   double totalVolume = g_machine.m_productDispensers[m_active_pump_index].getSelectedProductVolumeDispensed();
    if (triggerOutputData)
    {
 
@@ -598,7 +598,7 @@ DF_ERROR stateManualPump::autofillPresetQuantity()
    }
    else if (m_state_auto_pump == AUTO_PUMP_STATE_PUMPING)
    {
-      double totalVolume = g_machine.m_productDispensers[m_active_pump_index].getProductVolumeDispensed();
+      double totalVolume = g_machine.m_productDispensers[m_active_pump_index].getSelectedProductVolumeDispensed();
       if (totalVolume > 500)
       {
          m_state_auto_pump = AUTO_PUMP_STATE_FINISHED;

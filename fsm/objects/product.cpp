@@ -143,12 +143,12 @@ void product::setVolumeDispensed(double volume)
     m_nVolumeDispensed = volume;
 }
 
-double product::getProductVolumeDispensed()
+double product::getVolumeDispensed()
 {
     return m_nVolumeDispensed;
 }
 
-void product::resetProductVolumeDispensed()
+void product::resetVolumeDispensed()
 {
     m_nVolumeDispensed = 0;
 }
@@ -191,7 +191,7 @@ double product::getVolumeFull()
 {
     return m_nVolumeFull;
 }
-double product::getProductVolumeRemaining()
+double product::getVolumeRemaining()
 {
     return m_nVolumeRemaining;
 }
@@ -232,7 +232,22 @@ char product::getSizeCharFromTargetVolume(double volume)
         return 'c';
     }
 }
-double product::getTargetVolume(char size)
+double product::getTargetVolume(){
+    return m_nVolumeTarget;
+
+}
+
+void product::setTargetVolume(double volume)
+{
+    m_nVolumeTarget = volume;
+}
+
+double product::setTargetVolumeFromSize(char size){
+    m_nVolumeTarget = getVolumeFromSize(size);
+
+}
+
+double product::getVolumeFromSize(char size)
 {
     if (size == 's')
     {
@@ -268,11 +283,11 @@ double product::getTargetVolume(char size)
 // {
 //     // custom volume pricing is per ml. Often, pricing is more optimal when larger volumes are dispensed.
 //     // if the volume provide is larger than "large volume pricing", the price per milliliter will be adjusted to match that.
-//     if (volume >= getTargetVolume(SIZE_LARGE_CHAR))
+//     if (volume >= getVolumeFromSize(SIZE_LARGE_CHAR))
 //     {
 //         // go for discount
 //         // price per ml
-//         double largePricePerMl = getPrice(SIZE_LARGE_CHAR) / getTargetVolume(SIZE_LARGE_CHAR);
+//         double largePricePerMl = getPrice(SIZE_LARGE_CHAR) / getVolumeFromSize(SIZE_LARGE_CHAR);
 
 //         return largePricePerMl;
 

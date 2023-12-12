@@ -29,24 +29,11 @@ font-weight: normal;
 font-size: 23px;
 line-height: 29px;</string>
   </property>
-  <widget class="QPushButton" name="pushButton_previous_page">
-   <property name="geometry">
-    <rect>
-     <x>68</x>
-     <y>1757</y>
-     <width>281</width>
-     <height>100</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
   <widget class="QPushButton" name="pushButton_continue">
    <property name="geometry">
     <rect>
-     <x>188</x>
-     <y>1541</y>
+     <x>193</x>
+     <y>1750</y>
      <width>740</width>
      <height>92</height>
     </rect>
@@ -64,10 +51,10 @@ line-height: 29px;</string>
    </property>
    <property name="geometry">
     <rect>
-     <x>480</x>
-     <y>1770</y>
-     <width>125</width>
-     <height>125</height>
+     <x>970</x>
+     <y>30</y>
+     <width>75</width>
+     <height>75</height>
     </rect>
    </property>
    <property name="text">
@@ -190,10 +177,10 @@ text-align: center;</string>
   <widget class="QPushButton" name="pushButton_order_small">
    <property name="geometry">
     <rect>
-     <x>564</x>
-     <y>996</y>
-     <width>130</width>
-     <height>100</height>
+     <x>525</x>
+     <y>1252</y>
+     <width>225</width>
+     <height>158</height>
     </rect>
    </property>
    <property name="autoFillBackground">
@@ -305,10 +292,10 @@ text-align: center;</string>
   <widget class="QLabel" name="label_size_small">
    <property name="geometry">
     <rect>
-     <x>560</x>
-     <y>1000</y>
-     <width>131</width>
-     <height>31</height>
+     <x>561</x>
+     <y>1295</y>
+     <width>163</width>
+     <height>26</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -330,10 +317,10 @@ text-align: center;</string>
   <widget class="QLabel" name="label_price_small">
    <property name="geometry">
     <rect>
-     <x>560</x>
-     <y>1040</y>
-     <width>131</width>
-     <height>41</height>
+     <x>599</x>
+     <y>1331</y>
+     <width>77</width>
+     <height>36</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -359,47 +346,23 @@ text-align: center;</string>
   <widget class="QLabel" name="label_product_title">
    <property name="geometry">
     <rect>
-     <x>90</x>
-     <y>326</y>
-     <width>881</width>
-     <height>131</height>
+     <x>100</x>
+     <y>190</y>
+     <width>900</width>
+     <height>200</height>
     </rect>
    </property>
    <property name="text">
     <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_product_description">
-   <property name="geometry">
-    <rect>
-     <x>88</x>
-     <y>461</y>
-     <width>901</width>
-     <height>271</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Montserrat</family>
-     <pointsize>-1</pointsize>
-     <weight>50</weight>
-     <bold>false</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
    </property>
   </widget>
   <widget class="QLabel" name="label_product_ingredients">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>1280</y>
-     <width>888</width>
-     <height>200</height>
+     <x>50</x>
+     <y>1014</y>
+     <width>420</width>
+     <height>322</height>
     </rect>
    </property>
    <property name="text">
@@ -412,10 +375,10 @@ text-align: center;</string>
   <widget class="QLabel" name="label_product_photo">
    <property name="geometry">
     <rect>
-     <x>94</x>
-     <y>765</y>
-     <width>450</width>
-     <height>450</height>
+     <x>0</x>
+     <y>450</y>
+     <width>470</width>
+     <height>470</height>
     </rect>
    </property>
    <property name="text">
@@ -428,14 +391,14 @@ text-align: center;</string>
   <widget class="QLabel" name="label_product_ingredients_title">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>1239</y>
-     <width>351</width>
-     <height>50</height>
+     <x>50</x>
+     <y>970</y>
+     <width>211</width>
+     <height>29</height>
     </rect>
    </property>
    <property name="text">
-    <string>Ingredients:</string>
+    <string/>
    </property>
    <property name="alignment">
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -444,10 +407,10 @@ text-align: center;</string>
   <widget class="QLabel" name="label_background_small">
    <property name="geometry">
     <rect>
-     <x>310</x>
-     <y>230</y>
-     <width>67</width>
-     <height>17</height>
+     <x>525</x>
+     <y>1252</y>
+     <width>225</width>
+     <height>158</height>
     </rect>
    </property>
    <property name="text">
@@ -496,10 +459,10 @@ text-align: center;</string>
   <widget class="QLabel" name="label_select_quantity">
    <property name="geometry">
     <rect>
-     <x>567</x>
-     <y>949</y>
-     <width>393</width>
-     <height>44</height>
+     <x>495</x>
+     <y>1150</y>
+     <width>414</width>
+     <height>47</height>
     </rect>
    </property>
    <property name="text">
@@ -525,32 +488,68 @@ text-align: center;</string>
    </property>
    <property name="geometry">
     <rect>
-     <x>478</x>
-     <y>1773</y>
-     <width>125</width>
-     <height>125</height>
+     <x>980</x>
+     <y>40</y>
+     <width>50</width>
+     <height>50</height>
     </rect>
    </property>
    <property name="text">
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="label_customize_drink">
+   <property name="geometry">
+    <rect>
+     <x>495</x>
+     <y>450</y>
+     <width>339</width>
+     <height>47</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_sizes_background">
+   <property name="geometry">
+    <rect>
+     <x>495</x>
+     <y>1222</y>
+     <width>535</width>
+     <height>401</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: #5E8680;
+font-family: Montserrat;
+font-style: light;
+font-weight: normal;
+font-size: 20px;
+line-height: 24px;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <zorder>label_sizes_background</zorder>
   <zorder>label_help</zorder>
   <zorder>pushButton_continue</zorder>
-  <zorder>pushButton_order_small</zorder>
   <zorder>pushButton_order_big</zorder>
   <zorder>pushButton_order_medium</zorder>
   <zorder>pushButton_order_custom</zorder>
   <zorder>label_size_medium</zorder>
   <zorder>label_price_medium</zorder>
-  <zorder>label_size_small</zorder>
-  <zorder>label_price_small</zorder>
   <zorder>label_price_custom</zorder>
   <zorder>label_size_custom</zorder>
   <zorder>label_price_large</zorder>
   <zorder>label_size_large</zorder>
   <zorder>label_product_title</zorder>
-  <zorder>label_product_description</zorder>
   <zorder>label_product_photo</zorder>
   <zorder>label_product_ingredients_title</zorder>
   <zorder>label_background_small</zorder>
@@ -561,7 +560,10 @@ text-align: center;</string>
   <zorder>label_select_quantity</zorder>
   <zorder>pushButton_back</zorder>
   <zorder>pushButton_to_help</zorder>
-  <zorder>pushButton_previous_page</zorder>
+  <zorder>label_customize_drink</zorder>
+  <zorder>label_price_small</zorder>
+  <zorder>label_size_small</zorder>
+  <zorder>pushButton_order_small</zorder>
  </widget>
  <resources/>
  <connections/>

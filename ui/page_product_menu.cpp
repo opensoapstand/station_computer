@@ -353,10 +353,11 @@ void page_product_menu::displayDispenseProductsMenu()
             // p_page_idle->thisMachine->addPictureToLabel(labels_dispense_product_picture[sub_menu_index], dispenseProduct->getProductPicturePath());
 
             QString picturePath = dispenseProduct->getProductPicturePath();
-            // QString image_path_for_position = "%IMAGE_PATH%1%".arg(std::to_string(option_index));
-            
+            QString increment_text = "%IMAGE_PATH%1%";
+            QString image_path_for_position = increment_text.arg(sub_menu_index);
+            qDebug() << "!@@@@@@@@@@@ IMAGE PATH: " << image_path_for_position;
             // styleSheet.replace(image_path_for_position, picturePath);
-            styleSheet.replace("%IMAGE_PATH%", picturePath);
+            styleSheet.replace(image_path_for_position, picturePath);
 
 
             qDebug() << "Set up sub menu for item: " << sub_menu_index + 1 << " which is option: " << option_index + 1 << " which has pnumber; " << p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getPNumber();

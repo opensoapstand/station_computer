@@ -68,7 +68,7 @@ void page_product_mixing::setPage(page_select_product *pageSelect, page_dispense
     this->p_page_payment_tap_serial = page_payment_tap_serial;
     this->p_page_payment_tap_tcp = page_payment_tap_tcp;
     this->p_statusbar = p_statusbar;
-    this->p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_PRODUCT_BACKGROUND_PATH);
+    this->p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_PRODUCT_MENU_BACKGROUND_PATH);
 }
 
 // DTOR
@@ -96,14 +96,16 @@ void page_product_mixing::showEvent(QShowEvent *event)
     ui->label_product_title->setProperty("class", "title");
     ui->label_product_title->setStyleSheet(styleSheet);
     ui->pushButton_back->setStyleSheet(styleSheet); // pushbutton
-    ui->label_product_description->setStyleSheet(styleSheet);
+    // ui->label_product_description->setStyleSheet(styleSheet);
     ui->label_product_photo->setStyleSheet(styleSheet);
+    ui->label_customize_drink->setStyleSheet(styleSheet);
     ui->label_select_quantity->setStyleSheet(styleSheet);
     ui->label_product_ingredients->setStyleSheet(styleSheet);
     ui->label_product_ingredients_title->setStyleSheet(styleSheet);
     ui->label_help->setStyleSheet(styleSheet);
+    ui->label_sizes_background->setStyleSheet(styleSheet);
     ui->pushButton_continue->setStyleSheet(styleSheet);
-    ui->pushButton_previous_page->setStyleSheet(styleSheet);
+    // ui->pushButton_previous_page->setStyleSheet(styleSheet);
     ui->pushButton_to_help->setProperty("class", "button_transparent");
     ui->pushButton_to_help->setStyleSheet(styleSheet);
 
@@ -113,12 +115,12 @@ void page_product_mixing::showEvent(QShowEvent *event)
         orderSizeLabelsPrice[i]->setProperty("class", "orderSizeLabelsPrice");
         orderSizeBackgroundLabels[i]->setProperty("class", "orderSizeBackgroundLabels");
         orderSizeButtons[i]->setProperty("class", "orderSizeButtons");
-        orderSizeBackgroundLabels[i]->setProperty("class", "orderSizeBackgroundLabels1");
+        // orderSizeBackgroundLabels[i]->setProperty("class", "orderSizeBackgroundLabels1");
         orderSizeLabelsVolume[i]->setStyleSheet(styleSheet);
         orderSizeLabelsPrice[i]->setStyleSheet(styleSheet);
         orderSizeBackgroundLabels[i]->setStyleSheet(styleSheet);
         orderSizeButtons[i]->setStyleSheet(styleSheet);
-        orderSizeBackgroundLabels[i]->setStyleSheet(styleSheet);
+        // orderSizeBackgroundLabels[i]->setStyleSheet(styleSheet);
     }
 
     p_page_idle->thisMachine->resetTransactionLogging();
@@ -148,10 +150,12 @@ void page_product_mixing::reset_and_show_page_elements()
 
     // general setup
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_back);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->label_customize_drink);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_select_quantity);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->label_product_ingredients_title);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_continue);
 
-    ui->label_product_description->setWordWrap(true);
+    // ui->label_product_description->setWordWrap(true);
     ui->label_product_ingredients->setWordWrap(true);
     ui->pushButton_continue->hide();
 
@@ -180,7 +184,7 @@ void page_product_mixing::reset_and_show_page_elements()
 
     ui->label_product_title->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductName());
     ui->label_product_ingredients->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductIngredients());
-    ui->label_product_description->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductDescription());
+    // ui->label_product_description->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductDescription());
 
     QString full_path = p_page_idle->thisMachine->getTemplatePathFromName(IMAGE_BUTTON_HELP);
     qDebug() << full_path;
@@ -297,15 +301,15 @@ void page_product_mixing::reset_and_show_page_elements()
             // if there is only one product size available, the continue button will show, it will then load this default size
             default_size = product_sizes[i];
 
-            orderSizeButtons[i]->setFixedSize(QSize(xywh_size_buttons[i][2], xywh_size_buttons[i][3]));
-            orderSizeButtons[i]->move(xywh_size_buttons[i][0], xywh_size_buttons[i][1]);
+            // orderSizeButtons[i]->setFixedSize(QSize(xywh_size_buttons[i][2], xywh_size_buttons[i][3]));
+            // orderSizeButtons[i]->move(xywh_size_buttons[i][0], xywh_size_buttons[i][1]);
 
-            orderSizeBackgroundLabels[i]->setFixedSize(QSize(xywh_size_buttons[i][2], xywh_size_buttons[i][3]));
-            orderSizeBackgroundLabels[i]->move(xywh_size_buttons[i][0], xywh_size_buttons[i][1]);
-            orderSizeBackgroundLabels[i]->lower();
+            // orderSizeBackgroundLabels[i]->setFixedSize(QSize(xywh_size_buttons[i][2], xywh_size_buttons[i][3]));
+            // orderSizeBackgroundLabels[i]->move(xywh_size_buttons[i][0], xywh_size_buttons[i][1]);
+            // orderSizeBackgroundLabels[i]->lower();
 
-            orderSizeLabelsPrice[i]->move(xy_size_labels_price[i][0], xy_size_labels_price[i][1]);
-            orderSizeLabelsVolume[i]->move(xy_size_labels_volume[i][0], xy_size_labels_volume[i][1]);
+            // orderSizeLabelsPrice[i]->move(xy_size_labels_price[i][0], xy_size_labels_price[i][1]);
+            // orderSizeLabelsVolume[i]->move(xy_size_labels_volume[i][0], xy_size_labels_volume[i][1]);
 
             if (product_sizes[i] == SIZE_CUSTOM_INDEX)
             {
@@ -474,10 +478,10 @@ size_t page_product_mixing::WriteCallback_coupon(char *contents, size_t size, si
     return size * nmemb;
 }
 
-void page_product_mixing::on_pushButton_previous_page_clicked()
-{
-    hideCurrentPageAndShowProductMenu();
-}
+// void page_product_mixing::on_pushButton_previous_page_clicked()
+// {
+//     hideCurrentPageAndShowProductMenu();
+// }
 
 void page_product_mixing::on_pushButton_continue_clicked()
 {

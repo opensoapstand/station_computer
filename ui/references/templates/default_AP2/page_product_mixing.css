@@ -1,46 +1,32 @@
-/* #pushButton_to_idle {
-
-   font-family: 'Brevia';
-   font-style: normal;
-   font-weight: 75;
-   font-size: 20px;
-   line-height: 99px;
-   color: #FFFFFF;
-   text-align: center;
-   qproperty-alignment: AlignCenter;
-   border: none;
-} */
-
 .button_transparent {
    background-color: transparent;
    border: 0px;
 }
 
 .title {
-   position: absolute;
-   font-family: 'EuropaNuova-ExtraBold';
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   font-family: 'El Messiri';
    font-style: normal;
    font-weight: 400;
-   font-size: 45px;
-   line-height: 52px;
-   text-transform: capitalize;
-   color: red;
+   font-size: 60px;
+   color: #221403;
+   line-height: 1;
 }
 
-.orderSizeBackgroundLabels1 {
-   background-color: transparent;
-   border: 0px;
-}
-
-#label_select_quantity {
-   font-family: 'EuropaNuova-ExtraBold';
+#label_customize_drink, #label_select_quantity {
+   font-family: "El Messiri";
+   color: #221403;
+   font-size: 30px;
    font-style: normal;
-   font-weight: 400;
-   font-size: 36px;
-   line-height: auto;
-   color: #d2705e;
-   border: none;
-   margin-bottom: 10px;
+   font-weight: 700;
+   line-height: normal;
+}
+
+#label_sizes_background{
+   border-radius: 25px;
+   border: 1px solid #F9EBD8;
+   background: #FFF7ED; 
 }
 
 .orderSizeLabelsVolume {
@@ -56,24 +42,24 @@
 }
 
 .orderSizeLabelsPrice {
-   font-family: 'EuropaNuova-ExtraBold';
+   color: #895E25;
+   text-align: center;
+   font-family: 'Lato';
+   font-size: 30px;
    font-style: normal;
    font-weight: 700;
-   font-size: 34px;
-   line-height: 44px;
-   color: #58595B;
+   line-height: normal;
 }
 
 .orderSizeBackgroundLabels {
-   background-color: #FFFFFF;
-   border: 0px;
+   background-color: #FEFBF9;
+   border: 10px;
 }
 
 .orderSizeButtons {
-   /* background-color: #2C2C2C; */
    background-color: transparent;
-   border: 3px solid #d2705e;
-   border-radius: 25px;
+   border: 5px solid #BC8439;
+   border-radius: 10px;
 }
 
 #pushButton_previous_page {
@@ -82,14 +68,15 @@
 }
 
 #pushButton_back {
-   font-family: 'EuropaNuova-Regular';
+   font-family: 'Lato';
    font-style: normal;
-   font-weight: 700;
-   font-size: 35px;
-   color: #221F20;
+   font-weight: 400;
+   font-size: 24px;
+   color: #001810;
    text-align: left;
-   /* qproperty-alignment: AlignCenter; */
+   qproperty-alignment: AlignCenter;
    border: none;
+   text-transform: capitalize;
 }
 
 
@@ -108,32 +95,31 @@
 
 #label_product_photo {
    background-image: url(%IMAGE_PATH%);
-   border: 1px solid orange;
-   border-radius: 50%;
+   border-top-left-radius: 0px;
+   border-top-right-radius: 100px;
+   border-bottom-right-radius: 100px;
+   border-bottom-left-radius: 100px;
    background-repeat: no-repeat;
    background-size: contain;
    background-clip: content;
 }
 
 #label_product_ingredients_title {
-   position: absolute;
-   font-family: 'EuropaNuova-ExtraBold';
+   color: #221403;
+   font-family: 'Lato';
+   font-size: 24px;
    font-style: normal;
-   font-weight: 400;
-   font-size: 37px;
-   line-height: 49px;
-   color: #221F20;
+   font-weight: 700;
+   line-height: normal;
 }
 
 #label_product_ingredients {
-   margin-top: 20px;
-   position: absolute;
-   font-family: 'EuropaNuova-Regular';
+   color: #221403;
+   font-family: 'Lato';
+   font-size: 24px;
    font-style: normal;
    font-weight: 400;
-   font-size: 22px;
-   line-height: 50px;
-   color: #58595B;
+   line-height: normal;
 }
 
 #pushButton_continue {
@@ -144,7 +130,7 @@
    font-size: 48px;
    text-align: center;
    line-height: auto;
-   /* qproperty-alignment: AlignCenter; */
+   qproperty-alignment: AlignCenter;
    border-radius: 20px;
    color: white;
    border: none;

@@ -155,12 +155,54 @@ QLabel {
     /* border: 1px solid black;  */
 }
 
-.label_base_product_picture {
-    background-image: url(%IMAGE_PATH%);
-    border: 1px solid orange;
-    border-radius: 50%;
+.label_base_product_picture{
+    background-size: contain;
     background-repeat: no-repeat;
-    background-size: cover;
+    background-attachment: fixed;
     background-position: center;
     background-clip: content;
+}
+#label_dispense_product_picture_1{
+    border-top-left-radius: 0px;
+    border-top-right-radius: 100px;
+    border-bottom-right-radius: 100px;
+    border-bottom-left-radius: 100px;
+    background-image: url(%IMAGE_PATH0%);
+}
+
+#label_dispense_product_picture_2{
+    border-radius: 100px;
+    background-image: url(%IMAGE_PATH1%);
+}
+
+#label_dispense_product_picture_3{
+    border-top-left-radius: 100px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 100px;
+    border-bottom-left-radius: 100px;
+    background-image: url(%IMAGE_PATH2%);
+}
+
+#label_dispense_product_picture_4{
+    border-top-left-radius: 0px;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+    border-bottom-left-radius: 0px;
+    background-image: url(%IMAGE_PATH3%);
+}
+
+#label_dispense_product_picture_5{
+    border-top-left-radius: 0px;
+    border-top-right-radius: 100px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 100px;
+    background-image: url(%IMAGE_PATH4%);
+}
+
+#label_dispense_product_picture_6{
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 50px;
+    background-image: url(%IMAGE_PATH5%);
 }

@@ -29,6 +29,9 @@ gpio::~gpio()
         // kill thread!
         this->stopListener_flowsensor();
 }
+// void gpio::setPinNumber(int pinNumber){
+
+// }
 
 // kick off a listener_flowsensor
 void gpio::startListener_flowsensor()

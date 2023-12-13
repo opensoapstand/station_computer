@@ -71,9 +71,26 @@ messageMediator::~messageMediator()
 //    return false;
 // }
 
+DF_ERROR messageMediator::setSendingBehaviour(bool enableElseDisableSending)
+{
+   m_enable_sending = enableElseDisableSending;
+
+   DF_ERROR dfError = OK;
+   return dfError;
+}
+
 DF_ERROR messageMediator::sendMessageOverIP(string msg, bool isLoggingMessage)
 {
    DF_ERROR dfError = OK;
+   if (!m_enable_sending)
+   {
+      if (isLoggingMessage)
+      {
+         debugOutput::sendMessage("Standalone mode. Will not send msg:  " + msg, MSG_INFO);
+      }
+      return dfError;
+   }
+
    if (isLoggingMessage)
    {
       debugOutput::sendMessage("Send msg to UI (don't wait for reply): " + msg, MSG_INFO);
@@ -161,11 +178,11 @@ void messageMediator::setMachine(machine *machine)
 
       if (m_machine == nullptr)
       {
-         debugOutput::sendMessage("normal TO BE NULLPTR AT START ", MSG_ERROR);
+         //debugOutput::sendMessage("normal TO BE NULLPTR AT START ", MSG_INFO);
       }
       else
       {
-         debugOutput::sendMessage("not nullptr at start ", MSG_ERROR);
+         debugOutput::sendMessage("ASSERT ERROR: m_machine Not nullptr at init. Reinit??", MSG_WARNING);
       }
       this->m_machine = machine;
    }
@@ -573,14 +590,14 @@ void messageMediator::sendTemperatureData()
    string str_temperature_1;
    string str_temperature_2;
 
-   if (m_machine->control_pcb->isTemperatureSensorAvailable())
+   if (m_machine->control_pcb->isTemperatureSensorMCP9808Available_1())
    {
-      temperature_1 = m_machine->control_pcb->getTemperature(TEMPERATURE_SENSOR_1_ADDRESS);
+      temperature_1 = m_machine->control_pcb->getTemperature(pcb::external_sensor_fridge);
    }
 
-   if (m_machine->control_pcb->isTemperatureSensor2Available())
+   if (m_machine->control_pcb->isTemperatureSensorMCP9808Available_2())
    {
-      temperature_2 = m_machine->control_pcb->getTemperature(TEMPERATURE_SENSOR_2_ADDRESS);
+      temperature_2 = m_machine->control_pcb->getTemperature(pcb::external_sensor_cavity);
    }
    char temp_celcius_chars[MAX_BUF];
    snprintf(temp_celcius_chars, sizeof(temp_celcius_chars), "%.2f", temperature_1);

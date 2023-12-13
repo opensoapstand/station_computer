@@ -390,7 +390,7 @@ void page_product_overview::apply_promo_code(QString promocode)
     CURLcode res;
     long http_code = 0;
     QString machine_id = p_page_idle->thisMachine->getMachineId();
-    QString product_serial = p_page_idle->thisMachine->getSelectedProduct()->getProductDrinkfillSerial();
+    QString product_serial = p_page_idle->thisMachine->getSelectedProduct()->getPNumberAsPString();
     // csuccess
     p_page_idle->thisMachine->setCouponState(enabled_invalid_input);
 

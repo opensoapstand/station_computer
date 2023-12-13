@@ -22,7 +22,7 @@
 // Default CTOR
 stateIdle::stateIdle()
 {
-   productDispensers = g_productDispensers;
+   // productDispensers = g_productDispensers;
 }
 
 // CTOR Linked to IP Thread Socket Listener
@@ -88,21 +88,6 @@ DF_ERROR stateIdle::onAction()
 
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
-   // if (nullptr != &m_state_requested)
-   // {
-
-   // Check if Command String is ready
-
-   // if (temperatureRefresh==1) {
-   //   double temperature = this->productDispensers[0].the_pcb->getTemperature();
-   //   debugOutput::sendMessage("Temperature in Celsius: " + std::to_string(temperature), MSG_INFO);
-   //   printf("Temperature polling from MCP9808: %.3f Celcius \n", temperature);
-   //   m_pMessaging->sendMessageOverIP("temperature|" + std::to_string(temperature), true); // send to UI
-
-   //   std::this_thread::sleep_for(std::chrono::seconds(5));  // Wait for 5 seconds
-   // temperatureRefresh==0;
-   // }
-
    if (m_pMessaging->isCommandStringReadyToBeParsed())
    {
       DF_ERROR ret_msg;
@@ -149,8 +134,8 @@ DF_ERROR stateIdle::onAction()
       {
          
          debugOutput::sendMessage("Before reload parameters from product", MSG_INFO);
-         bool success = this->productDispensers[0].getSelectedProduct()->loadParameters();
-         this->productDispensers[0].loadGeneralProperties();
+         bool success = g_machine.m_productDispensers[0].getSelectedProduct()->loadParameters();
+         g_machine.m_productDispensers[0].loadGeneralProperties();
          g_machine.loadGeneralProperties();
 
          debugOutput::sendMessage("After" + to_string(success), MSG_INFO);

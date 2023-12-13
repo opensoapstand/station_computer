@@ -14,6 +14,7 @@
 
 #include "../dftypes.h"
 #include "../objects/messageMediator.h"
+#include "../objects/machine.h"
 #include "../fsm.h"
 
 #include "stateVirtual.h"
@@ -39,7 +40,7 @@ private:
     int slot;
     int slot_index;
 
-    dispenser *productDispensers;
+    // dispenser *productDispensers;
     bool flushCommand;
     char size;
 };

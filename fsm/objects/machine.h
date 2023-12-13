@@ -18,37 +18,55 @@
 #include "../dftypes.h"
 #include "../components/gpio.h"
 // #include "../components/dsed8344.h"
-#include "../components/odysseyx86gpio.h"
+#include "../components/fsmodysseyx86gpio.h"
+#include "../components/pcb.h"
+#include "dispenser.h"
 #include "product.h"
 #include <sqlite3.h>
+#include <map>
+#include <string>
 
 #include "../../library/printer/Adafruit_Thermal.h"
 
 class machine
 {
 public:
+    dispenser m_productDispensers[PRODUCT_DISPENSERS_MAX];
+
+    enum HardwareVersion
+    {
+        SS09,
+        SS1,
+        SS2,
+        AP1,
+        AP2,
+        UNKNOWN
+    };
+
     machine();
+    void refresh();
     void pcb24VPowerSwitch(bool enableElseDisable);
     bool getPcb24VPowerSwitchStatus();
     // void print_text(string text);
     void print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string char_units_formatted, string paymentMethod, string plu, string promoCode, bool sleep_until_printed);
     gpio *switch_24V;
     bool power24VEnabled = false;
-    void setup();
+    void setup(product *pnumbers);
     pcb *getPcb();
 
-    pcb *getTemperature();
-    pcb *getTemperature2();
-    // void getTemperature(temperature sensor);
-    // static pcb *control_pcb;
+    void setFlowSensorCallBack(int slot);
+    
+
+
     pcb *control_pcb;
     Adafruit_Thermal *receipt_printer;
     void setButtonLightsBehaviour(Button_lights_behaviour behaviour);
-
+    void initProductDispensers();
     void refreshButtonLightAnimationCaterpillar();
     void refreshButtonLightAnimationPingPong();
     void refreshButtonLightAnimation();
     void resetButtonLightAnimation();
+    void setMultiDispenseButtonLight(int slot, bool enableElseDisable);
     Button_lights_behaviour m_button_lights_behaviour;
     Button_lights_behaviour m_button_lights_behaviour_memory;
     uint64_t m_lights_animation_most_recent_step_millis;
@@ -56,12 +74,14 @@ public:
     void syncSoftwareVersionWithDb();
     void executeSQLStatement(string sql_string);
 
+    machine::HardwareVersion getHardwareVersion();
+
     int getButtonAnimationProgram();
     // void loadButtonPropertiesFromDb();
     bool getMultiDispenseButtonEnabled();
 
     void loadGeneralProperties();
-    void loadParametersFromDb();
+    void loadMachineParametersFromDb();
     string getMachineId();
 
     static int convertPStringToPNumber(const std::string &inputString);
@@ -69,12 +89,17 @@ public:
     bool getPumpReversalEnabled();
     bool getEmptyContainerDetectionEnabled();
     bool getPumpSlowStartStopEnabled();
+    int getDispensersCount();
 
 private:
+    product *m_pnumbers;
+    void setHardwareVersionFromString(const std::string &version);
     bool m_isMultiButtonEnabled = false;
     int m_button_animation_program;
     sqlite3 *db;
     int rc;
+
+    machine::HardwareVersion m_hardware_version;
 
     string m_machine_id;
     int m_soapstand_customer_id;
@@ -88,7 +113,7 @@ private:
     bool m_receipt_printer_is_online;
     bool m_receipt_printer_has_paper;
     bool m_has_tap_payment;
-    string m_hardware_version;
+    // string m_hardware_version_str;
     string m_software_version;
     int m_aws_port;
     string m_pump_id_slot_1;

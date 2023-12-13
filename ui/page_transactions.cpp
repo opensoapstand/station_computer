@@ -129,7 +129,7 @@ void page_transactions::populateList()
                 QString ingredients_ui;
                 QString rowItem;
 
-                int pnumber = p_page_idle->thisMachine->getProductByPNumber(0)->convertPNotationToPNumber(recent_transactions[i][4]);
+                int pnumber = p_page_idle->thisMachine->getProductByPNumber(0)->convertPStringToPInt(recent_transactions[i][4]);
 
                 p_page_idle->thisMachine->getProductByPNumber(pnumber)->getProductProperties(
                                                                                              &name,

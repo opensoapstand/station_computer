@@ -75,7 +75,7 @@ QLabel {
     font-style: normal;
     font-size: 30px;
     text-align: left;
-    qproperty-alignment: AlignCenter;
+    qproperty-alignment: AlignLeft;
 }
 
 .pushButton_dispense_product{

@@ -74,7 +74,7 @@ void machine::loadDynamicContent()
     QVector<int> all_pnumbers = getAllUsedPNumbersFromSlots();
     for (int pnumber_index = 0; pnumber_index < all_pnumbers.size(); pnumber_index++)
     {
-        qDebug() << "machine: load product properties for pnumber:" << (all_pnumbers[pnumber_index]);
+        // qDebug() << "machine: load product properties for pnumber:" << (all_pnumbers[pnumber_index]);
         m_pnumberproducts[all_pnumbers[pnumber_index]].loadProductProperties();
     }
 
@@ -191,7 +191,6 @@ void machine::initProductOptions()
         int option = dispenseProductsMenuOptions[i];
         qDebug() << "Option eef" << (i+1) << ": " << option;
     }
-
 }
 
 void machine::setProductToMenuOption(int productOption, int pnumber)

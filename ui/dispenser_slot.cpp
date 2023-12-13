@@ -55,7 +55,8 @@ QVector<int> dispenser_slot::getAllPNumbers()
     }
 
     // QVector<int> pnumbers(m_dispensePNumbers);
-    // qDebug()<<"dispensePNumbers Count: " << m_dispensePNumbers.size();
+    qDebug()<<"dispensePNumbers Count: " << m_dispensePNumbers.size();
+    qDebug()<<"dispensePNumbers Count: " << pnumbers.size();
 
     // Copy elements from m_additivePNumbers
     for (int i = 0; i < m_additivePNumbers.size(); ++i)
@@ -64,7 +65,7 @@ QVector<int> dispenser_slot::getAllPNumbers()
         pnumbers.insert(m_additivePNumbers[i]);
 
     }
-    // qDebug()<<"m_additivePNumbers Count: " << m_additivePNumbers.size();
+    qDebug()<<"m_additivePNumbers Count: " << m_additivePNumbers.size();
 
     pnumbers.insert(m_basePNumber);
     qDebug()<<"base pnumber value: " <<m_basePNumber;

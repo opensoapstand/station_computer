@@ -122,31 +122,37 @@ double product::getVolumePerTick()
 {
     return m_nVolumePerTick;
 }
-
-bool product::registerFlowSensorTick()
+void product::registerFlowSensorTickFromPcb()
 {
     // tick from flowsensor interrupt will increase dispensed volume.
-    //    cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
-    // cout << getVolumePerTick()<< endl;
-    // cout << "TICKTICK"<< endl;
-    // cout << m_concentration_multiplier <<endl;
-
+    // cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
+    cout << "Flow poll TICK from pcb." << endl;
     m_nVolumeDispensed += getVolumePerTick() * m_concentration_multiplier;
-
-    // m_nVolumeDispensed += 100.0;
 }
+
+void product::registerFlowSensorTickFromInterrupt()
+{
+    // tick from flowsensor interrupt will increase dispensed volume.
+    // cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
+    cout << "Interrupt flow TICKTICK" << endl;
+    m_nVolumeDispensed += getVolumePerTick() * m_concentration_multiplier;
+}
+
 void product::setVolumeDispensed(double volume)
 {
     m_nVolumeDispensed = volume;
 }
+
 double product::getVolumeDispensed()
 {
     return m_nVolumeDispensed;
 }
+
 void product::resetVolumeDispensed()
 {
     m_nVolumeDispensed = 0;
 }
+
 double product::getThresholdFlow()
 {
     // minimum threshold to consider dispensing.
@@ -157,8 +163,8 @@ double product::getThresholdFlow_max_allowed()
 
     if (m_nThresholdFlow_maximum_allowed < getThresholdFlow())
     {
-        // 2023-11: in the db, column "calibration_const" was reused to hold this variable, for AP. if not set, set it to an arbitray high value 
-                return 1000.0; // 1L per second. magic number
+        // 2023-11: in the db, column "calibration_const" was reused to hold this variable, for AP. if not set, set it to an arbitray high value
+        return 1000.0; // 1L per second. magic number
     }
     else
     {
@@ -189,13 +195,13 @@ double product::getVolumeRemaining()
 {
     return m_nVolumeRemaining;
 }
-double product::getVolumeDispensedTotalEver()
+double product::getProductVolumeDispensedTotalEver()
 {
     // total volume ever dispensed by this slot.
     return m_nVolumeDispensedTotalEver;
 }
 
-double product::getVolumeDispensedSinceLastRestock()
+double product::getProductVolumeDispensedSinceLastRestock()
 {
     return m_nVolumeDispensedSinceRestock;
 }
@@ -226,7 +232,22 @@ char product::getSizeCharFromTargetVolume(double volume)
         return 'c';
     }
 }
-double product::getTargetVolume(char size)
+double product::getTargetVolume(){
+    return m_nVolumeTarget;
+
+}
+
+void product::setTargetVolume(double volume)
+{
+    m_nVolumeTarget = volume;
+}
+
+double product::setTargetVolumeFromSize(char size){
+    m_nVolumeTarget = getVolumeFromSize(size);
+
+}
+
+double product::getVolumeFromSize(char size)
 {
     if (size == 's')
     {
@@ -262,11 +283,11 @@ double product::getTargetVolume(char size)
 // {
 //     // custom volume pricing is per ml. Often, pricing is more optimal when larger volumes are dispensed.
 //     // if the volume provide is larger than "large volume pricing", the price per milliliter will be adjusted to match that.
-//     if (volume >= getTargetVolume(SIZE_LARGE_CHAR))
+//     if (volume >= getVolumeFromSize(SIZE_LARGE_CHAR))
 //     {
 //         // go for discount
 //         // price per ml
-//         double largePricePerMl = getPrice(SIZE_LARGE_CHAR) / getTargetVolume(SIZE_LARGE_CHAR);
+//         double largePricePerMl = getPrice(SIZE_LARGE_CHAR) / getVolumeFromSize(SIZE_LARGE_CHAR);
 
 //         return largePricePerMl;
 
@@ -751,7 +772,7 @@ std::string product::dbFieldAsValidString(sqlite3_stmt *stmt, int column_index)
 bool product::loadParameters()
 {
     bool success = true;
-    success &= loadParametersFromDb();
+    success &= loadProductParametersFromDb();
     success &= loadParametersFromCsv();
     return success;
 }
@@ -762,7 +783,7 @@ bool product::loadParametersFromCsv()
     return true;
 }
 
-bool product::loadParametersFromDb()
+bool product::loadProductParametersFromDb()
 {
 
     for (uint8_t i = 0; i < 4; i++)
@@ -888,21 +909,20 @@ bool product::loadParametersFromDb()
         m_status_text = product::dbFieldAsValidString(stmt, 38);
 
         status = sqlite3_step(stmt); // next record
-        // every sqlite3_step returns a row. if it returns 0, it's run over all the rows.
+        // every sqlite3_step returns a row. if status is 101=SQLITE_DONE, it's run over all the rows.
     }
 
     m_pnumber_loaded_from_db = false;
     if (numberOfRecordsFound == 1)
     {
-
-        debugOutput::sendMessage("DB status: " + to_string(status), MSG_INFO);
-        debugOutput::sendMessage("target vaolume serial number: : " + m_pnumber, MSG_INFO);
-        debugOutput::sendMessage("mix pnumbers: : " + m_mix_pnumbers, MSG_INFO);
-        debugOutput::sendMessage("mix ratios: : " + m_mix_ratios, MSG_INFO);
-        debugOutput::sendMessage("target vaolume s: : " + to_string(m_nVolumeTarget_s), MSG_INFO);
-        debugOutput::sendMessage("target vaolume medium: : " + to_string(m_nVolumeTarget_m), MSG_INFO);
-        debugOutput::sendMessage("target vaolume l: : " + to_string(m_nVolumeTarget_l), MSG_INFO);
-        debugOutput::sendMessage("target vaolume custom: : " + to_string(m_price_custom_per_ml), MSG_INFO);
+        debugOutput::sendMessage("DB loading ok. Found one match. status: " + to_string(status), MSG_INFO);
+        debugOutput::sendMessage("DB target volume serial number: : " + m_pnumber, MSG_INFO);
+        debugOutput::sendMessage("DB mix pnumbers: : " + m_mix_pnumbers, MSG_INFO);
+        debugOutput::sendMessage("DB default mix ratios: : " + m_mix_ratios, MSG_INFO);
+        debugOutput::sendMessage("DB target volume small:  " + to_string(m_nVolumeTarget_s), MSG_INFO);
+        debugOutput::sendMessage("DB target volume medium: " + to_string(m_nVolumeTarget_m), MSG_INFO);
+        debugOutput::sendMessage("DB target volume large : " + to_string(m_nVolumeTarget_l), MSG_INFO);
+        debugOutput::sendMessage("DB target volume custom: " + to_string(m_price_custom_per_ml), MSG_INFO);
         m_pnumber_loaded_from_db = true;
     }
     else if (numberOfRecordsFound > 1)

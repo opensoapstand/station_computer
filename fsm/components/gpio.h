@@ -29,6 +29,7 @@ public:
 	virtual DF_ERROR setPinAsInputElseOutput(bool input) = 0;
 	virtual DF_ERROR readPin(bool *level) = 0;
 	virtual DF_ERROR writePin(bool level) = 0;
+	virtual void setPinNumber(int pinNumber) = 0;
 	// virtual void test()=0;
 
 	// Getters

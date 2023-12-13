@@ -47,7 +47,7 @@ public:
     DF_ERROR onExit();
 
 private:
-    dispenser *productDispensers;
+    // dispenser *productDispensers;
     bool isFlowTest=false;
     bool iscustomVolumeDispenseTest=false;
     bool dispenseButtonValueMemory=false;

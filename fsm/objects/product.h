@@ -48,8 +48,12 @@ public:
 
         double getVolumePerTick();
 
-        double getTargetVolume(char size);
+        double getVolumeFromSize(char size);
         char getSizeCharFromTargetVolume(double volume);
+        void setTargetVolume(double volume);
+        double setTargetVolumeFromSize(char size);
+        double getTargetVolume();
+
         double getPrice(char size);
         // double getCustomVolumePriceDependingOnDispensedVolume(double volume);
         string getDisplayUnits();
@@ -84,7 +88,7 @@ public:
         // double getVolPerTickFromDB();
         bool loadParameters();
         bool loadParametersFromCsv();
-        bool loadParametersFromDb();
+        bool loadProductParametersFromDb();
 
 
         bool testParametersFromDb();
@@ -110,12 +114,13 @@ public:
         bool isShowTransactionsInMachineTable();
         void executeSQLStatement(string sql_string);
 
-        bool registerFlowSensorTick();
+        void registerFlowSensorTickFromPcb();
+        void registerFlowSensorTickFromInterrupt();
         int getSlot();
 
         double getVolumeRemaining();
-        double getVolumeDispensedTotalEver();
-        double getVolumeDispensedSinceLastRestock();
+        double getProductVolumeDispensedTotalEver();
+        double getProductVolumeDispensedSinceLastRestock();
         double getVolumeFull();
         double getThresholdFlow();
         double getThresholdFlow_max_allowed();
@@ -136,6 +141,10 @@ public:
         double m_nVolumeTarget_c_max; // custom volume dispensing: max
 
         double m_nVolumeTarget_t = 10000000; // test dispense (infinite)
+
+
+        double m_nVolumeTarget;
+
         // double m_price;
         double m_price_small;
         double m_price_medium;

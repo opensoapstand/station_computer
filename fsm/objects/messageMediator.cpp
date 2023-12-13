@@ -71,9 +71,26 @@ messageMediator::~messageMediator()
 //    return false;
 // }
 
+DF_ERROR messageMediator::setSendingBehaviour(bool enableElseDisableSending)
+{
+   m_enable_sending = enableElseDisableSending;
+
+   DF_ERROR dfError = OK;
+   return dfError;
+}
+
 DF_ERROR messageMediator::sendMessageOverIP(string msg, bool isLoggingMessage)
 {
    DF_ERROR dfError = OK;
+   if (!m_enable_sending)
+   {
+      if (isLoggingMessage)
+      {
+         debugOutput::sendMessage("Standalone mode. Will not send msg:  " + msg, MSG_INFO);
+      }
+      return dfError;
+   }
+
    if (isLoggingMessage)
    {
       debugOutput::sendMessage("Send msg to UI (don't wait for reply): " + msg, MSG_INFO);
@@ -161,11 +178,11 @@ void messageMediator::setMachine(machine *machine)
 
       if (m_machine == nullptr)
       {
-         debugOutput::sendMessage("normal TO BE NULLPTR AT START ", MSG_ERROR);
+         //debugOutput::sendMessage("normal TO BE NULLPTR AT START ", MSG_INFO);
       }
       else
       {
-         debugOutput::sendMessage("not nullptr at start ", MSG_ERROR);
+         debugOutput::sendMessage("ASSERT ERROR: m_machine Not nullptr at init. Reinit??", MSG_WARNING);
       }
       this->m_machine = machine;
    }

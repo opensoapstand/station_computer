@@ -52,7 +52,7 @@ DF_ERROR stateManualPrinter::onEntry()
 
    printerr->connectToPrinter();
    b_isContinuouslyChecking = false;
-   productDispensers = g_productDispensers;
+   // productDispensers = g_productDispensers;
 
    if (!g_machine.getPcb24VPowerSwitchStatus())
    {
@@ -398,7 +398,7 @@ DF_ERROR stateManualPrinter::onExit()
 DF_ERROR stateManualPrinter::setup_receipt_from_pnumber_and_dispense_data(int pnumber, double volume_dispensed, double volume_requested, double price, string time_stamp)
 {
    std::string name_receipt = g_pnumbers[pnumber].getProductName();
-   //  std::string plu = productDispensers[slot-1].getSelectedProduct()->getBasePLU( SIZE_CUSTOM_CHAR  );
+   //  std::string plu = g_machine.m_productDispensers[slot-1].getSelectedProduct()->getBasePLU( SIZE_CUSTOM_CHAR  );
 
    char size = g_pnumbers[pnumber].getSizeCharFromTargetVolume(volume_requested);
    string plu = g_pnumbers[pnumber].getFinalPLU(size, price);

@@ -23,6 +23,7 @@
 #include <sstream>
 #include <iomanip>
 
+
 using namespace std;
 
 machine::machine()
@@ -32,21 +33,10 @@ machine::machine()
     m_button_animation_program = 0;
 }
 
-void machine::setup()
+void machine::setup(product *pnumbers)
 {
-    // if ((the_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON) && this->slot == 4)
-    // {
-    //     m_pDispenseButton4[0]->writePin(!enableElseDisable);
-    // }
-    // else
-    // {
-    //     this->the_pcb->setSingleDispenseButtonLight(slot, enableElseDisable);
-    // }
-    //  if (control_pcb == nullptr)
-    // {
     control_pcb = new pcb();
-    // }
-
+    m_pnumbers = pnumbers;
     receipt_printer = new Adafruit_Thermal();
     control_pcb->setup();
     control_pcb->setPumpPWM(DEFAULT_PUMP_PWM);
@@ -55,13 +45,69 @@ void machine::setup()
     power24VEnabled = false;
     switch_24V->setPinAsInputElseOutput(false); // set as output
     syncSoftwareVersionWithDb();
+    initProductDispensers();
+    loadGeneralProperties();
+}
+
+int machine::getDispensersCount()
+{
+    // slots, dispensers, lines,... it's all the same
+    return 4;
+}
+
+void machine::initProductDispensers()
+{
+    for (int slot_index = 0; slot_index < getDispensersCount(); slot_index++)
+    {
+        debugOutput::sendMessage("Init dispenser " + to_string(slot_index + 1), MSG_INFO);
+        // m_g_machine.m_productDispensers[slot_index].setup(&this, g_pnumbers);
+        m_productDispensers[slot_index].setup(control_pcb, m_pnumbers);
+        m_productDispensers[slot_index].setSlot(slot_index + 1);
+        m_productDispensers[slot_index].initGlobalFlowsensorIO(IO_PIN_FLOW_SENSOR);
+        setFlowSensorCallBack(slot_index + 1);
+
+
+        debugOutput::sendMessage("TEMPORARY HACK: base number is the selected product (pDispense). ", MSG_INFO);
+        m_productDispensers[slot_index].setBasePNumberAsSelectedProduct();
+
+
+    }
 }
 
 void machine::loadGeneralProperties()
 {
-    // loadButtonPropertiesFromDb();
-    loadParametersFromDb();
+    loadMachineParametersFromDb();
     usleep(20000);
+    for (int slot_index = 0; slot_index < getDispensersCount(); slot_index++)
+    {
+        m_productDispensers[slot_index].loadGeneralProperties();
+    }
+}
+
+machine::HardwareVersion machine::getHardwareVersion()
+{
+    return m_hardware_version;
+}
+
+// Function to convert string to HardwareVersion
+void machine::setHardwareVersionFromString(const std::string &version)
+{
+    static const std::map<std::string, HardwareVersion> versionMap = {
+        {"SS0.9", SS09},
+        {"SS1", SS1},
+        {"SS2", SS2},
+        {"AP1", AP1},
+        {"AP2", AP2}};
+
+    auto it = versionMap.find(version);
+    if (it != versionMap.end())
+    {
+        m_hardware_version = it->second;
+    }
+    else
+    {
+        m_hardware_version = UNKNOWN;
+    }
 }
 
 pcb *machine::getPcb()
@@ -72,6 +118,23 @@ pcb *machine::getPcb()
 // // nothing here.
 //     debugOutput::sendMessage("*** global machine test message", MSG_INFO);
 // }
+
+void machine::refresh()
+{
+    control_pcb->pcb_refresh();
+    // the pcb inputs are not interrupt driven. So, periodical updates are required
+    for (uint8_t slot_index = 0; slot_index < PRODUCT_DISPENSERS_MAX; slot_index++)
+    {
+        m_productDispensers[slot_index].refresh();
+    }
+}
+
+void machine::setFlowSensorCallBack(int slot)
+{
+    int slot_index = slot -1 ;
+    // control_pcb->registerFlowSensorTickCallback(std::bind(&dispenser::registerFlowSensorTickCallback, &m_productDispensers[slot_index]));
+    m_productDispensers[slot_index].linkActiveProductVolumeUpdate();
+}
 
 void machine::syncSoftwareVersionWithDb()
 {
@@ -192,6 +255,43 @@ void machine::refreshButtonLightAnimation()
     }
     }
     m_button_lights_behaviour_memory = m_button_lights_behaviour;
+}
+
+void machine::setMultiDispenseButtonLight(int slot, bool enableElseDisable)
+{
+    // output has to be set low for light to be on.
+    debugOutput::sendMessage("slot light: " + to_string(slot) + "on else off: " + to_string(enableElseDisable), MSG_INFO);
+
+    if (control_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON)
+    {
+        // if (getMultiDispenseButtonEnabled())
+        // {
+
+        //     if (slot == 4)
+        //     {
+        //         m_pDispenseButton4[0]->writePin(!enableElseDisable);
+        //     }
+        //     else
+        //     {
+
+        //         this->control_pcb->setSingleDispenseButtonLight(slot, enableElseDisable);
+        //     }
+        // }
+        // else
+        // {
+        //     this->control_pcb->setSingleDispenseButtonLight(1, enableElseDisable);
+        // }
+
+        debugOutput::sendMessage("ASSERT ERROR: functionality gone! Deprecated. ", MSG_ERROR);
+    }
+    else if (control_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_NO_PIC)
+    {
+        this->control_pcb->setSingleDispenseButtonLight(1, enableElseDisable);
+    }
+    else
+    {
+        this->control_pcb->setSingleDispenseButtonLight(slot, enableElseDisable);
+    }
 }
 
 void machine::refreshButtonLightAnimationCaterpillar()
@@ -506,70 +606,79 @@ bool machine::getEmptyContainerDetectionEnabled()
     return m_has_empty_detection;
 }
 
-int machine::convertPStringToPNumber(const std::string& inputString) {
+int machine::convertPStringToPNumber(const std::string &inputString)
+{
 
     // P-xxx to xxx   e.g. P-12  --> 12
     // Check if the input string starts with "P-"
-    if (inputString.find("P-") == 0) {
+    if (inputString.find("P-") == 0)
+    {
         // Extract the substring after "P-"
         std::string numberStr = inputString.substr(2);
-        
+
         int number = 0;
         // Iterate through the characters of the substring and convert to integer
-        for (char digitChar : numberStr) {
+        for (char digitChar : numberStr)
+        {
             // Check if the character is a valid digit
-            if (isdigit(digitChar)) {
+            if (isdigit(digitChar))
+            {
                 // Convert the character to integer and update the number
                 number = number * 10 + (digitChar - '0');
-            } else {
+            }
+            else
+            {
                 // If a non-digit character is encountered, return -1 (invalid input)
                 return -1;
             }
         }
-        
+
         // Check if the number is within the valid range (0 to 9999)
-        if (number >= 0 && number <= 9999) {
+        if (number >= 0 && number <= 9999)
+        {
             return number;
         }
     }
-    
+
     // Return -1 to indicate an invalid input or number out of range
     return -1;
 }
 
-void machine::loadParametersFromDb()
+void machine::loadMachineParametersFromDb()
 {
+    debugOutput::sendMessage("Machine load db par", MSG_INFO);
+
     int rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     string sql_string = "SELECT "
-                        "machine_id"
-                        "soapstand_customer_id"
-                        "template"
-                        "location"
-                        "controller_type"
-                        "controller_id"
-                        "screen_type"
-                        "screen_id"
-                        "has_receipt_printer"
-                        "receipt_printer_is_online"
-                        "receipt_printer_has_paper"
-                        "has_tap_payment"
-                        "hardware_version"
-                        "software_version"
-                        "aws_port"
-                        "coupons_enabled"
-                        "has_empty_detection"
-                        "enable_pump_ramping"
-                        "enable_pump_reversal"
-                        "dispense_buttons_count"
-                        "maintenance_pwd"
-                        "show_transactions"
-                        "help_text_html"
-                        "idle_page_type"
-                        "admin_pwd"
-                        "alert_temperature"
-                        "software_version_controller"
-                        "is_enabled"
+                        "machine_id,"
+                        "soapstand_customer_id,"
+                        "template,"
+                        "location,"
+                        "controller_type,"
+                        "controller_id,"
+                        "screen_type,"
+                        "screen_id,"
+                        "has_receipt_printer,"
+                        "receipt_printer_is_online,"
+                        "receipt_printer_has_paper,"
+                        "has_tap_payment,"
+                        "hardware_version,"
+                        "software_version,"
+                        "aws_port,"
+                        "coupons_enabled,"
+                        "has_empty_detection,"
+                        "enable_pump_ramping,"
+                        "enable_pump_reversal,"
+                        "dispense_buttons_count,"
+                        "maintenance_pwd,"
+                        "show_transactions,"
+                        "help_text_html,"
+                        "idle_page_type,"
+                        "admin_pwd,"
+                        "alert_temperature,"
+                        "software_version_controller,"
+                        "is_enabled,"
                         "status_text"
                         " FROM machine"
                         ";";
@@ -582,6 +691,7 @@ void machine::loadParametersFromDb()
     status = sqlite3_step(stmt);
 
     int numberOfRecordsFound = 0;
+    string m_hardware_version_str;
 
     while (status == SQLITE_ROW)
     {
@@ -599,7 +709,7 @@ void machine::loadParametersFromDb()
         m_receipt_printer_is_online = sqlite3_column_int(stmt, 9);
         m_receipt_printer_has_paper = sqlite3_column_int(stmt, 10);
         m_has_tap_payment = sqlite3_column_int(stmt, 11);
-        m_hardware_version = product::dbFieldAsValidString(stmt, 12);
+        m_hardware_version_str = product::dbFieldAsValidString(stmt, 12);
         m_software_version = product::dbFieldAsValidString(stmt, 13);
         m_aws_port = sqlite3_column_int(stmt, 14);
         m_coupons_enabled = sqlite3_column_int(stmt, 15);
@@ -617,10 +727,10 @@ void machine::loadParametersFromDb()
         m_is_enabled = sqlite3_column_int(stmt, 27);
         m_status_text = product::dbFieldAsValidString(stmt, 28);
 
-        if (numberOfRecordsFound != 0)
+        if (numberOfRecordsFound > 1)
         {
             // assert error
-            debugOutput::sendMessage("ASSERT Error: Machine table must have exactly one row. ", MSG_ERROR);
+            debugOutput::sendMessage("ASSERT Error: Machine table must have exactly one row. Found rows: " + std::to_string(numberOfRecordsFound), MSG_ERROR);
         }
 
         m_button_animation_program = m_dispense_buttons_count / 1000; // button light effect program
@@ -642,5 +752,8 @@ void machine::loadParametersFromDb()
 
         debugOutput::sendMessage("Multiple dispense buttons enabled? : " + to_string(m_isMultiButtonEnabled), MSG_INFO);
         debugOutput::sendMessage("Animation program number (0=no animation)? : " + to_string(m_button_animation_program), MSG_INFO);
+        setHardwareVersionFromString(m_hardware_version_str);
+        status = sqlite3_step(stmt); // next record
     }
+    debugOutput::sendMessage("Machine load db: finished. status: " + to_string(status), MSG_INFO);
 }

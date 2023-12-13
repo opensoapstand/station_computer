@@ -127,7 +127,7 @@ void board_test(pcb *connected_pcb)
                 {
                     connected_pcb->setPumpDirection(slot, true);
                     connected_pcb->setSingleDispenseButtonLight(slot, false);
-                    // connected_pcb->setSolenoidOnePerSlot(slot, false);
+                    // connected_pcb->setSpoutSolenoid(slot, false);
                     connected_pcb->disableAllSolenoidsOfSlot(slot);
                 }
                 else
@@ -208,10 +208,10 @@ void board_test(pcb *connected_pcb)
             if (next_step)
             {
                 dispense_state = dispense_activate_solenoid;
-                total_flow_pulses_count = connected_pcb->getFlowSensorTotalPulses(active_slot);
+                total_flow_pulses_count = connected_pcb->getFlowSensorPulsesSinceEnabling(active_slot);
 
                 debugOutput::sendMessage("---- Start of dispense cycle " + to_string(dispense_cycle_count) + "---- . Total number of flow sensor pulses since program start: " + to_string(total_flow_pulses_count), MSG_INFO);
-                // connected_pcb->resetFlowSensorTotalPulses(active_slot);
+                // connected_pcb->resetFlowSensorPulsesForDispenser(active_slot);
                 dispense_cycle_count++;
             }
         };
@@ -224,7 +224,7 @@ void board_test(pcb *connected_pcb)
             if (connected_pcb->get_pcb_version() == pcb::EN134_4SLOTS || connected_pcb->get_pcb_version() == pcb::EN134_8SLOTS)
             {
 
-                connected_pcb->setSolenoidOnePerSlot(active_slot, true);
+                connected_pcb->setSpoutSolenoid(active_slot, true);
                 debugOutput::sendMessage("Activate solenoid", MSG_INFO);
             }
             else if (connected_pcb->get_pcb_version() == pcb::EN258_4SLOTS || connected_pcb->get_pcb_version() == pcb::EN258_8SLOTS)
@@ -363,7 +363,7 @@ void board_test(pcb *connected_pcb)
             if (now_epoch_millis > (solenoid_stop_delay_start_epoch + SOLENOID_STOP_DELAY_MILLIS))
             {
 
-                // connected_pcb->setSolenoidOnePerSlot(active_slot, false);
+                // connected_pcb->setSpoutSolenoid(active_slot, false);
                 connected_pcb->disableAllSolenoidsOfSlot(active_slot);
 
                 uint64_t cycle_pulses;
@@ -498,7 +498,7 @@ void board_test(pcb *connected_pcb)
 //     connected_pcb->setPumpDirection(SLOT, true);
 //     // connected_pcb->setPumpDirection(SLOT, false);
 //     connected_pcb->setPumpEnable(SLOT);
-//     // connected_pcb->setSolenoidOnePerSlot(SLOT, true);
+//     // connected_pcb->setSpoutSolenoid(SLOT, true);
 //     // connected_pcb->setSingleDispenseButtonLight(SLOT, true);
 //     //     debugOutput::sendMessage("started. press button to stop", MSG_INFO);
 //     using namespace std::chrono;
@@ -514,7 +514,7 @@ void board_test(pcb *connected_pcb)
 //         // if (connected_pcb->getDispenseButtonEdgePositive(SLOT))
 //         // {
 //         //     connected_pcb->setPumpsDisableAll();
-//         //     connected_pcb->setSolenoidOnePerSlot(SLOT, false);
+//         //     connected_pcb->setSpoutSolenoid(SLOT, false);
 //         //     debugOutput::sendMessage("button pressed. finish up", MSG_INFO);
 //         //     connected_pcb->setSingleDispenseButtonLight(SLOT, false);
 //         //     return;
@@ -577,7 +577,7 @@ void board_test(pcb *connected_pcb)
 //         // if (connected_pcb->getDispenseButtonEdgePositive(SLOT))
 //         // {
 //         //     connected_pcb->setPumpsDisableAll();
-//         //     connected_pcb->setSolenoidOnePerSlot(SLOT, false);
+//         //     connected_pcb->setSpoutSolenoid(SLOT, false);
 //         //     debugOutput::sendMessage("button pressed. finish up", MSG_INFO);
 //         //     connected_pcb->setSingleDispenseButtonLight(SLOT, false);
 //         //     return;
@@ -763,10 +763,11 @@ void runMainTest()
         //     // pcb_to_test->setMCP23017Output(1, MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON, !light, MCP23017_REGISTER_GPB);
         // }
 
+        pcb_to_test->flowSensorsDisableAll();
         for (uint8_t slot = 1; slot <= 4; slot++)
         {
-            pcb_to_test->setFlowSensorTypeEN258(slot, false);
-            pcb_to_test->resetFlowSensorTotalPulses(slot);
+            pcb_to_test->setFlowSensorType(slot, pcb::AICHI);
+            // pcb_to_test->resetFlowSensorPulsesForDispenser(slot);
         }
 
         while (true)
@@ -780,7 +781,7 @@ void runMainTest()
                     pcb_to_test->setSingleDispenseButtonLight(slot, true);
                     pcb_to_test->setPumpEnable(slot);
                     pcb_to_test->startPump(slot);
-                    pcb_to_test->setSolenoidFromArray(slot, 6, true);
+                    pcb_to_test->setSolenoidFromArray(slot, 8, true);
                     pcb_to_test->getFlowSensorPulsesSinceEnabling(slot);
                 }
 
@@ -788,9 +789,9 @@ void runMainTest()
                 {
                     pcb_to_test->setSingleDispenseButtonLight(slot, false);
                     pcb_to_test->setPumpsDisableAll();
-                    pcb_to_test->setSolenoidFromArray(slot, 6, false);
-                    debugOutput::sendMessage("Flow sensor pulses during button press: " + std::to_string(pcb_to_test->getFlowSensorTotalPulses(slot)), MSG_INFO);
-                    pcb_to_test->resetFlowSensorTotalPulses(slot);
+                    pcb_to_test->setSolenoidFromArray(slot, 8, false);
+                    // debugOutput::sendMessage("Flow sensor pulses during button press: " + std::to_string(pcb_to_test->getFlowSensorPulsesSinceEnabling(slot)), MSG_INFO);
+                    // pcb_to_test->resetFlowSensorPulsesForDispenser(slot);
                 }
             }
         }

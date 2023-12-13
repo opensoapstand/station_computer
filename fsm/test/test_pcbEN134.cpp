@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     pcb->flowSensorEnable(2);
     uint8_t tmptest;
     pcb->getDispenseButtonStateDebounced(2);
-    // pcb->setSolenoidOnePerSlot(2,true);
+    // pcb->setSpoutSolenoid(2,true);
     while (true)
     {
         usleep(100);
@@ -45,12 +45,12 @@ int main(int argc, char *argv[])
 
         
             if (pcb->getDispenseButtonStateDebounced(slot)){
-                pcb->setSolenoidOnePerSlot(slot, true);
+                pcb->setSpoutSolenoid(slot, true);
                 pcb->setPumpEnableState(slot, true);
                  debugOutput::sendMessage("Press: " + to_string(slot), MSG_INFO);
             }else{
                 pcb->setPumpEnableState(slot, false);
-                 pcb->setSolenoidOnePerSlot(slot, false);
+                 pcb->setSpoutSolenoid(slot, false);
                 debugOutput::sendMessage("No Press: " + to_string(slot), MSG_INFO);
             }
         }
@@ -65,13 +65,13 @@ int main(int argc, char *argv[])
             //     pcb->setPumpSpeedPercentage(tmptest);
             // }
 
-            // pcb->setSolenoidOnePerSlot(slot, pcb->getDispenseButtonStateDebounced(slot));
+            // pcb->setSpoutSolenoid(slot, pcb->getDispenseButtonStateDebounced(slot));
         }
         // if (pcb->getDispenseButtonStateDebounced(2))
         // {
-        //     pcb->setSolenoidOnePerSlot(2, true);
+        //     pcb->setSpoutSolenoid(2, true);
         //     usleep(25000);
-        //     pcb->setSolenoidOnePerSlot(2, false);
+        //     pcb->setSpoutSolenoid(2, false);
         //     usleep(25000);
         // }
     };

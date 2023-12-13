@@ -138,7 +138,10 @@ void page_product_overview::showEvent(QShowEvent *event)
 
     if( p_page_idle->thisMachine->selectedProduct->getPaymentMethod()==PAYMENT_TAP_SERIAL){
         ui->pushButton_continue->raise();
+        ui->pushButton_continue_additional->show();
         ui->pushButton_continue_additional->raise();
+
+        ui->pushButton_continue->setFixedSize(QSize(360,92));
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay_tap");
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue_additional, "proceed_pay_qr");
 
@@ -621,7 +624,10 @@ void page_product_overview::check_to_page_email(){
     double selectedPrice = p_page_idle->thisMachine->selectedProduct->getBasePrice();
     double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
     if(finalPrice == 0.0 || selectedPrice== 0.0 ){
+        ui->pushButton_continue_additional->hide();
+        ui->pushButton_continue->setFixedSize(QSize(740,92));
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_free");
+
     }
     // else{
         // p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay");

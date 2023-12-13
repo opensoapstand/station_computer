@@ -25,6 +25,18 @@ page_product_mixing::page_product_mixing(QWidget *parent) : QWidget(parent),
 {
     ui->setupUi(this);
 
+    additiveBackgroundRows[0] = ui->label_additive_background_row_1;
+    additiveBackgroundRows[1] = ui->label_additive_background_row_2;
+    additiveBackgroundRows[2] = ui->label_additive_background_row_3;
+    additiveBackgroundRows[3] = ui->label_additive_background_row_4;
+    additiveBackgroundRows[4] = ui->label_additive_background_row_5;
+
+    additiveTitles[0] = ui->label_additive_title_1;
+    additiveTitles[1] = ui->label_additive_title_2;
+    additiveTitles[2] = ui->label_additive_title_3;
+    additiveTitles[3] = ui->label_additive_title_4;
+    additiveTitles[4] = ui->label_additive_title_5;
+
     orderSizeButtons[0] = ui->pushButton_order_small;
     orderSizeButtons[1] = ui->pushButton_order_medium;
     orderSizeButtons[2] = ui->pushButton_order_big;
@@ -104,6 +116,7 @@ void page_product_mixing::showEvent(QShowEvent *event)
     ui->label_product_ingredients_title->setStyleSheet(styleSheet);
     ui->label_help->setStyleSheet(styleSheet);
     ui->label_sizes_background->setStyleSheet(styleSheet);
+    ui->label_additives_background->setStyleSheet(styleSheet);
     ui->pushButton_continue->setStyleSheet(styleSheet);
     // ui->pushButton_previous_page->setStyleSheet(styleSheet);
     ui->pushButton_to_help->setProperty("class", "button_transparent");
@@ -121,6 +134,13 @@ void page_product_mixing::showEvent(QShowEvent *event)
         orderSizeBackgroundLabels[i]->setStyleSheet(styleSheet);
         orderSizeButtons[i]->setStyleSheet(styleSheet);
         // orderSizeBackgroundLabels[i]->setStyleSheet(styleSheet);
+    }
+
+    for (int j = 0; j <= 4; j++){
+        additiveTitles[j]->setProperty("class", "additiveTitles");
+        additiveBackgroundRows[j]->setProperty("class", "additiveBackgroundRows");
+        additiveTitles[j]->setStyleSheet(styleSheet);
+        additiveBackgroundRows[j]->setStyleSheet(styleSheet);
     }
 
     p_page_idle->thisMachine->resetTransactionLogging();
@@ -364,14 +384,14 @@ void page_product_mixing::reset_and_show_page_elements()
 
                 if (large_volume_discount_is_enabled)
                 {
-                    orderSizeLabelsPrice[i]->setText("$" + QString::number(price, 'f', 2) + "/" + units + " \n>" + QString::number(min_volume_for_discount, 'f', 1) + units_discount_indication + " @ $" + QString::number(discount_price_per_liter, 'f', 2) + "/" + units);
-                    orderSizeButtons[i]->setFixedSize(QSize(xywh_size_buttons[i][2], xywh_size_buttons[i][3] + 100));
-                    orderSizeLabelsPrice[i]->setFixedSize(QSize(420, 101));
+                    orderSizeLabelsPrice[i]->setText("$" + QString::number(price, 'f', 2) + "/" + "\n" + units + " \n>" + QString::number(min_volume_for_discount, 'f', 1) + units_discount_indication + " @ $" + QString::number(discount_price_per_liter, 'f', 2) + "/" + units);
+                    // orderSizeButtons[i]->setFixedSize(QSize(xywh_size_buttons[i][2], xywh_size_buttons[i][3] + 100));
+                    // orderSizeLabelsPrice[i]->setFixedSize(QSize(420, 101));
                 }
                 else
                 {
-                    orderSizeLabelsPrice[i]->setFixedSize(QSize(420, 50));
-                    orderSizeLabelsPrice[i]->setText("$" + QString::number(price, 'f', 2) + "/" + units);
+                    // orderSizeLabelsPrice[i]->setFixedSize(QSize(420, 50));
+                    orderSizeLabelsPrice[i]->setText("$" + QString::number(price, 'f', 2) + "/" + "\n" + units);
                 }
             }
             else
@@ -387,6 +407,7 @@ void page_product_mixing::reset_and_show_page_elements()
             orderSizeButtons[i]->hide();
         }
     }
+    ui->label_price_custom->setAlignment(Qt::AlignCenter);
 
     // it was confusing for the people to chose a quantity if there was only one quantity available. So, add a continue button if they can't chose anyways.
     if (sizes_available_count == 1)

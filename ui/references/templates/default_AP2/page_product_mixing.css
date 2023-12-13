@@ -14,6 +14,15 @@
    line-height: 1;
 }
 
+.additiveTitles{
+
+}
+
+.additiveBackgroundRows{
+   border-radius: 30px;
+   background: #F9EBD8;
+}
+
 #label_customize_drink, #label_select_quantity {
    font-family: "El Messiri";
    color: #221403;
@@ -21,6 +30,12 @@
    font-style: normal;
    font-weight: 700;
    line-height: normal;
+}
+
+#label_additives_background{
+   border-radius: 25px;
+   border: 1px solid #F9EBD8;
+   background: #FFF7ED; 
 }
 
 #label_sizes_background{
@@ -35,7 +50,7 @@
    font-style: normal;
    font-weight: 400;
    font-size: 24px;
-   line-height: 44px;
+   line-height: normal;
    color: #221F20;
    text-align: center;
    /* qproperty-alignment: AlignCenter; */
@@ -49,6 +64,7 @@
    font-style: normal;
    font-weight: 700;
    line-height: normal;
+   qproperty-alignment: AlignCenter;
 }
 
 .orderSizeBackgroundLabels {
@@ -60,11 +76,6 @@
    background-color: transparent;
    border: 5px solid #BC8439;
    border-radius: 10px;
-}
-
-#pushButton_previous_page {
-   background-color: transparent;
-   border: 0px;
 }
 
 #pushButton_back {
@@ -123,17 +134,16 @@
 }
 
 #pushButton_continue {
-   font-family: 'EuropaNuova-Regular';
+   font-family: 'Lato';
    font-style: normal;
    font-weight: 400;
-   background-color: #221F20;
+   background-color: #895E25;
    font-size: 48px;
    text-align: center;
-   line-height: auto;
+   line-height: normal;
    qproperty-alignment: AlignCenter;
-   border-radius: 20px;
-   color: white;
-   border: none;
+   border-radius: 25px;
+   color: #FEFBF9;
 }
 
 /* #label_help {

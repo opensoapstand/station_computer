@@ -32,10 +32,10 @@ line-height: 29px;</string>
   <widget class="QPushButton" name="pushButton_continue">
    <property name="geometry">
     <rect>
-     <x>193</x>
-     <y>1750</y>
-     <width>740</width>
-     <height>92</height>
+     <x>215</x>
+     <y>1720</y>
+     <width>650</width>
+     <height>100</height>
     </rect>
    </property>
    <property name="autoFillBackground">
@@ -64,10 +64,10 @@ line-height: 29px;</string>
   <widget class="QLabel" name="label_price_custom">
    <property name="geometry">
     <rect>
-     <x>550</x>
-     <y>1160</y>
-     <width>451</width>
-     <height>101</height>
+     <x>831</x>
+     <y>1500</y>
+     <width>113</width>
+     <height>72</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -97,10 +97,10 @@ text-align: center;
   <widget class="QLabel" name="label_price_large">
    <property name="geometry">
     <rect>
-     <x>860</x>
-     <y>1040</y>
-     <width>121</width>
-     <height>41</height>
+     <x>561</x>
+     <y>1514</y>
+     <width>153</width>
+     <height>36</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -126,10 +126,10 @@ text-align: center;</string>
   <widget class="QLabel" name="label_size_custom">
    <property name="geometry">
     <rect>
-     <x>570</x>
-     <y>1110</y>
-     <width>401</width>
-     <height>41</height>
+     <x>797</x>
+     <y>1465</y>
+     <width>180</width>
+     <height>26</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -152,10 +152,10 @@ text-align: center;
   <widget class="QLabel" name="label_size_large">
    <property name="geometry">
     <rect>
-     <x>860</x>
-     <y>1000</y>
-     <width>121</width>
-     <height>31</height>
+     <x>561</x>
+     <y>1478</y>
+     <width>153</width>
+     <height>26</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -193,10 +193,10 @@ text-align: center;</string>
   <widget class="QPushButton" name="pushButton_order_big">
    <property name="geometry">
     <rect>
-     <x>858</x>
-     <y>996</y>
-     <width>130</width>
-     <height>100</height>
+     <x>525</x>
+     <y>1435</y>
+     <width>225</width>
+     <height>158</height>
     </rect>
    </property>
    <property name="text">
@@ -206,10 +206,10 @@ text-align: center;</string>
   <widget class="QPushButton" name="pushButton_order_medium">
    <property name="geometry">
     <rect>
-     <x>711</x>
-     <y>996</y>
-     <width>130</width>
-     <height>100</height>
+     <x>775</x>
+     <y>1252</y>
+     <width>225</width>
+     <height>158</height>
     </rect>
    </property>
    <property name="autoFillBackground">
@@ -222,10 +222,10 @@ text-align: center;</string>
   <widget class="QPushButton" name="pushButton_order_custom">
    <property name="geometry">
     <rect>
-     <x>563</x>
-     <y>1113</y>
-     <width>424</width>
-     <height>191</height>
+     <x>775</x>
+     <y>1435</y>
+     <width>225</width>
+     <height>158</height>
     </rect>
    </property>
    <property name="autoFillBackground">
@@ -238,10 +238,10 @@ text-align: center;</string>
   <widget class="QLabel" name="label_size_medium">
    <property name="geometry">
     <rect>
-     <x>710</x>
-     <y>1000</y>
-     <width>131</width>
-     <height>31</height>
+     <x>811</x>
+     <y>1295</y>
+     <width>153</width>
+     <height>26</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -263,10 +263,10 @@ text-align: center;</string>
   <widget class="QLabel" name="label_price_medium">
    <property name="geometry">
     <rect>
-     <x>710</x>
-     <y>1040</y>
-     <width>131</width>
-     <height>41</height>
+     <x>811</x>
+     <y>1331</y>
+     <width>153</width>
+     <height>36</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -317,9 +317,9 @@ text-align: center;</string>
   <widget class="QLabel" name="label_price_small">
    <property name="geometry">
     <rect>
-     <x>599</x>
+     <x>561</x>
      <y>1331</y>
-     <width>77</width>
+     <width>153</width>
      <height>36</height>
     </rect>
    </property>
@@ -420,10 +420,10 @@ text-align: center;</string>
   <widget class="QLabel" name="label_background_medium">
    <property name="geometry">
     <rect>
-     <x>410</x>
-     <y>230</y>
-     <width>67</width>
-     <height>17</height>
+     <x>775</x>
+     <y>1252</y>
+     <width>225</width>
+     <height>158</height>
     </rect>
    </property>
    <property name="text">
@@ -433,10 +433,10 @@ text-align: center;</string>
   <widget class="QLabel" name="label_background_large">
    <property name="geometry">
     <rect>
-     <x>500</x>
-     <y>240</y>
-     <width>67</width>
-     <height>17</height>
+     <x>525</x>
+     <y>1435</y>
+     <width>225</width>
+     <height>158</height>
     </rect>
    </property>
    <property name="text">
@@ -446,10 +446,10 @@ text-align: center;</string>
   <widget class="QLabel" name="label_background_custom">
    <property name="geometry">
     <rect>
-     <x>400</x>
-     <y>280</y>
-     <width>67</width>
-     <height>17</height>
+     <x>775</x>
+     <y>1435</y>
+     <width>225</width>
+     <height>158</height>
     </rect>
    </property>
    <property name="text">
@@ -537,18 +537,365 @@ text-align: center;
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
+  <widget class="QLabel" name="label_additives_background">
+   <property name="geometry">
+    <rect>
+     <x>495</x>
+     <y>522</y>
+     <width>535</width>
+     <height>578</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: #5E8680;
+font-family: Montserrat;
+font-style: light;
+font-weight: normal;
+font-size: 20px;
+line-height: 24px;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_title_1">
+   <property name="geometry">
+    <rect>
+     <x>525</x>
+     <y>547</y>
+     <width>200</width>
+     <height>36</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_title_2">
+   <property name="geometry">
+    <rect>
+     <x>525</x>
+     <y>728</y>
+     <width>200</width>
+     <height>36</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_title_3">
+   <property name="geometry">
+    <rect>
+     <x>783</x>
+     <y>728</y>
+     <width>200</width>
+     <height>36</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_title_4">
+   <property name="geometry">
+    <rect>
+     <x>525</x>
+     <y>914</y>
+     <width>200</width>
+     <height>36</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_title_5">
+   <property name="geometry">
+    <rect>
+     <x>783</x>
+     <y>914</y>
+     <width>200</width>
+     <height>36</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_background_row_1">
+   <property name="geometry">
+    <rect>
+     <x>525</x>
+     <y>598</y>
+     <width>475</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_background_row_2">
+   <property name="geometry">
+    <rect>
+     <x>525</x>
+     <y>784</y>
+     <width>217</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_background_row_3">
+   <property name="geometry">
+    <rect>
+     <x>783</x>
+     <y>784</y>
+     <width>217</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_background_row_4">
+   <property name="geometry">
+    <rect>
+     <x>525</x>
+     <y>970</y>
+     <width>217</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_background_row_5">
+   <property name="geometry">
+    <rect>
+     <x>783</x>
+     <y>970</y>
+     <width>217</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
   <zorder>label_sizes_background</zorder>
   <zorder>label_help</zorder>
   <zorder>pushButton_continue</zorder>
-  <zorder>pushButton_order_big</zorder>
-  <zorder>pushButton_order_medium</zorder>
-  <zorder>pushButton_order_custom</zorder>
-  <zorder>label_size_medium</zorder>
-  <zorder>label_price_medium</zorder>
-  <zorder>label_price_custom</zorder>
-  <zorder>label_size_custom</zorder>
-  <zorder>label_price_large</zorder>
-  <zorder>label_size_large</zorder>
   <zorder>label_product_title</zorder>
   <zorder>label_product_photo</zorder>
   <zorder>label_product_ingredients_title</zorder>
@@ -564,6 +911,26 @@ text-align: center;
   <zorder>label_price_small</zorder>
   <zorder>label_size_small</zorder>
   <zorder>pushButton_order_small</zorder>
+  <zorder>label_price_medium</zorder>
+  <zorder>label_size_medium</zorder>
+  <zorder>pushButton_order_medium</zorder>
+  <zorder>label_price_large</zorder>
+  <zorder>label_size_large</zorder>
+  <zorder>pushButton_order_big</zorder>
+  <zorder>label_price_custom</zorder>
+  <zorder>label_size_custom</zorder>
+  <zorder>pushButton_order_custom</zorder>
+  <zorder>label_additives_background</zorder>
+  <zorder>label_additive_title_1</zorder>
+  <zorder>label_additive_title_2</zorder>
+  <zorder>label_additive_title_3</zorder>
+  <zorder>label_additive_title_4</zorder>
+  <zorder>label_additive_title_5</zorder>
+  <zorder>label_additive_background_row_1</zorder>
+  <zorder>label_additive_background_row_2</zorder>
+  <zorder>label_additive_background_row_3</zorder>
+  <zorder>label_additive_background_row_4</zorder>
+  <zorder>label_additive_background_row_5</zorder>
  </widget>
  <resources/>
  <connections/>

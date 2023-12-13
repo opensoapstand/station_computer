@@ -13,6 +13,7 @@ machine::machine()
     setRole(UserRole::user);
     setCouponState(no_state);
 
+
     // IPC Networking
     dfUtility = new df_util();
 }
@@ -33,6 +34,7 @@ void machine::initMachine()
         m_products[slot_index].setDb(m_db);
     }
     loadDynamicContent();
+    
 }
 
 void machine::loadDynamicContent()

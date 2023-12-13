@@ -162,6 +162,7 @@ using namespace std;
 #define PAYMENT_TAP_TCP                                 "tapTCP"
 #define PAYMENT_QR                                      "qr"
 
+
 class df_util : public QWidget
 {
     Q_OBJECT

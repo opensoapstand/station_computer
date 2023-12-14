@@ -643,8 +643,6 @@ DF_ERROR dispenser::stopActivePNumberDispense()
 /////////////////////////////////////////////////////////////////////////
 // dispenser volume
 
-
-
 void dispenser::linkActiveProductVolumeUpdate()
 {
     product *active_product = getActiveProduct();

@@ -313,6 +313,10 @@ void pcb::pcb_refresh()
         dispenseButtonRefresh();
         refreshFlowSensors();
         // independentDispensingRefresh(); // ATTENTION:  this is the state machine. involves more than just pumps....
+    }else{
+
+        usleep(5000000);
+        debugOutput::sendMessage("ASSERT ERROR: PCB not detected. Replace pcb? i2c working correctly?", MSG_ERROR);
     }
 }
 void pcb::setup()

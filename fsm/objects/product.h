@@ -22,6 +22,9 @@
 #include <unistd.h>
 #include <time.h>
 
+#include <sstream>
+// #include <vector>
+
 #include <sqlite3.h>
 
 #define MAX_BUF 64
@@ -36,6 +39,16 @@ public:
 
         int getPNumber();
         string getPNumberAsPString();
+
+        bool isMixingProduct();
+        void getMixRatios(double *&mixRatios, int &count);
+        void getMixPNumbers(int *&pnumbers, int &count);
+        int getBasePNumber();
+        int getAdditivesCount();
+        bool getAdditivePNumber(int position);
+        double getAdditiveMixRatio(int position);
+        double getBaseMixRatio();
+        double getMixRatio(int position);
 
         bool getIsEnabled();
         void setIsEnabled(bool isEnabled);
@@ -53,7 +66,7 @@ public:
 
         void customDispenseDiscountData(bool *isEnabled, double *discountVolume, double *discountPrice);
         string getFinalPLU(char size, double price);
-        
+
         void registerFlowSensorTickFromPcb();
         void registerFlowSensorTickFromInterrupt();
         double getVolumePerTick();
@@ -85,6 +98,9 @@ public:
         bool testParametersFromDb();
         static std::string dbFieldAsValidString(sqlite3_stmt *stmt, int column_index);
         void loadProductPropertiesFromCsv();
+
+        static int *parseIntCsvString(const std::string &csvString, int &size);
+        static double *parseDoubleCsvString(const std::string &csvString, int &size);
 
         string m_name;
         string m_product_id_combined_with_location_for_backend;
@@ -118,8 +134,13 @@ private:
         string m_product_properties[100];
 
         string m_display_unit;
-        string m_mix_pnumbers;
-        string m_mix_ratios;
+        string m_mix_pnumbers_str;
+
+        int *m_mix_pnumbers;
+        int m_mix_pnumbers_count;
+        string m_mix_ratios_str;
+        double *m_mix_ratios;
+        int m_mix_ratios_count;
 
         string m_nPLU_small;
         string m_nPLU_medium;

@@ -81,6 +81,14 @@ public:
       char getSelectedSizeAsChar();
       double getSelectedSizeAsVolume();
 
+
+      void setActiveProduct(int pnumber);
+
+      void setBaseAsActiveProduct();
+      void setAdditiveFromPositionAsSelectedProduct(int position);
+
+      bool isPNumberValidInThisDispenser(int pnumber, bool mustBeAdditiveOrBase);
+
       // active product
       product *getActiveProduct();
       void linkActiveProductVolumeUpdate();
@@ -114,9 +122,15 @@ public:
       void updateSlotState();
       void analyseSlotState();
 
-      DF_ERROR startDispense();
-      DF_ERROR initDispense(char size, double nPrice);
-      DF_ERROR stopDispense();
+      DF_ERROR initActivePNumberDispense(double volume);
+      DF_ERROR startActivePNumberDispense();
+      DF_ERROR stopActivePNumberDispense();
+      
+      DF_ERROR initSelectedProductDispense(char size, double nPrice);
+      DF_ERROR startSelectedProductDispense();
+      DF_ERROR stopSelectedProductDispense();
+      string getSelectedProductDispenseStartTime();
+      string getSelectedProductDispenseEndTime();
 
       int getBasePNumber();
       int getActivePNumber();
@@ -124,9 +138,9 @@ public:
       int getAdditivePNumber(int position);
 
       // dispenser flow
-      void resetDispenserVolumeDispensed();
-      double getDispenserVolumeDispensed();
-      bool isDispenserVolumeTargetReached();
+      // void resetDispenserVolumeDispensed();
+      // double getDispenserVolumeDispensed();
+      // bool isDispenserVolumeTargetReached();
 
       // product flow
       bool isActiveProductVolumeTargetReached();
@@ -166,8 +180,6 @@ public:
       uint64_t getButtonPressedCurrentPressMillis();
       void addDispenseButtonPress();
 
-      string getDispenseStartTime();
-      string getDispenseEndTime();
 
       void setSpoutSolenoid(bool openElseClosed);
 
@@ -220,14 +232,11 @@ private:
 
       int dispense_button_press_count_during_dispensing;
 
-
-
       uint64_t previous_status_update_allowed_epoch;
       bool isStatusUpdateSendAndPrintAllowed;
       Dispense_behaviour previous_dispense_state;
       Dispense_behaviour dispense_state;
       Slot_state slot_state;
-
 
       Time_val flowRateBuffer[RUNNING_AVERAGE_WINDOW_LENGTH];
       int flowRateBufferIndex;
@@ -248,7 +257,6 @@ private:
 
       // Button reference m_pButton[1] in stateVirtual; IPC shared due to Arduino!
       // gpio *m_pButton[NUM_BUTTON];
-
 };
 
 #endif

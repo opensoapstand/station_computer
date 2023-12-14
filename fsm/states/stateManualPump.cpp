@@ -102,7 +102,7 @@ DF_ERROR stateManualPump::onAction()
       else if ('1' == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Enable dispenser pump " + to_string(m_active_pump_index + 1) + "(press dispense button to make pump actually work)", MSG_INFO);
-         g_machine.m_productDispensers[m_active_pump_index].startDispense();
+         g_machine.m_productDispensers[m_active_pump_index].startSelectedProductDispense();
          g_machine.m_productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
          // g_machine.m_productDispensers[m_active_pump_index].setMultiDispenseButtonLight(m_active_pump_index + 1, true);
          g_machine.control_pcb->setSingleDispenseButtonLight(m_active_pump_index + 1, true);
@@ -113,7 +113,7 @@ DF_ERROR stateManualPump::onAction()
          debugOutput::sendMessage("Disable dispenser pump " + to_string(m_active_pump_index + 1), MSG_INFO);
 
          g_machine.m_productDispensers[m_active_pump_index].setPumpsDisableAll();
-         g_machine.m_productDispensers[m_active_pump_index].stopDispense();
+         g_machine.m_productDispensers[m_active_pump_index].stopSelectedProductDispense();
       }
 
       else if ('3' == m_pMessaging->getAction())
@@ -576,7 +576,7 @@ DF_ERROR stateManualPump::autofillPresetQuantity()
    else if (m_state_auto_pump == AUTO_PUMP_STATE_INIT)
    {
       // pump should be enabled first.
-      // g_machine.m_productDispensers[m_active_pump_index].startDispense();
+      // g_machine.m_productDispensers[m_active_pump_index].startSelectedProductDispense();
       // g_machine.m_productDispensers[m_active_pump_index].setPumpEnable(); // POS is 1->4! index is 0->3
       
 

@@ -47,6 +47,111 @@ string product::getProductName()
     return m_product_properties[CSV_PRODUCT_COL_NAME];
 }
 
+int product::getBasePNumber()
+{
+    if (!isMixingProduct())
+    {
+        if (m_mix_pnumbers_count == 1)
+        {
+            return m_mix_pnumbers[0];
+        }
+        else
+        {
+            return m_pnumber;
+        }
+    }
+    else
+    {
+        return m_mix_pnumbers[0];
+    }
+}
+
+int product::getAdditivesCount()
+{
+    if (isMixingProduct())
+    {
+        return m_mix_pnumbers_count - 1; // subtract base product
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+double product::getAdditiveMixRatio(int position)
+{
+    if (position == 0)
+    {
+        debugOutput::sendMessage("ASSERT ERROR: mixing position cannot be zero. ", MSG_ERROR);
+        return 0;
+    }
+    return getMixRatio(position);
+}
+
+double product::getBaseMixRatio()
+{
+    if (!isMixingProduct())
+    {
+        return 1.0;
+    }
+    else
+    {
+        return getMixRatio(0);
+    }
+}
+
+double product::getMixRatio(int position)
+{
+    if (!isMixingProduct())
+    {
+        return 0;
+    }
+    return m_mix_ratios[position];
+}
+
+bool product::getAdditivePNumber(int position)
+{
+    if (position == 0)
+    {
+        // position starts from 1
+        debugOutput::sendMessage("ASSERT ERROR: Additives numbering starts from 1. 0 was provided.", MSG_ERROR);
+    }
+    if (position > getAdditivesCount())
+    {
+        debugOutput::sendMessage("ASSERT ERROR: Additives position provided is too high. Additive does not exist.", MSG_ERROR);
+        return PRODUCT_DUMMY;
+    }
+    m_mix_pnumbers[position]; // first position is base pnumber. but mix pnumbers start from 1.
+}
+
+bool product::isMixingProduct()
+{
+    bool isMix = false;
+    if (m_mix_pnumbers_count <= 0)
+    {
+        isMix = false;
+    }
+    else if (m_mix_pnumbers_count == 1)
+    {
+        isMix = false;
+    }
+    else if (m_mix_pnumbers_count > 1)
+    {
+        isMix = true;
+    }
+    return isMix;
+}
+
+void product::getMixRatios(double *&mixRatios, int &count)
+{
+    mixRatios = m_mix_ratios;
+    count = m_mix_ratios_count;
+}
+void product::getMixPNumbers(int *&pnumbers, int &count)
+{
+    pnumbers = m_mix_pnumbers;
+    count = m_mix_pnumbers_count;
+}
 
 double product::getVolumeDispensed()
 {
@@ -687,7 +792,6 @@ bool product::loadParameters()
     return success;
 }
 
-
 void product::loadProductPropertiesFromCsv()
 {
     // Create an input filestream
@@ -714,7 +818,6 @@ void product::loadProductPropertiesFromCsv()
             token_index++;
             line.erase(0, pos + delimiter.length());
         }
-
 
         bool stringsAreDifferent;
         stringsAreDifferent = m_product_properties[CSV_PRODUCT_COL_ID].compare(getPNumberAsPString());
@@ -805,8 +908,8 @@ bool product::loadProductParametersFromDb()
         // debugOutput::sendMessage("colll count:  " + to_string(columns_count), MSG_INFO);
 
         m_pnumber = std::stoi(product::dbFieldAsValidString(stmt, 0));
-        m_mix_pnumbers = product::dbFieldAsValidString(stmt, 1);
-        m_mix_ratios = product::dbFieldAsValidString(stmt, 2);
+        m_mix_pnumbers_str = product::dbFieldAsValidString(stmt, 1);
+        m_mix_ratios_str = product::dbFieldAsValidString(stmt, 2);
 
         m_product_id_combined_with_location_for_backend = product::dbFieldAsValidString(stmt, 3);
         m_name = product::dbFieldAsValidString(stmt, 4);
@@ -856,13 +959,21 @@ bool product::loadProductParametersFromDb()
         // every sqlite3_step returns a row. if status is 101=SQLITE_DONE, it's run over all the rows.
     }
 
+    m_mix_ratios = product::parseDoubleCsvString(m_mix_ratios_str, m_mix_ratios_count);
+    m_mix_pnumbers = product::parseIntCsvString(m_mix_pnumbers_str, m_mix_pnumbers_count);
+
+    if (m_mix_pnumbers_count != m_mix_ratios_count)
+    {
+        debugOutput::sendMessage("DB mixing ASSERT ERROR: Amount of mixing pnumber and their ratios is not equal!!! pnumbers:" + m_mix_pnumbers_str + " mixing ratios: " + m_mix_ratios_str, MSG_ERROR);
+    }
+
     m_pnumber_loaded_from_db = false;
     if (numberOfRecordsFound == 1)
     {
         debugOutput::sendMessage("DB loading ok. Found one match. status: " + to_string(status), MSG_INFO);
         debugOutput::sendMessage("DB target volume serial number: : " + m_pnumber, MSG_INFO);
-        debugOutput::sendMessage("DB mix pnumbers: : " + m_mix_pnumbers, MSG_INFO);
-        debugOutput::sendMessage("DB default mix ratios: : " + m_mix_ratios, MSG_INFO);
+        debugOutput::sendMessage("DB mix pnumbers: : " + m_mix_pnumbers_str, MSG_INFO);
+        debugOutput::sendMessage("DB default mix ratios: : " + m_mix_ratios_str, MSG_INFO);
         debugOutput::sendMessage("DB target volume small:  " + to_string(m_nVolumeTarget_s), MSG_INFO);
         debugOutput::sendMessage("DB target volume medium: " + to_string(m_nVolumeTarget_m), MSG_INFO);
         debugOutput::sendMessage("DB target volume large : " + to_string(m_nVolumeTarget_l), MSG_INFO);
@@ -933,4 +1044,54 @@ bool product::testParametersFromDb()
     sqlite3_finalize(stmt);
     sqlite3_close(db);
     return pwm;
+}
+
+int *product::parseIntCsvString(const std::string &csvString, int &size)
+{
+    static const int MAX_SIZE = 100; // Define the maximum size of the array
+
+    int *intArray = new int[MAX_SIZE];
+    std::stringstream ss(csvString);
+    std::string token;
+    size = 0;
+
+    while (std::getline(ss, token, ','))
+    {
+        if (size < MAX_SIZE)
+        {
+            intArray[size++] = std::stoi(token);
+        }
+        else
+        {
+            std::cerr << "Array size exceeded maximum limit." << std::endl;
+            delete[] intArray;
+            return nullptr;
+        }
+    }
+    return intArray;
+}
+
+double *product::parseDoubleCsvString(const std::string &csvString, int &size)
+{
+    static const int MAX_SIZE = 100; // Define the maximum size of the array
+
+    double *doubleArray = new double[MAX_SIZE];
+    std::stringstream ss(csvString);
+    std::string token;
+    size = 0;
+
+    while (std::getline(ss, token, ','))
+    {
+        if (size < MAX_SIZE)
+        {
+            doubleArray[size++] = std::stod(token);
+        }
+        else
+        {
+            std::cerr << "Array size exceeded maximum limit." << std::endl;
+            delete[] doubleArray;
+            return nullptr;
+        }
+    }
+    return doubleArray;
 }

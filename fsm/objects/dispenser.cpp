@@ -119,7 +119,7 @@ DF_ERROR dispenser::setup(pcb *pcb, product *pnumbers)
     previousDispensedVolume = 0;
     isPumpSoftStarting = false;
     pwm_actual_set_speed = 0;
-    resetDispenserVolumeDispensed();
+    // resetDispenserVolumeDispensed();
     resetActiveProductVolumeDispensed();
     resetSelectedProductVolumeDispensed();
 }
@@ -182,10 +182,53 @@ product *dispenser::getSelectedProduct()
     return &m_pnumbers[m_selected_pnumber];
 }
 
+void dispenser::setAdditiveFromPositionAsSelectedProduct(int position)
+{
+    int pnumber = getAdditivePNumber(position);
+    setSelectedProduct(pnumber);
+    setActiveProduct(pnumber);
+}
+
 void dispenser::setBasePNumberAsSelectedProduct()
 {
+
     setSelectedProduct(getBasePNumber());
-    m_active_pnumber = getBasePNumber();
+    setBaseAsActiveProduct();
+}
+
+bool dispenser::isPNumberValidInThisDispenser(int pnumber, bool mustBeAdditiveOrBase)
+{
+    bool isValid = false;
+    if (getBasePNumber() == pnumber)
+    {
+        isValid = true;
+    }
+
+    for (int i = 0; i < m_additive_pnumbers_count; i++)
+    {
+        if (m_additive_pnumbers[i] == pnumber)
+        {
+            isValid = true;
+        }
+    }
+
+    if (!mustBeAdditiveOrBase)
+    {
+
+        for (int i = 0; i < m_dispense_pnumbers_count; i++)
+        {
+            if (m_dispense_pnumbers[i] == pnumber)
+            {
+                isValid = true;
+            }
+        }
+    }
+
+    if (!isValid)
+    {
+        debugOutput::sendMessage("ASSERT ERROR: invalid pnumber as selected pnumber in dispenser", MSG_ERROR);
+    }
+    return isValid;
 }
 
 bool dispenser::setSelectedProduct(int pnumber)
@@ -193,13 +236,29 @@ bool dispenser::setSelectedProduct(int pnumber)
     // WARNING: this is about dispensePNumbers! use active PNumber for the pnumber that's actually being dispensed.
 
     // to do check if number is available.
-    bool is_selected_product_a_valid_dispense_p_number = true;
-
-    if (is_selected_product_a_valid_dispense_p_number)
+    if (!isPNumberValidInThisDispenser(pnumber, false))
     {
-        m_selected_pnumber = pnumber;
+        return false;
     }
-    return is_selected_product_a_valid_dispense_p_number;
+
+    m_selected_pnumber = pnumber;
+
+    return true;
+}
+
+void dispenser::setActiveProduct(int pnumber)
+{
+    if (!isPNumberValidInThisDispenser(pnumber, true))
+    {
+        debugOutput::sendMessage("Dispenser: ASSERT ERROR Attempt to set non dispensable product as Active product to: " + to_string(pnumber), MSG_ERROR);
+    }
+    debugOutput::sendMessage("Dispenser: (product that will come out of spout=active product) Set Active product to: " + to_string(pnumber), MSG_INFO);
+    m_active_pnumber = pnumber;
+}
+
+void dispenser::setBaseAsActiveProduct()
+{
+    setActiveProduct(getBasePNumber());
 }
 
 void dispenser::setSelectedSizeAsChar(char size)
@@ -226,6 +285,7 @@ product *dispenser::getActiveProduct()
 {
     // set the product that will actually be dispensed. (base or additive)
     // for now, just base product.
+    // active products cannot be dispenseProducts (if the dispense product is not the same as a base or additive) e.g. ginger kombucha is not dispensable, its components (base kombucha, addtives: suger, ginger flavor) are.
     return &m_pnumbers[m_active_pnumber];
 }
 
@@ -262,10 +322,12 @@ int dispenser::getAdditivePNumber(int position)
     if (position == 0)
     {
         debugOutput::sendMessage("ASSERT ERROR Dispenser: Additive position cannot be zero. Starts from 1.", MSG_ERROR);
+        return PRODUCT_DUMMY;
     }
     if (position > m_additive_pnumbers_count)
     {
         debugOutput::sendMessage("ASSERT ERROR Dispenser: Additive number not existing. Requested:" + std::to_string(position) + " Max: " + std::to_string(m_additive_pnumbers_count), MSG_ERROR);
+        return PRODUCT_DUMMY;
     }
 
     return m_additive_pnumbers[position - 1];
@@ -379,39 +441,21 @@ bool dispenser::loadDispenserParametersFromDb()
 ///////////////////////////////////////////////////////////////////////////
 // dispense commands
 
-DF_ERROR dispenser::startDispense()
-{
-    debugOutput::sendMessage("Dispense start at slot " + to_string(this->m_slot), MSG_INFO);
-    using namespace std::chrono;
-    dispense_start_timestamp_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    dispenseButtonTimingreset();
 
-    this->m_pcb->flowSensorEnable(m_slot);
-    // this->m_pcb->resetFlowSensorPulsesForDispenser(m_slot);
+DF_ERROR dispenser::initSelectedProductDispense(char size, double nPrice){
 
-    // init state
-    dispense_state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
-    previous_dispense_state = FLOW_STATE_UNAVAILABLE; // hack needed to create edge
+    // Dispensing a mix includes the base and additive pnumbers. Start with additives, base last.
+    // needs a state machine to control all this. 
 
-    initProductFlowRateCalculation();
-
-    DF_ERROR e_ret = ERROR_MECH_PRODUCT_FAULT;
-    return e_ret = OK;
-}
-
-// Reset values onEntry()
-DF_ERROR dispenser::initDispense(char size, double nPrice)
-{
-
-    DF_ERROR dfRet = ERROR_BAD_PARAMS;
+    DF_ERROR dfRet = OK;
     getSelectedProduct()->setTargetVolumeFromSize(size);
 
     m_dispenserVolumeTarget = getSelectedProduct()->getTargetVolume();
 
+    
     m_price = nPrice;
 
-    resetDispenserVolumeDispensed();
-    resetActiveProductVolumeDispensed();
+    // resetDispenserVolumeDispensed();
     resetSelectedProductVolumeDispensed();
 
     switch (m_pcb->get_pcb_version())
@@ -441,15 +485,12 @@ DF_ERROR dispenser::initDispense(char size, double nPrice)
     {
 
         m_pcb->sendEN134DefaultConfigurationToPCA9534(getSlot(), true);
-        setPumpEnable();
         m_pcb->setSingleDispenseButtonLight(getSlot(), true);
     }
     break;
     case (pcb::PcbVersion::EN258_4SLOTS):
     case (pcb::PcbVersion::EN258_8SLOTS):
     {
-
-        setPumpEnable();
         m_pcb->setSingleDispenseButtonLight(getSlot(), true);
     }
     break;
@@ -460,44 +501,149 @@ DF_ERROR dispenser::initDispense(char size, double nPrice)
     break;
     }
 
+    initActivePNumberDispense(getSelectedProduct()->getTargetVolume());
+
+}
+
+DF_ERROR dispenser::startSelectedProductDispense()
+{
+    debugOutput::sendMessage("Dispenser: Start Selected PNumber dispense at slot " + to_string(this->m_slot), MSG_INFO);
+    using namespace std::chrono;
+    dispense_start_timestamp_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+
+    startActivePNumberDispense(); // hack for now
+
+    dispenseButtonTimingreset();
+
+    // this->m_pcb->flowSensorEnable(m_slot);
+    // // this->m_pcb->resetFlowSensorPulsesForDispenser(m_slot);
+
+    // // init state
+    // dispense_state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
+    // previous_dispense_state = FLOW_STATE_UNAVAILABLE; // hack needed to create edge
+
+    // initProductFlowRateCalculation();
+
+    // DF_ERROR e_ret = ERROR_MECH_PRODUCT_FAULT;
+    // return e_ret = OK;
+
     // Set Start Time
     time(&rawtime);
     timeinfo = localtime(&rawtime);
     strftime(m_nStartTime, 50, "%F %T", timeinfo);
-
-    return dfRet;
 }
 
-DF_ERROR dispenser::stopDispense()
+DF_ERROR dispenser::stopSelectedProductDispense()
 {
-    debugOutput::sendMessage("stop dispense actions...", MSG_INFO);
-
-    m_pcb->setDispenseButtonLightsAllOff();
-
-    m_pcb->flowSensorsDisableAll();
+    debugOutput::sendMessage("Dispenser: Stop selected PNumber dispense ", MSG_INFO);
+    stopActivePNumberDispense(); // hack for now.
 
     // Set End time
     time(&rawtime);
     timeinfo = localtime(&rawtime);
     strftime(m_nEndTime, 50, "%F %T", timeinfo);
 }
-string dispenser::getDispenseStartTime()
+
+string dispenser::getSelectedProductDispenseStartTime()
 {
     return m_nStartTime;
 }
-string dispenser::getDispenseEndTime()
+
+string dispenser::getSelectedProductDispenseEndTime()
 {
     return m_nEndTime;
 }
 
+DF_ERROR dispenser::initActivePNumberDispense(double volume)
+{
+    DF_ERROR dfRet = OK;
+    getActiveProduct()->setTargetVolume(volume);
+
+    resetActiveProductVolumeDispensed();
+
+    switch (m_pcb->get_pcb_version())
+    {
+
+    case (pcb::PcbVersion::DSED8344_NO_PIC):
+    {
+        // setMultiDispenseButtonLight(getSlot(), true);
+    }
+    break;
+    case pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON:
+    {
+        // if (m_machine->getMultiDispenseButtonEnabled())
+        // {
+        //     setMultiDispenseButtonLight(getSlot(), true);
+        // }
+        // else
+        // {
+        //     setMultiDispenseButtonLight(1, true);
+        // }
+        // setPumpEnable(); // Added at time of EN-134 integration. Why did things work earlier onwards?
+    }
+    break;
+    case (pcb::PcbVersion::EN134_4SLOTS):
+    case (pcb::PcbVersion::EN134_8SLOTS):
+    {
+
+        setPumpEnable();
+        
+    }
+    break;
+    case (pcb::PcbVersion::EN258_4SLOTS):
+    case (pcb::PcbVersion::EN258_8SLOTS):
+    {
+
+        setPumpEnable();
+    }
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Pcb not comptible. ", MSG_WARNING);
+    }
+    break;
+    }
+
+  
+    return dfRet;
+}
+
+
+DF_ERROR dispenser::startActivePNumberDispense()
+{
+    debugOutput::sendMessage("Dispenser: Start Active PNumber at slot " + to_string(this->m_slot), MSG_INFO);
+    
+    // dispenseButtonTimingreset();
+
+    this->m_pcb->flowSensorEnable(m_slot);
+    // this->m_pcb->resetFlowSensorPulsesForDispenser(m_slot);
+
+    // init state
+    dispense_state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
+    previous_dispense_state = FLOW_STATE_UNAVAILABLE; // hack needed to create edge
+
+    initProductFlowRateCalculation();
+
+    DF_ERROR e_ret = ERROR_MECH_PRODUCT_FAULT;
+    return e_ret = OK;
+}
+
+
+
+DF_ERROR dispenser::stopActivePNumberDispense()
+{
+    debugOutput::sendMessage("Dispenser: Stop Active PNumber  dispense ", MSG_INFO);
+
+    m_pcb->setDispenseButtonLightsAllOff();
+
+    m_pcb->flowSensorsDisableAll();
+}
+
+
 /////////////////////////////////////////////////////////////////////////
 // dispenser volume
 
-double dispenser::getDispenserVolumeDispensed()
-{
-    // return m_pcb->getFlowSensorPulsesForDispenser(m_slot) // this justreturns ticks. not volume. should be an addition of all the volumes already dispensed.;
-    return m_dispenser_volume_dispensed;
-}
+
 
 void dispenser::linkActiveProductVolumeUpdate()
 {
@@ -507,16 +653,22 @@ void dispenser::linkActiveProductVolumeUpdate()
     m_pcb->registerFlowSensorTickCallback(getSlot(), lambdaFunc);
 }
 
-void dispenser::resetDispenserVolumeDispensed()
-{
-    m_dispenser_volume_dispensed = 0;
-    // return m_pcb->resetFlowSensorPulsesForDispenser(m_slot);
-}
+// double dispenser::getDispenserVolumeDispensed()
+// {
+//     // return m_pcb->getFlowSensorPulsesForDispenser(m_slot) // this justreturns ticks. not volume. should be an addition of all the volumes already dispensed.;
+//     return m_dispenser_volume_dispensed;
+// }
+// REPLACE BY SelectedProductTargetVolume
+// void dispenser::resetDispenserVolumeDispensed()
+// {
+//     m_dispenser_volume_dispensed = 0;
+//     // return m_pcb->resetFlowSensorPulsesForDispenser(m_slot);
+// }
 
-bool dispenser::isDispenserVolumeTargetReached()
-{
-    return m_dispenserVolumeTarget <= getDispenserVolumeDispensed();
-}
+// bool dispenser::isDispenserVolumeTargetReached()
+// {
+//     return m_dispenserVolumeTarget <= getDispenserVolumeDispensed();
+// }
 
 /////////////////////////////////////////////////////////////////////////
 // active product volume

@@ -68,7 +68,7 @@ private:
     int _goTop_page_idleTimeoutSec;
     QTimer *timeoutTimer;
 
-    void stopDispenseTimer();
+    // void stopActivePNumberDispenseTimer();
 
 
 protected:

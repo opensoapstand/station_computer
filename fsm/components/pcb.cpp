@@ -313,6 +313,10 @@ void pcb::pcb_refresh()
         dispenseButtonRefresh();
         refreshFlowSensors();
         // independentDispensingRefresh(); // ATTENTION:  this is the state machine. involves more than just pumps....
+    }else{
+
+        usleep(5000000);
+        debugOutput::sendMessage("ASSERT ERROR: PCB not detected. Replace pcb? i2c working correctly?", MSG_ERROR);
     }
 }
 void pcb::setup()
@@ -1539,7 +1543,7 @@ void pcb::pollFlowSensor(uint8_t slot)
             }
 
             flow_sensor_pulses_since_enable[slot_index]++;
-            debugOutput::sendMessage("Flow sensor pulse detected by PCA chip. Slot: " + to_string(slot) + ". Pulse total: " + to_string(flow_sensor_pulses_since_enable[slot_index]), MSG_INFO);
+            // debugOutput::sendMessage("Flow sensor pulse detected by PCA chip. Slot: " + to_string(slot) + ". Pulse total: " + to_string(flow_sensor_pulses_since_enable[slot_index]), MSG_INFO);
             flowSensorTickReceivedEpoch[slot_index] = now_epoch_millis;
         }
         flowSensorStateMemory[slot_index] = state;

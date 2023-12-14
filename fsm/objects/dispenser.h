@@ -61,80 +61,88 @@ public:
 
       // DF_ERROR setup(machine *machine, product *pnumber);
       DF_ERROR setup(pcb *pcb, product *pnumbers);
-      void setPumpReversalEnabled(bool isEnabled);
-      void setPumpSlowStartStopEnabled(bool isEnabled);
       // DF_ERROR setup(pcb* pcb, machine* machine);
       void refresh();
-      // void initDispenser(int slot);
-
+      DF_ERROR loadGeneralProperties();
+      bool loadDispenserParametersFromDb();
+      void sendToUiIfAllowed(string message);
+      void logUpdateIfAllowed(string message);
+      bool getIsStatusUpdateAllowed();
+      bool isSlotEnabled();
 
       // product setting
       // selected product
+      product *getProductFromPNumber(int pnumber);
+
+      void setBasePNumberAsSelectedProduct();
       product *getSelectedProduct();
       bool setSelectedProduct(int pnumber);
-
       void setSelectedSizeAsChar(char size);
       char getSelectedSizeAsChar();
       double getSelectedSizeAsVolume();
 
-      void setBasePNumberAsSelectedProduct();
 
-      product* getProductFromPNumber(int pnumber);
+      void setActiveProduct(int pnumber);
+
+      void setBaseAsActiveProduct();
+      void setAdditiveFromPositionAsSelectedProduct(int position);
+
+      bool isPNumberValidInThisDispenser(int pnumber, bool mustBeAdditiveOrBase);
 
       // active product
-      product* getActiveProduct();
+      product *getActiveProduct();
       void linkActiveProductVolumeUpdate();
-     
+
       // DF_ERROR initButtonsShutdownAndMaintenance();
       DF_ERROR setSlot(int slot);
       int getSlot();
 
-      // DF_ERROR setPump(int mcpAddress, int pin, int position);
       DF_ERROR initGlobalFlowsensorIO(int pinint);
-      // DF_ERROR initDispenseButton4Light();
 
+      void setPumpReversalEnabled(bool isEnabled);
+      void setPumpSlowStartStopEnabled(bool isEnabled);
       unsigned short getPumpSpeed();
-      bool isSlotEnabled();
       DF_ERROR setPumpDirectionForward();
       DF_ERROR setPumpDirectionReverse();
       DF_ERROR setPumpsDisableAll();
       DF_ERROR setPumpEnable();
       DF_ERROR setPumpPWM(uint8_t value, bool enableLog);
+      DF_ERROR pumpSlowStart(bool forwardElseReverse);
+      DF_ERROR pumpSlowStartHandler();
+      DF_ERROR pumpSlowStopBlocking();
       DF_ERROR preparePumpForDispenseTrigger();
-
-      // void setAllDispenseButtonLightsOff();
       void reversePumpForSetTimeMillis(int millis);
+
       const char *getDispenseStatusAsString();
       void updateDispenseStatus();
       const char *getSlotStateAsString();
-
-      DF_ERROR pumpSlowStart(bool forwardElseReverse);
-      DF_ERROR pumpSlowStartHandler();
-
-      DF_ERROR pumpSlowStopBlocking();
-
-      void addDispenseButtonPress();
-      DF_ERROR startDispense();
-      DF_ERROR initDispense(char size, double nPrice);
-      DF_ERROR stopDispense();
-      string getDispenseStartTime();
-      string getDispenseEndTime();
       Dispense_behaviour getDispenseStatus();
       Slot_state getSlotState();
       void setSlotState(Slot_state state);
       void updateSlotState();
+      void analyseSlotState();
+
+      DF_ERROR initActivePNumberDispense(double volume);
+      DF_ERROR startActivePNumberDispense();
+      DF_ERROR stopActivePNumberDispense();
+      
+      DF_ERROR initSelectedProductDispense(char size, double nPrice);
+      DF_ERROR startSelectedProductDispense();
+      DF_ERROR stopSelectedProductDispense();
+      string getSelectedProductDispenseStartTime();
+      string getSelectedProductDispenseEndTime();
 
       int getBasePNumber();
       int getActivePNumber();
       int getSelectedPNumber();
       int getAdditivePNumber(int position);
 
-      // dispenser flow 
-      void resetDispenserVolumeDispensed();
-      double getDispenserVolumeDispensed();
-      bool isDispenserVolumeTargetReached();
+      // dispenser flow
+      // void resetDispenserVolumeDispensed();
+      // double getDispenserVolumeDispensed();
+      // bool isDispenserVolumeTargetReached();
 
-      // product flow 
+      // product flow
       bool isActiveProductVolumeTargetReached();
       double getActiveProductVolumeDispensed();
       double getActiveProductVolumeRemaining();
@@ -146,7 +154,7 @@ public:
       double getSelectedProductVolumeRemaining();
       void resetSelectedProductVolumeDispensed();
       void subtractSelectedFromProductVolumeDispensed(double volume_to_distract);
-      
+
       bool isProductVolumeTargetReached(int pnumber);
       double getProductTargetVolume(int pnumber);
       double getProductVolumeDispensed(int pnumber);
@@ -157,12 +165,11 @@ public:
       void initProductFlowRateCalculation();
       Time_val createAndGetActiveProductVolumeDispensedDatapoint();
       double getProductVolumeDeltaAndReset();
-
       double getProductFlowRateInstantaneous();
       DF_ERROR updateActiveProductFlowRateRunningAverageWindow();
       Time_val getAveragedProductFlowRate(uint64_t window_length_millis);
 
-      // void resetDispenseButton();
+      void setDispenseButtonLight(bool onElseOff);
       bool getDispenseButtonValue();
       bool getDispenseButtonEdgeNegative();
       bool getDispenseButtonEdgePositive();
@@ -171,72 +178,43 @@ public:
       int getDispenseButtonPressesDuringDispensing();
       uint64_t getButtonPressedTotalMillis();
       uint64_t getButtonPressedCurrentPressMillis();
+      void addDispenseButtonPress();
 
-      // void registerFlowSensorTickFromInterrupt();
-
-
-      DF_ERROR loadGeneralProperties();
-
-      bool loadDispenserParametersFromDb();
-
-      // void loadEmptyContainerDetectionEnabledFromDb();
-      void analyseSlotState();
-      // void loadPumpReversalEnabledFromDb();
-      
-      // bool getPumpSlowStartStopEnabled();
-      void sendToUiIfAllowed(string message);
-      void logUpdateIfAllowed(string message);
 
       void setSpoutSolenoid(bool openElseClosed);
 
-      bool getIsStatusUpdateAllowed();
-
       pcb *m_pcb;
-      // machine *m_machine;
       product *m_pnumbers;
-      // machine* global_machine;
 
-      static int * parseCSVString(const std::string &csvString, int &size);
-      void setDispenseButtonLight(bool onElseOff);
+      static int *parseIntCsvString(const std::string &csvString, int &size);
 
 private:
-      bool m_slot_loaded_from_db;
       int m_slot;
 
       bool m_isPumpReversalEnabled;
       bool m_isPumpSlowStartStopEnabled;
+      bool isPumpSoftStarting;
+      uint64_t slowStartMostRecentIncreaseEpoch;
+      uint8_t pwm_actual_set_speed;
 
       char m_selectedSizeAsChar;
 
-               
+      int m_base_pnumber;
       int m_selected_pnumber;
       int m_active_pnumber;
-
+      int *m_dispense_pnumbers;
+      int *m_additive_pnumbers;
 
       int m_dispense_pnumbers_count;
-      int* m_dispense_pnumbers;
       int m_additive_pnumbers_count;
-      int* m_additive_pnumbers;
-
       string dispense_numbers_str;
-      int m_base_pnumber;
       string m_additive_pnumbers_str;
-      bool m_is_enabled;
+      bool m_is_slot_enabled;
       string m_status_text;
 
-
-      // bool dispenseButtonValueMemory;
-      // bool dispenseButtonValueEdgePositive;
-      // bool dispenseButtonValueEdgeNegative;
-
-      bool isPumpSoftStarting;
-
-      bool isDispenseFinished;
-      // double m_nVolumeDispensedSinceLastPoll;
-      double m_nTickCount;
-      // double m_nVolumeTarget;
       double m_dispenser_volume_dispensed;
       double m_dispenserVolumeTarget;
+
       char m_nStartTime[50];
       char m_nEndTime[50];
 
@@ -244,12 +222,6 @@ private:
 
       time_t rawtime;
       struct tm *timeinfo;
-
-      // double m_nVolumeDispensed; // how much has been dispensed in this sale
-      // double m_nVolumeDispensedPreviously;
-
-      // We only want to create one instance of the class that controls
-      // the actual hardware, so declare this static.
 
       uint64_t dispense_cycle_pump_running_time_millis;
       uint64_t dispense_start_timestamp_epoch;
@@ -261,57 +233,30 @@ private:
       int dispense_button_press_count_during_dispensing;
 
       uint64_t previous_status_update_allowed_epoch;
-
-      uint64_t slowStartMostRecentIncreaseEpoch;
-
       bool isStatusUpdateSendAndPrintAllowed;
-
       Dispense_behaviour previous_dispense_state;
       Dispense_behaviour dispense_state;
-
       Slot_state slot_state;
 
       Time_val flowRateBuffer[RUNNING_AVERAGE_WINDOW_LENGTH];
       int flowRateBufferIndex;
-
       uint64_t millisAtLastCheck;
       double previousDispensedVolume;
-      unsigned char pump_position;
-
-      // bool m_isEmptyContainerDetectionEnabled = false;
-      // bool m_isPumpSlowStartStopEnabled = false;
-      // bool m_isPumpReversalEnabled = false;
-
-      // bool m_isDispenseDone; // XXX: Remove later.
-      // bool m_isStill;
 
       bool m_isSlotEnabled;
-      bool *m_pIsDispensing;
-
-      uint16_t m_flow_sensor_pulses;
-
-      bool m_isDispenseNew;
 
       sqlite3 *db;
       int rc;
 
+      gpio *m_pFlowsensor;
 
-      DF_ERROR *m_pthreadError;
-
-      // Pointers to Addresses set in State Init
-
-      // gpio *m_pSolenoid[NUM_SOLENOID]; // air,product, and water solenoid control
-      gpio* m_pFlowsensor;
-      // gpio *m_pPump[NUM_PUMP]; // forward and reverse pin control
-      gpio *m_pButtonPowerOff[1];
-      gpio *m_pButtonDisplayMaintenanceMode[1];
-      gpio *m_pPowerOffOrMaintenanceModeButtonPressed[1];
+      // gpio *m_pButtonPowerOff[1];
+      // gpio *m_pButtonDisplayMaintenanceMode[1];
+      // gpio *m_pPowerOffOrMaintenanceModeButtonPressed[1];
       // gpio *m_pDispenseButton4[1];
 
       // Button reference m_pButton[1] in stateVirtual; IPC shared due to Arduino!
-      gpio *m_pButton[NUM_BUTTON];
-
-      uint8_t pwm_actual_set_speed;
+      // gpio *m_pButton[NUM_BUTTON];
 };
 
 #endif

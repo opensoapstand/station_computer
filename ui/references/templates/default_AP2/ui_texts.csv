@@ -44,11 +44,6 @@ page_product->pushButton_back,←back
 page_product_mixing->pushButton_back,←BACK
 page_product_mixing->label_customize_drink,1. Customize Your Drink
 page_product_mixing->label_select_quantity,2. Select Quantity
-page_product_mixing->label_additive_minus_1,-
-page_product_mixing->label_additive_minus_2,-
-page_product_mixing->label_additive_minus_3,-
-page_product_mixing->label_additive_minus_4,-
-page_product_mixing->label_additive_minus_5,-
 page_product_mixing->label_product_ingredients_title,Curated Ingredients
 page_product_mixing->pushButton_continue,Continue
 page_product_mixing->custom_volume,Custom Volume

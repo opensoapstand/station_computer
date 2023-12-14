@@ -44,12 +44,6 @@ page_product_mixing::page_product_mixing(QWidget *parent) : QWidget(parent),
     additiveMinusButtonBackgrounds[3] = ui->label_additive_minus_background_4;
     additiveMinusButtonBackgrounds[4] = ui->label_additive_minus_background_5;
 
-    additiveMinusLabels[0] = ui->label_additive_minus_1;
-    additiveMinusLabels[1] = ui->label_additive_minus_2;
-    additiveMinusLabels[2] = ui->label_additive_minus_3;
-    additiveMinusLabels[3] = ui->label_additive_minus_4;
-    additiveMinusLabels[4] = ui->label_additive_minus_5;
-
     additiveMinusButtons[0] = ui->pushButton_additive_minus_1;
     additiveMinusButtons[1] = ui->pushButton_additive_minus_2;
     additiveMinusButtons[2] = ui->pushButton_additive_minus_3;
@@ -153,7 +147,6 @@ void page_product_mixing::showEvent(QShowEvent *event)
     ui->label_product_ingredients_title->setStyleSheet(styleSheet);
     ui->label_help->setStyleSheet(styleSheet);
     ui->label_sizes_background->setStyleSheet(styleSheet);
-    ui->label_additives_background->setStyleSheet(styleSheet);
     ui->pushButton_continue->setStyleSheet(styleSheet);
     // ui->pushButton_previous_page->setStyleSheet(styleSheet);
     ui->pushButton_to_help->setProperty("class", "button_transparent");
@@ -172,39 +165,62 @@ void page_product_mixing::showEvent(QShowEvent *event)
         orderSizeButtons[i]->setStyleSheet(styleSheet);
     }
 
-    for (int j = 0; j < 5; j++){
-        additiveTitles[j]->setProperty("class", "additiveTitles");
-        additiveBackgroundRows[j]->setProperty("class", "additiveBackgroundRows");
-        additiveMinusButtonBackgrounds[j]->setProperty("class", "additiveMinusButtonBackgrounds");
-        additiveMinusLabels[j]->setProperty("class", "additiveMinusLabels");
-        additiveMinusButtons[j]->setProperty("class", "additiveMinusButtons");
-        additivePlusButtonBackgrounds[j]->setProperty("class", "additivePlusButtonBackgrounds");
-        additivePlusButtons[j]->setProperty("class", "additivePlusButtons");
-        additivePercentageLabels[j]->setProperty("class", "additivePercentageLabels");
-        additiveTitles[j]->setStyleSheet(styleSheet);
-        additiveBackgroundRows[j]->setStyleSheet(styleSheet);
-        additiveMinusButtonBackgrounds[j]->setStyleSheet(styleSheet);
-        additiveMinusLabels[j]->setStyleSheet(styleSheet);
-        additiveMinusButtons[j]->setStyleSheet(styleSheet);
-        additivePlusButtonBackgrounds[j]->setStyleSheet(styleSheet);
-        additivePlusButtons[j]->setStyleSheet(styleSheet);
-        additivePercentageLabels[j]->setStyleSheet(styleSheet);
+    if(p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size() > 0){
+        ui->label_additives_background->setStyleSheet(styleSheet);
+        for (int j = 0; j < 5; j++){
+            if(j < p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size()){
+                additiveTitles[j]->setProperty("class", "additiveTitles");
+                additiveBackgroundRows[j]->setProperty("class", "additiveBackgroundRows");
+                additiveMinusButtonBackgrounds[j]->setProperty("class", "additiveMinusButtonBackgrounds");
+                additiveMinusButtons[j]->setProperty("class", "additiveMinusButtons");
+                additivePlusButtonBackgrounds[j]->setProperty("class", "additivePlusButtonBackgrounds");
+                additivePlusButtons[j]->setProperty("class", "additivePlusButtons");
+                additivePercentageLabels[j]->setProperty("class", "additivePercentageLabels");
 
-        p_page_idle->thisMachine->setTemplateTextToObject(additiveMinusLabels[j]);
+                additiveTitles[j]->setStyleSheet(styleSheet);
+                additiveBackgroundRows[j]->setStyleSheet(styleSheet);
+                additiveMinusButtonBackgrounds[j]->setStyleSheet(styleSheet);
+                additiveMinusButtons[j]->setStyleSheet(styleSheet);
+                additivePlusButtonBackgrounds[j]->setStyleSheet(styleSheet);
+                additivePlusButtons[j]->setStyleSheet(styleSheet);
+                additivePercentageLabels[j]->setStyleSheet(styleSheet);
 
+                additiveTitles[j]->show();
+                additiveBackgroundRows[j]->show();
+                additiveMinusButtonBackgrounds[j]->show();
+                additiveMinusButtons[j]->show();
+                additivePlusButtonBackgrounds[j]->show();
+                additivePlusButtons[j]->show();
+                additivePercentageLabels[j]->show();
+
+                int mixProductNumber = p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers()[j];
+                additiveTitles[j]->setText(p_page_idle->thisMachine->getProductByPNumber(mixProductNumber)->getProductName());
+                qDebug() << "$$$$$$$$$$$$$$$$$$$" << mixProductNumber;
+            }else{
+                additiveTitles[j]->hide();
+                additiveBackgroundRows[j]->hide();
+                additiveMinusButtonBackgrounds[j]->hide();
+                additiveMinusButtons[j]->hide();
+                additivePlusButtonBackgrounds[j]->hide();
+                additivePlusButtons[j]->hide();
+                additivePercentageLabels[j]->hide();
+            }
+        }
+    }else{
+        ui->label_additives_background->hide();
+        for (int j = 0; j < 5; j++){
+            additiveTitles[j]->hide();
+            additiveBackgroundRows[j]->hide();
+            additiveMinusButtonBackgrounds[j]->hide();
+            additiveMinusButtons[j]->hide();
+            additivePlusButtonBackgrounds[j]->hide();
+            additivePlusButtons[j]->hide();
+            additivePercentageLabels[j]->hide();
+        }
     }
+
     p_page_idle->thisMachine->resetTransactionLogging();
     // transactionLogging = "";
-    qDebug() << "1111111111" << p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size();
-    qDebug() << "2222222222";
-    for (int i = 0; i < p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size(); ++i) {
-        int mixProductNumber = p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers()[i];
-        p_page_idle->thisMachine->getProductByPNumber(mixProductNumber)->getProductName();
-        qDebug() << "##################" << mixProductNumber;
-        qDebug() << "##################" << p_page_idle->thisMachine->getProductByPNumber(mixProductNumber)->getProductName();
-        // Perform operations on the element
-    }
-    qDebug() << "3333333333";
     reset_and_show_page_elements();
 }
 

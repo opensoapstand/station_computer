@@ -21,6 +21,7 @@
    font-style: normal;
    font-weight: 700;
    line-height: normal;
+   text-align: left;
 }
 
 .additiveBackgroundRows{
@@ -35,26 +36,23 @@
    background: #BC8439;
 }
 
-.additiveMinusLabels{
+.additiveMinusButtons{
    font-size: 55px;
    color: #FFF;
    qproperty-alignment: AlignCenter;
    text-align: center;
    margin-bottom: 10px;
-}
-
-.additiveMinusButtons{
    background: transparent;
    border: none;
 }
 
 .additivePlusButtons{
-   background: transparent;
-   border: none;
    font-size: 46px;
    color: #FFF;
    qproperty-alignment: AlignCenter;
    text-align: center;
+   background: transparent;
+   border: none;
 }
 
 .additivePercentageLabels{

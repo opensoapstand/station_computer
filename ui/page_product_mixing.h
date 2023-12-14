@@ -59,6 +59,12 @@ class page_product_mixing : public QWidget
 public:
     QLabel *additiveBackgroundRows[5];
     QLabel *additiveTitles[5];
+    QLabel *additiveMinusButtonBackgrounds[5];
+    QLabel *additiveMinusLabels[5];
+    QPushButton *additiveMinusButtons[5];
+    QLabel *additivePlusButtonBackgrounds[5];
+    QPushButton *additivePlusButtons[5];
+    QLabel *additivePercentageLabels[5];
 
     QPushButton *orderSizeButtons[4];
     QLabel *orderSizeLabelsPrice[4];

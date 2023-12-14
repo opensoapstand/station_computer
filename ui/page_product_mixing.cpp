@@ -16,6 +16,7 @@
 //***************************************
 #include "page_product_mixing.h"
 #include "ui_page_product_mixing.h"
+#include "pnumberproduct.h"
 
 using json = nlohmann::json;
 
@@ -36,6 +37,42 @@ page_product_mixing::page_product_mixing(QWidget *parent) : QWidget(parent),
     additiveTitles[2] = ui->label_additive_title_3;
     additiveTitles[3] = ui->label_additive_title_4;
     additiveTitles[4] = ui->label_additive_title_5;
+
+    additiveMinusButtonBackgrounds[0] = ui->label_additive_minus_background_1;
+    additiveMinusButtonBackgrounds[1] = ui->label_additive_minus_background_2;
+    additiveMinusButtonBackgrounds[2] = ui->label_additive_minus_background_3;
+    additiveMinusButtonBackgrounds[3] = ui->label_additive_minus_background_4;
+    additiveMinusButtonBackgrounds[4] = ui->label_additive_minus_background_5;
+
+    additiveMinusLabels[0] = ui->label_additive_minus_1;
+    additiveMinusLabels[1] = ui->label_additive_minus_2;
+    additiveMinusLabels[2] = ui->label_additive_minus_3;
+    additiveMinusLabels[3] = ui->label_additive_minus_4;
+    additiveMinusLabels[4] = ui->label_additive_minus_5;
+
+    additiveMinusButtons[0] = ui->pushButton_additive_minus_1;
+    additiveMinusButtons[1] = ui->pushButton_additive_minus_2;
+    additiveMinusButtons[2] = ui->pushButton_additive_minus_3;
+    additiveMinusButtons[3] = ui->pushButton_additive_minus_4;
+    additiveMinusButtons[4] = ui->pushButton_additive_minus_5;
+
+    additivePlusButtonBackgrounds[0] = ui->label_additive_plus_background_1;
+    additivePlusButtonBackgrounds[1] = ui->label_additive_plus_background_2;
+    additivePlusButtonBackgrounds[2] = ui->label_additive_plus_background_3;
+    additivePlusButtonBackgrounds[3] = ui->label_additive_plus_background_4;
+    additivePlusButtonBackgrounds[4] = ui->label_additive_plus_background_5;
+
+    additivePlusButtons[0] = ui->pushButton_additive_plus_1;
+    additivePlusButtons[1] = ui->pushButton_additive_plus_2;
+    additivePlusButtons[2] = ui->pushButton_additive_plus_3;
+    additivePlusButtons[3] = ui->pushButton_additive_plus_4;
+    additivePlusButtons[4] = ui->pushButton_additive_plus_5;
+
+    additivePercentageLabels[0] = ui->label_additive_percentage_1;
+    additivePercentageLabels[1] = ui->label_additive_percentage_2;
+    additivePercentageLabels[2] = ui->label_additive_percentage_3;
+    additivePercentageLabels[3] = ui->label_additive_percentage_4;
+    additivePercentageLabels[4] = ui->label_additive_percentage_5;
 
     orderSizeButtons[0] = ui->pushButton_order_small;
     orderSizeButtons[1] = ui->pushButton_order_medium;
@@ -133,19 +170,41 @@ void page_product_mixing::showEvent(QShowEvent *event)
         orderSizeLabelsPrice[i]->setStyleSheet(styleSheet);
         orderSizeBackgroundLabels[i]->setStyleSheet(styleSheet);
         orderSizeButtons[i]->setStyleSheet(styleSheet);
-        // orderSizeBackgroundLabels[i]->setStyleSheet(styleSheet);
     }
 
-    for (int j = 0; j <= 4; j++){
+    for (int j = 0; j < 5; j++){
         additiveTitles[j]->setProperty("class", "additiveTitles");
         additiveBackgroundRows[j]->setProperty("class", "additiveBackgroundRows");
+        additiveMinusButtonBackgrounds[j]->setProperty("class", "additiveMinusButtonBackgrounds");
+        additiveMinusLabels[j]->setProperty("class", "additiveMinusLabels");
+        additiveMinusButtons[j]->setProperty("class", "additiveMinusButtons");
+        additivePlusButtonBackgrounds[j]->setProperty("class", "additivePlusButtonBackgrounds");
+        additivePlusButtons[j]->setProperty("class", "additivePlusButtons");
+        additivePercentageLabels[j]->setProperty("class", "additivePercentageLabels");
         additiveTitles[j]->setStyleSheet(styleSheet);
         additiveBackgroundRows[j]->setStyleSheet(styleSheet);
-    }
+        additiveMinusButtonBackgrounds[j]->setStyleSheet(styleSheet);
+        additiveMinusLabels[j]->setStyleSheet(styleSheet);
+        additiveMinusButtons[j]->setStyleSheet(styleSheet);
+        additivePlusButtonBackgrounds[j]->setStyleSheet(styleSheet);
+        additivePlusButtons[j]->setStyleSheet(styleSheet);
+        additivePercentageLabels[j]->setStyleSheet(styleSheet);
 
+        p_page_idle->thisMachine->setTemplateTextToObject(additiveMinusLabels[j]);
+
+    }
     p_page_idle->thisMachine->resetTransactionLogging();
     // transactionLogging = "";
-
+    qDebug() << "1111111111" << p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size();
+    qDebug() << "2222222222";
+    for (int i = 0; i < p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size(); ++i) {
+        int mixProductNumber = p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers()[i];
+        p_page_idle->thisMachine->getProductByPNumber(mixProductNumber)->getProductName();
+        qDebug() << "##################" << mixProductNumber;
+        qDebug() << "##################" << p_page_idle->thisMachine->getProductByPNumber(mixProductNumber)->getProductName();
+        // Perform operations on the element
+    }
+    qDebug() << "3333333333";
     reset_and_show_page_elements();
 }
 
@@ -181,7 +240,6 @@ void page_product_mixing::reset_and_show_page_elements()
 
     // p_page_idle->thisMachine->addPictureToLabel(ui->label_product_photo, p_page_idle->thisMachine->getSelectedProduct()->getProductPicturePath());
     QString picturePath = p_page_idle->thisMachine->getSelectedProduct()->getProductPicturePath();
-    qDebug() << "############## PICTURE PATH: " << picturePath;
     // ui->label_product_photo->setStyleSheet("QLabel {"
     //                  "border-radius: 10px;"
     //                  "background-image: url(/home/df-admin/production/references/products/P-91.png);"

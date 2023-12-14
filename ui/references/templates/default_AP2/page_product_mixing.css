@@ -15,12 +15,56 @@
 }
 
 .additiveTitles{
-
+   color: #221403;
+   font-family: 'Lato';
+   font-size: 30px;
+   font-style: normal;
+   font-weight: 700;
+   line-height: normal;
 }
 
 .additiveBackgroundRows{
-   border-radius: 30px;
+   border-radius: 40px;
    background: #F9EBD8;
+}
+
+.additiveMinusButtonBackgrounds, .additivePlusButtonBackgrounds{
+   max-width: 60px;
+   max-height: 60px;
+   border-radius: 30px;
+   background: #BC8439;
+}
+
+.additiveMinusLabels{
+   font-size: 55px;
+   color: #FFF;
+   qproperty-alignment: AlignCenter;
+   text-align: center;
+   margin-bottom: 10px;
+}
+
+.additiveMinusButtons{
+   background: transparent;
+   border: none;
+}
+
+.additivePlusButtons{
+   background: transparent;
+   border: none;
+   font-size: 46px;
+   color: #FFF;
+   qproperty-alignment: AlignCenter;
+   text-align: center;
+}
+
+.additivePercentageLabels{
+   color: #895E25;
+   text-align: center;
+   font-family: 'Lato';
+   font-size: 30px;
+   font-style: normal;
+   font-weight: 400;
+   line-height: normal;
 }
 
 #label_customize_drink, #label_select_quantity {

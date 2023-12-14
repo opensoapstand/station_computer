@@ -355,7 +355,6 @@ void page_product_menu::displayDispenseProductsMenu()
             QString picturePath = dispenseProduct->getProductPicturePath();
             QString increment_text = "%IMAGE_PATH%1%";
             QString image_path_for_position = increment_text.arg(sub_menu_index);
-            qDebug() << "!@@@@@@@@@@@ IMAGE PATH: " << image_path_for_position;
             // styleSheet.replace(image_path_for_position, picturePath);
             styleSheet.replace(image_path_for_position, picturePath);
 

@@ -893,6 +893,796 @@ text-align: center;
     <bool>true</bool>
    </property>
   </widget>
+  <widget class="QLabel" name="label_additive_minus_background_1">
+   <property name="geometry">
+    <rect>
+     <x>535</x>
+     <y>609</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_minus_background_2">
+   <property name="geometry">
+    <rect>
+     <x>535</x>
+     <y>794</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_minus_background_3">
+   <property name="geometry">
+    <rect>
+     <x>793</x>
+     <y>794</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_minus_background_4">
+   <property name="geometry">
+    <rect>
+     <x>535</x>
+     <y>980</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_minus_background_5">
+   <property name="geometry">
+    <rect>
+     <x>793</x>
+     <y>980</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_additive_minus_1">
+   <property name="geometry">
+    <rect>
+     <x>535</x>
+     <y>609</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_additive_minus_2">
+   <property name="geometry">
+    <rect>
+     <x>535</x>
+     <y>794</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>-</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_additive_minus_3">
+   <property name="geometry">
+    <rect>
+     <x>793</x>
+     <y>794</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>-</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_additive_minus_4">
+   <property name="geometry">
+    <rect>
+     <x>535</x>
+     <y>980</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>-</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_additive_minus_5">
+   <property name="geometry">
+    <rect>
+     <x>793</x>
+     <y>980</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>-</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_plus_background_1">
+   <property name="geometry">
+    <rect>
+     <x>930</x>
+     <y>608</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_plus_background_2">
+   <property name="geometry">
+    <rect>
+     <x>672</x>
+     <y>794</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_plus_background_3">
+   <property name="geometry">
+    <rect>
+     <x>930</x>
+     <y>794</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_plus_background_4">
+   <property name="geometry">
+    <rect>
+     <x>672</x>
+     <y>980</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_plus_background_5">
+   <property name="geometry">
+    <rect>
+     <x>930</x>
+     <y>980</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_additive_plus_1">
+   <property name="geometry">
+    <rect>
+     <x>930</x>
+     <y>608</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_additive_plus_2">
+   <property name="geometry">
+    <rect>
+     <x>672</x>
+     <y>794</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>+</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_additive_plus_3">
+   <property name="geometry">
+    <rect>
+     <x>930</x>
+     <y>794</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>+</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_additive_plus_4">
+   <property name="geometry">
+    <rect>
+     <x>672</x>
+     <y>980</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>+</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_additive_plus_5">
+   <property name="geometry">
+    <rect>
+     <x>930</x>
+     <y>980</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>+</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_percentage_1">
+   <property name="geometry">
+    <rect>
+     <x>733</x>
+     <y>620</y>
+     <width>59</width>
+     <height>36</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_percentage_2">
+   <property name="geometry">
+    <rect>
+     <x>604</x>
+     <y>807</y>
+     <width>59</width>
+     <height>36</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_percentage_3">
+   <property name="geometry">
+    <rect>
+     <x>862</x>
+     <y>807</y>
+     <width>59</width>
+     <height>36</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_percentage_4">
+   <property name="geometry">
+    <rect>
+     <x>604</x>
+     <y>993</y>
+     <width>59</width>
+     <height>36</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_percentage_5">
+   <property name="geometry">
+    <rect>
+     <x>862</x>
+     <y>993</y>
+     <width>59</width>
+     <height>36</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_minus_1">
+   <property name="geometry">
+    <rect>
+     <x>535</x>
+     <y>609</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_minus_2">
+   <property name="geometry">
+    <rect>
+     <x>535</x>
+     <y>794</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_minus_3">
+   <property name="geometry">
+    <rect>
+     <x>793</x>
+     <y>794</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_minus_4">
+   <property name="geometry">
+    <rect>
+     <x>535</x>
+     <y>980</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_minus_5">
+   <property name="geometry">
+    <rect>
+     <x>793</x>
+     <y>980</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
   <zorder>label_sizes_background</zorder>
   <zorder>label_help</zorder>
   <zorder>pushButton_continue</zorder>
@@ -931,6 +1721,36 @@ text-align: center;
   <zorder>label_additive_background_row_3</zorder>
   <zorder>label_additive_background_row_4</zorder>
   <zorder>label_additive_background_row_5</zorder>
+  <zorder>label_additive_minus_background_1</zorder>
+  <zorder>label_additive_minus_background_2</zorder>
+  <zorder>label_additive_minus_background_3</zorder>
+  <zorder>label_additive_minus_background_4</zorder>
+  <zorder>label_additive_minus_background_5</zorder>
+  <zorder>label_additive_plus_background_1</zorder>
+  <zorder>label_additive_plus_background_2</zorder>
+  <zorder>label_additive_plus_background_3</zorder>
+  <zorder>label_additive_plus_background_4</zorder>
+  <zorder>label_additive_plus_background_5</zorder>
+  <zorder>pushButton_additive_plus_1</zorder>
+  <zorder>pushButton_additive_plus_2</zorder>
+  <zorder>pushButton_additive_plus_3</zorder>
+  <zorder>pushButton_additive_plus_4</zorder>
+  <zorder>pushButton_additive_plus_5</zorder>
+  <zorder>label_additive_percentage_1</zorder>
+  <zorder>label_additive_percentage_2</zorder>
+  <zorder>label_additive_percentage_3</zorder>
+  <zorder>label_additive_percentage_4</zorder>
+  <zorder>label_additive_percentage_5</zorder>
+  <zorder>label_additive_minus_1</zorder>
+  <zorder>label_additive_minus_2</zorder>
+  <zorder>label_additive_minus_3</zorder>
+  <zorder>label_additive_minus_4</zorder>
+  <zorder>label_additive_minus_5</zorder>
+  <zorder>pushButton_additive_minus_1</zorder>
+  <zorder>pushButton_additive_minus_2</zorder>
+  <zorder>pushButton_additive_minus_3</zorder>
+  <zorder>pushButton_additive_minus_4</zorder>
+  <zorder>pushButton_additive_minus_5</zorder>
  </widget>
  <resources/>
  <connections/>

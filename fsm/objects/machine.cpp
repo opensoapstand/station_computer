@@ -66,11 +66,8 @@ void machine::initProductDispensers()
         m_productDispensers[slot_index].initGlobalFlowsensorIO(IO_PIN_FLOW_SENSOR);
         setFlowSensorCallBack(slot_index + 1);
 
-
-        debugOutput::sendMessage("TEMPORARY HACK: base number is the selected product (pDispense). ", MSG_INFO);
+        debugOutput::sendMessage("TEMPORARY HACK: base number is the selected product at startup. ", MSG_INFO);
         m_productDispensers[slot_index].setBasePNumberAsSelectedProduct();
-
-
     }
 }
 
@@ -131,6 +128,8 @@ void machine::refresh()
 
 void machine::setFlowSensorCallBack(int slot)
 {
+    // CALL THIS FOR EVERY ACTIVE PRODUCT CHANGE during a mixing dispense.
+
     int slot_index = slot -1 ;
     // control_pcb->registerFlowSensorTickCallback(std::bind(&dispenser::registerFlowSensorTickCallback, &m_productDispensers[slot_index]));
     m_productDispensers[slot_index].linkActiveProductVolumeUpdate();
@@ -144,7 +143,6 @@ void machine::syncSoftwareVersionWithDb()
 
 void machine::executeSQLStatement(string sql_string)
 {
-
     rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);

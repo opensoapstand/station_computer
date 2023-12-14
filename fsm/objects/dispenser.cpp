@@ -46,8 +46,7 @@ const char *SLOT_STATE_STRINGS[] = {
     "SLOT_STATE_DISABLED_COMING_SOON",
     "SLOT_STATE_DISABLED"};
 
-int *dispenser::parseCSVString(const std::string &csvString, int &size)
-
+int *dispenser::parseIntCsvString(const std::string &csvString, int &size)
 {
     static const int MAX_SIZE = 100; // Define the maximum size of the array
 
@@ -69,11 +68,9 @@ int *dispenser::parseCSVString(const std::string &csvString, int &size)
             return nullptr;
         }
     }
-
     return intArray;
 }
 
-// CTOR
 dispenser::dispenser()
 {
     // default constructor to set all pin to nullptr
@@ -94,6 +91,17 @@ dispenser::dispenser()
     previous_dispense_state = FLOW_STATE_UNAVAILABLE;
 }
 
+dispenser::~dispenser()
+{
+    debugOutput::sendMessage("~dispenser", MSG_INFO);
+
+    delete m_pcb;
+    m_pcb = nullptr;
+
+    using namespace std::chrono;
+    previous_status_update_allowed_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+}
+
 DF_ERROR dispenser::setup(pcb *pcb, product *pnumbers)
 // DF_ERROR dispenser::setup(machine *machine, product *pnumbers)
 {
@@ -111,7 +119,7 @@ DF_ERROR dispenser::setup(pcb *pcb, product *pnumbers)
     previousDispensedVolume = 0;
     isPumpSoftStarting = false;
     pwm_actual_set_speed = 0;
-    resetDispenserVolumeDispensed();
+    // resetDispenserVolumeDispensed();
     resetActiveProductVolumeDispensed();
     resetSelectedProductVolumeDispensed();
 }
@@ -144,18 +152,6 @@ void dispenser::refresh()
     pumpSlowStartHandler();
 }
 
-// DTOR
-dispenser::~dispenser()
-{
-    debugOutput::sendMessage("~dispenser", MSG_INFO);
-
-    delete m_pcb;
-    m_pcb = nullptr;
-
-    using namespace std::chrono;
-    previous_status_update_allowed_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-}
-
 // void dispenser::setAllDispenseButtonLightsOff()
 // {
 //     for (int slot = 1; slot < 5; slot++)
@@ -165,6 +161,10 @@ dispenser::~dispenser()
 //     }
 // }
 
+bool dispenser::isSlotEnabled()
+{
+    return m_isSlotEnabled;
+}
 DF_ERROR dispenser::setSlot(int slot)
 {
     // first slot is 1
@@ -182,10 +182,53 @@ product *dispenser::getSelectedProduct()
     return &m_pnumbers[m_selected_pnumber];
 }
 
+void dispenser::setAdditiveFromPositionAsSelectedProduct(int position)
+{
+    int pnumber = getAdditivePNumber(position);
+    setSelectedProduct(pnumber);
+    setActiveProduct(pnumber);
+}
+
 void dispenser::setBasePNumberAsSelectedProduct()
 {
+
     setSelectedProduct(getBasePNumber());
-    m_active_pnumber = getBasePNumber();
+    setBaseAsActiveProduct();
+}
+
+bool dispenser::isPNumberValidInThisDispenser(int pnumber, bool mustBeAdditiveOrBase)
+{
+    bool isValid = false;
+    if (getBasePNumber() == pnumber)
+    {
+        isValid = true;
+    }
+
+    for (int i = 0; i < m_additive_pnumbers_count; i++)
+    {
+        if (m_additive_pnumbers[i] == pnumber)
+        {
+            isValid = true;
+        }
+    }
+
+    if (!mustBeAdditiveOrBase)
+    {
+
+        for (int i = 0; i < m_dispense_pnumbers_count; i++)
+        {
+            if (m_dispense_pnumbers[i] == pnumber)
+            {
+                isValid = true;
+            }
+        }
+    }
+
+    if (!isValid)
+    {
+        debugOutput::sendMessage("ASSERT ERROR: invalid pnumber as selected pnumber in dispenser", MSG_ERROR);
+    }
+    return isValid;
 }
 
 bool dispenser::setSelectedProduct(int pnumber)
@@ -193,13 +236,29 @@ bool dispenser::setSelectedProduct(int pnumber)
     // WARNING: this is about dispensePNumbers! use active PNumber for the pnumber that's actually being dispensed.
 
     // to do check if number is available.
-    bool is_selected_product_a_valid_dispense_p_number = true;
-
-    if (is_selected_product_a_valid_dispense_p_number)
+    if (!isPNumberValidInThisDispenser(pnumber, false))
     {
-        m_selected_pnumber = pnumber;
+        return false;
     }
-    return is_selected_product_a_valid_dispense_p_number;
+
+    m_selected_pnumber = pnumber;
+
+    return true;
+}
+
+void dispenser::setActiveProduct(int pnumber)
+{
+    if (!isPNumberValidInThisDispenser(pnumber, true))
+    {
+        debugOutput::sendMessage("Dispenser: ASSERT ERROR Attempt to set non dispensable product as Active product to: " + to_string(pnumber), MSG_ERROR);
+    }
+    debugOutput::sendMessage("Dispenser: (product that will come out of spout=active product) Set Active product to: " + to_string(pnumber), MSG_INFO);
+    m_active_pnumber = pnumber;
+}
+
+void dispenser::setBaseAsActiveProduct()
+{
+    setActiveProduct(getBasePNumber());
 }
 
 void dispenser::setSelectedSizeAsChar(char size)
@@ -226,6 +285,7 @@ product *dispenser::getActiveProduct()
 {
     // set the product that will actually be dispensed. (base or additive)
     // for now, just base product.
+    // active products cannot be dispenseProducts (if the dispense product is not the same as a base or additive) e.g. ginger kombucha is not dispensable, its components (base kombucha, addtives: suger, ginger flavor) are.
     return &m_pnumbers[m_active_pnumber];
 }
 
@@ -262,13 +322,31 @@ int dispenser::getAdditivePNumber(int position)
     if (position == 0)
     {
         debugOutput::sendMessage("ASSERT ERROR Dispenser: Additive position cannot be zero. Starts from 1.", MSG_ERROR);
+        return PRODUCT_DUMMY;
     }
     if (position > m_additive_pnumbers_count)
     {
         debugOutput::sendMessage("ASSERT ERROR Dispenser: Additive number not existing. Requested:" + std::to_string(position) + " Max: " + std::to_string(m_additive_pnumbers_count), MSG_ERROR);
+        return PRODUCT_DUMMY;
     }
 
     return m_additive_pnumbers[position - 1];
+}
+
+bool dispenser::getIsStatusUpdateAllowed()
+{
+    // prevent flooding with messages by limiting amount of traffic let through
+    return isStatusUpdateSendAndPrintAllowed;
+}
+
+void dispenser::logUpdateIfAllowed(string message)
+{
+    // only use this for updates that would happen at every stateDispense refresh cycle.
+    if (isStatusUpdateSendAndPrintAllowed)
+    {
+        debugOutput::sendMessage(message,
+                                 MSG_INFO);
+    }
 }
 
 bool dispenser::loadDispenserParametersFromDb()
@@ -305,25 +383,25 @@ bool dispenser::loadDispenserParametersFromDb()
         dispense_numbers_str = product::dbFieldAsValidString(stmt, 1);
         base_pnumber_str = product::dbFieldAsValidString(stmt, 2);
         additive_pnumbers_str = product::dbFieldAsValidString(stmt, 3);
-        m_is_enabled = sqlite3_column_int(stmt, 4);
+        m_is_slot_enabled = sqlite3_column_int(stmt, 4);
         m_status_text = product::dbFieldAsValidString(stmt, 5);
 
         status = sqlite3_step(stmt); // next record
         // every sqlite3_step returns a row. if it returns 0, it's run over all the rows.
     }
 
-    m_slot_loaded_from_db = false;
+    bool slot_loaded_from_db = false;
     if (numberOfRecordsFound == 1)
     {
-        m_slot_loaded_from_db = true;
+        slot_loaded_from_db = true;
 
         // int ;
         //       int* ;
         //       int m_additive_pnumbers_count;
         //       int* m_additive_pnumbers;
 
-        m_dispense_pnumbers = dispenser::parseCSVString(dispense_numbers_str, m_dispense_pnumbers_count);
-        m_additive_pnumbers = dispenser::parseCSVString(dispense_numbers_str, m_additive_pnumbers_count);
+        m_dispense_pnumbers = dispenser::parseIntCsvString(dispense_numbers_str, m_dispense_pnumbers_count);
+        m_additive_pnumbers = dispenser::parseIntCsvString(dispense_numbers_str, m_additive_pnumbers_count);
 
         if (base_pnumber_str.empty())
         {
@@ -350,82 +428,34 @@ bool dispenser::loadDispenserParametersFromDb()
         // debugOutput::sendMessage("no records for: " + sql_string, MSG_INFO);
     }
 
+    if (!slot_loaded_from_db)
+    {
+        debugOutput::sendMessage("ERROR: Slot NOT loaded from db. slot: " + std::to_string(m_slot), MSG_ERROR);
+    }
+
     sqlite3_finalize(stmt);
     sqlite3_close(db);
     return true;
 }
 
-DF_ERROR dispenser::startDispense()
-{
-    debugOutput::sendMessage("Dispense start at slot " + to_string(this->m_slot), MSG_INFO);
-    using namespace std::chrono;
-    dispense_start_timestamp_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    dispenseButtonTimingreset();
+///////////////////////////////////////////////////////////////////////////
+// dispense commands
 
-    this->m_pcb->flowSensorEnable(m_slot);
-    // this->m_pcb->resetFlowSensorPulsesForDispenser(m_slot);
 
-    // init state
-    dispense_state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
-    previous_dispense_state = FLOW_STATE_UNAVAILABLE; // hack needed to create edge
+DF_ERROR dispenser::initSelectedProductDispense(char size, double nPrice){
 
-    initProductFlowRateCalculation();
+    // Dispensing a mix includes the base and additive pnumbers. Start with additives, base last.
+    // needs a state machine to control all this. 
 
-    DF_ERROR e_ret = ERROR_MECH_PRODUCT_FAULT;
-    return e_ret = OK;
-}
-
-void dispenser::setDispenseButtonLight(bool onElseOff)
-{
-    switch (m_pcb->get_pcb_version())
-    {
-
-    case (pcb::PcbVersion::DSED8344_NO_PIC):
-    {
-        debugOutput::sendMessage("No dispense button light. Deprecated ", MSG_WARNING);
-    }
-
-    break;
-    case pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON:
-    {
-        debugOutput::sendMessage("No dispense button light. Deprecated ", MSG_WARNING);
-    }
-    break;
-    case (pcb::PcbVersion::EN134_4SLOTS):
-    case (pcb::PcbVersion::EN134_8SLOTS):
-    {
-
-        m_pcb->setSingleDispenseButtonLight(getSlot(), onElseOff);
-    }
-    break;
-    case (pcb::PcbVersion::EN258_4SLOTS):
-    case (pcb::PcbVersion::EN258_8SLOTS):
-    {
-
-        m_pcb->setSingleDispenseButtonLight(getSlot(), onElseOff);
-    }
-    break;
-    default:
-    {
-        debugOutput::sendMessage("Pcb not comptible. ", MSG_WARNING);
-    }
-    break;
-    }
-}
-
-// Reset values onEntry()
-DF_ERROR dispenser::initDispense(char size, double nPrice)
-{
-
-    DF_ERROR dfRet = ERROR_BAD_PARAMS;
+    DF_ERROR dfRet = OK;
     getSelectedProduct()->setTargetVolumeFromSize(size);
 
     m_dispenserVolumeTarget = getSelectedProduct()->getTargetVolume();
 
+    
     m_price = nPrice;
 
-    resetDispenserVolumeDispensed();
-    resetActiveProductVolumeDispensed();
+    // resetDispenserVolumeDispensed();
     resetSelectedProductVolumeDispensed();
 
     switch (m_pcb->get_pcb_version())
@@ -455,15 +485,12 @@ DF_ERROR dispenser::initDispense(char size, double nPrice)
     {
 
         m_pcb->sendEN134DefaultConfigurationToPCA9534(getSlot(), true);
-        setPumpEnable();
         m_pcb->setSingleDispenseButtonLight(getSlot(), true);
     }
     break;
     case (pcb::PcbVersion::EN258_4SLOTS):
     case (pcb::PcbVersion::EN258_8SLOTS):
     {
-
-        setPumpEnable();
         m_pcb->setSingleDispenseButtonLight(getSlot(), true);
     }
     break;
@@ -474,44 +501,147 @@ DF_ERROR dispenser::initDispense(char size, double nPrice)
     break;
     }
 
+    initActivePNumberDispense(getSelectedProduct()->getTargetVolume());
+
+}
+
+DF_ERROR dispenser::startSelectedProductDispense()
+{
+    debugOutput::sendMessage("Dispenser: Start Selected PNumber dispense at slot " + to_string(this->m_slot), MSG_INFO);
+    using namespace std::chrono;
+    dispense_start_timestamp_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+
+    startActivePNumberDispense(); // hack for now
+
+    dispenseButtonTimingreset();
+
+    // this->m_pcb->flowSensorEnable(m_slot);
+    // // this->m_pcb->resetFlowSensorPulsesForDispenser(m_slot);
+
+    // // init state
+    // dispense_state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
+    // previous_dispense_state = FLOW_STATE_UNAVAILABLE; // hack needed to create edge
+
+    // initProductFlowRateCalculation();
+
+    // DF_ERROR e_ret = ERROR_MECH_PRODUCT_FAULT;
+    // return e_ret = OK;
+
     // Set Start Time
     time(&rawtime);
     timeinfo = localtime(&rawtime);
     strftime(m_nStartTime, 50, "%F %T", timeinfo);
-
-    return dfRet;
 }
 
-DF_ERROR dispenser::stopDispense()
+DF_ERROR dispenser::stopSelectedProductDispense()
 {
-    debugOutput::sendMessage("stop dispense actions...", MSG_INFO);
-
-    m_pcb->setDispenseButtonLightsAllOff();
-
-    m_pcb->flowSensorsDisableAll();
+    debugOutput::sendMessage("Dispenser: Stop selected PNumber dispense ", MSG_INFO);
+    stopActivePNumberDispense(); // hack for now.
 
     // Set End time
     time(&rawtime);
     timeinfo = localtime(&rawtime);
     strftime(m_nEndTime, 50, "%F %T", timeinfo);
 }
-string dispenser::getDispenseStartTime()
+
+string dispenser::getSelectedProductDispenseStartTime()
 {
     return m_nStartTime;
 }
-string dispenser::getDispenseEndTime()
+
+string dispenser::getSelectedProductDispenseEndTime()
 {
     return m_nEndTime;
 }
 
+DF_ERROR dispenser::initActivePNumberDispense(double volume)
+{
+    DF_ERROR dfRet = OK;
+    getActiveProduct()->setTargetVolume(volume);
+
+    resetActiveProductVolumeDispensed();
+
+    switch (m_pcb->get_pcb_version())
+    {
+
+    case (pcb::PcbVersion::DSED8344_NO_PIC):
+    {
+        // setMultiDispenseButtonLight(getSlot(), true);
+    }
+    break;
+    case pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON:
+    {
+        // if (m_machine->getMultiDispenseButtonEnabled())
+        // {
+        //     setMultiDispenseButtonLight(getSlot(), true);
+        // }
+        // else
+        // {
+        //     setMultiDispenseButtonLight(1, true);
+        // }
+        // setPumpEnable(); // Added at time of EN-134 integration. Why did things work earlier onwards?
+    }
+    break;
+    case (pcb::PcbVersion::EN134_4SLOTS):
+    case (pcb::PcbVersion::EN134_8SLOTS):
+    {
+
+        setPumpEnable();
+        
+    }
+    break;
+    case (pcb::PcbVersion::EN258_4SLOTS):
+    case (pcb::PcbVersion::EN258_8SLOTS):
+    {
+
+        setPumpEnable();
+    }
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Pcb not comptible. ", MSG_WARNING);
+    }
+    break;
+    }
+
+  
+    return dfRet;
+}
+
+
+DF_ERROR dispenser::startActivePNumberDispense()
+{
+    debugOutput::sendMessage("Dispenser: Start Active PNumber at slot " + to_string(this->m_slot), MSG_INFO);
+    
+    // dispenseButtonTimingreset();
+
+    this->m_pcb->flowSensorEnable(m_slot);
+    // this->m_pcb->resetFlowSensorPulsesForDispenser(m_slot);
+
+    // init state
+    dispense_state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
+    previous_dispense_state = FLOW_STATE_UNAVAILABLE; // hack needed to create edge
+
+    initProductFlowRateCalculation();
+
+    DF_ERROR e_ret = ERROR_MECH_PRODUCT_FAULT;
+    return e_ret = OK;
+}
+
+
+
+DF_ERROR dispenser::stopActivePNumberDispense()
+{
+    debugOutput::sendMessage("Dispenser: Stop Active PNumber  dispense ", MSG_INFO);
+
+    m_pcb->setDispenseButtonLightsAllOff();
+
+    m_pcb->flowSensorsDisableAll();
+}
+
+
 /////////////////////////////////////////////////////////////////////////
 // dispenser volume
-
-double dispenser::getDispenserVolumeDispensed()
-{
-    // return m_pcb->getFlowSensorPulsesForDispenser(m_slot) // this justreturns ticks. not volume. should be an addition of all the volumes already dispensed.;
-    return m_dispenser_volume_dispensed;
-}
 
 void dispenser::linkActiveProductVolumeUpdate()
 {
@@ -521,16 +651,22 @@ void dispenser::linkActiveProductVolumeUpdate()
     m_pcb->registerFlowSensorTickCallback(getSlot(), lambdaFunc);
 }
 
-void dispenser::resetDispenserVolumeDispensed()
-{
-    m_dispenser_volume_dispensed = 0;
-    // return m_pcb->resetFlowSensorPulsesForDispenser(m_slot);
-}
+// double dispenser::getDispenserVolumeDispensed()
+// {
+//     // return m_pcb->getFlowSensorPulsesForDispenser(m_slot) // this justreturns ticks. not volume. should be an addition of all the volumes already dispensed.;
+//     return m_dispenser_volume_dispensed;
+// }
+// REPLACE BY SelectedProductTargetVolume
+// void dispenser::resetDispenserVolumeDispensed()
+// {
+//     m_dispenser_volume_dispensed = 0;
+//     // return m_pcb->resetFlowSensorPulsesForDispenser(m_slot);
+// }
 
-bool dispenser::isDispenserVolumeTargetReached()
-{
-    return m_dispenserVolumeTarget <= getDispenserVolumeDispensed();
-}
+// bool dispenser::isDispenserVolumeTargetReached()
+// {
+//     return m_dispenserVolumeTarget <= getDispenserVolumeDispensed();
+// }
 
 /////////////////////////////////////////////////////////////////////////
 // active product volume
@@ -632,105 +768,46 @@ double dispenser::getProductVolumeDispensed(int pnumber)
     return getProductFromPNumber(pnumber)->getVolumeDispensed();
 }
 
-////////////////////////////////////////////////////////////
-// I/O
+////////////////////////////////////////////////////////////////////////////
+// I/O Button
 
-// TODO: Call this function on Dispense onEntry()
-DF_ERROR dispenser::initGlobalFlowsensorIO(int pin)
+void dispenser::setDispenseButtonLight(bool onElseOff)
 {
-    DF_ERROR e_ret = ERROR_BAD_PARAMS;
-
-    // *m_pIsDispensing = false;
-    std::string msg = "Dispenser::initGlobalFlowsensorIO. Position: " + std::to_string(getSlot()) + " (pin: " + std::to_string(pin) + ")";
-    // debugOutput::sendMessage("-----dispenser::initGlobalFlowsensorIO-----", MSG_INFO);
-    debugOutput::sendMessage(msg, MSG_INFO);
-
-    m_pFlowsensor = new FSModdyseyx86GPIO();
-    m_pFlowsensor->setPinNumber(pin);
-    m_pFlowsensor->setPinAsInputElseOutput(true);
-    m_pFlowsensor->registerProduct(getSelectedProduct());
-    m_pFlowsensor->startListener_flowsensor();
-    e_ret = OK;
-
-    // if ((slotindex >= 0) && (slotindex < 4))
-    // {
-    // Instantiate, set input, spin up a flowsensor thread.
-    // gets created at every instance. Which is not ok as there is only one pin that gets looked at multiple times. Hence, if there are four slots, for every tick, things will get triggered four times (even an edge) because it's processed four times (but seems to work)
-    // m_pFlowsensor[slotindex] = new FSModdyseyx86GPIO(pin);
-    // m_pFlowsensor[slotindex]->setPinAsInputElseOutput(true);
-    // m_pFlowsensor[slotindex]->registerProduct(getSelectedProduct());
-    // m_pFlowsensor[slotindex]->startListener_flowsensor();
-    // e_ret = OK;
-    // }
-    // else
-    // {
-    //     return e_ret = ERROR_MECH_FS_FAULT;
-    // }
-
-    return e_ret;
-}
-
-// DF_ERROR dispenser::initDispenseButton4Light()
-// {
-//     if (m_pcb->get_pcb_version() == pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON)
-//     {
-//         m_pDispenseButton4[0] = new FSModdyseyx86GPIO(IO_PIN_BUTTON_4);
-//         m_pDispenseButton4[0]->setPinAsInputElseOutput(false);
-//     }
-// }
-
-// DF_ERROR dispenser::initButtonsShutdownAndMaintenance()
-// {
-
-//     m_pPowerOffOrMaintenanceModeButtonPressed[0] = new FSModdyseyx86GPIO(IO_PIN_BUTTON_MAINTENANCE_SHUTDOWN_EDGE_DETECTOR);
-//     m_pButtonPowerOff[0] = new FSModdyseyx86GPIO(IO_PIN_BUTTON_MAINTENANCE);
-//     m_pButtonDisplayMaintenanceMode[0] = new FSModdyseyx86GPIO(IO_PIN_BUTTON_SHUTDOWN);
-
-//     m_pPowerOffOrMaintenanceModeButtonPressed[0]->setPinAsInputElseOutput(true);
-//     m_pButtonPowerOff[0]->setPinAsInputElseOutput(true);
-//     m_pButtonDisplayMaintenanceMode[0]->setPinAsInputElseOutput(true);
-//     m_pPowerOffOrMaintenanceModeButtonPressed[0]->startListener_buttons_powerAndMaintenance();
-// }
-
-// TODO: Call this function on Dispense onEntry()
-// DF_ERROR dispenser::setPump(int mcpAddress, int pin, int position)
-// {
-//     DF_ERROR e_ret = ERROR_BAD_PARAMS; // reset variable
-
-//     // Save the pump number of this instance
-//     pump_position = (unsigned char)(position + 1);
-
-//     return e_ret = OK;
-// }
-
-// TODO: Refactor Pumping with switch and ternary in future...keep seperate for ease of testing.
-// Reverse pump: Turn forward pin HIGH - Reverse pin LOW
-DF_ERROR dispenser::setPumpDirectionForward()
-{
-    debugOutput::sendMessage("Pump direction: Forward.", MSG_INFO);
-    m_pcb->setPumpDirection(this->m_slot, true);
-}
-
-bool dispenser::getIsStatusUpdateAllowed()
-{
-    // prevent flooding with messages by limiting amount of traffic let through
-    return isStatusUpdateSendAndPrintAllowed;
-}
-
-void dispenser::logUpdateIfAllowed(string message)
-{
-    // only use this for updates that would happen at every stateDispense refresh cycle.
-    if (isStatusUpdateSendAndPrintAllowed)
+    switch (m_pcb->get_pcb_version())
     {
-        debugOutput::sendMessage(message,
-                                 MSG_INFO);
+
+    case (pcb::PcbVersion::DSED8344_NO_PIC):
+    {
+        debugOutput::sendMessage("No dispense button light. Deprecated ", MSG_WARNING);
+    }
+
+    break;
+    case pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON:
+    {
+        debugOutput::sendMessage("No dispense button light. Deprecated ", MSG_WARNING);
+    }
+    break;
+    case (pcb::PcbVersion::EN134_4SLOTS):
+    case (pcb::PcbVersion::EN134_8SLOTS):
+    {
+
+        m_pcb->setSingleDispenseButtonLight(getSlot(), onElseOff);
+    }
+    break;
+    case (pcb::PcbVersion::EN258_4SLOTS):
+    case (pcb::PcbVersion::EN258_8SLOTS):
+    {
+
+        m_pcb->setSingleDispenseButtonLight(getSlot(), onElseOff);
+    }
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Pcb not comptible. ", MSG_WARNING);
+    }
+    break;
     }
 }
-
-// void dispenser::resetDispenseButton()
-// {
-//     dispenseButtonValueMemory = false;
-// }
 
 bool dispenser::getDispenseButtonEdgeNegative()
 {
@@ -798,9 +875,23 @@ uint64_t dispenser::getButtonPressedCurrentPressMillis()
     return dispense_button_current_press_millis;
 }
 
+////////////////////////////////////////////////////////////////////////////
+// I/O Solenoid
+
 void dispenser::setSpoutSolenoid(bool openElseClosed)
 {
     m_pcb->setSpoutSolenoid(this->m_slot, openElseClosed);
+}
+
+////////////////////////////////////////////////////////////////////////////
+// I/O Pump
+
+// TODO: Refactor Pumping with switch and ternary in future...keep seperate for ease of testing.
+// Reverse pump: Turn forward pin HIGH - Reverse pin LOW
+DF_ERROR dispenser::setPumpDirectionForward()
+{
+    debugOutput::sendMessage("Pump direction: Forward.", MSG_INFO);
+    m_pcb->setPumpDirection(this->m_slot, true);
 }
 
 // Reverse pump: Turn forward pin LOW - Reverse pin HIGH
@@ -878,11 +969,6 @@ void dispenser::reversePumpForSetTimeMillis(int millis)
             debugOutput::sendMessage("Rectraction disabled. ms:" + to_string(millis), MSG_INFO);
         }
     }
-}
-
-bool dispenser::isSlotEnabled()
-{
-    return m_isSlotEnabled;
 }
 
 DF_ERROR dispenser::pumpSlowStartHandler()
@@ -1020,125 +1106,31 @@ unsigned short dispenser::getPumpSpeed()
     m_pcb->getPumpPWM();
 }
 
-// void dispenser::loadPumpReversalEnabledFromDb()
-// {
-//     // val 0 = pump reversal not enabled
-//     // val 1 = pump reversal enabled. Will take retraction time from products
+////////////////////////////////////////////////////////////
+// I/O Flow Sensor
 
-//     rc = sqlite3_open(CONFIG_DB_PATH, &db);
-//     sqlite3_stmt *stmt;
-//     string sql_string = "SELECT enable_pump_reversal FROM machine";
-
-//     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
-//     sqlite3_step(stmt);
-
-//     int val = sqlite3_column_int(stmt, 0);
-
-//     sqlite3_finalize(stmt);
-//     sqlite3_close(db);
-//     m_isPumpReversalEnabled = (val != 0);
-
-//     debugOutput::sendMessage("Pump reversal enabled? : " + to_string(m_isPumpReversalEnabled), MSG_INFO);
-// }
-
-// void dispenser::loadPumpRampingEnabledFromDb()
-// {
-//     // val 0 = pump slow start stop not enabled
-//     // val 1 = pump slow start, slow stop enabled (with hardwired ramp up / ramp down time)
-
-//     rc = sqlite3_open(CONFIG_DB_PATH, &db);
-//     sqlite3_stmt *stmt;
-//     string sql_string = "SELECT enable_pump_ramping FROM machine";
-
-//     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
-//     sqlite3_step(stmt);
-
-//     int val = sqlite3_column_int(stmt, 0);
-
-//     sqlite3_finalize(stmt);
-//     sqlite3_close(db);
-//     m_isPumpSlowStartStopEnabled = (val != 0);
-
-//     debugOutput::sendMessage("Pump ramping enabled? : " + to_string(m_isPumpSlowStartStopEnabled) + "(val: " + to_string(val) + ")", MSG_INFO);
-// }
-
-// bool dispenser::getPumpSlowStartStopEnabled()
-// {
-//     return m_isPumpSlowStartStopEnabled;
-// }
-
-void dispenser::analyseSlotState()
+// TODO: Call this function on Dispense onEntry()
+DF_ERROR dispenser::initGlobalFlowsensorIO(int pin)
 {
-    // rc = sqlite3_open(CONFIG_DB_PATH, &db);
-    // sqlite3_stmt *stmt;
-    // string sql_string = "SELECT status_text_slot_" + to_string(getSlot()) + " FROM machine;";
+    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
-    // sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+    // *m_pIsDispensing = false;
+    std::string msg = "Dispenser::initGlobalFlowsensorIO. Position: " + std::to_string(getSlot()) + " (pin: " + std::to_string(pin) + ")";
+    // debugOutput::sendMessage("-----dispenser::initGlobalFlowsensorIO-----", MSG_INFO);
+    debugOutput::sendMessage(msg, MSG_INFO);
 
-    // int status;
-    // status = sqlite3_step(stmt);
-    // string slotStateText = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
+    m_pFlowsensor = new FSModdyseyx86GPIO();
+    m_pFlowsensor->setPinNumber(pin);
+    m_pFlowsensor->setPinAsInputElseOutput(true);
+    m_pFlowsensor->registerProduct(getSelectedProduct());
+    m_pFlowsensor->startListener_flowsensor();
+    e_ret = OK;
 
-    // sqlite3_finalize(stmt);
-    // sqlite3_close(db);
-
-    string slotStateText = m_status_text;
-
-    if (slotStateText.find("SLOT_STATE_AVAILABLE") != string::npos)
-    {
-        setSlotState(SLOT_STATE_AVAILABLE);
-    }
-    else if (slotStateText.find("SLOT_STATE_AVAILABLE_LOW_STOCK") != string::npos)
-    {
-        setSlotState(SLOT_STATE_AVAILABLE_LOW_STOCK);
-    }
-    else if (slotStateText.find("SLOT_STATE_WARNING_PRIMING") != string::npos)
-    {
-        setSlotState(SLOT_STATE_WARNING_PRIMING);
-    }
-    else if (slotStateText.find("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") != string::npos)
-    {
-        setSlotState(SLOT_STATE_PROBLEM_NEEDS_ATTENTION);
-    }
-    else if (slotStateText.find("SLOT_STATE_PROBLEM_EMPTY") != string::npos)
-    {
-        setSlotState(SLOT_STATE_PROBLEM_EMPTY);
-    }
-    else if (slotStateText.find("SLOT_STATE_DISABLED_COMING_SOON") != string::npos)
-    {
-        setSlotState(SLOT_STATE_DISABLED_COMING_SOON);
-    }
-    else if (slotStateText.find("SLOT_STATE_DISABLED") != string::npos)
-    {
-        setSlotState(SLOT_STATE_DISABLED);
-    }
-    else
-    {
-        setSlotState(SLOT_STATE_AVAILABLE);
-    }
-    debugOutput::sendMessage("Dispenser: Slot " + std::to_string(getSlot()) + ". State (loaded from db): " + std::string(getSlotStateAsString()) + "(db value: " + std::string(slotStateText) + ")", MSG_INFO);
+    return e_ret;
 }
 
-// void dispenser::loadEmptyContainerDetectionEnabledFromDb()
-// {
-//     // val 0 = empty container detection not enabled
-//     // val 1 = empty container detection enabled
-
-//     rc = sqlite3_open(CONFIG_DB_PATH, &db);
-//     sqlite3_stmt *stmt;
-//     string sql_string = "SELECT has_empty_detection FROM machine";
-
-//     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
-//     sqlite3_step(stmt);
-
-//     int val = sqlite3_column_int(stmt, 0);
-
-//     sqlite3_finalize(stmt);
-//     sqlite3_close(db);
-//     m_isEmptyContainerDetectionEnabled = (val != 0);
-
-//     debugOutput::sendMessage("Empty container detection enabled? : " + to_string(m_isEmptyContainerDetectionEnabled), MSG_INFO);
-// }
+////////////////////////////////////////////////////////////
+// Flow
 
 double dispenser::getProductVolumeDeltaAndReset()
 {
@@ -1307,19 +1299,47 @@ DF_ERROR dispenser::updateActiveProductFlowRateRunningAverageWindow()
     return e_ret = OK;
 }
 
-// // flow rate at pump running when pumpspeed is non zero. check intervals. --> 0.5s frame?! 1s frame?
-// double dispenser::getFlowRate(){
+//////////////////////////////////////////////////////////////
+//  Dispenser state
 
-//     // average. x steps.
-//     // if speed is zero, reset average.
+void dispenser::analyseSlotState()
+{
+    string slotStateText = m_status_text;
 
-//     // get volume change since last check.
-//     // get time since last check
-//     // calc flow.
-
-//     // update avg flowRate.
-
-// }
+    if (slotStateText.find("SLOT_STATE_AVAILABLE") != string::npos)
+    {
+        setSlotState(SLOT_STATE_AVAILABLE);
+    }
+    else if (slotStateText.find("SLOT_STATE_AVAILABLE_LOW_STOCK") != string::npos)
+    {
+        setSlotState(SLOT_STATE_AVAILABLE_LOW_STOCK);
+    }
+    else if (slotStateText.find("SLOT_STATE_WARNING_PRIMING") != string::npos)
+    {
+        setSlotState(SLOT_STATE_WARNING_PRIMING);
+    }
+    else if (slotStateText.find("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") != string::npos)
+    {
+        setSlotState(SLOT_STATE_PROBLEM_NEEDS_ATTENTION);
+    }
+    else if (slotStateText.find("SLOT_STATE_PROBLEM_EMPTY") != string::npos)
+    {
+        setSlotState(SLOT_STATE_PROBLEM_EMPTY);
+    }
+    else if (slotStateText.find("SLOT_STATE_DISABLED_COMING_SOON") != string::npos)
+    {
+        setSlotState(SLOT_STATE_DISABLED_COMING_SOON);
+    }
+    else if (slotStateText.find("SLOT_STATE_DISABLED") != string::npos)
+    {
+        setSlotState(SLOT_STATE_DISABLED);
+    }
+    else
+    {
+        setSlotState(SLOT_STATE_AVAILABLE);
+    }
+    debugOutput::sendMessage("Dispenser: Slot " + std::to_string(getSlot()) + ". State (loaded from db): " + std::string(getSlotStateAsString()) + "(db value: " + std::string(slotStateText) + ")", MSG_INFO);
+}
 
 const char *dispenser::getDispenseStatusAsString()
 {

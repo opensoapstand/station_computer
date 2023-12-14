@@ -50,6 +50,7 @@ page_product_overview::page_product_overview(QWidget *parent) : QWidget(parent),
 
     connect(ui->pushButton_promo_input, SIGNAL(clicked()), this, SLOT(on_lineEdit_promo_codeInput_clicked()));
     connect(ui->buttonGroup, SIGNAL(buttonPressed(int)), this, SLOT(keyboardButtonPressed(int)));
+    connect(ui->buttonGroup_continue, SIGNAL(buttonPressed(int)), this, SLOT(on_pushButton_continue(int)));
 
     ui->label_gif->hide();
     statusbarLayout = new QVBoxLayout(this);
@@ -74,6 +75,7 @@ void page_product_overview::setPage(page_select_product *pageSelect, page_dispen
 
     ui->label_discount_tag->hide();
     ui->label_gif->hide();
+    // ui->pushButton_continue_additional->hide();
     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_ORDER_OVERVIEW_PATH);
 }
 
@@ -132,10 +134,29 @@ void page_product_overview::showEvent(QShowEvent *event)
     ui->pushButton_previous_page->setProperty("class", "buttonBGTransparent");
     ui->pushButton_previous_page->setStyleSheet(styleSheet);
     ui->pushButton_continue->setStyleSheet(styleSheet);
+    ui->pushButton_continue_additional->setStyleSheet(styleSheet);
+
+    if( p_page_idle->thisMachine->selectedProduct->getPaymentMethod()==PAYMENT_TAP_SERIAL){
+        ui->pushButton_continue->raise();
+        // ui->pushButton_continue_additional->show();
+        ui->pushButton_continue_additional->raise();
+
+        ui->pushButton_continue->setFixedSize(QSize(360,92));
+        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay_tap");
+        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue_additional, "proceed_pay_qr");
+
+    }
+    else{
+        ui->pushButton_continue->raise();
+        ui->pushButton_continue_additional->lower();
+
+        ui->pushButton_continue->setFixedSize(QSize(740,92));
+        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay");
+
+    }
     // p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "offline");
     // p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "offline");
 
-    ui->pushButton_continue->raise();
     ui->pushButton_to_help->setProperty("class", "buttonBGTransparent");
     ui->pushButton_to_help->setStyleSheet(styleSheet);
 
@@ -519,17 +540,21 @@ void page_product_overview::on_lineEdit_promo_codeInput_clicked()
     reset_and_show_page_elements();
 }
 
-void page_product_overview::on_pushButton_continue_clicked()
+void page_product_overview::on_pushButton_continue(int buttonID)
 {
     qDebug() << "page_product_overview: Pay button";
-
     ui->pushButton_to_help->setEnabled(false);
     ui->pushButton_previous_page->setEnabled(false);
+    QAbstractButton *buttonpressed = ui->buttonGroup_continue->button(buttonID);
+    QString buttonName = buttonpressed->accessibleName();
 
     QString paymentMethod = p_page_idle->thisMachine->selectedProduct->getPaymentMethod();
+    if(buttonName=="paymentMethodAdditional"){
+        paymentMethod = PAYMENT_QR;
+    }
     double selectedPrice = p_page_idle->thisMachine->selectedProduct->getBasePrice();
     double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
-    if (paymentMethod == PAYMENT_QR && (selectedPrice == 0.0 || finalPrice == 0.0) )
+    if (selectedPrice == 0.0 || finalPrice == 0.0)
     {
         hideCurrentPageAndShowProvided(p_page_email);
 
@@ -598,9 +623,13 @@ void page_product_overview::on_pushButton_select_product_page_clicked()
 void page_product_overview::check_to_page_email(){
     double selectedPrice = p_page_idle->thisMachine->selectedProduct->getBasePrice();
     double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
-    if(p_page_idle->thisMachine->selectedProduct->getPaymentMethod() == PAYMENT_QR && (finalPrice == 0.0 || selectedPrice== 0.0 )){
+    if(finalPrice == 0.0 || selectedPrice== 0.0 ){
+        ui->pushButton_continue_additional->lower();
+        ui->pushButton_continue->setFixedSize(QSize(740,92));
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_free");
-    }else{
-        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay");
+
     }
+    // else{
+        // p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay");
+    // }
 }

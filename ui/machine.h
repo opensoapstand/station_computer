@@ -36,8 +36,6 @@ typedef enum StateReboot
     
 } StateReboot;
 
-
-
 class product; //  forward declaration.
 
 class machine : public QObject

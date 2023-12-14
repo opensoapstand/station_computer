@@ -38,16 +38,19 @@ line-height: 29px;</string>
      <height>100</height>
     </rect>
    </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
    <property name="text">
     <string/>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_continue">
+  <widget class="QPushButton" name="pushButton_continue_additional">
    <property name="geometry">
     <rect>
-     <x>188</x>
+     <x>568</x>
      <y>1541</y>
-     <width>740</width>
+     <width>360</width>
      <height>92</height>
     </rect>
    </property>
@@ -59,6 +62,9 @@ line-height: 29px;</string>
      <bold>false</bold>
     </font>
    </property>
+   <property name="accessibleName">
+    <string>paymentMethodAdditional</string>
+   </property>
    <property name="autoFillBackground">
     <bool>false</bool>
    </property>
@@ -68,6 +74,12 @@ line-height: 29px;</string>
    <property name="text">
     <string/>
    </property>
+   <property name="flat">
+    <bool>false</bool>
+   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_continue</string>
+   </attribute>
   </widget>
   <widget class="QPushButton" name="pushButton_to_help">
    <property name="geometry">
@@ -77,6 +89,9 @@ line-height: 29px;</string>
      <width>211</width>
      <height>191</height>
     </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
    </property>
    <property name="text">
     <string/>
@@ -90,6 +105,9 @@ line-height: 29px;</string>
      <width>251</width>
      <height>80</height>
     </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
    </property>
    <property name="styleSheet">
     <string notr="true">font-family: Montserrat;
@@ -116,6 +134,9 @@ color: #7F8080;</string>
      <width>301</width>
      <height>44</height>
     </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
    </property>
    <property name="styleSheet">
     <string notr="true">font-family: Montserrat;
@@ -151,6 +172,9 @@ color: #58595B;</string>
      <italic>false</italic>
      <bold>false</bold>
     </font>
+   </property>
+   <property name="accessibleName">
+    <string/>
    </property>
    <property name="layoutDirection">
     <enum>Qt::LeftToRight</enum>
@@ -189,6 +213,9 @@ text-align: center;
      <bold>true</bold>
     </font>
    </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
    <property name="styleSheet">
     <string notr="true">color: #FFFFFF;
 font-family: Montserrat;
@@ -223,6 +250,9 @@ text-align: center;</string>
      <height>35</height>
     </size>
    </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
    <property name="autoFillBackground">
     <bool>false</bool>
    </property>
@@ -250,6 +280,9 @@ text-align: center;</string>
      <width>391</width>
      <height>37</height>
     </size>
+   </property>
+   <property name="accessibleName">
+    <string/>
    </property>
    <property name="autoFillBackground">
     <bool>false</bool>
@@ -282,6 +315,9 @@ text-align: center;</string>
    <property name="tabletTracking">
     <bool>true</bool>
    </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
    <property name="autoFillBackground">
     <bool>false</bool>
    </property>
@@ -311,6 +347,9 @@ text-align: center;</string>
     </property>
     <property name="focusPolicy">
      <enum>Qt::NoFocus</enum>
+    </property>
+    <property name="accessibleName">
+     <string/>
     </property>
     <property name="autoFillBackground">
      <bool>false</bool>
@@ -355,6 +394,9 @@ outline: none;
     </property>
     <property name="focusPolicy">
      <enum>Qt::NoFocus</enum>
+    </property>
+    <property name="accessibleName">
+     <string/>
     </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
@@ -403,6 +445,9 @@ outline: none;
     <property name="acceptDrops">
      <bool>false</bool>
     </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
 background-color:rgba(238, 238, 236,0);
@@ -444,6 +489,9 @@ outline: none;
     <property name="focusPolicy">
      <enum>Qt::NoFocus</enum>
     </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
 background-color:rgba(238, 238, 236,0);
@@ -482,6 +530,9 @@ outline: none;
       <height>47</height>
      </size>
     </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
 background-color:rgba(238, 238, 236,0);
@@ -519,6 +570,9 @@ outline: none;
       <width>62</width>
       <height>47</height>
      </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
     </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
@@ -561,6 +615,9 @@ outline: none;
     <property name="focusPolicy">
      <enum>Qt::ClickFocus</enum>
     </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
 background-color:rgba(238, 238, 236,0);
@@ -598,6 +655,9 @@ outline: none;
       <width>62</width>
       <height>47</height>
      </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
     </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
@@ -637,6 +697,9 @@ outline: none;
       <height>47</height>
      </size>
     </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
 background-color:rgba(238, 238, 236,0);
@@ -674,6 +737,9 @@ outline: none;
       <width>62</width>
       <height>47</height>
      </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
     </property>
     <property name="autoFillBackground">
      <bool>false</bool>
@@ -716,6 +782,9 @@ outline: none;
       <height>62</height>
      </size>
     </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
 background-color:rgba(238, 238, 236,0);
@@ -753,6 +822,9 @@ outline: none;
       <width>62</width>
       <height>62</height>
      </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
     </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
@@ -792,6 +864,9 @@ outline: none;
       <height>62</height>
      </size>
     </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
 background-color:rgba(238, 238, 236,0);
@@ -829,6 +904,9 @@ outline: none;
       <width>62</width>
       <height>62</height>
      </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
     </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
@@ -868,6 +946,9 @@ outline: none;
       <height>62</height>
      </size>
     </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
 background-color:rgba(238, 238, 236,0);
@@ -905,6 +986,9 @@ outline: none;
       <width>62</width>
       <height>62</height>
      </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
     </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
@@ -944,6 +1028,9 @@ outline: none;
       <height>62</height>
      </size>
     </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
 background-color:rgba(238, 238, 236,0);
@@ -981,6 +1068,9 @@ outline: none;
       <width>62</width>
       <height>62</height>
      </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
     </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
@@ -1020,6 +1110,9 @@ outline: none;
       <height>62</height>
      </size>
     </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
 background-color:rgba(238, 238, 236,0);
@@ -1057,6 +1150,9 @@ outline: none;
       <width>62</width>
       <height>62</height>
      </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
     </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
@@ -1096,6 +1192,9 @@ outline: none;
       <height>62</height>
      </size>
     </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
 background-color:rgba(238, 238, 236,0);
@@ -1133,6 +1232,9 @@ outline: none;
       <width>62</width>
       <height>62</height>
      </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
     </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
@@ -1172,6 +1274,9 @@ outline: none;
       <height>62</height>
      </size>
     </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
 background-color:rgba(238, 238, 236,0);
@@ -1209,6 +1314,9 @@ outline: none;
       <width>62</width>
       <height>62</height>
      </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
     </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
@@ -1248,6 +1356,9 @@ outline: none;
       <height>62</height>
      </size>
     </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
 background-color:rgba(238, 238, 236,0);
@@ -1285,6 +1396,9 @@ outline: none;
       <width>62</width>
       <height>62</height>
      </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
     </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
@@ -1324,6 +1438,9 @@ outline: none;
       <height>62</height>
      </size>
     </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
 background-color:rgba(238, 238, 236,0);
@@ -1361,6 +1478,9 @@ outline: none;
       <width>62</width>
       <height>62</height>
      </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
     </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
@@ -1400,6 +1520,9 @@ outline: none;
       <height>62</height>
      </size>
     </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
 background-color:rgba(238, 238, 236,0);
@@ -1437,6 +1560,9 @@ outline: none;
       <width>62</width>
       <height>62</height>
      </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
     </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
@@ -1479,6 +1605,9 @@ outline: none;
     <property name="focusPolicy">
      <enum>Qt::NoFocus</enum>
     </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
 background-color:rgba(238, 238, 236,0);
@@ -1519,6 +1648,9 @@ outline: none;
     </property>
     <property name="focusPolicy">
      <enum>Qt::NoFocus</enum>
+    </property>
+    <property name="accessibleName">
+     <string/>
     </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
@@ -1561,6 +1693,9 @@ outline: none;
     <property name="focusPolicy">
      <enum>Qt::NoFocus</enum>
     </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
 background-color:rgba(238, 238, 236,0);
@@ -1601,6 +1736,9 @@ outline: none;
     </property>
     <property name="focusPolicy">
      <enum>Qt::NoFocus</enum>
+    </property>
+    <property name="accessibleName">
+     <string/>
     </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
@@ -1643,6 +1781,9 @@ outline: none;
     <property name="focusPolicy">
      <enum>Qt::NoFocus</enum>
     </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
 background-color:rgba(238, 238, 236,0);
@@ -1684,6 +1825,9 @@ outline: none;
     <property name="focusPolicy">
      <enum>Qt::NoFocus</enum>
     </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
     <property name="autoFillBackground">
      <bool>false</bool>
     </property>
@@ -1718,6 +1862,9 @@ outline: none;
       <width>87</width>
       <height>62</height>
      </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
     </property>
     <property name="styleSheet">
      <string notr="true">background:transparent;
@@ -1757,6 +1904,9 @@ outline: none;
     <property name="focusPolicy">
      <enum>Qt::ClickFocus</enum>
     </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
     <property name="autoFillBackground">
      <bool>false</bool>
     </property>
@@ -1785,6 +1935,9 @@ outline: none;
       <width>841</width>
       <height>321</height>
      </rect>
+    </property>
+    <property name="accessibleName">
+     <string/>
     </property>
     <property name="text">
      <string>TextLabel</string>
@@ -1839,6 +1992,9 @@ outline: none;
      <height>91</height>
     </rect>
    </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
    <property name="styleSheet">
     <string notr="true">position: absolute;
 height: 29px;
@@ -1872,6 +2028,9 @@ color: #58595B;
      <height>80</height>
     </rect>
    </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
    <property name="styleSheet">
     <string notr="true">font-family: Montserrat;
 background-image: url(/home/df-admin/production/references/background.png);
@@ -1900,6 +2059,9 @@ color: #7F8080;</string>
      <width>641</width>
      <height>41</height>
     </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
    </property>
    <property name="styleSheet">
     <string notr="true">position: absolute;
@@ -1931,6 +2093,9 @@ color: #58595B;
      <height>450</height>
     </rect>
    </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
    <property name="text">
     <string/>
    </property>
@@ -1949,6 +2114,9 @@ color: #58595B;
      <width>185</width>
      <height>34</height>
     </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
    </property>
    <property name="layoutDirection">
     <enum>Qt::LeftToRight</enum>
@@ -1972,6 +2140,9 @@ color: #58595B;
      <height>41</height>
     </rect>
    </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
    <property name="text">
     <string>PushButton</string>
    </property>
@@ -1992,6 +2163,9 @@ color: #58595B;
      <weight>75</weight>
      <bold>true</bold>
     </font>
+   </property>
+   <property name="accessibleName">
+    <string/>
    </property>
    <property name="styleSheet">
     <string notr="true">color: #FFFFFF;
@@ -2018,6 +2192,9 @@ text-align: center;</string>
      <height>200</height>
     </rect>
    </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
    <property name="autoFillBackground">
     <bool>false</bool>
    </property>
@@ -2034,6 +2211,9 @@ text-align: center;</string>
      <height>44</height>
     </rect>
    </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
    <property name="text">
     <string/>
    </property>
@@ -2046,6 +2226,9 @@ text-align: center;</string>
      <width>125</width>
      <height>125</height>
     </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
    </property>
    <property name="text">
     <string>TextLabel</string>
@@ -2060,12 +2243,49 @@ text-align: center;</string>
      <height>5</height>
     </rect>
    </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
    </property>
   </widget>
-  <zorder>label_help</zorder>
+  <widget class="QPushButton" name="pushButton_continue">
+   <property name="geometry">
+    <rect>
+     <x>188</x>
+     <y>1541</y>
+     <width>360</width>
+     <height>92</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Montserrat</family>
+     <pointsize>-1</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="accessibleName">
+    <string>paymentMethodDefault</string>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_continue</string>
+   </attribute>
+  </widget>
   <zorder>pushButton_continue</zorder>
+  <zorder>label_help</zorder>
+  <zorder>pushButton_continue_additional</zorder>
   <zorder>label_invoice_box</zorder>
   <zorder>label_invoice_price</zorder>
   <zorder>lineEdit_promo_code</zorder>
@@ -2090,5 +2310,6 @@ text-align: center;</string>
  <connections/>
  <buttongroups>
   <buttongroup name="buttonGroup"/>
+  <buttongroup name="buttonGroup_continue"/>
  </buttongroups>
 </ui>

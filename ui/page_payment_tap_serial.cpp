@@ -253,13 +253,14 @@ bool page_payment_tap_serial::tap_serial_initiate()
     // }
     com.flushSerial();
     cout << "-----------------------------------------------" << endl;
-
+    
+    
     /*getConfiguration packet to send*/
-    cout << "Sending Merchant Name query..." << endl;
-    pktToSend = paymentPacket.ppPosGetConfigPkt(CONFIG_ID::MERCH_NAME);
+    cout << "Sending Lan Info query..." << endl;
+    pktToSend = paymentPacket.ppPosStatusCheckPkt(StatusType::GetLanInfo);
     if (sendToUX410())
     {
-        cout << "Receiving Merchant Name" << endl;
+        cout << "Receiving Lan Info" << endl;
         waitForUX410();
         isInitMerchant = true;
         merchantName = paymentPktInfo.dataField(readPacket.getPacket().data).substr(2);

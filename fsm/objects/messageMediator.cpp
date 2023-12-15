@@ -178,7 +178,7 @@ void messageMediator::setMachine(machine *machine)
 
       if (m_machine == nullptr)
       {
-         //debugOutput::sendMessage("normal TO BE NULLPTR AT START ", MSG_INFO);
+         // debugOutput::sendMessage("normal TO BE NULLPTR AT START ", MSG_INFO);
       }
       else
       {
@@ -473,6 +473,35 @@ DF_ERROR messageMediator::parseCommandString()
       }
       m_requestedAction = ACTION_NO_ACTION;
    }
+   else if (sCommand.find("dispenseMix") != string::npos)
+   {
+      // dipenseMix|slot|pnumberscsv|ratioscsv
+      // e.g.    // dipenseMix|1|95|1
+      // e.g.    // dipenseMix|1|95,3,4|0.6,0.2,0.2
+
+      debugOutput::sendMessage("Dispense command found", MSG_INFO);
+      std::string delimiter = "|";
+      std::size_t found0 = sCommand.find(delimiter);
+      std::size_t found1 = sCommand.find(delimiter, found0 + 1);
+      std::size_t found2 = sCommand.find(delimiter, found1 + 1);
+      std::size_t found3 = sCommand.find(delimiter, found2 + 1);
+
+      debugOutput::sendMessage(to_string(found0), MSG_INFO);
+      debugOutput::sendMessage(to_string(found1), MSG_INFO);
+      debugOutput::sendMessage(to_string(found2), MSG_INFO);
+      debugOutput::sendMessage(to_string(found3), MSG_INFO);
+
+      std::string dispenseCommand = sCommand.substr(found0 + 1, found1 - found0 - 1);
+      debugOutput::sendMessage("Dispense command: " + dispenseCommand, MSG_INFO);
+      parseDispenseCommand(dispenseCommand);
+
+      std::string pnumbers = sCommand.substr(found1 + 1, found2 - found1 - 1);
+      debugOutput::sendMessage("Pnumbers : " + pnumbers, MSG_INFO);
+
+      std::string ratios = sCommand.substr(found2 + 1, found3 - found2 - 1);
+      debugOutput::sendMessage("Dispense Ratios : " + ratios, MSG_INFO);
+      m_machine->m_productDispensers[getRequestedSlot() - 1].setDispenseCommandCustomMixParameters(pnumbers, ratios);
+   }
    else if (sCommand.find("Order") != string::npos)
    {
       // e.g.   Order|1sd|2.2|super30off
@@ -698,9 +727,37 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
       e_ret = OK;
       break;
    }
+   case '5':
+   {
+      m_RequestedProductIndexInt = 5;
+      debugOutput::sendMessage("Product 5 requested", MSG_INFO);
+      e_ret = OK;
+      break;
+   }
+   case '6':
+   {
+      m_RequestedProductIndexInt = 6;
+      debugOutput::sendMessage("Product 6 requested", MSG_INFO);
+      e_ret = OK;
+      break;
+   }
+   case '7':
+   {
+      m_RequestedProductIndexInt = 7;
+      debugOutput::sendMessage("Product 7 requested", MSG_INFO);
+      e_ret = OK;
+      break;
+   }
+   case '8':
+   {
+      m_RequestedProductIndexInt = 8;
+      debugOutput::sendMessage("Product 8 requested", MSG_INFO);
+      e_ret = OK;
+      break;
+   }
    default:
    {
-      debugOutput::sendMessage("No product requested [1..4]", MSG_INFO);
+      debugOutput::sendMessage("No product requested [1..8] required", MSG_INFO);
       break;
    }
    }

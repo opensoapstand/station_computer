@@ -46,7 +46,7 @@ const char *SLOT_STATE_STRINGS[] = {
     "SLOT_STATE_DISABLED_COMING_SOON",
     "SLOT_STATE_DISABLED"};
 
-int *dispenser::parseIntCsvString(const std::string &csvString, int &size)
+int *dispenser::parseIntCsvString(const std::string &csvString, int &size) //int* intArray, 
 {
     static const int MAX_SIZE = 100; // Define the maximum size of the array
 
@@ -69,6 +69,30 @@ int *dispenser::parseIntCsvString(const std::string &csvString, int &size)
         }
     }
     return intArray;
+}
+double *dispenser::parseDoubleCsvString(const std::string &csvString, int &size)
+{
+    static const int MAX_SIZE = 100; // Define the maximum size of the array
+
+    double *doubleArray = new double[MAX_SIZE];
+    std::stringstream ss(csvString);
+    std::string token;
+    size = 0;
+
+    while (std::getline(ss, token, ','))
+    {
+        if (size < MAX_SIZE)
+        {
+            doubleArray[size++] = std::stod(token);
+        }
+        else
+        {
+            std::cerr << "Array size exceeded maximum limit." << std::endl;
+            delete[] doubleArray;
+            return nullptr;
+        }
+    }
+    return doubleArray;
 }
 
 dispenser::dispenser()
@@ -191,9 +215,21 @@ void dispenser::setAdditiveFromPositionAsSelectedProduct(int position)
 
 void dispenser::setBasePNumberAsSelectedProduct()
 {
-
     setSelectedProduct(getBasePNumber());
     setBaseAsActiveProduct();
+}
+
+void dispenser::setDispenseCommandCustomMixParameters(string pnumbers, string pnumberRatios)
+{
+    m_custom_mix_pnumbers = dispenser::parseIntCsvString(pnumbers, m_custom_mix_pnumbers_count);
+    m_custom_mix_ratios = dispenser::parseDoubleCsvString(pnumberRatios, m_custom_mix_ratios_count);
+
+    int pnumber;
+    for(int i=0;i<m_custom_mix_pnumbers_count;i++){
+        pnumber = m_custom_mix_pnumbers[i];
+        debugOutput::sendMessage("Pnumber at position: " + std::to_string(i)  + " P-" + std::to_string() + " ratio: " + std::to_string(m_custom_mix_ratios[i]), MSG_INFO);
+        isPNumberValidInThisDispenser(pnumber);
+    }
 }
 
 bool dispenser::isPNumberValidInThisDispenser(int pnumber, bool mustBeAdditiveOrBase)
@@ -226,7 +262,7 @@ bool dispenser::isPNumberValidInThisDispenser(int pnumber, bool mustBeAdditiveOr
 
     if (!isValid)
     {
-        debugOutput::sendMessage("ASSERT ERROR: invalid pnumber as selected pnumber in dispenser", MSG_ERROR);
+        debugOutput::sendMessage("ASSERT ERROR: invalid pnumber as selected pnumber in dispenser: " + std::to_string(pnumber), MSG_ERROR);
     }
     return isValid;
 }
@@ -441,18 +477,17 @@ bool dispenser::loadDispenserParametersFromDb()
 ///////////////////////////////////////////////////////////////////////////
 // dispense commands
 
-
-DF_ERROR dispenser::initSelectedProductDispense(char size, double nPrice){
+DF_ERROR dispenser::initSelectedProductDispense(char size, double nPrice)
+{
 
     // Dispensing a mix includes the base and additive pnumbers. Start with additives, base last.
-    // needs a state machine to control all this. 
+    // needs a state machine to control all this.
 
     DF_ERROR dfRet = OK;
     getSelectedProduct()->setTargetVolumeFromSize(size);
 
     m_dispenserVolumeTarget = getSelectedProduct()->getTargetVolume();
 
-    
     m_price = nPrice;
 
     // resetDispenserVolumeDispensed();
@@ -502,7 +537,6 @@ DF_ERROR dispenser::initSelectedProductDispense(char size, double nPrice){
     }
 
     initActivePNumberDispense(getSelectedProduct()->getTargetVolume());
-
 }
 
 DF_ERROR dispenser::startSelectedProductDispense()
@@ -587,7 +621,6 @@ DF_ERROR dispenser::initActivePNumberDispense(double volume)
     {
 
         setPumpEnable();
-        
     }
     break;
     case (pcb::PcbVersion::EN258_4SLOTS):
@@ -604,15 +637,13 @@ DF_ERROR dispenser::initActivePNumberDispense(double volume)
     break;
     }
 
-  
     return dfRet;
 }
-
 
 DF_ERROR dispenser::startActivePNumberDispense()
 {
     debugOutput::sendMessage("Dispenser: Start Active PNumber at slot " + to_string(this->m_slot), MSG_INFO);
-    
+
     // dispenseButtonTimingreset();
 
     this->m_pcb->flowSensorEnable(m_slot);
@@ -628,8 +659,6 @@ DF_ERROR dispenser::startActivePNumberDispense()
     return e_ret = OK;
 }
 
-
-
 DF_ERROR dispenser::stopActivePNumberDispense()
 {
     debugOutput::sendMessage("Dispenser: Stop Active PNumber  dispense ", MSG_INFO);
@@ -638,7 +667,6 @@ DF_ERROR dispenser::stopActivePNumberDispense()
 
     m_pcb->flowSensorsDisableAll();
 }
-
 
 /////////////////////////////////////////////////////////////////////////
 // dispenser volume

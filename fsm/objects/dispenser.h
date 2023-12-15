@@ -81,7 +81,6 @@ public:
       char getSelectedSizeAsChar();
       double getSelectedSizeAsVolume();
 
-
       void setActiveProduct(int pnumber);
 
       void setBaseAsActiveProduct();
@@ -125,7 +124,7 @@ public:
       DF_ERROR initActivePNumberDispense(double volume);
       DF_ERROR startActivePNumberDispense();
       DF_ERROR stopActivePNumberDispense();
-      
+
       DF_ERROR initSelectedProductDispense(char size, double nPrice);
       DF_ERROR startSelectedProductDispense();
       DF_ERROR stopSelectedProductDispense();
@@ -180,13 +179,15 @@ public:
       uint64_t getButtonPressedCurrentPressMillis();
       void addDispenseButtonPress();
 
-
       void setSpoutSolenoid(bool openElseClosed);
 
       pcb *m_pcb;
       product *m_pnumbers;
 
       static int *parseIntCsvString(const std::string &csvString, int &size);
+      static double *parseDoubleCsvString(const std::string &csvString, int &size);
+
+      void setDispenseCommandCustomMixParameters(string pnumbers, string pnumberRatios);
 
 private:
       int m_slot;
@@ -204,6 +205,11 @@ private:
       int m_active_pnumber;
       int *m_dispense_pnumbers;
       int *m_additive_pnumbers;
+
+      int* m_custom_mix_pnumbers;
+      int m_custom_mix_pnumbers_count;
+      double* m_custom_mix_ratios;
+      int m_custom_mix_ratios_count;
 
       int m_dispense_pnumbers_count;
       int m_additive_pnumbers_count;

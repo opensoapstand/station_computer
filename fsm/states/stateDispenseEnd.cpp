@@ -59,7 +59,7 @@ DF_ERROR stateDispenseEnd::onAction()
 
     DF_ERROR e_ret = OK;
 
-    g_machine.m_productDispensers[m_slot_index].stopDispense();
+    g_machine.m_productDispensers[m_slot_index].stopSelectedProductDispense();
 
     // handle minimum dispensing
     bool is_valid_dispense = g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed() >= MINIMUM_DISPENSE_VOLUME_ML;
@@ -306,8 +306,8 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
     // timeinfo = localtime(&rawtime);
     // strftime(EndTime, 50, "%F %T", timeinfo);
 
-    std::string start_time = g_machine.m_productDispensers[m_slot_index].getDispenseStartTime();
-    std::string end_time = g_machine.m_productDispensers[m_slot_index].getDispenseEndTime();
+    std::string start_time = g_machine.m_productDispensers[m_slot_index].getSelectedProductDispenseStartTime();
+    std::string end_time = g_machine.m_productDispensers[m_slot_index].getSelectedProductDispenseEndTime();
     double price = getFinalPrice();
     std::string price_string = to_string(price);
     debugOutput::sendMessage("Final price" + price_string, MSG_INFO);
@@ -378,7 +378,7 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
 
             // set transaction as processed in database.
             std::string sql;
-            std::string start_time = g_machine.m_productDispensers[m_slot_index].getDispenseStartTime();
+            std::string start_time = g_machine.m_productDispensers[m_slot_index].getSelectedProductDispenseStartTime();
             sql = ("UPDATE transactions SET processed_by_backend=1 WHERE start_time='" + start_time + "';");
             databaseUpdateSql(sql, USAGE_DB_PATH);
         }
@@ -521,8 +521,8 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     std::string target_volume;
     std::string button_press_duration = to_string(g_machine.m_productDispensers[m_slot_index].getButtonPressedTotalMillis());
     std::string dispense_button_count = to_string(g_machine.m_productDispensers[m_slot_index].getDispenseButtonPressesDuringDispensing());
-    std::string start_time = (g_machine.m_productDispensers[m_slot_index].getDispenseStartTime());
-    std::string end_time = (g_machine.m_productDispensers[m_slot_index].getDispenseEndTime());
+    std::string start_time = (g_machine.m_productDispensers[m_slot_index].getSelectedProductDispenseStartTime());
+    std::string end_time = (g_machine.m_productDispensers[m_slot_index].getSelectedProductDispenseEndTime());
     std::string pnumber = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getPNumberAsPString();
     double price;
     std::string price_string;

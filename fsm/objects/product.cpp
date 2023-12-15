@@ -18,8 +18,11 @@
 #include "../objects/debugOutput.h"
 #include <fstream>
 
-// Default CTOR
 product::product()
+{
+}
+
+product::~product()
 {
 }
 
@@ -29,123 +32,135 @@ void product::init(int pnumber)
     this->loadParameters();
 }
 
-static int db_sql_callback(void *data, int argc, char **argv, char **azColName)
-{
-    int i;
-    //    fprintf(stderr, "%s: ", (const char *)data);
-
-    for (i = 0; i < argc; i++)
-    {
-        printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
-        // if()
-    }
-
-    // setProductName("test");
-    // setIsStillProduct(false);
-
-    printf("\n");
-    return 0;
-}
-
-// DTOR
-product::~product()
-{
-}
-
-// Set the Product option slot
-// void product::setSlot(int slot)
-// {
-//     m_pnumber = slot;
-// }
-// Set the Product option slot
-int product::getSlot()
+int product::getPNumber()
 {
     return m_pnumber;
 }
 
-void product::loadProductPropertiesFromCsv()
+string product::getPNumberAsPString()
 {
-    // Create an input filestream
-    std::ifstream products_file(PRODUCT_DETAILS_TSV_PATH);
+    return "P-" + std::to_string(m_pnumber);
+}
 
-    if (!products_file.is_open())
+string product::getProductName()
+{
+    return m_product_properties[CSV_PRODUCT_COL_NAME];
+}
+
+int product::getBasePNumber()
+{
+    if (!isMixingProduct())
     {
-        debugOutput::sendMessage("Products file path could not be opened: " + std::string(PRODUCT_DETAILS_TSV_PATH), MSG_ERROR);
-        return;
-    }
-
-    std::string line;
-
-    while (std::getline(products_file, line))
-    {
-        std::string delimiter = "\t";
-        size_t pos = 0;
-        uint8_t token_index = 0;
-        std::string token;
-        while ((pos = line.find(delimiter)) != std::string::npos)
+        if (m_mix_pnumbers_count == 1)
         {
-            token = line.substr(0, pos);
-            m_product_properties[token_index] = token;
-            token_index++;
-            line.erase(0, pos + delimiter.length());
+            return m_mix_pnumbers[0];
         }
-
-        // for (uint8_t i=0;i<token_index;i++){
-        //     debugOutput::sendMessage(split_line[i] , MSG_INFO);
-
-        // }
-        // debugOutput::sendMessage(m_product_properties[CSV_PRODUCT_COL_ID] , MSG_INFO);
-        // debugOutput::sendMessage(getPNumberAsPString() , MSG_INFO);
-        // debugOutput::sendMessage(m_product_properties[CSV_PRODUCT_COL_NAME_UI] , MSG_INFO);
-
-        bool stringsAreDifferent;
-        // debugOutput::sendMessage("Product found in products file and loaded:"
-        stringsAreDifferent = m_product_properties[CSV_PRODUCT_COL_ID].compare(getPNumberAsPString());
-        if (!(stringsAreDifferent))
+        else
         {
-            debugOutput::sendMessage("Product found in products file and loaded: " + m_product_properties[CSV_PRODUCT_COL_ID] + " " + m_product_properties[CSV_PRODUCT_COL_NAME], MSG_INFO);
-            return;
+            return m_pnumber;
         }
     }
-    debugOutput::sendMessage("Could not load product from products file (not found). Pnumber " + std::to_string(m_pnumber), MSG_ERROR);
+    else
+    {
+        return m_mix_pnumbers[0];
+    }
 }
 
-// Set the Product Name
-// TODO: Redefine function prototype, no argument.
-// void product::setProductName(string productName)
-// {
-//     // TODO: SQLite database Query could be better option.
-//     m_name = productName;
-// }
-
-double product::getVolumePerTick()
+int product::getAdditivesCount()
 {
-    return m_nVolumePerTick;
-}
-void product::registerFlowSensorTickFromPcb()
-{
-    // tick from flowsensor interrupt will increase dispensed volume.
-    // cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
-    cout << "Flow poll TICK from pcb." << endl;
-    m_nVolumeDispensed += getVolumePerTick() * m_concentration_multiplier;
+    if (isMixingProduct())
+    {
+        return m_mix_pnumbers_count - 1; // subtract base product
+    }
+    else
+    {
+        return 0;
+    }
 }
 
-void product::registerFlowSensorTickFromInterrupt()
+double product::getAdditiveMixRatio(int position)
 {
-    // tick from flowsensor interrupt will increase dispensed volume.
-    // cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
-    cout << "Interrupt flow TICKTICK" << endl;
-    m_nVolumeDispensed += getVolumePerTick() * m_concentration_multiplier;
+    if (position == 0)
+    {
+        debugOutput::sendMessage("ASSERT ERROR: mixing position cannot be zero. ", MSG_ERROR);
+        return 0;
+    }
+    return getMixRatio(position);
 }
 
-void product::setVolumeDispensed(double volume)
+double product::getBaseMixRatio()
 {
-    m_nVolumeDispensed = volume;
+    if (!isMixingProduct())
+    {
+        return 1.0;
+    }
+    else
+    {
+        return getMixRatio(0);
+    }
+}
+
+double product::getMixRatio(int position)
+{
+    if (!isMixingProduct())
+    {
+        return 0;
+    }
+    return m_mix_ratios[position];
+}
+
+bool product::getAdditivePNumber(int position)
+{
+    if (position == 0)
+    {
+        // position starts from 1
+        debugOutput::sendMessage("ASSERT ERROR: Additives numbering starts from 1. 0 was provided.", MSG_ERROR);
+    }
+    if (position > getAdditivesCount())
+    {
+        debugOutput::sendMessage("ASSERT ERROR: Additives position provided is too high. Additive does not exist.", MSG_ERROR);
+        return PRODUCT_DUMMY;
+    }
+    m_mix_pnumbers[position]; // first position is base pnumber. but mix pnumbers start from 1.
+}
+
+bool product::isMixingProduct()
+{
+    bool isMix = false;
+    if (m_mix_pnumbers_count <= 0)
+    {
+        isMix = false;
+    }
+    else if (m_mix_pnumbers_count == 1)
+    {
+        isMix = false;
+    }
+    else if (m_mix_pnumbers_count > 1)
+    {
+        isMix = true;
+    }
+    return isMix;
+}
+
+void product::getMixRatios(double *&mixRatios, int &count)
+{
+    mixRatios = m_mix_ratios;
+    count = m_mix_ratios_count;
+}
+void product::getMixPNumbers(int *&pnumbers, int &count)
+{
+    pnumbers = m_mix_pnumbers;
+    count = m_mix_pnumbers_count;
 }
 
 double product::getVolumeDispensed()
 {
     return m_nVolumeDispensed;
+}
+
+void product::setVolumeDispensed(double volume)
+{
+    m_nVolumeDispensed = volume;
 }
 
 void product::resetVolumeDispensed()
@@ -172,19 +187,25 @@ double product::getThresholdFlow_max_allowed()
         return m_nThresholdFlow_maximum_allowed;
     }
 }
-int product::getRetractionTimeMillis()
+
+double product::getVolumePerTick()
 {
-    return m_nRetractionTimeMillis;
+    return m_nVolumePerTick;
+}
+void product::registerFlowSensorTickFromPcb()
+{
+    // tick from flowsensor interrupt will increase dispensed volume.
+    // cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
+    cout << "Flow poll TICK from pcb." << endl;
+    m_nVolumeDispensed += getVolumePerTick() * m_concentration_multiplier;
 }
 
-int product::getPWM()
+void product::registerFlowSensorTickFromInterrupt()
 {
-    return m_nDispenseSpeedPWM;
-}
-
-double product::getVolPerTick()
-{
-    return m_volumePerTick;
+    // tick from flowsensor interrupt will increase dispensed volume.
+    // cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
+    cout << "Interrupt flow TICKTICK" << endl;
+    m_nVolumeDispensed += getVolumePerTick() * m_concentration_multiplier;
 }
 
 double product::getVolumeFull()
@@ -232,9 +253,9 @@ char product::getSizeCharFromTargetVolume(double volume)
         return 'c';
     }
 }
-double product::getTargetVolume(){
+double product::getTargetVolume()
+{
     return m_nVolumeTarget;
-
 }
 
 void product::setTargetVolume(double volume)
@@ -242,9 +263,9 @@ void product::setTargetVolume(double volume)
     m_nVolumeTarget = volume;
 }
 
-double product::setTargetVolumeFromSize(char size){
+double product::setTargetVolumeFromSize(char size)
+{
     m_nVolumeTarget = getVolumeFromSize(size);
-
 }
 
 double product::getVolumeFromSize(char size)
@@ -341,6 +362,10 @@ double product::getPrice(char size)
     }
 }
 
+string product::getPaymentMethod()
+{
+    return m_paymentMethod;
+}
 bool product::getIsEnabled()
 {
     return this->m_is_enabled;
@@ -507,14 +532,14 @@ double product::convertVolumeMetricToDisplayUnits(double volume)
     return converted_volume;
 }
 
-int product::getPNumber()
+int product::getRetractionTimeMillis()
 {
-    return m_pnumber;
+    return m_nRetractionTimeMillis;
 }
 
-string product::getPNumberAsPString()
+int product::getPWM()
 {
-    return "P-" + std::to_string(m_pnumber);
+    return m_nDispenseSpeedPWM;
 }
 
 string product::getBasePLU(char size)
@@ -554,6 +579,7 @@ string product::getBasePLU(char size)
 // }
 void product::executeSQLStatement(string sql_string)
 {
+    // In fsm, we're only reading the db. Avoid writing. All results are sent to UI for updating db. This was a necessary transition...
 
     int rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
@@ -577,23 +603,17 @@ bool product::isColumnInTable(string table, string column_name_to_find)
     int status;
     status = sqlite3_step(stmt);
     int row = 0;
-    // debugOutput::sendMessage("process record: " + sql_string, MSG_INFO);
     while (status == SQLITE_ROW)
     {
-        // debugOutput::sendMessage("roooow " + std::to_string(row), MSG_INFO);
         int columns_count = 3;
         for (int column_index = 0; column_index < columns_count; column_index++)
         {
-
-            // debugOutput::sendMessage("dcolumn index " + std::to_string(column_index), MSG_INFO);
             // for every row, go over all the the items (0=cid, 1=name, 2=type,3=notnull,...)
-
             switch (column_index)
             {
             case (1):
             {
                 string column_name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
-                // debugOutput::sendMessage("col name: " +column_name, MSG_INFO);
                 if (!column_name.compare(column_name_to_find))
                 {
                     // FOUND returns 0
@@ -748,11 +768,6 @@ bool product::isDbValid()
     return is_valid;
 }
 
-string product::getProductName()
-{
-    return m_product_properties[CSV_PRODUCT_COL_NAME];
-}
-
 std::string product::dbFieldAsValidString(sqlite3_stmt *stmt, int column_index)
 {
     // protect against null values in db.
@@ -773,14 +788,46 @@ bool product::loadParameters()
 {
     bool success = true;
     success &= loadProductParametersFromDb();
-    success &= loadParametersFromCsv();
+    loadProductPropertiesFromCsv();
     return success;
 }
-bool product::loadParametersFromCsv()
-{
 
-    loadProductPropertiesFromCsv();
-    return true;
+void product::loadProductPropertiesFromCsv()
+{
+    // Create an input filestream
+    std::ifstream products_file(PRODUCT_DETAILS_TSV_PATH);
+
+    if (!products_file.is_open())
+    {
+        debugOutput::sendMessage("Products file path could not be opened: " + std::string(PRODUCT_DETAILS_TSV_PATH), MSG_ERROR);
+        return;
+    }
+
+    std::string line;
+
+    while (std::getline(products_file, line))
+    {
+        std::string delimiter = "\t";
+        size_t pos = 0;
+        uint8_t token_index = 0;
+        std::string token;
+        while ((pos = line.find(delimiter)) != std::string::npos)
+        {
+            token = line.substr(0, pos);
+            m_product_properties[token_index] = token;
+            token_index++;
+            line.erase(0, pos + delimiter.length());
+        }
+
+        bool stringsAreDifferent;
+        stringsAreDifferent = m_product_properties[CSV_PRODUCT_COL_ID].compare(getPNumberAsPString());
+        if (!(stringsAreDifferent))
+        {
+            debugOutput::sendMessage("Product found in products file and loaded: " + m_product_properties[CSV_PRODUCT_COL_ID] + " " + m_product_properties[CSV_PRODUCT_COL_NAME], MSG_INFO);
+            return;
+        }
+    }
+    debugOutput::sendMessage("Could not load product from products file (not found). Pnumber " + std::to_string(m_pnumber), MSG_ERROR);
 }
 
 bool product::loadProductParametersFromDb()
@@ -861,8 +908,8 @@ bool product::loadProductParametersFromDb()
         // debugOutput::sendMessage("colll count:  " + to_string(columns_count), MSG_INFO);
 
         m_pnumber = std::stoi(product::dbFieldAsValidString(stmt, 0));
-        m_mix_pnumbers = product::dbFieldAsValidString(stmt, 1);
-        m_mix_ratios = product::dbFieldAsValidString(stmt, 2);
+        m_mix_pnumbers_str = product::dbFieldAsValidString(stmt, 1);
+        m_mix_ratios_str = product::dbFieldAsValidString(stmt, 2);
 
         m_product_id_combined_with_location_for_backend = product::dbFieldAsValidString(stmt, 3);
         m_name = product::dbFieldAsValidString(stmt, 4);
@@ -912,13 +959,21 @@ bool product::loadProductParametersFromDb()
         // every sqlite3_step returns a row. if status is 101=SQLITE_DONE, it's run over all the rows.
     }
 
+    m_mix_ratios = product::parseDoubleCsvString(m_mix_ratios_str, m_mix_ratios_count);
+    m_mix_pnumbers = product::parseIntCsvString(m_mix_pnumbers_str, m_mix_pnumbers_count);
+
+    if (m_mix_pnumbers_count != m_mix_ratios_count)
+    {
+        debugOutput::sendMessage("DB mixing ASSERT ERROR: Amount of mixing pnumber and their ratios is not equal!!! pnumbers:" + m_mix_pnumbers_str + " mixing ratios: " + m_mix_ratios_str, MSG_ERROR);
+    }
+
     m_pnumber_loaded_from_db = false;
     if (numberOfRecordsFound == 1)
     {
         debugOutput::sendMessage("DB loading ok. Found one match. status: " + to_string(status), MSG_INFO);
         debugOutput::sendMessage("DB target volume serial number: : " + m_pnumber, MSG_INFO);
-        debugOutput::sendMessage("DB mix pnumbers: : " + m_mix_pnumbers, MSG_INFO);
-        debugOutput::sendMessage("DB default mix ratios: : " + m_mix_ratios, MSG_INFO);
+        debugOutput::sendMessage("DB mix pnumbers: : " + m_mix_pnumbers_str, MSG_INFO);
+        debugOutput::sendMessage("DB default mix ratios: : " + m_mix_ratios_str, MSG_INFO);
         debugOutput::sendMessage("DB target volume small:  " + to_string(m_nVolumeTarget_s), MSG_INFO);
         debugOutput::sendMessage("DB target volume medium: " + to_string(m_nVolumeTarget_m), MSG_INFO);
         debugOutput::sendMessage("DB target volume large : " + to_string(m_nVolumeTarget_l), MSG_INFO);
@@ -989,4 +1044,54 @@ bool product::testParametersFromDb()
     sqlite3_finalize(stmt);
     sqlite3_close(db);
     return pwm;
+}
+
+int *product::parseIntCsvString(const std::string &csvString, int &size)
+{
+    static const int MAX_SIZE = 100; // Define the maximum size of the array
+
+    int *intArray = new int[MAX_SIZE];
+    std::stringstream ss(csvString);
+    std::string token;
+    size = 0;
+
+    while (std::getline(ss, token, ','))
+    {
+        if (size < MAX_SIZE)
+        {
+            intArray[size++] = std::stoi(token);
+        }
+        else
+        {
+            std::cerr << "Array size exceeded maximum limit." << std::endl;
+            delete[] intArray;
+            return nullptr;
+        }
+    }
+    return intArray;
+}
+
+double *product::parseDoubleCsvString(const std::string &csvString, int &size)
+{
+    static const int MAX_SIZE = 100; // Define the maximum size of the array
+
+    double *doubleArray = new double[MAX_SIZE];
+    std::stringstream ss(csvString);
+    std::string token;
+    size = 0;
+
+    while (std::getline(ss, token, ','))
+    {
+        if (size < MAX_SIZE)
+        {
+            doubleArray[size++] = std::stod(token);
+        }
+        else
+        {
+            std::cerr << "Array size exceeded maximum limit." << std::endl;
+            delete[] doubleArray;
+            return nullptr;
+        }
+    }
+    return doubleArray;
 }

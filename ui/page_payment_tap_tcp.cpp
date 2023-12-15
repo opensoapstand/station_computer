@@ -43,11 +43,12 @@ page_payment_tap_tcp::page_payment_tap_tcp(QWidget *parent) : QWidget(parent),
 
     std::atomic<bool> stop_tap_action_thread(false);
     std::atomic<bool> stop_authorization_thread(false);
+
     // Receive packets from tap device checker
     checkPacketReceivedTimer = new QTimer(this);
     connect(checkPacketReceivedTimer, SIGNAL(timeout()), this, SLOT(check_packet_available()));
     checkPacketReceivedTimer->setInterval(500); // was 500
-
+    // Check if the card is tapped thread. 
     checkCardTappedTimer = new QTimer(this);
     connect(checkCardTappedTimer, SIGNAL(timeout()), this, SLOT(check_card_tapped()));
     checkCardTappedTimer->setInterval(500); // was 500
@@ -58,7 +59,6 @@ page_payment_tap_tcp::page_payment_tap_tcp(QWidget *parent) : QWidget(parent),
 
     ui->pushButton_payment_bypass->setEnabled(false);
     ui->label_title->hide();
-    // ui->order_total_amount->hide();
     statusbarLayout = new QVBoxLayout(this);
 }
 
@@ -76,6 +76,7 @@ void page_payment_tap_tcp::initiate_tap_setup()
     qDebug() << "Transaction cancelled";
     if (configMap["MAC_KEY"] != "")
     {
+        // Match the generated MAC with device MAC to authenticate
         std::map<std::string, std::string> testResponse = testMac(connectSocket(), configMap["MAC_KEY"], configMap["MAC_LABEL"]);
         if (testResponse["RESPONSE_TEXT"] == "Match")
         {
@@ -83,12 +84,14 @@ void page_payment_tap_tcp::initiate_tap_setup()
         }
         else
         {
+            // If not matched, device needs to be re-registered
             qDebug() << "Re-registration of the device";
             registerDevice(connectSocket());
         }
     }
     else
     {
+        // If config is not found, register the device, it will create config file automatically
         qDebug() << "No file config" << endl;
         registerDevice(connectSocket());
     }
@@ -141,7 +144,6 @@ void page_payment_tap_tcp::on_pushButton_payment_bypass_clicked()
 /*Cancel any previous payment*/
 void page_payment_tap_tcp::cancelPayment()
 {
-    // finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
     checkPacketReceivedTimer->stop();
 }
 
@@ -219,7 +221,6 @@ void page_payment_tap_tcp::tapPaymentHandler()
     lastTransactionId = std::stoi(configMap["INVOICE"]);
 
     startSession(socket, MAC_LABEL, MAC_KEY, lastTransactionId + 1);
-    // tapPaymentObject["session_id"] = std::to_string(lastTransactionId+1);
     tapPaymentObject["mac_label"] = MAC_LABEL;
 
     startPaymentProcess();
@@ -335,9 +336,6 @@ void page_payment_tap_tcp::authorized_transaction(std::map<std::string, std::str
     else if (responseObj["result"] == "APPROVED/STORED")
     {
         p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
-        // CTROUTD = responseObj["CTROUTD"];
-        // AUTH_CODE = responseObj["AUTH_CODE"];
-        // SAF_NUM = responseObj["SAF_NUM"];
         tapPaymentObject["ctroutd"] = responseObj["CTROUTD"];
         tapPaymentObject["auth_code"] = responseObj["AUTH_CODE"];
         tapPaymentObject["saf_num"] = responseObj["SAF_NUM"];
@@ -367,7 +365,6 @@ bool page_payment_tap_tcp::exitConfirm()
         msgBox->setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
         p_page_idle->thisMachine->addCssClassToObject(msgBox, "msgBoxbutton msgBox", PAGE_TAP_PAYMENT_CSS);
         QString searchString = this->objectName() + "->msgBox_cancel";
-        // p_page_idle->thisMachine->setTextToObject(&msgBox, p_page_idle->thisMachine->getTemplateText(searchString));
 
         int remainingTime = MESSAGE_BOX_TIMEOUT_EXIT_TAP_CONFIRM_SECONDS; // Initial value in seconds
         QString templateText = p_page_idle->thisMachine->getTemplateText(searchString);
@@ -406,8 +403,6 @@ bool page_payment_tap_tcp::exitConfirm()
         {
         case QMessageBox::Yes:
         {
-            // resetPaymentPage();
-            // transactionLogging = "";
             return true;
         }
         break;
@@ -420,9 +415,7 @@ bool page_payment_tap_tcp::exitConfirm()
     }
     else
     {
-        // exit, no questions asked.
-        // resetPaymentPage();
-        // transactionLogging = "";
+        
         return true;
     }
 }
@@ -438,15 +431,12 @@ void page_payment_tap_tcp::on_pushButton_previous_page_clicked()
         {
             stop_tap_action_thread = true;
             stop_authorization_thread = true;
-            // stopPayTimers();
             qDebug() << "Stopping the threads";
             std::map<std::string, std::string> cancelResp = cancelTransaction(connectSecondarySocket());
             qDebug() << "My socket address is " << QString::fromStdString(socketAddr) << endl;
             if (cancelResp["RESULT"] == "OK")
             {
                 qDebug() << QString::fromUtf8(cancelResp["RESULT"].c_str());
-                // sleep(3);
-                // finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
                 qDebug() << "Session finished sent";
             }
         }

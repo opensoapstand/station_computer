@@ -15,6 +15,7 @@
 #include "page_sendFeedback.h"
 
 extern QString transactionLogging;
+extern bool isFreeEmailOrder;
 
 // CTOR
 page_end::page_end(QWidget *parent) : QWidget(parent),
@@ -108,8 +109,11 @@ void page_end::showEvent(QShowEvent *event)
     is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
     exitIsForceable = false;
 
-    if (paymentMethod == PAYMENT_QR)
+    if (isFreeEmailOrder)
     {
+        is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
+    }
+    else if(paymentMethod == PAYMENT_QR){
         sendDispenseEndToCloud();
     }
     else
@@ -118,7 +122,7 @@ void page_end::showEvent(QShowEvent *event)
     }
     _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
     thankYouEndTimer->start();
-
+    isFreeEmailOrder = false;
     QString machine_logo_full_path = p_page_idle->thisMachine->getTemplatePathFromName(MACHINE_LOGO_PATH);
     p_page_idle->thisMachine->addPictureToLabel(ui->label_manufacturer_logo, machine_logo_full_path);
     ui->label_manufacturer_logo->setStyleSheet(styleSheet);
@@ -192,6 +196,7 @@ void page_end::sendDispenseEndToCloud()
     curl_easy_cleanup(curl);
     readBuffer = "";
 }
+
 
 void page_end::controllerFinishedTransaction()
 {

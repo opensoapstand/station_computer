@@ -126,6 +126,11 @@ private:
     void setButtonPressCountLabel(bool init);
     void setButtonPressCountLabel2(bool init);
 
+    int m_activePNumber;
+
+
+    QPushButton *buttons_select_additive[ADDITIVES_PER_SLOT_COUNT_MAX];
+
     void showEvent(QShowEvent *event);
     Ui::page_maintenance_dispenser *ui;
     page_maintenance *p_page_maintenance;

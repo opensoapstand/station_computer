@@ -22,6 +22,10 @@ public:
     QVector<int> getAllPNumbers();
     QVector<int> getDispensePNumbers();
     int getBasePNumber();
+    
+    int getAdditivePNumber(int position);
+    int getAdditiveCount();
+    
     QVector<int> getAdditivePNumbers();
     // int getAdditivesPNumbersCount();
 
@@ -48,8 +52,6 @@ public:
     // QString getStatusText();
     // void setStatusText(QString status);
 
-    int getAdditivePNumber(int position);
-    int getAdditiveCount();
 
 public slots:
 

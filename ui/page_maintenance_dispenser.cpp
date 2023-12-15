@@ -208,6 +208,10 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
     {
         ui->pushButton_clear_problem->hide();
     }
+
+
+    ui->pushButton_active_pnumber_base->setText( QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getBasePNumber()));
+
 }
 
 void page_maintenance_dispenser::setStatusTextLabel(QLabel *label, QString statusText, bool displayRawStatus)
@@ -1148,4 +1152,35 @@ void page_maintenance_dispenser::on_checkBox_enable_custom_clicked()
 {
     p_page_idle->thisMachine->getSelectedProduct()->toggleSizeEnabled(SIZE_CUSTOM_INDEX);
     updateProductLabelValues(true);
+}
+
+void page_maintenance_dispenser::on_pushButton_active_pnumber_base_clicked()
+{
+    // p_page_idle->thisMachine->getSelectedProduct()
+    
+}
+
+void page_maintenance_dispenser::on_pushButton_active_pnumber_additive_1_clicked()
+{
+
+}
+
+void page_maintenance_dispenser::on_pushButton_active_pnumber_additive_2_clicked()
+{
+
+}
+
+void page_maintenance_dispenser::on_pushButton_active_pnumber_additive_3_clicked()
+{
+
+}
+
+void page_maintenance_dispenser::on_pushButton_active_pnumber_additive_4_clicked()
+{
+
+}
+
+void page_maintenance_dispenser::on_pushButton_active_pnumber_additive_5_clicked()
+{
+
 }

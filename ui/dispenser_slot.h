@@ -48,6 +48,9 @@ public:
     // QString getStatusText();
     // void setStatusText(QString status);
 
+    int getAdditivePNumber(int position);
+    int getAdditiveCount();
+
 public slots:
 
 signals:

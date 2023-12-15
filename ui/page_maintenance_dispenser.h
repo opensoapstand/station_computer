@@ -109,6 +109,18 @@ private slots:
 
     void on_checkBox_enable_custom_clicked();
 
+    void on_pushButton_active_pnumber_base_clicked();
+
+    void on_pushButton_active_pnumber_additive_1_clicked();
+
+    void on_pushButton_active_pnumber_additive_2_clicked();
+
+    void on_pushButton_active_pnumber_additive_3_clicked();
+
+    void on_pushButton_active_pnumber_additive_4_clicked();
+
+    void on_pushButton_active_pnumber_additive_5_clicked();
+
 private:
     void setStatusTextLabel(QLabel* label, QString statusText, bool displayRawStatus);
     void setButtonPressCountLabel(bool init);

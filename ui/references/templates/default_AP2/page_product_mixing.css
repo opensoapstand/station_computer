@@ -22,6 +22,7 @@
    font-weight: 700;
    line-height: normal;
    text-align: left;
+   qproperty-alignment: AlignLeft;
 }
 
 .additiveBackgroundRows{

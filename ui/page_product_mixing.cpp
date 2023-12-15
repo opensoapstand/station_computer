@@ -167,7 +167,7 @@ void page_product_mixing::showEvent(QShowEvent *event)
 
     if(p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size() > 0){
         ui->label_additives_background->setStyleSheet(styleSheet);
-        for (int j = 0; j < 5; j++){
+        for (uint8_t j = 0; j < 5; j++){
             if(j < p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size()){
                 additiveTitles[j]->setProperty("class", "additiveTitles");
                 additiveBackgroundRows[j]->setProperty("class", "additiveBackgroundRows");
@@ -195,7 +195,8 @@ void page_product_mixing::showEvent(QShowEvent *event)
 
                 int mixProductNumber = p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers()[j];
                 additiveTitles[j]->setText(p_page_idle->thisMachine->getProductByPNumber(mixProductNumber)->getProductName());
-                qDebug() << "$$$$$$$$$$$$$$$$$$$" << mixProductNumber;
+                qDebug() << "$$$$$$$$$$$$$$$$$$$" << p_page_idle->thisMachine->getProductByPNumber(mixProductNumber);
+                qDebug() << "$$$$$$$$$$$$$$$$$$$" << p_page_idle->thisMachine->getProductByPNumber(mixProductNumber)->getProductName();
             }else{
                 additiveTitles[j]->hide();
                 additiveBackgroundRows[j]->hide();
@@ -208,7 +209,7 @@ void page_product_mixing::showEvent(QShowEvent *event)
         }
     }else{
         ui->label_additives_background->hide();
-        for (int j = 0; j < 5; j++){
+        for (uint8_t j = 0; j < 5; j++){
             additiveTitles[j]->hide();
             additiveBackgroundRows[j]->hide();
             additiveMinusButtonBackgrounds[j]->hide();

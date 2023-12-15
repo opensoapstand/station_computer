@@ -16,6 +16,7 @@ machine::machine()
     setRole(UserRole::user);
     setCouponState(no_state);
 
+
     // IPC Networking
     dfUtility = new df_util();
     dispenseProductsMenuOptions.resize(MENU_PRODUCT_SELECTION_OPTIONS_MAX);
@@ -245,6 +246,7 @@ pnumberproduct *machine::getSlotBaseProduct(int slot){
 
 pnumberproduct *machine::getProductByPNumber(int pnumber)
 {
+    qDebug() << pnumber;
     return &m_pnumberproducts[pnumber];
 }
 
@@ -551,8 +553,8 @@ double machine::getPriceCorrectedForSelectedSize(int pnumber, bool maximumVolume
     pnumberproduct *product = getProductByPNumber(all_pnumbers[pnumber]);
     if (product->is_valid_size_selected())
     {
+        qDebug() << "Selected size" << product->getSelectedSize();
         price = product->getBasePrice(product->getSelectedSize());
-
         if (maximumVolumeForCustom && (product->getSelectedSize() == SIZE_CUSTOM_INDEX))
         {
             // price is per ml for custom size, so, we multiply it by the maximum amount of dispensed volume if
@@ -744,8 +746,8 @@ void machine::fsmReceiveTemperature(double temperature_1, double temperature_2)
 {
     m_temperature = temperature_1;
     m_temperature2 = temperature_2;
-    // qDebug() << "Temperature received from FSM in machine: " << m_temperature;
-    // qDebug() << "Temperature 2 received from FSM in machine: " << m_temperature2;
+    //qDebug() << "Temperature received from FSM in machine: " << m_temperature;
+    //qDebug() << "Temperature 2 received from FSM in machine: " << m_temperature2;
 
     writeTemperatureToDb(m_temperature, m_temperature2);
 
@@ -1038,6 +1040,25 @@ void machine::setPaymentMethod(QString paymentMethod)
 {
     qDebug() << "Open db: set payment method";
     m_db->updateTableMachineWithText("payment", paymentMethod);
+}
+
+ActivePaymentMethod machine::getActivePaymentMethod()
+{
+    return m_activePaymentMethod;
+}
+
+void machine::setActivePaymentMethod(ActivePaymentMethod paymentMethod)
+{
+    m_activePaymentMethod = paymentMethod;
+}
+
+std::vector<ActivePaymentMethod> machine::getAllowedPaymentMethods(){
+    qDebug() << "helllo";
+    return allowedPaymentMethods;
+}
+
+void machine::setAllowedPaymentMethods(ActivePaymentMethod paymentMethod){
+    allowedPaymentMethods.push_back(paymentMethod);
 }
 
 QString machine::getMachineId()

@@ -118,7 +118,8 @@ DF_ERROR stateDispenseEnd::onAction()
 
         std::string paymentMethod = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getPaymentMethod();
 
-        if (paymentMethod == "qr")
+        double price = getFinalPrice();
+        if (paymentMethod == "qr" && price!= 0.0)
         {
             // these transactions are dealt with in the UI
         }
@@ -158,7 +159,8 @@ void stateDispenseEnd::adjustSizeToDispensedVolume()
         g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getIsSizeEnabled(SIZE_CUSTOM_CHAR))
     {
         // if custom volume is enabled, always revert back to the actual volume that's dispensed.
-        m_pMessaging->setRequestedSize(SIZE_CUSTOM_CHAR);
+        // Bug alert: If setting the size to custom, quantity_requested also change to custom size and database transaction shows that customer chose custom size
+        // m_pMessaging->setRequestedSize(SIZE_CUSTOM_CHAR);
         debugOutput::sendMessage("Custom volume is enabled, so we will always revert to it to calculate actual price.", MSG_INFO);
     }
     else if (g_machine.m_productDispensers[m_slot_index].getSelectedSizeAsChar() == SIZE_EMPTY_CONTAINER_DETECTED_CHAR)
@@ -526,7 +528,6 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     std::string price_string;
     std::string product_status;
     std::string slot_status_text;
-
     price = getFinalPrice();
     price_string = to_string(price);
 
@@ -622,8 +623,9 @@ double stateDispenseEnd::getFinalPrice()
     double price_per_ml;
     double volume_dispensed;
     double price;
-
-    if (size == SIZE_CUSTOM_CHAR)
+    // bool isCustomSizeEnabled = g_machine.m_productDispensers.getProduct()->getIsSizeEnabled(SIZE_CUSTOM_CHAR);
+    // If custom volume is enabled, adjust the price to actual quantity dispensed
+    if (size == SIZE_CUSTOM_CHAR )
     {
 
         bool isDiscountEnabled;
@@ -645,6 +647,9 @@ double stateDispenseEnd::getFinalPrice()
         }
 
         price = price_per_ml * volume_dispensed;
+        if(size != SIZE_CUSTOM_CHAR){
+            price = std::min(price,m_pMessaging->getRequestedPrice());
+        }
     }
     else if (size == SIZE_TEST_CHAR)
     {

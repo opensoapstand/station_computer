@@ -435,6 +435,9 @@ transfer_production_db_old(){
 
 transfer_production_logging(){
 
+    local days=$1  # Number of days to consider for -mtime option
+
+    echo "Number of days (all logs if none provided) WARNING:non timestamped files will not be included if number of days is provided): $days"
     echo "Source Station: "
     get_station_port
     source_port=$global_port
@@ -442,12 +445,35 @@ transfer_production_logging(){
     get_station_port
     destination_port=$global_port
 
+
     logging_zip_name=logging_$source_port.zip  # check for where used, not as a variable. Because... it's hard.
     
     cmd0=( rm /home/ubuntu/Stations/logging.zip )
     # zip it up
-    cmd1=( sudo ssh -t df-admin@localhost -p $source_port 'cd /home/df-admin/production; zip -r logging.zip logging; mv logging.zip ..' )
+
+    # all files: 
+    # cmd1=( sudo ssh -t df-admin@localhost -p $source_port 'cd /home/df-admin/production; zip -r logging.zip logging; mv logging.zip ..' )
+
+    # only files within timestamp
+    # cmd1=(sudo ssh -t df-admin@localhost -p $source_port 'cd /home/df-admin/production/logging; find . -type f -mtime -7 -exec zip -r logging.zip {} +; mv /home/df-admin/production/logging/logging.zip /home/df-admin/logging.zip')
     
+
+    if [ -n "$days" ]; then
+        # Zip only files within the specified number of days (by modified file date)
+        # cmd1=(sudo ssh -t df-admin@localhost -p $source_port "cd /home/df-admin/production/logging; find . -type f -mtime -7 -exec zip -r logging.zip {} +; mv /home/df-admin/production/logging/logging.zip /home/df-admin/logging.zip")
+        
+        # Zip only files within the specified number of days
+        cmd1=(sudo ssh -t df-admin@localhost -p $source_port 'cd /home/df-admin/production/logging; find . -type f -name "*_*.txt" | awk -F_ '\''$2 >= "'"$(date -d "$days days ago" +%F)"'"'\'' | xargs -I {} zip -r logging.zip {} && mv /home/df-admin/production/logging/logging.zip /home/df-admin/logging.zip')
+
+
+    else
+        # Zip all files
+        cmd1=( sudo ssh -t df-admin@localhost -p $source_port 'cd /home/df-admin/production; zip -r logging.zip logging; mv logging.zip ..' )
+    fi
+
+
+
+
     # transfer zip from source station to aws 
     cmd2=( scp -r -P $source_port "df-admin@localhost:/home/df-admin/logging.zip" "/home/ubuntu/Stations/" )
     # transfer zip from aws to destination station
@@ -865,7 +891,7 @@ deploy_with_ash () {
 }
 
 PS3="Choose option(digit + enter) :"
-options=("Quit" "Stations status" "Station log in" "Production Folder Copy and Deploy: Static files" "Production Folder Copy: Static files" "Production Folder Copy: Logging Folder" "Production Folder Copy: Databases" "Production Folder Copy: Configuration database" "Production Folder Copy: Usage database" "Production Folder Copy: Database OLD" )
+options=("Quit" "Stations status" "Station log in" "Production Folder Copy and Deploy: Static files" "Production Folder Copy: Static files" "Production Folder Copy: Logging Folder (Last Seven Days)" "Production Folder Copy: Logging Folder (All)" "Production Folder Copy: Databases" "Production Folder Copy: Configuration database" "Production Folder Copy: Usage database" "Production Folder Copy: Database OLD" )
 # options=("Quit" "Stations status" "Show Station Descriptions" "Station log in" "Station/production/x to Station/production/x" "Station/production/x to Station/home/x" "Station/home/x to Station/production/x" "Station/home/x to Station/home/x" "AWS to Station/home/x" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB" "Manualport/production/x to Manualport/home/x" "Station mkdir" "Station log in [port]" "Static Production Copy: Station to Station" "Static Production Copy: Station to [port]" "Static Production Copy: [port] to Station" "Static Production Copy: [port] to [port]" "DB Production copy: Station to Station" "DB Production copy: Station to [port]" "DB Production copy: [port] to Station" "DB Production copy: [port] to [port]" "Logs Production Copy: Station to Station" "Logs Production Copy: Station to [port]" "Logs Production Copy: [port] to Station" "Logs Production Copy: [port] to [port]")
 
 select opt in "${options[@]}"
@@ -928,7 +954,11 @@ do
             transfer_production_usage_db  
             ;;
 
-        "Production Folder Copy: Logging Folder")
+        "Production Folder Copy: Logging Folder (Last Seven Days)")
+            transfer_production_logging 7
+            ;;
+
+        "Production Folder Copy: Logging Folder (All)")
             transfer_production_logging  
             ;;
       

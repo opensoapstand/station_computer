@@ -66,6 +66,7 @@ private:
     QTimer *rebootTimer;
     int _rebootTimeoutSec;
     bool start_controller;
+    ActivePaymentMethod activePaymentMethod;
 };
 
 #endif // INIT_H

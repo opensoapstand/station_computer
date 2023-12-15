@@ -79,7 +79,7 @@ public:
     void showEvent(QShowEvent *event);
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void hideCurrentPageAndShowProductMenu();
-
+    int convert_additivePRatio_to_percentage(double additivePRatio);
 signals:
     void paymentTotal(string, string, string);
 

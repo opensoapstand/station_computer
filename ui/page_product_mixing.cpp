@@ -145,6 +145,7 @@ void page_product_mixing::showEvent(QShowEvent *event)
     ui->label_select_quantity->setStyleSheet(styleSheet);
     ui->label_product_ingredients->setStyleSheet(styleSheet);
     ui->label_product_ingredients_title->setStyleSheet(styleSheet);
+    ui->label_additives_background->setStyleSheet(styleSheet);
     ui->label_help->setStyleSheet(styleSheet);
     ui->label_sizes_background->setStyleSheet(styleSheet);
     ui->pushButton_continue->setStyleSheet(styleSheet);
@@ -166,8 +167,8 @@ void page_product_mixing::showEvent(QShowEvent *event)
     }
 
     if(p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size() > 0){
-        ui->label_additives_background->setStyleSheet(styleSheet);
-        for (uint8_t j = 0; j < 5; j++){
+        ui->label_additives_background->show();
+        for (int j = 0; j < 5; j++){
             if(j < p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size()){
                 additiveTitles[j]->setProperty("class", "additiveTitles");
                 additiveBackgroundRows[j]->setProperty("class", "additiveBackgroundRows");
@@ -193,10 +194,11 @@ void page_product_mixing::showEvent(QShowEvent *event)
                 additivePlusButtons[j]->show();
                 additivePercentageLabels[j]->show();
 
-                int mixProductNumber = p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers()[j];
-                additiveTitles[j]->setText(p_page_idle->thisMachine->getProductByPNumber(mixProductNumber)->getProductName());
-                qDebug() << "$$$$$$$$$$$$$$$$$$$" << p_page_idle->thisMachine->getProductByPNumber(mixProductNumber);
-                qDebug() << "$$$$$$$$$$$$$$$$$$$" << p_page_idle->thisMachine->getProductByPNumber(mixProductNumber)->getProductName();
+                int additivePNumber = p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers()[j];
+                additiveTitles[j]->setText(p_page_idle->thisMachine->getProductByPNumber(additivePNumber)->getProductName());
+                double additivePRatio = p_page_idle->thisMachine->getSelectedProduct()->getMixRatios()[j];
+                QString additivePRatio_string = QString::number(convert_additivePRatio_to_percentage(additivePRatio));
+                additivePercentageLabels[j]->setText(QString::number(additivePRatio));
             }else{
                 additiveTitles[j]->hide();
                 additiveBackgroundRows[j]->hide();
@@ -590,3 +592,7 @@ void page_product_mixing::on_pushButton_back_clicked()
 {
     hideCurrentPageAndShowProductMenu();
 }
+
+int page_product_mixing::convert_additivePRatio_to_percentage(double additivePRatio){
+    return additivePRatio * 100;
+} 

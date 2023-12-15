@@ -104,6 +104,11 @@ QVector<int> pnumberproduct::getMixPNumbers()
     return m_mixPNumbers;
 }
 
+QVector<double> pnumberproduct::getMixRatios()
+{
+    return m_mixRatios;
+}
+
 void pnumberproduct::loadProductPropertiesFromDb()
 {
     qDebug() << "Open db: db load pnumberproduct properties for pnumberproduct for pnumber: " << getPNumber();

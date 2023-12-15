@@ -409,10 +409,11 @@ void page_product_menu::select_base_product_in_menu(int base_product_index)
 
 void page_product_menu::select_product(int option)
 {
-    if (p_page_idle->thisMachine->getIsOptionAvailable(option))
+    int option_index = m_selectedBaseProductIndex * MENU_DISPENSE_OPTIONS_PER_BASE_MAXIMUM + option;
+    if (p_page_idle->thisMachine->getIsOptionAvailable(option_index))
     {
-        qDebug() << "Option select and available: " << option;
-        p_page_idle->thisMachine->setSelectedProductByOption(option);
+        qDebug() << "Option select and available: " << option_index;
+        p_page_idle->thisMachine->setSelectedProductByOption(option_index);
         p_page_idle->thisMachine->setSelectedSlotFromSelectedProduct();
 
         // hideCurrentPageAndShowProvided(p_page_product);
@@ -420,7 +421,7 @@ void page_product_menu::select_product(int option)
     }
     else
     {
-        qDebug() << "Option not available: " << option;
+        qDebug() << "Option not available: " << option_index;
     }
 }
 

@@ -69,7 +69,7 @@ QVector<int> dispenser_slot::getAllPNumbers()
 
     pnumbers.insert(m_basePNumber);
     qDebug()<<"base pnumber value: " <<m_basePNumber;
-
+    qDebug() << pnumbers;
     int option = 1;
     foreach (const int &value, pnumbers) {
         if (value < 0){

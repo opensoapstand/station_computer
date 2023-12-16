@@ -20,6 +20,7 @@ page_idle->label_printer_status->nopaper,Assistance needed<br>Receipt Printer em
 page_idle->label_show_temperature->temperature,Temperature is..
 #page_idle->label_show_temperature,Temperature: %1
 page_idle->label_show_temperature,%1°C
+page_idle->msgBox_reboot->default,<p align=center>System will be rebooted in<br></p>
 page_idle->label_reboot_nightly_title,NIGHTLY REBOOT
 page_idle->label_reboot_nightly_text,System will be rebooted in<br>%1 second(s)
 page_idle->pushButton_reboot_nightly,Cancel
@@ -82,7 +83,7 @@ page_payment_tap_serial->pushButton_previous_page,←back
 
 # page_email
 page_email->pushButton_to_product_overview,←back
-page_email->label_email_title,To dispense free sample<br>Please kindly enter your email address
+page_email->label_email_title,To dispense free sample<br>Please enter your email address
 page_email->keyboardTextEntry->email_placeholder,Please enter your email address
 page_email->keyboardTextEntry->invalid,Incorrect email address, please enter valid email address
 page_email->pushButton_continue, Submit email for free dispense!

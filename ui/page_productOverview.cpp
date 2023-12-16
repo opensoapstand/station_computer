@@ -36,6 +36,8 @@ std::string AUTH_CODE = "";
 std::map<std::string, std::string> tapPaymentObject;
 std::string socketAddr;
 
+bool isFreeEmailOrder = false;
+
 // CTOR
 page_product_overview::page_product_overview(QWidget *parent) : QWidget(parent),
                                                                 ui(new Ui::page_product_overview)
@@ -48,6 +50,7 @@ page_product_overview::page_product_overview(QWidget *parent) : QWidget(parent),
 
     connect(ui->pushButton_promo_input, SIGNAL(clicked()), this, SLOT(on_lineEdit_promo_codeInput_clicked()));
     connect(ui->buttonGroup, SIGNAL(buttonPressed(int)), this, SLOT(keyboardButtonPressed(int)));
+    connect(ui->buttonGroup_continue, SIGNAL(buttonPressed(int)), this, SLOT(on_pushButton_continue(int)));
 
     ui->label_gif->hide();
     statusbarLayout = new QVBoxLayout(this);
@@ -72,6 +75,7 @@ void page_product_overview::setPage(page_select_product *pageSelect, page_dispen
 
     ui->label_discount_tag->hide();
     ui->label_gif->hide();
+    // ui->pushButton_continue_additional->hide();
     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_ORDER_OVERVIEW_PATH);
 }
 
@@ -129,10 +133,11 @@ void page_product_overview::showEvent(QShowEvent *event)
     ui->pushButton_previous_page->setProperty("class", "buttonBGTransparent");
     ui->pushButton_previous_page->setStyleSheet(styleSheet);
     ui->pushButton_continue->setStyleSheet(styleSheet);
+    ui->pushButton_continue_additional->setStyleSheet(styleSheet);
+    
     // p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "offline");
     // p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "offline");
 
-    ui->pushButton_continue->raise();
     ui->pushButton_to_help->setProperty("class", "buttonBGTransparent");
     ui->pushButton_to_help->setStyleSheet(styleSheet);
 
@@ -148,6 +153,76 @@ void page_product_overview::showEvent(QShowEvent *event)
     selectIdleTimer->start(1000);
     reset_and_show_page_elements();
     check_to_page_email();
+    std::vector<ActivePaymentMethod> paymentMethods = p_page_idle->thisMachine->getAllowedPaymentMethods();
+    size_t numberOfPaymentMethods = paymentMethods.size();
+     switch(paymentMethods[0]){
+        case 0:
+            {
+            //Set the first payment to Pay With QR
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay_qr");
+            break;
+            }
+        case 1:
+        case 2:{
+            //Set the first payment to Pay with TAP
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay_tap");
+            break;
+        }
+        default:{
+            //Set the first payment to Continue
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_free");
+            break;
+        }
+    }
+    if(numberOfPaymentMethods==1){
+        ui->pushButton_continue->raise();
+        ui->pushButton_continue_additional->lower();
+        ui->pushButton_continue->setFixedSize(QSize(740,92));
+        ui->pushButton_continue->setProperty("activePaymentMethod",paymentMethods[0]);
+    }
+    else if(numberOfPaymentMethods==2){
+        ui->pushButton_continue->raise();
+        ui->pushButton_continue_additional->raise();
+        ui->pushButton_continue->setFixedSize(QSize(360,92));
+        ui->pushButton_continue->setProperty("activePaymentMethod",paymentMethods[0]);
+        ui->pushButton_continue_additional->setProperty("activePaymentMethod",paymentMethods[1]);
+        switch(paymentMethods[1]){
+        case 0:
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue_additional, "proceed_pay_qr");
+            break;
+        case 1:
+        case 2:{
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue_additional, "proceed_pay_tap");
+            break;
+        }
+        default:{
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue_additional, "proceed_free");
+            break;
+        }
+    }
+    }
+   
+    // for (const auto& method : paymentMethods) {
+    //     qDebug()<< "Payment Method: " << methods[method];
+    // }
+    // if( p_page_idle->thisMachine->getPaymentMethod()==PAYMENT_TAP_CANADA){
+    //     ui->pushButton_continue->raise();
+    //     // ui->pushButton_continue_additional->show();
+    //     ui->pushButton_continue_additional->raise();
+
+    //     ui->pushButton_continue->setFixedSize(QSize(360,92));
+    //     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay_tap");
+    //     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue_additional, "proceed_pay_qr");
+
+    // }
+    // else{
+    //     ui->pushButton_continue->raise();
+    //     ui->pushButton_continue_additional->lower();
+
+    //     ui->pushButton_continue->setFixedSize(QSize(740,92));
+    //     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay");
+
+    // }
 }
 
 void page_product_overview::resizeEvent(QResizeEvent *event)
@@ -516,67 +591,125 @@ void page_product_overview::on_lineEdit_promo_codeInput_clicked()
     reset_and_show_page_elements();
 }
 
-void page_product_overview::on_pushButton_continue_clicked()
+void page_product_overview::on_pushButton_continue(int buttonID)
 {
+    
     ui->pushButton_to_help->setEnabled(false);
-    ui->pushButton_previous_page->setEnabled(false);
-
-    QString paymentMethod = p_page_idle->thisMachine->getPaymentMethod();
+    ui->pushButton_previous_page->setEnabled(false);    
+    QAbstractButton *buttonpressed = ui->buttonGroup_continue->button(buttonID);
+    int activePaymentMethod = buttonpressed->property("activePaymentMethod").toInt();
+    // QString paymentMethod = p_page_idle->thisMachine->getPaymentMethod();
+    // if(buttonName=="paymentMethodAdditional"){
+    //     paymentMethod = PAYMENT_QR;
+    // }
     double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
     double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
-    if (paymentMethod == PAYMENT_QR && finalPrice == 0.0)
+    if (selectedPrice == 0.0 || finalPrice == 0.0)
     {
         hideCurrentPageAndShowProvided(p_page_email);
     }
-    else if (paymentMethod == PAYMENT_QR)
-    {
-        CURL *curl;
-        CURLcode res;
-        curl = curl_easy_init();
-
-        if (!curl)
+    switch(activePaymentMethod){
+        case 0:
         {
-            qDebug() << "page_product_overview: cURL failed init";
-            return;
+            p_page_idle->thisMachine->setActivePaymentMethod(ActivePaymentMethod::qr);
+            CURL *curl;
+            CURLcode res;
+            curl = curl_easy_init();
+
+            if (!curl)
+            {
+                qDebug() << "page_product_overview: cURL failed init";
+                return;
+            }
+
+            curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/ping");
+            curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
+
+            res = curl_easy_perform(curl);
+            if (res != CURLE_OK)
+            {
+                qDebug() << "ERROR: Failed to reach soapstandportal. error code: " + QString::number(res);
+                hideCurrentPageAndShowProvided(p_page_wifi_error);
+            }
+            else
+            {
+                QString feedback = QString::fromUtf8(readBuffer.c_str());
+                qDebug() << "Server feedback readbuffer: " << feedback;
+
+                ui->label_invoice_price->text();
+                hideCurrentPageAndShowProvided(p_page_payment_qr);
+            }
+            curl_easy_cleanup(curl);
+            readBuffer = "";
+            break;
         }
-
-        curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/ping");
-        curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
-
-        res = curl_easy_perform(curl);
-        if (res != CURLE_OK)
+        case 1:
         {
-            qDebug() << "ERROR: Failed to reach soapstandportal. error code: " + QString::number(res);
-            hideCurrentPageAndShowProvided(p_page_wifi_error);
+            p_page_idle->thisMachine->setActivePaymentMethod(ActivePaymentMethod::tap_canada);
+            hideCurrentPageAndShowProvided(p_page_payment_tap_serial);
+            break;
         }
-        else
+        case 2:
         {
-            QString feedback = QString::fromUtf8(readBuffer.c_str());
-            qDebug() << "Server feedback readbuffer: " << feedback;
-
-            ui->label_invoice_price->text();
-            hideCurrentPageAndShowProvided(p_page_payment_qr);
+            p_page_idle->thisMachine->setActivePaymentMethod(ActivePaymentMethod::tap_usa);
+            hideCurrentPageAndShowProvided(p_page_payment_tap_tcp);
+            break;
         }
-        curl_easy_cleanup(curl);
-        readBuffer = "";
+        default:{
+            p_page_idle->thisMachine->setActivePaymentMethod(ActivePaymentMethod::receipt_printer);
+            hideCurrentPageAndShowProvided(p_page_dispense);
+            break;
+        }
     }
-    else if (paymentMethod == PAYMENT_TAP_TCP)
-    {
-        hideCurrentPageAndShowProvided(p_page_payment_tap_tcp);
-    }
-    else if (paymentMethod == PAYMENT_TAP_SERIAL)
-    {
-        hideCurrentPageAndShowProvided(p_page_payment_tap_serial);
-    }
-    else if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
-    {
-        hideCurrentPageAndShowProvided(p_page_dispense);
-    }
-    else
-    {
-        qDebug() << "WARNING: No payment method detected.";
-        hideCurrentPageAndShowProvided(p_page_dispense);
-    }
+    // else if (paymentMethod == PAYMENT_QR)
+    // {
+    //     CURL *curl;
+    //     CURLcode res;
+    //     curl = curl_easy_init();
+
+    //     if (!curl)
+    //     {
+    //         qDebug() << "page_product_overview: cURL failed init";
+    //         return;
+    //     }
+
+    //     curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/ping");
+    //     curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
+
+    //     res = curl_easy_perform(curl);
+    //     if (res != CURLE_OK)
+    //     {
+    //         qDebug() << "ERROR: Failed to reach soapstandportal. error code: " + QString::number(res);
+    //         hideCurrentPageAndShowProvided(p_page_wifi_error);
+    //     }
+    //     else
+    //     {
+    //         QString feedback = QString::fromUtf8(readBuffer.c_str());
+    //         qDebug() << "Server feedback readbuffer: " << feedback;
+
+    //         ui->label_invoice_price->text();
+    //         hideCurrentPageAndShowProvided(p_page_payment_qr);
+    //     }
+    //     curl_easy_cleanup(curl);
+    //     readBuffer = "";
+    // }
+    // else if (paymentMethod == PAYMENT_TAP_USA)
+    // {
+    //     hideCurrentPageAndShowProvided(p_page_payment_tap_tcp);
+    // }
+    // else if (paymentMethod == PAYMENT_TAP_CANADA)
+    // {
+    //     hideCurrentPageAndShowProvided(p_page_payment_tap_serial);
+    // }
+    // else if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
+    // {
+    //     hideCurrentPageAndShowProvided(p_page_dispense);
+    // }
+    // else
+    // {
+    //     qDebug() << "WARNING: No payment method detected.";
+    //     hideCurrentPageAndShowProvided(p_page_dispense);
+    // }
 }
 
 void page_product_overview::return_to_selectProductPage()
@@ -593,12 +726,13 @@ void page_product_overview::check_to_page_email()
 {
     double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
     double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
-    if (p_page_idle->thisMachine->getPaymentMethod() == PAYMENT_QR && (finalPrice == 0.0 || selectedPrice == 0.0))
-    {
+    if(finalPrice == 0.0 || selectedPrice== 0.0 ){
+        ui->pushButton_continue_additional->lower();
+        ui->pushButton_continue->setFixedSize(QSize(740,92));
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_free");
+
     }
-    else
-    {
-        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay");
-    }
+    // else{
+        // p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay");
+    // }
 }

@@ -4,6 +4,7 @@
 #include "df_util.h"
 #include "pnumberproduct.h"
 #include "dbmanager.h"
+#include <vector>
 
 typedef enum UserRole
 {
@@ -34,8 +35,15 @@ typedef enum StateReboot
     triggered_wait_for_delay,
     delay_elapsed,
     user_cancelled_reboot
-
 } StateReboot;
+
+typedef enum ActivePaymentMethod
+{
+    qr,
+    tap_canada,
+    tap_usa,
+    receipt_printer,
+} ActivePaymentMethod;
 
 class product; //  forward declaration.
 
@@ -149,6 +157,12 @@ public:
 
     StateReboot getRebootState();
     void setRebootState(StateReboot state);
+
+    ActivePaymentMethod getActivePaymentMethod();
+    void setActivePaymentMethod(ActivePaymentMethod paymentMethod);
+
+    std::vector<ActivePaymentMethod> getAllowedPaymentMethods();
+    void setAllowedPaymentMethods(ActivePaymentMethod paymentMethod);
 
     void setProducts(product *products);
 
@@ -269,7 +283,8 @@ private:
     double max_discount = 0.0;
     QString m_promoCode;
     StateReboot m_stateReboot;
-
+    ActivePaymentMethod m_activePaymentMethod;
+    std::vector<ActivePaymentMethod> allowedPaymentMethods;
     DbManager *m_db;
     UserRole active_role;
 

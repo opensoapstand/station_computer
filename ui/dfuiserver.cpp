@@ -68,7 +68,10 @@ void DfUiServer::noFlowAbortSlot()
 
 void DfUiServer::receiveTemperatureFromFsm(double temperature_1, double temperature_2)
 {
-    emit temperatureSignal(temperature_1, temperature_2);
+  emit temperatureSignal(temperature_1, temperature_2);
+    // emit temperatureSignal(temperature_1);
+    // emit temperatureSignal(temperature_2);
+
 }
 // void DfUiServer::receiveTemperature2FromFsm(double temperature2)
 // {

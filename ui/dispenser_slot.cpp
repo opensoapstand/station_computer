@@ -38,6 +38,26 @@ QVector<int> dispenser_slot::getAdditivePNumbers()
 {
     return m_additivePNumbers;
 }
+int dispenser_slot::getAdditivePNumber(int position)
+{
+    // position starts from 1
+    if (position == 0)
+    {
+        qDebug() << "Additive Position cannot be 0 , must start from 1.";
+        return DUMMY_PNUMBER;
+    }
+    if (position > getAdditiveCount())
+    {
+        qDebug() << "Additive not existing.";
+        return DUMMY_PNUMBER;
+    }
+    return m_additivePNumbers[position - 1];
+}
+
+int dispenser_slot::getAdditiveCount()
+{
+    return m_additivePNumbers.size();
+}
 
 int dispenser_slot::getBasePNumber()
 {
@@ -48,36 +68,37 @@ QVector<int> dispenser_slot::getAllPNumbers()
 {
 
     QSet<int> pnumbers; // Use a QSet to store unique pnumbers (i.e. no value can appear twice)
-    
 
-    for (const int &value : m_dispensePNumbers) {
+    for (const int &value : m_dispensePNumbers)
+    {
         pnumbers.insert(value);
     }
 
     // QVector<int> pnumbers(m_dispensePNumbers);
-    qDebug()<<"dispensePNumbers Count: " << m_dispensePNumbers.size();
-    qDebug()<<"dispensePNumbers Count: " << pnumbers.size();
+    qDebug() << "dispensePNumbers Count: " << m_dispensePNumbers.size();
+    qDebug() << "dispensePNumbers Count: " << pnumbers.size();
 
     // Copy elements from m_additivePNumbers
     for (int i = 0; i < m_additivePNumbers.size(); ++i)
     {
-       
-        pnumbers.insert(m_additivePNumbers[i]);
 
+        pnumbers.insert(m_additivePNumbers[i]);
     }
-    qDebug()<<"m_additivePNumbers Count: " << m_additivePNumbers.size();
+    qDebug() << "m_additivePNumbers Count: " << m_additivePNumbers.size();
 
     pnumbers.insert(m_basePNumber);
-    qDebug()<<"base pnumber value: " <<m_basePNumber;
-    qDebug() << pnumbers;
+    qDebug() << "base pnumber value: " << m_basePNumber;
+
     int option = 1;
-    foreach (const int &value, pnumbers) {
-        if (value < 0){
-            qDebug()<<"Assert error: pNumber invalid too low (" << value << " ) at option: " << option;
+    foreach (const int &value, pnumbers)
+    {
+        if (value < 0)
+        {
+            qDebug() << "Assert error: pNumber invalid too low (" << value << " ) at option: " << option;
         }
-        if (value > HIGHEST_PNUMBER_COUNT){
-            qDebug()<<"Assert error: pNumber invalid too high(" << value << " ) at option: " << option;
-            
+        if (value > HIGHEST_PNUMBER_COUNT)
+        {
+            qDebug() << "Assert error: pNumber invalid too high(" << value << " ) at option: " << option;
         }
         // std::cout << value << std::endl;
         option++;
@@ -86,7 +107,7 @@ QVector<int> dispenser_slot::getAllPNumbers()
     // qDebug()<<"size of all pnumbers: " <<pnumbers.size();
 
     // return pnumbers;
-     return QVector<int>::fromList(pnumbers.toList());
+    return QVector<int>::fromList(pnumbers.toList());
 }
 
 void dispenser_slot::loadSlotParametersFromDb()

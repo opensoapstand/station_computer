@@ -500,7 +500,9 @@ DF_ERROR messageMediator::parseCommandString()
 
       std::string ratios = sCommand.substr(found2 + 1, found3 - found2 - 1);
       debugOutput::sendMessage("Dispense Ratios : " + ratios, MSG_INFO);
-      m_machine->m_productDispensers[getRequestedSlot() - 1].setDispenseCommandCustomMixParameters(pnumbers, ratios);
+      m_machine->m_productDispensers[getRequestedSlot() - 1].setCustomMixParametersAsSelectedProduct(pnumbers, ratios);
+      int pnumber = m_machine->m_productDispensers[getRequestedSlot() - 1].getMixPNumberFromMixIndex(0);
+      m_machine->m_productDispensers[getRequestedSlot() - 1].setPNumberAsSingleDispenseSelectedProduct(pnumber);
    }
    else if (sCommand.find("Order") != string::npos)
    {
@@ -537,6 +539,8 @@ DF_ERROR messageMediator::parseCommandString()
       }
       m_promoCode = promoCode;
       debugOutput::sendMessage("Promo code" + m_promoCode, MSG_INFO);
+
+      m_machine->m_productDispensers[getRequestedSlot() - 1].setBasePNumberAsSingleDispenseSelectedProduct();
    }
    else if (sCommand.length() == 3)
    //  first_char == '1' ||

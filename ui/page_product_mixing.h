@@ -70,6 +70,9 @@ public:
     QLabel *orderSizeLabelsVolume[4];
     QLabel *orderSizeBackgroundLabels[4];
 
+    QVector<QPushButton*> minusButtonCollection;
+    QVector<QPushButton*> plusButtonCollection;
+
     explicit page_product_mixing(QWidget *parent = nullptr);
     void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_payment_tap_serial *page_payment_tap_serial, page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product_overview *page_Overview, statusbar *p_statusbar, page_product_menu *page_product_menu);
     ~page_product_mixing();
@@ -79,7 +82,8 @@ public:
     void showEvent(QShowEvent *event);
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void hideCurrentPageAndShowProductMenu();
-    int convert_additivePRatio_to_percentage(double additivePRatio);
+    int convertAdditivePRatioToPercentage(double additivePRatio);
+    bool isAdditiveEnabled(int index);
 signals:
     void paymentTotal(string, string, string);
 
@@ -97,6 +101,9 @@ private slots:
 
     void on_pushButton_order_medium_clicked();
 
+    void on_pushButton_additive_minus_1_clicked();
+    void on_pushButton_additive_plus_1_clicked();
+    void on_pushButton_additive_minus_clicked();
     // void loadProdSpecs();
 
 private:

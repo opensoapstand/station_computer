@@ -106,7 +106,7 @@ QVector<int> pnumberproduct::getMixPNumbers()
 
 QVector<double> pnumberproduct::getMixRatios()
 {
-    return m_mixRatios;
+    return m_mixRatiosDefault;
 }
 
 void pnumberproduct::loadProductPropertiesFromDb()
@@ -116,7 +116,7 @@ void pnumberproduct::loadProductPropertiesFromDb()
                                   &m_aws_product_id,
                                   &m_soapstand_product_serial,
                                   m_mixPNumbers,
-                                  m_mixRatios,
+                                  m_mixRatiosDefault,
                                   &m_size_unit,
                                   //   &m_currency_deprecated, //_dummy_deprecated
                                   //   &m_payment_deprecated,  //_deprecated,
@@ -564,3 +564,29 @@ void pnumberproduct::setDispenseSpeedPercentage(int percentage)
 //     // DO  NOT USE
 //     return m_payment_deprecated;
 // }
+
+void pnumberproduct::setDefaultAdditivesRatioModifier(int size){
+    m_additivesRatioModifier.clear();
+    for(int i = 0; i < size; i++){
+        m_additivesRatioModifier.append(1);
+        qDebug() << m_additivesRatioModifier[i];
+    }
+}
+
+void pnumberproduct::adjustAdditivesRatioModifier(int index, double additiveModifier){
+    m_additivesRatioModifier[index] = additiveModifier;
+
+    qDebug() << "222222222222222 ADJUST ADDITIVES RATIO MODIFIER";
+    for(int i = 0; i < m_additivesRatioModifier.size(); i++){
+        qDebug() << m_additivesRatioModifier[i];
+    }
+}
+
+QVector<double> pnumberproduct::getAdditivesRatioModifier()
+{
+    return m_additivesRatioModifier;
+}
+
+double pnumberproduct::getAdditivesRatioModifier(int index){
+    return m_additivesRatioModifier[index];
+}

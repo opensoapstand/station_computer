@@ -109,12 +109,19 @@ public:
     QString getStatusText();
     void setStatusText(QString statusText);
 
+    void setDefaultAdditivesRatioModifier(int size);
+    void adjustAdditivesRatioModifier(int index, double additiveModifier);
+    QVector<double> getAdditivesRatioModifier();
+    double getAdditivesRatioModifier(int index);
+
 private:
     int m_PNumber;
     int m_basePNumber;
     bool m_isBaseProduct; // 100%, no additives.
     QVector<int> m_mixPNumbers;
-    QVector<double> m_mixRatios;
+    QVector<double> m_mixRatiosDefault;
+    QVector<double> m_additivesRatioModifier;
+    QVector<double> m_mixRatiosCustom;
 
     int m_selected_size;
     double DispensedVolumeMl;

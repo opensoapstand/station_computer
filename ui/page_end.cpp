@@ -14,7 +14,8 @@
 #include "ui_page_end.h"
 #include "page_sendFeedback.h"
 
-// extern QString transactionLogging;
+extern QString transactionLogging;
+extern bool isFreeEmailOrder;
 
 // CTOR
 page_end::page_end(QWidget *parent) : QWidget(parent),
@@ -82,40 +83,70 @@ void page_end::showEvent(QShowEvent *event)
 
     p_page_idle->thisMachine->addClientLogoToLabel(ui->label_client_logo);
 
-    QString paymentMethod = p_page_idle->thisMachine->getPaymentMethod();
+    ActivePaymentMethod paymentMethod = p_page_idle->thisMachine->getActivePaymentMethod();
 
     ui->label_volume_dispensed_ml->setText("");
-
-    if (p_page_idle->thisMachine->hasReceiptPrinter())
-    {
-        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "hasReceiptPrinter");
-        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "hasReceiptPrinter2");
+    switch(paymentMethod){
+        case 0:
+        {
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "qr");
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "qr2");
+            is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
+            sendDispenseEndToCloud();
+        }
+        case 1:
+        case 2:{
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "qr");
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "qr2");
+            is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
+            break;
+        }
+        case 3:{
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "hasReceiptPrinter");
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "hasReceiptPrinter2");
+            is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
+            break;
+        }
+        default:{
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "any_pay");
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "any_pay2");
+            is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
+            break;
+        }
     }
-    else if (paymentMethod == PAYMENT_QR || paymentMethod == PAYMENT_TAP_TCP)
-    {
-        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "qr");
-        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "qr2");
-    }
-    else
-    {
-        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "any_pay");
-        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "any_pay2");
-    }
+    // if (p_page_idle->thisMachine->hasReceiptPrinter())
+    // {
+    //     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "hasReceiptPrinter");
+    //     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "hasReceiptPrinter2");
+    // }
+    // else if (paymentMethod == PAYMENT_QR || paymentMethod == PAYMENT_TAP_USA)
+    // {
+    //     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "qr");
+    //     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "qr2");
+    // }
+    // else
+    // {
+    //     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "any_pay");
+    //     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "any_pay2");
+    // }
 
     is_in_state_thank_you = true;
 
     is_controller_finished = false;
-    is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
+    // is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
     exitIsForceable = false;
 
-    if (paymentMethod == PAYMENT_QR)
-    {
-        sendDispenseEndToCloud();
-    }
-    else
-    {
-        is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
-    }
+    // if (isFreeEmailOrder)
+    // {
+    //     is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
+    // }
+    // else if(paymentMethod == PAYMENT_QR){
+    //     sendDispenseEndToCloud();
+    // }
+    // else
+    // {
+    //     is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
+    // }
     _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
     thankYouEndTimer->start();
 

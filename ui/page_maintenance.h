@@ -80,7 +80,7 @@ private:
     void showEvent(QShowEvent *event);
     Ui::page_maintenance *ui;
     page_idle* p_page_idle;
-    page_maintenance_dispenser* p_page_maintenance_product;
+    page_maintenance_dispenser* p_page_maintenance_dispenser;
     page_maintenance_general* p_page_maintenance_general;
     page_select_product* p_pageSelectProduct;
     page_product* p_page_product;

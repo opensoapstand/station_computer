@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
     qDebug() << "Constructor page_maintenance";
     page_maintenance *p_page_maintenance = new page_maintenance();
     qDebug() << "Constructor page_maintenance_dispenser";
-    page_maintenance_dispenser *p_page_maintenance_product = new page_maintenance_dispenser();
+    page_maintenance_dispenser *p_page_maintenance_dispenser = new page_maintenance_dispenser();
     qDebug() << "Constructor page_maintenance_general";
     page_maintenance_general *p_page_maintenance_general = new page_maintenance_general();
     qDebug() << "Constructor page_email";
@@ -229,10 +229,10 @@ int main(int argc, char *argv[])
     p_page_help->setPage(p_page_select_product, p_page_product, p_page_idle, p_page_payment_qr, p_page_transactions, p_page_maintenance, p_page_sendFeedback, p_statusbar);
     p_page_transactions->setPage(p_page_idle, p_statusbar);
     initPage->setPage(p_page_idle);
-    p_page_maintenance_product->setPage(p_page_maintenance, p_page_idle, p_page_idle_products, p_statusbar);
+    p_page_maintenance_dispenser->setPage(p_page_maintenance, p_page_idle, p_page_idle_products, p_statusbar);
 
     p_page_maintenance_general->setPage(p_page_maintenance, p_page_idle, p_page_idle_products, p_statusbar);
-    p_page_maintenance->setPage(p_page_idle, p_page_maintenance_product, p_page_maintenance_general, p_page_select_product, p_page_product, p_statusbar);
+    p_page_maintenance->setPage(p_page_idle, p_page_maintenance_dispenser, p_page_maintenance_general, p_page_select_product, p_page_product, p_statusbar);
     p_page_idle->setPage(p_page_select_product, p_page_maintenance, p_page_maintenance_general, p_page_idle_products, p_page_wifi_error, p_statusbar, p_page_product_menu);
     p_page_idle_products->setPage(p_page_idle, p_page_select_product);
     p_page_product_menu->setPage(p_page_product, p_page_product_mixing, p_page_idle_products, p_page_idle, p_page_maintenance, p_page_help, p_statusbar);
@@ -270,14 +270,14 @@ int main(int argc, char *argv[])
     QObject::connect(&dfUiServer, &DfUiServer::targetHit, p_page_dispense, &page_dispenser::fsmReceiveTargetVolumeReached);
     QObject::connect(&dfUiServer, &DfUiServer::noFlowAbort, p_page_dispense, &page_dispenser::fsmReceiveNoFlowAbort);
 
-    QObject::connect(&dfUiServer, &DfUiServer::signalUpdateVolume, p_page_maintenance_product, &page_maintenance_dispenser::fsmReceivedVolumeDispensed);
-    QObject::connect(&dfUiServer, &DfUiServer::signalDispenseStatus, p_page_maintenance_product, &page_maintenance_dispenser::fsmReceiveDispenserStatus);
-    QObject::connect(&dfUiServer, &DfUiServer::signalDispenseRate, p_page_maintenance_product, &page_maintenance_dispenser::fsmReceiveDispenseRate);
-    QObject::connect(&dfUiServer, &DfUiServer::dispenseButtonPressedPosEdgeSignal, p_page_maintenance_product, &page_maintenance_dispenser::fsmReceiveDispenseButtonPressedPositiveEdge);
-    QObject::connect(&dfUiServer, &DfUiServer::dispenseButtonPressedNegEdgeSignal, p_page_maintenance_product, &page_maintenance_dispenser::fsmReceiveDispenseButtonPressedNegativeEdge);
-    QObject::connect(&dfUiServer, &DfUiServer::targetHit, p_page_maintenance_product, &page_maintenance_dispenser::fsmReceiveTargetVolumeReached);
-    QObject::connect(&dfUiServer, &DfUiServer::noFlowAbort, p_page_maintenance_product, &page_maintenance_dispenser::fsmReceiveNoFlowAbort);
-    QObject::connect(&dfUiServer, &DfUiServer::temperatureSignal, p_page_maintenance_product, &page_maintenance_dispenser::fsmReceiveTemperature);
+    QObject::connect(&dfUiServer, &DfUiServer::signalUpdateVolume, p_page_maintenance_dispenser, &page_maintenance_dispenser::fsmReceivedVolumeDispensed);
+    QObject::connect(&dfUiServer, &DfUiServer::signalDispenseStatus, p_page_maintenance_dispenser, &page_maintenance_dispenser::fsmReceiveDispenserStatus);
+    QObject::connect(&dfUiServer, &DfUiServer::signalDispenseRate, p_page_maintenance_dispenser, &page_maintenance_dispenser::fsmReceiveDispenseRate);
+    QObject::connect(&dfUiServer, &DfUiServer::dispenseButtonPressedPosEdgeSignal, p_page_maintenance_dispenser, &page_maintenance_dispenser::fsmReceiveDispenseButtonPressedPositiveEdge);
+    QObject::connect(&dfUiServer, &DfUiServer::dispenseButtonPressedNegEdgeSignal, p_page_maintenance_dispenser, &page_maintenance_dispenser::fsmReceiveDispenseButtonPressedNegativeEdge);
+    QObject::connect(&dfUiServer, &DfUiServer::targetHit, p_page_maintenance_dispenser, &page_maintenance_dispenser::fsmReceiveTargetVolumeReached);
+    QObject::connect(&dfUiServer, &DfUiServer::noFlowAbort, p_page_maintenance_dispenser, &page_maintenance_dispenser::fsmReceiveNoFlowAbort);
+    QObject::connect(&dfUiServer, &DfUiServer::temperatureSignal, p_page_maintenance_dispenser, &page_maintenance_dispenser::fsmReceiveTemperature);
     QObject::connect(&dfUiServer, &DfUiServer::initReady, initPage, &page_init::initReadySlot);
 
     return mainApp.exec();

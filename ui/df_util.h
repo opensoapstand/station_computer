@@ -23,7 +23,7 @@
 #define SIZE_LARGE_INDEX 3
 #define SIZE_CUSTOM_INDEX 4
 #define SIZE_TEST_INDEX 5
-#define ADDITIVES_PER_SLOT_COUNT_MAX 10
+#define ADDITIVES_PER_SLOT_COUNT_MAX 5
 #define ADDITIVES_RATIO_INCREMENT 10
 
 #define MENU_BASE_OPTIONS_MAXIMUM 5
@@ -163,9 +163,12 @@ using namespace std;
 #define SEND_REPAIR_PCA "pcabugfix"
 #define SEND_DISPENSE_AUTOFILL "a"
 
-#define PAYMENT_TAP_SERIAL                              "tapSerial"
-#define PAYMENT_TAP_TCP                                 "tapTCP"
 #define PAYMENT_QR                                      "qr"
+#define PAYMENT_TAP_CANADA                              "tap_canada"
+#define PAYMENT_TAP_USA                                 "tap_usa"
+#define PAYMENT_TAP_CANADA_QR                           "tap_canada_qr"
+#define PAYMENT_TAP_USA_QR                              "tap_usa_qr"
+
 
 class df_util : public QWidget
 {

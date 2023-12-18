@@ -108,6 +108,8 @@ void page_qr_payment::showEvent(QShowEvent *event)
     ui->label_product_information->setStyleSheet(styleSheet);
     ui->label_gif->setStyleSheet(styleSheet);
 
+    msgBox = nullptr;
+
     state_payment = s_init;
     // double originalPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
     // if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar() == 'c')
@@ -117,8 +119,7 @@ void page_qr_payment::showEvent(QShowEvent *event)
     // QString price = QString::number(p_page_idle->thisMachine->getPriceWithDiscount(originalPrice), 'f', 2);
 
     int pnumber_selected = p_page_idle->thisMachine->getSelectedProduct()->getPNumber();
-    double price = p_page_idle->thisMachine->getPriceCorrectedForSelectedSize(pnumber_selected, true);
-
+    double price = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
 
     if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize() == SIZE_CUSTOM_INDEX)
     {
@@ -403,14 +404,15 @@ void page_qr_payment::onTimeoutTick()
 bool page_qr_payment::exitConfirm()
 {
     qDebug() << "In exit confirm";
-    QMessageBox msgBox;
+    // QMessageBox msgBox;
+    msgBox = new QMessageBox();
 
-    msgBox.setWindowFlags(Qt::FramelessWindowHint);
+    msgBox->setWindowFlags(Qt::FramelessWindowHint);
     QString searchString;
     if (state_payment == s_payment_processing || state_payment == s_payment_done)
     {
         searchString = this->objectName() + "->msgBox_cancel->default";
-        p_page_idle->thisMachine->setTextToObject(&msgBox, p_page_idle->thisMachine->getTemplateText(searchString));
+        p_page_idle->thisMachine->setTextToObject(msgBox, p_page_idle->thisMachine->getTemplateText(searchString));
     }
     else if (state_payment == s_init)
     {
@@ -422,30 +424,34 @@ bool page_qr_payment::exitConfirm()
     QString autoCloseText = QString("Closing in %1 seconds...").arg(remainingTime);
     QString messageBoxText = templateText + "\n" + autoCloseText;
 
-    msgBox.setText(messageBoxText);
+    msgBox->setText(messageBoxText);
 
     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_QR_PAYMENT_CSS);
-    msgBox.setProperty("class", "msgBoxbutton msgBox");
-    msgBox.setStyleSheet(styleSheet);
+    msgBox->setProperty("class", "msgBoxbutton msgBox");
+    msgBox->setStyleSheet(styleSheet);
 
-    QTimer *timeauto_timer = new QTimer(&msgBox);
-    QObject::connect(timeauto_timer, &QTimer::timeout, [&msgBox, &remainingTime, &templateText, timeauto_timer]()
+    QTimer *timeoutTimer = new QTimer(msgBox);
+    QObject::connect(timeoutTimer, &QTimer::timeout, [this, &remainingTime, &templateText, timeoutTimer]()
                      {
         remainingTime--;
         QString autoCloseText = QString("Closing in %1 seconds...").arg(remainingTime);
         QString messageBoxText = templateText + "\n" + autoCloseText;
-        msgBox.setText(messageBoxText);
+        msgBox->setText(messageBoxText);
+        msgBox->raise(); // not reproducable bug for Lode but, for UBC machine, the msgbox keeps focus but is set to background, so it's unclickable
         if (remainingTime <= 0) {
-            timeauto_timer->stop();
-            msgBox.hide();
-            msgBox.deleteLater();
+            timeoutTimer->stop();
+            msgBox->hide();
+            msgBox->deleteLater();
+            msgBox = nullptr;
         } });
 
-    timeauto_timer->start(1000); // Update every 1000 milliseconds (1 second)
+    timeoutTimer->start(1000); // Update every 1000 milliseconds (1 second)
 
-    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-    int ret = msgBox.exec();
-
+    msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    int ret = msgBox->exec();
+    msgBox = nullptr;
+    timeoutTimer->stop();
+    
     switch (ret)
     {
     case QMessageBox::Yes:
@@ -454,7 +460,7 @@ bool page_qr_payment::exitConfirm()
         return false;
     }
 
-    timeauto_timer->stop();
+    // WARNING: if messagbox still active while qr-page times out, it will still run in the background. 
     return false; // return false as default e.g. if message box timed out
 }
 
@@ -557,6 +563,13 @@ void page_qr_payment::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     resetPaymentPage();
     statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
+
+    if (msgBox != nullptr)
+    {
+        msgBox->hide();
+        msgBox->deleteLater();
+        msgBox = nullptr;
+    }
 }
 
 // Navigation: Back to Product Size Selection

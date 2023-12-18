@@ -79,7 +79,7 @@ signals:
 private slots:
     // **** Navigation ****
     void on_pushButton_previous_page_clicked();
-    void on_pushButton_continue_clicked();
+    void on_pushButton_continue(int);
 
     void on_lineEdit_promo_codeInput_clicked();
     void on_pushButton_select_product_page_clicked();

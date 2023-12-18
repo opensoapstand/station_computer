@@ -197,6 +197,8 @@ public:
     void disableAllSolenoidsOfSlot(uint8_t slot);
     void setSolenoidFromArray(uint8_t slot, uint8_t position, bool onElseOff);
     void setSpoutSolenoid(uint8_t slot, bool onElseOff);
+    void setAdditiveSolenoid(uint8_t slot, int additivePosition, bool onElseOff);
+    void setBaseSolenoid(uint8_t slot, bool onElseOff);
 
     void setFlowSensorTypeDefaults();
     void setFlowSensorType(uint8_t slot, FlowSensorType sensorType);

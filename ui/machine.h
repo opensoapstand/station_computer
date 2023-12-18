@@ -4,6 +4,7 @@
 #include "df_util.h"
 #include "pnumberproduct.h"
 #include "dbmanager.h"
+#include <vector>
 
 typedef enum UserRole
 {
@@ -34,8 +35,15 @@ typedef enum StateReboot
     triggered_wait_for_delay,
     delay_elapsed,
     user_cancelled_reboot
-
 } StateReboot;
+
+typedef enum ActivePaymentMethod
+{
+    qr,
+    tap_canada,
+    tap_usa,
+    receipt_printer,
+} ActivePaymentMethod;
 
 class product; //  forward declaration.
 
@@ -111,7 +119,9 @@ public:
     void setSlots(dispenser_slot *slotss);
     bool isSlotCountBiggerThanMaxSlotCount(int slot_count);
 
+    void setSelectedSlot(int slot);
     void setSelectedSlotFromSelectedProduct();
+    void setSelectedSlot();
     int getSlotFromBasePNumber(int base_pnumber);
     dispenser_slot *getSelectedSlot();
 
@@ -149,6 +159,12 @@ public:
 
     StateReboot getRebootState();
     void setRebootState(StateReboot state);
+
+    ActivePaymentMethod getActivePaymentMethod();
+    void setActivePaymentMethod(ActivePaymentMethod paymentMethod);
+
+    std::vector<ActivePaymentMethod> getAllowedPaymentMethods();
+    void setAllowedPaymentMethods(ActivePaymentMethod paymentMethod);
 
     void setProducts(product *products);
 
@@ -252,7 +268,7 @@ public slots:
 signals:
 
 private:
-    dispenser_slot *selectedSlot; // deprecated, derived from selectedProduct.
+    dispenser_slot *m_selectedSlot; // used for maintenance mode!!  , or derived from selectedProduct.
     pnumberproduct *m_selectedProduct;
     QVector<int> dispenseProductsMenuOptions;
     dispenser_slot *m_slots;
@@ -274,16 +290,20 @@ private:
     double max_discount = 0.0;
     QString m_promoCode;
     StateReboot m_stateReboot;
-
+    ActivePaymentMethod m_activePaymentMethod;
+    std::vector<ActivePaymentMethod> allowedPaymentMethods;
     DbManager *m_db;
     UserRole active_role;
 
     QString m_pump_id_slots[MAX_SLOT_COUNT];
     int m_is_enabled_slots[MAX_SLOT_COUNT];
     QString m_status_text_slots[MAX_SLOT_COUNT];
+<<<<<<< HEAD
     QString transactionLogging;
 
 
+=======
+>>>>>>> 5f510d546b209a64704b5c5b88e1ab39c0de4ed9
 };
 
 #endif // MACHINE_H

@@ -66,8 +66,8 @@ void machine::initProductDispensers()
         m_productDispensers[slot_index].initGlobalFlowsensorIO(IO_PIN_FLOW_SENSOR);
         setFlowSensorCallBack(slot_index + 1);
 
-        debugOutput::sendMessage("TEMPORARY HACK: base number is the selected product at startup. ", MSG_INFO);
-        m_productDispensers[slot_index].setBasePNumberAsSelectedProduct();
+        // debugOutput::sendMessage("TEMPORARY HACK: base number is the selected product at startup. ", MSG_INFO);
+        m_productDispensers[slot_index].setBasePNumberAsSingleDispenseSelectedProduct(); // as default, basePNumber is the active product.
     }
 }
 
@@ -118,6 +118,7 @@ pcb *machine::getPcb()
 
 void machine::refresh()
 {
+    
     control_pcb->pcb_refresh();
     // the pcb inputs are not interrupt driven. So, periodical updates are required
     for (uint8_t slot_index = 0; slot_index < PRODUCT_DISPENSERS_MAX; slot_index++)

@@ -298,12 +298,9 @@ private:
     QString m_pump_id_slots[MAX_SLOT_COUNT];
     int m_is_enabled_slots[MAX_SLOT_COUNT];
     QString m_status_text_slots[MAX_SLOT_COUNT];
-<<<<<<< HEAD
     QString transactionLogging;
 
 
-=======
->>>>>>> 5f510d546b209a64704b5c5b88e1ab39c0de4ed9
 };
 
 #endif // MACHINE_H

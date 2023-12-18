@@ -569,17 +569,11 @@ void pnumberproduct::setDefaultAdditivesRatioModifier(int size){
     m_additivesRatioModifier.clear();
     for(int i = 0; i < size; i++){
         m_additivesRatioModifier.append(1);
-        qDebug() << m_additivesRatioModifier[i];
     }
 }
 
 void pnumberproduct::adjustAdditivesRatioModifier(int index, double additiveModifier){
     m_additivesRatioModifier[index] = additiveModifier;
-
-    qDebug() << "222222222222222 ADJUST ADDITIVES RATIO MODIFIER";
-    for(int i = 0; i < m_additivesRatioModifier.size(); i++){
-        qDebug() << m_additivesRatioModifier[i];
-    }
 }
 
 QVector<double> pnumberproduct::getAdditivesRatioModifier()

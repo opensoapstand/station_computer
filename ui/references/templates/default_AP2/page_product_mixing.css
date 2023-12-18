@@ -17,7 +17,7 @@
 .additiveTitles{
    color: #221403;
    font-family: 'Lato';
-   font-size: 30px;
+   font-size: 24px;
    font-style: normal;
    font-weight: 700;
    line-height: normal;
@@ -26,14 +26,14 @@
 }
 
 .additiveBackgroundRows{
-   border-radius: 40px;
+   border-radius: 35px;
    background: #F9EBD8;
 }
 
 .additiveMinusButtonBackgrounds, .additivePlusButtonBackgrounds{
-   max-width: 60px;
-   max-height: 60px;
-   border-radius: 30px;
+   max-width: 55px;
+   max-height: 55px;
+   border-radius: 26px;
    background: #BC8439;
 }
 
@@ -81,12 +81,6 @@
    background: #FFF7ED; 
 }
 
-#label_sizes_background{
-   border-radius: 25px;
-   border: 1px solid #F9EBD8;
-   background: #FFF7ED; 
-}
-
 .orderSizeLabelsVolume {
    font-family: 'EuropaNuova-Regular';
    /* background-image: url(/home/df-admin/production/references/background.png); */
@@ -111,7 +105,7 @@
 }
 
 .orderSizeBackgroundLabels {
-   background-color: #FEFBF9;
+   background-color: #FFF7ED;
    border: 10px;
 }
 

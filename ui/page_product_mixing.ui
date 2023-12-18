@@ -33,7 +33,7 @@ line-height: 29px;</string>
    <property name="geometry">
     <rect>
      <x>215</x>
-     <y>1720</y>
+     <y>1740</y>
      <width>650</width>
      <height>100</height>
     </rect>
@@ -64,8 +64,8 @@ line-height: 29px;</string>
   <widget class="QLabel" name="label_price_custom">
    <property name="geometry">
     <rect>
-     <x>831</x>
-     <y>1500</y>
+     <x>847</x>
+     <y>1570</y>
      <width>113</width>
      <height>72</height>
     </rect>
@@ -97,8 +97,8 @@ text-align: center;
   <widget class="QLabel" name="label_price_large">
    <property name="geometry">
     <rect>
-     <x>561</x>
-     <y>1514</y>
+     <x>546</x>
+     <y>1584</y>
      <width>153</width>
      <height>36</height>
     </rect>
@@ -126,8 +126,8 @@ text-align: center;</string>
   <widget class="QLabel" name="label_size_custom">
    <property name="geometry">
     <rect>
-     <x>797</x>
-     <y>1465</y>
+     <x>813</x>
+     <y>1535</y>
      <width>180</width>
      <height>26</height>
     </rect>
@@ -152,8 +152,8 @@ text-align: center;
   <widget class="QLabel" name="label_size_large">
    <property name="geometry">
     <rect>
-     <x>561</x>
-     <y>1478</y>
+     <x>546</x>
+     <y>1548</y>
      <width>153</width>
      <height>26</height>
     </rect>
@@ -177,9 +177,9 @@ text-align: center;</string>
   <widget class="QPushButton" name="pushButton_order_small">
    <property name="geometry">
     <rect>
-     <x>525</x>
-     <y>1252</y>
-     <width>225</width>
+     <x>495</x>
+     <y>1322</y>
+     <width>255</width>
      <height>158</height>
     </rect>
    </property>
@@ -193,9 +193,9 @@ text-align: center;</string>
   <widget class="QPushButton" name="pushButton_order_big">
    <property name="geometry">
     <rect>
-     <x>525</x>
-     <y>1435</y>
-     <width>225</width>
+     <x>495</x>
+     <y>1505</y>
+     <width>255</width>
      <height>158</height>
     </rect>
    </property>
@@ -207,8 +207,8 @@ text-align: center;</string>
    <property name="geometry">
     <rect>
      <x>775</x>
-     <y>1252</y>
-     <width>225</width>
+     <y>1322</y>
+     <width>255</width>
      <height>158</height>
     </rect>
    </property>
@@ -223,8 +223,8 @@ text-align: center;</string>
    <property name="geometry">
     <rect>
      <x>775</x>
-     <y>1435</y>
-     <width>225</width>
+     <y>1505</y>
+     <width>255</width>
      <height>158</height>
     </rect>
    </property>
@@ -238,8 +238,8 @@ text-align: center;</string>
   <widget class="QLabel" name="label_size_medium">
    <property name="geometry">
     <rect>
-     <x>811</x>
-     <y>1295</y>
+     <x>826</x>
+     <y>1365</y>
      <width>153</width>
      <height>26</height>
     </rect>
@@ -263,8 +263,8 @@ text-align: center;</string>
   <widget class="QLabel" name="label_price_medium">
    <property name="geometry">
     <rect>
-     <x>811</x>
-     <y>1331</y>
+     <x>826</x>
+     <y>1401</y>
      <width>153</width>
      <height>36</height>
     </rect>
@@ -292,9 +292,9 @@ text-align: center;</string>
   <widget class="QLabel" name="label_size_small">
    <property name="geometry">
     <rect>
-     <x>561</x>
-     <y>1295</y>
-     <width>163</width>
+     <x>546</x>
+     <y>1365</y>
+     <width>153</width>
      <height>26</height>
     </rect>
    </property>
@@ -317,8 +317,8 @@ text-align: center;</string>
   <widget class="QLabel" name="label_price_small">
    <property name="geometry">
     <rect>
-     <x>561</x>
-     <y>1331</y>
+     <x>546</x>
+     <y>1401</y>
      <width>153</width>
      <height>36</height>
     </rect>
@@ -407,9 +407,9 @@ text-align: center;</string>
   <widget class="QLabel" name="label_background_small">
    <property name="geometry">
     <rect>
-     <x>525</x>
-     <y>1252</y>
-     <width>225</width>
+     <x>495</x>
+     <y>1322</y>
+     <width>255</width>
      <height>158</height>
     </rect>
    </property>
@@ -421,8 +421,8 @@ text-align: center;</string>
    <property name="geometry">
     <rect>
      <x>775</x>
-     <y>1252</y>
-     <width>225</width>
+     <y>1322</y>
+     <width>255</width>
      <height>158</height>
     </rect>
    </property>
@@ -433,9 +433,9 @@ text-align: center;</string>
   <widget class="QLabel" name="label_background_large">
    <property name="geometry">
     <rect>
-     <x>525</x>
-     <y>1435</y>
-     <width>225</width>
+     <x>495</x>
+     <y>1505</y>
+     <width>255</width>
      <height>158</height>
     </rect>
    </property>
@@ -447,8 +447,8 @@ text-align: center;</string>
    <property name="geometry">
     <rect>
      <x>775</x>
-     <y>1435</y>
-     <width>225</width>
+     <y>1505</y>
+     <width>255</width>
      <height>158</height>
     </rect>
    </property>
@@ -460,8 +460,8 @@ text-align: center;</string>
    <property name="geometry">
     <rect>
      <x>495</x>
-     <y>1150</y>
-     <width>414</width>
+     <y>1250</y>
+     <width>423</width>
      <height>47</height>
     </rect>
    </property>
@@ -511,32 +511,6 @@ text-align: center;</string>
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_sizes_background">
-   <property name="geometry">
-    <rect>
-     <x>495</x>
-     <y>1222</y>
-     <width>535</width>
-     <height>401</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">color: #5E8680;
-font-family: Montserrat;
-font-style: light;
-font-weight: normal;
-font-size: 20px;
-line-height: 24px;
-text-align: center;
-</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_additives_background">
    <property name="geometry">
     <rect>
@@ -566,10 +540,10 @@ text-align: center;
   <widget class="QLabel" name="label_additive_title_1">
    <property name="geometry">
     <rect>
-     <x>525</x>
-     <y>547</y>
+     <x>514</x>
+     <y>525</y>
      <width>475</width>
-     <height>36</height>
+     <height>29</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -599,10 +573,10 @@ text-align: center;
   <widget class="QLabel" name="label_additive_title_2">
    <property name="geometry">
     <rect>
-     <x>525</x>
-     <y>728</y>
-     <width>200</width>
-     <height>36</height>
+     <x>514</x>
+     <y>664</y>
+     <width>475</width>
+     <height>29</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -632,10 +606,10 @@ text-align: center;
   <widget class="QLabel" name="label_additive_title_3">
    <property name="geometry">
     <rect>
-     <x>783</x>
-     <y>728</y>
-     <width>200</width>
-     <height>36</height>
+     <x>515</x>
+     <y>803</y>
+     <width>475</width>
+     <height>29</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -665,10 +639,10 @@ text-align: center;
   <widget class="QLabel" name="label_additive_title_4">
    <property name="geometry">
     <rect>
-     <x>525</x>
-     <y>914</y>
-     <width>200</width>
-     <height>36</height>
+     <x>515</x>
+     <y>942</y>
+     <width>475</width>
+     <height>29</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -698,10 +672,10 @@ text-align: center;
   <widget class="QLabel" name="label_additive_title_5">
    <property name="geometry">
     <rect>
-     <x>783</x>
-     <y>914</y>
-     <width>200</width>
-     <height>36</height>
+     <x>515</x>
+     <y>1081</y>
+     <width>475</width>
+     <height>29</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -731,10 +705,10 @@ text-align: center;
   <widget class="QLabel" name="label_additive_background_row_1">
    <property name="geometry">
     <rect>
-     <x>525</x>
-     <y>598</y>
-     <width>475</width>
-     <height>80</height>
+     <x>514</x>
+     <y>569</y>
+     <width>515</width>
+     <height>75</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -764,10 +738,10 @@ text-align: center;
   <widget class="QLabel" name="label_additive_background_row_2">
    <property name="geometry">
     <rect>
-     <x>525</x>
-     <y>784</y>
-     <width>217</width>
-     <height>80</height>
+     <x>514</x>
+     <y>708</y>
+     <width>515</width>
+     <height>75</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -797,10 +771,10 @@ text-align: center;
   <widget class="QLabel" name="label_additive_background_row_3">
    <property name="geometry">
     <rect>
-     <x>783</x>
-     <y>784</y>
-     <width>217</width>
-     <height>80</height>
+     <x>515</x>
+     <y>847</y>
+     <width>515</width>
+     <height>75</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -830,10 +804,10 @@ text-align: center;
   <widget class="QLabel" name="label_additive_background_row_4">
    <property name="geometry">
     <rect>
-     <x>525</x>
-     <y>970</y>
-     <width>217</width>
-     <height>80</height>
+     <x>515</x>
+     <y>986</y>
+     <width>515</width>
+     <height>75</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -863,10 +837,10 @@ text-align: center;
   <widget class="QLabel" name="label_additive_background_row_5">
    <property name="geometry">
     <rect>
-     <x>783</x>
-     <y>970</y>
-     <width>217</width>
-     <height>80</height>
+     <x>515</x>
+     <y>1125</y>
+     <width>515</width>
+     <height>75</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -896,10 +870,10 @@ text-align: center;
   <widget class="QLabel" name="label_additive_minus_background_1">
    <property name="geometry">
     <rect>
-     <x>535</x>
-     <y>609</y>
-     <width>60</width>
-     <height>60</height>
+     <x>524</x>
+     <y>579</y>
+     <width>55</width>
+     <height>55</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -929,10 +903,10 @@ text-align: center;
   <widget class="QLabel" name="label_additive_minus_background_2">
    <property name="geometry">
     <rect>
-     <x>535</x>
-     <y>794</y>
-     <width>60</width>
-     <height>60</height>
+     <x>524</x>
+     <y>718</y>
+     <width>55</width>
+     <height>55</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -962,10 +936,10 @@ text-align: center;
   <widget class="QLabel" name="label_additive_minus_background_3">
    <property name="geometry">
     <rect>
-     <x>793</x>
-     <y>794</y>
-     <width>60</width>
-     <height>60</height>
+     <x>525</x>
+     <y>857</y>
+     <width>55</width>
+     <height>55</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -995,10 +969,10 @@ text-align: center;
   <widget class="QLabel" name="label_additive_minus_background_4">
    <property name="geometry">
     <rect>
-     <x>535</x>
-     <y>980</y>
-     <width>60</width>
-     <height>60</height>
+     <x>525</x>
+     <y>996</y>
+     <width>55</width>
+     <height>55</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -1028,10 +1002,10 @@ text-align: center;
   <widget class="QLabel" name="label_additive_minus_background_5">
    <property name="geometry">
     <rect>
-     <x>793</x>
-     <y>980</y>
-     <width>60</width>
-     <height>60</height>
+     <x>525</x>
+     <y>1135</y>
+     <width>55</width>
+     <height>55</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -1061,10 +1035,10 @@ text-align: center;
   <widget class="QPushButton" name="pushButton_additive_minus_1">
    <property name="geometry">
     <rect>
-     <x>535</x>
-     <y>609</y>
-     <width>60</width>
-     <height>60</height>
+     <x>524</x>
+     <y>579</y>
+     <width>55</width>
+     <height>55</height>
     </rect>
    </property>
    <property name="text">
@@ -1074,10 +1048,10 @@ text-align: center;
   <widget class="QPushButton" name="pushButton_additive_minus_2">
    <property name="geometry">
     <rect>
-     <x>535</x>
-     <y>794</y>
-     <width>60</width>
-     <height>60</height>
+     <x>524</x>
+     <y>718</y>
+     <width>55</width>
+     <height>55</height>
     </rect>
    </property>
    <property name="text">
@@ -1087,10 +1061,10 @@ text-align: center;
   <widget class="QPushButton" name="pushButton_additive_minus_3">
    <property name="geometry">
     <rect>
-     <x>793</x>
-     <y>794</y>
-     <width>60</width>
-     <height>60</height>
+     <x>525</x>
+     <y>857</y>
+     <width>55</width>
+     <height>55</height>
     </rect>
    </property>
    <property name="text">
@@ -1100,10 +1074,10 @@ text-align: center;
   <widget class="QPushButton" name="pushButton_additive_minus_4">
    <property name="geometry">
     <rect>
-     <x>535</x>
-     <y>980</y>
-     <width>60</width>
-     <height>60</height>
+     <x>525</x>
+     <y>996</y>
+     <width>55</width>
+     <height>55</height>
     </rect>
    </property>
    <property name="text">
@@ -1113,10 +1087,10 @@ text-align: center;
   <widget class="QPushButton" name="pushButton_additive_minus_5">
    <property name="geometry">
     <rect>
-     <x>793</x>
-     <y>980</y>
-     <width>60</width>
-     <height>60</height>
+     <x>525</x>
+     <y>1135</y>
+     <width>55</width>
+     <height>55</height>
     </rect>
    </property>
    <property name="text">
@@ -1126,8 +1100,8 @@ text-align: center;
   <widget class="QLabel" name="label_additive_plus_background_1">
    <property name="geometry">
     <rect>
-     <x>930</x>
-     <y>608</y>
+     <x>964</x>
+     <y>579</y>
      <width>60</width>
      <height>60</height>
     </rect>
@@ -1159,10 +1133,10 @@ text-align: center;
   <widget class="QLabel" name="label_additive_plus_background_2">
    <property name="geometry">
     <rect>
-     <x>672</x>
-     <y>794</y>
-     <width>60</width>
-     <height>60</height>
+     <x>964</x>
+     <y>718</y>
+     <width>55</width>
+     <height>55</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -1192,10 +1166,10 @@ text-align: center;
   <widget class="QLabel" name="label_additive_plus_background_3">
    <property name="geometry">
     <rect>
-     <x>930</x>
-     <y>794</y>
-     <width>60</width>
-     <height>60</height>
+     <x>965</x>
+     <y>857</y>
+     <width>55</width>
+     <height>55</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -1225,10 +1199,10 @@ text-align: center;
   <widget class="QLabel" name="label_additive_plus_background_4">
    <property name="geometry">
     <rect>
-     <x>672</x>
-     <y>980</y>
-     <width>60</width>
-     <height>60</height>
+     <x>965</x>
+     <y>996</y>
+     <width>55</width>
+     <height>55</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -1258,10 +1232,10 @@ text-align: center;
   <widget class="QLabel" name="label_additive_plus_background_5">
    <property name="geometry">
     <rect>
-     <x>930</x>
-     <y>980</y>
-     <width>60</width>
-     <height>60</height>
+     <x>965</x>
+     <y>1135</y>
+     <width>55</width>
+     <height>55</height>
     </rect>
    </property>
    <property name="layoutDirection">
@@ -1291,10 +1265,10 @@ text-align: center;
   <widget class="QPushButton" name="pushButton_additive_plus_1">
    <property name="geometry">
     <rect>
-     <x>930</x>
-     <y>608</y>
-     <width>60</width>
-     <height>60</height>
+     <x>964</x>
+     <y>579</y>
+     <width>55</width>
+     <height>55</height>
     </rect>
    </property>
    <property name="text">
@@ -1304,10 +1278,10 @@ text-align: center;
   <widget class="QPushButton" name="pushButton_additive_plus_2">
    <property name="geometry">
     <rect>
-     <x>672</x>
-     <y>794</y>
-     <width>60</width>
-     <height>60</height>
+     <x>964</x>
+     <y>718</y>
+     <width>55</width>
+     <height>55</height>
     </rect>
    </property>
    <property name="text">
@@ -1317,10 +1291,10 @@ text-align: center;
   <widget class="QPushButton" name="pushButton_additive_plus_3">
    <property name="geometry">
     <rect>
-     <x>930</x>
-     <y>794</y>
-     <width>60</width>
-     <height>60</height>
+     <x>965</x>
+     <y>857</y>
+     <width>55</width>
+     <height>55</height>
     </rect>
    </property>
    <property name="text">
@@ -1330,10 +1304,10 @@ text-align: center;
   <widget class="QPushButton" name="pushButton_additive_plus_4">
    <property name="geometry">
     <rect>
-     <x>672</x>
-     <y>980</y>
-     <width>60</width>
-     <height>60</height>
+     <x>965</x>
+     <y>996</y>
+     <width>55</width>
+     <height>55</height>
     </rect>
    </property>
    <property name="text">
@@ -1343,10 +1317,10 @@ text-align: center;
   <widget class="QPushButton" name="pushButton_additive_plus_5">
    <property name="geometry">
     <rect>
-     <x>930</x>
-     <y>980</y>
-     <width>60</width>
-     <height>60</height>
+     <x>965</x>
+     <y>1135</y>
+     <width>55</width>
+     <height>55</height>
     </rect>
    </property>
    <property name="text">
@@ -1357,8 +1331,8 @@ text-align: center;
    <property name="geometry">
     <rect>
      <x>733</x>
-     <y>620</y>
-     <width>59</width>
+     <y>591</y>
+     <width>77</width>
      <height>36</height>
     </rect>
    </property>
@@ -1389,9 +1363,9 @@ text-align: center;
   <widget class="QLabel" name="label_additive_percentage_2">
    <property name="geometry">
     <rect>
-     <x>604</x>
-     <y>807</y>
-     <width>59</width>
+     <x>734</x>
+     <y>730</y>
+     <width>77</width>
      <height>36</height>
     </rect>
    </property>
@@ -1422,9 +1396,9 @@ text-align: center;
   <widget class="QLabel" name="label_additive_percentage_3">
    <property name="geometry">
     <rect>
-     <x>862</x>
-     <y>807</y>
-     <width>59</width>
+     <x>734</x>
+     <y>869</y>
+     <width>77</width>
      <height>36</height>
     </rect>
    </property>
@@ -1455,9 +1429,9 @@ text-align: center;
   <widget class="QLabel" name="label_additive_percentage_4">
    <property name="geometry">
     <rect>
-     <x>604</x>
-     <y>993</y>
-     <width>59</width>
+     <x>734</x>
+     <y>1008</y>
+     <width>77</width>
      <height>36</height>
     </rect>
    </property>
@@ -1488,9 +1462,9 @@ text-align: center;
   <widget class="QLabel" name="label_additive_percentage_5">
    <property name="geometry">
     <rect>
-     <x>862</x>
-     <y>993</y>
-     <width>59</width>
+     <x>734</x>
+     <y>1147</y>
+     <width>77</width>
      <height>36</height>
     </rect>
    </property>
@@ -1518,7 +1492,6 @@ text-align: center;
     <bool>true</bool>
    </property>
   </widget>
-  <zorder>label_sizes_background</zorder>
   <zorder>label_help</zorder>
   <zorder>pushButton_continue</zorder>
   <zorder>label_product_title</zorder>

@@ -49,11 +49,13 @@ page_product_mixing::page_product_mixing(QWidget *parent) : QWidget(parent),
     additiveMinusButtons[2] = ui->pushButton_additive_minus_3;
     additiveMinusButtons[3] = ui->pushButton_additive_minus_4;
     additiveMinusButtons[4] = ui->pushButton_additive_minus_5;
-    minusButtonCollection.append(ui->pushButton_additive_minus_1);
-    minusButtonCollection.append(ui->pushButton_additive_minus_2);
-    minusButtonCollection.append(ui->pushButton_additive_minus_3);
-    minusButtonCollection.append(ui->pushButton_additive_minus_4);
-    minusButtonCollection.append(ui->pushButton_additive_minus_5);
+
+    QSignalMapper *minusButtonsMapper = new QSignalMapper(this);
+    connect(minusButtonsMapper, SIGNAL(mapped(int)), this, SLOT(additiveMinusButtonsPressed(int)));
+    for(int i = 0; i < 5; i++){
+        minusButtonsMapper->setMapping(additiveMinusButtons[i], i + 1);
+        connect(additiveMinusButtons[i], SIGNAL(clicked()), minusButtonsMapper, SLOT(map()));
+    }
 
     additivePlusButtonBackgrounds[0] = ui->label_additive_plus_background_1;
     additivePlusButtonBackgrounds[1] = ui->label_additive_plus_background_2;
@@ -66,11 +68,13 @@ page_product_mixing::page_product_mixing(QWidget *parent) : QWidget(parent),
     additivePlusButtons[2] = ui->pushButton_additive_plus_3;
     additivePlusButtons[3] = ui->pushButton_additive_plus_4;
     additivePlusButtons[4] = ui->pushButton_additive_plus_5;
-    plusButtonCollection.append(ui->pushButton_additive_plus_1);
-    plusButtonCollection.append(ui->pushButton_additive_plus_2);
-    plusButtonCollection.append(ui->pushButton_additive_plus_3);
-    plusButtonCollection.append(ui->pushButton_additive_plus_4);
-    plusButtonCollection.append(ui->pushButton_additive_plus_5);
+
+    QSignalMapper *plusButtonsMapper = new QSignalMapper(this);
+    connect(plusButtonsMapper, SIGNAL(mapped(int)), this, SLOT(additivePlusButtonsPressed(int)));
+    for(int i = 0; i < 5; i++){
+        plusButtonsMapper->setMapping(additivePlusButtons[i], i + 1);
+        connect(additivePlusButtons[i], SIGNAL(clicked()), plusButtonsMapper, SLOT(map()));
+    }
 
     additivePercentageLabels[0] = ui->label_additive_percentage_1;
     additivePercentageLabels[1] = ui->label_additive_percentage_2;
@@ -157,7 +161,6 @@ void page_product_mixing::showEvent(QShowEvent *event)
     ui->label_product_ingredients_title->setStyleSheet(styleSheet);
     ui->label_additives_background->setStyleSheet(styleSheet);
     ui->label_help->setStyleSheet(styleSheet);
-    ui->label_sizes_background->setStyleSheet(styleSheet);
     ui->pushButton_continue->setStyleSheet(styleSheet);
     // ui->pushButton_previous_page->setStyleSheet(styleSheet);
     ui->pushButton_to_help->setProperty("class", "button_transparent");
@@ -179,6 +182,7 @@ void page_product_mixing::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->getSelectedProduct()->setDefaultAdditivesRatioModifier(p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size() - 1);
     if(p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size() > 0){
         ui->label_additives_background->setText("");
+        ui->label_additives_background->hide();
         for (int j = 0; j < 5; j++){
             if(isAdditiveEnabled(j)){
                 additiveTitles[j]->setProperty("class", "additiveTitles");
@@ -221,7 +225,7 @@ void page_product_mixing::showEvent(QShowEvent *event)
             }
         }
     }else{
-        // ui->label_additives_background->hide();
+        ui->label_additives_background->show();
         p_page_idle->thisMachine->setTemplateTextToObject(ui->label_additives_background);
         for (uint8_t j = 0; j < 5; j++){
             additiveTitles[j]->hide();
@@ -605,45 +609,7 @@ void page_product_mixing::on_pushButton_back_clicked()
     hideCurrentPageAndShowProductMenu();
 }
 
-void page_product_mixing::on_pushButton_additive_minus_1_clicked()
-{
-    double additivePRatio = p_page_idle->thisMachine->getSelectedProduct()->getAdditivesRatioModifier(0);
-    int additiveRatioToPercentage = convertAdditivePRatioToPercentage(additivePRatio) - ADDITIVES_RATIO_INCREMENT;
-    if( additiveRatioToPercentage >= 0){
-        additivePercentageLabels[0]->setText(QString::number(additiveRatioToPercentage) + "%");
-        p_page_idle->thisMachine->getSelectedProduct()->adjustAdditivesRatioModifier(0, additiveRatioToPercentage / 100.0);
-    }else{
-        additiveRatioToPercentage = 0;
-        additivePercentageLabels[0]->setText(QString::number(additiveRatioToPercentage) + "%");
-        p_page_idle->thisMachine->getSelectedProduct()->adjustAdditivesRatioModifier(0, additiveRatioToPercentage / 100.0);
-    }
-}
-
-void page_product_mixing::on_pushButton_additive_minus_clicked()
-{
-    QPushButton *clickedButton = qobject_cast<QPushButton*>(sender());
-    if (clickedButton) {
-        qDebug() << "~~~~~~~~" << clickedButton->objectName();
-    }
-}
-
-void page_product_mixing::on_pushButton_additive_plus_1_clicked()
-{
-    double additivePRatio = p_page_idle->thisMachine->getSelectedProduct()->getAdditivesRatioModifier(0);
-    int additiveRatioToPercentage = convertAdditivePRatioToPercentage(additivePRatio) + ADDITIVES_RATIO_INCREMENT;
-    qDebug() << "@@@@@@@@@@@@@@@@@" << convertAdditivePRatioToPercentage(additivePRatio);
-    qDebug() << "$$$$$$$$$$$$$$$" << additiveRatioToPercentage / 100.0;
-    if( additiveRatioToPercentage <= 999){
-        additivePercentageLabels[0]->setText(QString::number(additiveRatioToPercentage) + "%");
-        p_page_idle->thisMachine->getSelectedProduct()->adjustAdditivesRatioModifier(0, additiveRatioToPercentage / 100.0);
-    }else{
-        additiveRatioToPercentage = 999;
-        additivePercentageLabels[0]->setText(QString::number(additiveRatioToPercentage) + "%");
-        p_page_idle->thisMachine->getSelectedProduct()->adjustAdditivesRatioModifier(0, additiveRatioToPercentage / 100.0);
-    }
-}
-
-int page_product_mixing::convertAdditivePRatioToPercentage(double additivePRatio)
+double page_product_mixing::convertAdditivePRatioToPercentage(double additivePRatio)
 {
     return additivePRatio * 100;
 } 
@@ -655,4 +621,29 @@ bool page_product_mixing::isAdditiveEnabled(int index){
     return index+1 <= p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size() - 1;
 }
 
+void page_product_mixing::additiveMinusButtonsPressed(int index){
+    double additivePRatio = p_page_idle->thisMachine->getSelectedProduct()->getAdditivesRatioModifier(index - 1);
+    double additiveRatioToPercentage = convertAdditivePRatioToPercentage(additivePRatio) - ADDITIVES_RATIO_INCREMENT;
+    if( additiveRatioToPercentage >= 0){
+        additivePercentageLabels[index - 1]->setText(QString::number(additiveRatioToPercentage) + "%");
+        p_page_idle->thisMachine->getSelectedProduct()->adjustAdditivesRatioModifier(index - 1, additiveRatioToPercentage / 100.0);
+    }else{
+        additiveRatioToPercentage = 0;
+        additivePercentageLabels[index - 1]->setText(QString::number(additiveRatioToPercentage) + "%");
+        p_page_idle->thisMachine->getSelectedProduct()->adjustAdditivesRatioModifier(index - 1, additiveRatioToPercentage / 100.0);
+    }
+}
+
+void page_product_mixing::additivePlusButtonsPressed(int index){
+    double additivePRatio = p_page_idle->thisMachine->getSelectedProduct()->getAdditivesRatioModifier(index - 1);
+    double additiveRatioToPercentage = convertAdditivePRatioToPercentage(additivePRatio) + ADDITIVES_RATIO_INCREMENT;
+    if( additiveRatioToPercentage <= 999){
+        additivePercentageLabels[index - 1]->setText(QString::number(additiveRatioToPercentage) + "%");
+        p_page_idle->thisMachine->getSelectedProduct()->adjustAdditivesRatioModifier(index - 1, additiveRatioToPercentage / 100.0);
+    }else{
+        additiveRatioToPercentage = 990;
+        additivePercentageLabels[index - 1]->setText(QString::number(additiveRatioToPercentage) + "%");
+        p_page_idle->thisMachine->getSelectedProduct()->adjustAdditivesRatioModifier(index - 1, additiveRatioToPercentage / 100.0);
+    }
+}
 

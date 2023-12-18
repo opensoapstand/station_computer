@@ -82,7 +82,7 @@ public:
     void showEvent(QShowEvent *event);
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void hideCurrentPageAndShowProductMenu();
-    int convertAdditivePRatioToPercentage(double additivePRatio);
+    double convertAdditivePRatioToPercentage(double additivePRatio);
     bool isAdditiveEnabled(int index);
 signals:
     void paymentTotal(string, string, string);
@@ -101,9 +101,8 @@ private slots:
 
     void on_pushButton_order_medium_clicked();
 
-    void on_pushButton_additive_minus_1_clicked();
-    void on_pushButton_additive_plus_1_clicked();
-    void on_pushButton_additive_minus_clicked();
+    void additiveMinusButtonsPressed(int index);
+    void additivePlusButtonsPressed(int index);
     // void loadProdSpecs();
 
 private:

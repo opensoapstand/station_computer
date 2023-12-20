@@ -26,7 +26,7 @@
 }
 
 .additiveBackgroundRows{
-   border-radius: 35px;
+   border-radius: 36px;
    background: #F9EBD8;
 }
 
@@ -79,6 +79,14 @@
    border-radius: 25px;
    border: 1px solid #F9EBD8;
    background: #FFF7ED; 
+   font-size: 64px;
+   font-family: 'Lato';
+   font-style: normal;
+   font-weight: 300;
+   line-height: 2.5;
+   qproperty-alignment: AlignLeft;
+   text-align: left;
+   padding: 190px 20px;
 }
 
 .orderSizeLabelsVolume {
@@ -125,6 +133,17 @@
    qproperty-alignment: AlignCenter;
    border: none;
    text-transform: capitalize;
+}
+
+#pushButton_recommended{
+   border-radius: 10px;
+   border: 3px solid #211403;
+   background: transparent;
+   font-family: 'Lato';
+   font-size: 24px;
+   font-style: normal;
+   font-weight: 400;
+   color: #211403;
 }
 
 

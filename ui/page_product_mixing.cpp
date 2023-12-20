@@ -160,8 +160,10 @@ void page_product_mixing::showEvent(QShowEvent *event)
     ui->label_product_ingredients->setStyleSheet(styleSheet);
     ui->label_product_ingredients_title->setStyleSheet(styleSheet);
     ui->label_additives_background->setStyleSheet(styleSheet);
+    ui->label_additives_background->setWordWrap(true);
     ui->label_help->setStyleSheet(styleSheet);
     ui->pushButton_continue->setStyleSheet(styleSheet);
+    ui->pushButton_recommended->setStyleSheet(styleSheet);
     // ui->pushButton_previous_page->setStyleSheet(styleSheet);
     ui->pushButton_to_help->setProperty("class", "button_transparent");
     ui->pushButton_to_help->setStyleSheet(styleSheet);
@@ -179,8 +181,8 @@ void page_product_mixing::showEvent(QShowEvent *event)
         orderSizeButtons[i]->setStyleSheet(styleSheet);
     }
 
-    p_page_idle->thisMachine->getSelectedProduct()->setDefaultAdditivesRatioModifier(p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size() - 1);
     if(p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size() > 0){
+        ui->pushButton_recommended->show();
         ui->label_additives_background->setText("");
         ui->label_additives_background->hide();
         for (int j = 0; j < 5; j++){
@@ -225,6 +227,7 @@ void page_product_mixing::showEvent(QShowEvent *event)
             }
         }
     }else{
+        ui->pushButton_recommended->hide();
         ui->label_additives_background->show();
         p_page_idle->thisMachine->setTemplateTextToObject(ui->label_additives_background);
         for (uint8_t j = 0; j < 5; j++){
@@ -268,7 +271,7 @@ void page_product_mixing::reset_and_show_page_elements()
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_select_quantity);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_product_ingredients_title);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_continue);
-
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_recommended);
     // ui->label_product_description->setWordWrap(true);
     ui->label_product_ingredients->setWordWrap(true);
     ui->pushButton_continue->hide();
@@ -414,15 +417,15 @@ void page_product_mixing::reset_and_show_page_elements()
             // if there is only one product size available, the continue button will show, it will then load this default size
             default_size = product_sizes[i];
 
-            // orderSizeButtons[i]->setFixedSize(QSize(xywh_size_buttons[i][2], xywh_size_buttons[i][3]));
-            // orderSizeButtons[i]->move(xywh_size_buttons[i][0], xywh_size_buttons[i][1]);
+            orderSizeButtons[i]->setFixedSize(QSize(xywh_size_buttons[i][2], xywh_size_buttons[i][3]));
+            orderSizeButtons[i]->move(xywh_size_buttons[i][0], xywh_size_buttons[i][1]);
 
-            // orderSizeBackgroundLabels[i]->setFixedSize(QSize(xywh_size_buttons[i][2], xywh_size_buttons[i][3]));
-            // orderSizeBackgroundLabels[i]->move(xywh_size_buttons[i][0], xywh_size_buttons[i][1]);
-            // orderSizeBackgroundLabels[i]->lower();
+            orderSizeBackgroundLabels[i]->setFixedSize(QSize(xywh_size_buttons[i][2], xywh_size_buttons[i][3]));
+            orderSizeBackgroundLabels[i]->move(xywh_size_buttons[i][0], xywh_size_buttons[i][1]);
+            orderSizeBackgroundLabels[i]->lower();
 
-            // orderSizeLabelsPrice[i]->move(xy_size_labels_price[i][0], xy_size_labels_price[i][1]);
-            // orderSizeLabelsVolume[i]->move(xy_size_labels_volume[i][0], xy_size_labels_volume[i][1]);
+            orderSizeLabelsPrice[i]->move(xy_size_labels_price[i][0], xy_size_labels_price[i][1]);
+            orderSizeLabelsVolume[i]->move(xy_size_labels_volume[i][0], xy_size_labels_volume[i][1]);
 
             if (product_sizes[i] == SIZE_CUSTOM_INDEX)
             {
@@ -478,12 +481,12 @@ void page_product_mixing::reset_and_show_page_elements()
                 if (large_volume_discount_is_enabled)
                 {
                     orderSizeLabelsPrice[i]->setText("$" + QString::number(price, 'f', 2) + "/" + "\n" + units + " \n>" + QString::number(min_volume_for_discount, 'f', 1) + units_discount_indication + " @ $" + QString::number(discount_price_per_liter, 'f', 2) + "/" + units);
-                    // orderSizeButtons[i]->setFixedSize(QSize(xywh_size_buttons[i][2], xywh_size_buttons[i][3] + 100));
-                    // orderSizeLabelsPrice[i]->setFixedSize(QSize(420, 101));
+                    orderSizeButtons[i]->setFixedSize(QSize(xywh_size_buttons[i][2], xywh_size_buttons[i][3] + 100));
+                    orderSizeLabelsPrice[i]->setFixedSize(QSize(180, 26));
                 }
                 else
                 {
-                    // orderSizeLabelsPrice[i]->setFixedSize(QSize(420, 50));
+                    orderSizeLabelsPrice[i]->setFixedSize(QSize(113, 72));
                     orderSizeLabelsPrice[i]->setText("$" + QString::number(price, 'f', 2) + "/" + "\n" + units);
                 }
             }
@@ -614,7 +617,6 @@ double page_product_mixing::convertAdditivePRatioToPercentage(double additivePRa
     return additivePRatio * 100;
 } 
 
-
 bool page_product_mixing::isAdditiveEnabled(int index){
     // 1st value in mix_pnumbers is the base pnumber which we do not care about for additives ratio
     // if within boundry return true
@@ -644,6 +646,17 @@ void page_product_mixing::additivePlusButtonsPressed(int index){
         additiveRatioToPercentage = 990;
         additivePercentageLabels[index - 1]->setText(QString::number(additiveRatioToPercentage) + "%");
         p_page_idle->thisMachine->getSelectedProduct()->adjustAdditivesRatioModifier(index - 1, additiveRatioToPercentage / 100.0);
+    }
+}
+
+void page_product_mixing::on_pushButton_recommended_clicked(){
+    p_page_idle->thisMachine->getSelectedProduct()->setDefaultAdditivesRatioModifier(p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size() - 1);
+    for (int j = 0; j < 5; j++){
+        if(isAdditiveEnabled(j)){
+            double additivePRatio = p_page_idle->thisMachine->getSelectedProduct()->getAdditivesRatioModifier(j);
+            QString additivePRatio_string = QString::number(convertAdditivePRatioToPercentage(additivePRatio));
+            additivePercentageLabels[j]->setText(additivePRatio_string + "%");
+        }
     }
 }
 

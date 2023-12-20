@@ -42,6 +42,7 @@ class page_product;
 class page_dispenser;
 class page_idle;
 class page_help;
+class page_product_mixing;
 
 namespace Ui {
 class page_qr_payment;
@@ -63,7 +64,7 @@ class page_qr_payment : public QWidget
 public:
     // **** GUI Setup ****
     explicit page_qr_payment(QWidget *parent = nullptr);
-    void setPage(page_product* p_page_product,page_error_wifi *pageWifiError, page_dispenser* page_dispenser, page_idle* pageIdle, page_help *pageHelp, statusbar *p_statusbar);
+    void setPage(page_product* p_page_product,page_error_wifi *pageWifiError, page_dispenser* page_dispenser, page_idle* pageIdle, page_help *pageHelp, statusbar *p_statusbar, page_product_mixing* p_page_product_mixing);
     ~page_qr_payment();
 
     void showEvent(QShowEvent *event);
@@ -95,6 +96,7 @@ private:
     page_help* p_page_help;
     page_error_wifi *p_page_wifi_error;
     statusbar *p_statusbar;
+    page_product_mixing *p_page_product_mixing;
 
     QString _paymentTimeLabel;
     int _pageTimeoutCounterSecondsLeft;

@@ -517,7 +517,7 @@ text-align: center;</string>
      <x>495</x>
      <y>522</y>
      <width>535</width>
-     <height>578</height>
+     <height>680</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -1492,6 +1492,19 @@ text-align: center;
     <bool>true</bool>
    </property>
   </widget>
+  <widget class="QPushButton" name="pushButton_recommended">
+   <property name="geometry">
+    <rect>
+     <x>852</x>
+     <y>447</y>
+     <width>177</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
   <zorder>label_help</zorder>
   <zorder>pushButton_continue</zorder>
   <zorder>label_product_title</zorder>
@@ -1554,6 +1567,7 @@ text-align: center;
   <zorder>pushButton_additive_plus_3</zorder>
   <zorder>pushButton_additive_plus_4</zorder>
   <zorder>pushButton_additive_plus_5</zorder>
+  <zorder>pushButton_recommended</zorder>
  </widget>
  <resources/>
  <connections/>

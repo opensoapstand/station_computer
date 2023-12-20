@@ -103,157 +103,151 @@ private slots:
 
     void additiveMinusButtonsPressed(int index);
     void additivePlusButtonsPressed(int index);
+    void on_pushButton_recommended_clicked();
     // void loadProdSpecs();
 
 private:
     // button positions
     uint16_t orderSizeButtons_xywh_dynamic_ui_all_sizes_available[4][4] = {
-        {560, 990, 135, 100}, // S
-        {706, 990, 135, 100}, // M
-        {852, 990, 135, 100}, // L
-        {560, 1100, 430, 115} // custom
+        {495, 1322, 255, 158}, // S
+        {775, 1322, 255, 158}, // M
+        {495, 1505, 255, 158}, // L
+        {775, 1505, 255, 158} // custom
     };
 
     uint16_t orderSizeButtons_xywh_dynamic_ui_small_available[4][4] = {
-        {564, 1088, 209, 126}, // S
+        {495, 1322, 255, 158}, // S
         {1, 1, 1, 1},          // M
         {1, 1, 1, 1},          // L
         {1, 1, 1, 1}           // custom
     };
 
     uint16_t orderSizeButtons_xywh_dynamic_ui_small_large_custom_available[4][4] = {
-        {564, 990, 209, 100}, // S
+        {495, 1322, 255, 158}, // S
         {1, 1, 1, 1},
-        {790, 990, 198, 100}, // L
-        {564, 1100, 424, 113} // custom
+        {775, 1322, 255, 158}, // L
+        {495, 1505, 255, 158} // custom
     };
 
     uint16_t orderSizeButtons_xywh_dynamic_ui_small_and_large_available[4][4] = {
-        {567, 1024, 198, 126}, // S
+        {495, 1322, 255, 158}, // S
         {1, 1, 1, 1},          // M
-        {788, 1024, 198, 126}, // L
+        {775, 1322, 255, 158}, // L
         {1, 1, 1, 1}           // custom
     };
     uint16_t orderSizeButtons_xywh_dynamic_ui_custom_available[4][4] = {
         {1, 1, 1, 1},
         {1, 1, 1, 1}, // M
         {1, 1, 1, 1},
-        {564, 1037, 424, 113} // custom
+        {495, 1322, 255, 158} // custom
         // {564, 1037, 424, 113} // custom
     };
     uint16_t orderSizeButtons_xywh_dynamic_ui_small_custom_available[4][4] = {
-        {560, 990, 430, 100}, // S
+        {495, 1322, 255, 158}, // S
         {1, 1, 1, 1},         // M
         {1, 1, 1, 1},
-        {560, 1100, 430, 115} // custom
+        {775, 1322, 255, 158} // custom
         // {564, 1037, 424, 113} // custom
     };
 
     uint16_t orderSizeButtons_xywh_dynamic_ui_large_custom_available[4][4] = {
         {1, 1, 1, 1},         // S
         {1, 1, 1, 1},         // M
-        {560, 990, 430, 100}, // L
-        {560, 1100, 430, 115} // custom
+        {495, 1322, 255, 158}, // L
+        {775, 1322, 255, 158} // custom
         // {564, 1037, 424, 113} // custom
     };
-
-    // labels of volume and price are different (and annoying)
-    uint16_t orderSizeButtons_xywh_static_product_page[4][4] = {
-        {564, 1088, 209, 126},
-        {1, 1, 1, 1},
-        {790, 1087, 198, 126},
-        {1, 1, 1, 1}};
-
+    
     uint16_t orderSizeVolumeLabels_xy_dynamic_ui_all_sizes_available[4][2] = {
-        {560, 1000}, // S vol
-        {710, 1000}, // M vol
-        {860, 1000}, // L vol
-        {570, 1110}  // custom col
+        {546, 1365}, // S vol
+        {826, 1365}, // M vol
+        {546, 1548}, // L vol
+        {813, 1535}  // custom col
     };
     uint16_t orderSizePriceLabels_xy_dynamic_ui_all_sizes_available[8][2] = {
-        {560, 1040}, // S price
-        {710, 1040}, // M price
-        {860, 1040}, // L price
-        {560, 1160}  // custom price
+        {546, 1401}, // S price
+        {826, 1401}, // M price
+        {546, 1584}, // L price
+        {847, 1570}  // custom price
     };
 
     uint16_t orderSizeVolumeLabels_xy_dynamic_ui_small_large_custom_available[8][2] = {
-        {605, 1000}, // S vol
+        {546, 1365}, // S vol
         {1, 1},      // M vol
-        {825, 1000}, // L vol
-        {570, 1110}  // custom col
+        {826, 1365}, // L vol
+        {532, 1530}  // custom col
     };
     uint16_t orderSizePriceLabels_xy_dynamic_ui_small_large_custom_available[8][2] = {
-        {605, 1040}, // S price
+        {546, 1401}, // S price
         {1, 1},      // M price
-        {825, 1040}, // L price
-        {560, 1160}  // custom price
+        {826, 1401}, // L price
+        {566, 1565}  // custom price
     };
 
     uint16_t orderSizeVolumeLabels_xy_dynamic_ui_custom_available[8][2] = {
         {1, 1},     // S vol
         {1, 1},     // M vol
         {1, 1},     // L vol
-        {570, 1047} // custom col
+        {532, 1347} // custom col
     };
     uint16_t orderSizePriceLabels_xy_dynamic_ui_custom_available[8][2] = {
         {1, 1},     // S price
         {1, 1},     // M price
         {1, 1},     // L price
-        {560, 1097} // custom price
+        {566, 1382} // custom price
     };
 
     uint16_t orderSizeVolumeLabels_xy_dynamic_ui_small_custom_available[8][2] = {
-        {710, 1000}, // S vol
+        {546, 1365}, // S vol
         {1, 1},      // M vol
         {1, 1},      // L vol
-        {570, 1110}  // custom col
+        {812, 1347}  // custom col
     };
 
     uint16_t orderSizePriceLabels_xy_dynamic_ui_small_custom_available[8][2] = {
-        {710, 1040}, // S price
+        {546, 1401}, // S price
         {1, 1},      // M price
         {1, 1},      // L price
-        {560, 1160}  // custom price
+        {846, 1382}  // custom price
     };
 
     uint16_t orderSizeVolumeLabels_xy_dynamic_ui_large_custom_available[8][2] = {
         {1, 1},      // S vol
         {1, 1},      // M vol
-        {710, 1000}, // L vol
-        {570, 1110}  // custom col
+        {546, 1365}, // L vol
+        {812, 1347}  // custom col
     };
 
     uint16_t orderSizePriceLabels_xy_dynamic_ui_large_custom_available[8][2] = {
         {1, 1},      // S price
         {1, 1},      // M price
-        {710, 1040}, // L price
-        {560, 1160}  // custom price
+        {546, 1401}, // L price
+        {846, 1382}  // custom price
     };
 
     uint16_t orderSizeVolumeLabels_xy_dynamic_ui_small_available[8][2] = {
-        {605, 1150}, // S vol
+        {546, 1365}, // S vol
         {1, 1},      // M vol
         {1, 1},      // L vol
         {1, 1}       // custom col
     };
     uint16_t orderSizePriceLabels_xy_dynamic_ui_small_available[8][2] = {
-        {605, 1110}, // S price
+        {546, 1401}, // S price
         {1, 1},      // M price
         {1, 1},      // L price
         {1, 1}       // custom price
     };
 
     uint16_t orderSizeVolumeLabels_xy_dynamic_ui_small_and_large_available[8][2] = {
-        {605, 1050}, // S vol
+        {546, 1365}, // S vol
         {1, 1},      // M vol
-        {825, 1050}, // L vol
+        {826, 1365}, // L vol
         {1, 1}       // custom col
     };
     uint16_t orderSizePriceLabels_xy_dynamic_ui_small_and_large_available[8][2] = {
-        {605, 1090}, // S price
+        {546, 1401}, // S price
         {1, 1},      // M price
-        {825, 1090}, // L price
+        {826, 1401}, // L price
         {1, 1}       // custom price
     };
     int product_sizes[4] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX};

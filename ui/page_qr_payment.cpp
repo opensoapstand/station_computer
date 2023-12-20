@@ -48,7 +48,7 @@ page_qr_payment::page_qr_payment(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference
  */
-void page_qr_payment::setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp, statusbar *p_statusbar)
+void page_qr_payment::setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp, statusbar *p_statusbar, page_product_mixing *p_page_product_mixing)
 {
     this->p_page_product = p_page_product;
     this->p_page_wifi_error = pageWifiError;
@@ -56,6 +56,7 @@ void page_qr_payment::setPage(page_product *p_page_product, page_error_wifi *pag
     this->p_page_idle = pageIdle;
     this->p_page_help = pageHelp;
     this->p_statusbar = p_statusbar;
+    this->p_page_product_mixing = p_page_product_mixing;
 }
 
 // DTOR
@@ -578,7 +579,8 @@ void page_qr_payment::on_pushButton_previous_page_clicked()
     qDebug() << "In previous page button";
     if (exitConfirm())
     {
-        hideCurrentPageAndShowProvided(p_page_product);
+        // hideCurrentPageAndShowProvided(p_page_product);
+        hideCurrentPageAndShowProvided(p_page_product_mixing);
     }
 }
 

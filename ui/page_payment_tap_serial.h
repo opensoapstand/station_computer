@@ -95,6 +95,7 @@ public:
         return merchantAddress;
     }
     bool tap_serial_initiate();
+    void getLanInfo();
 
     QTimer *readTimer;
     StatePaymentSerial state_payment;

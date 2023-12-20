@@ -609,6 +609,7 @@ void page_product_overview::on_pushButton_continue(int buttonID)
     if (selectedPrice == 0.0 || finalPrice == 0.0)
     {
         hideCurrentPageAndShowProvided(p_page_email);
+        return;
     }
     switch(activePaymentMethod){
         case 0:

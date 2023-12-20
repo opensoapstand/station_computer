@@ -45,7 +45,10 @@ page_product_overview->pushButton_select_product_page,←back
 page_product_overview->label_total,Total Amount
 page_product_overview->pushButton_continue->proceed_free,Proceed
 page_product_overview->pushButton_continue->proceed_pay,Proceed to Pay
-
+page_product_overview->pushButton_continue,Continue
+page_product_overview->pushButton_continue->proceed_pay_tap,Pay with TAP
+page_product_overview->pushButton_continue->proceed_pay_qr,Pay with QR
+page_product_overview->pushButton_continue_additional->proceed_pay_qr,Pay with QR
 
 # page_dispenser
 page_dispenser->label_to_refill,To Refill

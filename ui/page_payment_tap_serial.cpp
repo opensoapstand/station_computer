@@ -279,8 +279,8 @@ bool page_payment_tap_serial::tap_serial_initiate()
         pktResponded.clear();
     }
     else{
-        // resetDevice();
-        // sleep(45);
+        resetDevice();
+        sleep(45);
     }
 
     com.flushSerial();

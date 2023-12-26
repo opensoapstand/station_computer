@@ -75,7 +75,7 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     pingTapDeviceTimer = new QTimer(this);
     connect(pingTapDeviceTimer, SIGNAL(timeout()), this, SLOT(pingTapDevice()));
     // Set the ping timer to every 30 mins
-    pingTapDeviceTimer->start(30 * 60 * 1000); 
+    pingTapDeviceTimer->start(5 * 60 * 1000); 
 
     tappingBlockedUntilPrinterReply = false;
 }
@@ -448,6 +448,7 @@ void page_idle::onRebootNightlyTimeOutTimerTick()
                 thisMachine->setRebootState(wait_for_trigger);
                 _delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
                 stateScreenCheck = state_screen_check_not_initiated;
+                QString paymentMethod = thisMachine->getProduct(1)->getPaymentMethod(); 
                 QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -r 0";
                 system(qPrintable(command));
             }

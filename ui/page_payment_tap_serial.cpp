@@ -110,6 +110,18 @@ void page_payment_tap_serial::getLanInfo()
     com.flushSerial();
 }
 
+void page_payment_tap_serial::resetDevice()
+{
+    while (!paymentConnected)
+    {
+        paymentConnected = com.page_init();
+        sleep(1);
+    }
+    cout << "Device reboot" << endl;
+    pktToSend = paymentPacket.resetDevice();
+    sendToUX410();    
+}
+
 // Navigation: Back to Drink Size Selection
 void page_payment_tap_serial::on_pushButton_previous_page_clicked()
 {
@@ -266,6 +278,10 @@ bool page_payment_tap_serial::tap_serial_initiate()
         waitForUX410();
         pktResponded.clear();
     }
+    else{
+        // resetDevice();
+        // sleep(45);
+    }
 
     com.flushSerial();
     cout << "-----------------------------------------------" << endl;
@@ -353,6 +369,7 @@ bool page_payment_tap_serial::sendToUX410()
             return true;
         }
     }
+    // resetDevice();
     return false;
 }
 bool page_payment_tap_serial::waitForUX410()

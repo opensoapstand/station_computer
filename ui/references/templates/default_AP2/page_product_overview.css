@@ -48,11 +48,12 @@ QPushButton {
 .promoCode_valid{
     font-family: "Lato"; 
     font-style: normal; 
-    font-weight: 400; 
+    font-weight: 700; 
     font-size: 24px; 
     padding: 10px;
     color: #5E8580;
     border: 2px solid #58595B;
+    border-radius: 10px;
 }
 #pushButton_select_product_page{ 
     font-family: 'Lato';
@@ -177,21 +178,16 @@ QLabel {
 }
 
 .labelDiscount{
-    font-family: 'EuropaNuova-Regular';
+    font-family: 'Lato';
     font-style: normal;
     font-weight: 700;
-    font-size: 34px;
-    line-height: 28px;
-    color: #5E8580;
+    font-size: 30px;
+    color: #895E25;
     text-align: right;
 }
-.labelDiscountName{
-    font-family: 'EuropaNuova-Regular';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 34px;
-    line-height: 29px;
-    color: #221F20;
+.labelDiscountName, #label_discount_tag{
+    color: transparent;
+    background: transparent;
 }
 #label_total, #label_invoice_price_total{
     font-family: 'Lato';

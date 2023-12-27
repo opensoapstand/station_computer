@@ -132,7 +132,6 @@ void page_product_overview::showEvent(QShowEvent *event)
     ui->label_total->setStyleSheet(styleSheet);
     ui->label_gif->setStyleSheet(styleSheet);
     ui->line_invoice->setStyleSheet(styleSheet);
-    // ui->line_invoice->setStyleSheet(QString("background-color: #0000FF; border: 3px solid red;"));
     ui->pushButton_select_product_page->setStyleSheet(styleSheet);
 
     QString picturePath = p_page_idle->thisMachine->getSelectedProduct()->getProductPicturePath();
@@ -156,6 +155,9 @@ void page_product_overview::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_checkout_title);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_select_product_page);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_discount_tag);
+
+    QString coupon_icon_path = p_page_idle->thisMachine->getTemplatePathFromName(COUPON_ICON_UNAVAILABLE_PATH);
+    p_page_idle->thisMachine->addPictureToLabel(ui->label_coupon_icon, coupon_icon_path);
 
     QString keyboard = KEYBOARD_IMAGE_PATH;
     QString keyboard_picture_path = p_page_idle->thisMachine->getTemplatePathFromName(KEYBOARD_IMAGE_PATH);
@@ -314,7 +316,11 @@ void page_product_overview::reset_and_show_page_elements()
         qDebug() << "Coupon state: Coupon valid";
         p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_promo_code, "promoCode_valid", PAGE_PRODUCT_OVERVIEW_CSS);
         QString promo_code_input_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "lineEdit_promo_code->valid");
-        ui->lineEdit_promo_code->setText(promo_code_input_text);
+        QString entered_coupon_code = ui->lineEdit_promo_code->text().toUpper();
+        // ui->lineEdit_promo_code->setText(promo_code_input_text);
+        ui->lineEdit_promo_code->setText("Valid Coupon: " + entered_coupon_code);
+        QString coupon_icon_path = p_page_idle->thisMachine->getTemplatePathFromName(COUPON_ICON_AVAILABLE_PATH);
+        p_page_idle->thisMachine->addPictureToLabel(ui->label_coupon_icon, coupon_icon_path);
 
         ui->label_invoice_discount_amount->show();
         ui->label_invoice_discount_name->hide();
@@ -743,7 +749,7 @@ void page_product_overview::check_to_page_email()
     double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
     if(finalPrice == 0.0 || selectedPrice== 0.0 ){
         ui->pushButton_continue_additional->lower();
-        ui->pushButton_continue->setFixedSize(QSize(740,92));
+        ui->pushButton_continue->setFixedSize(QSize(740,100));
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_free");
 
     }

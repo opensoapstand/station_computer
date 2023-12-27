@@ -2373,6 +2373,22 @@ color: #58595B;
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="label_coupon_icon">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>1307</y>
+     <width>45</width>
+     <height>45</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
   <zorder>pushButton_continue</zorder>
   <zorder>label_help</zorder>
   <zorder>pushButton_continue_additional</zorder>
@@ -2399,6 +2415,7 @@ color: #58595B;
   <zorder>label_invoice_size_title</zorder>
   <zorder>label_invoice_coupon_title</zorder>
   <zorder>promoKeyboard</zorder>
+  <zorder>label_coupon_icon</zorder>
  </widget>
  <resources/>
  <connections/>

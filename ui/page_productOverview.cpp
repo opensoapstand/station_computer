@@ -105,6 +105,8 @@ void page_product_overview::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
 
     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_PRODUCT_OVERVIEW_CSS);
+    ui->label_page_title->setStyleSheet(styleSheet);
+    ui->label_checkout_title->setStyleSheet(styleSheet);
     ui->pushButton_promo_input->setStyleSheet(styleSheet);
     ui->lineEdit_promo_code->setProperty("class", "promoCode");
     ui->lineEdit_promo_code->setStyleSheet(styleSheet);
@@ -116,6 +118,8 @@ void page_product_overview::showEvent(QShowEvent *event)
     ui->label_discount_tag->setProperty("class", "labelDiscount");
     ui->label_invoice_discount_amount->setProperty("class", "labelDiscount");
 
+    ui->label_invoice_coupon_title->setStyleSheet(styleSheet);
+    ui->label_invoice_size_title->setStyleSheet(styleSheet);
     ui->label_invoice_name->setStyleSheet(styleSheet);
     ui->label_invoice_price->setStyleSheet(styleSheet);
     ui->label_invoice_price_total->setStyleSheet(styleSheet);
@@ -130,6 +134,8 @@ void page_product_overview::showEvent(QShowEvent *event)
     ui->line_invoice->setStyleSheet(styleSheet);
     ui->pushButton_select_product_page->setStyleSheet(styleSheet);
 
+    QString picturePath = p_page_idle->thisMachine->getSelectedProduct()->getProductPicturePath();
+    styleSheet.replace("%IMAGE_PATH%", picturePath);
     ui->label_product_photo->setStyleSheet(styleSheet);
     /* Hacky transparent button */
     ui->pushButton_previous_page->setProperty("class", "buttonBGTransparent");
@@ -143,8 +149,15 @@ void page_product_overview::showEvent(QShowEvent *event)
     ui->pushButton_to_help->setProperty("class", "buttonBGTransparent");
     ui->pushButton_to_help->setStyleSheet(styleSheet);
 
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->label_invoice_coupon_title);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->label_invoice_size_title);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->label_page_title);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->label_checkout_title);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_select_product_page);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_discount_tag);
+
+    QString coupon_icon_path = p_page_idle->thisMachine->getTemplatePathFromName(COUPON_ICON_UNAVAILABLE_PATH);
+    p_page_idle->thisMachine->addPictureToLabel(ui->label_coupon_icon, coupon_icon_path);
 
     QString keyboard = KEYBOARD_IMAGE_PATH;
     QString keyboard_picture_path = p_page_idle->thisMachine->getTemplatePathFromName(KEYBOARD_IMAGE_PATH);
@@ -179,13 +192,13 @@ void page_product_overview::showEvent(QShowEvent *event)
     if(numberOfPaymentMethods==1){
         ui->pushButton_continue->raise();
         ui->pushButton_continue_additional->lower();
-        ui->pushButton_continue->setFixedSize(QSize(740,92));
+        ui->pushButton_continue->setFixedSize(QSize(740,100));
         ui->pushButton_continue->setProperty("activePaymentMethod",paymentMethods[0]);
     }
     else if(numberOfPaymentMethods==2){
         ui->pushButton_continue->raise();
         ui->pushButton_continue_additional->raise();
-        ui->pushButton_continue->setFixedSize(QSize(360,92));
+        ui->pushButton_continue->setFixedSize(QSize(360,100));
         ui->pushButton_continue->setProperty("activePaymentMethod",paymentMethods[0]);
         ui->pushButton_continue_additional->setProperty("activePaymentMethod",paymentMethods[1]);
         switch(paymentMethods[1]){
@@ -249,8 +262,8 @@ void page_product_overview::reset_and_show_page_elements()
     qDebug() << "Reset and show page elements";
 
     QString bitmap_location;
-    p_page_idle->thisMachine->addPictureToLabel(ui->label_product_photo, p_page_idle->thisMachine->getSelectedProduct()->getProductPicturePath());
-    ui->label_selected_price->setText("$" + QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize(), 'f', 2));
+    // p_page_idle->thisMachine->addPictureToLabel(ui->label_product_photo, p_page_idle->thisMachine->getSelectedProduct()->getProductPicturePath());
+    // ui->label_selected_price->setText("$" + QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize(), 'f', 2));
     QString full_path = p_page_idle->thisMachine->getTemplatePathFromName(IMAGE_BUTTON_HELP);
     p_page_idle->thisMachine->addPictureToLabel(ui->label_help, full_path);
 
@@ -303,7 +316,11 @@ void page_product_overview::reset_and_show_page_elements()
         qDebug() << "Coupon state: Coupon valid";
         p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_promo_code, "promoCode_valid", PAGE_PRODUCT_OVERVIEW_CSS);
         QString promo_code_input_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "lineEdit_promo_code->valid");
-        ui->lineEdit_promo_code->setText(promo_code_input_text);
+        QString entered_coupon_code = ui->lineEdit_promo_code->text().toUpper();
+        // ui->lineEdit_promo_code->setText(promo_code_input_text);
+        ui->lineEdit_promo_code->setText("Valid Coupon: " + entered_coupon_code);
+        QString coupon_icon_path = p_page_idle->thisMachine->getTemplatePathFromName(COUPON_ICON_AVAILABLE_PATH);
+        p_page_idle->thisMachine->addPictureToLabel(ui->label_coupon_icon, coupon_icon_path);
 
         ui->label_invoice_discount_amount->show();
         ui->label_invoice_discount_name->hide();
@@ -732,7 +749,7 @@ void page_product_overview::check_to_page_email()
     double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
     if(finalPrice == 0.0 || selectedPrice== 0.0 ){
         ui->pushButton_continue_additional->lower();
-        ui->pushButton_continue->setFixedSize(QSize(740,92));
+        ui->pushButton_continue->setFixedSize(QSize(740,100));
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_free");
 
     }

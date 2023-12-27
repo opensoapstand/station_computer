@@ -1155,15 +1155,22 @@ void machine::addPictureToLabelCircle(QLabel *label, QString picturePath){
     if (df_util::pathExists(picturePath))
     {
         QPixmap picture(picturePath);
+        QPixmap mask(picture.size());
+        mask.fill(Qt::transparent);
 
+        // Draw smooth ellipse on mask
+        QPainter painter(&mask);
+        painter.setRenderHint(QPainter::Antialiasing);
+        painter.setBrush(QBrush(Qt::white));
+        painter.drawEllipse(0, 0, picture.width(), picture.height());
+
+        // Apply mask to picture
+        picture.setMask(mask.mask());
+
+        // Set a scaled pixmap to a w x h window keeping its aspect ratio
         int w = label->width();
         int h = label->height();
-        QRect *rct = new QRect(0, 0, w, h);
-        QRegion *reg = new QRegion(*rct, QRegion::Ellipse);
-        // // // set a scaled pixmap to a w x h window keeping its aspect ratio
-        picture = picture.transformed(QTransform());
         label->setPixmap(picture.scaled(w, h, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-        label->setMask(*reg);
     }
     else
     {

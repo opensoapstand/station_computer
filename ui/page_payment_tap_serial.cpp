@@ -117,7 +117,7 @@ void page_payment_tap_serial::resetDevice()
         paymentConnected = com.page_init();
         sleep(1);
     }
-    cout << "Device reboot" << endl;
+    qDebug() << "Device reboot" << endl;
     pktToSend = paymentPacket.resetDevice();
     sendToUX410();    
 }

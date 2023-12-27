@@ -107,7 +107,7 @@ private slots:
     void onRebootNightlyTimeOutTimerTick();
     void on_pushButton_reboot_nightly_clicked();
     void pingTapDevice();
-
+    void rebootTapDevice();
 private:
     Ui::page_idle *ui;
     page_select_product *p_pageSelectProduct;

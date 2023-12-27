@@ -31,8 +31,21 @@ page_select_product->pushButton_help_page,{"x": 940, "y": 35, "width": 75, "heig
 page_product->label_help,{"x": 940, "y": 35, "width": 75, "height": 75}
 page_product->pushButton_to_help,{"x": 940, "y": 35, "width": 75, "height": 75}
 
-page_product_overview->label_help,{"x": 940, "y": 35, "width": 75, "height": 75}
-page_product_overview->pushButton_to_help,{"x": 940, "y": 35, "width": 75, "height": 75}
+page_product_overview->label_help,{"x": 980, "y": 40, "width": 50, "height": 50}
+page_product_overview->pushButton_to_help,{"x": 980, "y": 30, "width": 75, "height": 75}
+page_product_overview->label_product_photo,{"x": 0, "y": 350, "width": 470, "height": 470}
+page_product_overview->label_invoice_box,{"x": 50, "y": 942, "width": 980, "height": 703}
+page_product_overview->label_invoice_price,{"x": 890, "y": 1012, "width": 110, "height": 36}
+page_product_overview->label_invoice_name,{"x": 80, "y": 1012, "width": 775, "height": 36}
+page_product_overview->line_invoice,{"x": 80, "y": 1484, "width": 920, "height": 5}
+page_product_overview->label_total,{"x": 80, "y": 1509, "width": 80, "height": 36}
+page_product_overview->label_invoice_price_total,{"x": 870, "y": 1509, "width": 130, "height": 36}
+page_product_overview->label_selected_volume,{"x": 152, "y": 1129, "width": 117, "height": 45}
+page_product_overview->lineEdit_promo_code,{"x": 145, "y": 1294, "width": 791, "height": 70}
+page_product_overview->pushButton_promo_input,{"x": 145, "y": 1294, "width": 791, "height": 70}
+page_product_overview->pushButton_continue,{"x": 188, "y": 1740, "width": 360, "height": 100}
+page_product_overview->pushButton_continue_additional,{"x": 568, "y": 1740, "width": 360, "height": 100}
+page_product_overview->promoKeyboard,{"x": 120, "y": 1374, "width": 841, "height": 364}
 
 page_email->label_help,{"x": 940, "y": 35, "width": 75, "height": 75}
 page_email->pushButton_to_help,{"x": 940, "y": 35, "width": 75, "height": 75}

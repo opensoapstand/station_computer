@@ -34,11 +34,11 @@ page_product_menu->label_dispense_products_section_title,2. Pick a drink
 
 #page_select_product
 page_select_product->label_pick_soap,Discover our Beverages
-page_select_product->pushButton_to_idle,←back
+page_select_product->pushButton_to_idle,←BACK
 page_select_product->no_text,
 
 # Page_product 
-page_product->pushButton_back,←back
+page_product->pushButton_back,←BACK
 
 #page_product_mixing
 page_product_mixing->pushButton_back,←BACK
@@ -51,7 +51,11 @@ page_product_mixing->custom_volume,Custom Volume
 page_product_mixing->pushButton_recommended,Recommended
 
 # page_product_overview
-page_product_overview->pushButton_select_product_page,←back
+page_product_overview->label_page_title,Your Order
+page_product_overview->label_checkout_title,Checkout
+page_product_overview->label_invoice_size_title,Size: 
+page_product_overview->label_invoice_coupon_title,Promo Code / Coupon
+page_product_overview->pushButton_select_product_page,←BACK
 page_product_overview->label_total,Total Amount
 page_product_overview->pushButton_continue->proceed_free,Proceed
 page_product_overview->pushButton_continue->proceed_pay,Proceed to Pay

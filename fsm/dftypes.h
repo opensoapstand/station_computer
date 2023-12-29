@@ -63,6 +63,8 @@
 //#define FLOWSENSOR_DEJITTER_MICROS 10000ULL  // AICHI flow sensor
 #define IO_PIN_BUTTON_4 410   // connector pin 36 for EN-29 pcb
 #define IO_PIN_ENABLE_24V 410 // connector pin 36 for EN-134 pcb
+#define IO_PIN_ENABLE_3point3V 389 // connector pin 28 for EN258 pcb
+#define IO_PIN_ENABLE_5V 338       // connector pin 12 for EN258 pcb
 
 #define PIC_PROGRAMMER_PIN_VPP 337
 #define PIC_PROGRAMMER_PIN_PGC 412

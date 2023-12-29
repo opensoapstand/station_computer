@@ -33,7 +33,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>940</y>
+     <y>970</y>
      <width>221</width>
      <height>61</height>
     </rect>
@@ -46,7 +46,7 @@
    <property name="geometry">
     <rect>
      <x>290</x>
-     <y>940</y>
+     <y>970</y>
      <width>221</width>
      <height>61</height>
     </rect>
@@ -59,7 +59,7 @@
    <property name="geometry">
     <rect>
      <x>290</x>
-     <y>1010</y>
+     <y>1040</y>
      <width>221</width>
      <height>61</height>
     </rect>
@@ -1351,7 +1351,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>850</y>
+     <y>880</y>
      <width>111</width>
      <height>17</height>
     </rect>
@@ -1457,7 +1457,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>870</y>
+     <y>900</y>
      <width>221</width>
      <height>61</height>
     </rect>
@@ -1470,7 +1470,7 @@
    <property name="geometry">
     <rect>
      <x>290</x>
-     <y>870</y>
+     <y>900</y>
      <width>221</width>
      <height>61</height>
     </rect>
@@ -1518,6 +1518,25 @@
     <string>wifi name</string>
    </property>
   </widget>
+  <widget class="QCheckBox" name="checkBox_enable_pcb_3point3V">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>840</y>
+     <width>911</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PCB 3.3V system power (experimental. No feedback from fsm. Toggle a few times, check with 3.3V light on pcb)</string>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="tristate">
+    <bool>false</bool>
+   </property>
+  </widget>
   <zorder>pushButton_back</zorder>
   <zorder>pushButton_minimize</zorder>
   <zorder>pushButton_reboot</zorder>
@@ -1547,6 +1566,7 @@
   <zorder>label_aws_port</zorder>
   <zorder>label_machine_id</zorder>
   <zorder>label_wifi_name</zorder>
+  <zorder>checkBox_enable_pcb_3point3V</zorder>
  </widget>
  <resources/>
  <connections/>

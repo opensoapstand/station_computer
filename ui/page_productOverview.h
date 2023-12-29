@@ -69,7 +69,7 @@ public:
     void showEvent(QShowEvent *event);
 
     void cancelTimers();
-
+    QString additivies_overview(QString product_additives_overview);
     void apply_promo_code(QString promocode);
     void check_to_page_email();
     bool m_readyToSendCoupon; 

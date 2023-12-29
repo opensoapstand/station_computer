@@ -63,6 +63,7 @@ page_product_overview->pushButton_continue,Continue
 page_product_overview->pushButton_continue->proceed_pay_tap,Pay with TAP
 page_product_overview->pushButton_continue->proceed_pay_qr,Pay with QR
 page_product_overview->pushButton_continue_additional->proceed_pay_qr,Pay with QR
+page_product_overview->label_selected_volume->custom_volume,Custom Volume (maximum: %1)
 
 # page_dispenser
 page_dispenser->label_to_refill,To Refill
@@ -77,7 +78,7 @@ page_help->pushButton_to_idle,←back
 page_help->pushButton_to_transactions,transactions→
 
 # page_sendFeedback
-page_sendFeedback->pushButton_previous_page,←back
+page_sendFeedback->pushButton_previous_page,←BACK
 page_sendFeedback->checkBox_1_Label,I love this, keep me in the loop.
 page_sendFeedback->checkBox_2_Label,User interface problem
 page_sendFeedback->checkBox_3_Label,Drink dispensing problem
@@ -88,9 +89,10 @@ page_sendFeedback->label_thanks_for_feedback,Thank you for <br> your feedback
 page_sendFeedback->pushButton_send,Send
 
 # page_qr_payment
-page_qr_payment->pushButton_previous_page,←back
-page_qr_payment->label_title->pay_by_phone,Pay by Phone
-page_qr_payment->label_steps,<style>        li:{margin-top:10px; margin-left: 5px;}        </style>        <ol>        <li><span class='tab'></span>Scan QR code with phone camera<br></li>        <li><span class='tab'></span>Click to open the link that appears<br></li>        <li><span class='tab'></span>Follow payment instructions on phone<br></li>        <li><span class='tab'></span>The station will proceed after payment<br></li>        <li><span class='tab'></span>Refill your beverage!</li>        </ol>        <style>        li:{margin-top:10px;}        </style>        <ol>       
+page_qr_payment->pushButton_previous_page,←BACK
+page_qr_payment->label_title->pay_by_phone,Scan to Pay
+page_qr_payment->label_scan->label_scan_1,QR Pay
+page_qr_payment->label_steps,<ol><li><span class='tab'></span>Scan QR code with phone camera</li>        <li><span class='tab'></span>Click to open the link that appears</li>        <li><span class='tab'></span>Follow payment instructions on phone</li>        <li><span class='tab'></span>The station will proceed after payment</li>        <li><span class='tab'></span>Refill your beverage!</li>        </ol>  
 
 # page_payment_tap_tcp
 page_payment_tap_tcp->pushButton_previous_page,←back

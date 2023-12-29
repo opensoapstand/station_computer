@@ -2389,6 +2389,22 @@ color: #58595B;
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="label_invoice_additives_overview">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>1073</y>
+     <width>920</width>
+     <height>45</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
   <zorder>pushButton_continue</zorder>
   <zorder>label_help</zorder>
   <zorder>pushButton_continue_additional</zorder>
@@ -2409,18 +2425,19 @@ color: #58595B;
   <zorder>label_product_photo</zorder>
   <zorder>label_gif</zorder>
   <zorder>pushButton_to_help</zorder>
-  <zorder>line_invoice</zorder>
   <zorder>label_page_title</zorder>
   <zorder>label_checkout_title</zorder>
   <zorder>label_invoice_size_title</zorder>
   <zorder>label_invoice_coupon_title</zorder>
-  <zorder>promoKeyboard</zorder>
   <zorder>label_coupon_icon</zorder>
+  <zorder>label_invoice_additives_overview</zorder>
+  <zorder>line_invoice</zorder>
+  <zorder>promoKeyboard</zorder>
  </widget>
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup"/>
   <buttongroup name="buttonGroup_continue"/>
+  <buttongroup name="buttonGroup"/>
  </buttongroups>
 </ui>

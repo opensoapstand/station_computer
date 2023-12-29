@@ -125,6 +125,10 @@ QLabel {
     /* qproperty-alignment: AlignCenter; */
     border: 2px solid #5E8580;
 }
+#label_invoice_additives_overview, #label_coupon_icon{
+    color: transparent;
+    background: transparent;
+}
 .labelOrderOverview{
     font-family: 'Montserrat';
     font-style: normal;
@@ -176,12 +180,14 @@ QLabel {
     border:8px solid #248C8C;
     border-radius: 20px;
 }
+#line_invoice{
+    border: none;
+}
 #label_product_photo {
     border: 2px solid #5E8580;
     background-image: url(%IMAGE_PATH%);
     background-repeat: no-repeat;
     background-size: contain;
 }
-#line_invoice{
-    border: none;
-}
+
+

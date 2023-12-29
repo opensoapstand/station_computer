@@ -35,64 +35,28 @@ page_product_overview->label_help,{"x": 980, "y": 40, "width": 50, "height": 50}
 page_product_overview->pushButton_to_help,{"x": 980, "y": 30, "width": 75, "height": 75}
 page_product_overview->label_product_photo,{"x": 0, "y": 350, "width": 470, "height": 470}
 page_product_overview->label_invoice_box,{"x": 50, "y": 942, "width": 980, "height": 703}
-page_product_overview->label_invoice_price,{"x": 890, "y": 1012, "width": 110, "height": 36}
-page_product_overview->label_invoice_name,{"x": 80, "y": 1012, "width": 775, "height": 36}
+page_product_overview->label_invoice_price,{"x": 750, "y": 1012, "width": 250, "height": 36}
+page_product_overview->label_invoice_name,{"x": 80, "y": 1012, "width": 655, "height": 36}
 page_product_overview->line_invoice,{"x": 80, "y": 1484, "width": 920, "height": 5}
 page_product_overview->label_invoice_discount_amount,{"x": 840, "y": 1233, "width": 160, "height": 36}
-page_product_overview->label_total,{"x": 80, "y": 1509, "width": 80, "height": 36}
-page_product_overview->label_invoice_price_total,{"x": 870, "y": 1509, "width": 130, "height": 36}
-page_product_overview->label_selected_volume,{"x": 152, "y": 1129, "width": 117, "height": 45}
+page_product_overview->label_total,{"x": 80, "y": 1509, "width": 500, "height": 36}
+page_product_overview->label_invoice_price_total,{"x": 750, "y": 1509, "width": 250, "height": 36}
+page_product_overview->label_selected_volume,{"x": 152, "y": 1129, "width": 470, "height": 45}
 page_product_overview->lineEdit_promo_code,{"x": 145, "y": 1294, "width": 791, "height": 70}
 page_product_overview->pushButton_promo_input,{"x": 145, "y": 1294, "width": 791, "height": 70}
 page_product_overview->pushButton_continue,{"x": 188, "y": 1740, "width": 360, "height": 100}
 page_product_overview->pushButton_continue_additional,{"x": 568, "y": 1740, "width": 360, "height": 100}
 page_product_overview->promoKeyboard,{"x": 120, "y": 1374, "width": 841, "height": 364}
 
-page_product_overview->a,{"x": 53, "y": 179, "width": 62, "height": 62}
-page_product_overview->b,{"x": 403, "y": 252, "width": 62, "height": 62}
-page_product_overview->backspace,{"x": 728, "y": 179, "width": 62, "height": 62}
-page_product_overview->c,{"x": 253, "y": 252, "width": 62, "height": 62}
-page_product_overview->d,{"x": 203, "y": 179, "width": 62, "height": 62}
-page_product_overview->done,{"x": 628, "y": 252, "width": 125, "height": 62}
-page_product_overview->e,{"x": 203, "y": 107, "width": 62, "height": 62}
-page_product_overview->f,{"x": 278, "y": 179, "width": 62, "height": 62}
-page_product_overview->g,{"x": 353, "y": 179, "width": 62, "height": 62}
-page_product_overview->h,{"x": 428, "y": 179, "width": 62, "height": 62}
-page_product_overview->i,{"x": 578, "y": 107, "width": 62, "height": 62}
-page_product_overview->j,{"x": 503, "y": 179, "width": 62, "height": 62}
-page_product_overview->k,{"x": 578, "y": 179, "width": 62, "height": 62}
-page_product_overview->l,{"x": 653, "y": 179, "width": 62, "height": 62}
-page_product_overview->label_keyboard_background,{"x": 0, "y": 0, "width": 841, "height": 364}
-page_product_overview->m,{"x": 553, "y": 252, "width": 62, "height": 62}
-page_product_overview->n,{"x": 478, "y": 252, "width": 62, "height": 62}
-page_product_overview->num0,{"x": 728, "y": 50, "width": 62, "height": 47}
-page_product_overview->num1,{"x": 53, "y": 50, "width": 62, "height": 47}
-page_product_overview->num2,{"x": 128, "y": 50, "width": 62, "height": 47}
-page_product_overview->num3,{"x": 203, "y": 50, "width": 62, "height": 47}
-page_product_overview->num4,{"x": 278, "y": 50, "width": 62, "height": 47}
-page_product_overview->num5,{"x": 353, "y": 50, "width": 62, "height": 47}
-page_product_overview->num6,{"x": 428, "y": 50, "width": 62, "height": 47}
-page_product_overview->num7,{"x": 503, "y": 50, "width": 62, "height": 47}
-page_product_overview->num8,{"x": 578, "y": 50, "width": 62, "height": 47}
-page_product_overview->num9,{"x": 653, "y": 50, "width": 62, "height": 47}
-page_product_overview->o,{"x": 653, "y": 107, "width": 62, "height": 62}
-page_product_overview->p,{"x": 728, "y": 107, "width": 62, "height": 62}
-page_product_overview->q,{"x": 53, "y": 107, "width": 62, "height": 62}
-page_product_overview->r,{"x": 278, "y": 107, "width": 62, "height": 62}
-page_product_overview->s,{"x": 128, "y": 179, "width": 62, "height": 62}
-page_product_overview->t,{"x": 353, "y": 107, "width": 62, "height": 62}
-page_product_overview->u,{"x": 503, "y": 107, "width": 62, "height": 62}
-page_product_overview->v,{"x": 328, "y": 252, "width": 62, "height": 62}
-page_product_overview->w,{"x": 128, "y": 107, "width": 62, "height": 62}
-page_product_overview->x,{"x": 178, "y": 252, "width": 62, "height": 62}
-page_product_overview->y,{"x": 428, "y": 107, "width": 62, "height": 62}
-page_product_overview->z,{"x": 103, "y": 252, "width": 62, "height": 62}
-
 page_email->label_help,{"x": 940, "y": 35, "width": 75, "height": 75}
 page_email->pushButton_to_help,{"x": 940, "y": 35, "width": 75, "height": 75}
 
 page_sendFeedback->label_help,{"x": 940, "y": 35, "width": 75, "height": 75}
 page_sendFeedback->pushButton_help_page,{"x": 940, "y": 35, "width": 75, "height": 75}
+
+page_qr_payment->label_title,{"x": 381, "y": 200, "width": 317, "height": 100}
+page_qr_payment->label_qrCode,{"x": 314, "y": 424, "width": 451, "height": 451}
+page_qr_payment->label_scan,{"x": 464, "y": 930, "width": 152, "height": 75}
 
 page_dispenser->label_indicate_active_spout,{"x":460,"y":1700,"isVisibleAtLoad":true}
 

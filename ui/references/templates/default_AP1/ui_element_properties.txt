@@ -24,7 +24,7 @@
 page_dispenser->label_indicate_active_spout,{"x":460,"y":1700,"isVisibleAtLoad":true}
 page_idle->label_show_temperature,{"x":10000}
 
-page_product_overview->label_discount_tag,{"x": 120, "y": 1175, "width": 185, "height": 34}
+page_product_overview->label_discount_tag,{"x": 130, "y": 1175, "width": 185, "height": 34}
 page_product_overview->label_gif,{"x": 440, "y": 960, "width": 200, "height": 200}
 page_product_overview->label_help,{"x": 478, "y": 1773, "width": 125, "height": 125}
 page_product_overview->label_invoice_box,{"x": 94, "y": 890, "width": 891, "height": 760}

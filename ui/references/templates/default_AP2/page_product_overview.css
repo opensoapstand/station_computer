@@ -51,7 +51,7 @@ QPushButton {
     font-weight: 700; 
     font-size: 24px; 
     padding: 10px;
-    color: #5E8580;
+    color: #895E25;
     border: 2px solid #58595B;
     border-radius: 10px;
 }
@@ -124,7 +124,6 @@ QLabel {
 
 #label_page_title{
     color: #211403;
-    text-align: center;
     font-family: 'El Messiri';
     font-size: 64px;
     font-style: normal;
@@ -176,7 +175,13 @@ QLabel {
     background: #FFF7ED;
     border-radius: 25px;
 }
-
+#label_invoice_additives_overview{
+    color: #211403;
+    font-family: 'Lato';
+    font-size: 30px;
+    font-weight: 400;
+    font-style: normal;
+}
 .labelDiscount{
     font-family: 'Lato';
     font-style: normal;
@@ -214,6 +219,7 @@ QLabel {
     font-style: normal;
     font-weight: 400;
     line-height: 45px;
+    qproperty-alignment: 'AlignVCenter | AlignLeft';
 }
 
 #line_invoice{

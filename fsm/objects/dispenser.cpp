@@ -136,6 +136,19 @@ DF_ERROR dispenser::setup(pcb *pcb, product *pnumbers)
     resetSelectedProductVolumeDispensed();
 }
 
+DF_ERROR dispenser::loadGeneralProperties()
+{
+    debugOutput::sendMessage("Dispenser: Load general properties:", MSG_INFO);
+    // ******* Sleep time between DB calls solved inconsistend readings from db!!!****
+    // debugOutput::sendMessage("TEMPORARY HACK: base number is the selected product at startup. ", MSG_INFO);
+    usleep(20000);
+    loadDispenserParametersFromDb();
+    usleep(20000);
+    analyseSlotState();
+    usleep(20000);
+    // setBasePNumberAsSingleDispenseSelectedProduct(); // as default, basePNumber is the active product.
+}
+
 void dispenser::refresh()
 {
 
@@ -204,7 +217,7 @@ void dispenser::setAdditiveFromPositionAsSingleDispenseSelectedProduct(int posit
 void dispenser::setBasePNumberAsSingleDispenseSelectedProduct()
 {
     setPNumberAsSingleDispenseSelectedProduct(getBasePNumber());
-    debugOutput::sendMessage("Dispenser: Set Base PNumber as selected product: " + std::to_string(getBasePNumber()), MSG_WARNING);
+    debugOutput::sendMessage("Dispenser: By default: One dispense product per slot. Set Base PNumber as selected product: " + std::to_string(getBasePNumber()), MSG_WARNING);
 }
 
 void dispenser::setPNumberAsSingleDispenseSelectedProduct(int pnumber)
@@ -348,17 +361,6 @@ product *dispenser::getActiveProduct()
     return &m_pnumbers[m_active_pnumber];
 }
 
-DF_ERROR dispenser::loadGeneralProperties()
-{
-    debugOutput::sendMessage("Dispenser: Load general properties:", MSG_INFO);
-    // ******* Sleep time between DB calls solved inconsistend readings from db!!!****
-    usleep(20000);
-    loadDispenserParametersFromDb();
-    usleep(20000);
-    analyseSlotState();
-    usleep(20000);
-}
-
 int dispenser::getSelectedPNumber()
 {
     return m_selected_pnumber;
@@ -460,7 +462,7 @@ bool dispenser::loadDispenserParametersFromDb()
         //       int* m_additive_pnumbers;
 
         dispenser::parseIntCsvString(dispense_numbers_str, m_dispense_pnumbers, m_dispense_pnumbers_count);
-        dispenser::parseIntCsvString(dispense_numbers_str, m_additive_pnumbers, m_additive_pnumbers_count);
+        dispenser::parseIntCsvString(additive_pnumbers_str, m_additive_pnumbers, m_additive_pnumbers_count);
 
         // debugOutput::sendMessage("feijwefijweifwejif : " + base_pnumber_str, MSG_INFO);
         if (base_pnumber_str.empty())
@@ -469,8 +471,22 @@ bool dispenser::loadDispenserParametersFromDb()
             // this is handy if we have a basic dispenser, like with soap, that only dispenses pure products. No mixings. No need to then have the same pnumber as base_pnumber
             m_base_pnumber = m_dispense_pnumbers[0];
         }
+        else
+        {
+            m_base_pnumber = std::stoi(base_pnumber_str);
+        }
 
-        debugOutput::sendMessage("INFO: loaded slot: " + std::to_string(m_slot) + " Base pnumber: " + std::to_string(m_base_pnumber), MSG_INFO);
+        debugOutput::sendMessage("Dispenser: loaded slot: " + std::to_string(m_slot) + " Base pnumber: " + std::to_string(m_base_pnumber), MSG_INFO);
+        debugOutput::sendMessage("Dispenser: additives: ", MSG_INFO);
+        for (int additivePosition = 1; additivePosition <= m_additive_pnumbers_count;additivePosition++)
+        {
+            debugOutput::sendMessage(std::to_string(additivePosition) + " : " + std::to_string(getAdditivePNumber(additivePosition)), MSG_INFO);
+        }
+        debugOutput::sendMessage("Dispenser: m_dispense_pnumbers: ", MSG_INFO);
+        for (int pos = 1; pos <= m_dispense_pnumbers_count ;pos++)
+        {
+            debugOutput::sendMessage(std::to_string(pos) + " : " + std::to_string(m_dispense_pnumbers[pos-1]), MSG_INFO);
+        }
     }
     else if (numberOfRecordsFound > 1)
     {
@@ -663,7 +679,7 @@ DF_ERROR dispenser::initActivePNumberDispense(double volume)
 
 DF_ERROR dispenser::startActivePNumberDispense()
 {
-    debugOutput::sendMessage("Dispenser: Start Active PNumber at slot " + to_string(this->m_slot), MSG_INFO);
+    debugOutput::sendMessage("Dispenser: Start Active PNumber: " + to_string(getActivePNumber()) + " At slot " + to_string(this->m_slot), MSG_INFO);
 
     // dispenseButtonTimingreset();
 
@@ -932,27 +948,32 @@ uint64_t dispenser::getButtonPressedCurrentPressMillis()
 
 void dispenser::setProductSolenoid(int pnumber, bool openElseClosed)
 {
-    bool found =false;
-    if (pnumber == getBasePNumber()){
+    bool found = false;
+    debugOutput::sendMessage("Set product solenoid for pnumber: " + to_string(pnumber) + " base pnumber: " + to_string(getBasePNumber()), MSG_INFO);
+    if (pnumber == getBasePNumber())
+    {
+        debugOutput::sendMessage("Dispenser: Base solenoid. Active: " + to_string(openElseClosed), MSG_INFO);
         m_pcb->setBaseSolenoid(this->m_slot, openElseClosed);
         found = true;
         return;
     }
 
     int additivePosition = 1;
-    while(additivePosition <= ADDITIVES_PER_SLOT_COUNT_MAX && !found){
-        if(pnumber == getAdditivePNumber(additivePosition)){
+    while (additivePosition <= m_additive_pnumbers_count && !found)
+    {
+        if (pnumber == getAdditivePNumber(additivePosition))
+        {
+            debugOutput::sendMessage("Dispenser: Additive solenoid at additive position: " + to_string(additivePosition) + ". Active: " + to_string(openElseClosed), MSG_INFO);
             m_pcb->setAdditiveSolenoid(this->m_slot, additivePosition, openElseClosed);
             found = true;
         }
         additivePosition++;
     }
 
-    if(!found){
+    if (!found)
+    {
         debugOutput::sendMessage("Dispenser: Solenoid not found!!!!", MSG_ERROR);
     }
-    
-
 }
 
 void dispenser::setActiveProductSolenoid(bool openElseClosed)
@@ -962,6 +983,7 @@ void dispenser::setActiveProductSolenoid(bool openElseClosed)
 
 void dispenser::setSpoutSolenoid(bool openElseClosed)
 {
+    debugOutput::sendMessage("Dispenser: Set spout solenoid. Active: " + to_string(openElseClosed), MSG_ERROR);
     m_pcb->setSpoutSolenoid(this->m_slot, openElseClosed);
 }
 

@@ -44,6 +44,18 @@ void machine::setup(product *pnumbers)
     switch_24V = new FSModdyseyx86GPIO(IO_PIN_ENABLE_24V);
     power24VEnabled = false;
     switch_24V->setPinAsInputElseOutput(false); // set as output
+
+    // gpio_odyssey controlPower3point3V(IO_PIN_ENABLE_3point3V);
+    // controlPower3point3V.setPinAsInputElseOutput(false);
+    // controlPower3point3V.writePin(true);
+
+    // 3.3V control power to the pcb. 
+    switch_3point3V = new FSModdyseyx86GPIO(IO_PIN_ENABLE_3point3V);
+    signal3point3VEnabled = false;
+    switch_3point3V->setPinAsInputElseOutput(false); // set as output
+    pcb3point3VPowerSwitch(true);
+   // switch_3point3V->writePin(true);
+
     syncSoftwareVersionWithDb();
     initProductDispensers();
     loadGeneralProperties();
@@ -65,9 +77,6 @@ void machine::initProductDispensers()
         m_productDispensers[slot_index].setSlot(slot_index + 1);
         m_productDispensers[slot_index].initGlobalFlowsensorIO(IO_PIN_FLOW_SENSOR);
         setFlowSensorCallBack(slot_index + 1);
-
-        // debugOutput::sendMessage("TEMPORARY HACK: base number is the selected product at startup. ", MSG_INFO);
-        m_productDispensers[slot_index].setBasePNumberAsSingleDispenseSelectedProduct(); // as default, basePNumber is the active product.
     }
 }
 
@@ -498,6 +507,20 @@ void machine::pcb24VPowerSwitch(bool enableElseDisable)
         power24VEnabled = enableElseDisable;
         switch_24V->writePin(power24VEnabled);
     }
+}
+
+bool machine::getPcb3point3VPowerSwitchStatus()
+{
+    return signal3point3VEnabled;
+}
+
+void machine::pcb3point3VPowerSwitch(bool enableElseDisable)
+{
+    // if (signal3point3VEnabled != enableElseDisable)
+    // {
+        signal3point3VEnabled = enableElseDisable;
+        switch_3point3V->writePin(signal3point3VEnabled);
+    // }
 }
 
 void machine::print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string char_units_formatted, string paymentMethod, string plu, string promoCode, bool sleep_until_printed)

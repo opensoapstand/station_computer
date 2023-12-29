@@ -85,6 +85,8 @@ private slots:
 
     void on_pushButton_restart_electronics_clicked();
 
+    void on_checkBox_enable_pcb_3point3V_clicked(bool checked);
+
 private:
     void showEvent(QShowEvent *event);
     Ui::page_maintenance_general *ui;

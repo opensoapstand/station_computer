@@ -209,7 +209,6 @@ private:
       int m_active_pnumber;
       int m_dispense_pnumbers [DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
       int m_additive_pnumbers [DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
-
       int m_custom_mix_pnumbers [DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
       int m_custom_mix_pnumbers_count;
       double m_custom_mix_ratios [DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];

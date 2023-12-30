@@ -23,7 +23,6 @@
 #include <sstream>
 #include <iomanip>
 
-
 using namespace std;
 
 machine::machine()
@@ -49,16 +48,16 @@ void machine::setup(product *pnumbers)
     // controlPower3point3V.setPinAsInputElseOutput(false);
     // controlPower3point3V.writePin(true);
 
-    // 3.3V control power to the pcb. 
+    // 3.3V control power to the pcb.
     switch_3point3V = new FSModdyseyx86GPIO(IO_PIN_ENABLE_3point3V);
     signal3point3VEnabled = false;
     switch_3point3V->setPinAsInputElseOutput(false); // set as output
     pcb3point3VPowerSwitch(true);
-   // switch_3point3V->writePin(true);
+    // switch_3point3V->writePin(true);
 
     syncSoftwareVersionWithDb();
     initProductDispensers();
-    loadGeneralProperties();
+    loadGeneralProperties(true);
 }
 
 int machine::getDispensersCount()
@@ -80,13 +79,16 @@ void machine::initProductDispensers()
     }
 }
 
-void machine::loadGeneralProperties()
+void machine::loadGeneralProperties(bool loadDispenserParameters)
 {
     loadMachineParametersFromDb();
     usleep(20000);
-    for (int slot_index = 0; slot_index < getDispensersCount(); slot_index++)
+    if (loadDispenserParameters)
     {
-        m_productDispensers[slot_index].loadGeneralProperties();
+        for (int slot_index = 0; slot_index < getDispensersCount(); slot_index++)
+        {
+            m_productDispensers[slot_index].loadGeneralProperties();
+        }
     }
 }
 
@@ -127,7 +129,7 @@ pcb *machine::getPcb()
 
 void machine::refresh()
 {
-    
+
     control_pcb->pcb_refresh();
     // the pcb inputs are not interrupt driven. So, periodical updates are required
     for (uint8_t slot_index = 0; slot_index < PRODUCT_DISPENSERS_MAX; slot_index++)
@@ -140,7 +142,7 @@ void machine::setFlowSensorCallBack(int slot)
 {
     // CALL THIS FOR EVERY ACTIVE PRODUCT CHANGE during a mixing dispense.
 
-    int slot_index = slot -1 ;
+    int slot_index = slot - 1;
     // control_pcb->registerFlowSensorTickCallback(std::bind(&dispenser::registerFlowSensorTickCallback, &m_productDispensers[slot_index]));
     m_productDispensers[slot_index].linkActiveProductVolumeUpdate();
 }
@@ -518,8 +520,8 @@ void machine::pcb3point3VPowerSwitch(bool enableElseDisable)
 {
     // if (signal3point3VEnabled != enableElseDisable)
     // {
-        signal3point3VEnabled = enableElseDisable;
-        switch_3point3V->writePin(signal3point3VEnabled);
+    signal3point3VEnabled = enableElseDisable;
+    switch_3point3V->writePin(signal3point3VEnabled);
     // }
 }
 

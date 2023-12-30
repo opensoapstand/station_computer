@@ -323,7 +323,7 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
     std::string coupon = m_pMessaging->getCouponCode();
     std::string button_press_duration = to_string(g_machine.m_productDispensers[m_slot_index].getButtonPressedTotalMillis());
     std::string dispense_button_count = to_string(g_machine.m_productDispensers[m_slot_index].getDispenseButtonPressesDuringDispensing());
-    std::string pnumber = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getPNumberAsPString();
+    std::string pnumberString = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getPNumberAsPString();
     double volume_remaining_converted;
     std::string dispensed_volume_units_converted;
     double dispensed_volume = ceil(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed());
@@ -340,7 +340,7 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
     volume_remaining_converted = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->convertVolumeMetricToDisplayUnits(volume_remaining);
     volume_remaining_units_converted_string = to_string(volume_remaining_converted);
 
-    std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&size_unit=" + units + "&price=" + price_string + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + end_time + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer&volume_remaining_ml=" + to_string(volume_remaining) + "&quantity_dispensed_ml=" + to_string(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed()) + "&volume_remaining=" + volume_remaining_units_converted_string + "&coupon=" + coupon + "&buttonDuration=" + button_press_duration + "&buttonTimes=" + dispense_button_count + "&pnumber=" + pnumber;
+    std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&size_unit=" + units + "&price=" + price_string + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + end_time + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer&volume_remaining_ml=" + to_string(volume_remaining) + "&quantity_dispensed_ml=" + to_string(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed()) + "&volume_remaining=" + volume_remaining_units_converted_string + "&coupon=" + coupon + "&buttonDuration=" + button_press_duration + "&buttonTimes=" + dispense_button_count + "&pnumber=" + pnumberString;
     char buffer[1080];
     strcpy(buffer, curl_param.c_str());
 
@@ -523,7 +523,8 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     std::string dispense_button_count = to_string(g_machine.m_productDispensers[m_slot_index].getDispenseButtonPressesDuringDispensing());
     std::string start_time = (g_machine.m_productDispensers[m_slot_index].getSelectedProductDispenseStartTime());
     std::string end_time = (g_machine.m_productDispensers[m_slot_index].getSelectedProductDispenseEndTime());
-    std::string pnumber = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getPNumberAsPString();
+    std::string pnumberPString = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getPNumberAsPString();
+    int pnumber = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getPNumber();
     double price;
     std::string price_string;
     std::string product_status;
@@ -597,7 +598,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     if (isValidTransaction)
     {
         std::string sql1;
-        sql1 = ("INSERT INTO transactions (product,quantity_requested,price,start_time,quantity_dispensed,end_time,volume_remaining,slot,button_duration,button_times,processed_by_backend,product_id, soapstand_product_serial) VALUES ('" + product_name + "'," + target_volume + "," + price_string + ",'" + start_time + "'," + dispensed_volume_str + ",'" + end_time + "'," + updated_volume_remaining_str + "," + to_string(m_slot) + "," + button_press_duration + "," + dispense_button_count + "," + to_string(false) + ",'" + product_id + "','" + pnumber + "');");
+        sql1 = ("INSERT INTO transactions (product,quantity_requested,price,start_time,quantity_dispensed,end_time,volume_remaining,slot,button_duration,button_times,processed_by_backend,product_id, soapstand_product_serial) VALUES ('" + product_name + "'," + target_volume + "," + price_string + ",'" + start_time + "'," + dispensed_volume_str + ",'" + end_time + "'," + updated_volume_remaining_str + "," + to_string(m_slot) + "," + button_press_duration + "," + dispense_button_count + "," + to_string(false) + ",'" + product_id + "','" + pnumberPString + "');");
         databaseUpdateSql(sql1, USAGE_DB_PATH);
     }
 

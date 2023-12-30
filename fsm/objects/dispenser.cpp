@@ -263,7 +263,7 @@ void dispenser::setCustomMixParametersAsSelectedProduct(string pnumbers, string 
             m_custom_mix_pnumbers[m_custom_mix_pnumbers_count] = custom_mix_pnumbers[i];
             m_custom_mix_ratios[m_custom_mix_pnumbers_count] = custom_mix_ratios[i];
 
-            debugOutput::sendMessage("Pnumber at position: " + std::to_string(i) + " P-" + std::to_string(m_custom_mix_pnumbers[m_custom_mix_pnumbers_count]) + " ratio: " + std::to_string(m_custom_mix_ratios[m_custom_mix_pnumbers_count]), MSG_INFO);
+            debugOutput::sendMessage("Mixing: Pnumber at mix position index: " + std::to_string(i) + " P-" + std::to_string(m_custom_mix_pnumbers[m_custom_mix_pnumbers_count]) + " ratio: " + std::to_string(m_custom_mix_ratios[m_custom_mix_pnumbers_count]), MSG_INFO);
 
             m_custom_mix_pnumbers_count++;
             m_custom_mix_ratios_count++;
@@ -434,12 +434,12 @@ bool dispenser::loadDispenserParametersFromDb()
     string base_pnumber_str;
     string dispense_numbers_str;
     string additive_pnumbers_str;
-    debugOutput::sendMessage("Dispenser load from db. Status : " + std::to_string(status) + " sql: " + sql_string, MSG_INFO);
+    debugOutput::sendMessage("Dispenser slot: "+ std::to_string(m_slot) + ". Load parameters from db. Status : " + std::to_string(status) + " sql: " + sql_string, MSG_INFO);
     while (status == SQLITE_ROW)
     {
         numberOfRecordsFound++;
 
-        debugOutput::sendMessage("Record found for slot : " + std::to_string(getSlot()), MSG_INFO);
+        // debugOutput::sendMessage("Record found for slot : " + std::to_string(getSlot()), MSG_INFO);
 
         dispense_numbers_str = product::dbFieldAsValidString(stmt, 1);
         base_pnumber_str = product::dbFieldAsValidString(stmt, 2);
@@ -455,16 +455,9 @@ bool dispenser::loadDispenserParametersFromDb()
     if (numberOfRecordsFound == 1)
     {
         slot_loaded_from_db = true;
-
-        // int ;
-        //       int* ;
-        //       int m_additive_pnumbers_count;
-        //       int* m_additive_pnumbers;
-
         dispenser::parseIntCsvString(dispense_numbers_str, m_dispense_pnumbers, m_dispense_pnumbers_count);
         dispenser::parseIntCsvString(additive_pnumbers_str, m_additive_pnumbers, m_additive_pnumbers_count);
 
-        // debugOutput::sendMessage("feijwefijweifwejif : " + base_pnumber_str, MSG_INFO);
         if (base_pnumber_str.empty())
         {
             // first dispense number in the list as base pnumber if base pnumber is empty.
@@ -476,13 +469,13 @@ bool dispenser::loadDispenserParametersFromDb()
             m_base_pnumber = std::stoi(base_pnumber_str);
         }
 
-        debugOutput::sendMessage("Dispenser: loaded slot: " + std::to_string(m_slot) + " Base pnumber: " + std::to_string(m_base_pnumber), MSG_INFO);
-        debugOutput::sendMessage("Dispenser: additives: ", MSG_INFO);
+        debugOutput::sendMessage("Base pnumber: " + std::to_string(m_base_pnumber), MSG_INFO);
+        debugOutput::sendMessage("Additives: ", MSG_INFO);
         for (int additivePosition = 1; additivePosition <= m_additive_pnumbers_count;additivePosition++)
         {
             debugOutput::sendMessage(std::to_string(additivePosition) + " : " + std::to_string(getAdditivePNumber(additivePosition)), MSG_INFO);
         }
-        debugOutput::sendMessage("Dispenser: m_dispense_pnumbers: ", MSG_INFO);
+        debugOutput::sendMessage("m_dispense_pnumbers: ", MSG_INFO);
         for (int pos = 1; pos <= m_dispense_pnumbers_count ;pos++)
         {
             debugOutput::sendMessage(std::to_string(pos) + " : " + std::to_string(m_dispense_pnumbers[pos-1]), MSG_INFO);

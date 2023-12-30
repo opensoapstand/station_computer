@@ -90,6 +90,10 @@ QPushButton {
    word-wrap:break-word;
 }
 
+#label_qr_background{
+   background: transparent;
+}
+
 #pushButton_previous_page{ 
    background-color: transparent; 
    font-family: 'Brevia';
@@ -137,5 +141,6 @@ QLabel {
    padding: 3px;
    text-align: center;
    /* border:8px solid #248C8C; */
+   qproperty-alignment: 'AlignVCenter | AlignCenter';
 }
 

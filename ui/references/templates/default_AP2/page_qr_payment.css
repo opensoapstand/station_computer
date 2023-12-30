@@ -4,10 +4,26 @@
 } */
 
 #label_product_price {
+   qproperty-alignment: 'AlignVCenter | AlignRight';
    text-align: right;
-   font-weight: 600;
-   /* font-style: normal; */
-   /* background-color: red; */
+   font-weight: 700;
+   font-size: 30px;
+   font-family: 'Lato';
+   color: #211403;
+   font-style: normal;
+}
+
+#label_product_information{
+   font-weight: 700;
+   font-size: 30px;
+   font-family: 'Lato';
+   color: #211403;
+   font-style: normal;
+}
+
+#label_qr_background{
+   border-radius: 25px;
+   background: #FFF7ED;
 }
 
 QPushButton {
@@ -48,37 +64,37 @@ QPushButton {
    font-size: 64px;
    text-align: center;
    color: #221F20;
+   qproperty-alignment: AlignCenter;
 }
 
 #label_scan {
    font-family: 'El Messiri';
    color: #895E25;
+   font-size: 40px;
+   font-style: normal;
+   font-weight: 700;
+   qproperty-alignment: 'AlignVCenter | AlignCenter';
+}
+
+#label_steps {
+   color: black;
+   font-family: 'El Messiri';
+   font-size: 30px;
+   font-style: normal;
+   font-weight: 700;
+}
+
+#label_processing {
+   color: #895E25;
+   qproperty-alignment: AlignCenter;
+   font-family: 'El Messiri';
    font-size: 48px;
    font-style: normal;
    font-weight: 700;
 }
 
-#label_steps {
-   position: absolute;
-   font-family: 'EuropaNuova-ExtraBold';
-   font-style: normal;
-   font-weight: 400;
-   font-size: 36px;
-   color: #58595B;
-}
-
-#label_processing {
-   position: absolute;
-   width: 777px;
-   height: 306px;
-   left: 143px;
-   top: 1029px;
-   font-family: 'EuropaNuova-ExtraBold';
-   font-style: normal;
-   font-weight: 400;
-   font-size: 36px;
-   line-height: 51px;
-   color: #221F20;
+#label_gif{
+   qproperty-alignment: 'AlignVCenter | AlignCenter';
 }
 
 QMessageBox {

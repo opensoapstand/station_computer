@@ -785,8 +785,11 @@ void page_product_overview::on_pushButton_continue(int buttonID)
 
 void page_product_overview::return_to_selectProductPage()
 {
-    // hideCurrentPageAndShowProvided(p_page_product);
-    hideCurrentPageAndShowProvided(p_page_product_mixing);
+    if(p_page_idle->thisMachine->m_template == "default_AP2"){
+        hideCurrentPageAndShowProvided(p_page_product_mixing);
+    }else{
+        hideCurrentPageAndShowProvided(p_page_product);
+    }
 }
 
 void page_product_overview::on_pushButton_select_product_page_clicked()

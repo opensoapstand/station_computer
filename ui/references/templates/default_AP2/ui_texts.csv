@@ -92,16 +92,18 @@ page_sendFeedback->pushButton_send,Send
 page_qr_payment->pushButton_previous_page,←BACK
 page_qr_payment->label_title->pay_by_phone,Scan to Pay
 page_qr_payment->label_scan->label_scan_1,QR Pay
+page_qr_payment->label_scan->finalize_transaction,\n Please follow the instructions in <br>your phone browser
 page_qr_payment->label_steps,<ol><li><span class='tab'></span>Scan QR code with phone camera</li>        <li><span class='tab'></span>Click to open the link that appears</li>        <li><span class='tab'></span>Follow payment instructions on phone</li>        <li><span class='tab'></span>The station will proceed after payment</li>        <li><span class='tab'></span>Refill your beverage!</li>        </ol>  
 
 # page_payment_tap_tcp
-page_payment_tap_tcp->pushButton_previous_page,←back
+page_payment_tap_tcp->pushButton_previous_page,←BACK
 
 # page_payment_tap_serial
-page_payment_tap_serial->pushButton_previous_page,←back
+page_payment_tap_serial->pushButton_previous_page,←BACK
+page_payment_tap_serial->animated_Label->cancel,Please wait a moment to choose another product
 
 # page_email
-page_email->pushButton_to_product_overview,←back
+page_email->pushButton_to_product_overview,←BACK
 page_email->label_email_title,To dispense free sample<br>Please kindly enter your email address
 page_email->keyboardTextEntry->email_placeholder,Please enter your email address
 page_email->keyboardTextEntry->invalid,Incorrect email address, please enter valid email address

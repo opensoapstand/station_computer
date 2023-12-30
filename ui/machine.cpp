@@ -1075,7 +1075,6 @@ void machine::setActivePaymentMethod(ActivePaymentMethod paymentMethod)
 }
 
 std::vector<ActivePaymentMethod> machine::getAllowedPaymentMethods(){
-    qDebug() << "helllo";
     return allowedPaymentMethods;
 }
 

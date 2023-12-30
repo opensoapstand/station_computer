@@ -418,7 +418,11 @@ void page_product_menu::select_product(int option)
         // hideCurrentPageAndShowProvided(p_page_product);
         p_page_idle->thisMachine->getSelectedProduct()->setDefaultAdditivesRatioModifier(p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size() - 1);
 
-        hideCurrentPageAndShowProvided(p_page_product_mixing);
+        if(p_page_idle->thisMachine->m_template == "default_AP2"){
+            hideCurrentPageAndShowProvided(p_page_product_mixing);
+        }else{
+            hideCurrentPageAndShowProvided(p_page_product);
+        }
     }
     else
     {

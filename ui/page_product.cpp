@@ -387,7 +387,7 @@ bool page_product::stopSelectTimers()
 
 void page_product::hideCurrentPageAndShowProductMenu()
 {
-    if (p_page_idle->thisMachine->getHardwareMajorVersion().startsWith("AP2"))
+    if (p_page_idle->thisMachine->m_template == "default_AP2")
     {
         this->hideCurrentPageAndShowProvided(p_page_product_menu);
     }

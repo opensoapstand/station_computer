@@ -589,7 +589,7 @@ void page_idle::on_pushButton_to_select_product_page_clicked()
 
 void page_idle::hideCurrentPageAndShowProductMenu()
 {
-    if (thisMachine->getHardwareMajorVersion().startsWith("AP2"))
+    if (thisMachine->m_template == "default_AP2")
     {
 
         this->hideCurrentPageAndShowProvided(p_page_product_menu, true);

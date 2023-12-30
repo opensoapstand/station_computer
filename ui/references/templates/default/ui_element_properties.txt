@@ -23,6 +23,12 @@
 
 page_dispenser->label_indicate_active_spout,{"x":900,"y":350,"isVisibleAtLoad":true}
 
+page_select_product->label_help,{"x": 478, "y": 1773, "width": 125, "height": 125}
+page_select_product->pushButton_help_page,{"x": 460, "y": 1760, "width": 161, "height": 141}
+
+page_product->label_help,{"x": 478, "y": 1773, "width": 125, "height": 125}
+page_product->pushButton_to_hep,{"x": 460, "y": 1760, "width": 161, "height": 141}
+
 page_product_overview->label_discount_tag,{"x": 130, "y": 1175, "width": 185, "height": 34}
 page_product_overview->label_gif,{"x": 440, "y": 960, "width": 200, "height": 200}
 page_product_overview->label_help,{"x": 478, "y": 1773, "width": 125, "height": 125}
@@ -90,3 +96,11 @@ page_product_overview->z,{"x": 103, "y": 234, "width": 62, "height": 62}
 page_qr_payment->label_title,{"x": 0, "y": 170, "width": 1080, "height": 81}
 page_qr_payment->label_qrCode,{"x": 360, "y": 530, "width": 360, "height": 360}
 page_qr_payment->label_scan,{"x": 0, "y": 390, "width": 1080, "height": 130}
+page_qr_payment->label_processing,{"x": 0, "y": 690, "width": 1080, "height": 251}
+page_qr_payment->label_steps,{"x": 100, "y": 940, "width": 980, "height": 501}
+page_qr_payment->label_product_information,{"x": 100, "y": 1470, "width": 521, "height": 81}
+page_qr_payment->label_product_price,{"x": 530, "y": 1470, "width": 451, "height": 41}
+page_qr_payment->label_gif,{"x": 365, "y": 960, "width": 350, "height": 350}
+
+page_payment_tap_serial->pushButton_to_idle,{"x": 460, "y": 1760, "width": 161, "height": 141}
+page_payment_tap_serial->animated_Label,{"x": 221, "y": 327, "width": 639, "height": 639}

@@ -107,6 +107,7 @@ void page_qr_payment::showEvent(QShowEvent *event)
     ui->label_processing->setStyleSheet(styleSheet);
     ui->label_product_price->setStyleSheet(styleSheet);
     ui->label_product_information->setStyleSheet(styleSheet);
+    ui->label_qr_background->setStyleSheet(styleSheet);
     ui->label_gif->setStyleSheet(styleSheet);
 
     msgBox = nullptr;
@@ -352,6 +353,7 @@ void page_qr_payment::isQrProcessedCheckOnline()
             ui->label_gif->show();
 
             ui->label_processing->show();
+            ui->label_qr_background->hide();
             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_scan, "finalize_transaction");
             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_title, "almost_there");
             QString image_path = p_page_idle->thisMachine->getTemplatePathFromName("soapstandspinner.gif");
@@ -586,8 +588,12 @@ void page_qr_payment::on_pushButton_previous_page_clicked()
     qDebug() << "In previous page button";
     if (exitConfirm())
     {
-        // hideCurrentPageAndShowProvided(p_page_product);
-        hideCurrentPageAndShowProvided(p_page_product_mixing);
+        if(p_page_idle->thisMachine->m_template == "default_AP2"){
+            hideCurrentPageAndShowProvided(p_page_product_mixing);
+        }else{
+            hideCurrentPageAndShowProvided(p_page_product);
+        }
+
     }
 }
 

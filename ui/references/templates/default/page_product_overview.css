@@ -3,7 +3,7 @@ QPushButton {
 }
 
 
-#pushButton_continue {
+#pushButton_continue, #pushButton_continue_additional{
     font-family: 'Brevia';
     font-style: normal;
     font-weight: 200;

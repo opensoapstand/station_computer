@@ -123,6 +123,7 @@ void page_idle::showEvent(QShowEvent *event)
     thisMachine->loadDynamicContent();
 
     thisMachine->dispenseButtonLightsAnimateState(true);
+    thisMachine->setCouponState(enabled_not_set);
 
     if (!thisMachine->isSessionLocked())
     {
@@ -447,8 +448,8 @@ void page_idle::onRebootNightlyTimeOutTimerTick()
                 thisMachine->setRebootState(wait_for_trigger);
                 _delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
                 stateScreenCheck = state_screen_check_not_initiated;
-                QString paymentMethod = thisMachine->getProduct(1)->getPaymentMethod(); 
-                if(paymentMethod== PAYMENT_TAP_SERIAL){
+                QString paymentMethod = thisMachine->getPaymentMethod(); 
+                if(paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA){
                     rebootTapDevice();
                 }
                 QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -r 0";
@@ -649,16 +650,16 @@ void page_idle::on_pushButton_reboot_nightly_clicked()
 }
 
 void page_idle::pingTapDevice(){
-    QString paymentMethod = thisMachine->getProduct(1)->getPaymentMethod(); 
-    if(paymentMethod == PAYMENT_TAP_SERIAL){
-        qDebug() << "Pinging Tap Device";
+    QString paymentMethod = thisMachine->getPaymentMethod(); 
+    if(paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA){
+        qDebug() << "Pinging Tap Serial Device";
         page_payment_tap_serial paymentSerialObject;
         paymentSerialObject.getLanInfo();
     }
 }
 
 void page_idle::rebootTapDevice(){
-        qDebug() << "Rebooting Tap Device at Midnight";
+        qDebug() << "Rebooting Tap Device";
         page_payment_tap_serial paymentSerialObject;
         paymentSerialObject.resetDevice();
     

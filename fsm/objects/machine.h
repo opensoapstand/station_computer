@@ -47,16 +47,20 @@ public:
     void refresh();
     void pcb24VPowerSwitch(bool enableElseDisable);
     bool getPcb24VPowerSwitchStatus();
+
+    bool getPcb3point3VPowerSwitchStatus();
+    void pcb3point3VPowerSwitch(bool enableElseDisable);
+
     // void print_text(string text);
     void print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string char_units_formatted, string paymentMethod, string plu, string promoCode, bool sleep_until_printed);
     gpio *switch_24V;
     bool power24VEnabled = false;
+    gpio *switch_3point3V;
+    bool signal3point3VEnabled = false;
     void setup(product *pnumbers);
     pcb *getPcb();
 
     void setFlowSensorCallBack(int slot);
-    
-
 
     pcb *control_pcb;
     Adafruit_Thermal *receipt_printer;
@@ -80,7 +84,7 @@ public:
     // void loadButtonPropertiesFromDb();
     bool getMultiDispenseButtonEnabled();
 
-    void loadGeneralProperties();
+    void loadGeneralProperties(bool loadDispenserParameters);
     void loadMachineParametersFromDb();
     string getMachineId();
 

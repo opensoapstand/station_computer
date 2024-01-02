@@ -177,20 +177,20 @@ void machine::initProductOptions()
     dispenseProductsMenuOptions.fill(DUMMY_PNUMBER);
     for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
     {
-        qDebug() << "slot: " << (slot_index+1) ;
+        qDebug() << "slot: " << (slot_index + 1);
         QVector<int> dispense_pnumbers = getAllDispensePNumbersFromSlot(slot_index + 1);
         for (int i = 0; i < dispense_pnumbers.size(); i++)
         {
             int position = 1 + slot_index * MENU_DISPENSE_OPTIONS_PER_BASE_MAXIMUM + i;
             setProductToMenuOption(position, dispense_pnumbers[i]);
-            qDebug() << "pnumber. : : " << (dispense_pnumbers[i]) << "at option" << position ;
+            qDebug() << "pnumber. : : " << (dispense_pnumbers[i]) << "at option" << position;
         }
     }
 
-
-    for (int i = 0; i < dispenseProductsMenuOptions.size(); ++i) {
+    for (int i = 0; i < dispenseProductsMenuOptions.size(); ++i)
+    {
         int option = dispenseProductsMenuOptions[i];
-        qDebug() << "Option eef" << (i+1) << ": " << option;
+        qDebug() << "Option eef" << (i + 1) << ": " << option;
     }
 }
 
@@ -215,7 +215,8 @@ void machine::setProductToMenuOption(int productOption, int pnumber)
     dispenseProductsMenuOptions[productOption - 1] = pnumber;
 }
 
-bool machine::isOptionExisting(int productOption){
+bool machine::isOptionExisting(int productOption)
+{
     if (productOption == 0)
     {
         qDebug() << "ERROR:  option numbering start from 1!!!";
@@ -230,7 +231,8 @@ pnumberproduct *machine::getProductFromMenuOption(int productOption)
     // option start counting from 1
     // slotPosition starts at 1
 
-    if (!isOptionExisting(productOption)){
+    if (!isOptionExisting(productOption))
+    {
         qDebug() << "ASSERT ERROR: non existing number (dummy or not valid). undefined behaviour from now on";
     }
 
@@ -239,7 +241,8 @@ pnumberproduct *machine::getProductFromMenuOption(int productOption)
     return &m_pnumberproducts[pnumber];
 }
 
-pnumberproduct *machine::getSlotBaseProduct(int slot){
+pnumberproduct *machine::getSlotBaseProduct(int slot)
+{
     int basePNumber = m_slots[slot - 1].getBasePNumber();
     return &m_pnumberproducts[basePNumber];
 }
@@ -313,11 +316,6 @@ int machine::getSlotFromBasePNumber(int base_pnumber)
     return slot_with_base_pnumber;
 }
 
-dispenser_slot *machine::getSelectedSlot()
-{
-
-    return selectedSlot;
-}
 
 pnumberproduct *machine::getSelectedProduct()
 {
@@ -349,6 +347,16 @@ void machine::setSlots(dispenser_slot *slotss)
     m_slots = slotss; // slots is a TYPE in QT. so we can't use it as a variable name
 }
 
+dispenser_slot *machine::getSelectedSlot()
+{
+
+    return m_selectedSlot;
+}
+
+void machine::setSelectedSlot(int slot)
+{
+    m_selectedSlot = &m_slots[slot - 1];
+}
 void machine::setSelectedSlotFromSelectedProduct()
 {
 
@@ -360,8 +368,7 @@ void machine::setSelectedSlotFromSelectedProduct()
     int base_pnumber = m_selectedProduct->getFirstMixPNumberOrPNumberAsBasePNumber(); // if this is not a mix, it will return the main p number.
 
     int slot = getSlotFromBasePNumber(base_pnumber);
-
-    selectedSlot = &m_slots[slot - 1];
+    setSelectedSlot(slot);
 }
 
 bool machine::isDispenseAreaBelowElseBesideScreen()
@@ -401,7 +408,7 @@ bool machine::isAelenPillarElseSoapStand()
 QString machine::getHardwareMajorVersion()
 {
     // e.g. AP2, SS1, ...
-    return m_hardware_version.left(3); // 
+    return m_hardware_version.left(3); //
 }
 
 int machine::getSlotCount()
@@ -625,8 +632,9 @@ QString machine::getTemplateFolder()
             template_name = QString(TEMPLATES_DEFAULT_NAME) + "_" + getHardwareMajorVersion();
         }
     }
-
-    return QString(TEMPLATES_ROOT_PATH) + template_name + "/";
+    QString templateFolder = QString(TEMPLATES_ROOT_PATH) + template_name + "/";
+    qDebug() << "Get template folder : " << templateFolder;
+    return templateFolder;
 }
 
 QString machine::getTemplatePathFromName(QString fileName)
@@ -644,7 +652,7 @@ QString machine::getTemplatePathFromName(QString fileName)
 
         if (!df_util::pathExists(filePath))
         {
-            qDebug() << "File not found in default hardware folder : " + filePath;
+            qDebug() << "File not found in default hardware folder: " + filePath + " Will try default.";
             // check if file exists in default template
             filePath = QString(TEMPLATES_ROOT_PATH) + QString(TEMPLATES_DEFAULT_NAME) + "/" + fileName;
             if (!df_util::pathExists(filePath))

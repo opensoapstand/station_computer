@@ -545,7 +545,6 @@
     </property>
     <property name="font">
      <font>
-      <family>Proxima Nova ScOsf</family>
       <pointsize>14</pointsize>
       <weight>75</weight>
       <bold>true</bold>
@@ -1654,6 +1653,84 @@
    </property>
    <property name="text">
     <string>Temperature2</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_active_pnumber_base">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>1650</y>
+     <width>101</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_active_pnumber_additive_1">
+   <property name="geometry">
+    <rect>
+     <x>450</x>
+     <y>1650</y>
+     <width>101</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_active_pnumber_additive_2">
+   <property name="geometry">
+    <rect>
+     <x>560</x>
+     <y>1650</y>
+     <width>101</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_active_pnumber_additive_3">
+   <property name="geometry">
+    <rect>
+     <x>670</x>
+     <y>1650</y>
+     <width>101</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_active_pnumber_additive_4">
+   <property name="geometry">
+    <rect>
+     <x>780</x>
+     <y>1650</y>
+     <width>101</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_active_pnumber_additive_5">
+   <property name="geometry">
+    <rect>
+     <x>890</x>
+     <y>1650</y>
+     <width>101</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
    </property>
   </widget>
  </widget>

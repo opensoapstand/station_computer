@@ -115,25 +115,25 @@ void page_maintenance::showEvent(QShowEvent *event)
         labels_product_position[slot_index]->setProperty("class", "label_product_position");
         labels_product_position[slot_index]->setStyleSheet(styleSheet);
 
-        QString p = p_page_idle->thisMachine->getProductFromMenuOption(slot_index+1)->getProductPicturePath();
+        
+        QString p = p_page_idle->thisMachine->getSlotBaseProduct(slot_index+1)->getProductPicturePath();
         p_page_idle->thisMachine->dfUtility->pathExists(p);
         QPixmap im(p);
         QIcon qi(im);
         pushButtons_products[slot_index]->setIcon(qi);
-        // pushButtons_products[slot_index]->setObjectName("product");
         pushButtons_products[slot_index]->setStyleSheet(styleSheet);
         pushButtons_products[slot_index]->setIconSize(QSize(241, 341));
 
         pushButtons_products[slot_index]->setStyleSheet("background-color: transparent; border: 1px solid black;");
         pushButtons_products[slot_index]->raise();
 
-        labels_product_name[slot_index]->setText(p_page_idle->thisMachine->getProductFromMenuOption(slot_index+1)->getProductName());
-        int product_slot_enabled = p_page_idle->thisMachine->getProductFromMenuOption(slot_index+1)->getIsProductEnabled();
+        labels_product_name[slot_index]->setText(p_page_idle->thisMachine->getSlotBaseProduct(slot_index+1)->getProductName());
+        int product_slot_enabled = p_page_idle->thisMachine->getSlotBaseProduct(slot_index+1)->getIsProductEnabled();
 
-        QString product_status_text = p_page_idle->thisMachine->getProductFromMenuOption(slot_index+1)->getStatusText();
+        QString product_status_text = p_page_idle->thisMachine->getSlotBaseProduct(slot_index+1)->getStatusText();
         QString status_display_text = "";
 
-        int pnumber = p_page_idle->thisMachine->getProductFromMenuOption(slot_index+1)->getPNumber();
+        int pnumber = p_page_idle->thisMachine->getSlotBaseProduct(slot_index+1)->getPNumber();
         if (!(p_page_idle->thisMachine->isProductVolumeInContainer(pnumber)))
         {
             status_display_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->auto_empty");
@@ -177,7 +177,7 @@ void page_maintenance::showEvent(QShowEvent *event)
 void page_maintenance::setPage(page_idle *pageIdle, page_maintenance_dispenser *p_pageMaintenanceDispenser, page_maintenance_general *p_pageMaintenanceGeneral, page_select_product *p_page_product, page_product *pagePaySelect, statusbar *p_statusbar)
 {
     this->p_page_idle = pageIdle;
-    this->p_page_maintenance_product = p_pageMaintenanceDispenser;
+    this->p_page_maintenance_dispenser = p_pageMaintenanceDispenser;
     this->p_page_maintenance_general = p_pageMaintenanceGeneral;
     this->p_pageSelectProduct = p_page_product;
     this->p_page_product = pagePaySelect; 
@@ -215,26 +215,31 @@ void page_maintenance::on_pushButton_to_previous_page_clicked()
 
 void page_maintenance::on_pushButton_product_1_clicked()
 {
-    p_page_idle->thisMachine->setSelectedProduct(0);
-    hideCurrentPageAndShowProvided(p_page_maintenance_product);
+    // p_page_idle->thisMachine->setSelectedProduct(0);
+    qDebug() << "Clicked slot 1";
+    p_page_idle->thisMachine->setSelectedSlot(1);
+    hideCurrentPageAndShowProvided(p_page_maintenance_dispenser);
 }
 
 void page_maintenance::on_pushButton_product_2_clicked()
 {
-    p_page_idle->thisMachine->setSelectedProduct(0);
-    hideCurrentPageAndShowProvided(p_page_maintenance_product);
+    // p_page_idle->thisMachine->setSelectedProduct(0);
+    p_page_idle->thisMachine->setSelectedSlot(2);
+    hideCurrentPageAndShowProvided(p_page_maintenance_dispenser);
 }
 
 void page_maintenance::on_pushButton_product_3_clicked()
 {
-    p_page_idle->thisMachine->setSelectedProduct(0);
-    hideCurrentPageAndShowProvided(p_page_maintenance_product);
+    // p_page_idle->thisMachine->setSelectedProduct(0);
+    p_page_idle->thisMachine->setSelectedSlot(3);
+    hideCurrentPageAndShowProvided(p_page_maintenance_dispenser);
 }
 
 void page_maintenance::on_pushButton_product_4_clicked()
 {
-    p_page_idle->thisMachine->setSelectedProduct(0);
-    hideCurrentPageAndShowProvided(p_page_maintenance_product);
+    p_page_idle->thisMachine->setSelectedSlot(4);
+    // p_page_idle->thisMachine->setSelectedProduct(0);
+    hideCurrentPageAndShowProvided(p_page_maintenance_dispenser);
 }
 
 int getSelection()

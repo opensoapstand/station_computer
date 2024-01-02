@@ -119,7 +119,9 @@ public:
     void setSlots(dispenser_slot *slotss);
     bool isSlotCountBiggerThanMaxSlotCount(int slot_count);
 
+    void setSelectedSlot(int slot);
     void setSelectedSlotFromSelectedProduct();
+    void setSelectedSlot();
     int getSlotFromBasePNumber(int base_pnumber);
     dispenser_slot *getSelectedSlot();
 
@@ -261,7 +263,7 @@ public slots:
 signals:
 
 private:
-    dispenser_slot *selectedSlot; // deprecated, derived from selectedProduct.
+    dispenser_slot *m_selectedSlot; // used for maintenance mode!!  , or derived from selectedProduct.
     pnumberproduct *m_selectedProduct;
     QVector<int> dispenseProductsMenuOptions;
     dispenser_slot *m_slots;
@@ -291,7 +293,6 @@ private:
     QString m_pump_id_slots[MAX_SLOT_COUNT];
     int m_is_enabled_slots[MAX_SLOT_COUNT];
     QString m_status_text_slots[MAX_SLOT_COUNT];
-
 };
 
 #endif // MACHINE_H

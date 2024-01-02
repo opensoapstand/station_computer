@@ -74,20 +74,21 @@ public:
       // selected product
       product *getProductFromPNumber(int pnumber);
 
-      void setBasePNumberAsSelectedProduct();
+      void setBasePNumberAsSingleDispenseSelectedProduct();
       product *getSelectedProduct();
       bool setSelectedProduct(int pnumber);
       void setSelectedSizeAsChar(char size);
       char getSelectedSizeAsChar();
       double getSelectedSizeAsVolume();
 
-
       void setActiveProduct(int pnumber);
 
-      void setBaseAsActiveProduct();
-      void setAdditiveFromPositionAsSelectedProduct(int position);
+      void setPNumberAsSingleDispenseSelectedProduct(int pnumber);
+      void setAdditiveFromPositionAsSingleDispenseSelectedProduct(int position);
 
       bool isPNumberValidInThisDispenser(int pnumber, bool mustBeAdditiveOrBase);
+
+      int getMixPNumberFromMixIndex(int mixIndex);
 
       // active product
       product *getActiveProduct();
@@ -125,7 +126,7 @@ public:
       DF_ERROR initActivePNumberDispense(double volume);
       DF_ERROR startActivePNumberDispense();
       DF_ERROR stopActivePNumberDispense();
-      
+
       DF_ERROR initSelectedProductDispense(char size, double nPrice);
       DF_ERROR startSelectedProductDispense();
       DF_ERROR stopSelectedProductDispense();
@@ -180,13 +181,17 @@ public:
       uint64_t getButtonPressedCurrentPressMillis();
       void addDispenseButtonPress();
 
-
       void setSpoutSolenoid(bool openElseClosed);
+      void setActiveProductSolenoid(bool openElseClosed);
+      void setProductSolenoid(int pnumber, bool openElseClosed);
 
       pcb *m_pcb;
       product *m_pnumbers;
 
-      static int *parseIntCsvString(const std::string &csvString, int &size);
+      static void parseIntCsvString(const std::string &csvString, int* intArray, int &size);
+      static void parseDoubleCsvString(const std::string &csvString, double * doubleArray,int &size);
+
+      void setCustomMixParametersAsSelectedProduct(string pnumbers, string pnumberRatios);
 
 private:
       int m_slot;
@@ -202,8 +207,12 @@ private:
       int m_base_pnumber;
       int m_selected_pnumber;
       int m_active_pnumber;
-      int *m_dispense_pnumbers;
-      int *m_additive_pnumbers;
+      int m_dispense_pnumbers [DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
+      int m_additive_pnumbers [DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
+      int m_custom_mix_pnumbers [DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
+      int m_custom_mix_pnumbers_count;
+      double m_custom_mix_ratios [DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
+      int m_custom_mix_ratios_count;
 
       int m_dispense_pnumbers_count;
       int m_additive_pnumbers_count;

@@ -83,7 +83,7 @@ public:
 
         double getVolumeFromSize(char size);
         char getSizeCharFromTargetVolume(double volume);
-        double setTargetVolumeFromSize(char size);
+        void setTargetVolumeFromSize(char size);
         void setTargetVolume(double volume);
         double getTargetVolume();
         int sizeCharToSizeIndex(char size);
@@ -99,8 +99,8 @@ public:
         static std::string dbFieldAsValidString(sqlite3_stmt *stmt, int column_index);
         void loadProductPropertiesFromCsv();
 
-        static int *parseIntCsvString(const std::string &csvString, int &size);
-        static double *parseDoubleCsvString(const std::string &csvString, int &size);
+        static void parseIntCsvString(const std::string &csvString, int* intArray, int &size);
+        static void parseDoubleCsvString(const std::string &csvString, double * doubleArray, int &size);
 
         string m_name;
         string m_product_id_combined_with_location_for_backend;
@@ -136,10 +136,10 @@ private:
         string m_display_unit;
         string m_mix_pnumbers_str;
 
-        int *m_mix_pnumbers;
+        int m_mix_pnumbers[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
         int m_mix_pnumbers_count;
         string m_mix_ratios_str;
-        double *m_mix_ratios;
+        double m_mix_ratios[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
         int m_mix_ratios_count;
 
         string m_nPLU_small;

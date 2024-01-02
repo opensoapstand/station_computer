@@ -34,7 +34,11 @@
 #define CSV_PRODUCT_COL_INGREDIENTS_UI 10
 #define CSV_PRODUCT_COL_NOTES 11
 
+#define DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX 6
+
 #define PRODUCT_DISPENSERS_MAX 4
+#define DUMMY_PNUMBER 666
+#define ADDITIVES_PER_SLOT_COUNT_MAX 5
 #define PNUMBERS_COUNT 100
 #define MINIMUM_DISPENSE_VOLUME_ML 10
 
@@ -59,6 +63,8 @@
 //#define FLOWSENSOR_DEJITTER_MICROS 10000ULL  // AICHI flow sensor
 #define IO_PIN_BUTTON_4 410   // connector pin 36 for EN-29 pcb
 #define IO_PIN_ENABLE_24V 410 // connector pin 36 for EN-134 pcb
+#define IO_PIN_ENABLE_3point3V 389 // connector pin 28 for EN258 pcb
+#define IO_PIN_ENABLE_5V 338       // connector pin 12 for EN258 pcb
 
 #define PIC_PROGRAMMER_PIN_VPP 337
 #define PIC_PROGRAMMER_PIN_PGC 412

@@ -94,13 +94,22 @@
 #define MCP23017_EN258_GPB6_PIN_OUT_SOLENOID_4 6
 #define MCP23017_EN258_GPB7_PIN_OUT_SOLENOID_5 7
 
-#define EN258_SOLENOID_BASE 2
-#define EN258_SOLENOID_ADDITIVE_1 3
-#define EN258_SOLENOID_ADDITIVE_2 4
-#define EN258_SOLENOID_ADDITIVE_3 5
-#define EN258_SOLENOID_ADDITIVE_4 6
-#define EN258_SOLENOID_ADDITIVE_5 7
-#define EN258_SOLENOID_SPOUT 8
+#define EN258_SOLENOID_SPOUT 8   // dispense solenoid position (corresponds with printed solenoid number on pcb)
+#define EN258_SOLENOID_BASE 7   // base product
+#define EN258_SOLENOID_ADDITIVE_1 6
+#define EN258_SOLENOID_ADDITIVE_2 5
+#define EN258_SOLENOID_ADDITIVE_3 4
+#define EN258_SOLENOID_ADDITIVE_4 3
+#define EN258_SOLENOID_ADDITIVE_5 2
+#define EN258_SOLENOID_ADDITIVE_6 1
+
+// #define EN258_SOLENOID_BASE 2
+// #define EN258_SOLENOID_ADDITIVE_1 3
+// #define EN258_SOLENOID_ADDITIVE_2 4
+// #define EN258_SOLENOID_ADDITIVE_3 5
+// #define EN258_SOLENOID_ADDITIVE_4 6
+// #define EN258_SOLENOID_ADDITIVE_5 7
+// #define EN258_SOLENOID_SPOUT 8
 
 #define PUMP_START_DELAY_MILLIS 100
 #define PUMP_STOP_BEFORE_BACKTRACK_TIME_MILLIS 0
@@ -197,6 +206,8 @@ public:
     void disableAllSolenoidsOfSlot(uint8_t slot);
     void setSolenoidFromArray(uint8_t slot, uint8_t position, bool onElseOff);
     void setSpoutSolenoid(uint8_t slot, bool onElseOff);
+    void setAdditiveSolenoid(uint8_t slot, int additivePosition, bool onElseOff);
+    void setBaseSolenoid(uint8_t slot, bool onElseOff);
 
     void setFlowSensorTypeDefaults();
     void setFlowSensorType(uint8_t slot, FlowSensorType sensorType);

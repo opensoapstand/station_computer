@@ -263,7 +263,7 @@ void product::setTargetVolume(double volume)
     m_nVolumeTarget = volume;
 }
 
-double product::setTargetVolumeFromSize(char size)
+void product::setTargetVolumeFromSize(char size)
 {
     m_nVolumeTarget = getVolumeFromSize(size);
 }
@@ -959,8 +959,8 @@ bool product::loadProductParametersFromDb()
         // every sqlite3_step returns a row. if status is 101=SQLITE_DONE, it's run over all the rows.
     }
 
-    m_mix_ratios = product::parseDoubleCsvString(m_mix_ratios_str, m_mix_ratios_count);
-    m_mix_pnumbers = product::parseIntCsvString(m_mix_pnumbers_str, m_mix_pnumbers_count);
+    product::parseDoubleCsvString(m_mix_ratios_str,  m_mix_ratios, m_mix_ratios_count);
+    product::parseIntCsvString(m_mix_pnumbers_str,m_mix_pnumbers, m_mix_pnumbers_count);
 
     if (m_mix_pnumbers_count != m_mix_ratios_count)
     {
@@ -986,7 +986,7 @@ bool product::loadProductParametersFromDb()
     }
     else
     {
-        // debugOutput::sendMessage("No db record for product: " + std::to_string(m_pnumber), MSG_INFO);
+        debugOutput::sendMessage("No db record for product: " + std::to_string(m_pnumber), MSG_ERROR);
         // debugOutput::sendMessage("no records for: " + sql_string, MSG_INFO);
     }
 
@@ -1046,52 +1046,40 @@ bool product::testParametersFromDb()
     return pwm;
 }
 
-int *product::parseIntCsvString(const std::string &csvString, int &size)
+void product::parseIntCsvString(const std::string &csvString, int* intArray, int &size)
 {
-    static const int MAX_SIZE = 100; // Define the maximum size of the array
-
-    int *intArray = new int[MAX_SIZE];
     std::stringstream ss(csvString);
     std::string token;
     size = 0;
 
     while (std::getline(ss, token, ','))
     {
-        if (size < MAX_SIZE)
+        if (size < DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX)
         {
             intArray[size++] = std::stoi(token);
         }
         else
         {
-            std::cerr << "Array size exceeded maximum limit." << std::endl;
-            delete[] intArray;
-            return nullptr;
+            debugOutput::sendMessage("ERROR: Array size exceeded maximum limit (will stop adding):  " + std::to_string(size), MSG_ERROR);
         }
     }
-    return intArray;
 }
 
-double *product::parseDoubleCsvString(const std::string &csvString, int &size)
+void product::parseDoubleCsvString(const std::string &csvString,double * doubleArray,int &size)
 {
-    static const int MAX_SIZE = 100; // Define the maximum size of the array
-
-    double *doubleArray = new double[MAX_SIZE];
     std::stringstream ss(csvString);
     std::string token;
     size = 0;
 
     while (std::getline(ss, token, ','))
     {
-        if (size < MAX_SIZE)
+        if (size < DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX)
         {
             doubleArray[size++] = std::stod(token);
         }
         else
         {
-            std::cerr << "Array size exceeded maximum limit." << std::endl;
-            delete[] doubleArray;
-            return nullptr;
+            debugOutput::sendMessage("ERROR: Array size exceeded maximum limit (will stop adding):  " + std::to_string(size), MSG_ERROR);
         }
     }
-    return doubleArray;
 }

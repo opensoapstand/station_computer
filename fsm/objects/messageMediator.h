@@ -22,7 +22,7 @@
 #include <pthread.h>
 
 #include "dispenser.h"
-#include "machine.h" 
+#include "machine.h"
 
 #include <stdio.h>
 #include <cstring>
@@ -32,7 +32,7 @@
 #include "../../library/socket/ClientSocket.h"
 
 // Forward declaration  to avoid circular dependencies problem
-class machine; 
+class machine;
 
 class messageMediator
 {
@@ -78,12 +78,11 @@ public:
    // static ServerSocket *fsm_comm_socket;
    // bool m_handlingRequest;
    // bool isBusySendingMessage();
- 
+
    DF_ERROR setSendingBehaviour(bool enableElseDisableSending);
 
 private:
-
-   bool m_enable_sending=true;
+   bool m_enable_sending = true;
    int messageIP;
    static bool m_fExitThreads;
 
@@ -111,6 +110,7 @@ private:
    static void *doKBThread(void *pThreadArgs);
    static void *doIPThread(void *pThreadArgs);
    machine *m_machine;
+
 };
 
 #endif

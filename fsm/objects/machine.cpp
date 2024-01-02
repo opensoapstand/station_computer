@@ -23,7 +23,6 @@
 #include <sstream>
 #include <iomanip>
 
-
 using namespace std;
 
 machine::machine()
@@ -44,9 +43,21 @@ void machine::setup(product *pnumbers)
     switch_24V = new FSModdyseyx86GPIO(IO_PIN_ENABLE_24V);
     power24VEnabled = false;
     switch_24V->setPinAsInputElseOutput(false); // set as output
+
+    // gpio_odyssey controlPower3point3V(IO_PIN_ENABLE_3point3V);
+    // controlPower3point3V.setPinAsInputElseOutput(false);
+    // controlPower3point3V.writePin(true);
+
+    // 3.3V control power to the pcb.
+    switch_3point3V = new FSModdyseyx86GPIO(IO_PIN_ENABLE_3point3V);
+    signal3point3VEnabled = false;
+    switch_3point3V->setPinAsInputElseOutput(false); // set as output
+    pcb3point3VPowerSwitch(true);
+    // switch_3point3V->writePin(true);
+
     syncSoftwareVersionWithDb();
     initProductDispensers();
-    loadGeneralProperties();
+    loadGeneralProperties(true);
 }
 
 int machine::getDispensersCount()
@@ -65,19 +76,19 @@ void machine::initProductDispensers()
         m_productDispensers[slot_index].setSlot(slot_index + 1);
         m_productDispensers[slot_index].initGlobalFlowsensorIO(IO_PIN_FLOW_SENSOR);
         setFlowSensorCallBack(slot_index + 1);
-
-        debugOutput::sendMessage("TEMPORARY HACK: base number is the selected product at startup. ", MSG_INFO);
-        m_productDispensers[slot_index].setBasePNumberAsSelectedProduct();
     }
 }
 
-void machine::loadGeneralProperties()
+void machine::loadGeneralProperties(bool loadDispenserParameters)
 {
     loadMachineParametersFromDb();
     usleep(20000);
-    for (int slot_index = 0; slot_index < getDispensersCount(); slot_index++)
+    if (loadDispenserParameters)
     {
-        m_productDispensers[slot_index].loadGeneralProperties();
+        for (int slot_index = 0; slot_index < getDispensersCount(); slot_index++)
+        {
+            m_productDispensers[slot_index].loadGeneralProperties();
+        }
     }
 }
 
@@ -118,6 +129,7 @@ pcb *machine::getPcb()
 
 void machine::refresh()
 {
+
     control_pcb->pcb_refresh();
     // the pcb inputs are not interrupt driven. So, periodical updates are required
     for (uint8_t slot_index = 0; slot_index < PRODUCT_DISPENSERS_MAX; slot_index++)
@@ -130,7 +142,7 @@ void machine::setFlowSensorCallBack(int slot)
 {
     // CALL THIS FOR EVERY ACTIVE PRODUCT CHANGE during a mixing dispense.
 
-    int slot_index = slot -1 ;
+    int slot_index = slot - 1;
     // control_pcb->registerFlowSensorTickCallback(std::bind(&dispenser::registerFlowSensorTickCallback, &m_productDispensers[slot_index]));
     m_productDispensers[slot_index].linkActiveProductVolumeUpdate();
 }
@@ -497,6 +509,20 @@ void machine::pcb24VPowerSwitch(bool enableElseDisable)
         power24VEnabled = enableElseDisable;
         switch_24V->writePin(power24VEnabled);
     }
+}
+
+bool machine::getPcb3point3VPowerSwitchStatus()
+{
+    return signal3point3VEnabled;
+}
+
+void machine::pcb3point3VPowerSwitch(bool enableElseDisable)
+{
+    // if (signal3point3VEnabled != enableElseDisable)
+    // {
+    signal3point3VEnabled = enableElseDisable;
+    switch_3point3V->writePin(signal3point3VEnabled);
+    // }
 }
 
 void machine::print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string char_units_formatted, string paymentMethod, string plu, string promoCode, bool sleep_until_printed)

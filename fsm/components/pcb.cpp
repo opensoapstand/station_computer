@@ -2143,7 +2143,7 @@ void pcb::setSolenoidFromArray(uint8_t slot, uint8_t position, bool onElseOff)
     if (isValid)
     {
         setMCP23017Output(slot, solenoid_positions[position - 1], onElseOff, solenoid_positions_register[position - 1]);
-        debugOutput::sendMessage("Pcb: Solenoid array. Position: " + std::to_string(position) + ". Slot: " + std::to_string(slot) + ". Enabled: " + std::to_string(onElseOff), MSG_INFO);
+        debugOutput::sendMessage("Pcb: Array Solenoid# : " + std::to_string(position) + ". Slot: " + std::to_string(slot) + ". Enabled: " + std::to_string(onElseOff), MSG_INFO);
     }
 }
 
@@ -2176,6 +2176,106 @@ void pcb::disableAllSolenoidsOfSlot(uint8_t slot)
     default:
     {
         debugOutput::sendMessage("Pcb: No solenoid function available for this pcb.", MSG_ERROR);
+    }
+    break;
+    }
+}
+
+void pcb::setAdditiveSolenoid(uint8_t slot, int additivePosition, bool onElseOff)
+{
+    switch (pcb_version)
+    {
+
+    case (DSED8344_NO_PIC):
+    case (DSED8344_PIC_MULTIBUTTON):
+    {
+        debugOutput::sendMessage("No solenoid used in pcb. ", MSG_INFO);
+    };
+    break;
+    case (EN134_4SLOTS):
+    case (EN134_8SLOTS):
+    {
+        debugOutput::sendMessage("No base solenoid used in pcb. ", MSG_INFO);
+    };
+    break;
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
+    {
+        switch(additivePosition){
+            case(1):
+            {
+                    setSolenoidFromArray(slot, EN258_SOLENOID_ADDITIVE_1, onElseOff);
+
+            }
+            break;
+            case(2):
+            {
+                    setSolenoidFromArray(slot, EN258_SOLENOID_ADDITIVE_2, onElseOff);
+
+            }
+            break;
+            case(3):
+            {
+                    setSolenoidFromArray(slot, EN258_SOLENOID_ADDITIVE_3, onElseOff);
+
+            }
+            break;
+            case(4):
+            {
+                    setSolenoidFromArray(slot, EN258_SOLENOID_ADDITIVE_4, onElseOff);
+
+            }
+            break;
+            case(5):
+            {
+                    setSolenoidFromArray(slot, EN258_SOLENOID_ADDITIVE_5, onElseOff);
+
+            }
+            break;
+            default:
+            {
+                   debugOutput::sendMessage("Pcb: Additive position not available." + std::to_string(additivePosition), MSG_ERROR);
+
+            }
+            break;
+        }
+    }
+    break;
+
+    default:
+    {
+        debugOutput::sendMessage("Pcb: No single solenoid function available for this pcb.", MSG_ERROR);
+    }
+    break;
+    }
+}
+void pcb::setBaseSolenoid(uint8_t slot, bool onElseOff)
+{
+    switch (pcb_version)
+    {
+
+    case (DSED8344_NO_PIC):
+    case (DSED8344_PIC_MULTIBUTTON):
+    {
+        debugOutput::sendMessage("No solenoid used in pcb. ", MSG_INFO);
+    };
+    break;
+    case (EN134_4SLOTS):
+    case (EN134_8SLOTS):
+    {
+        debugOutput::sendMessage("No base solenoid used in pcb. ", MSG_INFO);
+    };
+    break;
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
+    {
+        setSolenoidFromArray(slot, EN258_SOLENOID_BASE, onElseOff);
+    }
+    break;
+
+    default:
+    {
+        debugOutput::sendMessage("Pcb: No single solenoid function available for this pcb.", MSG_ERROR);
     }
     break;
     }

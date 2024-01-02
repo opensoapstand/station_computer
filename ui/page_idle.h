@@ -28,6 +28,8 @@
 #include "statusbar.h"
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
+#include "page_payment_tap_serial.h"
+
 
 class statusbar;
 class page_maintenance;
@@ -86,6 +88,7 @@ public:
     int _userRoleTimeOutTimerSec;
     QTimer *rebootNightlyTimeOutTimer;
     QTime *currentTime;
+    QTimer *pingTapDeviceTimer;
     int _rebootNightlyTimeOutTimerSec;
     int _millisecondsUntilSetTime;
     int _delaytime_seconds;
@@ -106,7 +109,8 @@ private slots:
     void onUserRoleTimeOutTimerTick();
     void onRebootNightlyTimeOutTimerTick();
     void on_pushButton_reboot_nightly_clicked();
-
+    void pingTapDevice();
+    void rebootTapDevice();
 private:
     Ui::page_idle *ui;
     page_select_product *p_pageSelectProduct;

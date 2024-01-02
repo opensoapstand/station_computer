@@ -73,6 +73,10 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     rebootNightlyTimeOutTimer->setInterval(1000);
     connect(rebootNightlyTimeOutTimer, SIGNAL(timeout()), this, SLOT(onRebootNightlyTimeOutTimerTick()));
     // thisMachine->setRebootState(initial_state);
+    pingTapDeviceTimer = new QTimer(this);
+    connect(pingTapDeviceTimer, SIGNAL(timeout()), this, SLOT(pingTapDevice()));
+    // Set the ping timer to every 30 mins
+    pingTapDeviceTimer->start(30 * 60 * 1000); 
 
     tappingBlockedUntilPrinterReply = false;
 }
@@ -443,6 +447,10 @@ void page_idle::onRebootNightlyTimeOutTimerTick()
                 thisMachine->setRebootState(wait_for_trigger);
                 _delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
                 stateScreenCheck = state_screen_check_not_initiated;
+                QString paymentMethod = thisMachine->getProduct(1)->getPaymentMethod(); 
+                if(paymentMethod== PAYMENT_TAP_SERIAL){
+                    rebootTapDevice();
+                }
                 QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -r 0";
                 system(qPrintable(command));
             }
@@ -638,4 +646,20 @@ void page_idle::on_pushButton_reboot_nightly_clicked()
 {
     qDebug() << "reboot nightly cancel clicked.. ";
     thisMachine->setRebootState(user_cancelled_reboot);
+}
+
+void page_idle::pingTapDevice(){
+    QString paymentMethod = thisMachine->getProduct(1)->getPaymentMethod(); 
+    if(paymentMethod == PAYMENT_TAP_SERIAL){
+        qDebug() << "Pinging Tap Device";
+        page_payment_tap_serial paymentSerialObject;
+        paymentSerialObject.getLanInfo();
+    }
+}
+
+void page_idle::rebootTapDevice(){
+        qDebug() << "Rebooting Tap Device at Midnight";
+        page_payment_tap_serial paymentSerialObject;
+        paymentSerialObject.resetDevice();
+    
 }

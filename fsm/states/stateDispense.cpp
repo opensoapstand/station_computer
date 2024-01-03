@@ -117,7 +117,8 @@ DF_ERROR stateDispense::onAction()
       // update of the actual dispense
       const char *dispenseStatusStr = g_machine.m_productDispensers[slot_index].getDispenseStatusAsString();
       debugOutput::sendMessage(dispenseStatusStr, MSG_INFO);
-      debugOutput::sendMessage(to_string( g_machine.m_productDispensers[slot_index].m_pcb->getFlowSensorPulsesSinceEnabling(slot)), MSG_INFO);
+      debugOutput::sendMessage(to_string( g_machine.getPcb()->getFlowSensorPulsesSinceEnabling(slot)), MSG_INFO);
+       g_machine.getPcb()->outputMCP23017IORegisters(slot);
 #endif
    }
 
@@ -141,13 +142,13 @@ DF_ERROR stateDispense::onAction()
 
    if (m_pMessaging->getAction() == ACTION_REPAIR_PCA)
    {
-      if (g_machine.m_productDispensers[slot_index].m_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS || g_machine.m_productDispensers[slot_index].m_pcb->get_pcb_version() == pcb::PcbVersion::EN134_8SLOTS)
+      if (g_machine.getPcb()->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS || g_machine.getPcb()->get_pcb_version() == pcb::PcbVersion::EN134_8SLOTS)
       {
-         g_machine.m_productDispensers[slot_index].m_pcb->sendEN134DefaultConfigurationToPCA9534(slot, true);
+         g_machine.getPcb()->sendEN134DefaultConfigurationToPCA9534(slot, true);
          m_pMessaging->resetAction();
          g_machine.control_pcb->setSingleDispenseButtonLight(slot, true);
 
-         g_machine.m_productDispensers[slot_index].m_pcb->flowSensorEnable(slot);
+         g_machine.getPcb()->flowSensorEnable(slot);
       }
    }
 
@@ -174,11 +175,11 @@ void stateDispense::startPumping()
    case (machine::HardwareVersion::SS2):
    {
       debugOutput::sendMessage("start pumping SS2.", MSG_INFO);
-      g_machine.m_productDispensers[slot_index].m_pcb->setPumpSpeedPercentage(0); // pump speed is inverted!
-      g_machine.m_productDispensers[slot_index].m_pcb->setPumpDirection(slot, true);
+      g_machine.getPcb()->setPumpSpeedPercentage(0); // pump speed is inverted!
+      g_machine.getPcb()->setPumpDirection(slot, true);
 
-      g_machine.m_productDispensers[slot_index].m_pcb->startPump(slot);
-      g_machine.m_productDispensers[slot_index].m_pcb->setSpoutSolenoid(slot, true);
+      g_machine.getPcb()->startPump(slot);
+      g_machine.getPcb()->setSpoutSolenoid(slot, true);
    }
    break;
    case (machine::HardwareVersion::SS09):
@@ -190,8 +191,8 @@ void stateDispense::startPumping()
    case (machine::HardwareVersion::AP2):
    {
       debugOutput::sendMessage("start pumping AP2.", MSG_INFO);
-      g_machine.m_productDispensers[slot_index].m_pcb->startPump(slot);
-      g_machine.m_productDispensers[slot_index].m_pcb->setSpoutSolenoid(slot, true);
+      g_machine.getPcb()->startPump(slot);
+      g_machine.getPcb()->setSpoutSolenoid(slot, true);
    }
    break;
    default:
@@ -211,10 +212,10 @@ void stateDispense::stopPumping()
    case (machine::HardwareVersion::SS1):
    case (machine::HardwareVersion::SS2):
    {
-      if (g_machine.m_productDispensers[slot_index].m_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
+      if (g_machine.getPcb()->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
       {
-         g_machine.m_productDispensers[slot_index].m_pcb->stopPump(slot);
-         g_machine.m_productDispensers[slot_index].m_pcb->setSpoutSolenoid(slot, false);
+         g_machine.getPcb()->stopPump(slot);
+         g_machine.getPcb()->setSpoutSolenoid(slot, false);
       }
       else
       {
@@ -230,10 +231,10 @@ void stateDispense::stopPumping()
    break;
    case (machine::HardwareVersion::AP2):
    {
-      if (g_machine.m_productDispensers[slot_index].m_pcb->get_pcb_version() == pcb::PcbVersion::EN258_4SLOTS)
+      if (g_machine.getPcb()->get_pcb_version() == pcb::PcbVersion::EN258_4SLOTS)
       {
-         g_machine.m_productDispensers[slot_index].m_pcb->stopPump(slot);
-         g_machine.m_productDispensers[slot_index].m_pcb->setSpoutSolenoid(slot, false);
+         g_machine.getPcb()->stopPump(slot);
+         g_machine.getPcb()->setSpoutSolenoid(slot, false);
       }
       else
       {
@@ -260,8 +261,8 @@ DF_ERROR stateDispense::rectractProductBlocking()
 DF_ERROR stateDispense::onExit()
 {
    g_machine.m_productDispensers[slot_index].setPumpsDisableAll();
-   // g_machine.m_productDispensers[slot_index].m_pcb->virtualButtonUnpressHack(this->slot);
-   g_machine.m_productDispensers[slot_index].m_pcb->setSingleDispenseButtonLight(this->slot, false);
+   // g_machine.getPcb()->virtualButtonUnpressHack(this->slot);
+   g_machine.getPcb()->setSingleDispenseButtonLight(this->slot, false);
 
    DF_ERROR e_ret = OK;
    return e_ret;

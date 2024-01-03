@@ -706,10 +706,21 @@ DF_ERROR dispenser::stopActivePNumberDispense()
 
 void dispenser::linkActiveProductVolumeUpdate()
 {
+    // DEPRECATED, if implemented, needs to relink callback function for every new active product 
     product *active_product = getActiveProduct();
     auto lambdaFunc = [active_product]()
     { active_product->registerFlowSensorTickFromPcb(); };
     m_pcb->registerFlowSensorTickCallback(getSlot(), lambdaFunc);
+}
+
+void dispenser::linkDispenserFlowSensorTick()
+{
+    auto lambdaFunc = [this](){ this->registerFlowSensorTickFromPcb(); };  
+    m_pcb->registerFlowSensorTickCallback(getSlot(), lambdaFunc);
+}
+
+void dispenser::registerFlowSensorTickFromPcb(){
+    getActiveProduct()->registerFlowSensorTickFromPcb();
 }
 
 // double dispenser::getDispenserVolumeDispensed()
@@ -753,6 +764,7 @@ double dispenser::getActiveProductVolumeRemaining()
 
 double dispenser::getActiveProductVolumeDispensed()
 {
+    // debugOutput::sendMessage("Dispenser: flofowolfflow : " + std::to_string(getProductVolumeDispensed(getActivePNumber())), MSG_INFO);
     // return m_nVolumeDispensed;
     return getProductVolumeDispensed(getActivePNumber());
 }

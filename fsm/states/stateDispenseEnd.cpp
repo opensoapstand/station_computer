@@ -604,7 +604,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
 
     // update product table
     std::string sql2;
-    sql2 = ("UPDATE products SET volume_dispensed_total=" + updated_volume_dispensed_total_ever_str + ", volume_remaining=" + updated_volume_remaining_str + ", volume_dispensed_since_restock=" + updated_volume_dispensed_since_restock_str + " WHERE soapstand_product_serial='" + pnumber + "';");
+    sql2 = ("UPDATE products SET volume_dispensed_total=" + updated_volume_dispensed_total_ever_str + ", volume_remaining=" + updated_volume_remaining_str + ", volume_dispensed_since_restock=" + updated_volume_dispensed_since_restock_str + " WHERE soapstand_product_serial='" + std::to_string(pnumber) + "';");
     databaseUpdateSql(sql2, CONFIG_DB_PATH);
 
     // update dipenser table

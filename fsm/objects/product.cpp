@@ -197,6 +197,7 @@ void product::registerFlowSensorTickFromPcb()
     // tick from flowsensor interrupt will increase dispensed volume.
     // cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
     cout << "Flow poll TICK from pcb." << endl;
+    debugOutput::sendMessage("Flow poll TICK from pcb." + getPNumberAsPString(), MSG_INFO);
     m_nVolumeDispensed += getVolumePerTick() * m_concentration_multiplier;
 }
 
@@ -204,7 +205,7 @@ void product::registerFlowSensorTickFromInterrupt()
 {
     // tick from flowsensor interrupt will increase dispensed volume.
     // cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
-    cout << "Interrupt flow TICKTICK" << endl;
+    debugOutput::sendMessage("Interrupt poll TICK from pcb." + getPNumberAsPString(), MSG_INFO);
     m_nVolumeDispensed += getVolumePerTick() * m_concentration_multiplier;
 }
 
@@ -959,8 +960,8 @@ bool product::loadProductParametersFromDb()
         // every sqlite3_step returns a row. if status is 101=SQLITE_DONE, it's run over all the rows.
     }
 
-    product::parseDoubleCsvString(m_mix_ratios_str,  m_mix_ratios, m_mix_ratios_count);
-    product::parseIntCsvString(m_mix_pnumbers_str,m_mix_pnumbers, m_mix_pnumbers_count);
+    product::parseDoubleCsvString(m_mix_ratios_str, m_mix_ratios, m_mix_ratios_count);
+    product::parseIntCsvString(m_mix_pnumbers_str, m_mix_pnumbers, m_mix_pnumbers_count);
 
     if (m_mix_pnumbers_count != m_mix_ratios_count)
     {
@@ -1046,7 +1047,7 @@ bool product::testParametersFromDb()
     return pwm;
 }
 
-void product::parseIntCsvString(const std::string &csvString, int* intArray, int &size)
+void product::parseIntCsvString(const std::string &csvString, int *intArray, int &size)
 {
     std::stringstream ss(csvString);
     std::string token;
@@ -1065,7 +1066,7 @@ void product::parseIntCsvString(const std::string &csvString, int* intArray, int
     }
 }
 
-void product::parseDoubleCsvString(const std::string &csvString,double * doubleArray,int &size)
+void product::parseDoubleCsvString(const std::string &csvString, double *doubleArray, int &size)
 {
     std::stringstream ss(csvString);
     std::string token;

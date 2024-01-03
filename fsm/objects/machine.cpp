@@ -140,11 +140,12 @@ void machine::refresh()
 
 void machine::setFlowSensorCallBack(int slot)
 {
-    // CALL THIS FOR EVERY ACTIVE PRODUCT CHANGE during a mixing dispense.
-
+    
     int slot_index = slot - 1;
     // control_pcb->registerFlowSensorTickCallback(std::bind(&dispenser::registerFlowSensorTickCallback, &m_productDispensers[slot_index]));
-    m_productDispensers[slot_index].linkActiveProductVolumeUpdate();
+    // m_productDispensers[slot_index].linkActiveProductVolumeUpdate(); // CALL THIS FOR EVERY ACTIVE PRODUCT CHANGE during a mixing dispense.
+
+    m_productDispensers[slot_index].linkDispenserFlowSensorTick();
 }
 
 void machine::syncSoftwareVersionWithDb()

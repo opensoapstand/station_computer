@@ -38,6 +38,21 @@ QVector<int> dispenser_slot::getAdditivePNumbers()
 {
     return m_additivePNumbers;
 }
+int dispenser_slot::getDispensePNumber(int position)
+{
+  if (position == 0)
+    {
+        qDebug() << "Dispense product Position cannot be 0 , must start from 1.";
+        return DUMMY_PNUMBER;
+    }
+    if (position > getDispenseProductsCount())
+    {
+        qDebug() << "Dispense Product not existing.";
+        return DUMMY_PNUMBER;
+    }
+    return m_dispensePNumbers[position - 1];
+}
+
 int dispenser_slot::getAdditivePNumber(int position)
 {
     // position starts from 1
@@ -57,6 +72,11 @@ int dispenser_slot::getAdditivePNumber(int position)
 int dispenser_slot::getAdditiveCount()
 {
     return m_additivePNumbers.size();
+}
+
+int dispenser_slot::getDispenseProductsCount()
+{
+    return m_dispensePNumbers.size();
 }
 
 int dispenser_slot::getBasePNumber()

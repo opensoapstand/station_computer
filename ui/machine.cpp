@@ -182,7 +182,7 @@ void machine::initProductOptions()
         QVector<int> dispense_pnumbers = getAllDispensePNumbersFromSlot(slot_index + 1);
         for (int i = 0; i < dispense_pnumbers.size(); i++)
         {
-            int position = 1 + slot_index * MENU_DISPENSE_OPTIONS_PER_BASE_MAXIMUM + i;
+            int position = 1 + slot_index * DISPENSE_PRODUCTS_PER_BASE_LINE_MAX + i;
             setProductToMenuOption(position, dispense_pnumbers[i]);
             qDebug() << "pnumber. : : " << (dispense_pnumbers[i]) << "at option" << position;
         }

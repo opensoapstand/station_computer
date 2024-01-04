@@ -17,6 +17,7 @@ public:
 
     int getFirstMixPNumberOrPNumberAsBasePNumber();
     QVector<int> getMixPNumbers();
+    // QVector<int> getMixRatios();
 
     void loadProductPropertiesFromProductsFile();
     void getProductProperties(QString *name, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui);

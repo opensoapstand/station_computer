@@ -121,6 +121,18 @@ private slots:
 
     void on_pushButton_active_pnumber_additive_5_clicked();
 
+    void on_pushButton_dispense_pnumber_1_clicked();
+
+    void on_pushButton_dispense_pnumber_2_clicked();
+
+    void on_pushButton_dispense_pnumber_3_clicked();
+
+    void on_pushButton_dispense_pnumber_4_clicked();
+
+    void on_pushButton_dispense_pnumber_5_clicked();
+
+    void on_pushButton_dispense_pnumber_6_clicked();
+
 private:
     void setSelectedProduct(int pnumber);
     void setStatusTextLabel(QLabel* label, QString statusText, bool displayRawStatus);
@@ -131,6 +143,8 @@ private:
 
 
     QPushButton *buttons_select_additive[ADDITIVES_PER_SLOT_COUNT_MAX];
+
+    QPushButton *buttons_select_mix[DISPENSE_PRODUCTS_PER_BASE_LINE_MAX];
 
     void showEvent(QShowEvent *event);
     Ui::page_maintenance_dispenser *ui;

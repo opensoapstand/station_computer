@@ -23,12 +23,11 @@
 #define SIZE_LARGE_INDEX 3
 #define SIZE_CUSTOM_INDEX 4
 #define SIZE_TEST_INDEX 5
+
 #define ADDITIVES_PER_SLOT_COUNT_MAX 5
-
-
-#define MENU_BASE_OPTIONS_MAXIMUM 5
-#define MENU_DISPENSE_OPTIONS_PER_BASE_MAXIMUM 6
-#define MENU_PRODUCT_SELECTION_OPTIONS_MAX MENU_BASE_OPTIONS_MAXIMUM *MENU_DISPENSE_OPTIONS_PER_BASE_MAXIMUM // the offered selection of product to the user
+#define BASE_LINE_COUNT_MAX 5 // maximum amount of base lines
+#define DISPENSE_PRODUCTS_PER_BASE_LINE_MAX 6   // drinks per base line  (not dynamic, redo ui elements in qt creator when changing... )
+#define MENU_PRODUCT_SELECTION_OPTIONS_MAX BASE_LINE_COUNT_MAX * DISPENSE_PRODUCTS_PER_BASE_LINE_MAX // the offered selection of product to the user
 #define DUMMY_PNUMBER 1
 
 #define HIGHEST_PNUMBER_COUNT 1000 // WARNING: this is not the amount of pnumber loaded in the machine, but the amount of pnumbers existing. in this array, even if we only have 10 pnumbers loaded, P-88 will reside at index 88

@@ -513,7 +513,7 @@ void machine::initCouponState()
 
     setDiscountPercentageFraction(0.0);
     setCouponCode("");
-    m_max_dollar_amount_discount = "666.0";
+    m_max_dollar_amount_discount = "0";
 }
 
 void machine::setRebootState(StateReboot state)
@@ -530,6 +530,15 @@ void machine::setDiscountPercentageFraction(double percentageFraction)
     // ratio = percentage / 100;
     qDebug() << "Set discount percentage as a fraction. " << QString::number(percentageFraction, 'f', 3);
     m_discount_percentage_fraction = percentageFraction;
+}
+
+void machine::resetCouponDiscount()
+{
+    m_discount_percentage_fraction = 0;
+    m_min_threshold_vol_ml_discount = "0";
+    m_max_threshold_vol_ml_discount = "0";
+    m_max_dollar_amount_discount = "0";
+    
 }
 
 double machine::getDiscountPercentageFraction()

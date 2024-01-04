@@ -91,6 +91,37 @@ void page_payment_tap_serial::cancelPayment()
     
 }
 
+
+/*Getting Lan Info*/
+void page_payment_tap_serial::getLanInfo()
+{
+    while (!paymentConnected)
+    {
+        paymentConnected = com.page_init();
+        sleep(1);
+    }
+    cout << "Getting Lan Info" << endl;
+    pktToSend = paymentPacket.ppPosStatusCheckPkt(StatusType::GetLanInfo);
+    if (sendToUX410())
+    {
+        waitForUX410();
+    }
+    pktResponded.clear();
+    com.flushSerial();
+}
+
+void page_payment_tap_serial::resetDevice()
+{
+    while (!paymentConnected)
+    {
+        paymentConnected = com.page_init();
+        sleep(1);
+    }
+    qDebug() << "Device reboot" << endl;
+    pktToSend = paymentPacket.resetDevice();
+    sendToUX410();    
+}
+
 // Navigation: Back to Drink Size Selection
 void page_payment_tap_serial::on_pushButton_previous_page_clicked()
 {
@@ -240,7 +271,7 @@ bool page_payment_tap_serial::tap_serial_initiate()
         paymentConnected = com.page_init();
         sleep(1);
     }
-    cout << "_----_-----__------_-----";
+   
     /*logon packet to send*/
     cout << "Sending Logon packet..." << endl;
     pktToSend = paymentPacket.logonPacket();
@@ -251,10 +282,11 @@ bool page_payment_tap_serial::tap_serial_initiate()
         waitForUX410();
         pktResponded.clear();
     }
-    // else
-    // {
-    //     return false;
-    // }
+    else{
+        resetDevice();
+        sleep(45);
+    }
+
     com.flushSerial();
     cout << "-----------------------------------------------" << endl;
     
@@ -271,10 +303,7 @@ bool page_payment_tap_serial::tap_serial_initiate()
         cout << merchantName << endl;
         pktResponded.clear();
     }
-    // else
-    // {
-    //     return false;
-    // }
+
     com.flushSerial();
     cout << "-----------------------------------------------" << endl;
 
@@ -290,10 +319,7 @@ bool page_payment_tap_serial::tap_serial_initiate()
         std::cout << merchantAddress << endl;
         pktResponded.clear();
     }
-    // else
-    // {
-    //     return false;
-    // }
+
     com.flushSerial();
     cout << "-----------------------------------------------" << endl;
 
@@ -309,10 +335,7 @@ bool page_payment_tap_serial::tap_serial_initiate()
         std::cout << terminalID << endl;
         pktResponded.clear();
     }
-    // else
-    // {
-    //     return false;
-    // }
+  
     com.flushSerial();
     /*Cancel any previous payment*/
     pktToSend = paymentPacket.purchaseCancelPacket();
@@ -333,12 +356,12 @@ bool page_payment_tap_serial::tap_serial_initiate()
 
 bool page_payment_tap_serial::sendToUX410()
 {
-    qDebug() << "Send packet"<< endl;
+    qDebug() << "Sending packet to TAP device"<< endl;
     int waitForAck = 0;
     while (waitForAck < 3)
     {
         com.sendPacket(pktToSend, uint(pktToSend.size()));
-        std::cout << " \n sendtoUX410 Electronic Card Reader: " << paymentPacket.getSendPacket() << endl;
+        qDebug() << "Packet to send: " << QVector<uint8_t>::fromStdVector( pktToSend);
         usleep(100);
         // read back what is responded
         pktResponded = com.readForAck();
@@ -350,6 +373,7 @@ bool page_payment_tap_serial::sendToUX410()
             return true;
         }
     }
+    // resetDevice();
     return false;
 }
 bool page_payment_tap_serial::waitForUX410()
@@ -357,10 +381,11 @@ bool page_payment_tap_serial::waitForUX410()
     bool waitResponse = false;
     while (!waitResponse)
     {
-        qDebug() << "In wait for packet" << endl;
+        qDebug() << "Waiting for packet from TAP" << endl;
         usleep(1000);
         QCoreApplication::processEvents();
         cout << readPacket << endl;
+
         if (pktResponded[0] != 0x02)
         {
             pktResponded.clear();
@@ -369,8 +394,8 @@ bool page_payment_tap_serial::waitForUX410()
         }
         else
         {
+            qDebug() << "Packet received: " << QVector<uint8_t>::fromStdVector(pktResponded);
             readPacket.packetReadFromUX(pktResponded);
-            std::cout << readPacket;
             com.sendAck();
             waitResponse = true;
             sleep(1);
@@ -393,6 +418,7 @@ void page_payment_tap_serial::readTimer_loop()
     qDebug() << "Packet sent for payment";
     if (sendToUX410())
     {   
+        qDebug() << "Tap reader activated";
         waitForUX410();
         while (!response)
         {
@@ -425,7 +451,7 @@ void page_payment_tap_serial::readTimer_loop()
                     if (pktResponded[19] == 0x41)
                     { // Host Response 41 = A "Approved"
                         p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
-
+                        qDebug() << "Payment Approved";
                         purchaseEnable = true;
                         approved = true;
                         cout << "Approval Packet 41" << endl;
@@ -442,6 +468,7 @@ void page_payment_tap_serial::readTimer_loop()
                         purchaseEnable = true;
                         approved = false;
                         cout << "Declined Packet 44" << endl;
+                        qDebug() << "Payment declined";
                         // this->ui->payment_countdownLabel->setText("Declined");
                         paymentPktInfo.transactionID(readPacket.getPacket().data);
                         paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
@@ -461,6 +488,7 @@ void page_payment_tap_serial::readTimer_loop()
                     {
                         purchaseEnable = false;
                         cout << "No Approval Packet!" << endl;
+                        qDebug() << "Payment not approved";
                         // this->ui->payment_countdownLabel->setText("Not Approved");
                         paymentPktInfo.transactionID(readPacket.getPacket().data);
                         paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());

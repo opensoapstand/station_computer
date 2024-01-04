@@ -986,7 +986,7 @@ bool product::loadProductParametersFromDb()
     }
     else
     {
-        // debugOutput::sendMessage("No db record for product: " + std::to_string(m_pnumber), MSG_INFO);
+        debugOutput::sendMessage("No db record for product: " + std::to_string(m_pnumber), MSG_ERROR);
         // debugOutput::sendMessage("no records for: " + sql_string, MSG_INFO);
     }
 

@@ -169,6 +169,7 @@ public:
     void setProducts(product *products);
 
     void setDiscountPercentageFraction(double percentageFraction);
+    void resetCouponDiscount();
     double getDiscountPercentageFraction();
     double getPriceCorrectedForSelectedSize(int pnumber, bool maximumVolumeForCustom);
     double getDiscountAmount(double price);

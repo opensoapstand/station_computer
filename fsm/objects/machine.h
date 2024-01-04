@@ -84,7 +84,7 @@ public:
     // void loadButtonPropertiesFromDb();
     bool getMultiDispenseButtonEnabled();
 
-    void loadGeneralProperties();
+    void loadGeneralProperties(bool loadDispenserParameters);
     void loadMachineParametersFromDb();
     string getMachineId();
 

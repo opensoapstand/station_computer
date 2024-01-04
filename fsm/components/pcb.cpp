@@ -2143,7 +2143,7 @@ void pcb::setSolenoidFromArray(uint8_t slot, uint8_t position, bool onElseOff)
     if (isValid)
     {
         setMCP23017Output(slot, solenoid_positions[position - 1], onElseOff, solenoid_positions_register[position - 1]);
-        debugOutput::sendMessage("Pcb: Solenoid array. Position: " + std::to_string(position) + ". Slot: " + std::to_string(slot) + ". Enabled: " + std::to_string(onElseOff), MSG_INFO);
+        debugOutput::sendMessage("Pcb: Array Solenoid# : " + std::to_string(position) + ". Slot: " + std::to_string(slot) + ". Enabled: " + std::to_string(onElseOff), MSG_INFO);
     }
 }
 

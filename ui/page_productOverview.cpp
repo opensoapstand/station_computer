@@ -334,6 +334,7 @@ void page_product_overview::reset_and_show_page_elements()
     case (enabled_invalid_input):
     {
         qDebug() << "Coupon state: Invalid coupon input";
+        p_page_idle->thisMachine->resetCouponDiscount();
         p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_promo_code, "promoCode_invalid", PAGE_PRODUCT_OVERVIEW_CSS);
         QString promo_code_input_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "lineEdit_promo_code->invalid");
         ui->lineEdit_promo_code->setText(promo_code_input_text);
@@ -344,6 +345,7 @@ void page_product_overview::reset_and_show_page_elements()
     case (enabled_not_eligible):
     {
         qDebug() << "Coupon state: Not eligible for station";
+        p_page_idle->thisMachine->resetCouponDiscount();
         p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_promo_code, "promoCode_invalid", PAGE_PRODUCT_OVERVIEW_CSS);
         QString promo_code_input_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "lineEdit_promo_code->ineligible");
         ui->lineEdit_promo_code->setText(promo_code_input_text);
@@ -410,12 +412,14 @@ void page_product_overview::reset_and_show_page_elements()
         ui->lineEdit_promo_code->setText(promo_code_input_text);
         ui->lineEdit_promo_code->show();
         ui->pushButton_promo_input->show();
+        p_page_idle->thisMachine->resetCouponDiscount();
     }
     break;
 
     default:
     {
         qDebug() << "Coupon state: Invalid" << p_page_idle->thisMachine->getCouponState();
+        p_page_idle->thisMachine->resetCouponDiscount();
     }
     break;
     }
@@ -469,6 +473,7 @@ void page_product_overview::updatePriceLabel()
         double selectedPriceCorrected = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
         double discount = p_page_idle->thisMachine->getDiscountAmount(selectedPrice);
         double discountFraction = p_page_idle->thisMachine->getDiscountPercentageFraction();
+        qDebug() << "Discount" << discountFraction;
 
         QString units = p_page_idle->thisMachine->getSelectedProduct()->getUnitsForSlot();
         if (units == "ml")
@@ -513,7 +518,9 @@ void page_product_overview::updatePriceLabel()
         // It's intended behaviour so user doesnt have to retype the promo-code
         // promo codes get reset when going to idle page.
         double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
+        qDebug() << "Selcted price" << selectedPrice;
         double selectedPriceCorrected = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
+        qDebug() << "Selcted price corrected" << selectedPriceCorrected;
         double discountFraction = p_page_idle->thisMachine->getDiscountPercentageFraction();
         double discountAmount = selectedPrice - selectedPriceCorrected;
         ui->label_invoice_discount_amount->setText("-$" + QString::number(discountAmount, 'f', 2));
@@ -579,7 +586,6 @@ void page_product_overview::apply_promo_code(QString promocode)
 
                         p_page_idle->thisMachine->setCouponCode(promocode);
                         p_page_idle->thisMachine->setDiscountPercentageFraction((new_percent * 1.0) / 100);
-
                         p_page_idle->thisMachine->setCouponState(enabled_valid_active);
                     }
                     else

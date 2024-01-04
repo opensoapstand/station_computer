@@ -122,6 +122,7 @@ private slots:
     void on_pushButton_active_pnumber_additive_5_clicked();
 
 private:
+    void setSelectedProduct(int pnumber);
     void setStatusTextLabel(QLabel* label, QString statusText, bool displayRawStatus);
     void setButtonPressCountLabel(bool init);
     void setButtonPressCountLabel2(bool init);

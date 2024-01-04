@@ -17,6 +17,8 @@ public:
 
     int getFirstMixPNumberOrPNumberAsBasePNumber();
     QVector<int> getMixPNumbers();
+    QString getMixPNumbersAsCsv();
+    QString getMixRatiosAsCsv();
     // QVector<int> getMixRatios();
 
     void loadProductPropertiesFromProductsFile();

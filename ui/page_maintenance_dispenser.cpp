@@ -520,8 +520,14 @@ void page_maintenance_dispenser::dispense_test_start()
     // QString slotAsQString = QString::number(p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
     // QString pNumbersAsCsvString = QString::number(m_activePNumber);
     // QString pNumberRatiosAsCsvString = QString::number(1);
-    QString pNumbersAsCsvString = QString::number(this->p_page_idle->thisMachine->getSelectedProduct()->getPNumber()) + ",666";
-    QString pNumberRatiosAsCsvString = QString::number(0.6) + ",0.4";
+
+    // check if pnumber is a mix. 
+
+    QString pNumbersAsCsvString = this->p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbersAsCsv();
+    QString pNumberRatiosAsCsvString = this->p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosAsCsv();
+
+    // QString pNumbersAsCsvString = QString::number(this->p_page_idle->thisMachine->getSelectedProduct()->getPNumber()) + ",666";
+    // QString pNumberRatiosAsCsvString = QString::number(0.6) + ",0.4";
 
     QString command = "dispenseMix|" + dispenseCommand + "|" + pNumbersAsCsvString + "|" + pNumberRatiosAsCsvString + "|"; // dipenseMix|slot|pnumberscsv|ratioscsv
 

@@ -99,6 +99,45 @@ int pnumberproduct::getFirstMixPNumberOrPNumberAsBasePNumber()
     }
 }
 
+QString pnumberproduct::getMixPNumbersAsCsv()
+{
+    QString csvString;
+    if (m_mixPNumbers.size() > 0)
+    {
+        for (int i = 0; i < m_mixPNumbers.size(); ++i)
+        {
+            csvString += QString::number(m_mixPNumbers[i]);
+            if (i < m_mixPNumbers.size() - 1) // Don't add a comma after the last element
+                csvString += ",";
+        }
+    }
+    else
+    {
+        csvString += QString::number(m_PNumber);
+    }
+    return csvString;
+}
+
+QString pnumberproduct::getMixRatiosAsCsv()
+{
+    QString csvString;
+    if (m_mixRatios.size() > 0)
+    {
+
+        for (int i = 0; i < m_mixRatios.size(); ++i)
+        {
+            csvString += QString::number(m_mixRatios[i]);
+            if (i < m_mixRatios.size() - 1) // Don't add a comma after the last element
+                csvString += ",";
+        }
+    }
+    else
+    {
+        csvString += "1";
+    }
+    return csvString;
+}
+
 QVector<int> pnumberproduct::getMixPNumbers()
 {
     return m_mixPNumbers;
@@ -112,7 +151,7 @@ void pnumberproduct::loadProductPropertiesFromDb()
                                   &m_soapstand_product_serial,
                                   m_mixPNumbers,
                                   m_mixRatios,
-                                //   &m_size_unit,
+                                  //   &m_size_unit,
                                   //   &m_currency_deprecated, //_dummy_deprecated
                                   //   &m_payment_deprecated,  //_deprecated,
                                   &m_name_receipt,
@@ -134,16 +173,17 @@ void pnumberproduct::loadProductPropertiesFromDb()
                                   &m_status_text,
                                   m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
 
-        int pnumberFromDb = convertPStringToPInt(m_soapstand_product_serial);
+    int pnumberFromDb = convertPStringToPInt(m_soapstand_product_serial);
 
-        if (getPNumber() != pnumberFromDb){
-            qDebug() << "ERROR: Could not load from DB: " << getPNumber() <<" was set as: " << pnumberFromDb;
-        }
-        
-        // else{
-        //     qDebug() << "Loaded from DB: " << getPNumber() <<" with db pnumber: " << pnumberFromDb;
+    if (getPNumber() != pnumberFromDb)
+    {
+        qDebug() << "ERROR: Could not load from DB: " << getPNumber() << " was set as: " << pnumberFromDb;
+    }
 
-        // }
+    // else{
+    //     qDebug() << "Loaded from DB: " << getPNumber() <<" with db pnumber: " << pnumberFromDb;
+
+    // }
 }
 
 bool pnumberproduct::getIsProductEnabled()
@@ -352,7 +392,7 @@ double pnumberproduct::getRestockVolume()
 
 void pnumberproduct::setSizeUnit(QString unit)
 {
-     m_size_unit = unit;
+    m_size_unit = unit;
 }
 
 QString pnumberproduct::getSizeUnit()

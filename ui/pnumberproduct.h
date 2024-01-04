@@ -82,8 +82,9 @@ public:
     double getVolumePerTickForSlot();                                 // productt
     void setVolumePerTickForSlot(QString volumePerTickInput);         // productt
 
-    QString getUnitsForSlot();              // productt
-    QString getSizeAsVolume(QString units); // productt
+    void setSizeUnit(QString units);
+    QString getSizeUnit();              // productt
+    // QString getSizeAsVolume(QString units); // productt
 
     QString getSizeAsVolumeWithCorrectUnits(bool round, bool addUnits);                // productt
     QString getSizeAsVolumeWithCorrectUnits(int size, bool roundValue, bool addUnits); // productt

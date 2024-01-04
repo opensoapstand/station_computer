@@ -77,6 +77,7 @@ void machine::loadDynamicContent()
     {
         // qDebug() << "machine: load product properties for pnumber:" << (all_pnumbers[pnumber_index]);
         m_pnumberproducts[all_pnumbers[pnumber_index]].loadProductProperties();
+        m_pnumberproducts[all_pnumbers[pnumber_index]].setSizeUnit(getSizeUnit()); // volumeUnit is a machine wide parameter
     }
 
     loadTextsFromTemplateCsv();                                // dynamic content (text by template)
@@ -771,6 +772,10 @@ double machine::getTemperature_1()
     return m_temperature;
 }
 
+QString machine::getSizeUnit(){
+    return m_size_unit;
+}
+
 void machine::getTemperatureFromController()
 {
     dfUtility->send_command_to_FSM("getTemperature", false);
@@ -1022,7 +1027,8 @@ void machine::loadMachineParameterFromDb()
         &m_software_version_controller,
         &m_is_enabled,
         &m_status_text,
-        &m_payment);
+        &m_payment,
+        &m_size_unit);
 
     qDebug() << "Machine ID as loaded from db: " << getMachineId();
     qDebug() << "Template folder from db : " << getTemplateFolder();

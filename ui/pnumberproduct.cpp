@@ -112,7 +112,7 @@ void pnumberproduct::loadProductPropertiesFromDb()
                                   &m_soapstand_product_serial,
                                   m_mixPNumbers,
                                   m_mixRatios,
-                                  &m_size_unit,
+                                //   &m_size_unit,
                                   //   &m_currency_deprecated, //_dummy_deprecated
                                   //   &m_payment_deprecated,  //_deprecated,
                                   &m_name_receipt,
@@ -318,7 +318,7 @@ void pnumberproduct::setVolumeDispensedMl(double volumeMl)
 
 double pnumberproduct::inputTextToMlConvertUnits(QString inputValueAsText)
 {
-    if (getUnitsForSlot() == "oz")
+    if (getSizeUnit() == "oz")
     {
         return df_util::convertOzToMl(inputValueAsText.toDouble());
     }
@@ -350,7 +350,12 @@ double pnumberproduct::getRestockVolume()
     return m_volume_full;
 }
 
-QString pnumberproduct::getUnitsForSlot()
+void pnumberproduct::setSizeUnit(QString unit)
+{
+     m_size_unit = unit;
+}
+
+QString pnumberproduct::getSizeUnit()
 {
 
     return m_size_unit;
@@ -359,7 +364,7 @@ QString pnumberproduct::getUnitsForSlot()
 QString pnumberproduct::getVolumePerTickAsStringForSlot()
 {
     double vol_per_tick = getVolumePerTickForSlot();
-    QString units = getUnitsForSlot();
+    QString units = getSizeUnit();
 
     return df_util::getConvertedStringVolumeFromMl(vol_per_tick, units, false, true);
 }
@@ -417,7 +422,7 @@ double pnumberproduct::getVolumeRemaining()
 
 QString pnumberproduct::getVolumeRemainingCorrectUnits(bool addUnits)
 {
-    QString units = getUnitsForSlot();
+    QString units = getSizeUnit();
     QString volume_as_string = df_util::getConvertedStringVolumeFromMl(getVolumeRemaining(), units, false, addUnits);
 
     return volume_as_string;
@@ -425,14 +430,14 @@ QString pnumberproduct::getVolumeRemainingCorrectUnits(bool addUnits)
 
 QString pnumberproduct::getVolumeDispensedSinceRestockCorrectUnits()
 {
-    QString units = getUnitsForSlot();
+    QString units = getSizeUnit();
     QString volume_as_string = df_util::getConvertedStringVolumeFromMl(m_volume_dispensed_since_restock, units, false, true);
     return volume_as_string;
 }
 
 QString pnumberproduct::getTotalDispensedCorrectUnits()
 {
-    QString units = getUnitsForSlot();
+    QString units = getSizeUnit();
     QString volume_as_string = df_util::getConvertedStringVolumeFromMl(m_volume_dispensed_total, units, false, true);
     return volume_as_string;
 }
@@ -445,7 +450,7 @@ QString pnumberproduct::getSizeAsVolumeWithCorrectUnits(int size, bool roundValu
     QString units;
 
     v = getVolumeBySize(size);
-    units = getUnitsForSlot();
+    units = getSizeUnit();
     volume_as_string = df_util::getConvertedStringVolumeFromMl(v, units, roundValue, addUnits);
     return volume_as_string;
 }
@@ -518,7 +523,7 @@ QString pnumberproduct::getAwsProductId()
 
 QString pnumberproduct::getFullVolumeCorrectUnits(bool addUnits)
 {
-    QString units = getUnitsForSlot();
+    QString units = getSizeUnit();
     QString volume_as_string = df_util::getConvertedStringVolumeFromMl(m_volume_full, units, false, addUnits);
     return volume_as_string;
 }

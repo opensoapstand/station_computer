@@ -26,9 +26,11 @@ product::~product()
 {
 }
 
-void product::init(int pnumber)
+void product::init(int pnumber, string size_unit, string paymentMethod)
 {
     m_pnumber = pnumber;
+    m_display_unit = size_unit;
+    m_paymentMethod = paymentMethod;
     this->loadParameters();
 }
 
@@ -646,11 +648,8 @@ bool product::isDbValid()
         "mix_pnumbers",
         "mix_ratios",
         "productId",
-        "slot",
         "name",
-        "size_unit",
         "currency",
-        "payment",
         "name_receipt",
         "concentrate_multiplier",
         "dispense_speed",
@@ -694,7 +693,8 @@ bool product::isDbValid()
         "size_custom_discount",
         "price_custom_discount",
         "is_enabled",
-        "status_text"
+        "status_text",
+        "size_unit"
 
     };
     bool is_valid = true;
@@ -855,40 +855,38 @@ bool product::loadProductParametersFromDb()
                         "mix_ratios,"
                         "productId,"
                         "name,"
-                        "size_unit,"
-                        "payment,"
+                        "is_enabled,"
                         "concentrate_multiplier,"
-                        "dispense_speed," // 8
+                        "dispense_speed," // 7
                         "threshold_flow,"
-                        "retraction_time," // 10
+                        "retraction_time," // 9
                         "calibration_const,"
                         "volume_per_tick,"
                         "volume_full,"
                         "volume_remaining,"
-                        "volume_dispensed_since_restock," // 15
+                        "volume_dispensed_since_restock," // 14
                         "volume_dispensed_total,"
                         "is_enabled_small,"
                         "is_enabled_medium,"
-                        "is_enabled_large," // 19
+                        "is_enabled_large," // 18
                         "is_enabled_custom,"
                         "size_small,"
                         "size_medium,"
                         "size_large,"
                         "size_custom_min,"
-                        "size_custom_max," // 25
+                        "size_custom_max," // 24
                         "price_small,"
                         "price_medium,"
                         "price_large,"
-                        "price_custom," // 29
+                        "price_custom," // 28
                         "plu_small,"
                         "plu_medium,"
                         "plu_large,"
                         "plu_custom,"
-                        "is_enabled_custom_discount," //
+                        "is_enabled_custom_discount," // 33
                         "size_custom_discount,"
-                        "price_custom_discount," //
-                        "is_enabled,"
-                        "status_text"
+                        "price_custom_discount," // 35
+                        "status_text"            // 36
                         " FROM products WHERE soapstand_product_serial='" +
                         std::to_string(m_pnumber) + "';";
 
@@ -914,47 +912,48 @@ bool product::loadProductParametersFromDb()
 
         m_product_id_combined_with_location_for_backend = product::dbFieldAsValidString(stmt, 3);
         m_name = product::dbFieldAsValidString(stmt, 4);
-        m_display_unit = product::dbFieldAsValidString(stmt, 5);
-        m_paymentMethod = product::dbFieldAsValidString(stmt, 6);
-        m_concentration_multiplier = sqlite3_column_double(stmt, 7);
+        // m_display_unit = product::dbFieldAsValidString(stmt, 5);
+        m_is_enabled = sqlite3_column_int(stmt, 5);
+        // m_paymentMethod = product::dbFieldAsValidString(stmt, 6);
+        m_concentration_multiplier = sqlite3_column_double(stmt, 6);
 
         if (m_concentration_multiplier < 0.00000001)
         {
-            debugOutput::sendMessage("Concentration multiplier was not set. Will default to 1. Was:" + to_string(m_concentration_multiplier), MSG_INFO);
+            debugOutput::sendMessage("Concentration multiplier was not set. Will default to 1. Was:" + std::to_string(m_concentration_multiplier), MSG_INFO);
             m_concentration_multiplier = 1.0;
         }
 
-        m_nDispenseSpeedPWM = sqlite3_column_int(stmt, 8);
-        m_nThresholdFlow = sqlite3_column_double(stmt, 9);
-        m_nRetractionTimeMillis = sqlite3_column_int(stmt, 10);
-        m_nThresholdFlow_maximum_allowed = sqlite3_column_double(stmt, 11); // debugOutput::sendMessage("DB_PRODUCTS_CALIBRATION_CONST (reused for maximum flow rate):" + to_string(m_nThresholdFlow_maximum_allowed), MSG_INFO);
-        m_nVolumePerTick = sqlite3_column_double(stmt, 12);
-        m_nVolumeFull = sqlite3_column_double(stmt, 13);
-        m_nVolumeRemaining = sqlite3_column_double(stmt, 14);
-        m_nVolumeDispensedSinceRestock = sqlite3_column_double(stmt, 15);
-        m_nVolumeDispensedTotalEver = sqlite3_column_double(stmt, 16);
-        isEnabledSizes[SIZE_INDEX_SMALL] = sqlite3_column_int(stmt, 17);
-        isEnabledSizes[SIZE_INDEX_MEDIUM] = sqlite3_column_int(stmt, 18);
-        isEnabledSizes[SIZE_INDEX_LARGE] = sqlite3_column_int(stmt, 19);
-        isEnabledSizes[SIZE_INDEX_CUSTOM] = sqlite3_column_int(stmt, 20);
-        m_nVolumeTarget_s = sqlite3_column_double(stmt, 21);
-        m_nVolumeTarget_m = sqlite3_column_double(stmt, 22);
-        m_nVolumeTarget_l = sqlite3_column_double(stmt, 23);
-        m_nVolumeTarget_c_min = sqlite3_column_double(stmt, 24);
-        m_nVolumeTarget_c_max = sqlite3_column_double(stmt, 25);
-        m_price_small = sqlite3_column_double(stmt, 26);
-        m_price_medium = sqlite3_column_double(stmt, 27);
-        m_price_large = sqlite3_column_double(stmt, 28);
-        m_price_custom_per_ml = sqlite3_column_double(stmt, 29);
-        m_nPLU_small = product::dbFieldAsValidString(stmt, 30);
-        m_nPLU_medium = product::dbFieldAsValidString(stmt, 31);
-        m_nPLU_large = product::dbFieldAsValidString(stmt, 32);
-        m_nPLU_custom = product::dbFieldAsValidString(stmt, 33);
-        m_is_enabled_custom_discount = sqlite3_column_int(stmt, 34);
-        m_nVolumeTarget_custom_discount = sqlite3_column_double(stmt, 35);
-        m_price_custom_discount_per_liter = sqlite3_column_double(stmt, 36);
-        m_is_enabled = sqlite3_column_int(stmt, 37);
-        m_status_text = product::dbFieldAsValidString(stmt, 38);
+        m_nDispenseSpeedPWM = sqlite3_column_int(stmt, 7);
+        m_nThresholdFlow = sqlite3_column_double(stmt, 8);
+        m_nRetractionTimeMillis = sqlite3_column_int(stmt, 9);
+        m_nThresholdFlow_maximum_allowed = sqlite3_column_double(stmt, 10);
+        m_nVolumePerTick = sqlite3_column_double(stmt, 11);
+        m_nVolumeFull = sqlite3_column_double(stmt, 12);
+        m_nVolumeRemaining = sqlite3_column_double(stmt, 13);
+        m_nVolumeDispensedSinceRestock = sqlite3_column_double(stmt, 14);
+        m_nVolumeDispensedTotalEver = sqlite3_column_double(stmt, 15);
+        isEnabledSizes[SIZE_INDEX_SMALL] = sqlite3_column_int(stmt, 16);
+        isEnabledSizes[SIZE_INDEX_MEDIUM] = sqlite3_column_int(stmt, 17);
+        isEnabledSizes[SIZE_INDEX_LARGE] = sqlite3_column_int(stmt, 18);
+        isEnabledSizes[SIZE_INDEX_CUSTOM] = sqlite3_column_int(stmt, 19);
+        m_nVolumeTarget_s = sqlite3_column_double(stmt, 20);
+        m_nVolumeTarget_m = sqlite3_column_double(stmt, 21);
+        m_nVolumeTarget_l = sqlite3_column_double(stmt, 22);
+        m_nVolumeTarget_c_min = sqlite3_column_double(stmt, 23);
+        m_nVolumeTarget_c_max = sqlite3_column_double(stmt, 24);
+        m_price_small = sqlite3_column_double(stmt, 25);
+        m_price_medium = sqlite3_column_double(stmt, 26);
+        m_price_large = sqlite3_column_double(stmt, 27);
+        m_price_custom_per_ml = sqlite3_column_double(stmt, 28);
+        m_nPLU_small = product::dbFieldAsValidString(stmt, 29);
+        m_nPLU_medium = product::dbFieldAsValidString(stmt, 30);
+        m_nPLU_large = product::dbFieldAsValidString(stmt, 31);
+        m_nPLU_custom = product::dbFieldAsValidString(stmt, 32);
+        m_is_enabled_custom_discount = sqlite3_column_int(stmt, 33);
+        m_nVolumeTarget_custom_discount = sqlite3_column_double(stmt, 34);
+        m_price_custom_discount_per_liter = sqlite3_column_double(stmt, 35);
+
+        m_status_text = product::dbFieldAsValidString(stmt, 36);
 
         status = sqlite3_step(stmt); // next record
         // every sqlite3_step returns a row. if status is 101=SQLITE_DONE, it's run over all the rows.

@@ -165,6 +165,15 @@ void machine::executeSQLStatement(string sql_string)
     sqlite3_close(db);
 }
 
+string machine::getPaymentMethod()
+{
+    return m_payment;
+}
+string machine::getSizeUnit()
+{
+    return m_size_unit;
+}
+
 string machine::getMachineId()
 {
     return m_machine_id;
@@ -704,7 +713,9 @@ void machine::loadMachineParametersFromDb()
                         "alert_temperature,"
                         "software_version_controller,"
                         "is_enabled,"
-                        "status_text"
+                        "status_text,"
+                        "payment,"
+                        "size_unit"
                         " FROM machine"
                         ";";
 
@@ -751,6 +762,9 @@ void machine::loadMachineParametersFromDb()
         m_software_version_controller = product::dbFieldAsValidString(stmt, 26);
         m_is_enabled = sqlite3_column_int(stmt, 27);
         m_status_text = product::dbFieldAsValidString(stmt, 28);
+        m_payment = product::dbFieldAsValidString(stmt, 29);
+
+        m_size_unit = product::dbFieldAsValidString(stmt, 30);
 
         if (numberOfRecordsFound > 1)
         {

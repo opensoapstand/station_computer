@@ -54,12 +54,11 @@ DF_ERROR stateDispense::onEntry()
 
    if (m_pMessaging->getAction() == ACTION_AUTOFILL)
    {
-      startPumping();
+      startPumping();  // make part of dispenser. 
    }
 
    return e_ret;
 }
-
 
 DF_ERROR stateDispense::onAction()
 {
@@ -99,13 +98,10 @@ DF_ERROR stateDispense::onAction()
 
    if (g_machine.m_productDispensers[slot_index].getIsStatusUpdateAllowed())
    {
-      double volume = g_machine.m_productDispensers[slot_index].getSelectedProductVolumeDispensed();
+      double volume = g_machine.m_productDispensers[slot_index].getActiveProductVolumeDispensed();
 
       Time_val avg_02s = g_machine.m_productDispensers[slot_index].getAveragedProductFlowRate(1000);
       double flowrate = avg_02s.value;
-      // const char *statusStringChar = g_machine.m_productDispensers[slot_index].getDispenseStatusAsString();
-      // std::string statusString(statusStringChar);
-      // std::string message = "dispenseupdate|" + std::to_string(volume) + "|" + std::to_string(flowrate) + "|" + statusString;
       const char *statusStringChar = g_machine.m_productDispensers[slot_index].getSlotStateAsString();
       std::string statusString(statusStringChar);
       std::string message = "dispenseupdate|" + std::to_string(volume) + "|" + std::to_string(flowrate) + "|" + statusString;
@@ -117,8 +113,8 @@ DF_ERROR stateDispense::onAction()
       // update of the actual dispense
       const char *dispenseStatusStr = g_machine.m_productDispensers[slot_index].getDispenseStatusAsString();
       debugOutput::sendMessage(dispenseStatusStr, MSG_INFO);
-      debugOutput::sendMessage(to_string( g_machine.getPcb()->getFlowSensorPulsesSinceEnabling(slot)), MSG_INFO);
-       g_machine.getPcb()->outputMCP23017IORegisters(slot);
+      debugOutput::sendMessage(to_string(g_machine.getPcb()->getFlowSensorPulsesSinceEnabling(slot)), MSG_INFO);
+      g_machine.getPcb()->outputMCP23017IORegisters(slot);
 #endif
    }
 
@@ -152,12 +148,21 @@ DF_ERROR stateDispense::onAction()
       }
    }
 
-   if (g_machine.m_productDispensers[slot_index].isSelectedProductVolumeTargetReached())
+   if (g_machine.m_productDispensers[slot_index].isActiveProductVolumeTargetReached())
    {
-      debugOutput::sendMessage("Stop dispensing. Requested volume reached. " + to_string(g_machine.m_productDispensers[slot_index].getSelectedProductVolumeDispensed()), MSG_INFO);
-      m_state_requested = STATE_DISPENSE_END;
+      
+      debugOutput::sendMessage("Stop dispensing active product. Requested volume reached. " + to_string(g_machine.m_productDispensers[slot_index].getActiveProductVolumeDispensed()), MSG_INFO);
       stopPumping();
-      return e_ret = OK;
+      if ( g_machine.m_productDispensers[slot_index].isEndOfSelectedProductDispenseIfNotSetNextActiveProduct()){
+         m_state_requested = STATE_DISPENSE_END;
+         debugOutput::sendMessage("Stop dispensing selected product. Requested volume reached. " + to_string(g_machine.m_productDispensers[slot_index].getSelectedProductVolumeDispensed()), MSG_INFO);
+      }
+      else
+      {
+         
+
+         // check for next mixing product to activate to dispense.   additive n -> .... ->  additive 1 -> base. (end with base)
+      }
    }
 
    e_ret = OK;

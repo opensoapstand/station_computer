@@ -68,6 +68,12 @@ int product::getBasePNumber()
     }
 }
 
+int product::getMixProductsCount()
+{
+    // sum of additives and base
+    return m_mix_pnumbers_count;
+}
+
 int product::getAdditivesCount()
 {
     if (isMixingProduct())
@@ -92,6 +98,7 @@ double product::getAdditiveMixRatio(int position)
 
 double product::getBaseMixRatio()
 {
+    // ratio of base product
     if (!isMixingProduct())
     {
         return 1.0;
@@ -104,14 +111,15 @@ double product::getBaseMixRatio()
 
 double product::getMixRatio(int position)
 {
+    // ratio of mixing product (pos 0=base,  pos>=1 = additives.  pos1=additive1,...)
     if (!isMixingProduct())
     {
-        return 0;
+        return 1.0;
     }
     return m_mix_ratios[position];
 }
 
-bool product::getAdditivePNumber(int position)
+int product::getAdditivePNumber(int position)
 {
     if (position == 0)
     {
@@ -123,11 +131,21 @@ bool product::getAdditivePNumber(int position)
         debugOutput::sendMessage("ASSERT ERROR: Additives position provided is too high. Additive does not exist.", MSG_ERROR);
         return PRODUCT_DUMMY;
     }
-    m_mix_pnumbers[position]; // first position is base pnumber. but mix pnumbers start from 1.
+    return getMixPNumber(position); // first position is base pnumber. but mix pnumbers start from 1.
+}
+
+int product::getMixPNumber(int position)
+{
+    //  for (uint8_t i=0;i<m_mix_pnumbers_count;i++){
+    //     debugOutput::sendMessage("array tesrrrrrrrtstj:  " + to_string(m_mix_pnumbers[i]) + " at pos: " + to_string(i), MSG_INFO);
+    // }
+
+    return m_mix_pnumbers[position]; // first position is base pnumber. but pnumbers additives start from 1.
 }
 
 bool product::isMixingProduct()
 {
+    // the implications are big: mixing products have a lot less properties than actual products (i.e. no calibration parameter)
     bool isMix = false;
     if (m_mix_pnumbers_count <= 0)
     {
@@ -788,8 +806,13 @@ std::string product::dbFieldAsValidString(sqlite3_stmt *stmt, int column_index)
 bool product::loadParameters()
 {
     bool success = true;
-    success &= loadProductParametersFromDb();
-    loadProductPropertiesFromCsv();
+    if (getPNumber() != CUSTOM_MIX_PNUMBER)
+    {
+        success &= loadProductParametersFromDb();
+        loadProductPropertiesFromCsv();
+    }else{
+        debugOutput::sendMessage("No data loading for custom mix product.", MSG_INFO);
+    }
     return success;
 }
 
@@ -959,13 +982,14 @@ bool product::loadProductParametersFromDb()
         // every sqlite3_step returns a row. if status is 101=SQLITE_DONE, it's run over all the rows.
     }
 
-    product::parseDoubleCsvString(m_mix_ratios_str, m_mix_ratios, m_mix_ratios_count);
-    product::parseIntCsvString(m_mix_pnumbers_str, m_mix_pnumbers, m_mix_pnumbers_count);
+    parseMixPNumbersAndRatiosCsv(m_mix_pnumbers_str, m_mix_ratios_str);
+    // product::parseDoubleCsvString(m_mix_ratios_str, m_mix_ratios, m_mix_ratios_count);
+    // product::parseIntCsvString(m_mix_pnumbers_str, m_mix_pnumbers, m_mix_pnumbers_count);
 
-    if (m_mix_pnumbers_count != m_mix_ratios_count)
-    {
-        debugOutput::sendMessage("DB mixing ASSERT ERROR: Amount of mixing pnumber and their ratios is not equal!!! pnumbers:" + m_mix_pnumbers_str + " mixing ratios: " + m_mix_ratios_str, MSG_ERROR);
-    }
+    // if (m_mix_pnumbers_count != m_mix_ratios_count)
+    // {
+    //     debugOutput::sendMessage("DB mixing ASSERT ERROR: Amount of mixing pnumber and their ratios is not equal!!! pnumbers:" + m_mix_pnumbers_str + " mixing ratios: " + m_mix_ratios_str, MSG_ERROR);
+    // }
 
     m_pnumber_loaded_from_db = false;
     if (numberOfRecordsFound == 1)
@@ -1046,6 +1070,20 @@ bool product::testParametersFromDb()
     return pwm;
 }
 
+void product::parseMixPNumbersAndRatiosCsv(const std::string &mixPNumbersCsvString, const std::string &mixRatiosCsvString)
+{
+
+    product::parseDoubleCsvString(mixRatiosCsvString, m_mix_ratios, m_mix_ratios_count);
+    product::parseIntCsvString(mixPNumbersCsvString, m_mix_pnumbers, m_mix_pnumbers_count);
+
+    if (m_mix_pnumbers_count != m_mix_ratios_count)
+    {
+        debugOutput::sendMessage("DB mixing ASSERT ERROR: Amount of mixing pnumber and their ratios is not equal!!! pnumbers:" + mixPNumbersCsvString + " mixing ratios: " + mixRatiosCsvString, MSG_ERROR);
+    }
+
+   
+}
+
 void product::parseIntCsvString(const std::string &csvString, int *intArray, int &size)
 {
     std::stringstream ss(csvString);
@@ -1054,9 +1092,13 @@ void product::parseIntCsvString(const std::string &csvString, int *intArray, int
 
     while (std::getline(ss, token, ','))
     {
+
         if (size < DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX)
         {
-            intArray[size++] = std::stoi(token);
+            intArray[size] = std::stoi(token);
+            // debugOutput::sendMessage("array teststj:  " + to_string(intArray[size]) + " at pos: " + to_string(size), MSG_INFO);
+
+            size++;
         }
         else
         {

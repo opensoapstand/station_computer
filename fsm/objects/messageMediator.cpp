@@ -524,8 +524,8 @@ DF_ERROR messageMediator::parseCommandString()
       std::string ratios = sCommand.substr(found2 + 1, found3 - found2 - 1);
       debugOutput::sendMessage("Dispense Ratios : " + ratios, MSG_INFO);
       m_machine->m_productDispensers[getRequestedSlot() - 1].setCustomMixParametersAsSelectedProduct(pnumbers, ratios);
-      int pnumber = m_machine->m_productDispensers[getRequestedSlot() - 1].getMixPNumberFromMixIndex(0);
-      m_machine->m_productDispensers[getRequestedSlot() - 1].setPNumberAsSingleDispenseSelectedProduct(pnumber);
+      // int pnumber = m_machine->m_productDispensers[getRequestedSlot() - 1].getCustomMixPNumberFromMixIndex(0);
+      // m_machine->m_productDispensers[getRequestedSlot() - 1].setPNumberAsSingleDispenseSelectedProduct(pnumber);
    }
    else if (sCommand.find("Order") != string::npos)
    {
@@ -729,56 +729,56 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
    case '1':
    {
       m_RequestedProductIndexInt = 1;
-      debugOutput::sendMessage("Product 1 requested", MSG_INFO);
+      debugOutput::sendMessage("Product from slot 1 requested", MSG_INFO);
       e_ret = OK;
       break;
    }
    case '2':
    {
       m_RequestedProductIndexInt = 2;
-      debugOutput::sendMessage("Product 2 requested", MSG_INFO);
+      debugOutput::sendMessage("Product from slot 2 requested", MSG_INFO);
       e_ret = OK;
       break;
    }
    case '3':
    {
       m_RequestedProductIndexInt = 3;
-      debugOutput::sendMessage("Product 3 requested", MSG_INFO);
+      debugOutput::sendMessage("Product from slot 3 requested", MSG_INFO);
       e_ret = OK;
       break;
    }
    case '4':
    {
       m_RequestedProductIndexInt = 4;
-      debugOutput::sendMessage("Product 4 requested", MSG_INFO);
+      debugOutput::sendMessage("Product from slot 4 requested", MSG_INFO);
       e_ret = OK;
       break;
    }
    case '5':
    {
       m_RequestedProductIndexInt = 5;
-      debugOutput::sendMessage("Product 5 requested", MSG_INFO);
+      debugOutput::sendMessage("Product from slot 5 requested", MSG_INFO);
       e_ret = OK;
       break;
    }
    case '6':
    {
       m_RequestedProductIndexInt = 6;
-      debugOutput::sendMessage("Product 6 requested", MSG_INFO);
+      debugOutput::sendMessage("Product from slot 6 requested", MSG_INFO);
       e_ret = OK;
       break;
    }
    case '7':
    {
       m_RequestedProductIndexInt = 7;
-      debugOutput::sendMessage("Product 7 requested", MSG_INFO);
+      debugOutput::sendMessage("Product from slot 7 requested", MSG_INFO);
       e_ret = OK;
       break;
    }
    case '8':
    {
       m_RequestedProductIndexInt = 8;
-      debugOutput::sendMessage("Product 8 requested", MSG_INFO);
+      debugOutput::sendMessage("Product from slot 8 requested", MSG_INFO);
       e_ret = OK;
       break;
    }

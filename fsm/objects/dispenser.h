@@ -88,7 +88,11 @@ public:
 
       bool isPNumberValidInThisDispenser(int pnumber, bool mustBeAdditiveOrBase);
 
-      int getMixPNumberFromMixIndex(int mixIndex);
+      // int getCustomMixPNumberFromMixIndex(int mixIndex);
+      // int getCustomMixCount();
+
+      // bool isCustomMixPNumberAsSelectedProduct();
+
 
       // active product
       product *getActiveProduct();
@@ -125,12 +129,13 @@ public:
       void updateSlotState();
       void analyseSlotState();
 
-      DF_ERROR initActivePNumberDispense(double volume);
+      // DF_ERROR initActivePNumberDispense(double volume);
       DF_ERROR startActivePNumberDispense();
       DF_ERROR stopActivePNumberDispense();
 
+      bool isEndOfSelectedProductDispenseIfNotSetNextActiveProduct();
       DF_ERROR initSelectedProductDispense(char size, double nPrice);
-      DF_ERROR startSelectedProductDispense();
+      // DF_ERROR startSelectedProductDispense();
       DF_ERROR stopSelectedProductDispense();
       string getSelectedProductDispenseStartTime();
       string getSelectedProductDispenseEndTime();
@@ -195,11 +200,12 @@ public:
 
       void setCustomMixParametersAsSelectedProduct(string pnumbers, string pnumberRatios);
 
+
 private:
       int m_slot;
 
-      bool m_isPumpReversalEnabled;
-      bool m_isPumpSlowStartStopEnabled;
+      bool m_isPumpReversalEnabled  = false;
+      bool m_isPumpSlowStartStopEnabled = false;
       bool isPumpSoftStarting;
       uint64_t slowStartMostRecentIncreaseEpoch;
       uint8_t pwm_actual_set_speed;
@@ -212,9 +218,11 @@ private:
       int m_dispense_pnumbers [DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
       int m_additive_pnumbers [DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
       int m_custom_mix_pnumbers [DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
-      int m_custom_mix_pnumbers_count;
+      int m_custom_mix_pnumbers_count = 0;
       double m_custom_mix_ratios [DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
       int m_custom_mix_ratios_count;
+
+      int m_mix_active_index; // index --> starts from 0
 
       int m_dispense_pnumbers_count;
       int m_additive_pnumbers_count;

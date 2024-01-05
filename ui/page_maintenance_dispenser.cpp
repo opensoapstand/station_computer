@@ -515,6 +515,7 @@ void page_maintenance_dispenser::dispense_test_start()
     qDebug() << "Start dispense in maintenance mode. (FYI: if app crashes, it's probably about the update volume interrupts caused by the controller sending data.)";
     QString dispenseCommand = QString::number(p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
     dispenseCommand.append("t");
+    // dispenseCommand.append("t");
     dispenseCommand.append(SEND_DISPENSE_START);
 
     // QString slotAsQString = QString::number(p_page_idle->thisMachine->getSelectedSlot()->getSlotId());

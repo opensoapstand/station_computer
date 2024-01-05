@@ -143,11 +143,6 @@ QVector<int> pnumberproduct::getMixPNumbers()
     return m_mixPNumbers;
 }
 
-QVector<double> pnumberproduct::getMixRatios()
-{
-    return m_mixRatiosDefault;
-}
-
 void pnumberproduct::loadProductPropertiesFromDb()
 {
     qDebug() << "Open db: db load pnumberproduct properties for pnumberproduct for pnumber: " << getPNumber();
@@ -155,13 +150,8 @@ void pnumberproduct::loadProductPropertiesFromDb()
                                   &m_aws_product_id,
                                   &m_soapstand_product_serial,
                                   m_mixPNumbers,
-<<<<<<< HEAD
-                                  m_mixRatiosDefault,
-                                  &m_size_unit,
-=======
                                   m_mixRatios,
                                   //   &m_size_unit,
->>>>>>> e533526676b9c8ff919d5972c8e5305a4669b5b1
                                   //   &m_currency_deprecated, //_dummy_deprecated
                                   //   &m_payment_deprecated,  //_deprecated,
                                   &m_name_receipt,

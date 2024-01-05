@@ -116,7 +116,7 @@ DF_ERROR stateDispenseEnd::onAction()
 #define ENABLE_TRANSACTION_TO_CLOUD
 #ifdef ENABLE_TRANSACTION_TO_CLOUD
 
-        std::string paymentMethod = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getPaymentMethod();
+        std::string paymentMethod = g_machine.getPaymentMethod();
 
         double price = getFinalPrice();
         if (paymentMethod == "qr" && price!= 0.0)
@@ -236,7 +236,7 @@ DF_ERROR stateDispenseEnd::handleTransactionPayment()
     debugOutput::sendMessage("Transaction payment", MSG_INFO);
     DF_ERROR e_ret = OK;
 
-    std::string paymentMethod = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getPaymentMethod();
+    std::string paymentMethod = g_machine.getPaymentMethod();
 
     // Currently only Drinkfill used the tap method of payment, so this checks if it is a tap payment system and runs the cleaning cycle if it is...
     // TODO: Change this to just check if the system is Soapstand or Drinkfill instead of payment system!
@@ -604,7 +604,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
 
     // update product table
     std::string sql2;
-    sql2 = ("UPDATE products SET volume_dispensed_total=" + updated_volume_dispensed_total_ever_str + ", volume_remaining=" + updated_volume_remaining_str + ", volume_dispensed_since_restock=" + updated_volume_dispensed_since_restock_str + " WHERE soapstand_product_serial='" + pnumberPString + "';");
+    sql2 = ("UPDATE products SET volume_dispensed_total=" + updated_volume_dispensed_total_ever_str + ", volume_remaining=" + updated_volume_remaining_str + ", volume_dispensed_since_restock=" + updated_volume_dispensed_since_restock_str + " WHERE soapstand_product_serial='" + std::to_string(pnumber) + "';");
     databaseUpdateSql(sql2, CONFIG_DB_PATH);
 
     // update dipenser table
@@ -674,7 +674,7 @@ DF_ERROR stateDispenseEnd::setup_and_print_receipt()
 
     string cost = (chars_cost);
 
-    std::string paymentMethod = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getPaymentMethod();
+    std::string paymentMethod = g_machine.getPaymentMethod();
     std::string name_receipt = (g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getProductName());
 
     std::string units = (g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getDisplayUnits());

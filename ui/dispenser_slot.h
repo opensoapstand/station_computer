@@ -20,14 +20,16 @@ public:
     void setDb(DbManager *db);
 
     QVector<int> getAllPNumbers();
-    QVector<int> getDispensePNumbers();
+
     int getBasePNumber();
+    
+    int getDispenseProductsCount();
+    int getDispensePNumber(int position);
+    QVector<int> getDispensePNumbers();
     
     int getAdditivePNumber(int position);
     int getAdditiveCount();
-    
     QVector<int> getAdditivePNumbers();
-    // int getAdditivesPNumbersCount();
 
     void loadSlotParametersFromDb();
 

@@ -140,11 +140,12 @@ void machine::refresh()
 
 void machine::setFlowSensorCallBack(int slot)
 {
-    // CALL THIS FOR EVERY ACTIVE PRODUCT CHANGE during a mixing dispense.
-
+    
     int slot_index = slot - 1;
     // control_pcb->registerFlowSensorTickCallback(std::bind(&dispenser::registerFlowSensorTickCallback, &m_productDispensers[slot_index]));
-    m_productDispensers[slot_index].linkActiveProductVolumeUpdate();
+    // m_productDispensers[slot_index].linkActiveProductVolumeUpdate(); // CALL THIS FOR EVERY ACTIVE PRODUCT CHANGE during a mixing dispense.
+
+    m_productDispensers[slot_index].linkDispenserFlowSensorTick();
 }
 
 void machine::syncSoftwareVersionWithDb()
@@ -162,6 +163,15 @@ void machine::executeSQLStatement(string sql_string)
     status = sqlite3_step(stmt);
     sqlite3_finalize(stmt);
     sqlite3_close(db);
+}
+
+string machine::getPaymentMethod()
+{
+    return m_payment;
+}
+string machine::getSizeUnit()
+{
+    return m_size_unit;
 }
 
 string machine::getMachineId()
@@ -703,7 +713,9 @@ void machine::loadMachineParametersFromDb()
                         "alert_temperature,"
                         "software_version_controller,"
                         "is_enabled,"
-                        "status_text"
+                        "status_text,"
+                        "payment,"
+                        "size_unit"
                         " FROM machine"
                         ";";
 
@@ -750,6 +762,9 @@ void machine::loadMachineParametersFromDb()
         m_software_version_controller = product::dbFieldAsValidString(stmt, 26);
         m_is_enabled = sqlite3_column_int(stmt, 27);
         m_status_text = product::dbFieldAsValidString(stmt, 28);
+        m_payment = product::dbFieldAsValidString(stmt, 29);
+
+        m_size_unit = product::dbFieldAsValidString(stmt, 30);
 
         if (numberOfRecordsFound > 1)
         {

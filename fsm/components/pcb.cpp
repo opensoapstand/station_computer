@@ -268,6 +268,14 @@ bool pcb::getMCP23017Input(uint8_t slot, int posIndex, uint8_t GPIORegister)
     return (ReadByte(get_MCP23017_address_from_slot(slot), GPIORegister) & (1 << posIndex));
 }
 
+void pcb::outputMCP23017IORegisters(uint8_t slot){
+     uint8_t register_gpioA_value = getMCP23017Register(1, MCP23017_REGISTER_GPA);
+    uint8_t register_gpioB_value = getMCP23017Register(1, MCP23017_REGISTER_GPB);
+    std::bitset<8> binaryA(register_gpioA_value);
+    std::bitset<8> binaryB(register_gpioB_value);
+    debugOutput::sendMessage("Pcb: MCP23017 status for slot: " + std::to_string(slot) + " GPA : " + binaryA.to_string() + " GPB : " + binaryB.to_string(), MSG_INFO);
+}
+
 void pcb::setMCP23017Output(uint8_t slot, int posIndex, bool onElseOff, uint8_t GPIORegister)
 {
     // slot starts at 1!
@@ -1196,7 +1204,7 @@ void pcb::dispenseButtonRefreshPerSlot(uint8_t slot)
     {
         dispenseButtonDebounceStartEpoch[slot_index] = now_epoch_millis;
         dispenseButtonIsDebounced[slot_index] = false;
-        debugOutput::sendMessage("Pcb: Slot: " + std::to_string(slot) + " . Button edge detected!" + std::to_string(dispenseButtonDebounceStartEpoch[slot_index]) + "state: " + std::to_string(state), MSG_INFO);
+        debugOutput::sendMessage("Pcb: Slot: " + std::to_string(slot) + " . Button edge detected! timestamp:" + std::to_string(dispenseButtonDebounceStartEpoch[slot_index]) + "state: " + std::to_string(state), MSG_INFO);
     }
 
     positive_edge_detected[slot_index] = false;
@@ -2110,7 +2118,7 @@ void pcb::setSolenoidFromArray(uint8_t slot, uint8_t position, bool onElseOff)
 
     if (position <= 0)
     {
-        debugOutput::sendMessage("First Solenoid position is 1  !!!!", MSG_ERROR);
+        debugOutput::sendMessage("Pcb ASSERT ERROR: First Solenoid position is 1  !!!!", MSG_ERROR);
     }
 
     switch (pcb_version)

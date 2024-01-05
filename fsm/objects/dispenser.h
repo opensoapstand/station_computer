@@ -93,6 +93,8 @@ public:
       // active product
       product *getActiveProduct();
       void linkActiveProductVolumeUpdate();
+      void linkDispenserFlowSensorTick();
+      void registerFlowSensorTickFromPcb();
 
       // DF_ERROR initButtonsShutdownAndMaintenance();
       DF_ERROR setSlot(int slot);

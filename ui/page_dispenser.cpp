@@ -232,7 +232,7 @@ void page_dispenser::showEvent(QShowEvent *event)
 void page_dispenser::updatelabel_volume_dispensed_ml(double dispensed)
 {
     QString dispensedVolumeUnitsCorrected;
-    QString units = p_page_idle->thisMachine->getSelectedProduct()->getUnitsForSlot();
+    QString units = p_page_idle->thisMachine->getSizeUnit();
 
     if (units == "oz")
     {

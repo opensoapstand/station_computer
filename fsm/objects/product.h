@@ -35,7 +35,7 @@ class product
 public:
         product();
         ~product();
-        void init(int pnumber);
+        void init(int pnumber, string size_unit, string paymentMethod);
 
         int getPNumber();
         string getPNumberAsPString();

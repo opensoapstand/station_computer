@@ -404,7 +404,7 @@ DF_ERROR stateManualPrinter::setup_receipt_from_pnumber_and_dispense_data(int pn
    string plu = g_pnumbers[pnumber].getFinalPLU(size, price);
 
    std::string units = g_pnumbers[pnumber].getDisplayUnits();
-   std::string paymentMethod = g_pnumbers[pnumber].getPaymentMethod();
+   std::string paymentMethod = g_machine.getPaymentMethod();
 
    char chars_cost[MAX_BUF];
    char chars_volume_formatted[MAX_BUF];

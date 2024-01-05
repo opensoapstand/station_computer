@@ -77,6 +77,7 @@ void machine::loadDynamicContent()
     {
         // qDebug() << "machine: load product properties for pnumber:" << (all_pnumbers[pnumber_index]);
         m_pnumberproducts[all_pnumbers[pnumber_index]].loadProductProperties();
+        m_pnumberproducts[all_pnumbers[pnumber_index]].setSizeUnit(getSizeUnit()); // volumeUnit is a machine wide parameter
     }
 
     loadTextsFromTemplateCsv();                                // dynamic content (text by template)
@@ -181,7 +182,7 @@ void machine::initProductOptions()
         QVector<int> dispense_pnumbers = getAllDispensePNumbersFromSlot(slot_index + 1);
         for (int i = 0; i < dispense_pnumbers.size(); i++)
         {
-            int position = 1 + slot_index * MENU_DISPENSE_OPTIONS_PER_BASE_MAXIMUM + i;
+            int position = 1 + slot_index * DISPENSE_PRODUCTS_PER_BASE_LINE_MAX + i;
             setProductToMenuOption(position, dispense_pnumbers[i]);
             qDebug() << "pnumber. : : " << (dispense_pnumbers[i]) << "at option" << position;
         }
@@ -780,6 +781,10 @@ double machine::getTemperature_1()
     return m_temperature;
 }
 
+QString machine::getSizeUnit(){
+    return m_size_unit;
+}
+
 void machine::getTemperatureFromController()
 {
     dfUtility->send_command_to_FSM("getTemperature", false);
@@ -1031,7 +1036,8 @@ void machine::loadMachineParameterFromDb()
         &m_software_version_controller,
         &m_is_enabled,
         &m_status_text,
-        &m_payment);
+        &m_payment,
+        &m_size_unit);
 
     qDebug() << "Machine ID as loaded from db: " << getMachineId();
     qDebug() << "Template folder from db : " << getTemplateFolder();

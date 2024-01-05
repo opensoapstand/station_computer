@@ -33,8 +33,6 @@ FORMS += \
     page_maintenance_general.ui \
     page_idle_products.ui \
     statusbar.ui \
-    keyboard.ui \
-    keyboard.ui
 
 HEADERS += \
     dfuicommthread.h \

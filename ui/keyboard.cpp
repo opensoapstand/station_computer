@@ -40,7 +40,11 @@ keyboard::~keyboard()
 
 void keyboard::setVisibility(bool isVisible)
 {
+    qDebug() << "$$$$$$$$$$$$$$$$$ keyboard set visibility";
     is_keyboard_visible = isVisible;
+    if(isVisible){
+        this->show();
+    }
 }
 
 void keyboard::showEvent(QShowEvent *event)
@@ -49,6 +53,7 @@ void keyboard::showEvent(QShowEvent *event)
 
     QWidget::showEvent(event);
     QString styleSheet = p_page_idle->thisMachine->getCSS(KEYBOARD_CSS);
+    ui->keyboard_3->setStyleSheet(styleSheet);
     // ui->statusbar_bg->setStyleSheet(styleSheet);
     // ui->label_active_role->setStyleSheet(styleSheet);
     // ui->label_session_id->setStyleSheet(styleSheet);

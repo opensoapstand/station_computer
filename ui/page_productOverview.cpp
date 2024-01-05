@@ -55,12 +55,13 @@ page_product_overview::page_product_overview(QWidget *parent) : QWidget(parent),
 
     ui->label_gif->hide();
     statusbarLayout = new QVBoxLayout(this);
+    keyboardLayout = new QVBoxLayout(this);
 }
 
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void page_product_overview::setPage(page_select_product *pageSelect, page_product_mixing *p_page_product_mixing, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_payment_tap_serial *page_payment_tap_serial, page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product *page_product, page_email *page_email, statusbar *statusbar)
+void page_product_overview::setPage(page_select_product *pageSelect, page_product_mixing *p_page_product_mixing, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_payment_tap_serial *page_payment_tap_serial, page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product *page_product, page_email *page_email, statusbar *statusbar, keyboard *keyboard)
 {
     this->p_page_select_product = pageSelect;
     this->p_page_product_mixing = p_page_product_mixing;
@@ -73,6 +74,7 @@ void page_product_overview::setPage(page_select_product *pageSelect, page_produc
     this->p_page_wifi_error = pageWifiError;
     this->p_page_product = page_product;
     this->p_statusbar = statusbar;
+    this->p_keyboard = keyboard;
     this->p_page_email = page_email;
 
     ui->label_discount_tag->hide();
@@ -101,6 +103,8 @@ void page_product_overview::showEvent(QShowEvent *event)
 
     statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
     statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
+    keyboardLayout->addWidget(p_keyboard);         
+    keyboardLayout->setContentsMargins(0, 0, 0, 0);
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
     //p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(ui->promoKeyboard); 
@@ -398,7 +402,8 @@ void page_product_overview::reset_and_show_page_elements()
     case (enabled_show_keyboard):
     {
         qDebug() << "Coupon state: Show keyboard";
-        ui->promoKeyboard->show();
+        // ui->promoKeyboard->show();
+        p_keyboard->setVisibility(true);
         ui->lineEdit_promo_code->clear();
         ui->lineEdit_promo_code->show();
         p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_promo_code, "promoCode", PAGE_PRODUCT_OVERVIEW_CSS);

@@ -437,8 +437,8 @@ void page_product_mixing::reset_and_show_page_elements()
                 p_page_idle->thisMachine->getSelectedProduct()->getCustomDiscountDetails(&large_volume_discount_is_enabled, &min_volume_for_discount, &discount_price_per_liter);
                 orderSizeLabelsVolume[i]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "custom_volume"));
 
-                QString units = p_page_idle->thisMachine->getSelectedProduct()->getUnitsForSlot();
-                QString units_discount_indication = p_page_idle->thisMachine->getSelectedProduct()->getUnitsForSlot();
+                QString units = p_page_idle->thisMachine->getSizeUnit();
+                QString units_discount_indication = p_page_idle->thisMachine->getSizeUnit();
                 if (units == "ml")
                 {
                     units = "100ml";

@@ -93,6 +93,8 @@ public:
       // active product
       product *getActiveProduct();
       void linkActiveProductVolumeUpdate();
+      void linkDispenserFlowSensorTick();
+      void registerFlowSensorTickFromPcb();
 
       // DF_ERROR initButtonsShutdownAndMaintenance();
       DF_ERROR setSlot(int slot);
@@ -209,7 +211,6 @@ private:
       int m_active_pnumber;
       int m_dispense_pnumbers [DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
       int m_additive_pnumbers [DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
-
       int m_custom_mix_pnumbers [DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
       int m_custom_mix_pnumbers_count;
       double m_custom_mix_ratios [DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];

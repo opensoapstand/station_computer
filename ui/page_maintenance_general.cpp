@@ -588,3 +588,14 @@ void page_maintenance_general::on_pushButton_restart_electronics_clicked()
 
     qApp->exit(); // restart UI. The problem with only controller restart is that there are two screens now.
 }
+
+void page_maintenance_general::on_checkBox_enable_pcb_3point3V_clicked(bool checked)
+{
+    if (checked){
+
+        p_page_idle->thisMachine->dfUtility->send_command_to_FSM("pcbPower|ON", true);
+    }else{
+        p_page_idle->thisMachine->dfUtility->send_command_to_FSM("pcbPower|OFF", true);
+
+    }
+}

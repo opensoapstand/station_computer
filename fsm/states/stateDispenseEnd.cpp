@@ -116,7 +116,7 @@ DF_ERROR stateDispenseEnd::onAction()
 #define ENABLE_TRANSACTION_TO_CLOUD
 #ifdef ENABLE_TRANSACTION_TO_CLOUD
 
-        std::string paymentMethod = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getPaymentMethod();
+        std::string paymentMethod = g_machine.getPaymentMethod();
 
         double price = getFinalPrice();
         if (paymentMethod == "qr" && price!= 0.0)
@@ -236,7 +236,7 @@ DF_ERROR stateDispenseEnd::handleTransactionPayment()
     debugOutput::sendMessage("Transaction payment", MSG_INFO);
     DF_ERROR e_ret = OK;
 
-    std::string paymentMethod = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getPaymentMethod();
+    std::string paymentMethod = g_machine.getPaymentMethod();
 
     // Currently only Drinkfill used the tap method of payment, so this checks if it is a tap payment system and runs the cleaning cycle if it is...
     // TODO: Change this to just check if the system is Soapstand or Drinkfill instead of payment system!
@@ -323,7 +323,7 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
     std::string coupon = m_pMessaging->getCouponCode();
     std::string button_press_duration = to_string(g_machine.m_productDispensers[m_slot_index].getButtonPressedTotalMillis());
     std::string dispense_button_count = to_string(g_machine.m_productDispensers[m_slot_index].getDispenseButtonPressesDuringDispensing());
-    std::string pnumber = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getPNumberAsPString();
+    std::string pnumberString = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getPNumberAsPString();
     double volume_remaining_converted;
     std::string dispensed_volume_units_converted;
     double dispensed_volume = ceil(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed());
@@ -340,7 +340,7 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
     volume_remaining_converted = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->convertVolumeMetricToDisplayUnits(volume_remaining);
     volume_remaining_units_converted_string = to_string(volume_remaining_converted);
 
-    std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&size_unit=" + units + "&price=" + price_string + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + end_time + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer&volume_remaining_ml=" + to_string(volume_remaining) + "&quantity_dispensed_ml=" + to_string(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed()) + "&volume_remaining=" + volume_remaining_units_converted_string + "&coupon=" + coupon + "&buttonDuration=" + button_press_duration + "&buttonTimes=" + dispense_button_count + "&pnumber=" + pnumber;
+    std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&size_unit=" + units + "&price=" + price_string + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + end_time + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer&volume_remaining_ml=" + to_string(volume_remaining) + "&quantity_dispensed_ml=" + to_string(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed()) + "&volume_remaining=" + volume_remaining_units_converted_string + "&coupon=" + coupon + "&buttonDuration=" + button_press_duration + "&buttonTimes=" + dispense_button_count + "&pnumber=" + pnumberString;
     char buffer[1080];
     strcpy(buffer, curl_param.c_str());
 
@@ -523,7 +523,8 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     std::string dispense_button_count = to_string(g_machine.m_productDispensers[m_slot_index].getDispenseButtonPressesDuringDispensing());
     std::string start_time = (g_machine.m_productDispensers[m_slot_index].getSelectedProductDispenseStartTime());
     std::string end_time = (g_machine.m_productDispensers[m_slot_index].getSelectedProductDispenseEndTime());
-    std::string pnumber = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getPNumberAsPString();
+    std::string pnumberPString = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getPNumberAsPString();
+    int pnumber = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getPNumber();
     double price;
     std::string price_string;
     std::string product_status;
@@ -597,13 +598,13 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     if (isValidTransaction)
     {
         std::string sql1;
-        sql1 = ("INSERT INTO transactions (product,quantity_requested,price,start_time,quantity_dispensed,end_time,volume_remaining,slot,button_duration,button_times,processed_by_backend,product_id, soapstand_product_serial) VALUES ('" + product_name + "'," + target_volume + "," + price_string + ",'" + start_time + "'," + dispensed_volume_str + ",'" + end_time + "'," + updated_volume_remaining_str + "," + to_string(m_slot) + "," + button_press_duration + "," + dispense_button_count + "," + to_string(false) + ",'" + product_id + "','" + pnumber + "');");
+        sql1 = ("INSERT INTO transactions (product,quantity_requested,price,start_time,quantity_dispensed,end_time,volume_remaining,slot,button_duration,button_times,processed_by_backend,product_id, soapstand_product_serial) VALUES ('" + product_name + "'," + target_volume + "," + price_string + ",'" + start_time + "'," + dispensed_volume_str + ",'" + end_time + "'," + updated_volume_remaining_str + "," + to_string(m_slot) + "," + button_press_duration + "," + dispense_button_count + "," + to_string(false) + ",'" + product_id + "','" + pnumberPString + "');");
         databaseUpdateSql(sql1, USAGE_DB_PATH);
     }
 
     // update product table
     std::string sql2;
-    sql2 = ("UPDATE products SET volume_dispensed_total=" + updated_volume_dispensed_total_ever_str + ", volume_remaining=" + updated_volume_remaining_str + ", volume_dispensed_since_restock=" + updated_volume_dispensed_since_restock_str + " WHERE soapstand_product_serial='" + pnumber + "';");
+    sql2 = ("UPDATE products SET volume_dispensed_total=" + updated_volume_dispensed_total_ever_str + ", volume_remaining=" + updated_volume_remaining_str + ", volume_dispensed_since_restock=" + updated_volume_dispensed_since_restock_str + " WHERE soapstand_product_serial='" + std::to_string(pnumber) + "';");
     databaseUpdateSql(sql2, CONFIG_DB_PATH);
 
     // update dipenser table
@@ -673,7 +674,7 @@ DF_ERROR stateDispenseEnd::setup_and_print_receipt()
 
     string cost = (chars_cost);
 
-    std::string paymentMethod = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getPaymentMethod();
+    std::string paymentMethod = g_machine.getPaymentMethod();
     std::string name_receipt = (g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getProductName());
 
     std::string units = (g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getDisplayUnits());

@@ -65,13 +65,13 @@ DF_ERROR stateInit::onAction()
 
     debugOutput::sendMessage("Use database at: " + std::to_string(1) + CONFIG_DB_PATH, MSG_INFO);
 
-    // setup PIC programmer pins. Set to input as we will not use them. (this replaces setting them manually in BIOS)
-    pin_vpp = new FSModdyseyx86GPIO(PIC_PROGRAMMER_PIN_VPP);
-    pin_vpp->setPinAsInputElseOutput(true);
-    pin_pgc = new FSModdyseyx86GPIO(PIC_PROGRAMMER_PIN_PGC);
-    pin_pgc->setPinAsInputElseOutput(true);
-    pin_pgd = new FSModdyseyx86GPIO(PIC_PROGRAMMER_PIN_PGD);
-    pin_pgd->setPinAsInputElseOutput(true);
+    // // setup PIC programmer pins. Set to input as we will not use them. (this replaces setting them manually in BIOS)
+    // pin_vpp = new FSModdyseyx86GPIO(PIC_PROGRAMMER_PIN_VPP);
+    // pin_vpp->setPinAsInputElseOutput(true);
+    // pin_pgc = new FSModdyseyx86GPIO(PIC_PROGRAMMER_PIN_PGC);
+    // pin_pgc->setPinAsInputElseOutput(true);
+    // pin_pgd = new FSModdyseyx86GPIO(PIC_PROGRAMMER_PIN_PGD);
+    // pin_pgd->setPinAsInputElseOutput(true);
 
     dispenserSetup();
 
@@ -110,7 +110,7 @@ DF_ERROR stateInit::dispenserSetup()
     // is ever active at a time.  The flow sensors are all connected
     // to the same pin in the hardware.
 
-    g_machine.loadGeneralProperties();
+    g_machine.loadGeneralProperties(true);
 
     // g_machine.m_productDispensers[0].initButtonsShutdownAndMaintenance(); // todo: this is a hack for the maintenance and power button. It should not be part of the dispenser class
 

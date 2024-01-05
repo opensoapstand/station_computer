@@ -23,6 +23,7 @@
 #include "dispenser_slot.h"
 #include "dbmanager.h"
 #include "statusbar.h"
+#include "keyboard.h"
 
 #include <cstdlib> // For rand() function
 
@@ -73,11 +74,15 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     rebootNightlyTimeOutTimer->setInterval(1000);
     connect(rebootNightlyTimeOutTimer, SIGNAL(timeout()), this, SLOT(onRebootNightlyTimeOutTimerTick()));
     // thisMachine->setRebootState(initial_state);
+    pingTapDeviceTimer = new QTimer(this);
+    connect(pingTapDeviceTimer, SIGNAL(timeout()), this, SLOT(pingTapDevice()));
+    // Set the ping timer to every 30 mins
+    pingTapDeviceTimer->start(30 * 60 * 1000); 
 
     tappingBlockedUntilPrinterReply = false;
 }
 
-void page_idle::setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products, page_error_wifi *p_page_error_wifi, statusbar *p_statusbar, page_product_menu *p_page_product_menu)
+void page_idle::setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products, page_error_wifi *p_page_error_wifi, statusbar *p_statusbar, page_product_menu *p_page_product_menu, keyboard *p_keyboard)
 {
     // Chained to KB Listener
     this->p_pageSelectProduct = p_page_select_product;
@@ -87,6 +92,7 @@ void page_idle::setPage(page_select_product *p_page_select_product, page_mainten
     this->p_page_idle_products = p_page_idle_products;
     this->p_page_error_wifi = p_page_error_wifi;
     this->p_statusbar = p_statusbar;
+    this->p_keyboard = p_keyboard;
 
     thisMachine->setRebootState(wait_for_trigger);
 }
@@ -119,6 +125,7 @@ void page_idle::showEvent(QShowEvent *event)
     thisMachine->loadDynamicContent();
 
     thisMachine->dispenseButtonLightsAnimateState(true);
+    thisMachine->setCouponState(enabled_not_set);
 
     if (!thisMachine->isSessionLocked())
     {
@@ -443,6 +450,10 @@ void page_idle::onRebootNightlyTimeOutTimerTick()
                 thisMachine->setRebootState(wait_for_trigger);
                 _delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
                 stateScreenCheck = state_screen_check_not_initiated;
+                QString paymentMethod = thisMachine->getPaymentMethod(); 
+                if(paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA){
+                    rebootTapDevice();
+                }
                 QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -r 0";
                 system(qPrintable(command));
             }
@@ -589,7 +600,7 @@ void page_idle::on_pushButton_to_select_product_page_clicked()
 
 void page_idle::hideCurrentPageAndShowProductMenu()
 {
-    if (thisMachine->getHardwareMajorVersion().startsWith("AP2"))
+    if (thisMachine->m_template == "default_AP2")
     {
 
         this->hideCurrentPageAndShowProvided(p_page_product_menu, true);
@@ -638,4 +649,20 @@ void page_idle::on_pushButton_reboot_nightly_clicked()
 {
     qDebug() << "reboot nightly cancel clicked.. ";
     thisMachine->setRebootState(user_cancelled_reboot);
+}
+
+void page_idle::pingTapDevice(){
+    QString paymentMethod = thisMachine->getPaymentMethod(); 
+    if(paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA){
+        qDebug() << "Pinging Tap Serial Device";
+        page_payment_tap_serial paymentSerialObject;
+        paymentSerialObject.getLanInfo();
+    }
+}
+
+void page_idle::rebootTapDevice(){
+        qDebug() << "Rebooting Tap Device";
+        page_payment_tap_serial paymentSerialObject;
+        paymentSerialObject.resetDevice();
+    
 }

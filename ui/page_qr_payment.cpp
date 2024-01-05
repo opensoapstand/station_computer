@@ -107,6 +107,7 @@ void page_qr_payment::showEvent(QShowEvent *event)
     ui->label_processing->setStyleSheet(styleSheet);
     ui->label_product_price->setStyleSheet(styleSheet);
     ui->label_product_information->setStyleSheet(styleSheet);
+    ui->label_qr_background->setStyleSheet(styleSheet);
     ui->label_gif->setStyleSheet(styleSheet);
 
     msgBox = nullptr;
@@ -165,8 +166,14 @@ void page_qr_payment::setupQrOrder()
 
         p_page_idle->thisMachine->addToTransactionLogging("\n 2: QR code - True");
         // transactionLogging += "\n 2: QR code - True";
-        QPixmap map(360, 360);
-        map.fill(QColor("black"));
+        QPixmap map;
+        if(p_page_idle->thisMachine->m_template == "default_AP2"){
+            map = QPixmap(451, 451);
+            map.fill(QColor("#895E25"));
+        }else{
+            map = QPixmap(360, 360);
+            map.fill(QColor("black"));
+        }
         QPainter painter(&map);
 
         // build up qr content (link)
@@ -176,7 +183,8 @@ void page_qr_payment::setupQrOrder()
             qrdata = "https://soapstandportal.com/paymentAelen?oid=" + orderId;
         }
         // create qr code graphics
-        paintQR(painter, QSize(360, 360), qrdata, QColor("white"));
+        p_page_idle->thisMachine->m_template == "default_AP2" ? paintQR(painter, QSize(451, 451), qrdata, QColor("white")) : paintQR(painter, QSize(360, 360), qrdata, QColor("white"));
+        // paintQR(painter, QSize(360, 360), qrdata, QColor("white"));
         ui->label_qrCode->setPixmap(map);
         // _paymentTimeoutSec = QR_PAGE_TIMEOUT_SECONDS;
 
@@ -213,7 +221,7 @@ bool page_qr_payment::createOrderIdAndSendToBackend()
     bool shouldShowQR = false;
     qDebug() << "Get cloud to create an order and retrieve the order id";
     QString MachineSerialNumber = p_page_idle->thisMachine->getMachineId();
-    QString productUnits = p_page_idle->thisMachine->getSelectedProduct()->getUnitsForSlot();
+    QString productUnits = p_page_idle->thisMachine->getSizeUnit();
     QString productId = p_page_idle->thisMachine->getSelectedProduct()->getAwsProductId();
     QString contents = p_page_idle->thisMachine->getSelectedProduct()->getProductName();
     QString quantity_requested = p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(false, false);
@@ -345,6 +353,7 @@ void page_qr_payment::isQrProcessedCheckOnline()
             ui->label_gif->show();
 
             ui->label_processing->show();
+            ui->label_qr_background->hide();
             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_scan, "finalize_transaction");
             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_title, "almost_there");
             QString image_path = p_page_idle->thisMachine->getTemplatePathFromName("soapstandspinner.gif");
@@ -579,8 +588,12 @@ void page_qr_payment::on_pushButton_previous_page_clicked()
     qDebug() << "In previous page button";
     if (exitConfirm())
     {
-        // hideCurrentPageAndShowProvided(p_page_product);
-        hideCurrentPageAndShowProvided(p_page_product_mixing);
+        if(p_page_idle->thisMachine->m_template == "default_AP2"){
+            hideCurrentPageAndShowProvided(p_page_product_mixing);
+        }else{
+            hideCurrentPageAndShowProvided(p_page_product);
+        }
+
     }
 }
 
@@ -667,6 +680,10 @@ void page_qr_payment::paintQR(QPainter &painter, const QSize sz, const QString &
             const int color = qr.getModule(x, y); // 0 for white, 1 for black
             if (0 != color)
             {
+                if (p_page_idle->thisMachine->m_template == "default_AP2"){
+                    QColor customColor("#FFF7ED");
+                    painter.setBrush(customColor);
+                }
                 const double rx1 = (x + 1) * scale, ry1 = (y + 1) * scale;
                 QRectF r(rx1, ry1, scale, scale);
                 painter.drawRects(&r, 1);

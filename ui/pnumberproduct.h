@@ -17,7 +17,9 @@ public:
 
     int getFirstMixPNumberOrPNumberAsBasePNumber();
     QVector<int> getMixPNumbers();
-    QVector<double> getMixRatios();
+    QString getMixPNumbersAsCsv();
+    QString getMixRatiosAsCsv();
+    // QVector<int> getMixRatios();
 
     void loadProductPropertiesFromProductsFile();
     void getProductProperties(QString *name, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui);
@@ -83,8 +85,9 @@ public:
     double getVolumePerTickForSlot();                                 // productt
     void setVolumePerTickForSlot(QString volumePerTickInput);         // productt
 
-    QString getUnitsForSlot();              // productt
-    QString getSizeAsVolume(QString units); // productt
+    void setSizeUnit(QString units);
+    QString getSizeUnit();              // productt
+    // QString getSizeAsVolume(QString units); // productt
 
     QString getSizeAsVolumeWithCorrectUnits(bool round, bool addUnits);                // productt
     QString getSizeAsVolumeWithCorrectUnits(int size, bool roundValue, bool addUnits); // productt
@@ -121,7 +124,6 @@ private:
     QVector<int> m_mixPNumbers;
     QVector<double> m_mixRatiosDefault;
     QVector<double> m_additivesRatioModifier;
-    QVector<double> m_mixRatiosCustom;
 
     int m_selected_size;
     double DispensedVolumeMl;

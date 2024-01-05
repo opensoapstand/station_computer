@@ -32,7 +32,9 @@ FORMS += \
     page_transactions.ui \
     page_maintenance_general.ui \
     page_idle_products.ui \
-    statusbar.ui
+    statusbar.ui \
+    keyboard.ui \
+    keyboard.ui
 
 HEADERS += \
     dfuicommthread.h \
@@ -75,6 +77,7 @@ HEADERS += \
     page_idle_products.h \
     machine.h \
     statusbar.h \
+    keyboard.h \
     pnumberproduct.h
 
 SOURCES += \
@@ -118,6 +121,7 @@ SOURCES += \
     page_idle_products.cpp \
     machine.cpp \
     statusbar.cpp \
+    keyboard.cpp \
     pnumberproduct.cpp
 
 RESOURCES += \

@@ -452,6 +452,29 @@ DF_ERROR messageMediator::parseCommandString()
    else if (sCommand.find("getTemperature") != string::npos)
    {
       sendTemperatureData();
+      m_requestedAction = ACTION_NO_ACTION;
+   }
+   else if (sCommand.find("pcbPower") != string::npos)
+   {
+      std::string delimiter = "|";
+      std::size_t found0 = sCommand.find(delimiter);
+      std::size_t found1 = sCommand.find(delimiter, found0 + 1);
+
+      std::string command_argument = sCommand.substr(found0 + 1, found1 - found0 - 1);
+
+      bool switchPcbOnElseOff = false;
+      if (command_argument == "ON")
+      {
+         switchPcbOnElseOff = true;
+      }
+      else if (command_argument == "OFF")
+      {
+            switchPcbOnElseOff = false;
+      }
+
+
+      m_machine->pcb3point3VPowerSwitch(switchPcbOnElseOff);
+      m_requestedAction = ACTION_NO_ACTION;
    }
    else if (sCommand.find("DispenseButtonLights") != string::npos)
    {

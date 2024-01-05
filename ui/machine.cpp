@@ -77,6 +77,7 @@ void machine::loadDynamicContent()
     {
         // qDebug() << "machine: load product properties for pnumber:" << (all_pnumbers[pnumber_index]);
         m_pnumberproducts[all_pnumbers[pnumber_index]].loadProductProperties();
+        m_pnumberproducts[all_pnumbers[pnumber_index]].setSizeUnit(getSizeUnit()); // volumeUnit is a machine wide parameter
     }
 
     loadTextsFromTemplateCsv();                                // dynamic content (text by template)
@@ -181,7 +182,7 @@ void machine::initProductOptions()
         QVector<int> dispense_pnumbers = getAllDispensePNumbersFromSlot(slot_index + 1);
         for (int i = 0; i < dispense_pnumbers.size(); i++)
         {
-            int position = 1 + slot_index * MENU_DISPENSE_OPTIONS_PER_BASE_MAXIMUM + i;
+            int position = 1 + slot_index * DISPENSE_PRODUCTS_PER_BASE_LINE_MAX + i;
             setProductToMenuOption(position, dispense_pnumbers[i]);
             qDebug() << "pnumber. : : " << (dispense_pnumbers[i]) << "at option" << position;
         }
@@ -512,7 +513,7 @@ void machine::initCouponState()
 
     setDiscountPercentageFraction(0.0);
     setCouponCode("");
-    m_max_dollar_amount_discount = "666.0";
+    m_max_dollar_amount_discount = "0";
 }
 
 void machine::setRebootState(StateReboot state)
@@ -529,6 +530,15 @@ void machine::setDiscountPercentageFraction(double percentageFraction)
     // ratio = percentage / 100;
     qDebug() << "Set discount percentage as a fraction. " << QString::number(percentageFraction, 'f', 3);
     m_discount_percentage_fraction = percentageFraction;
+}
+
+void machine::resetCouponDiscount()
+{
+    m_discount_percentage_fraction = 0;
+    m_min_threshold_vol_ml_discount = "0";
+    m_max_threshold_vol_ml_discount = "0";
+    m_max_dollar_amount_discount = "0";
+    
 }
 
 double machine::getDiscountPercentageFraction()
@@ -769,6 +779,10 @@ void machine::fsmReceiveTemperature(double temperature_1, double temperature_2)
 double machine::getTemperature_1()
 {
     return m_temperature;
+}
+
+QString machine::getSizeUnit(){
+    return m_size_unit;
 }
 
 void machine::getTemperatureFromController()
@@ -1036,7 +1050,8 @@ void machine::loadMachineParameterFromDb()
         &m_software_version_controller,
         &m_is_enabled,
         &m_status_text,
-        &m_payment);
+        &m_payment,
+        &m_size_unit);
 
     qDebug() << "Machine ID as loaded from db: " << getMachineId();
     qDebug() << "Template folder from db : " << getTemplateFolder();
@@ -1075,7 +1090,6 @@ void machine::setActivePaymentMethod(ActivePaymentMethod paymentMethod)
 }
 
 std::vector<ActivePaymentMethod> machine::getAllowedPaymentMethods(){
-    qDebug() << "helllo";
     return allowedPaymentMethods;
 }
 
@@ -1243,7 +1257,6 @@ QString machine::getTemplateTextByElementNameAndPageAndIdentifier(QWidget *p_ele
 {
     // QString element_page_and_name = getTemplateTextByElementNameAndPage(p_element);
     QString element_page_and_name = getCombinedElementPageAndName(p_element);
-
     QString searchString = element_page_and_name + "->" + identifier;
     return getTemplateText(searchString);
 }
@@ -1369,31 +1382,33 @@ void machine::applyPropertiesToQWidget(QWidget *widget)
 
     QString combinedName = getCombinedElementPageAndName(widget);
 
-    auto it = elementDynamicPropertiesMap_template.find(combinedName);
-    QString jsonString;
+    auto selectedElement = elementDynamicPropertiesMap_template.find(combinedName); // find element in associative array
+    QString propertiesJsonString;
     bool valid = true;
 
-    if (it != elementDynamicPropertiesMap_template.end())
+    if (selectedElement != elementDynamicPropertiesMap_template.end())
     {
-        qDebug() << "element " << combinedName << "found in template. json string: " << it->second;
-        jsonString = it->second;
+        // if found in template dynamic properties 
+        qDebug() << "element " << combinedName << "found in template. json string: " << selectedElement->second;
+        propertiesJsonString = selectedElement->second; // second implies the value of the key:value pair in the associative array
     }
     else
     {
-
-        it = elementDynamicPropertiesMap_default_hardware.find(combinedName);
-        if (it != elementDynamicPropertiesMap_default_hardware.end())
+// if found in default hardware template dynamic properties
+        selectedElement = elementDynamicPropertiesMap_default_hardware.find(combinedName);
+        if (selectedElement != elementDynamicPropertiesMap_default_hardware.end())
         {
-            qDebug() << "element " << combinedName << "found in default hardware. json string: " << it->second;
-            jsonString = it->second;
+            qDebug() << "element " << combinedName << "found in default hardware template. json string: " << selectedElement->second;
+            propertiesJsonString = selectedElement->second;
         }
         else
         {
-            it = elementDynamicPropertiesMap_default.find(combinedName);
-            if (it != elementDynamicPropertiesMap_default.end())
+            // if found in default template dynamic properties
+            selectedElement = elementDynamicPropertiesMap_default.find(combinedName);
+            if (selectedElement != elementDynamicPropertiesMap_default.end())
             {
-                qDebug() << "element " << combinedName << "found in default. json string: " << it->second;
-                jsonString = it->second;
+                qDebug() << "element " << combinedName << "found in default template. json string: " << selectedElement->second;
+                propertiesJsonString = selectedElement->second;
             }
             else
             {
@@ -1408,7 +1423,7 @@ void machine::applyPropertiesToQWidget(QWidget *widget)
         return;
     }
 
-    QJsonObject jsonObject = df_util::parseJsonString(jsonString);
+    QJsonObject jsonObject = df_util::parseJsonString(propertiesJsonString);
 
     int x = widget->x();
     int y = widget->y();

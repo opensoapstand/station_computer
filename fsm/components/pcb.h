@@ -94,13 +94,22 @@
 #define MCP23017_EN258_GPB6_PIN_OUT_SOLENOID_4 6
 #define MCP23017_EN258_GPB7_PIN_OUT_SOLENOID_5 7
 
-#define EN258_SOLENOID_BASE 2
-#define EN258_SOLENOID_ADDITIVE_1 3
-#define EN258_SOLENOID_ADDITIVE_2 4
-#define EN258_SOLENOID_ADDITIVE_3 5
-#define EN258_SOLENOID_ADDITIVE_4 6
-#define EN258_SOLENOID_ADDITIVE_5 7
-#define EN258_SOLENOID_SPOUT 8
+#define EN258_SOLENOID_SPOUT 8   // dispense solenoid position (corresponds with printed solenoid number on pcb)
+#define EN258_SOLENOID_BASE 7   // base product
+#define EN258_SOLENOID_ADDITIVE_1 6
+#define EN258_SOLENOID_ADDITIVE_2 5
+#define EN258_SOLENOID_ADDITIVE_3 4
+#define EN258_SOLENOID_ADDITIVE_4 3
+#define EN258_SOLENOID_ADDITIVE_5 2
+#define EN258_SOLENOID_ADDITIVE_6 1
+
+// #define EN258_SOLENOID_BASE 2
+// #define EN258_SOLENOID_ADDITIVE_1 3
+// #define EN258_SOLENOID_ADDITIVE_2 4
+// #define EN258_SOLENOID_ADDITIVE_3 5
+// #define EN258_SOLENOID_ADDITIVE_4 6
+// #define EN258_SOLENOID_ADDITIVE_5 7
+// #define EN258_SOLENOID_SPOUT 8
 
 #define PUMP_START_DELAY_MILLIS 100
 #define PUMP_STOP_BEFORE_BACKTRACK_TIME_MILLIS 0
@@ -230,6 +239,8 @@ public:
     uint8_t get_MCP23017_address_from_slot(uint8_t slot);
     uint8_t getMCP23017Register(uint8_t slot, uint8_t reg);
     void setMCP23017Register(uint8_t slot, uint8_t reg, uint8_t value);
+
+    void outputMCP23017IORegisters(uint8_t slot);
 
     void registerFlowSensorTickCallback(int slot, std::function<void()> callback);
     PcbVersion pcb_version;

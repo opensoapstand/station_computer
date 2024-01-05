@@ -59,8 +59,10 @@ DF_ERROR stateDispenseInit::onEntry()
 
     debugOutput::sendMessage("Dispense init: (re)load relevant parameters from database.", MSG_INFO);
 
-    g_machine.loadGeneralProperties();
+    g_machine.loadGeneralProperties(false);
     g_machine.m_productDispensers[dispenser_index].loadGeneralProperties();
+
+    debugOutput::sendMessage("Dispense init: Load selected product parameters: ", MSG_INFO);
     bool success = g_machine.m_productDispensers[dispenser_index].getSelectedProduct()->loadParameters();
 
     if (!success)

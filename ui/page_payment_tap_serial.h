@@ -38,6 +38,7 @@
 
 class statusbar;
 class page_product;
+class page_product_mixing;
 class page_dispenser;
 class page_idle;
 class page_help;
@@ -63,7 +64,7 @@ class page_payment_tap_serial : public QWidget
 public:
     // **** GUI Setup ****
     explicit page_payment_tap_serial(QWidget *parent = nullptr);
-    void setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp, statusbar *p_statusbar);
+    void setPage(page_product *p_page_product, page_product_mixing *p_page_product_mixing, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp, statusbar *p_statusbar);
     ~page_payment_tap_serial();
 
     void resizeEvent(QResizeEvent *event);
@@ -95,6 +96,8 @@ public:
         return merchantAddress;
     }
     bool tap_serial_initiate();
+    void getLanInfo();
+    void resetDevice();
 
     QTimer *readTimer;
     StatePaymentSerial state_payment;
@@ -113,6 +116,7 @@ private:
     // **** GUI ****
     Ui::page_payment_tap_serial *ui;
     page_product *p_page_product;
+    page_product_mixing *p_page_product_mixing;
     page_dispenser *p_page_dispense;
     page_idle *p_page_idle;
     page_help *p_page_help;

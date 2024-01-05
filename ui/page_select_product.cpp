@@ -154,7 +154,7 @@ void page_select_product::displayProducts()
     // for (uint8_t option_index = 0; option_index < p_page_idle->thisMachine->getOptionCount(); option_index++)
     {
 
-        int option_index = (MENU_DISPENSE_OPTIONS_PER_BASE_MAXIMUM * slot_index);
+        int option_index = (DISPENSE_PRODUCTS_PER_BASE_LINE_MAX * slot_index);
         qDebug() << "Page select. Set up option: " << option_index + 1;
         QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_SELECT_PRODUCT_CSS);
 

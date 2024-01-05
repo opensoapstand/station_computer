@@ -475,7 +475,7 @@ void page_product_overview::updatePriceLabel()
         double discountFraction = p_page_idle->thisMachine->getDiscountPercentageFraction();
         qDebug() << "Discount" << discountFraction;
 
-        QString units = p_page_idle->thisMachine->getSelectedProduct()->getUnitsForSlot();
+        QString units = p_page_idle->thisMachine->getSizeUnit();
         if (units == "ml")
         {
             units = "100ml";

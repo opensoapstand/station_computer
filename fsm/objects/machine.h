@@ -87,6 +87,8 @@ public:
     void loadGeneralProperties(bool loadDispenserParameters);
     void loadMachineParametersFromDb();
     string getMachineId();
+    string getSizeUnit();
+    string getPaymentMethod();
 
     static int convertPStringToPNumber(const std::string &inputString);
 
@@ -146,6 +148,8 @@ private:
     string m_software_version_controller;
     bool m_is_enabled;
     string m_status_text;
+    string m_payment;
+    string m_size_unit;
 };
 
 #endif

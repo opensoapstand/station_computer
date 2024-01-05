@@ -343,9 +343,9 @@ void page_product_menu::displayProducts()
 void page_product_menu::displayDispenseProductsMenu()
 {
     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_PRODUCT_MENU_CSS);
-    for (int sub_menu_index = 0; sub_menu_index < MENU_DISPENSE_OPTIONS_PER_BASE_MAXIMUM; sub_menu_index++)
+    for (int sub_menu_index = 0; sub_menu_index < DISPENSE_PRODUCTS_PER_BASE_LINE_MAX; sub_menu_index++)
     {
-        int option_index = m_selectedBaseProductIndex * MENU_DISPENSE_OPTIONS_PER_BASE_MAXIMUM + sub_menu_index;
+        int option_index = m_selectedBaseProductIndex * DISPENSE_PRODUCTS_PER_BASE_LINE_MAX + sub_menu_index;
 
         if (p_page_idle->thisMachine->isOptionExisting(option_index + 1))
         {

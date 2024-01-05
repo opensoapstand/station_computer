@@ -221,7 +221,7 @@ bool page_qr_payment::createOrderIdAndSendToBackend()
     bool shouldShowQR = false;
     qDebug() << "Get cloud to create an order and retrieve the order id";
     QString MachineSerialNumber = p_page_idle->thisMachine->getMachineId();
-    QString productUnits = p_page_idle->thisMachine->getSelectedProduct()->getUnitsForSlot();
+    QString productUnits = p_page_idle->thisMachine->getSizeUnit();
     QString productId = p_page_idle->thisMachine->getSelectedProduct()->getAwsProductId();
     QString contents = p_page_idle->thisMachine->getSelectedProduct()->getProductName();
     QString quantity_requested = p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(false, false);

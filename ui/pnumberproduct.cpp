@@ -99,6 +99,45 @@ int pnumberproduct::getFirstMixPNumberOrPNumberAsBasePNumber()
     }
 }
 
+QString pnumberproduct::getMixPNumbersAsCsv()
+{
+    QString csvString;
+    if (m_mixPNumbers.size() > 0)
+    {
+        for (int i = 0; i < m_mixPNumbers.size(); ++i)
+        {
+            csvString += QString::number(m_mixPNumbers[i]);
+            if (i < m_mixPNumbers.size() - 1) // Don't add a comma after the last element
+                csvString += ",";
+        }
+    }
+    else
+    {
+        csvString += QString::number(m_PNumber);
+    }
+    return csvString;
+}
+
+QString pnumberproduct::getMixRatiosAsCsv()
+{
+    QString csvString;
+    if (m_mixRatios.size() > 0)
+    {
+
+        for (int i = 0; i < m_mixRatios.size(); ++i)
+        {
+            csvString += QString::number(m_mixRatios[i]);
+            if (i < m_mixRatios.size() - 1) // Don't add a comma after the last element
+                csvString += ",";
+        }
+    }
+    else
+    {
+        csvString += "1";
+    }
+    return csvString;
+}
+
 QVector<int> pnumberproduct::getMixPNumbers()
 {
     return m_mixPNumbers;
@@ -116,8 +155,13 @@ void pnumberproduct::loadProductPropertiesFromDb()
                                   &m_aws_product_id,
                                   &m_soapstand_product_serial,
                                   m_mixPNumbers,
+<<<<<<< HEAD
                                   m_mixRatiosDefault,
                                   &m_size_unit,
+=======
+                                  m_mixRatios,
+                                  //   &m_size_unit,
+>>>>>>> e533526676b9c8ff919d5972c8e5305a4669b5b1
                                   //   &m_currency_deprecated, //_dummy_deprecated
                                   //   &m_payment_deprecated,  //_deprecated,
                                   &m_name_receipt,
@@ -139,16 +183,17 @@ void pnumberproduct::loadProductPropertiesFromDb()
                                   &m_status_text,
                                   m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
 
-        int pnumberFromDb = convertPStringToPInt(m_soapstand_product_serial);
+    int pnumberFromDb = convertPStringToPInt(m_soapstand_product_serial);
 
-        if (getPNumber() != pnumberFromDb){
-            qDebug() << "ERROR: Could not load from DB: " << getPNumber() <<" was set as: " << pnumberFromDb;
-        }
-        
-        // else{
-        //     qDebug() << "Loaded from DB: " << getPNumber() <<" with db pnumber: " << pnumberFromDb;
+    if (getPNumber() != pnumberFromDb)
+    {
+        qDebug() << "ERROR: Could not load from DB: " << getPNumber() << " was set as: " << pnumberFromDb;
+    }
 
-        // }
+    // else{
+    //     qDebug() << "Loaded from DB: " << getPNumber() <<" with db pnumber: " << pnumberFromDb;
+
+    // }
 }
 
 bool pnumberproduct::getIsProductEnabled()
@@ -323,7 +368,7 @@ void pnumberproduct::setVolumeDispensedMl(double volumeMl)
 
 double pnumberproduct::inputTextToMlConvertUnits(QString inputValueAsText)
 {
-    if (getUnitsForSlot() == "oz")
+    if (getSizeUnit() == "oz")
     {
         return df_util::convertOzToMl(inputValueAsText.toDouble());
     }
@@ -355,7 +400,12 @@ double pnumberproduct::getRestockVolume()
     return m_volume_full;
 }
 
-QString pnumberproduct::getUnitsForSlot()
+void pnumberproduct::setSizeUnit(QString unit)
+{
+    m_size_unit = unit;
+}
+
+QString pnumberproduct::getSizeUnit()
 {
 
     return m_size_unit;
@@ -364,7 +414,7 @@ QString pnumberproduct::getUnitsForSlot()
 QString pnumberproduct::getVolumePerTickAsStringForSlot()
 {
     double vol_per_tick = getVolumePerTickForSlot();
-    QString units = getUnitsForSlot();
+    QString units = getSizeUnit();
 
     return df_util::getConvertedStringVolumeFromMl(vol_per_tick, units, false, true);
 }
@@ -422,7 +472,7 @@ double pnumberproduct::getVolumeRemaining()
 
 QString pnumberproduct::getVolumeRemainingCorrectUnits(bool addUnits)
 {
-    QString units = getUnitsForSlot();
+    QString units = getSizeUnit();
     QString volume_as_string = df_util::getConvertedStringVolumeFromMl(getVolumeRemaining(), units, false, addUnits);
 
     return volume_as_string;
@@ -430,14 +480,14 @@ QString pnumberproduct::getVolumeRemainingCorrectUnits(bool addUnits)
 
 QString pnumberproduct::getVolumeDispensedSinceRestockCorrectUnits()
 {
-    QString units = getUnitsForSlot();
+    QString units = getSizeUnit();
     QString volume_as_string = df_util::getConvertedStringVolumeFromMl(m_volume_dispensed_since_restock, units, false, true);
     return volume_as_string;
 }
 
 QString pnumberproduct::getTotalDispensedCorrectUnits()
 {
-    QString units = getUnitsForSlot();
+    QString units = getSizeUnit();
     QString volume_as_string = df_util::getConvertedStringVolumeFromMl(m_volume_dispensed_total, units, false, true);
     return volume_as_string;
 }
@@ -450,7 +500,7 @@ QString pnumberproduct::getSizeAsVolumeWithCorrectUnits(int size, bool roundValu
     QString units;
 
     v = getVolumeBySize(size);
-    units = getUnitsForSlot();
+    units = getSizeUnit();
     volume_as_string = df_util::getConvertedStringVolumeFromMl(v, units, roundValue, addUnits);
     return volume_as_string;
 }
@@ -523,7 +573,7 @@ QString pnumberproduct::getAwsProductId()
 
 QString pnumberproduct::getFullVolumeCorrectUnits(bool addUnits)
 {
-    QString units = getUnitsForSlot();
+    QString units = getSizeUnit();
     QString volume_as_string = df_util::getConvertedStringVolumeFromMl(m_volume_full, units, false, addUnits);
     return volume_as_string;
 }

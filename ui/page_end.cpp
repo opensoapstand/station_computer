@@ -167,7 +167,7 @@ void page_end::fsmReceiveFinalDispensedVolume(double dispensed)
 {
     qDebug() << "Updated dispensed volume" << dispensed;
     p_page_idle->thisMachine->getSelectedProduct()->setVolumeDispensedMl(dispensed);
-    QString units = p_page_idle->thisMachine->getSelectedProduct()->getUnitsForSlot();
+    QString units = p_page_idle->thisMachine->getSizeUnit();
     QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl(), units, false, true);
 
     double price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize());
@@ -184,7 +184,7 @@ void page_end::fsmReceiveFinalDispensedVolume(double dispensed)
 // {
 //     qDebug() << "Updated dispensed volume" << dispensed;
 //     p_page_idle->thisMachine->selectedProduct->setVolumeDispensedMl(dispensed);
-//     QString units = p_page_idle->thisMachine->selectedProduct->getUnitsForSlot();
+//     QString units = p_page_idle->thisMachine->selectedProduct->getSizeUnit();
 //     QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl(), units, false, true);
 
 //     double price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->selectedProduct->getBasePrice());
@@ -201,7 +201,7 @@ void page_end::sendDispenseEndToCloud()
 {
     QString order_id = this->paymentPage->getOID();
 
-    QString units = p_page_idle->thisMachine->getSelectedProduct()->getUnitsForSlot();
+    QString units = p_page_idle->thisMachine->getSizeUnit();
     QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl(), units, false, false);
     QString volume_remaining = p_page_idle->thisMachine->getSelectedProduct()->getVolumeRemainingCorrectUnits(false);
     QString soapstand_product_serial = p_page_idle->thisMachine->getSelectedProduct()->getPNumberAsPString();

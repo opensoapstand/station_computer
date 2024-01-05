@@ -186,7 +186,7 @@ struct Time_val
 };
 typedef struct Time_val Time_val;
 
-#define TABLE_PRODUCTS_COLUMN_COUNT 53
+#define TABLE_PRODUCTS_COLUMN_COUNT 52
 
 typedef enum DF_FSM
 {

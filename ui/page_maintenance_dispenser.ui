@@ -585,7 +585,7 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>1500</y>
+     <y>1570</y>
      <width>251</width>
      <height>251</height>
     </rect>
@@ -598,7 +598,7 @@
    <property name="geometry">
     <rect>
      <x>330</x>
-     <y>1500</y>
+     <y>1470</y>
      <width>351</width>
      <height>20</height>
     </rect>
@@ -1555,7 +1555,7 @@
    <property name="geometry">
     <rect>
      <x>330</x>
-     <y>1520</y>
+     <y>1490</y>
      <width>701</width>
      <height>51</height>
     </rect>
@@ -1659,7 +1659,7 @@
    <property name="geometry">
     <rect>
      <x>340</x>
-     <y>1650</y>
+     <y>1720</y>
      <width>101</width>
      <height>101</height>
     </rect>
@@ -1672,7 +1672,7 @@
    <property name="geometry">
     <rect>
      <x>450</x>
-     <y>1650</y>
+     <y>1720</y>
      <width>101</width>
      <height>101</height>
     </rect>
@@ -1685,7 +1685,7 @@
    <property name="geometry">
     <rect>
      <x>560</x>
-     <y>1650</y>
+     <y>1720</y>
      <width>101</width>
      <height>101</height>
     </rect>
@@ -1698,7 +1698,7 @@
    <property name="geometry">
     <rect>
      <x>670</x>
-     <y>1650</y>
+     <y>1720</y>
      <width>101</width>
      <height>101</height>
     </rect>
@@ -1711,7 +1711,7 @@
    <property name="geometry">
     <rect>
      <x>780</x>
-     <y>1650</y>
+     <y>1720</y>
      <width>101</width>
      <height>101</height>
     </rect>
@@ -1724,13 +1724,117 @@
    <property name="geometry">
     <rect>
      <x>890</x>
-     <y>1650</y>
+     <y>1720</y>
      <width>101</width>
      <height>101</height>
     </rect>
    </property>
    <property name="text">
     <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_dispense_pnumber_1">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>1570</y>
+     <width>101</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_dispense_pnumber_2">
+   <property name="geometry">
+    <rect>
+     <x>450</x>
+     <y>1570</y>
+     <width>101</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_dispense_pnumber_3">
+   <property name="geometry">
+    <rect>
+     <x>560</x>
+     <y>1570</y>
+     <width>101</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_dispense_pnumber_4">
+   <property name="geometry">
+    <rect>
+     <x>670</x>
+     <y>1570</y>
+     <width>101</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_dispense_pnumber_5">
+   <property name="geometry">
+    <rect>
+     <x>780</x>
+     <y>1570</y>
+     <width>101</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_dispense_pnumber_6">
+   <property name="geometry">
+    <rect>
+     <x>890</x>
+     <y>1570</y>
+     <width>101</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>1690</y>
+     <width>201</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Available single products:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_7">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>1540</y>
+     <width>201</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Available mix products:</string>
    </property>
   </widget>
  </widget>

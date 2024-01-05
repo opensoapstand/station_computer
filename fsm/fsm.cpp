@@ -145,7 +145,7 @@ DF_ERROR initObjects()
     for (int pnumber = 0; pnumber < PNUMBERS_COUNT; pnumber++)
     {
         debugOutput::sendMessage("Load pnumber " + to_string(pnumber), MSG_INFO);
-        g_pnumbers[pnumber].init(pnumber);
+        g_pnumbers[pnumber].init(pnumber, g_machine.getSizeUnit(), g_machine.getPaymentMethod());
     }
 
     dfRet = createStateArray();

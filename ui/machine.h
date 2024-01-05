@@ -65,6 +65,8 @@ public:
 
     bool isSessionLocked();
 
+    QString getSizeUnit();
+
     void dispenseButtonLightsAnimateState(bool animateElseOff);
     bool slotNumberValidityCheck(int slot);
 
@@ -233,6 +235,7 @@ public:
     QString m_help_text_html;
     QString m_idle_page_type;
     QString m_admin_pwd;
+    QString m_size_unit;
     double m_temperature;
     double m_alert_temperature;
     QString m_software_version_controller;

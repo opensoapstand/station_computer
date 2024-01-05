@@ -104,3 +104,6 @@ page_qr_payment->label_gif,{"x": 365, "y": 960, "width": 350, "height": 350}
 
 page_payment_tap_serial->pushButton_to_idle,{"x": 460, "y": 1760, "width": 161, "height": 141}
 page_payment_tap_serial->animated_Label,{"x": 221, "y": 327, "width": 639, "height": 639}
+
+page_payment_tap_tcp->pushButton_to_idle,{"x": 460, "y": 1760, "width": 161, "height": 141}
+page_payment_tap_tcp->animated_Label,{"x": 221, "y": 327, "width": 639, "height": 639}

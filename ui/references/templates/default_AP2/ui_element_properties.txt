@@ -66,6 +66,9 @@ page_qr_payment->label_gif,{"x": 365, "y": 548, "width": 350, "height": 350}
 page_payment_tap_serial->pushButton_to_idle,{"x": 980, "y": 50, "width": 50, "height": 50}
 page_payment_tap_serial->animated_Label,{"x": 139, "y": 668, "width": 801, "height": 365}
 
+page_payment_tap_tcp->pushButton_to_idle,{"x": 980, "y": 50, "width": 50, "height": 50}
+page_payment_tap_tcp->animated_Label,{"x": 139, "y": 668, "width": 801, "height": 365}
+
 page_dispenser->label_indicate_active_spout,{"x":460,"y":1700,"isVisibleAtLoad":true}
 
 statusbar->statusbar,{"width": 75, "height": 75}

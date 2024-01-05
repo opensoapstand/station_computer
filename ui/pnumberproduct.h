@@ -121,7 +121,6 @@ private:
     QVector<int> m_mixPNumbers;
     QVector<double> m_mixRatiosDefault;
     QVector<double> m_additivesRatioModifier;
-    QVector<double> m_mixRatiosCustom;
 
     int m_selected_size;
     double DispensedVolumeMl;

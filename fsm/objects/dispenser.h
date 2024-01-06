@@ -93,7 +93,6 @@ public:
 
       // bool isCustomMixPNumberAsSelectedProduct();
 
-
       // active product
       product *getActiveProduct();
       void linkActiveProductVolumeUpdate();
@@ -133,8 +132,8 @@ public:
       DF_ERROR startActivePNumberDispense();
       DF_ERROR stopActivePNumberDispense();
 
-      bool isEndOfSelectedProductDispenseIfNotSetNextActiveProduct();
-      DF_ERROR initSelectedProductDispense(char size, double nPrice);
+      bool setNextActiveProductAsPartOfSelectedProduct();
+      DF_ERROR startSelectedProductDispense(char size, double nPrice);
       // DF_ERROR startSelectedProductDispense();
       DF_ERROR stopSelectedProductDispense();
       string getSelectedProductDispenseStartTime();
@@ -195,16 +194,16 @@ public:
       pcb *m_pcb;
       product *m_pnumbers;
 
-      static void parseIntCsvString(const std::string &csvString, int* intArray, int &size);
-      static void parseDoubleCsvString(const std::string &csvString, double * doubleArray,int &size);
+      string getDispenseUpdateString();
+      static void parseIntCsvString(const std::string &csvString, int *intArray, int &size);
+      static void parseDoubleCsvString(const std::string &csvString, double *doubleArray, int &size);
 
-      void setCustomMixParametersAsSelectedProduct(string pnumbers, string pnumberRatios);
-
+      void setCustomMixParametersToSelectedProduct(string pnumbers, string pnumberRatios);
 
 private:
       int m_slot;
 
-      bool m_isPumpReversalEnabled  = false;
+      bool m_isPumpReversalEnabled = false;
       bool m_isPumpSlowStartStopEnabled = false;
       bool isPumpSoftStarting;
       uint64_t slowStartMostRecentIncreaseEpoch;
@@ -215,11 +214,11 @@ private:
       int m_base_pnumber;
       int m_selected_pnumber;
       int m_active_pnumber;
-      int m_dispense_pnumbers [DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
-      int m_additive_pnumbers [DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
-      int m_custom_mix_pnumbers [DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
+      int m_dispense_pnumbers[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
+      int m_additive_pnumbers[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
+      int m_custom_mix_pnumbers[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
       int m_custom_mix_pnumbers_count = 0;
-      double m_custom_mix_ratios [DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
+      double m_custom_mix_ratios[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
       int m_custom_mix_ratios_count;
 
       int m_mix_active_index; // index --> starts from 0
@@ -232,7 +231,6 @@ private:
       string m_status_text;
 
       double m_dispenser_volume_dispensed;
-      double m_dispenserVolumeTarget;
 
       char m_nStartTime[50];
       char m_nEndTime[50];

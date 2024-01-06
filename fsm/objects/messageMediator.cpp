@@ -496,11 +496,11 @@ DF_ERROR messageMediator::parseCommandString()
       }
       m_requestedAction = ACTION_NO_ACTION;
    }
-   else if (sCommand.find("dispenseMix") != string::npos)
+   else if (sCommand.find("dispenseCustomMix") != string::npos)
    {
-      // dipenseMix|slot|pnumberscsv|ratioscsv
-      // e.g.    // dipenseMix|1|95|1
-      // e.g.    // dipenseMix|1|95,3,4|0.6,0.2,0.2
+      // dipenseMix|slot|dispenseProduct|pnumberscsv|ratioscsv
+      // e.g.    // dipenseMix|1|91|95|1|
+      // e.g.    // dipenseMix|1|91|95,3,4|0.6,0.2,0.2|
 
       debugOutput::sendMessage("Dispense command found", MSG_INFO);
       std::string delimiter = "|";
@@ -508,24 +508,60 @@ DF_ERROR messageMediator::parseCommandString()
       std::size_t found1 = sCommand.find(delimiter, found0 + 1);
       std::size_t found2 = sCommand.find(delimiter, found1 + 1);
       std::size_t found3 = sCommand.find(delimiter, found2 + 1);
+      std::size_t found4 = sCommand.find(delimiter, found3 + 1);
 
       debugOutput::sendMessage(to_string(found0), MSG_INFO);
       debugOutput::sendMessage(to_string(found1), MSG_INFO);
       debugOutput::sendMessage(to_string(found2), MSG_INFO);
       debugOutput::sendMessage(to_string(found3), MSG_INFO);
+      debugOutput::sendMessage(to_string(found4), MSG_INFO);
 
       std::string dispenseCommand = sCommand.substr(found0 + 1, found1 - found0 - 1);
       debugOutput::sendMessage("Dispense command: " + dispenseCommand, MSG_INFO);
       parseDispenseCommand(dispenseCommand);
 
-      std::string pnumbers = sCommand.substr(found1 + 1, found2 - found1 - 1);
+      std::string pNumberDispenseProduct_str = sCommand.substr(found1 + 1, found2 - found1 - 1);
+      debugOutput::sendMessage("Selected Dispense PNumber : " + pNumberDispenseProduct_str, MSG_INFO);
+
+      int pNumberDispenseProduct = std::stoi(pNumberDispenseProduct_str);
+
+      std::string pnumbers = sCommand.substr(found2 + 1, found3 - found2 - 1);
       debugOutput::sendMessage("Pnumbers : " + pnumbers, MSG_INFO);
 
-      std::string ratios = sCommand.substr(found2 + 1, found3 - found2 - 1);
+      std::string ratios = sCommand.substr(found3 + 1, found4 - found3 - 1);
       debugOutput::sendMessage("Dispense Ratios : " + ratios, MSG_INFO);
-      m_machine->m_productDispensers[getRequestedSlot() - 1].setCustomMixParametersAsSelectedProduct(pnumbers, ratios);
+      
+      m_machine->m_productDispensers[getRequestedSlot() - 1].setSelectedProduct(pNumberDispenseProduct);
+      m_machine->m_productDispensers[getRequestedSlot() - 1].setCustomMixParametersToSelectedProduct(pnumbers, ratios);
       // int pnumber = m_machine->m_productDispensers[getRequestedSlot() - 1].getCustomMixPNumberFromMixIndex(0);
       // m_machine->m_productDispensers[getRequestedSlot() - 1].setPNumberAsSingleDispenseSelectedProduct(pnumber);
+   }
+   else if (sCommand.find("dispensePNumber") != string::npos)
+   {
+      // dipenseMix|slot|dispenseProduct
+      // e.g.    // dipenseMix|1|91|
+      // e.g.    // dipenseMix|1|91|
+
+      debugOutput::sendMessage("Dispense command found", MSG_INFO);
+      std::string delimiter = "|";
+      std::size_t found0 = sCommand.find(delimiter);
+      std::size_t found1 = sCommand.find(delimiter, found0 + 1);
+      std::size_t found2 = sCommand.find(delimiter, found1 + 1);
+      
+      debugOutput::sendMessage(to_string(found0), MSG_INFO);
+      debugOutput::sendMessage(to_string(found1), MSG_INFO);
+      debugOutput::sendMessage(to_string(found2), MSG_INFO);
+      
+      std::string dispenseCommand = sCommand.substr(found0 + 1, found1 - found0 - 1);
+      debugOutput::sendMessage("Dispense command: " + dispenseCommand, MSG_INFO);
+      parseDispenseCommand(dispenseCommand);
+
+      std::string pNumberDispenseProduct_str = sCommand.substr(found1 + 1, found2 - found1 - 1);
+      debugOutput::sendMessage("Selected Dispense PNumber : " + pNumberDispenseProduct_str, MSG_INFO);
+
+      int pNumberDispenseProduct = std::stoi(pNumberDispenseProduct_str);
+
+      m_machine->m_productDispensers[getRequestedSlot() - 1].setSelectedProduct(pNumberDispenseProduct);
    }
    else if (sCommand.find("Order") != string::npos)
    {

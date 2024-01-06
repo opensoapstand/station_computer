@@ -153,7 +153,7 @@ DF_ERROR stateDispense::onAction()
    if (g_machine.m_productDispensers[slot_index].isActiveProductVolumeTargetReached())
    {
 
-      debugOutput::sendMessage("Stop dispensing active product. Requested volume reached. " + to_string(g_machine.m_productDispensers[slot_index].getActiveProductVolumeDispensed()), MSG_INFO);
+      debugOutput::sendMessage("Active product. Requested volume reached. Stop and next.  stop active pnumber: " + to_string(g_machine.m_productDispensers[slot_index].getActiveProductVolumeDispensed()), MSG_INFO);
       stopPumping();
 
       if (g_machine.m_productDispensers[slot_index].setNextActiveProductAsPartOfSelectedProduct())

@@ -11,6 +11,7 @@ keyboard::keyboard(QWidget *parent) : QWidget(parent),
     refreshTimer = new QTimer(this);
     refreshTimer->setInterval(1000);
     connect(refreshTimer, SIGNAL(timeout()), this, SLOT(onRefreshTimerTick()));
+    connect(ui->buttonGroup, SIGNAL(buttonPressed(int)), this, SLOT(keyboardButtonPressed(int)));
 
     refreshTimer->start(1000);
     _refreshTimerTimeoutSec = STATUS_BAR_REFRESH_PERIOD_SECONDS;
@@ -23,27 +24,24 @@ keyboard::~keyboard()
     delete ui;
 }
 
-// void statusbar::autoSetVisibility()
-// {
-//     bool isVisible = false;
-//     if (p_page_idle->thisMachine->getRole() != UserRole::user)
-//     {
-//         isVisible = true;
-//     }
-//     if (this->p_page_idle->thisMachine->getCouponState() == enabled_valid_active)
-//     {
-//         isVisible = true;
-//     }
-
-//     setVisibility(isVisible);
-// }
-
-void keyboard::setVisibility(bool isVisible)
+void keyboard::autoSetVisibility()
 {
-    qDebug() << "$$$$$$$$$$$$$$$$$ keyboard set visibility";
+    bool isVisible = false;
+    if (p_page_idle->thisMachine->getCouponState() == enabled_show_keyboard)
+    {
+        isVisible = true;
+    }
+
+    // setVisibility(isVisible);
+}
+
+void keyboard::setVisibility(bool isVisible, QWidget *widget)
+{
     is_keyboard_visible = isVisible;
     if(isVisible){
         this->show();
+    }else{
+        this->hide();
     }
 }
 
@@ -70,7 +68,7 @@ void keyboard::showEvent(QShowEvent *event)
 
     // setRoleTimeOutTrailingText(""); // reset count down.
 
-    // refresh();
+    refresh();
 }
 
 // void statusbar::hideCurrentPageAndShowProvided(QWidget *pageToShow)
@@ -105,37 +103,19 @@ void keyboard::setPage(page_idle *pageIdle)
 //     }
 // }
 
-// void statusbar::refresh()
-// {
-//     // autoSetVisibility();
+void keyboard::refresh()
+{
+    autoSetVisibility();
 
-//     if (is_statusbar_visible)
-//     {
-//         this->show();
-
-//         this->p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_active_role, this->p_page_idle->thisMachine->getActiveRoleAsText());
-//         QString base = p_page_idle->thisMachine->getTemplateTextByElementNameAndPage(ui->pushButton_hide);
-//         ui->pushButton_hide->setText(base.arg(roleTimeOutTrailingText));
-
-//         if (this->p_page_idle->thisMachine->getCouponState() == enabled_valid_active)
-//         {
-//             QString coupon_code = this->p_page_idle->thisMachine->getCouponCode();
-//             QString coupon_status_text = this->p_page_idle->thisMachine->getTemplateTextByElementNameAndPage(ui->label_coupon_code);
-//             ui->label_coupon_code->setText(coupon_status_text.arg(coupon_code));
-//             ui->label_coupon_code->show();
-//         }
-//         else
-//         {
-//             ui->label_coupon_code->hide();
-//         }
-
-//         ui->label_session_id->setText(p_page_idle->thisMachine->getSessionId());
-//     }
-//     else
-//     {
-//         this->hide();
-//     }
-// }
+    if (is_keyboard_visible)
+    {
+        this->show();
+    }
+    else
+    {
+        this->hide();
+    }
+}
 
 void keyboard::on_pushButton_hide_clicked()
 {
@@ -173,3 +153,44 @@ void keyboard::onRefreshTimerTick()
 //     autoSetVisibility();
 //     refresh();
 // }
+
+void keyboard::keyboardButtonPressed(int buttonID)
+{
+    QAbstractButton *buttonpressed = ui->buttonGroup->button(buttonID);
+    QString buttonText = buttonpressed->text();
+    if (buttonText == "backspace")
+    {
+        // ui->lineEdit_promo_code->backspace();
+        qDebug() << "######### BACKSPACE";
+    }
+    else if (buttonText == "done")
+    {
+        // if (m_readyToSendCoupon && p_page_idle->thisMachine->getCouponState() != enabled_processing_input)
+        // {
+        //     m_readyToSendCoupon = false;
+        //     qDebug() << "Done clicked, initiated apply promo.";
+
+        //     // hack, sometimes it appears like the 'done' button code is called twice.
+        //     p_page_idle->thisMachine->setCouponState(enabled_processing_input);
+        //     reset_and_show_page_elements();
+        //     // apply_promo_code(ui->lineEdit_promo_code->text());
+        // }
+        // else
+        // {
+        //     qDebug() << "ASSERT ERROR: Illegal press. Still processing other call.";
+        // }
+        qDebug() << "############ DONE";
+    }
+    else if (buttonText.mid(0, 3) == "num")
+    {
+        qDebug() << "######### NUM" << buttonText.mid(3, 1);
+        // ui->lineEdit_promo_code->setText(ui->lineEdit_promo_code->text() + buttonText.mid(3, 1));
+    }
+    else
+    {
+        qDebug() << "############ TEXT" << buttonText;
+        // ui->lineEdit_promo_code->setText(ui->lineEdit_promo_code->text() + buttonText);
+    }
+
+    // qDebug() << "Promo code input field: " << ui->lineEdit_promo_code->text();
+}

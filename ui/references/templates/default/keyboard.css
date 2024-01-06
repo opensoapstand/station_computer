@@ -10,6 +10,10 @@ QPushButton {
    border-radius: 5px;
 }
 
+QPushButton:hover{
+   background: red;
+}
+
 #keyboard_3{
    background: yellow;
 }

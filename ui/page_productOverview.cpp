@@ -55,7 +55,7 @@ page_product_overview::page_product_overview(QWidget *parent) : QWidget(parent),
 
     ui->label_gif->hide();
     statusbarLayout = new QVBoxLayout(this);
-    keyboardLayout = new QVBoxLayout(this);
+    // keyboardLayout = new QVBoxLayout(this);
 }
 
 /*
@@ -102,9 +102,9 @@ void page_product_overview::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
 
     statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
-    statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
-    keyboardLayout->addWidget(p_keyboard);         
-    keyboardLayout->setContentsMargins(0, 0, 0, 0);
+    // statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
+    statusbarLayout->setContentsMargins(0, 0, 0, 0); // int left, int top, int right, int bottom);
+    // p_keyboard->move(15, 1371);
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
     //p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(ui->promoKeyboard); 
@@ -402,8 +402,10 @@ void page_product_overview::reset_and_show_page_elements()
     case (enabled_show_keyboard):
     {
         qDebug() << "Coupon state: Show keyboard";
+        statusbarLayout->addWidget(p_keyboard);       
         // ui->promoKeyboard->show();
-        p_keyboard->setVisibility(true);
+        p_keyboard->setVisibility(true, ui->lineEdit_promo_code);
+        // p_page_idle->thisMachine->activateKeyboard(ui->lineEdit_promo_code);
         ui->lineEdit_promo_code->clear();
         ui->lineEdit_promo_code->show();
         p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_promo_code, "promoCode", PAGE_PRODUCT_OVERVIEW_CSS);
@@ -450,6 +452,7 @@ void page_product_overview::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 
     selectIdleTimer->stop();
     statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
+    statusbarLayout->removeWidget(p_keyboard); // Only one instance can be shown. So, has to be added/removed per page.
 
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
 }

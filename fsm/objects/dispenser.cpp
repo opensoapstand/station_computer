@@ -540,8 +540,8 @@ bool dispenser::setNextActiveProductAsPartOfSelectedProduct()
         }
         else
         {
-            debugOutput::sendMessage("Dispenser: Set next active product in mix. Position:  " + to_string(m_mix_active_index) + " Active Pnumber: " + to_string(getActivePNumber()), MSG_INFO);
             setActiveProduct(getSelectedProduct()->getMixPNumber(m_mix_active_index));
+            debugOutput::sendMessage("Dispenser: Set next active product in mix. Position:  " + to_string(m_mix_active_index) + " Active Pnumber: " + to_string(getActivePNumber()), MSG_INFO);
             startActivePNumberDispense();
             return false;
         }
@@ -640,6 +640,8 @@ DF_ERROR dispenser::stopSelectedProductDispense()
     time(&rawtime);
     timeinfo = localtime(&rawtime);
     strftime(m_nEndTime, 50, "%F %T", timeinfo);
+
+    m_pcb->setDispenseButtonLightsAllOff();
 }
 
 string dispenser::getSelectedProductDispenseStartTime()
@@ -651,58 +653,6 @@ string dispenser::getSelectedProductDispenseEndTime()
 {
     return m_nEndTime;
 }
-
-// DF_ERROR dispenser::initActivePNumberDispense(double volume)
-// {
-//     DF_ERROR dfRet = OK;
-//     getActiveProduct()->setTargetVolume(volume);
-
-//     resetActiveProductVolumeDispensed();
-
-//     switch (m_pcb->get_pcb_version())
-//     {
-
-//     case (pcb::PcbVersion::DSED8344_NO_PIC):
-//     {
-//         // setMultiDispenseButtonLight(getSlot(), true);
-//     }
-//     break;
-//     case pcb::PcbVersion::DSED8344_PIC_MULTIBUTTON:
-//     {
-//         // if (m_machine->getMultiDispenseButtonEnabled())
-//         // {
-//         //     setMultiDispenseButtonLight(getSlot(), true);
-//         // }
-//         // else
-//         // {
-//         //     setMultiDispenseButtonLight(1, true);
-//         // }
-//         // setPumpEnable(); // Added at time of EN-134 integration. Why did things work earlier onwards?
-//     }
-//     break;
-//     case (pcb::PcbVersion::EN134_4SLOTS):
-//     case (pcb::PcbVersion::EN134_8SLOTS):
-//     {
-
-//         setPumpEnable();
-//     }
-//     break;
-//     case (pcb::PcbVersion::EN258_4SLOTS):
-//     case (pcb::PcbVersion::EN258_8SLOTS):
-//     {
-
-//         setPumpEnable();
-//     }
-//     break;
-//     default:
-//     {
-//         debugOutput::sendMessage("Pcb not comptible. ", MSG_WARNING);
-//     }
-//     break;
-//     }
-
-//     return dfRet;
-// }
 
 DF_ERROR dispenser::startActivePNumberDispense()
 {
@@ -762,7 +712,7 @@ DF_ERROR dispenser::stopActivePNumberDispense()
     debugOutput::sendMessage("Dispenser: Stop Active PNumber dispense " + to_string(getActivePNumber()), MSG_INFO);
 
     setActiveProductSolenoid(false);
-    m_pcb->setDispenseButtonLightsAllOff();
+    
     m_pcb->flowSensorsDisableAll();
 }
 
@@ -788,6 +738,10 @@ void dispenser::linkDispenserFlowSensorTick()
 void dispenser::registerFlowSensorTickFromPcb()
 {
     getActiveProduct()->registerFlowSensorTickFromPcb();
+    if (getActivePNumber() != getSelectedPNumber()){
+        getSelectedProduct()->registerFlowSensorTickFromPcb();
+
+    }
 }
 
 // double dispenser::getDispenserVolumeDispensed()

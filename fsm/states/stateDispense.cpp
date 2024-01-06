@@ -153,7 +153,7 @@ DF_ERROR stateDispense::onAction()
    if (g_machine.m_productDispensers[slot_index].isActiveProductVolumeTargetReached())
    {
 
-      debugOutput::sendMessage("Active product. Requested volume reached. Stop and next.  stop active pnumber: " + to_string(g_machine.m_productDispensers[slot_index].getActiveProductVolumeDispensed()), MSG_INFO);
+      debugOutput::sendMessage("Active product. Requested volume reached. Stop and next.   P-" + to_string(g_machine.m_productDispensers[slot_index].getActivePNumber()) + " / " + to_string(g_machine.m_productDispensers[slot_index].getActiveProductVolumeDispensed()) + "ml", MSG_INFO);
       stopPumping();
 
       if (g_machine.m_productDispensers[slot_index].setNextActiveProductAsPartOfSelectedProduct())
@@ -161,7 +161,9 @@ DF_ERROR stateDispense::onAction()
          // check for next mixing product to activate to dispense.   additive n -> .... ->  additive 1 -> base. (end with base)
          m_state_requested = STATE_DISPENSE_END;
          debugOutput::sendMessage("Stop dispensing selected product. Requested volume reached. " + to_string(g_machine.m_productDispensers[slot_index].getSelectedProductVolumeDispensed()), MSG_INFO);
-
+      }
+      else
+      {
          if (g_machine.m_productDispensers[slot_index].getDispenseButtonValue())
          {
             debugOutput::sendMessage("Dispense button is pressed, so restart next phase automatically. ", MSG_INFO);

@@ -433,6 +433,64 @@ transfer_production_db_old(){
     echo "done"
 }
 
+
+
+transfer_folder(){
+
+    echo "Source Station: "
+    get_station_port
+    source_port=$global_port
+    echo "Destination Station: "
+    get_station_port
+    destination_port=$global_port
+
+
+    logging_zip_name=transfer_$source_port.zip  # check for where used, not as a variable. Because... it's hard.
+    
+    cmd0=( rm /home/ubuntu/Stations/transfer.zip )
+    # zip it up
+
+    # all files: 
+    # cmd1=( sudo ssh -t df-admin@localhost -p $source_port 'cd /home/df-admin/production; zip -r logging.zip logging; mv logging.zip ..' )
+
+    # only files within timestamp
+    # cmd1=(sudo ssh -t df-admin@localhost -p $source_port 'cd /home/df-admin/production/logging; find . -type f -mtime -7 -exec zip -r logging.zip {} +; mv /home/df-admin/production/logging/logging.zip /home/df-admin/logging.zip')
+    
+
+        # Zip all files
+    cmd1=( sudo ssh -t df-admin@localhost -p $source_port 'rm /home/df-admin/transfer.zip; cd /home/df-admin/transfer; zip -r ../transfer.zip *' )
+
+
+    # transfer zip from source station to aws 
+    cmd2=( scp -r -P $source_port "df-admin@localhost:/home/df-admin/transfer.zip" "/home/ubuntu/Stations/" )
+    # transfer zip from aws to destination station
+
+    cmd3=( scp -r -P $destination_port "/home/ubuntu/Stations/transfer.zip" df-admin@localhost:/home/df-admin/$logging_zip_name )
+
+    printf -v cmd0_str '%q ' "${cmd0[@]}"
+    printf -v cmd1_str '%q ' "${cmd1[@]}"
+    printf -v cmd2_str '%q ' "${cmd2[@]}"
+    printf -v cmd3_str '%q ' "${cmd3[@]}"
+
+    # confirm_execute "$cmd_str"
+    echo "Lined up commands: "
+    echo "$cmd0_str"
+    echo "$cmd1_str"
+    echo "$cmd2_str"
+    echo "$cmd3_str"
+    
+    continu_or_exit
+    echo "Delete previous transfer artefacts"
+    "${cmd0[@]}"
+    echo "Zip transfer folder..."
+    "${cmd1[@]}"
+    echo "Transfer zip file to aws..."
+    "${cmd2[@]}"
+    echo "Transfer folder from aws to station..."
+    "${cmd3[@]}"
+    echo "done"
+}
+
 transfer_production_logging(){
 
     local days=$1  # Number of days to consider for -mtime option
@@ -891,7 +949,7 @@ deploy_with_ash () {
 }
 
 PS3="Choose option(digit + enter) :"
-options=("Quit" "Stations status" "Station log in" "Production Folder Copy and Deploy: Static files" "Production Folder Copy: Static files" "Production Folder Copy: Logging Folder (Last Seven Days)" "Production Folder Copy: Logging Folder (All)" "Production Folder Copy: Databases" "Production Folder Copy: Configuration database" "Production Folder Copy: Usage database" "Production Folder Copy: Database OLD" )
+options=("Quit" "Stations status" "Station log in" "Production Folder Copy and Deploy: Static files" "Production Folder Copy: Static files" "Production Folder Copy: Logging Folder (Last Seven Days)" "Production Folder Copy: Logging Folder (All)" "Production Folder Copy: Databases" "Production Folder Copy: Configuration database" "Production Folder Copy: Usage database" "Production Folder Copy: Database OLD" "Transfer general: home/transfer" )
 # options=("Quit" "Stations status" "Show Station Descriptions" "Station log in" "Station/production/x to Station/production/x" "Station/production/x to Station/home/x" "Station/home/x to Station/production/x" "Station/home/x to Station/home/x" "AWS to Station/home/x" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB" "Manualport/production/x to Manualport/home/x" "Station mkdir" "Station log in [port]" "Static Production Copy: Station to Station" "Static Production Copy: Station to [port]" "Static Production Copy: [port] to Station" "Static Production Copy: [port] to [port]" "DB Production copy: Station to Station" "DB Production copy: Station to [port]" "DB Production copy: [port] to Station" "DB Production copy: [port] to [port]" "Logs Production Copy: Station to Station" "Logs Production Copy: Station to [port]" "Logs Production Copy: [port] to Station" "Logs Production Copy: [port] to [port]")
 
 select opt in "${options[@]}"
@@ -960,6 +1018,9 @@ do
 
         "Production Folder Copy: Logging Folder (All)")
             transfer_production_logging  
+            ;;
+        "Transfer general: home/transfer")
+            transfer_folder  
             ;;
       
         "Manualport/production/x to Manualport/home/x")

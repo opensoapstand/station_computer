@@ -49,7 +49,6 @@ page_maintenance_dispenser::page_maintenance_dispenser(QWidget *parent) : QWidge
     buttons_select_mix[3] = ui->pushButton_dispense_pnumber_4;
     buttons_select_mix[4] = ui->pushButton_dispense_pnumber_5;
     buttons_select_mix[5] = ui->pushButton_dispense_pnumber_6;
-
 }
 
 // DTOR
@@ -115,7 +114,6 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     ui->pushButton_active_pnumber_base->setStyleSheet(styleSheet);
     ui->pushButton_active_pnumber_base->setText("Base\nP-" + QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getBasePNumber()));
 
-
     // first, pretend like there are no dispense products
     for (int dispense_product_position = 1; dispense_product_position <= DISPENSE_PRODUCTS_PER_BASE_LINE_MAX; dispense_product_position++)
     {
@@ -126,7 +124,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
         // buttons_select_mix[dispense_product_position - 1]->hide();
     }
 
-     // set up for all available dispense products
+    // set up for all available dispense products
     int dispense_product_position = 1;
     while (dispense_product_position <= this->p_page_idle->thisMachine->getSelectedSlot()->getDispenseProductsCount())
     {
@@ -136,7 +134,6 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
         buttons_select_mix[dispense_product_position - 1]->show();
         dispense_product_position++;
     }
-
 
     // first, pretend like there are no additives
     for (int additive_position = 1; additive_position <= ADDITIVES_PER_SLOT_COUNT_MAX; additive_position++)
@@ -514,22 +511,26 @@ void page_maintenance_dispenser::dispense_test_start()
 {
     qDebug() << "Start dispense in maintenance mode. (FYI: if app crashes, it's probably about the update volume interrupts caused by the controller sending data.)";
     QString dispenseCommand = QString::number(p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
-    dispenseCommand.append("t");
+    dispenseCommand.append("m");
+    // dispenseCommand.append("t");
     dispenseCommand.append(SEND_DISPENSE_START);
 
-    // QString slotAsQString = QString::number(p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
-    // QString pNumbersAsCsvString = QString::number(m_activePNumber);
-    // QString pNumberRatiosAsCsvString = QString::number(1);
+    // #define DISPENSE_CUSTOM_MIX
 
-    // check if pnumber is a mix. 
-
+#ifdef DISPENSE_CUSTOM_MIX
+    // check if pnumber is a mix.
     QString pNumbersAsCsvString = this->p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbersAsCsv();
     QString pNumberRatiosAsCsvString = this->p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosAsCsv();
+    int pNumberSelectedProduct = this->p_page_idle->thisMachine->getSelectedProduct()->getPNumber();
 
-    // QString pNumbersAsCsvString = QString::number(this->p_page_idle->thisMachine->getSelectedProduct()->getPNumber()) + ",666";
-    // QString pNumberRatiosAsCsvString = QString::number(0.6) + ",0.4";
+    QString command = "dispenseCustomMix|" + dispenseCommand + "|" + QString::number(pNumberSelectedProduct) + "|" + pNumbersAsCsvString + "|" + pNumberRatiosAsCsvString + "|"; // dipenseMix|slot|dispensePNumber|pnumberscsv|ratioscsv
+#else
 
-    QString command = "dispenseMix|" + dispenseCommand + "|" + pNumbersAsCsvString + "|" + pNumberRatiosAsCsvString + "|"; // dipenseMix|slot|pnumberscsv|ratioscsv
+    int pNumberSelectedProduct = this->p_page_idle->thisMachine->getSelectedProduct()->getPNumber();
+
+    QString command = "dispensePNumber|" + dispenseCommand + "|" + QString::number(pNumberSelectedProduct) + "|"; // dipenseMix|slot|dispensePNumber
+
+#endif
 
     reset_all_dispense_stats();
     dispenseTimer->start(100);

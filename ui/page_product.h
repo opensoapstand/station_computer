@@ -25,11 +25,11 @@
 
 #include "page_dispenser.h"
 #include "page_productOverview.h"
+#include "page_productFreeSample.h"
 #include "page_payment_tap_serial.h"
 #include "page_payment_tap_tcp.h"
 #include "page_qr_payment.h"
 #include "page_select_product.h"
-#include "page_productOverview.h"
 #include "dispenser_slot.h"
 #include "page_idle.h"
 #include "page_error_wifi.h"

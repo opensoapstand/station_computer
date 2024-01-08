@@ -1505,6 +1505,39 @@ text-align: center;
     <string/>
    </property>
   </widget>
+  <widget class="QPushButton" name="pushButton_order_sample">
+   <property name="geometry">
+    <rect>
+     <x>890</x>
+     <y>1740</y>
+     <width>170</width>
+     <height>100</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Try Sample</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_background_sample">
+   <property name="geometry">
+    <rect>
+     <x>890</x>
+     <y>1740</y>
+     <width>170</width>
+     <height>100</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <zorder>label_background_sample</zorder>
+  <zorder>label_background_custom</zorder>
+  <zorder>pushButton_order_sample</zorder>
+  <zorder>pushButton_order_custom</zorder>
   <zorder>label_help</zorder>
   <zorder>pushButton_continue</zorder>
   <zorder>label_product_title</zorder>
@@ -1513,7 +1546,6 @@ text-align: center;
   <zorder>label_background_small</zorder>
   <zorder>label_background_medium</zorder>
   <zorder>label_background_large</zorder>
-  <zorder>label_background_custom</zorder>
   <zorder>label_product_ingredients</zorder>
   <zorder>label_select_quantity</zorder>
   <zorder>pushButton_back</zorder>
@@ -1530,7 +1562,6 @@ text-align: center;
   <zorder>pushButton_order_big</zorder>
   <zorder>label_price_custom</zorder>
   <zorder>label_size_custom</zorder>
-  <zorder>pushButton_order_custom</zorder>
   <zorder>label_additives_background</zorder>
   <zorder>label_additive_title_1</zorder>
   <zorder>label_additive_title_2</zorder>

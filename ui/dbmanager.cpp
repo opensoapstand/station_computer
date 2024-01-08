@@ -409,7 +409,10 @@ void DbManager::getAllProductProperties(int pnumber,
             "size_custom_discount,"
             "price_custom_discount," // 48
             "is_enabled,"
-            "status_text " // 50
+            "status_text," // 50
+            "is_enabled_sample,"
+            "size_sample,"
+            "price_sample "
             "FROM products WHERE soapstand_product_serial=:pnumber"
 
         );

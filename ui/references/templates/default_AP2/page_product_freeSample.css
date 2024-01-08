@@ -1,0 +1,238 @@
+QPushButton { 
+    border: 1px solid #5E8580;
+}
+#pushButton_promo_input{ 
+    background-color: transparent; 
+    border: none;
+}
+.promoCode{
+    font-family: "Lato"; 
+    font-style: normal; 
+    font-weight: 700; 
+    font-size: 24px; 
+    color: #908981;
+    padding: 10px;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+.promoCode_network_error{
+    font-family: "Lato"; 
+    font-style: normal; 
+    font-weight: 700; 
+    font-size: 24px; 
+    padding: 10px;
+    color: #da980a;
+    border: 2px solid #58595B;
+    border-radius: 10px;
+}
+.promoCode_invalid{
+    font-family: "Lato"; 
+    font-style: normal; 
+    font-weight: 700; 
+    font-size: 24px; 
+    padding: 10px;
+    color: #f44336;
+    border: 2px solid #58595B;
+    border-radius: 10px;
+}
+.promoCode_processing{
+    font-family: "Lato"; 
+    font-style: normal; 
+    font-weight: 700; 
+    font-size: 24px; 
+    padding: 10px;
+    color: #858585;
+    border: 2px solid #858585;
+    border-radius: 10px;
+}
+.promoCode_valid{
+    font-family: "Lato"; 
+    font-style: normal; 
+    font-weight: 700; 
+    font-size: 24px; 
+    padding: 10px;
+    color: #895E25;
+    border: 2px solid #58595B;
+    border-radius: 10px;
+}
+#pushButton_select_product_page{ 
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    color: #001810;
+    text-align: left;
+    qproperty-alignment: AlignCenter;
+    border: none;
+}
+/* .buttonPromo {
+    font-family: 'Brevia';
+    font-style: normal;
+    font-weight: 75;
+    font-size: 32px;
+    line-height: 99px;
+    text-transform: lowercase;
+    background-color: #5E8580;
+    border: 1px solid #3D6675;
+    color: #FFFFFF;
+    text-align: center;
+    qproperty-alignment: AlignCenter;
+} */
+.buttonBGTransparent{ 
+    background-color: transparent; 
+    border: 0px
+}
+
+#pushButton_continue{
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 400;
+    background-color: #895E25;
+    font-size: 47px;
+    text-align: center;
+    line-height: auto;
+    qproperty-alignment: AlignCenter;
+    border-radius: 25px;
+    color: #FEFBF9;
+    border: none;
+}
+
+#pushButton_continue_additional{
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 400;
+    background-color: #895E25;
+    font-size: 47px;
+    text-align: center;
+    line-height: auto;
+    qproperty-alignment: AlignCenter;
+    border-radius: 25px;
+    color: #FEFBF9;
+    border: none;
+}
+
+QLabel {
+    position: absolute;
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 45px;
+    text-transform: capitalize;
+    color: #211403;
+}
+
+#label_page_title{
+    color: #211403;
+    font-family: 'El Messiri';
+    font-size: 64px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+#label_checkout_title{
+    color: #211403;
+    font-family: 'El Messiri';
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.labelOrderOverview{
+    color: #211403;
+    font-family: 'Lato';
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+#label_invoice_size_title{
+    color: #211403;
+    font-family: 'Lato';
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 400;
+}
+
+#label_invoice_price{
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    color: #211403;
+}
+#label_invoice_coupon_title{
+    color: #211403;
+    font-family: 'Lato';
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 700;
+}
+#label_invoice_box{
+    background: #FFF7ED;
+    border-radius: 25px;
+}
+#label_invoice_additives_overview{
+    color: #211403;
+    font-family: 'Lato';
+    font-size: 30px;
+    font-weight: 400;
+    font-style: normal;
+}
+.labelDiscount{
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    color: #895E25;
+    text-align: right;
+}
+.labelDiscountName, #label_discount_tag{
+    color: transparent;
+    background: transparent;
+}
+#label_total, #label_invoice_price_total{
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    color: #221403;
+}
+#label_gif{
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 36px;
+    line-height: 40px;
+    color: #58595B;
+    padding: 3px;
+    border:8px solid #248C8C;
+    border-radius: 20px;
+}
+#label_selected_volume{
+    color: #211403;
+    font-family: 'Lato';
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 45px;
+    qproperty-alignment: 'AlignVCenter | AlignLeft';
+}
+
+#line_invoice{
+    border: 3px solid black;
+}
+#label_product_photo {
+    background-image: url(%IMAGE_PATH%);
+    border-top-left-radius: 0px;
+    border-top-right-radius: 100px;
+    border-bottom-right-radius: 100px;
+    border-bottom-left-radius: 100px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-clip: content;
+}
+

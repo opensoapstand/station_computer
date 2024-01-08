@@ -694,8 +694,10 @@ bool product::isDbValid()
         "price_custom_discount",
         "is_enabled",
         "status_text",
-        "size_unit"
-
+        "size_unit",
+        "is_enabled_sample",
+        "size_sample",
+        "price_sample"
     };
     bool is_valid = true;
 
@@ -886,7 +888,10 @@ bool product::loadProductParametersFromDb()
                         "is_enabled_custom_discount," // 33
                         "size_custom_discount,"
                         "price_custom_discount," // 35
-                        "status_text"            // 36
+                        "status_text,"            // 36
+                        "is_enabled_sample,"
+                        "size_sample,"
+                        "price_sample"
                         " FROM products WHERE soapstand_product_serial='" +
                         std::to_string(m_pnumber) + "';";
 

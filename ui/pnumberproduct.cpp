@@ -217,7 +217,7 @@ bool pnumberproduct::toggleSizeEnabled(int size)
 
 bool pnumberproduct::setSizeEnabled(int size, bool enabled)
 {
-    QString sizeIndexToText[6] = {"Invalid", "small", "medium", "large", "custom", "test"};
+    QString sizeIndexToText[7] = {"Invalid", "small", "medium", "large", "custom", "test","sample"};
     // m_sizeIndexIsEnabled[size] = enabled;
     QString column_name = QString("is_enabled_%1").arg(sizeIndexToText[size]);
     m_db->updateTableProductsWithInt(getPNumber(), column_name, enabled);
@@ -229,6 +229,7 @@ bool pnumberproduct::getSizeEnabled(int size)
     qDebug() << "Size enabled? for: " << size << "enabled? : " << m_sizeIndexIsEnabled[size];
     return m_sizeIndexIsEnabled[size];
 }
+
 char pnumberproduct::getSelectedSizeAsChar()
 {
     // ! = invalid.

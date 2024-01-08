@@ -25,6 +25,7 @@
 
 #include "page_dispenser.h"
 #include "page_productOverview.h"
+#include "page_productFreeSample.h"
 #include "page_payment_tap_serial.h"
 #include "page_payment_tap_tcp.h"
 #include "page_qr_payment.h"
@@ -43,6 +44,7 @@ class page_dispenser;
 class page_error_wifi;
 class page_help;
 class page_product_overview;
+class page_product_freeSample;
 class page_payment_tap_serial;
 class page_payment_tap_tcp;
 class page_product_menu;
@@ -74,7 +76,7 @@ public:
     QVector<QPushButton*> plusButtonCollection;
 
     explicit page_product_mixing(QWidget *parent = nullptr);
-    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_payment_tap_serial *page_payment_tap_serial, page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product_overview *page_Overview, statusbar *p_statusbar, page_product_menu *page_product_menu);
+    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_payment_tap_serial *page_payment_tap_serial, page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product_overview *page_Overview, statusbar *p_statusbar, page_product_menu *page_product_menu,page_product_freeSample *p_page_freeSample);
     ~page_product_mixing();
     size_t WriteCallback_coupon(char *contents, size_t size, size_t nmemb, void *userp);
 
@@ -100,6 +102,7 @@ private slots:
     void on_pushButton_order_custom_clicked();
 
     void on_pushButton_order_medium_clicked();
+    void on_pushButton_order_sample_clicked();
 
     void additiveMinusButtonsPressed(int index);
     void additivePlusButtonsPressed(int index);
@@ -266,6 +269,7 @@ private:
     page_error_wifi *p_page_wifi_error;
     page_help *p_page_help;
     page_product_overview *p_page_overview;
+    page_product_freeSample *p_page_product_freeSample;
     page_payment_tap_tcp *p_page_payment_tap_tcp;
     page_payment_tap_serial *p_page_payment_tap_serial;
     statusbar *p_statusbar;

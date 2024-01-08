@@ -210,6 +210,8 @@ public:
 
     bool isProductVolumeInContainer(int pnumber);
 
+    // void activateKeyboard(QWidget *page);
+
     QString m_machine_id;
     QString m_client_id;
     QString m_template;
@@ -272,6 +274,7 @@ public slots:
 signals:
 
 private:
+    // QWidget* m_widgetForTextEdit;
     dispenser_slot *m_selectedSlot; // used for maintenance mode!!  , or derived from selectedProduct.
     pnumberproduct *m_selectedProduct;
     QVector<int> dispenseProductsMenuOptions;

@@ -21,14 +21,15 @@ public:
     // void exit_page();
     // void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     // void hide();
-    // void refresh();
+    void refresh();
     // void setRoleTimeOutTrailingText(QString text);
     QString roleTimeOutTrailingText;
     
-    // void autoSetVisibility();
-    void setVisibility(bool isVisible);
-
+    void autoSetVisibility();
+    void setVisibility(bool isVisible, QWidget *widget);
+    QWidget target;
 private slots:
+    void keyboardButtonPressed(int buttonID);
     void on_pushButton_hide_clicked();
     void onRefreshTimerTick();
 

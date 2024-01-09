@@ -51,7 +51,6 @@ page_product_overview->pushButton_previous_page,{"x": 70, "y": 1757, "width": 28
 page_product_overview->pushButton_promo_input,{"x": 90, "y": 770, "width": 891, "height": 46}
 page_product_overview->pushButton_select_product_page,{"x": 70, "y": 40, "width": 401, "height": 41}
 page_product_overview->pushButton_to_help,{"x": 446, "y": 1727, "width": 211, "height": 191}
-page_product_overview->promoKeyboard,{"x": 120, "y": 830, "width": 841, "height": 320}
 
 page_product_overview->a,{"x": 53, "y": 161, "width": 62, "height": 62}
 page_product_overview->b,{"x": 403, "y": 234, "width": 62, "height": 62}
@@ -130,4 +129,3 @@ page_product_freeSample->pushButton_previous_page,{"x": 70, "y": 1757, "width": 
 page_product_freeSample->pushButton_promo_input,{"x": 90, "y": 770, "width": 891, "height": 46}
 page_product_freeSample->pushButton_select_product_page,{"x": 70, "y": 40, "width": 401, "height": 41}
 page_product_freeSample->pushButton_to_help,{"x": 446, "y": 1727, "width": 211, "height": 191}
-page_product_freeSample->promoKeyboard,{"x": 120, "y": 830, "width": 841, "height": 320}

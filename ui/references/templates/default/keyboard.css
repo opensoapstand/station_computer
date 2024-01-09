@@ -3,17 +3,8 @@ QPushButton {
    font-style: normal;
    font-weight: 20;
    font-size: 16px;
-   color: #E2B985;
-   background-color: #5E5E5E;
-   border: 2px solid #2B2B2B;
+   color: transparent;
+   background-color: transparent;
    text-align: center;
    border-radius: 5px;
-}
-
-QPushButton:hover{
-   background: red;
-}
-
-#keyboard_3{
-   background: yellow;
 }

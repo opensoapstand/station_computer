@@ -37,7 +37,11 @@
 #define DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX 6
 
 #define PRODUCT_DISPENSERS_MAX 4
-#define DUMMY_PNUMBER 666
+
+#define DUMMY_PNUMBER 2
+#define CUSTOM_MIX_PNUMBER 1
+
+
 #define ADDITIVES_PER_SLOT_COUNT_MAX 5
 #define PNUMBERS_COUNT 100
 #define MINIMUM_DISPENSE_VOLUME_ML 10
@@ -78,7 +82,7 @@
 #define SLOW_START_INCREASE_PERIOD_MILLIS 2 // set to 0 for instant start
 #define SLOW_STOP_PERIOD_MILLIS 1           // set to 0 for instant stop
 
-#define DISPENSE_STATUS_UPDATE_DELTA_MILLIS 500 // period of which controller can send status to ui and logging and terminal
+#define DISPENSE_STATUS_UPDATE_DELTA_MILLIS 1000 // period of which controller can send status to ui and logging and terminal
 
 #define SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS 3000
 // #define EMPTY_CONTAINER_DETECTION_FLOW_THRESHOLD_ML_PER_S 15 // reference: at 2l/min we have 33ml/s

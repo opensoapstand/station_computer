@@ -1,6 +1,5 @@
 #include "df_util.h" // lode added for settings
 #include "dbmanager.h"
-#include "keyboard.h"
 #include "machine.h"
 #include "dispenser_slot.h"
 #include "pnumberproduct.h"
@@ -1569,8 +1568,3 @@ QStringList machine::getChildNames(QObject *parent)
 
     return childNames;
 }
-
-// void machine::activateKeyboard(QWidget *page){
-//     keyboard->setVisibility(true);
-//     qDebug() << "##########" << page;
-// }

@@ -19,7 +19,7 @@
 #include <iostream>
 #include <string>
 #include <cmath>
-
+#include <functional>
 #include "page_qr_payment.h"
 #include "page_payment_tap_tcp.h"
 #include "page_select_product.h"
@@ -103,7 +103,8 @@ void page_product_overview::showEvent(QShowEvent *event)
 
     statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
     // statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
-    statusbarLayout->setContentsMargins(0, 0, 0, 0); // int left, int top, int right, int bottom);
+    statusbarLayout->addWidget(p_keyboard);    
+    statusbarLayout->setContentsMargins(14, 1374, 15, 51); // int left, int top, int right, int bottom);
     // p_keyboard->move(15, 1371);
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
@@ -249,8 +250,8 @@ void page_product_overview::showEvent(QShowEvent *event)
         ui->pushButton_continue->setProperty("activePaymentMethod",paymentMethods[0]);
     }
     else if(numberOfPaymentMethods==2){
-        ui->pushButton_continue->raise();
-        ui->pushButton_continue_additional->raise();
+        // ui->pushButton_continue->raise();
+        // ui->pushButton_continue_additional->raise();
         ui->pushButton_continue->setFixedSize(QSize(360,100));
         ui->pushButton_continue->setProperty("activePaymentMethod",paymentMethods[0]);
         ui->pushButton_continue_additional->setFixedSize(QSize(360,100));
@@ -374,7 +375,7 @@ void page_product_overview::reset_and_show_page_elements()
         QString promo_code_input_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "lineEdit_promo_code->valid");
         QString entered_coupon_code = ui->lineEdit_promo_code->text().toUpper();
         // ui->lineEdit_promo_code->setText(promo_code_input_text);
-        ui->lineEdit_promo_code->setText("Valid Coupon: " + entered_coupon_code);
+        ui->lineEdit_promo_code->setText(entered_coupon_code);
         QString coupon_icon_path = p_page_idle->thisMachine->getTemplatePathFromName(COUPON_ICON_AVAILABLE_PATH);
         if (p_page_idle->thisMachine->m_template == "default_AP2"){
             p_page_idle->thisMachine->addPictureToLabel(ui->label_coupon_icon, coupon_icon_path);
@@ -402,10 +403,9 @@ void page_product_overview::reset_and_show_page_elements()
     case (enabled_show_keyboard):
     {
         qDebug() << "Coupon state: Show keyboard";
-        statusbarLayout->addWidget(p_keyboard);       
         // ui->promoKeyboard->show();
-        p_keyboard->setVisibility(true, ui->lineEdit_promo_code);
-        // p_page_idle->thisMachine->activateKeyboard(ui->lineEdit_promo_code);
+        p_keyboard->registerCallBack(std::bind(&page_product_overview::enterButtonPressed, this));
+        p_keyboard->initializeKeyboard(true, ui->lineEdit_promo_code);
         ui->lineEdit_promo_code->clear();
         ui->lineEdit_promo_code->show();
         p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_promo_code, "promoCode", PAGE_PRODUCT_OVERVIEW_CSS);
@@ -625,43 +625,59 @@ void page_product_overview::apply_promo_code(QString promocode)
     reset_and_show_page_elements();
 }
 
-void page_product_overview::keyboardButtonPressed(int buttonID)
-{
-    QAbstractButton *buttonpressed = ui->buttonGroup->button(buttonID);
-    QString buttonText = buttonpressed->objectName();
-
-    if (buttonText == "backspace")
+void page_product_overview::enterButtonPressed(){
+    if (m_readyToSendCoupon && p_page_idle->thisMachine->getCouponState() != enabled_processing_input)
     {
-        ui->lineEdit_promo_code->backspace();
-    }
-    else if (buttonText == "done")
-    {
-        if (m_readyToSendCoupon && p_page_idle->thisMachine->getCouponState() != enabled_processing_input)
-        {
-            m_readyToSendCoupon = false;
-            qDebug() << "Done clicked, initiated apply promo.";
-
-            // hack, sometimes it appears like the 'done' button code is called twice.
-            p_page_idle->thisMachine->setCouponState(enabled_processing_input);
-            reset_and_show_page_elements();
-            apply_promo_code(ui->lineEdit_promo_code->text());
-        }
-        else
-        {
-            qDebug() << "ASSERT ERROR: Illegal press. Still processing other call.";
-        }
-    }
-    else if (buttonText.mid(0, 3) == "num")
-    {
-        ui->lineEdit_promo_code->setText(ui->lineEdit_promo_code->text() + buttonText.mid(3, 1));
+        m_readyToSendCoupon = false;
+        qDebug() << "Done clicked, initiated apply promo.";
+        // hack, sometimes it appears like the 'done' button code is called twice.
+        p_page_idle->thisMachine->setCouponState(enabled_processing_input);
+        reset_and_show_page_elements();
+        apply_promo_code(ui->lineEdit_promo_code->text());
     }
     else
     {
-        ui->lineEdit_promo_code->setText(ui->lineEdit_promo_code->text() + buttonText);
+        qDebug() << "ASSERT ERROR: Illegal press. Still processing other call.";
     }
-
-    qDebug() << "Promo code input field: " << ui->lineEdit_promo_code->text();
 }
+
+// void page_product_overview::keyboardButtonPressed(int buttonID)
+// {
+//     QAbstractButton *buttonpressed = ui->buttonGroup->button(buttonID);
+//     QString buttonText = buttonpressed->objectName();
+
+//     if (buttonText == "backspace")
+//     {
+//         ui->lineEdit_promo_code->backspace();
+//     }
+//     else if (buttonText == "done")
+//     {
+//         if (m_readyToSendCoupon && p_page_idle->thisMachine->getCouponState() != enabled_processing_input)
+//         {
+//             m_readyToSendCoupon = false;
+//             qDebug() << "Done clicked, initiated apply promo.";
+
+//             // hack, sometimes it appears like the 'done' button code is called twice.
+//             p_page_idle->thisMachine->setCouponState(enabled_processing_input);
+//             reset_and_show_page_elements();
+//             apply_promo_code(ui->lineEdit_promo_code->text());
+//         }
+//         else
+//         {
+//             qDebug() << "ASSERT ERROR: Illegal press. Still processing other call.";
+//         }
+//     }
+//     else if (buttonText.mid(0, 3) == "num")
+//     {
+//         ui->lineEdit_promo_code->setText(ui->lineEdit_promo_code->text() + buttonText.mid(3, 1));
+//     }
+//     else
+//     {
+//         ui->lineEdit_promo_code->setText(ui->lineEdit_promo_code->text() + buttonText);
+//     }
+
+//     qDebug() << "Promo code input field: " << ui->lineEdit_promo_code->text();
+// }
 
 void page_product_overview::on_pushButton_previous_page_clicked()
 {
@@ -672,6 +688,7 @@ void page_product_overview::on_pushButton_previous_page_clicked()
 void page_product_overview::on_lineEdit_promo_codeInput_clicked()
 {
     p_page_idle->thisMachine->setCouponState(enabled_show_keyboard);
+    statusbarLayout->removeWidget(p_statusbar);
     reset_and_show_page_elements();
 }
 

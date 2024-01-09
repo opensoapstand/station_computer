@@ -90,12 +90,12 @@ DF_ERROR stateDispenseInit::onAction()
     debugOutput::sendMessage(std::string("Dispenser slot state: ") + g_machine.m_productDispensers[dispenser_index].getSlotStateAsString(),
                              MSG_INFO);
 
-    g_machine.m_productDispensers[dispenser_index].initSelectedProductDispense(
+    g_machine.m_productDispensers[dispenser_index].startSelectedProductDispense(
         size,
         g_machine.m_productDispensers[dispenser_index].getSelectedProduct()->getPrice(size)
         );
 
-    g_machine.m_productDispensers[dispenser_index].startSelectedProductDispense();
+    
     
     m_state_requested = STATE_DISPENSE;
     return e_ret;

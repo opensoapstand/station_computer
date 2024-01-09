@@ -43,9 +43,13 @@ public:
         bool isMixingProduct();
         void getMixRatios(double *&mixRatios, int &count);
         void getMixPNumbers(int *&pnumbers, int &count);
+
+        int getMixProductsCount();
+
         int getBasePNumber();
         int getAdditivesCount();
-        bool getAdditivePNumber(int position);
+        int getAdditivePNumber(int position);
+        int getMixPNumber(int position);
         double getAdditiveMixRatio(int position);
         double getBaseMixRatio();
         double getMixRatio(int position);
@@ -99,6 +103,7 @@ public:
         static std::string dbFieldAsValidString(sqlite3_stmt *stmt, int column_index);
         void loadProductPropertiesFromCsv();
 
+        void parseMixPNumbersAndRatiosCsv(const std::string &mixPNumbersCsvString, const std::string &mixRatiosCsvString);
         static void parseIntCsvString(const std::string &csvString, int* intArray, int &size);
         static void parseDoubleCsvString(const std::string &csvString, double * doubleArray, int &size);
 

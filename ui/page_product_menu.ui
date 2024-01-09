@@ -32,10 +32,10 @@
   <widget class="QPushButton" name="pushButton_help_page">
    <property name="geometry">
     <rect>
-     <x>446</x>
-     <y>1732</y>
-     <width>201</width>
-     <height>181</height>
+     <x>970</x>
+     <y>30</y>
+     <width>75</width>
+     <height>75</height>
     </rect>
    </property>
    <property name="text">
@@ -58,10 +58,10 @@
   <widget class="QLabel" name="label_help">
    <property name="geometry">
     <rect>
-     <x>478</x>
-     <y>1773</y>
-     <width>125</width>
-     <height>125</height>
+     <x>980</x>
+     <y>40</y>
+     <width>50</width>
+     <height>50</height>
     </rect>
    </property>
    <property name="text">
@@ -321,7 +321,7 @@
      <x>330</x>
      <y>430</y>
      <width>338</width>
-     <height>400</height>
+     <height>436</height>
     </rect>
    </property>
    <property name="text">
@@ -334,7 +334,7 @@
      <x>690</x>
      <y>430</y>
      <width>338</width>
-     <height>400</height>
+     <height>436</height>
     </rect>
    </property>
    <property name="text">
@@ -345,9 +345,9 @@
    <property name="geometry">
     <rect>
      <x>330</x>
-     <y>880</y>
+     <y>916</y>
      <width>338</width>
-     <height>400</height>
+     <height>436</height>
     </rect>
    </property>
    <property name="text">
@@ -358,9 +358,9 @@
    <property name="geometry">
     <rect>
      <x>690</x>
-     <y>880</y>
+     <y>916</y>
      <width>338</width>
-     <height>400</height>
+     <height>436</height>
     </rect>
    </property>
    <property name="text">
@@ -371,9 +371,9 @@
    <property name="geometry">
     <rect>
      <x>330</x>
-     <y>1330</y>
+     <y>1402</y>
      <width>338</width>
-     <height>400</height>
+     <height>436</height>
     </rect>
    </property>
    <property name="text">
@@ -384,9 +384,9 @@
    <property name="geometry">
     <rect>
      <x>690</x>
-     <y>1330</y>
+     <y>1402</y>
      <width>338</width>
-     <height>400</height>
+     <height>436</height>
     </rect>
    </property>
    <property name="text">
@@ -423,7 +423,7 @@
    <property name="geometry">
     <rect>
      <x>330</x>
-     <y>880</y>
+     <y>916</y>
      <width>338</width>
      <height>338</height>
     </rect>
@@ -436,7 +436,7 @@
    <property name="geometry">
     <rect>
      <x>690</x>
-     <y>880</y>
+     <y>916</y>
      <width>338</width>
      <height>338</height>
     </rect>
@@ -449,7 +449,7 @@
    <property name="geometry">
     <rect>
      <x>330</x>
-     <y>1330</y>
+     <y>1402</y>
      <width>338</width>
      <height>338</height>
     </rect>
@@ -462,9 +462,87 @@
    <property name="geometry">
     <rect>
      <x>690</x>
-     <y>1330</y>
+     <y>1402</y>
      <width>338</width>
      <height>338</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_dispense_product_name_1">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>794</y>
+     <width>338</width>
+     <height>72</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_dispense_product_name_2">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>794</y>
+     <width>338</width>
+     <height>72</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_dispense_product_name_3">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1280</y>
+     <width>338</width>
+     <height>72</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_dispense_product_name_4">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>1280</y>
+     <width>338</width>
+     <height>72</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_dispense_product_name_5">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1766</y>
+     <width>338</width>
+     <height>72</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_dispense_product_name_6">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>1766</y>
+     <width>338</width>
+     <height>72</height>
     </rect>
    </property>
    <property name="text">
@@ -506,6 +584,12 @@
   <zorder>label_dispense_product_picture_4</zorder>
   <zorder>label_dispense_product_picture_5</zorder>
   <zorder>label_dispense_product_picture_6</zorder>
+  <zorder>label_dispense_product_name_1</zorder>
+  <zorder>label_dispense_product_name_2</zorder>
+  <zorder>label_dispense_product_name_3</zorder>
+  <zorder>label_dispense_product_name_4</zorder>
+  <zorder>label_dispense_product_name_5</zorder>
+  <zorder>label_dispense_product_name_6</zorder>
  </widget>
  <resources/>
  <connections/>

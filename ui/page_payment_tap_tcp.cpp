@@ -17,12 +17,13 @@
 #include "ui_page_payment_tap_tcp.h"
 
 #include "page_product.h"
+#include "page_product_mixing.h"
 #include "page_dispenser.h"
 #include "page_idle.h"
 #include "payment/commands.h"
 #include "payment/setup_Tap.h"
 
-extern QString transactionLogging;
+// extern QString transactionLogging;
 extern std::string CTROUTD;
 extern std::string MAC_KEY;
 extern std::string MAC_LABEL;
@@ -117,9 +118,10 @@ void page_payment_tap_tcp::stopPayTimers()
 /*
  * Page Tracking reference
  */
-void page_payment_tap_tcp::setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp, statusbar *p_statusbar)
+void page_payment_tap_tcp::setPage(page_product *p_page_product, page_product_mixing *p_page_product_mixing, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp, statusbar *p_statusbar)
 {
     this->p_page_product = p_page_product;
+    this->p_page_product_mixing = p_page_product_mixing;
     this->p_page_wifi_error = pageWifiError;
     this->p_page_dispense = page_dispenser;
     this->p_page_idle = pageIdle;
@@ -408,7 +410,7 @@ bool page_payment_tap_tcp::exitConfirm()
         case QMessageBox::Yes:
         {
             // resetPaymentPage();
-            // transactionLogging = "";
+            // p_page_idle->thisMachine->resetTransactionLogging();
             return true;
         }
         break;
@@ -423,7 +425,7 @@ bool page_payment_tap_tcp::exitConfirm()
     {
         // exit, no questions asked.
         // resetPaymentPage();
-        // transactionLogging = "";
+        // p_page_idle->thisMachine->resetTransactionLogging();
         return true;
     }
 }
@@ -451,7 +453,11 @@ void page_payment_tap_tcp::on_pushButton_previous_page_clicked()
                 qDebug() << "Session finished sent";
             }
         }
-        hideCurrentPageAndShowProvided(p_page_product);
+        if(p_page_idle->thisMachine->m_template == "default_AP2"){
+            hideCurrentPageAndShowProvided(p_page_product_mixing);
+        }else{
+            hideCurrentPageAndShowProvided(p_page_product);
+        }
     }
 }
 
@@ -472,7 +478,8 @@ void page_payment_tap_tcp::resetPaymentPage()
     ui->label_title->hide();
 
     stopPayTimers();
-    transactionLogging = "";
+    p_page_idle->thisMachine->resetTransactionLogging();
+    // transactionLogging = "";
     response = true;
     qDebug() << "Cancelled";
 }

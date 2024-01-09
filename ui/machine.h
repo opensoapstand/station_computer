@@ -199,6 +199,7 @@ public:
     QString getHardwareMajorVersion();
 
     void addPictureToLabel(QLabel *label, QString picturePath);
+    void addPictureToLabelCircle(QLabel *label, QString picturePath);
     void addPictureToButton(QPushButton *button, QString picturePath);
     void addClientLogoToLabel(QLabel *label);
     void setBackgroundPictureFromTemplateToPage(QWidget *page, QString imageName);
@@ -208,6 +209,8 @@ public:
     void applyDynamicPropertiesFromTemplateToWidgetChildren(QWidget *widget);
 
     bool isProductVolumeInContainer(int pnumber);
+
+    // void activateKeyboard(QWidget *page);
 
     QString m_machine_id;
     QString m_client_id;
@@ -262,6 +265,10 @@ public:
     QVector<int> getAllUniqueDispensePNumbers();
     QVector<int> getAllDispensePNumbersFromSlot(int slot);
 
+    void resetTransactionLogging();
+    void addToTransactionLogging(QString text);
+    QString getTransactionLogging();
+
 public slots:
 
 signals:
@@ -297,6 +304,9 @@ private:
     QString m_pump_id_slots[MAX_SLOT_COUNT];
     int m_is_enabled_slots[MAX_SLOT_COUNT];
     QString m_status_text_slots[MAX_SLOT_COUNT];
+    QString transactionLogging;
+
+
 };
 
 #endif // MACHINE_H

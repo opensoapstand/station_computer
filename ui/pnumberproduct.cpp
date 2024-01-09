@@ -604,3 +604,23 @@ void pnumberproduct::setDispenseSpeedPercentage(int percentage)
 //     // DO  NOT USE
 //     return m_payment_deprecated;
 // }
+
+void pnumberproduct::setDefaultAdditivesRatioModifier(int size){
+    m_additivesRatioModifier.clear();
+    for(int i = 0; i < size; i++){
+        m_additivesRatioModifier.append(1);
+    }
+}
+
+void pnumberproduct::adjustAdditivesRatioModifier(int index, double additiveModifier){
+    m_additivesRatioModifier[index] = additiveModifier;
+}
+
+QVector<double> pnumberproduct::getAdditivesRatioModifier()
+{
+    return m_additivesRatioModifier;
+}
+
+double pnumberproduct::getAdditivesRatioModifier(int index){
+    return m_additivesRatioModifier[index];
+}

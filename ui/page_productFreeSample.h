@@ -72,6 +72,7 @@ public:
 
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
+    QString additivies_overview(QString product_additives_overview);
 
     void cancelTimers();
     void apply_promo_code(QString promocode);

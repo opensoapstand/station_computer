@@ -153,8 +153,6 @@ void page_product_mixing::showEvent(QShowEvent *event)
 
     ui->label_product_title->setProperty("class", "title");
     ui->label_product_title->setStyleSheet(styleSheet);
-    ui->label_background_sample->setProperty("class","orderSizeBackgroundLabels");
-    ui->label_background_sample->setStyleSheet(styleSheet);
 
     // ui->pushButton_order_sample->setProperty("class","sampleBackgroundLabel");
     // ui->pushButton_order_sample->setStyleSheet(styleSheet);

@@ -90,7 +90,7 @@ void page_product_freeSample::showEvent(QShowEvent *event)
 
     statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
     // statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
-    keyboardLayout->addWidget(p_keyboard);    
+    statusbarLayout->addWidget(p_keyboard);    
     statusbarLayout->setContentsMargins(14, 1374, 15, 51); // int left, int top, int right, int bottom);
      
     // keyboardLayout->setContentsMargins(0, 0, 0, 0);

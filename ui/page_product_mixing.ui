@@ -1508,10 +1508,10 @@ text-align: center;
   <widget class="QPushButton" name="pushButton_order_sample">
    <property name="geometry">
     <rect>
-     <x>860</x>
-     <y>1740</y>
-     <width>170</width>
-     <height>100</height>
+     <x>851</x>
+     <y>1730</y>
+     <width>179</width>
+     <height>110</height>
     </rect>
    </property>
    <property name="autoFillBackground">

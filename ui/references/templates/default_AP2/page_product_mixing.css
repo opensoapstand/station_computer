@@ -214,28 +214,17 @@
    border: none;
 } */
 
-.sampleBackgroundLabel{
-   font-family: 'Lato';
-   font-style: normal;
-   font-weight: 400;
-   background-color: #895E25;
-   font-size: 48px;
-   text-align: center;
-   line-height: normal;
-   qproperty-alignment: AlignCenter;
-   border-radius: 25px;
-   color: #FEFBF9;
-}
 
-.pushButton_order_sample{
+#pushButton_order_sample{
    font-family: 'Lato';
    font-style: normal;
-   font-weight: 400;
-   background-color: #895E25;
-   font-size: 48px;
+   font-weight: 700;
+   background-color: #FEFBF9;
+   /* border: 5px solid #BC8439; */
+   font-size: 30px;
    text-align: center;
    line-height: normal;
    qproperty-alignment: AlignCenter;
    border-radius: 25px;
-   color: #FEFBF9;
+   color: #BC8439;
 }

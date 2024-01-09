@@ -480,6 +480,7 @@ void DbManager::getAllProductProperties(int pnumber,
             *price_custom_discount = qry.value(47).toDouble();
             //Sample size assignment
             isSizeEnabled[6] = qry.value(50).toInt();
+            qDebug() <<"Ashwani" <<isSizeEnabled[6];
             volumes[6] = qry.value(51).toDouble();
             prices[6] = qry.value(52).toDouble();
         }

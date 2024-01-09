@@ -101,7 +101,7 @@ page_product_mixing::page_product_mixing(QWidget *parent) : QWidget(parent),
     orderSizeBackgroundLabels[1] = ui->label_background_medium;
     orderSizeBackgroundLabels[2] = ui->label_background_large;
     orderSizeBackgroundLabels[3] = ui->label_background_custom;
-
+    ui->pushButton_order_sample->hide();
     selectIdleTimer = new QTimer(this);
     selectIdleTimer->setInterval(40);
     connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
@@ -155,6 +155,9 @@ void page_product_mixing::showEvent(QShowEvent *event)
     ui->label_product_title->setStyleSheet(styleSheet);
     ui->label_background_sample->setProperty("class","orderSizeBackgroundLabels");
     ui->label_background_sample->setStyleSheet(styleSheet);
+
+    // ui->pushButton_order_sample->setProperty("class","sampleBackgroundLabel");
+    // ui->pushButton_order_sample->setStyleSheet(styleSheet);
 
     ui->pushButton_back->setStyleSheet(styleSheet); // pushbutton
     // ui->label_product_description->setStyleSheet(styleSheet);
@@ -278,6 +281,7 @@ void page_product_mixing::reset_and_show_page_elements()
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_product_ingredients_title);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_continue);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_recommended);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_order_sample);
     // ui->label_product_description->setWordWrap(true);
     ui->label_product_ingredients->setWordWrap(true);
     ui->pushButton_continue->hide();
@@ -523,14 +527,11 @@ void page_product_mixing::reset_and_show_page_elements()
     {
         ui->pushButton_continue->hide();
     }
-    if(true)
+    if(p_page_idle->thisMachine->getSelectedProduct()->getSizeEnabled(SIZE_SAMPLE_INDEX))
     {
-        qDebug() << "Sample size";
-
-        qDebug() << p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(SIZE_SAMPLE_INDEX, true, true);
-        ui->label_background_sample->show();     
-        p_page_idle->thisMachine->addCssClassToObject(ui->label_background_sample, "sampleBackgroundLabel", PAGE_PRODUCT_MIXING_CSS);
+        ui->pushButton_order_sample->show();
         ui->pushButton_order_sample->raise();
+        
     }
 
     qDebug() << "-------------------------- END LOAD PRODUCTS ----------------";

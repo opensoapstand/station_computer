@@ -20,8 +20,6 @@
 #include <string>
 #include <cmath>
 
-#include "page_qr_payment.h"
-#include "page_payment_tap_tcp.h"
 #include "page_select_product.h"
 #include "page_product_mixing.h"
 #include "page_idle.h"
@@ -29,7 +27,7 @@
 #include <json.hpp>
 #include <QMovie>
 using json = nlohmann::json;
-
+extern bool isFreeEmailOrder;
 
 // CTOR
 page_product_freeSample::page_product_freeSample(QWidget *parent) : QWidget(parent),
@@ -43,7 +41,7 @@ page_product_freeSample::page_product_freeSample(QWidget *parent) : QWidget(pare
 
     connect(ui->pushButton_promo_input, SIGNAL(clicked()), this, SLOT(on_lineEdit_promo_codeInput_clicked()));
     connect(ui->buttonGroup, SIGNAL(buttonPressed(int)), this, SLOT(keyboardButtonPressed(int)));
-    connect(ui->buttonGroup_continue, SIGNAL(buttonPressed(int)), this, SLOT(on_pushButton_continue(int)));
+    connect(ui->pushButton_continue, SIGNAL(clicked()), this, SLOT(on_pushButton_continue()));
 
     ui->label_gif->hide();
     statusbarLayout = new QVBoxLayout(this);
@@ -57,9 +55,6 @@ void page_product_freeSample::setPage(page_select_product *pageSelect, page_prod
 {
     this->p_page_select_product = pageSelect;
     this->p_page_product_mixing = p_page_product_mixing;
-    this->p_page_payment_qr = page_qr_payment;
-    this->p_page_payment_tap_tcp = page_payment_tap_tcp;
-    this->p_page_payment_tap_serial = page_payment_tap_serial;
     this->p_page_idle = pageIdle;
     this->p_page_dispense = page_dispenser;
     this->p_page_help = pageHelp;
@@ -71,8 +66,8 @@ void page_product_freeSample::setPage(page_select_product *pageSelect, page_prod
 
     ui->label_discount_tag->hide();
     ui->label_gif->hide();
-    // ui->pushButton_continue_additional->hide();
     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_ORDER_OVERVIEW_PATH);
+
 }
 
 // DTOR
@@ -95,8 +90,8 @@ void page_product_freeSample::showEvent(QShowEvent *event)
 
     statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
     statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
-    keyboardLayout->addWidget(p_keyboard);         
-    keyboardLayout->setContentsMargins(0, 0, 0, 0);
+    // keyboardLayout->addWidget(p_keyboard);         
+    // keyboardLayout->setContentsMargins(0, 0, 0, 0);
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
     // p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(ui->promoKeyboard); 
@@ -141,52 +136,47 @@ void page_product_freeSample::showEvent(QShowEvent *event)
     //     ui->promoKeyboard->findChild<QPushButton*>("y")->setGeometry(QRect(428, 107, 62, 62));
     //     ui->promoKeyboard->findChild<QPushButton*>("z")->setGeometry(QRect(103, 252, 62, 62));
 
-    //     QString coupon_icon_path = p_page_idle->thisMachine->getTemplatePathFromName(COUPON_ICON_UNAVAILABLE_PATH);
-    //     p_page_idle->thisMachine->addPictureToLabel(ui->label_coupon_icon, coupon_icon_path);
+        QString coupon_icon_path = p_page_idle->thisMachine->getTemplatePathFromName(COUPON_ICON_UNAVAILABLE_PATH);
+        p_page_idle->thisMachine->addPictureToLabel(ui->label_coupon_icon, coupon_icon_path);
     // }
 
     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_PRODUCT_FREESAMPLE_CSS);
     ui->label_page_title->setStyleSheet(styleSheet);
-    ui->label_checkout_title->setStyleSheet(styleSheet);
     ui->pushButton_promo_input->setStyleSheet(styleSheet);
     ui->lineEdit_promo_code->setProperty("class", "promoCode");
     ui->lineEdit_promo_code->setStyleSheet(styleSheet);
+    setup_qr_code();
     //  ui->label_product_title->setStyleSheet(styleSheet);
     ui->label_selected_volume->setStyleSheet(styleSheet);
 
     ui->label_invoice_name->setProperty("class", "labelOrderOverview");
-    ui->label_invoice_price->setProperty("class", "labelOrderOverview");
     ui->label_discount_tag->setProperty("class", "labelDiscount");
-    ui->label_invoice_discount_amount->setProperty("class", "labelDiscount");
 
-    ui->label_invoice_additives_overview->setStyleSheet(styleSheet);
     ui->label_invoice_coupon_title->setStyleSheet(styleSheet);
     ui->label_invoice_size_title->setStyleSheet(styleSheet);
     ui->label_invoice_name->setStyleSheet(styleSheet);
-    ui->label_invoice_price->setStyleSheet(styleSheet);
-    ui->label_invoice_price_total->setStyleSheet(styleSheet);
     ui->label_discount_tag->setStyleSheet(styleSheet);
-    ui->label_invoice_discount_amount->setStyleSheet(styleSheet);
     ui->label_invoice_box->setStyleSheet(styleSheet);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->label_steps);
+    ui->label_steps->setStyleSheet(styleSheet);
 
+    ui->label_steps->show();
     ui->label_invoice_discount_name->setProperty("class", "labelDiscountName");
     ui->label_invoice_discount_name->setStyleSheet(styleSheet);
-    ui->label_total->setStyleSheet(styleSheet);
     ui->label_gif->setStyleSheet(styleSheet);
     ui->line_invoice->setStyleSheet(styleSheet);
     ui->pushButton_select_product_page->setStyleSheet(styleSheet);
+   
 
     QString picturePath = p_page_idle->thisMachine->getSelectedProduct()->getProductPicturePath();
     styleSheet.replace("%IMAGE_PATH%", picturePath);
-    ui->label_product_photo->setStyleSheet(styleSheet);
+    // ui->label_product_photo->setStyleSheet(styleSheet);
     /* Hacky transparent button */
     ui->pushButton_previous_page->setProperty("class", "buttonBGTransparent");
     ui->pushButton_previous_page->setStyleSheet(styleSheet);
     ui->pushButton_continue->setStyleSheet(styleSheet);
-    ui->pushButton_continue_additional->setStyleSheet(styleSheet);
-    
-    p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "offline");
-    p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "offline");
+    // p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "offline");
+    p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_free");
 
     ui->pushButton_to_help->setProperty("class", "buttonBGTransparent");
     ui->pushButton_to_help->setStyleSheet(styleSheet);
@@ -194,7 +184,6 @@ void page_product_freeSample::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_invoice_coupon_title);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_invoice_size_title);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_page_title);
-    p_page_idle->thisMachine->setTemplateTextToObject(ui->label_checkout_title);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_select_product_page);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_discount_tag);
    
@@ -202,6 +191,7 @@ void page_product_freeSample::showEvent(QShowEvent *event)
     QString keyboard = KEYBOARD_IMAGE_PATH;
     QString keyboard_picture_path = p_page_idle->thisMachine->getTemplatePathFromName(KEYBOARD_IMAGE_PATH);
     p_page_idle->thisMachine->addPictureToLabel(ui->label_keyboard_background, keyboard_picture_path);
+    ui->pushButton_continue->hide();
     // ui->label_keyboard_background->lower();
 
     _selectIdleTimeoutSec = 400;
@@ -233,17 +223,16 @@ void page_product_freeSample::reset_and_show_page_elements()
     QString bitmap_location;
     QString full_path = p_page_idle->thisMachine->getTemplatePathFromName(IMAGE_BUTTON_HELP);
     p_page_idle->thisMachine->addPictureToLabel(ui->label_help, full_path);
-
     ui->label_invoice_name->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductName());
 
     // by default hide all coupon and discount elements.
     ui->promoKeyboard->hide();
     ui->pushButton_promo_input->hide();
     ui->lineEdit_promo_code->hide();
-    ui->label_invoice_discount_amount->hide();
     ui->label_invoice_discount_name->hide();
     ui->label_discount_tag->hide();
-
+    QString selected_volume = p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize(), true, true);
+    ui->label_selected_volume->setText(selected_volume);
     m_readyToSendCoupon = false;
 
     switch (p_page_idle->thisMachine->getCouponState())
@@ -292,12 +281,13 @@ void page_product_freeSample::reset_and_show_page_elements()
         if (p_page_idle->thisMachine->m_template == "default_AP2"){
             p_page_idle->thisMachine->addPictureToLabel(ui->label_coupon_icon, coupon_icon_path);
         }
-        ui->label_invoice_discount_amount->show();
         ui->label_invoice_discount_name->hide();
         ui->label_discount_tag->show();
         ui->lineEdit_promo_code->show();
         ui->pushButton_promo_input->show();
-        check_to_page_email();
+        ui->pushButton_continue->show();
+        ui->pushButton_continue->raise();
+
     }
     break;
     case (disabled):
@@ -315,8 +305,8 @@ void page_product_freeSample::reset_and_show_page_elements()
     case (enabled_show_keyboard):
     {
         qDebug() << "Coupon state: Show keyboard";
-        // ui->promoKeyboard->show();
-        p_keyboard->setVisibility(true);
+        ui->promoKeyboard->show();
+        // p_keyboard->setVisibility(true);
         ui->lineEdit_promo_code->clear();
         ui->lineEdit_promo_code->show();
         p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_promo_code, "promoCode", PAGE_PRODUCT_FREESAMPLE_CSS);
@@ -514,11 +504,12 @@ void page_product_freeSample::on_lineEdit_promo_codeInput_clicked()
     reset_and_show_page_elements();
 }
 
-void page_product_freeSample::on_pushButton_continue(int buttonID)
+void page_product_freeSample::on_pushButton_continue()
 {
-    
+    isFreeEmailOrder = true;
     ui->pushButton_to_help->setEnabled(false);
-    ui->pushButton_previous_page->setEnabled(false);    
+    ui->pushButton_previous_page->setEnabled(false);  
+    hideCurrentPageAndShowProvided(p_page_dispense);
   
 }
 
@@ -536,14 +527,66 @@ void page_product_freeSample::on_pushButton_select_product_page_clicked()
     this->return_to_selectProductPage();
 }
 
-void page_product_freeSample::check_to_page_email()
-{
-    double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
-    double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
-    if(finalPrice == 0.0 || selectedPrice== 0.0 ){
-        ui->pushButton_continue_additional->lower();
-        ui->pushButton_continue->setFixedSize(QSize(740,100));
-        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_free");
 
+void page_product_freeSample:: setup_qr_code(){
+    QPixmap map;
+        map = QPixmap(360, 360);
+        map.fill(QColor("#895E25"));
+        
+        QPainter painter(&map);
+
+        // build up qr content (link)
+        QString qrdata = "https://www.aelen.com/freesample";
+        // create qr code graphics
+        p_page_idle->thisMachine->m_template == "default_AP2" ? paintSampleQR(painter, QSize(360, 360), qrdata, QColor("white")) : paintSampleQR(painter, QSize(360, 360), qrdata, QColor("white"));
+        // paintSampleQR(painter, QSize(360, 360), qrdata, QColor("white"));
+        ui->label_qrCode->setPixmap(map);
+        // _paymentTimeoutSec = QR_PAGE_TIMEOUT_SECONDS;
+
+        // _paymentTimeLabel = QR_PAGE_TIMEOUT_SECONDS;
+
+        // _pageTimeoutCounterSecondsLeft = QR_PAGE_TIMEOUT_SECONDS;
+
+        // _qrProcessedPeriodicalCheckSec = QR_PROCESSED_PERIODICAL_CHECK_SECONDS;
+        // qrPeriodicalCheckTimer->start(1000);
+}
+
+
+void page_product_freeSample::paintSampleQR(QPainter &painter, const QSize sz, const QString &data, QColor fg)
+{
+    // NOTE: At this point you will use the API to get the encoding and format you want, instead of my hardcoded stuff:
+    qrcodegen::QrCode qr = qrcodegen::QrCode::encodeText(data.toUtf8().constData(), qrcodegen::QrCode::Ecc::HIGHH);
+    const int s = qr.getSize() > 0 ? qr.getSize() : 1;
+    const double w = sz.width();
+    const double h = sz.height();
+    const double aspect = w / h;
+    const double size = ((aspect > 1.0) ? h : w);
+    const double scale = size / (s + 2);
+    // NOTE: For performance reasons my implementation only draws the foreground parts in supplied color.
+    // It expects background to be prepared already (in white or whatever is preferred).
+
+    painter.setPen(Qt::NoPen);
+
+    painter.setBrush(fg);
+    for (int y = 0; y < s; y++)
+    {
+        for (int x = 0; x < s; x++)
+        {
+            const int color = qr.getModule(x, y); // 0 for white, 1 for black
+            if (0 != color)
+            {
+                if (p_page_idle->thisMachine->m_template == "default_AP2"){
+                    QColor customColor("#FFF7ED");
+                    painter.setBrush(customColor);
+                }
+                const double rx1 = (x + 1) * scale, ry1 = (y + 1) * scale;
+                QRectF r(rx1, ry1, scale, scale);
+                painter.drawRects(&r, 1);
+            }
+        }
     }
 }
+
+// void page_product_freeSample:: on_pushButton_repeated_sample_clicked(){
+//     qDebug() << "repeated";
+// }

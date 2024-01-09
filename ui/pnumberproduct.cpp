@@ -219,6 +219,7 @@ bool pnumberproduct::setSizeEnabled(int size, bool enabled)
 {
     QString sizeIndexToText[7] = {"Invalid", "small", "medium", "large", "custom", "test","sample"};
     // m_sizeIndexIsEnabled[size] = enabled;
+    qDebug() << "Size enabled" << size;
     QString column_name = QString("is_enabled_%1").arg(sizeIndexToText[size]);
     m_db->updateTableProductsWithInt(getPNumber(), column_name, enabled);
 }
@@ -308,7 +309,6 @@ double pnumberproduct::getVolumeOfSelectedSize()
 
 double pnumberproduct::getVolumeBySize(int size)
 {
-
     return m_sizeIndexVolumes[size];
 }
 
@@ -318,7 +318,7 @@ double pnumberproduct::getVolumeBySize(int size)
 
 void pnumberproduct::setPrice(int size, double price)
 {
-    QString price_columns[5] = {"size_error", "price_small", "price_medium", "price_large", "price_custom"};
+    QString price_columns[6] = {"size_error", "price_small", "price_medium", "price_large", "price_custom","price_sample"};
     QString column_name = price_columns[size];
 
     qDebug() << "Open db: set p roduct price";
@@ -425,7 +425,7 @@ void pnumberproduct::setVolumePerTickForSlot(QString volumePerTickInput)
 void pnumberproduct::configureVolumeToSizeForSlot(QString volumeInput, int size)
 {
     double volume = inputTextToMlConvertUnits(volumeInput);
-    QString volume_columns[5] = {"invalid_size", "size_small", "size_medium", "size_large", "size_custom_max"};
+    QString volume_columns[6] = {"invalid_size", "size_small", "size_medium", "size_large", "size_custom_max","size_sample"};
     QString column_name = volume_columns[size];
 
     qInfo() << "Open db: size to volume";
@@ -489,7 +489,7 @@ QString pnumberproduct::getSizeAsVolumeWithCorrectUnits(int size, bool roundValu
     double v;
     double volume_oz;
     QString units;
-
+    
     v = getVolumeBySize(size);
     units = getSizeUnit();
     volume_as_string = df_util::getConvertedStringVolumeFromMl(v, units, roundValue, addUnits);

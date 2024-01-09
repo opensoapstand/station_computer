@@ -97,7 +97,7 @@ QPushButton {
     border: none;
 }
 
-#pushButton_continue_additional{
+#pushButton_repeated_sample{
     font-family: 'Lato';
     font-style: normal;
     font-weight: 400;
@@ -121,6 +121,14 @@ QLabel {
     text-transform: capitalize;
     color: #211403;
 }
+
+#label_steps {
+    color: black;
+    font-family: 'El Messiri';
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 600;
+ }
 
 #label_page_title{
     color: #211403;

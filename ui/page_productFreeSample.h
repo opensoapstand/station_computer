@@ -24,6 +24,8 @@
 #include "page_product_mixing.h"
 #include "page_payment_tap_serial.h"
 #include "page_email.h"
+#include "../library/qr/qrcodegen.hpp"
+
 
 class statusbar;
 class keyboard;
@@ -52,6 +54,8 @@ namespace Ui
     class page_product_freeSample;
 }
 
+using namespace qrcodegen;
+
 class page_product_freeSample : public QWidget
 {
     Q_OBJECT
@@ -70,9 +74,7 @@ public:
     void showEvent(QShowEvent *event);
 
     void cancelTimers();
-    QString additivies_overview(QString product_additives_overview);
     void apply_promo_code(QString promocode);
-    void check_to_page_email();
     bool m_readyToSendCoupon; 
 
 signals:
@@ -81,12 +83,13 @@ signals:
 private slots:
     // **** Navigation ****
     void on_pushButton_previous_page_clicked();
-    void on_pushButton_continue(int);
+    void on_pushButton_continue();
 
     void on_lineEdit_promo_codeInput_clicked();
     void on_pushButton_select_product_page_clicked();
     void return_to_selectProductPage();
     void on_pushButton_to_help_clicked();
+
     void onSelectTimeoutTick();
     void keyboardButtonPressed(int);
 
@@ -98,13 +101,11 @@ private:
     bool stopSelectTimers();
     void reset_and_show_page_elements();
     void selectOnTick();
-
+    void paintSampleQR(QPainter &painter, const QSize sz, const QString &data, QColor fg);
+    void setup_qr_code();
     std::string readBuffer;
     Ui::page_product_freeSample *ui;
     page_select_product *p_page_select_product;
-    page_qr_payment *p_page_payment_qr;
-    page_payment_tap_tcp *p_page_payment_tap_tcp;
-    page_payment_tap_serial *p_page_payment_tap_serial;
     page_idle *p_page_idle;
     page_dispenser *p_page_dispense;
     page_error_wifi *p_page_wifi_error;

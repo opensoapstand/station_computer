@@ -710,7 +710,7 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
             actionChar = sCommand[i];
          }
 
-         if (sCommand[i] == SIZE_SMALL_CHAR || sCommand[i] == SIZE_MEDIUM_CHAR || sCommand[i] == SIZE_LARGE_CHAR || sCommand[i] == SIZE_CUSTOM_CHAR || sCommand[i] == SIZE_TEST_CHAR)
+         if (sCommand[i] == SIZE_SMALL_CHAR || sCommand[i] == SIZE_MEDIUM_CHAR || sCommand[i] == SIZE_LARGE_CHAR || sCommand[i] == SIZE_CUSTOM_CHAR || sCommand[i] == SIZE_SAMPLE_CHAR|| sCommand[i] == SIZE_TEST_CHAR)
          {
             volumeChar = (sCommand[i]);
          }
@@ -827,6 +827,12 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
       case SIZE_TEST_CHAR:
          debugOutput::sendMessage("Requested volume test", MSG_INFO);
          m_requestedSize = SIZE_TEST_CHAR;
+         e_ret = OK;
+         break;
+
+      case SIZE_SAMPLE_CHAR:
+         debugOutput::sendMessage("Requested volume sample", MSG_INFO);
+         m_requestedSize = SIZE_SAMPLE_CHAR;
          e_ret = OK;
          break;
 

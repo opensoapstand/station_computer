@@ -243,7 +243,7 @@ private:
         {825, 1090}, // L price
         {1, 1}       // custom price
     };
-    int product_sizes[4] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX};
+    int product_sizes[5] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX,SIZE_SAMPLE_INDEX};
     bool stopSelectTimers();
     void reset_and_show_page_elements();
     void selectOnTick();

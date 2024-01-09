@@ -103,6 +103,7 @@
 #define SIZE_LARGE_CHAR 'l'
 #define SIZE_CUSTOM_CHAR 'c'
 #define SIZE_TEST_CHAR 't'
+#define SIZE_SAMPLE_CHAR 'f'
 // #define SIZE_AUTO_CHAR 'a'
 #define SIZE_DUMMY 'x'
 #define SIZE_SMALLER_THAN_SMALL '0'

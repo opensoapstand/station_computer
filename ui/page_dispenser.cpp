@@ -335,9 +335,10 @@ void page_dispenser::dispensing_end_admin()
     {
         this->cancelPayment = true;
     }
-    if(price== 0.0){
+    if(isFreeEmailOrder){
         qDebug() << "Free email order";
     }
+    else{
     switch(paymentMethod){
         //If payment method is Tap canada
         case 1:{
@@ -422,7 +423,11 @@ void page_dispenser::dispensing_end_admin()
             }
             break;
         }
+        default:{
+            break;
+        }
 
+    }
     }
     // else if (this->cancelPayment && (paymentMethod == PAYMENT_TAP_USA || paymentMethod == PAYMENT_TAP_CANADA))
     // {

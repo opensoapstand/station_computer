@@ -34,7 +34,7 @@ line-height: 29px;</string>
     <rect>
      <x>215</x>
      <y>1740</y>
-     <width>650</width>
+     <width>600</width>
      <height>100</height>
     </rect>
    </property>
@@ -1508,7 +1508,7 @@ text-align: center;
   <widget class="QPushButton" name="pushButton_order_sample">
    <property name="geometry">
     <rect>
-     <x>890</x>
+     <x>860</x>
      <y>1740</y>
      <width>170</width>
      <height>100</height>
@@ -1524,7 +1524,7 @@ text-align: center;
   <widget class="QLabel" name="label_background_sample">
    <property name="geometry">
     <rect>
-     <x>890</x>
+     <x>860</x>
      <y>1740</y>
      <width>170</width>
      <height>100</height>
@@ -1556,7 +1556,6 @@ text-align: center;
   <zorder>pushButton_order_small</zorder>
   <zorder>label_price_medium</zorder>
   <zorder>label_size_medium</zorder>
-  <zorder>pushButton_order_medium</zorder>
   <zorder>label_price_large</zorder>
   <zorder>label_size_large</zorder>
   <zorder>pushButton_order_big</zorder>
@@ -1599,6 +1598,7 @@ text-align: center;
   <zorder>pushButton_additive_plus_4</zorder>
   <zorder>pushButton_additive_plus_5</zorder>
   <zorder>pushButton_recommended</zorder>
+  <zorder>pushButton_order_medium</zorder>
  </widget>
  <resources/>
  <connections/>

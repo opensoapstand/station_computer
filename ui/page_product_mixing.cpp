@@ -153,6 +153,9 @@ void page_product_mixing::showEvent(QShowEvent *event)
 
     ui->label_product_title->setProperty("class", "title");
     ui->label_product_title->setStyleSheet(styleSheet);
+    ui->label_background_sample->setProperty("class","orderSizeBackgroundLabels");
+    ui->label_background_sample->setStyleSheet(styleSheet);
+
     ui->pushButton_back->setStyleSheet(styleSheet); // pushbutton
     // ui->label_product_description->setStyleSheet(styleSheet);
     ui->label_product_photo->setStyleSheet(styleSheet);
@@ -164,6 +167,7 @@ void page_product_mixing::showEvent(QShowEvent *event)
     ui->label_additives_background->setWordWrap(true);
     ui->label_help->setStyleSheet(styleSheet);
     ui->pushButton_continue->setStyleSheet(styleSheet);
+    ui->pushButton_order_sample->setStyleSheet(styleSheet);
     ui->pushButton_recommended->setStyleSheet(styleSheet);
     // ui->pushButton_previous_page->setStyleSheet(styleSheet);
     ui->pushButton_to_help->setProperty("class", "button_transparent");
@@ -522,8 +526,10 @@ void page_product_mixing::reset_and_show_page_elements()
     if(true)
     {
         qDebug() << "Sample size";
-        ui->label_background_sample->show();
-        p_page_idle->thisMachine->addCssClassToObject(ui->label_background_sample, "orderSizeBackgroundLabels", PAGE_PRODUCT_MIXING_CSS);
+
+        qDebug() << p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(SIZE_SAMPLE_INDEX, true, true);
+        ui->label_background_sample->show();     
+        p_page_idle->thisMachine->addCssClassToObject(ui->label_background_sample, "sampleBackgroundLabel", PAGE_PRODUCT_MIXING_CSS);
         ui->pushButton_order_sample->raise();
     }
 
@@ -605,6 +611,7 @@ void page_product_mixing::on_pushButton_order_sample_clicked()
 {
     qDebug() << "Button sample clicked";
     p_page_idle->thisMachine->getSelectedProduct()->setSelectedSize(SIZE_SAMPLE_INDEX);
+    qDebug() << p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize();
     hideCurrentPageAndShowProvided(p_page_product_freeSample);
 }
 

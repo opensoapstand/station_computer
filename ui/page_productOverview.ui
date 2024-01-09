@@ -2406,8 +2406,8 @@ color: #58595B;
    </property>
   </widget>
   <zorder>pushButton_continue</zorder>
-  <zorder>label_help</zorder>
   <zorder>pushButton_continue_additional</zorder>
+  <zorder>label_help</zorder>
   <zorder>label_invoice_box</zorder>
   <zorder>label_invoice_price</zorder>
   <zorder>lineEdit_promo_code</zorder>

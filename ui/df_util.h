@@ -141,6 +141,7 @@ using namespace std;
 #define THANK_YOU_FOR_YOUR_FEEDBACK "background_feedbacksent.png"
 #define PAGE_ERROR_BACKGROUND_PATH "background_error_wifi.png"
 #define KEYBOARD_IMAGE_PATH "soapstand-keyboard.png"
+#define UNIVERSAL_KEYBOARD_IMAGE_PATH "universal_keyboard.png"
 #define COUPON_ICON_UNAVAILABLE_PATH "coupon_unavailable.png"
 #define COUPON_ICON_AVAILABLE_PATH "coupon_available.png"
 #define MACHINE_LOGO_PATH "machine_logo.png"

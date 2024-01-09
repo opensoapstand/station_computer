@@ -274,7 +274,6 @@ public slots:
 signals:
 
 private:
-    // QWidget* m_widgetForTextEdit;
     dispenser_slot *m_selectedSlot; // used for maintenance mode!!  , or derived from selectedProduct.
     pnumberproduct *m_selectedProduct;
     QVector<int> dispenseProductsMenuOptions;

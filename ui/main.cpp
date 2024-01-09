@@ -253,7 +253,7 @@ int main(int argc, char *argv[])
     p_page_sendFeedback->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_help, p_page_product, p_page_end, p_statusbar);
     p_page_end->setPage(p_page_dispense, p_page_idle, p_page_payment_qr, p_page_sendFeedback, p_statusbar);
     p_statusbar->setPage(p_page_idle);
-    p_keyboard->setPage(p_page_idle);
+    p_keyboard->setPage(p_page_idle, p_page_product_overview);
     p_page_wifi_error->setPage(p_page_payment_qr, p_page_end, p_page_idle);
 
     initPage->showFullScreen();

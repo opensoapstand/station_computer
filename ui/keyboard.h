@@ -2,7 +2,11 @@
 #define KEYBOARD_H
 
 #include <QWidget>
+#include <QLineEdit>
 #include "page_idle.h"
+#include "page_productOverview.h"
+
+class page_product_overview;
 
 namespace Ui
 {
@@ -16,29 +20,25 @@ class keyboard : public QWidget
 public:
     explicit keyboard(QWidget *parent = 0);
     ~keyboard();
-    void setPage(page_idle *pageIdle);
+    void setPage(page_idle *pageIdle, page_product_overview *page_Overview);
     void showEvent(QShowEvent *event);
-    // void exit_page();
-    // void hideCurrentPageAndShowProvided(QWidget *pageToShow);
-    // void hide();
     void refresh();
-    // void setRoleTimeOutTrailingText(QString text);
     QString roleTimeOutTrailingText;
-    
-    void autoSetVisibility();
-    void setVisibility(bool isVisible, QWidget *widget);
-    QWidget target;
+    void registerCallBack(const std::function<void()>& func);
+    std::function<void()> callbackFunction;
+    // void* callback;
+    void initializeKeyboard(bool isVisible, QLineEdit *widget);
 private slots:
     void keyboardButtonPressed(int buttonID);
-    void on_pushButton_hide_clicked();
     void onRefreshTimerTick();
 
-    // void on_pushButton_active_role_clicked();
-
 private:
+    QLineEdit* widgetForTextEdit;
     bool is_keyboard_visible;
+    bool hasStartedTyping = false;
     Ui::keyboard *ui;
     page_idle* p_page_idle;
+    page_product_overview *p_page_overview;
     
     QTimer *refreshTimer;
     int _refreshTimerTimeoutSec;

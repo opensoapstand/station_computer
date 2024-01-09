@@ -74,7 +74,8 @@ public:
     void apply_promo_code(QString promocode);
     void check_to_page_email();
     bool m_readyToSendCoupon; 
-
+    void reset_and_show_page_elements();
+    void enterButtonPressed();
 signals:
     void paymentTotal(string, string, string);
 
@@ -89,7 +90,7 @@ private slots:
     void updatePriceLabel();
     void on_pushButton_to_help_clicked();
     void onSelectTimeoutTick();
-    void keyboardButtonPressed(int);
+    // void keyboardButtonPressed(int);
 
 private:
 
@@ -97,7 +98,6 @@ private:
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     int product_sizes[4] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX};
     bool stopSelectTimers();
-    void reset_and_show_page_elements();
     void selectOnTick();
 
     std::string readBuffer;

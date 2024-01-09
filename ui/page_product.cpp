@@ -18,158 +18,6 @@
 #include "ui_page_product.h"
 
 using json = nlohmann::json;
-QString transactionLogging = "";
-extern bool promoApplied;
-// button positions
-uint16_t orderSizeButtons_xywh_dynamic_ui_all_sizes_available[4][4] = {
-    {560, 990, 135, 100}, // S
-    {706, 990, 135, 100}, // M
-    {852, 990, 135, 100}, // L
-    {560, 1100, 430, 115} // custom
-};
-
-uint16_t orderSizeButtons_xywh_dynamic_ui_small_available[4][4] = {
-    {564, 1088, 209, 126}, // S
-    {1, 1, 1, 1},          // M
-    {1, 1, 1, 1},          // L
-    {1, 1, 1, 1}           // custom
-};
-
-uint16_t orderSizeButtons_xywh_dynamic_ui_small_large_custom_available[4][4] = {
-    {564, 990, 209, 100}, // S
-    {1, 1, 1, 1},
-    {790, 990, 198, 100}, // L
-    {564, 1100, 424, 113} // custom
-};
-
-uint16_t orderSizeButtons_xywh_dynamic_ui_small_and_large_available[4][4] = {
-    {567, 1024, 198, 126}, // S
-    {1, 1, 1, 1},          // M
-    {788, 1024, 198, 126}, // L
-    {1, 1, 1, 1}           // custom
-};
-uint16_t orderSizeButtons_xywh_dynamic_ui_custom_available[4][4] = {
-    {1, 1, 1, 1},
-    {1, 1, 1, 1}, // M
-    {1, 1, 1, 1},
-    {564, 1037, 424, 113} // custom
-    // {564, 1037, 424, 113} // custom
-};
-uint16_t orderSizeButtons_xywh_dynamic_ui_small_custom_available[4][4] = {
-    {560, 990, 430, 100}, // S
-    {1, 1, 1, 1},         // M
-    {1, 1, 1, 1},
-    {560, 1100, 430, 115} // custom
-    // {564, 1037, 424, 113} // custom
-};
-
-uint16_t orderSizeButtons_xywh_dynamic_ui_large_custom_available[4][4] = {
-    {1, 1, 1, 1},         // S
-    {1, 1, 1, 1},         // M
-    {560, 990, 430, 100}, // L
-    {560, 1100, 430, 115} // custom
-    // {564, 1037, 424, 113} // custom
-};
-
-// labels of volume and price are different (and annoying)
-uint16_t orderSizeButtons_xywh_static_product_page[4][4] = {
-    {564, 1088, 209, 126},
-    {1, 1, 1, 1},
-    {790, 1087, 198, 126},
-    {1, 1, 1, 1}};
-
-uint16_t orderSizeVolumeLabels_xy_dynamic_ui_all_sizes_available[4][2] = {
-    {560, 1000}, // S vol
-    {710, 1000}, // M vol
-    {860, 1000}, // L vol
-    {570, 1110}  // custom col
-};
-uint16_t orderSizePriceLabels_xy_dynamic_ui_all_sizes_available[8][2] = {
-    {560, 1040}, // S price
-    {710, 1040}, // M price
-    {860, 1040}, // L price
-    {560, 1160}  // custom price
-};
-
-uint16_t orderSizeVolumeLabels_xy_dynamic_ui_small_large_custom_available[8][2] = {
-    {605, 1000}, // S vol
-    {1, 1},      // M vol
-    {825, 1000}, // L vol
-    {570, 1110}  // custom col
-};
-uint16_t orderSizePriceLabels_xy_dynamic_ui_small_large_custom_available[8][2] = {
-    {605, 1040}, // S price
-    {1, 1},      // M price
-    {825, 1040}, // L price
-    {560, 1160}  // custom price
-};
-
-uint16_t orderSizeVolumeLabels_xy_dynamic_ui_custom_available[8][2] = {
-    {1, 1},     // S vol
-    {1, 1},     // M vol
-    {1, 1},     // L vol
-    {570, 1047} // custom col
-};
-uint16_t orderSizePriceLabels_xy_dynamic_ui_custom_available[8][2] = {
-    {1, 1},     // S price
-    {1, 1},     // M price
-    {1, 1},     // L price
-    {560, 1097} // custom price
-};
-
-uint16_t orderSizeVolumeLabels_xy_dynamic_ui_small_custom_available[8][2] = {
-    {710, 1000}, // S vol
-    {1, 1},      // M vol
-    {1, 1},      // L vol
-    {570, 1110}  // custom col
-};
-
-uint16_t orderSizePriceLabels_xy_dynamic_ui_small_custom_available[8][2] = {
-    {710, 1040}, // S price
-    {1, 1},      // M price
-    {1, 1},      // L price
-    {560, 1160}  // custom price
-};
-
-uint16_t orderSizeVolumeLabels_xy_dynamic_ui_large_custom_available[8][2] = {
-    {1, 1},      // S vol
-    {1, 1},      // M vol
-    {710, 1000}, // L vol
-    {570, 1110}  // custom col
-};
-
-uint16_t orderSizePriceLabels_xy_dynamic_ui_large_custom_available[8][2] = {
-    {1, 1},      // S price
-    {1, 1},      // M price
-    {710, 1040}, // L price
-    {560, 1160}  // custom price
-};
-
-uint16_t orderSizeVolumeLabels_xy_dynamic_ui_small_available[8][2] = {
-    {605, 1150}, // S vol
-    {1, 1},      // M vol
-    {1, 1},      // L vol
-    {1, 1}       // custom col
-};
-uint16_t orderSizePriceLabels_xy_dynamic_ui_small_available[8][2] = {
-    {605, 1110}, // S price
-    {1, 1},      // M price
-    {1, 1},      // L price
-    {1, 1}       // custom price
-};
-
-uint16_t orderSizeVolumeLabels_xy_dynamic_ui_small_and_large_available[8][2] = {
-    {605, 1050}, // S vol
-    {1, 1},      // M vol
-    {825, 1050}, // L vol
-    {1, 1}       // custom col
-};
-uint16_t orderSizePriceLabels_xy_dynamic_ui_small_and_large_available[8][2] = {
-    {605, 1090}, // S price
-    {1, 1},      // M price
-    {825, 1090}, // L price
-    {1, 1}       // custom price
-};
 
 // CTOR
 page_product::page_product(QWidget *parent) : QWidget(parent),
@@ -201,7 +49,6 @@ page_product::page_product(QWidget *parent) : QWidget(parent),
     selectIdleTimer->setInterval(40);
     connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
 
-    transactionLogging = "";
     statusbarLayout = new QVBoxLayout(this);
 }
 
@@ -270,6 +117,8 @@ void page_product::showEvent(QShowEvent *event)
         orderSizeButtons[i]->setStyleSheet(styleSheet);
         orderSizeBackgroundLabels[i]->setStyleSheet(styleSheet);
     }
+    p_page_idle->thisMachine->resetTransactionLogging();
+    // transactionLogging = "";
 
     reset_and_show_page_elements();
 }
@@ -538,7 +387,7 @@ bool page_product::stopSelectTimers()
 
 void page_product::hideCurrentPageAndShowProductMenu()
 {
-    if (p_page_idle->thisMachine->getHardwareMajorVersion().startsWith("AP2"))
+    if (p_page_idle->thisMachine->m_template == "default_AP2")
     {
         this->hideCurrentPageAndShowProvided(p_page_product_menu);
     }

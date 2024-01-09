@@ -17,11 +17,13 @@ FORMS += \
     page_payment_tap_tcp.ui \
     page_payment_tap_serial.ui \
     page_product.ui \
+    page_product_mixing.ui \
     page_product_menu.ui \
     page_select_product.ui \
     page_end.ui \
     page_maintenance.ui \
     page_productOverview.ui \
+    page_productFreeSample.ui \
     page_maintenance_dispenser.ui \
     page_init.ui \
     page_help.ui \
@@ -31,7 +33,7 @@ FORMS += \
     page_transactions.ui \
     page_maintenance_general.ui \
     page_idle_products.ui \
-    statusbar.ui
+    statusbar.ui \
 
 HEADERS += \
     dfuicommthread.h \
@@ -43,10 +45,12 @@ HEADERS += \
     page_payment_tap_tcp.h \
     page_payment_tap_serial.h \
     page_product.h \
+    page_product_mixing.h \
     posm/enums.h \
     posm/lrcgenerator.h \
     posm/mcommunication.h \
     page_productOverview.h \
+    page_productFreeSample.h \
     posm/packetfromecr.h \
     posm/packetfromux410.h \
     posm/packetreadsort.h \
@@ -73,6 +77,7 @@ HEADERS += \
     page_idle_products.h \
     machine.h \
     statusbar.h \
+    keyboard.h \
     pnumberproduct.h
 
 SOURCES += \
@@ -85,9 +90,11 @@ SOURCES += \
     page_payment_tap_tcp.cpp \
     page_payment_tap_serial.cpp \
     page_product.cpp \
+    page_product_mixing.cpp \
     posm/lrcgenerator.cpp \
     posm/mcommunication.cpp \
     page_productOverview.cpp \
+    page_productFreeSample.cpp \
     posm/packetfromecr.cpp \
     posm/packetfromux410.cpp \
     posm/packetreadsort.cpp \
@@ -115,6 +122,7 @@ SOURCES += \
     page_idle_products.cpp \
     machine.cpp \
     statusbar.cpp \
+    keyboard.cpp \
     pnumberproduct.cpp
 
 RESOURCES += \

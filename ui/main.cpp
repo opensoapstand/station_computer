@@ -22,13 +22,16 @@
 #include "page_product_menu.h"
 #include "page_select_product.h"
 #include "page_product.h"
+#include "page_product_mixing.h"
 #include "page_qr_payment.h"
 #include "page_payment_tap_tcp.h"
 #include "page_payment_tap_serial.h"
 #include "page_dispenser.h"
 #include "page_error_wifi.h"
 #include "page_productOverview.h"
+#include "page_productFreeSample.h"
 #include "statusbar.h"
+#include "keyboard.h"
 #include "page_email.h"
 
 #include "page_end.h"
@@ -140,6 +143,8 @@ int main(int argc, char *argv[])
     page_select_product *p_page_select_product = new page_select_product();
     qDebug() << "Constructor page_product";
     page_product *p_page_product = new page_product();
+    qDebug() << "Constructor page_product_mixing";
+    page_product_mixing *p_page_product_mixing = new page_product_mixing();
     qDebug() << "Constructor page_qr_payment";
     page_qr_payment *p_page_payment_qr = new page_qr_payment();
     qDebug() << "Constructor page_payment_tap_tcp";
@@ -154,8 +159,12 @@ int main(int argc, char *argv[])
     page_end *p_page_end = new page_end();
     qDebug() << "Constructor statusbar";
     statusbar *p_statusbar = new statusbar();
+    qDebug() << "Constructor keyboard";
+    keyboard *p_keyboard = new keyboard();
     qDebug() << "Constructor page_product_overview";
     page_product_overview *p_page_product_overview = new page_product_overview();
+    qDebug() << "Constructor page_product_free_sample";
+    page_product_freeSample *p_page_product_freeSample = new page_product_freeSample();
     qDebug() << "Constructor page_sendFeedback";
     page_sendFeedback *p_page_sendFeedback = new page_sendFeedback();
     qDebug() << "Constructor page_maintenance";
@@ -230,24 +239,26 @@ int main(int argc, char *argv[])
 
     p_page_maintenance_general->setPage(p_page_maintenance, p_page_idle, p_page_idle_products, p_statusbar);
     p_page_maintenance->setPage(p_page_idle, p_page_maintenance_dispenser, p_page_maintenance_general, p_page_select_product, p_page_product, p_statusbar);
-    p_page_idle->setPage(p_page_select_product, p_page_maintenance, p_page_maintenance_general, p_page_idle_products, p_page_wifi_error, p_statusbar, p_page_product_menu);
+    p_page_idle->setPage(p_page_select_product, p_page_maintenance, p_page_maintenance_general, p_page_idle_products, p_page_wifi_error, p_statusbar, p_page_product_menu, p_keyboard);
     p_page_idle_products->setPage(p_page_idle, p_page_select_product);
-    p_page_product_menu->setPage(p_page_product, p_page_idle_products, p_page_idle, p_page_maintenance, p_page_help, p_statusbar);
+    p_page_product_menu->setPage(p_page_product, p_page_product_mixing, p_page_idle_products, p_page_idle, p_page_maintenance, p_page_help, p_statusbar);
     p_page_select_product->setPage(p_page_product, p_page_idle_products, p_page_idle, p_page_maintenance, p_page_help, p_statusbar);
     p_page_product->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_help, p_page_product_overview, p_statusbar,p_page_product_menu);
-    p_page_payment_qr->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help, p_statusbar);
-    p_page_payment_tap_tcp->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help, p_statusbar);
-    p_page_payment_tap_serial->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help, p_statusbar);
+    p_page_product_mixing->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_help, p_page_product_overview, p_statusbar,p_page_product_menu,p_page_product_freeSample);
+    p_page_payment_qr->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help, p_statusbar, p_page_product_mixing);
+    p_page_payment_tap_tcp->setPage(p_page_product, p_page_product_mixing, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help, p_statusbar);
+    p_page_payment_tap_serial->setPage(p_page_product, p_page_product_mixing, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help, p_statusbar);
     p_page_email->setPage(p_page_dispense, p_page_idle, p_page_help, p_page_product_overview, p_statusbar);
 
 
     p_page_dispense->setPage(p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_end, p_page_idle, p_page_sendFeedback, p_statusbar);
-    p_page_product_overview->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_help, p_page_product, p_page_email, p_statusbar);
+    p_page_product_overview->setPage(p_page_select_product, p_page_product_mixing, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_help, p_page_product, p_page_email, p_statusbar, p_keyboard);
     p_page_sendFeedback->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_help, p_page_product, p_page_end, p_statusbar);
     p_page_end->setPage(p_page_dispense, p_page_idle, p_page_payment_qr, p_page_sendFeedback, p_statusbar);
     p_statusbar->setPage(p_page_idle);
+    p_keyboard->setPage(p_page_idle, p_page_product_overview);
     p_page_wifi_error->setPage(p_page_payment_qr, p_page_end, p_page_idle);
-
+    p_page_product_freeSample->setPage(p_page_select_product, p_page_product_mixing, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_help, p_page_product, p_page_email, p_statusbar, p_keyboard);
     initPage->showFullScreen();
 
     // listen for fsm messages

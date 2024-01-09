@@ -21,10 +21,12 @@
 #include "page_error_wifi.h"
 #include "page_help.h"
 #include "page_product.h"
+#include "page_product_mixing.h"
 #include "page_payment_tap_serial.h"
 #include "page_email.h"
 
 class statusbar;
+class keyboard;
 class page_select_product;
 class page_qr_payment;
 class page_payment_tap_tcp;
@@ -35,6 +37,7 @@ class page_error_wifi;
 class page_help;
 class page_product;
 class page_email;
+class page_product_mixing;
 
 // typedef enum UserRole
 // {
@@ -60,18 +63,19 @@ public:
     QLabel *orderSizeBackgroundLabels[4];
 
     explicit page_product_overview(QWidget *parent = nullptr);
-    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,  page_payment_tap_serial *page_payment_tap_serial,page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product *page_product, page_email *page_email, statusbar * statusbar);
+    void setPage(page_select_product *pageSelect, page_product_mixing *p_page_product_mixing, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,  page_payment_tap_serial *page_payment_tap_serial,page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product *page_product, page_email *page_email, statusbar * statusbar,keyboard * keyboard);
     ~page_product_overview();
 
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
 
     void cancelTimers();
-
+    QString additivies_overview(QString product_additives_overview);
     void apply_promo_code(QString promocode);
     void check_to_page_email();
     bool m_readyToSendCoupon; 
-
+    void reset_and_show_page_elements();
+    void enterButtonPressed();
 signals:
     void paymentTotal(string, string, string);
 
@@ -86,7 +90,7 @@ private slots:
     void updatePriceLabel();
     void on_pushButton_to_help_clicked();
     void onSelectTimeoutTick();
-    void keyboardButtonPressed(int);
+    // void keyboardButtonPressed(int);
 
 private:
 
@@ -94,7 +98,6 @@ private:
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     int product_sizes[4] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX};
     bool stopSelectTimers();
-    void reset_and_show_page_elements();
     void selectOnTick();
 
     std::string readBuffer;
@@ -109,7 +112,9 @@ private:
     page_help *p_page_help;
     page_product *p_page_product;
     statusbar *p_statusbar;
+    keyboard *p_keyboard;
     page_email* p_page_email;
+    page_product_mixing *p_page_product_mixing;
 
     QTimer *selectIdleTimer;
     int _selectIdleTimeoutSec;
@@ -118,6 +123,7 @@ private:
     QShowEvent *dispenseEvent;
     QShowEvent *wifiErrorEvent;
     QVBoxLayout *statusbarLayout;
+    QVBoxLayout *keyboardLayout;
 };
 
 #endif // PAYSELECT_H

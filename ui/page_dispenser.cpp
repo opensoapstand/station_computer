@@ -20,6 +20,7 @@
 #include "page_idle.h"
 #include "page_end.h"
 #include "page_product.h"
+#include "page_product_mixing.h"
 #include "payment/commands.h"
 extern bool isFreeEmailOrder;
 extern QString transactionLogging;
@@ -140,7 +141,8 @@ void page_dispenser::showEvent(QShowEvent *event)
     ui->label_press->setStyleSheet(styleSheet);
     ui->label_dispense_message->setStyleSheet(styleSheet);
 
-    transactionLogging += "\n 6: Station Unlocked - True";
+    p_page_idle->thisMachine->addToTransactionLogging("\n 6: Station Unlocked - True");
+    // transactionLogging += "\n 6: Station Unlocked - True";
 
     animationStepForwardElseBackward = true;
 
@@ -333,94 +335,107 @@ void page_dispenser::dispensing_end_admin()
     {
         this->cancelPayment = true;
     }
-    if(price== 0.0){
+    if(isFreeEmailOrder)
+    {
         qDebug() << "Free email order";
     }
-    switch(paymentMethod){
-        //If payment method is Tap canada
-        case 1:{
-            if(this->cancelPayment){
-                ui->label_indicate_active_spout->hide();
-                ui->label_to_refill->hide();
-                p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_finishTransactionMessage, "no_pay");
-                p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_CANCEL);
-                std::map<std::string, std::string> response;
-                qDebug() << "dispense end: tap payment No volume dispensed.";
-                com.page_init();
-                pktToSend = paymentPacket.reversePurchasePacket();
-                if (sendToUX410())
+    else
+    {
+        switch(paymentMethod)
+        {
+            //If payment method is Tap canada
+            case 1:
+            {
+                if(this->cancelPayment)
                 {
-                    waitForUX410();
-                    qDebug() << "Payment Reversed" << endl;
-                    pktResponded.clear();
-                    com.flushSerial();
+                    ui->label_indicate_active_spout->hide();
+                    ui->label_to_refill->hide();
+                    p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_finishTransactionMessage, "no_pay");
+                    p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_CANCEL);
+                    std::map<std::string, std::string> response;
+                    qDebug() << "dispense end: tap payment No volume dispensed.";
+                    com.page_init();
+                    pktToSend = paymentPacket.reversePurchasePacket();
+                    if (sendToUX410())
+                    {
+                        waitForUX410();
+                        qDebug() << "Payment Reversed" << endl;
+                        pktResponded.clear();
+                        com.flushSerial();
+                    }
+                    tapPaymentObject["status"] = "Voided";
+                    p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
                 }
-                tapPaymentObject["status"] = "Voided";
-                p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
-            }
-            else{
-                //Successful transaction. Capturing payment
-                QString base_text = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_finishTransactionMessage, "display_price");
-                ui->label_finishTransactionMessage->setText(base_text.arg(QString::number(current_price, 'f', 2))); // will replace %1 character in string by the provide text
-                p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
-                tapPaymentObject["status"] = "CAPTURED";
-                p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
-            }
-            break;
-        }
-        case 2:{
-            //If active payment method is Tap USA
-            if(this->cancelPayment){
-                //Reversing the payment back to the Tapped card
-                ui->label_indicate_active_spout->hide();
-                ui->label_to_refill->hide();
-                p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_finishTransactionMessage, "no_pay");
-                p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_CANCEL);
-                std::map<std::string, std::string> response;
-                qDebug() << "dispense end: tap payment No volume dispensed.";
-                if (tapPaymentObject.find("saf_num") != tapPaymentObject.end())
+                else
                 {
-                    std::cout << "Voiding transaction";
-                    qDebug() << "SAF_NUM" << QString::fromStdString(tapPaymentObject["saf_num"]);
-                    tapPaymentObject["ctrout_saf"] = tapPaymentObject["saf_num"];
-                    response = voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["saf_num"]);
+                    //Successful transaction. Capturing payment
+                    QString base_text = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_finishTransactionMessage, "display_price");
+                    ui->label_finishTransactionMessage->setText(base_text.arg(QString::number(current_price, 'f', 2))); // will replace %1 character in string by the provide text
+                    p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
+                    tapPaymentObject["status"] = "CAPTURED";
+                    p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
                 }
-                else if (tapPaymentObject.find("ctroutd") != tapPaymentObject.end())
-                {
-                    qDebug() << "CTROUTD" << QString::fromStdString(tapPaymentObject["ctroutd"]);
-                    response = voidTransaction(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["ctroutd"]);
-                    tapPaymentObject["ctrout_saf"] = tapPaymentObject["ctroutd"];
-                }
-                tapPaymentObject["amount"] = stream.str();
-                tapPaymentObject["status"] = "Voided";
-                p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
-                finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
+                break;
             }
-            else{
-                QString base_text = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_finishTransactionMessage, "display_price");
-                ui->label_finishTransactionMessage->setText(base_text.arg(QString::number(current_price, 'f', 2))); // will replace %1 character in string by the provide text
-                p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
-                if (tapPaymentObject.find("ctroutd") != tapPaymentObject.end())
+            case 2:
+            {
+                //If active payment method is Tap USA
+                if(this->cancelPayment)
                 {
-                    qDebug() << "CTROUTD" << QString::fromStdString(tapPaymentObject["ctroutd"]);
-                    tapPaymentObject["ctrout_saf"] = tapPaymentObject["ctroutd"];
-                    std::map<std::string, std::string> testResponse = capture(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["ctroutd"], stream.str());
+                    //Reversing the payment back to the Tapped card
+                    ui->label_indicate_active_spout->hide();
+                    ui->label_to_refill->hide();
+                    p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_finishTransactionMessage, "no_pay");
+                    p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_CANCEL);
+                    std::map<std::string, std::string> response;
+                    qDebug() << "dispense end: tap payment No volume dispensed.";
+                    if (tapPaymentObject.find("saf_num") != tapPaymentObject.end())
+                    {
+                        std::cout << "Voiding transaction";
+                        qDebug() << "SAF_NUM" << QString::fromStdString(tapPaymentObject["saf_num"]);
+                        tapPaymentObject["ctrout_saf"] = tapPaymentObject["saf_num"];
+                        response = voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["saf_num"]);
+                    }
+                    else if (tapPaymentObject.find("ctroutd") != tapPaymentObject.end())
+                    {
+                        qDebug() << "CTROUTD" << QString::fromStdString(tapPaymentObject["ctroutd"]);
+                        response = voidTransaction(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["ctroutd"]);
+                        tapPaymentObject["ctrout_saf"] = tapPaymentObject["ctroutd"];
+                    }
                     tapPaymentObject["amount"] = stream.str();
+                    tapPaymentObject["status"] = "Voided";
+                    p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
+                    finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
                 }
-                else if (tapPaymentObject.find("saf_num") != tapPaymentObject.end())
+                else
                 {
-                    qDebug() << "SAF_NUM" << QString::fromStdString(tapPaymentObject["saf_num"]);
-                    tapPaymentObject["ctrout_saf"] = tapPaymentObject["saf_num"];
-                    std::map<std::string, std::string> testResponse = editSaf(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["saf_num"], stream.str(), "ELIGIBLE");
-                    tapPaymentObject["amount"] = stream.str();
+                    QString base_text = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_finishTransactionMessage, "display_price");
+                    ui->label_finishTransactionMessage->setText(base_text.arg(QString::number(current_price, 'f', 2))); // will replace %1 character in string by the provide text
+                    p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
+                    if (tapPaymentObject.find("ctroutd") != tapPaymentObject.end())
+                    {
+                        qDebug() << "CTROUTD" << QString::fromStdString(tapPaymentObject["ctroutd"]);
+                        tapPaymentObject["ctrout_saf"] = tapPaymentObject["ctroutd"];
+                        std::map<std::string, std::string> testResponse = capture(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["ctroutd"], stream.str());
+                        tapPaymentObject["amount"] = stream.str();
+                    }
+                    else if (tapPaymentObject.find("saf_num") != tapPaymentObject.end())
+                    {
+                        qDebug() << "SAF_NUM" << QString::fromStdString(tapPaymentObject["saf_num"]);
+                        tapPaymentObject["ctrout_saf"] = tapPaymentObject["saf_num"];
+                        std::map<std::string, std::string> testResponse = editSaf(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["saf_num"], stream.str(), "ELIGIBLE");
+                        tapPaymentObject["amount"] = stream.str();
+                    }
+                    tapPaymentObject["status"] = "CAPTURED";
+                    p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
+                    finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
                 }
-                tapPaymentObject["status"] = "CAPTURED";
-                p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
-                finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
+                break;
             }
-            break;
+            default:{
+                break;
+            }
         }
-
     }
     // else if (this->cancelPayment && (paymentMethod == PAYMENT_TAP_USA || paymentMethod == PAYMENT_TAP_CANADA))
     // {
@@ -723,7 +738,8 @@ void page_dispenser::fsmReceiveTargetVolumeReached()
         qDebug() << "Target reached from controller.";
         this->isDispensing = false;
         updateVolumeDisplayed(p_page_idle->thisMachine->getSelectedProduct()->getVolumeOfSelectedSize(), true); // make sure the fill bottle graphics are completed
-        transactionLogging += "\n 8: Target Reached - True";
+        p_page_idle->thisMachine->addToTransactionLogging("\n 8: Target Reached - True");
+        // transactionLogging += "\n 8: Target Reached - True";
         dispensing_end_admin();
     }
     else
@@ -751,7 +767,8 @@ void page_dispenser::on_cancelButton_clicked()
     qDebug() << "Pressed cancel dispensing.";
     if (this->isDispensing)
     {
-        transactionLogging += "\n 7: Cancel Button - True";
+        p_page_idle->thisMachine->addToTransactionLogging("\n 7: Cancel Button - True");
+        // transactionLogging += "\n 7: Cancel Button - True";
         force_finish_dispensing();
     }
 }
@@ -765,8 +782,8 @@ void page_dispenser::on_pushButton_debug_Button_clicked()
 void page_dispenser::on_pushButton_abort_clicked()
 {
     qDebug() << "Pressed button abort/complete";
-
-    transactionLogging += "\n 7: Complete Button - True";
+    p_page_idle->thisMachine->addToTransactionLogging("\n 7: Complete Button - True");
+    // transactionLogging += "\n 7: Complete Button - True";
     if (p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl() < MINIMUM_DISPENSE_VOLUME_ML)
     {
         msgBox_abort = new QMessageBox();

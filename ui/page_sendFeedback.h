@@ -23,6 +23,7 @@
 #include "page_end.h"
 #include "page_help.h"
 #include "page_product.h"
+#include "page_product_mixing.h"
 #include <curl/curl.h>
 
 class statusbar;

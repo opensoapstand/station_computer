@@ -35,6 +35,9 @@ QPushButton {
    background: transparent;
 }
 
+#label_gif{
+   qproperty-alignment: 'AlignVCenter | AlignCenter';
+}
 
 .invisible_button{
    background-color: transparent;

@@ -999,6 +999,20 @@ QString machine::getHelpPageHtmlText()
     return m_help_text_html;
 }
 
+void machine::resetTransactionLogging(){
+    transactionLogging = "";
+
+}
+
+void machine::addToTransactionLogging(QString text){
+    transactionLogging += text;
+    qDebug() << "Transaction Logging: " << transactionLogging;
+}
+
+QString machine::getTransactionLogging(){
+    return transactionLogging;
+}
+
 void machine::loadMachineParameterFromDb()
 {
     qDebug() << "DB call: Load all machine parameters";
@@ -1076,7 +1090,6 @@ void machine::setActivePaymentMethod(ActivePaymentMethod paymentMethod)
 }
 
 std::vector<ActivePaymentMethod> machine::getAllowedPaymentMethods(){
-    qDebug() << "helllo";
     return allowedPaymentMethods;
 }
 
@@ -1143,15 +1156,42 @@ void machine::addPictureToLabel(QLabel *label, QString picturePath)
 
         int w = label->width();
         int h = label->height();
-
-        // // set a scaled pixmap to a w x h window keeping its aspect ratio
-        label->setPixmap(picture.scaled(w, h, Qt::KeepAspectRatio));
+        // // // set a scaled pixmap to a w x h window keeping its aspect ratio
+        label->setPixmap(picture.scaled(w, h, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     }
     else
     {
         qDebug() << "Can't add picture to label: " << label->objectName() << " " << picturePath;
     }
 }
+
+void machine::addPictureToLabelCircle(QLabel *label, QString picturePath){
+    if (df_util::pathExists(picturePath))
+    {
+        QPixmap picture(picturePath);
+        QPixmap mask(picture.size());
+        mask.fill(Qt::transparent);
+
+        // Draw smooth ellipse on mask
+        QPainter painter(&mask);
+        painter.setRenderHint(QPainter::Antialiasing);
+        painter.setBrush(QBrush(Qt::white));
+        painter.drawEllipse(0, 0, picture.width(), picture.height());
+
+        // Apply mask to picture
+        picture.setMask(mask.mask());
+
+        // Set a scaled pixmap to a w x h window keeping its aspect ratio
+        int w = label->width();
+        int h = label->height();
+        label->setPixmap(picture.scaled(w, h, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    }
+    else
+    {
+        qDebug() << "Can't add picture to label: " << label->objectName() << " " << picturePath;
+    }
+}
+
 
 void machine::addCssClassToObject(QWidget *element, QString classname, QString css_file_name)
 {
@@ -1217,7 +1257,6 @@ QString machine::getTemplateTextByElementNameAndPageAndIdentifier(QWidget *p_ele
 {
     // QString element_page_and_name = getTemplateTextByElementNameAndPage(p_element);
     QString element_page_and_name = getCombinedElementPageAndName(p_element);
-
     QString searchString = element_page_and_name + "->" + identifier;
     return getTemplateText(searchString);
 }
@@ -1343,31 +1382,33 @@ void machine::applyPropertiesToQWidget(QWidget *widget)
 
     QString combinedName = getCombinedElementPageAndName(widget);
 
-    auto it = elementDynamicPropertiesMap_template.find(combinedName);
-    QString jsonString;
+    auto selectedElement = elementDynamicPropertiesMap_template.find(combinedName); // find element in associative array
+    QString propertiesJsonString;
     bool valid = true;
 
-    if (it != elementDynamicPropertiesMap_template.end())
+    if (selectedElement != elementDynamicPropertiesMap_template.end())
     {
-        qDebug() << "element " << combinedName << "found in template. json string: " << it->second;
-        jsonString = it->second;
+        // if found in template dynamic properties 
+        qDebug() << "element " << combinedName << "found in template. json string: " << selectedElement->second;
+        propertiesJsonString = selectedElement->second; // second implies the value of the key:value pair in the associative array
     }
     else
     {
-
-        it = elementDynamicPropertiesMap_default_hardware.find(combinedName);
-        if (it != elementDynamicPropertiesMap_default_hardware.end())
+// if found in default hardware template dynamic properties
+        selectedElement = elementDynamicPropertiesMap_default_hardware.find(combinedName);
+        if (selectedElement != elementDynamicPropertiesMap_default_hardware.end())
         {
-            qDebug() << "element " << combinedName << "found in default hardware. json string: " << it->second;
-            jsonString = it->second;
+            qDebug() << "element " << combinedName << "found in default hardware template. json string: " << selectedElement->second;
+            propertiesJsonString = selectedElement->second;
         }
         else
         {
-            it = elementDynamicPropertiesMap_default.find(combinedName);
-            if (it != elementDynamicPropertiesMap_default.end())
+            // if found in default template dynamic properties
+            selectedElement = elementDynamicPropertiesMap_default.find(combinedName);
+            if (selectedElement != elementDynamicPropertiesMap_default.end())
             {
-                qDebug() << "element " << combinedName << "found in default. json string: " << it->second;
-                jsonString = it->second;
+                qDebug() << "element " << combinedName << "found in default template. json string: " << selectedElement->second;
+                propertiesJsonString = selectedElement->second;
             }
             else
             {
@@ -1382,7 +1423,7 @@ void machine::applyPropertiesToQWidget(QWidget *widget)
         return;
     }
 
-    QJsonObject jsonObject = df_util::parseJsonString(jsonString);
+    QJsonObject jsonObject = df_util::parseJsonString(propertiesJsonString);
 
     int x = widget->x();
     int y = widget->y();

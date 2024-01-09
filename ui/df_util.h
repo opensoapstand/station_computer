@@ -15,7 +15,7 @@
 #define OPTION_SLOT_INVALID 0
 #define MAX_SLOT_COUNT 20 // number of slots
 
-#define SIZES_COUNT 6
+#define SIZES_COUNT 7
 #define MINIMUM_DISPENSE_VOLUME_ML 10.0
 #define SIZE_INVALID_INDEX 0
 #define SIZE_SMALL_INDEX 1
@@ -23,6 +23,8 @@
 #define SIZE_LARGE_INDEX 3
 #define SIZE_CUSTOM_INDEX 4
 #define SIZE_TEST_INDEX 5
+#define SIZE_SAMPLE_INDEX 6
+#define ADDITIVES_RATIO_INCREMENT 10
 
 #define ADDITIVES_PER_SLOT_COUNT_MAX 5
 #define BASE_LINE_COUNT_MAX 5 // maximum amount of base lines
@@ -92,12 +94,15 @@ using namespace std;
 #define PAGE_HELP_CSS                                   "page_help.css"
 #define PAGE_FEEDBACK_CSS                               "page_sendFeedback.css"
 #define STATUSBAR_CSS                                   "statusbar.css"
+#define KEYBOARD_CSS                                   "keyboard.css"
 #define PAGE_IDLE_CSS                                   "page_idle.css"
 #define PAGE_PRODUCT_MENU_CSS                           "page_product_menu.css"
 #define PAGE_SELECT_PRODUCT_CSS                         "page_select_product.css"
 #define PAGE_PRODUCT_CSS                                "page_product.css"
+#define PAGE_PRODUCT_MIXING_CSS                         "page_product_mixing.css"
 #define PAGE_DISPENSER_CSS                              "page_dispenser.css"
 #define PAGE_PRODUCT_OVERVIEW_CSS                       "page_product_overview.css"
+#define PAGE_PRODUCT_FREESAMPLE_CSS                     "page_product_freeSample.css"
 #define PAGE_END_CSS                                    "page_end.css"
 #define PAGE_QR_PAYMENT_CSS                             "page_qr_payment.css"
 #define PAGE_ERROR_WIFI_CSS                             "page_error_wifi.css"
@@ -138,6 +143,9 @@ using namespace std;
 #define THANK_YOU_FOR_YOUR_FEEDBACK "background_feedbacksent.png"
 #define PAGE_ERROR_BACKGROUND_PATH "background_error_wifi.png"
 #define KEYBOARD_IMAGE_PATH "soapstand-keyboard.png"
+#define UNIVERSAL_KEYBOARD_IMAGE_PATH "universal_keyboard.png"
+#define COUPON_ICON_UNAVAILABLE_PATH "coupon_unavailable.png"
+#define COUPON_ICON_AVAILABLE_PATH "coupon_available.png"
 #define MACHINE_LOGO_PATH "machine_logo.png"
 #define REBOOT_NIGHTLY_ICON_PATH "reboot_nightly_icon.png"
 #define QR_MANUAL_PATH "qr_user_manual.png"

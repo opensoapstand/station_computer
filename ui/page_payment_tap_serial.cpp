@@ -17,6 +17,7 @@
 #include "ui_page_payment_tap_serial.h"
 
 #include "page_product.h"
+#include "page_product_mixing.h"
 #include "page_dispenser.h"
 #include "page_idle.h"
 
@@ -48,10 +49,11 @@ void page_payment_tap_serial::stopPayTimers()
 /*
  * Page Tracking reference
  */
-void page_payment_tap_serial::setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp, statusbar *p_statusbar)
+void page_payment_tap_serial::setPage(page_product *p_page_product, page_product_mixing *p_page_product_mixing, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp, statusbar *p_statusbar)
 {
     tmpCounter = 0;
     this->p_page_product = p_page_product;
+    this->p_page_product_mixing = p_page_product_mixing;
     this->p_page_wifi_error = pageWifiError;
     this->p_page_dispense = page_dispenser; 
     this->p_page_idle = pageIdle;
@@ -74,14 +76,12 @@ void page_payment_tap_serial::on_pushButton_payment_bypass_clicked()
 /*Cancel any previous payment*/
 void page_payment_tap_serial::cancelPayment()
 {
-    
     com.flushSerial();
     /*Cancel any previous payment*/
     pktToSend = paymentPacket.purchaseCancelPacket();
     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_CANCEL);
     ui->animated_Label->show();
     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->animated_Label, "cancel");
-    
     if (sendToUX410())
     {
         waitForUX410();
@@ -129,7 +129,11 @@ void page_payment_tap_serial::on_pushButton_previous_page_clicked()
 
     if (exitConfirm())
     {
-        hideCurrentPageAndShowProvided(p_page_product,true);
+        if(p_page_idle->thisMachine->m_template == "default_AP2"){
+            hideCurrentPageAndShowProvided(p_page_product_mixing,true);
+        }else{
+            hideCurrentPageAndShowProvided(p_page_product,true);
+        }
     }
 }
 

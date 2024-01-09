@@ -17,10 +17,11 @@
 #include "ui_page_qr_payment.h"
 
 #include "page_product.h"
+#include "page_product_mixing.h"
 #include "page_dispenser.h"
 #include "page_idle.h"
 
-extern QString transactionLogging;
+// extern QString transactionLogging;
 
 // CTOR
 
@@ -47,7 +48,7 @@ page_qr_payment::page_qr_payment(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference
  */
-void page_qr_payment::setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp, statusbar *p_statusbar)
+void page_qr_payment::setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp, statusbar *p_statusbar, page_product_mixing *p_page_product_mixing)
 {
     this->p_page_product = p_page_product;
     this->p_page_wifi_error = pageWifiError;
@@ -55,6 +56,7 @@ void page_qr_payment::setPage(page_product *p_page_product, page_error_wifi *pag
     this->p_page_idle = pageIdle;
     this->p_page_help = pageHelp;
     this->p_statusbar = p_statusbar;
+    this->p_page_product_mixing = p_page_product_mixing;
 }
 
 // DTOR
@@ -105,6 +107,7 @@ void page_qr_payment::showEvent(QShowEvent *event)
     ui->label_processing->setStyleSheet(styleSheet);
     ui->label_product_price->setStyleSheet(styleSheet);
     ui->label_product_information->setStyleSheet(styleSheet);
+    ui->label_qr_background->setStyleSheet(styleSheet);
     ui->label_gif->setStyleSheet(styleSheet);
 
     msgBox = nullptr;
@@ -161,9 +164,16 @@ void page_qr_payment::setupQrOrder()
     if (createOrderIdAndSendToBackend())
     {
 
-        transactionLogging += "\n 2: QR code - True";
-        QPixmap map(360, 360);
-        map.fill(QColor("black"));
+        p_page_idle->thisMachine->addToTransactionLogging("\n 2: QR code - True");
+        // transactionLogging += "\n 2: QR code - True";
+        QPixmap map;
+        if(p_page_idle->thisMachine->m_template == "default_AP2"){
+            map = QPixmap(451, 451);
+            map.fill(QColor("#895E25"));
+        }else{
+            map = QPixmap(360, 360);
+            map.fill(QColor("black"));
+        }
         QPainter painter(&map);
 
         // build up qr content (link)
@@ -173,7 +183,8 @@ void page_qr_payment::setupQrOrder()
             qrdata = "https://soapstandportal.com/paymentAelen?oid=" + orderId;
         }
         // create qr code graphics
-        paintQR(painter, QSize(360, 360), qrdata, QColor("white"));
+        p_page_idle->thisMachine->m_template == "default_AP2" ? paintQR(painter, QSize(451, 451), qrdata, QColor("white")) : paintQR(painter, QSize(360, 360), qrdata, QColor("white"));
+        // paintQR(painter, QSize(360, 360), qrdata, QColor("white"));
         ui->label_qrCode->setPixmap(map);
         // _paymentTimeoutSec = QR_PAGE_TIMEOUT_SECONDS;
 
@@ -230,7 +241,7 @@ bool page_qr_payment::createOrderIdAndSendToBackend()
 
     // send order details to backend
     QString curl_order_parameters_string = "orderId=" + orderId + "&size=" + drinkSize + "&MachineSerialNumber=" + MachineSerialNumber +
-                                           "&contents=" + contents + "&price=" + price + "&productId=" + productId + "&quantity_requested=" + quantity_requested + "&size_unit=" + productUnits + "&logging=" + transactionLogging;
+                                           "&contents=" + contents + "&price=" + price + "&productId=" + productId + "&quantity_requested=" + quantity_requested + "&size_unit=" + productUnits + "&logging=" + p_page_idle->thisMachine->getTransactionLogging();
     curl_order_parameters = curl_order_parameters_string.toLocal8Bit();
 
     curl1 = curl_easy_init();
@@ -312,7 +323,8 @@ void page_qr_payment::isQrProcessedCheckOnline()
 
         if (readBuffer == "true")
         {
-            transactionLogging += "\n 4: Order Paid - True";
+            p_page_idle->thisMachine->addToTransactionLogging("\n 4: Order Paid - True");
+            // transactionLogging += "\n 4: Order Paid - True";
             qDebug() << "QR processed. It's time to dispense.";
             proceed_to_dispense();
             state_payment = s_payment_done;
@@ -325,9 +337,11 @@ void page_qr_payment::isQrProcessedCheckOnline()
         }
         else if (readBuffer == "In progress")
         {
-            if (!transactionLogging.contains("\n 3: QR Scanned - True"))
+            
+            if (!p_page_idle->thisMachine->getTransactionLogging().contains("\n 3: QR Scanned - True"))
             {
-                transactionLogging += "\n 3: QR Scanned - True";
+                p_page_idle->thisMachine->addToTransactionLogging("\n 3: QR Scanned - True");
+                // transactionLogging += "\n 3: QR Scanned - True";
             }
             qDebug() << "Wait for QR processed. User must have finished transaction to continue.";
             // user scanned qr code and is processing transaction. Delete qr code and make it harder for user to leave page.
@@ -339,6 +353,7 @@ void page_qr_payment::isQrProcessedCheckOnline()
             ui->label_gif->show();
 
             ui->label_processing->show();
+            ui->label_qr_background->hide();
             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_scan, "finalize_transaction");
             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_title, "almost_there");
             QString image_path = p_page_idle->thisMachine->getTemplatePathFromName("soapstandspinner.gif");
@@ -385,7 +400,8 @@ void page_qr_payment::onTimeoutTick()
     else
     {
         qDebug() << "Timer Done!" << _pageTimeoutCounterSecondsLeft;
-        transactionLogging += "\n 5: Timeout - True";
+        p_page_idle->thisMachine->addToTransactionLogging("\n 5: Timeout - True");
+        // transactionLogging += "\n 5: Timeout - True";
 
         idlePaymentTimeout();
     }
@@ -572,7 +588,12 @@ void page_qr_payment::on_pushButton_previous_page_clicked()
     qDebug() << "In previous page button";
     if (exitConfirm())
     {
-        hideCurrentPageAndShowProvided(p_page_product);
+        if(p_page_idle->thisMachine->m_template == "default_AP2"){
+            hideCurrentPageAndShowProvided(p_page_product_mixing);
+        }else{
+            hideCurrentPageAndShowProvided(p_page_product);
+        }
+
     }
 }
 
@@ -583,7 +604,8 @@ void page_qr_payment::idlePaymentTimeout()
 
 void page_qr_payment::resetPaymentPage()
 {
-    transactionLogging = "";
+    p_page_idle->thisMachine->resetTransactionLogging();
+    // transactionLogging = "";
     paymentEndTimer->stop();
     qrPeriodicalCheckTimer->stop();
     showErrorTimer->stop();
@@ -658,6 +680,10 @@ void page_qr_payment::paintQR(QPainter &painter, const QSize sz, const QString &
             const int color = qr.getModule(x, y); // 0 for white, 1 for black
             if (0 != color)
             {
+                if (p_page_idle->thisMachine->m_template == "default_AP2"){
+                    QColor customColor("#FFF7ED");
+                    painter.setBrush(customColor);
+                }
                 const double rx1 = (x + 1) * scale, ry1 = (y + 1) * scale;
                 QRectF r(rx1, ry1, scale, scale);
                 painter.drawRects(&r, 1);

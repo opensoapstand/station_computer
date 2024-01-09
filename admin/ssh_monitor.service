@@ -1,0 +1,15 @@
+[Unit]
+Description=SSH Connection Monitor
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/home/df-admin/production/admin/ssh_monitor.sh
+
+[Timer]
+OnUnitActiveSec=30m
+AccuracySec=1s
+
+[Install]
+WantedBy=default.target

@@ -115,7 +115,7 @@ public:
         double m_nVolumeTarget_c_min;           // custom volume dispensing: min (zero volume can be dispensed, but we will still charge for min)
         double m_nVolumeTarget_custom_discount; // custom volume from which a discount is applied.
         double m_nVolumeTarget_c_max;           // custom volume dispensing: max
-
+        double m_nVolumeTarget_f;               // how much to dispense (free sample)
         double m_nVolumeTarget_t = 10000000; // test dispense (infinite)
 
 private:

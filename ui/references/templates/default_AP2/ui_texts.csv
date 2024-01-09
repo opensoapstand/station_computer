@@ -49,6 +49,7 @@ page_product_mixing->label_product_ingredients_title,Curated Ingredients
 page_product_mixing->pushButton_continue,Continue
 page_product_mixing->custom_volume,Custom Volume
 page_product_mixing->pushButton_recommended,Recommended
+page_product_mixing->pushButton_order_sample,Try a sample
 
 # page_product_overview
 page_product_overview->label_page_title,Your Order
@@ -108,3 +109,19 @@ page_email->label_email_title,To dispense free sample<br>Please kindly enter you
 page_email->keyboardTextEntry->email_placeholder,Please enter your email address
 page_email->keyboardTextEntry->invalid,Incorrect email address, please enter valid email address
 page_email->pushButton_continue, Submit email for free dispense!
+
+# page_product_freeSample
+page_product_freeSample->label_page_title,Free Sample
+page_product_freeSample->label_checkout_title,Checkout
+page_product_freeSample->label_invoice_size_title,Size: 
+page_product_freeSample->label_invoice_coupon_title,Promo Code / Coupon
+page_product_freeSample->pushButton_select_product_page,←BACK
+page_product_freeSample->label_total,Total Amount
+page_product_freeSample->pushButton_continue->proceed_free,Proceed
+page_product_freeSample->pushButton_continue->proceed_pay,Proceed to Pay
+page_product_freeSample->pushButton_continue,Continue
+page_product_freeSample->pushButton_continue->proceed_pay_tap,Pay with TAP
+page_product_freeSample->pushButton_continue->proceed_pay_qr,Pay with QR
+page_product_freeSample->pushButton_continue_additional->proceed_pay_qr,Pay with QR
+page_product_freeSample->label_selected_volume->custom_volume,Custom Volume (maximum: %1)
+page_product_freeSample->label_steps,<ol><li><span class='tab'></span>Scan QR code with phone camera <br/>or enter <span style='color: red;'>aelen.com/freesample </span> in your browser</li>        <li><span class='tab'></span>Click to open the link that appears</li>        <li><span class='tab'></span>Enter your email to receive a promotional coupon</li>        <li><span class='tab'></span>Enter the received coupon below</li>        <li><span class='tab'></span>Refill your beverage!</li>        </ol>  

@@ -206,11 +206,11 @@ void page_init::initiateTapPayment()
             paymentObject.initiate_tap_setup();
             break;
         }
-        case tap_canada:{
-            page_payment_tap_serial paymentSerialObject;
-            paymentSerialObject.tap_serial_initiate();
-            break;
-        }
+        // case tap_canada:{
+        //     page_payment_tap_serial paymentSerialObject;
+        //     paymentSerialObject.tap_serial_initiate();
+        //     break;
+        // }
     }
     // if (paymentMethod == PAYMENT_TAP_USA)
     // {

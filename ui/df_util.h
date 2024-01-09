@@ -15,7 +15,7 @@
 #define OPTION_SLOT_INVALID 0
 #define MAX_SLOT_COUNT 20 // number of slots
 
-#define SIZES_COUNT 6
+#define SIZES_COUNT 7
 #define MINIMUM_DISPENSE_VOLUME_ML 10.0
 #define SIZE_INVALID_INDEX 0
 #define SIZE_SMALL_INDEX 1
@@ -23,6 +23,7 @@
 #define SIZE_LARGE_INDEX 3
 #define SIZE_CUSTOM_INDEX 4
 #define SIZE_TEST_INDEX 5
+#define SIZE_SAMPLE_INDEX 6
 #define ADDITIVES_RATIO_INCREMENT 10
 
 #define ADDITIVES_PER_SLOT_COUNT_MAX 5
@@ -101,6 +102,7 @@ using namespace std;
 #define PAGE_PRODUCT_MIXING_CSS                         "page_product_mixing.css"
 #define PAGE_DISPENSER_CSS                              "page_dispenser.css"
 #define PAGE_PRODUCT_OVERVIEW_CSS                       "page_product_overview.css"
+#define PAGE_PRODUCT_FREESAMPLE_CSS                     "page_product_freeSample.css"
 #define PAGE_END_CSS                                    "page_end.css"
 #define PAGE_QR_PAYMENT_CSS                             "page_qr_payment.css"
 #define PAGE_ERROR_WIFI_CSS                             "page_error_wifi.css"

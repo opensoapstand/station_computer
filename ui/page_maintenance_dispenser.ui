@@ -1816,12 +1816,12 @@
     <rect>
      <x>340</x>
      <y>1690</y>
-     <width>201</width>
+     <width>511</width>
      <height>17</height>
     </rect>
    </property>
    <property name="text">
-    <string>Available single products:</string>
+    <string>Available single products (pure products available in this dispenser):</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_7">
@@ -1829,19 +1829,19 @@
     <rect>
      <x>340</x>
      <y>1540</y>
-     <width>201</width>
+     <width>521</width>
      <height>17</height>
     </rect>
    </property>
    <property name="text">
-    <string>Available mix products:</string>
+    <string>Available dispense products (user selectable mixes or single products) :</string>
    </property>
   </widget>
  </widget>
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_edit_product"/>
   <buttongroup name="buttonGroup_keypad"/>
+  <buttongroup name="buttonGroup_edit_product"/>
  </buttongroups>
 </ui>

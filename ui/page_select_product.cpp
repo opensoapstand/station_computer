@@ -19,6 +19,7 @@
 #include "ui_page_select_product.h"
 
 #include "page_product.h"
+#include "page_product_mixing.h"
 #include "page_idle.h"
 #include "df_util.h"
 

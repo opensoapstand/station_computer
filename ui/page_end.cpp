@@ -209,11 +209,12 @@ void page_end::sendDispenseEndToCloud()
     qDebug() << "Send data at finish of order : " << order_id << ". Total dispensed: " << dispensed_correct_units << "corrected units send to soapstandportal: " << dispensed_correct_units;
     if (dispensed_correct_units == 0)
     {
-        transactionLogging += "\n ERROR: No Volume dispensed";
+        p_page_idle->thisMachine->addToTransactionLogging("\n ERROR: No Volume dispensed");
+        // transactionLogging += "\n ERROR: No Volume dispensed";
     }
     // std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&size_unit=" + units + "&price=" + price_string + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + end_time + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer&volume_remaining_ml=" + to_string(volume_remaining) + "&quantity_dispensed_ml=" + to_string(productDispensers[slot_index].getVolumeDispensed()) + "&volume_remaining=" + volume_remaining_units_converted_string + "&coupon=" + coupon + "&buttonDuration=" + button_press_duration + "&buttonTimes=" + dispense_button_count + "&soapstand_product_serial=" + soapstand_product_serial;
 
-    QString curl_param = "oid=" + order_id + "&dispensed_amount=" + dispensed_correct_units + "&coupon=" + promoCode + "&logging=" + transactionLogging + "&volume_remaining_ml=" + volume_remaining + "&soapstand_product_serial=" + soapstand_product_serial;
+    QString curl_param = "oid=" + order_id + "&dispensed_amount=" + dispensed_correct_units + "&coupon=" + promoCode + "&logging=" + p_page_idle->thisMachine->getTransactionLogging() + "&volume_remaining_ml=" + volume_remaining + "&soapstand_product_serial=" + soapstand_product_serial;
     qDebug() << "Curl params" << curl_param << endl;
     curl_param_array = curl_param.toLocal8Bit();
     curl_data = curl_param_array.data();
@@ -315,7 +316,8 @@ void page_end::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 
 void page_end::finishHandler()
 {
-    transactionLogging = "";
+    // transactionLogging = "";
+    p_page_idle->thisMachine->resetTransactionLogging();
     if ((is_controller_finished && is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER) || exitIsForceable)
     {
         if (exitIsForceable)

@@ -1,0 +1,215 @@
+.button_transparent {
+   background-color: transparent;
+   border: 0px;
+}
+
+.title {
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   font-family: 'El Messiri';
+   font-style: normal;
+   font-weight: 400;
+   font-size: 60px;
+   color: #221403;
+   line-height: 1;
+}
+
+.additiveTitles{
+   color: #221403;
+   font-family: 'Lato';
+   font-size: 24px;
+   font-style: normal;
+   font-weight: 700;
+   line-height: normal;
+   text-align: left;
+   qproperty-alignment: AlignLeft;
+}
+
+.additiveBackgroundRows{
+   border-radius: 36px;
+   background: #F9EBD8;
+}
+
+.additiveMinusButtonBackgrounds, .additivePlusButtonBackgrounds{
+   max-width: 55px;
+   max-height: 55px;
+   border-radius: 26px;
+   background: #BC8439;
+}
+
+.additiveMinusButtons{
+   font-size: 55px;
+   color: #FFF;
+   qproperty-alignment: AlignCenter;
+   text-align: center;
+   margin-bottom: 10px;
+   background: transparent;
+   border: none;
+}
+
+.additivePlusButtons{
+   font-size: 46px;
+   color: #FFF;
+   qproperty-alignment: AlignCenter;
+   text-align: center;
+   background: transparent;
+   border: none;
+}
+
+.additivePercentageLabels{
+   color: #895E25;
+   text-align: center;
+   font-family: 'Lato';
+   font-size: 30px;
+   font-style: normal;
+   font-weight: 400;
+   line-height: normal;
+}
+
+#label_customize_drink, #label_select_quantity {
+   font-family: "El Messiri";
+   color: #221403;
+   font-size: 30px;
+   font-style: normal;
+   font-weight: 700;
+   line-height: normal;
+}
+
+#label_additives_background{
+   border-radius: 25px;
+   border: 1px solid #F9EBD8;
+   background: #FFF7ED; 
+   font-size: 64px;
+   font-family: 'Lato';
+   font-style: normal;
+   font-weight: 300;
+   line-height: 2.5;
+   qproperty-alignment: AlignLeft;
+   text-align: left;
+   padding: 190px 20px;
+}
+
+.orderSizeLabelsVolume {
+   font-family: 'EuropaNuova-Regular';
+   /* background-image: url(/home/df-admin/production/references/background.png); */
+   font-style: normal;
+   font-weight: 400;
+   font-size: 24px;
+   line-height: normal;
+   color: #221F20;
+   text-align: center;
+   /* qproperty-alignment: AlignCenter; */
+}
+
+.orderSizeLabelsPrice {
+   color: #895E25;
+   text-align: center;
+   font-family: 'Lato';
+   font-size: 30px;
+   font-style: normal;
+   font-weight: 700;
+   line-height: normal;
+   qproperty-alignment: AlignCenter;
+}
+
+.orderSizeBackgroundLabels {
+   background-color: #FFF7ED;
+   border: 10px;
+}
+
+.orderSizeButtons {
+   background-color: transparent;
+   border: 5px solid #BC8439;
+   border-radius: 10px;
+}
+
+#pushButton_back {
+   font-family: 'Lato';
+   font-style: normal;
+   font-weight: 400;
+   font-size: 24px;
+   color: #001810;
+   text-align: left;
+   qproperty-alignment: AlignCenter;
+   border: none;
+   text-transform: capitalize;
+}
+
+#pushButton_recommended{
+   border-radius: 10px;
+   border: 3px solid #211403;
+   background: transparent;
+   font-family: 'Lato';
+   font-size: 24px;
+   font-style: normal;
+   font-weight: 400;
+   color: #211403;
+}
+
+
+#label_product_description {
+   position: absolute;
+   font-family: 'EuropaNuova-Regular';
+   font-style: normal;
+   font-weight: 400;
+   font-size: 28px;
+   line-height: 36px;
+   color: #58595B;
+   text-align: left;
+   qproperty-alignment: AlignLeftCenter;
+   margin-top: 20px;
+}
+
+#label_product_photo {
+   background-image: url(%IMAGE_PATH%);
+   border-top-left-radius: 0px;
+   border-top-right-radius: 100px;
+   border-bottom-right-radius: 100px;
+   border-bottom-left-radius: 100px;
+   background-repeat: no-repeat;
+   background-size: contain;
+   background-clip: content;
+}
+
+#label_product_ingredients_title {
+   color: #221403;
+   font-family: 'Lato';
+   font-size: 24px;
+   font-style: normal;
+   font-weight: 700;
+   line-height: normal;
+}
+
+#label_product_ingredients {
+   color: #221403;
+   font-family: 'Lato';
+   font-size: 24px;
+   font-style: normal;
+   font-weight: 400;
+   line-height: normal;
+}
+
+#pushButton_continue {
+   font-family: 'Lato';
+   font-style: normal;
+   font-weight: 400;
+   background-color: #895E25;
+   font-size: 48px;
+   text-align: center;
+   line-height: normal;
+   qproperty-alignment: AlignCenter;
+   border-radius: 25px;
+   color: #FEFBF9;
+}
+
+/* #label_help {
+   font-family: 'Brevia';
+   font-style: normal;
+   font-weight: 75;
+   font-size: 20px;
+   line-height: 99px;
+   color: #FFFFFF;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   border: none;
+} */

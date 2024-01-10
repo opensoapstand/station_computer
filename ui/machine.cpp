@@ -1568,3 +1568,11 @@ QStringList machine::getChildNames(QObject *parent)
 
     return childNames;
 }
+
+bool machine::hasMixing(){
+    if(m_hardware_version == "AP2" || m_hardware_version == "AP3"){
+        return true;
+    }else{
+        return false;
+    }
+}

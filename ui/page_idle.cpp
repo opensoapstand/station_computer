@@ -600,15 +600,7 @@ void page_idle::on_pushButton_to_select_product_page_clicked()
 
 void page_idle::hideCurrentPageAndShowProductMenu()
 {
-    if (thisMachine->m_template == "default_AP2")
-    {
-
-        this->hideCurrentPageAndShowProvided(p_page_product_menu, true);
-    }
-    else
-    {
-        this->hideCurrentPageAndShowProvided(p_pageSelectProduct, true);
-    }
+    thisMachine->hasMixing() ? this->hideCurrentPageAndShowProvided(p_page_product_menu, true) : this->hideCurrentPageAndShowProvided(p_pageSelectProduct, true);
 }
 
 void page_idle::hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createNewSessionId)

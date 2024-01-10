@@ -49,7 +49,7 @@ page_product_mixing->label_product_ingredients_title,Curated Ingredients
 page_product_mixing->pushButton_continue,Continue
 page_product_mixing->custom_volume,Custom Volume
 page_product_mixing->pushButton_recommended,Recommended
-page_product_mixing->pushButton_order_sample,Try a sample
+page_product_mixing->pushButton_order_sample,Try a \n sample
 
 # page_product_overview
 page_product_overview->label_page_title,Your Order

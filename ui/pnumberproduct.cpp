@@ -613,11 +613,11 @@ bool pnumberproduct::isCustomMix()
 {
     bool isCustomMix = false;
 
-    for (int i = 0; i < getMixRatios().size() ; i++)
+    for (int i = 0; i < getMixRatios().size(); i++)
     {
         if (m_customMixRatios[i] != getMixRatios()[i])
         {
-             qInfo() << "i: normal mix ratio: " << getMixRatios()[i]<< "  custom: " << m_customMixRatios[i];
+            // qInfo() << "i: normal mix ratio: " << getMixRatios()[i]<< "  custom: " << m_customMixRatios[i];
             isCustomMix = true;
         }
     }
@@ -633,9 +633,11 @@ void pnumberproduct::resetCustomMixRatioParameters()
     {
         m_additivesCustomMixRatioModifiers.append(1);
     }
+    m_customMixRatios.clear();
     for (int i = 0; i < getMixRatios().size(); i++)
     {
-        m_customMixRatios[i] = m_mixRatios[i];
+
+        m_customMixRatios.append(getMixRatios()[i]); // add base product ratio
     }
 }
 

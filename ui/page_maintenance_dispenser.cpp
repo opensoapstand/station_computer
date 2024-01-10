@@ -528,7 +528,7 @@ void page_maintenance_dispenser::dispense_test_start()
 
     int pNumberSelectedProduct = this->p_page_idle->thisMachine->getSelectedProduct()->getPNumber();
 
-    QString command = "dispensePNumber|" + dispenseCommand + "|" + QString::number(pNumberSelectedProduct) + "|"; // dipenseMix|slot|dispensePNumber
+    QString command = "dispensePNumber|" + dispenseCommand + "|" + QString::number(pNumberSelectedProduct) + "|"; // dispensePNumber|slot|dispensePNumber
 
 #endif
 

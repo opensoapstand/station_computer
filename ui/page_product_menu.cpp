@@ -413,7 +413,6 @@ void page_product_menu::select_product(int option)
         p_page_idle->thisMachine->setSelectedProductByOption(option);
         p_page_idle->thisMachine->setSelectedSlotFromSelectedProduct();
 
-        // hideCurrentPageAndShowProvided(p_page_product);
         p_page_idle->thisMachine->getSelectedProduct()->resetCustomMixRatioParameters();
 
         if(p_page_idle->thisMachine->m_template == "default_AP2"){

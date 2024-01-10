@@ -476,6 +476,10 @@ DF_ERROR messageMediator::parseCommandString()
       m_machine->pcb3point3VPowerSwitch(switchPcbOnElseOff);
       m_requestedAction = ACTION_NO_ACTION;
    }
+   else if (sCommand.find("stopDispense") != string::npos){
+         debugOutput::sendMessage("Action: Abort Dispense Request", MSG_INFO);
+         m_requestedAction = ACTION_DISPENSE_END;
+   }
    else if (sCommand.find("DispenseButtonLights") != string::npos)
    {
       // simple is alive command will reset to idle state

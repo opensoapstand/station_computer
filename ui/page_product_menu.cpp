@@ -414,7 +414,6 @@ void page_product_menu::select_product(int option)
         p_page_idle->thisMachine->setSelectedProductByOption(option_index);
         p_page_idle->thisMachine->setSelectedSlotFromSelectedProduct();
 
-        // hideCurrentPageAndShowProvided(p_page_product);
         p_page_idle->thisMachine->getSelectedProduct()->resetCustomMixRatioParameters();
         p_page_idle->thisMachine->hasMixing() ? hideCurrentPageAndShowProvided(p_page_product_mixing) : hideCurrentPageAndShowProvided(p_page_product);
     }

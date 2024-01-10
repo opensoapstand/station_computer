@@ -101,6 +101,16 @@ void page_product_overview::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
     p_keyboard->initializeKeyboard(false, ui->lineEdit_promo_code);
     statusbarLayout->removeWidget(p_keyboard);
+
+    qDebug() << "is Custom mix? : " << p_page_idle->thisMachine->getSelectedProduct()->isCustomMix();
+    QVector<double> customRatios = p_page_idle->thisMachine->getSelectedProduct()->getCustomMixRatios();
+    qDebug() << "Mixing products (includes base) ratios:";
+
+    for (int i = 0; i < customRatios.size(); i++)
+    {
+        qDebug() << QString::number(i) + " : " + QString::number(customRatios[i]);
+    }
+
     statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
     // statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
     statusbarLayout->addWidget(p_keyboard);   

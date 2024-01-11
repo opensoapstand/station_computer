@@ -546,31 +546,32 @@ void page_dispenser::fsmSendStartDispensing()
     dispenseCommand.append(p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar());
     dispenseCommand.append(SEND_DISPENSE_START);
 
-    QString priceCommand = QString::number(p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize()));
-    QString promoCommand = p_page_idle->thisMachine->getCouponCode();
+    QString price = QString::number(p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize()));
+    QString promoCode = p_page_idle->thisMachine->getCouponCode();
 
     QString delimiter = QString("|");
-    QString preamble = "Order";
-    QString command = preamble + delimiter + dispenseCommand + delimiter + priceCommand + delimiter + promoCommand + delimiter;
-
-    qDebug() << "Send start command to FSM: " << command;
-    p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
-    this->isDispensing = true;
-    qDebug() << "Dispensing started.";
+    QString preamble = "orderDetails";
+    QString order_command = preamble + delimiter + price + delimiter + promoCode + delimiter;
+    qDebug() << "Send order details to FSM: " << order_command;
+    p_page_idle->thisMachine->dfUtility->send_command_to_FSM(order_command, true);
+    
 
     bool isCustomMix = p_page_idle->thisMachine->getSelectedProduct()->isCustomMix();
     int pNumberSelectedProduct = p_page_idle->thisMachine->getSelectedProduct()->getPNumber();
-
+    QString command;
     if (isCustomMix)
     {
         QString pNumbersAsCsvString = this->p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbersAsCsv();
         QString pNumberRatiosAsCsvString = this->p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosAsCsv();
-        QString command = "dispenseCustomMix|" + dispenseCommand + "|" + QString::number(pNumberSelectedProduct) + "|" + pNumbersAsCsvString + "|" + pNumberRatiosAsCsvString + "|"; // dipenseMix|slot|dispensePNumber|pnumberscsv|ratioscsv
+        command = "dispenseCustomMix|" + dispenseCommand + "|" + QString::number(pNumberSelectedProduct) + "|" + pNumbersAsCsvString + "|" + pNumberRatiosAsCsvString + "|"; // dipenseMix|slot|dispensePNumber|pnumberscsv|ratioscsv
     }
     else
     {
-        QString command = "dispensePNumber|" + dispenseCommand + "|" + QString::number(pNumberSelectedProduct) + "|"; // dispensePNumber|slot|dispensePNumber
+        command = "dispensePNumber|" + dispenseCommand + "|" + QString::number(pNumberSelectedProduct) + "|"; // dispensePNumber|slot|dispensePNumber
     }
+    p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
+    this->isDispensing = true;
+    qDebug() << "Dispensing started.";
 }
 
 void page_dispenser::fsmSendStopDispensing()
@@ -578,9 +579,10 @@ void page_dispenser::fsmSendStopDispensing()
     qDebug() << "Send STOP dispensing to fsm";
     this->isDispensing = false;
 
-    QString command = QString::number(p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
-    command.append(p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar());
-    command.append(SEND_DISPENSE_STOP);
+    // QString command = QString::number(p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
+    // command.append(p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar());
+    // command.append(SEND_DISPENSE_STOP);
+    QString command = "stopDispense";
     p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
 }
 

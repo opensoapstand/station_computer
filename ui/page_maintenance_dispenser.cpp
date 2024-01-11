@@ -559,9 +559,10 @@ void page_maintenance_dispenser::dispense_test_end(bool sendStopToController)
         if (sendStopToController)
         {
             qDebug() << "Manually finish dispense in maintenance mode.";
-            QString command = QString::number(p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
-            command.append("t");
-            command.append(SEND_DISPENSE_STOP);
+            // QString command = QString::number(p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
+            // command.append("t");
+            // command.append(SEND_DISPENSE_STOP);
+            QString command = "stopDispense";
             p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
         }
         else

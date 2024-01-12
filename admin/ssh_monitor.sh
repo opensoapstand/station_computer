@@ -20,5 +20,6 @@ restart_service() {
 if check_internet_connection; then
     echo "Internet connection is active."
 else
+    echo "Internet is not active, Restarting rtunnel"
     restart_service
 fi

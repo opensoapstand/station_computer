@@ -531,6 +531,15 @@ QString product::getPaymentMethod()
     return m_payment;
 }
 
+QString product::setActivePaymentMethod(QString activePaymentMethod){
+    m_activePayment = activePaymentMethod;
+}
+
+
+QString product::getActivePaymentMethod(){
+    return m_activePayment;
+}
+
 int product::getDispenseSpeedPercentage()
 {
     return (int)round((double(m_dispense_speed) * 100) / 255);

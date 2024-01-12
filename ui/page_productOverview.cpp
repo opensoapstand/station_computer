@@ -547,7 +547,6 @@ void page_product_overview::on_pushButton_continue(int buttonID)
     ui->pushButton_previous_page->setEnabled(false);
     QAbstractButton *buttonpressed = ui->buttonGroup_continue->button(buttonID);
     QString buttonName = buttonpressed->accessibleName();
-
     QString paymentMethod = p_page_idle->thisMachine->selectedProduct->getPaymentMethod();
     if(buttonName=="paymentMethodAdditional"){
         paymentMethod = PAYMENT_QR;
@@ -564,7 +563,7 @@ void page_product_overview::on_pushButton_continue(int buttonID)
         CURL *curl;
         CURLcode res;
         curl = curl_easy_init();
-
+        p_page_idle->thisMachine->selectedProduct->setActivePaymentMethod(PAYMENT_QR);
         if (!curl)
         {
             qDebug() << "page_product_overview: cURL failed init";
@@ -593,14 +592,17 @@ void page_product_overview::on_pushButton_continue(int buttonID)
     }
     else if (paymentMethod == PAYMENT_TAP_TCP)
     {
+        p_page_idle->thisMachine->selectedProduct->setActivePaymentMethod(PAYMENT_TAP_TCP);
         hideCurrentPageAndShowProvided(p_page_payment_tap_tcp);
     }
     else if (paymentMethod == PAYMENT_TAP_SERIAL)
     {
+        p_page_idle->thisMachine->selectedProduct->setActivePaymentMethod(PAYMENT_TAP_SERIAL);
         hideCurrentPageAndShowProvided(p_page_payment_tap_serial);
     }
     else if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
     {
+        p_page_idle->thisMachine->selectedProduct->setActivePaymentMethod(paymentMethod);
         hideCurrentPageAndShowProvided(p_page_dispense);
     }
     else

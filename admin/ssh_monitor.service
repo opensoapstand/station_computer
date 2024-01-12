@@ -7,9 +7,5 @@ After=network-online.target
 Type=simple
 ExecStart=/home/df-admin/production/admin/ssh_monitor.sh
 
-[Timer]
-OnUnitActiveSec=30m
-AccuracySec=1s
-
 [Install]
 WantedBy=default.target

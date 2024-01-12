@@ -107,7 +107,10 @@ public:
     void setDispenseSpeedPercentage(int percentage);
 
     QString getPaymentMethod();
+    QString getActivePaymentMethod();
     void setPaymentMethod(QString paymentMethod);
+    QString setActivePaymentMethod(QString activePaymentMethod);
+
 
     // double getDiscountPercentageFraction();
     // QString getCouponCode();
@@ -130,7 +133,8 @@ private:
     QString m_productId;
     QString m_soapstand_product_serial;
     QString m_payment;
-
+    QString m_activePayment;
+    
     QString m_ingredients_ui;
     QString m_product_type;
 

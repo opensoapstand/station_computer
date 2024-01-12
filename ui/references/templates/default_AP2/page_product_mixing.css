@@ -9,7 +9,7 @@
    font-family: 'El Messiri';
    font-style: normal;
    font-weight: 400;
-   font-size: 60px;
+   font-size: 54px;
    color: #221403;
    line-height: 1;
 }
@@ -69,7 +69,7 @@
 #label_customize_drink, #label_select_quantity {
    font-family: "El Messiri";
    color: #221403;
-   font-size: 30px;
+   font-size: 26px;
    font-style: normal;
    font-weight: 700;
    line-height: normal;
@@ -213,3 +213,18 @@
    qproperty-alignment: AlignCenter;
    border: none;
 } */
+
+
+#pushButton_order_sample{
+   font-family: 'Lato';
+   font-style: normal;
+   font-weight: 700;
+   background-color: #FEFBF9;
+   /* border: 5px solid #BC8439; */
+   font-size: 30px;
+   text-align: center;
+   line-height: normal;
+   qproperty-alignment: AlignCenter;
+   border-radius: 25px;
+   color: #BC8439;
+}

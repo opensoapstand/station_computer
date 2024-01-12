@@ -409,7 +409,10 @@ void DbManager::getAllProductProperties(int pnumber,
             "size_custom_discount,"
             "price_custom_discount," // 48
             "is_enabled,"
-            "status_text " // 50
+            "status_text," // 50
+            "is_enabled_sample,"
+            "size_sample,"
+            "price_sample "
             "FROM products WHERE soapstand_product_serial=:pnumber"
 
         );
@@ -455,6 +458,7 @@ void DbManager::getAllProductProperties(int pnumber,
             volumes[3] = qry.value(24).toDouble();
             // size custom min
             volumes[4] = qry.value(26).toDouble(); // size custom max.
+            
 
             prices[1] = qry.value(27).toDouble();
             prices[2] = qry.value(28).toDouble();
@@ -474,6 +478,11 @@ void DbManager::getAllProductProperties(int pnumber,
             *is_enabled_custom_discount = qry.value(45).toInt();
             *size_custom_discount = qry.value(46).toDouble();
             *price_custom_discount = qry.value(47).toDouble();
+            //Sample size assignment
+            isSizeEnabled[6] = qry.value(50).toInt();
+            qDebug() <<"Ashwani" <<isSizeEnabled[6];
+            volumes[6] = qry.value(51).toDouble();
+            prices[6] = qry.value(52).toDouble();
         }
 
         qry.finish();

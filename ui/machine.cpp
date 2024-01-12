@@ -370,6 +370,7 @@ void machine::setSelectedSlotFromSelectedProduct()
 
     int slot = getSlotFromBasePNumber(base_pnumber);
     setSelectedSlot(slot);
+    qDebug() << "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS set selected slot: " << slot;
 }
 
 bool machine::isDispenseAreaBelowElseBesideScreen()

@@ -268,6 +268,10 @@ char product::getSizeCharFromTargetVolume(double volume)
     {
         return 'c';
     }
+    else if (volume == m_nVolumeTarget_f)
+    {
+        return 'f';
+    }
     else
     {
         debugOutput::sendMessage("Get size from volume, not found, will default to custom dispense for volume " + to_string(volume), MSG_INFO);
@@ -306,6 +310,10 @@ double product::getVolumeFromSize(char size)
     else if (size == 'c')
     {
         return m_nVolumeTarget_c_max;
+    }
+    else if (size == 'f')
+    {
+        return m_nVolumeTarget_f;
     }
     else if (size == 't')
     {
@@ -712,8 +720,9 @@ bool product::isDbValid()
         "price_custom_discount",
         "is_enabled",
         "status_text",
-        "size_unit"
-
+        "is_enabled_sample",
+        "size_sample",
+        "price_sample"
     };
     bool is_valid = true;
 
@@ -909,7 +918,10 @@ bool product::loadProductParametersFromDb()
                         "is_enabled_custom_discount," // 33
                         "size_custom_discount,"
                         "price_custom_discount," // 35
-                        "status_text"            // 36
+                        "status_text,"            // 36
+                        "is_enabled_sample,"
+                        "size_sample,"
+                        "price_sample"
                         " FROM products WHERE soapstand_product_serial='" +
                         std::to_string(m_pnumber) + "';";
 
@@ -977,8 +989,9 @@ bool product::loadProductParametersFromDb()
         m_price_custom_discount_per_liter = sqlite3_column_double(stmt, 35);
 
         m_status_text = product::dbFieldAsValidString(stmt, 36);
-
+        m_nVolumeTarget_f = sqlite3_column_double(stmt, 38);
         status = sqlite3_step(stmt); // next record
+
         // every sqlite3_step returns a row. if status is 101=SQLITE_DONE, it's run over all the rows.
     }
 
@@ -1001,6 +1014,7 @@ bool product::loadProductParametersFromDb()
         debugOutput::sendMessage("DB target volume small:  " + to_string(m_nVolumeTarget_s), MSG_INFO);
         debugOutput::sendMessage("DB target volume medium: " + to_string(m_nVolumeTarget_m), MSG_INFO);
         debugOutput::sendMessage("DB target volume large : " + to_string(m_nVolumeTarget_l), MSG_INFO);
+        debugOutput::sendMessage("DB target volume free : " + to_string(m_nVolumeTarget_f), MSG_INFO);
         debugOutput::sendMessage("DB target volume custom: " + to_string(m_price_custom_per_ml), MSG_INFO);
         m_pnumber_loaded_from_db = true;
     }

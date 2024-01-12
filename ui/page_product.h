@@ -25,11 +25,11 @@
 
 #include "page_dispenser.h"
 #include "page_productOverview.h"
+#include "page_productFreeSample.h"
 #include "page_payment_tap_serial.h"
 #include "page_payment_tap_tcp.h"
 #include "page_qr_payment.h"
 #include "page_select_product.h"
-#include "page_productOverview.h"
 #include "dispenser_slot.h"
 #include "page_idle.h"
 #include "page_error_wifi.h"
@@ -243,7 +243,7 @@ private:
         {825, 1090}, // L price
         {1, 1}       // custom price
     };
-    int product_sizes[4] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX};
+    int product_sizes[5] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX,SIZE_SAMPLE_INDEX};
     bool stopSelectTimers();
     void reset_and_show_page_elements();
     void selectOnTick();

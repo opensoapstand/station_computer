@@ -469,12 +469,16 @@ DF_ERROR messageMediator::parseCommandString()
       }
       else if (command_argument == "OFF")
       {
-            switchPcbOnElseOff = false;
+         switchPcbOnElseOff = false;
       }
-
 
       m_machine->pcb3point3VPowerSwitch(switchPcbOnElseOff);
       m_requestedAction = ACTION_NO_ACTION;
+   }
+   else if (sCommand.find("stopDispense") != string::npos)
+   {
+      debugOutput::sendMessage("Action: Abort Dispense Request", MSG_INFO);
+      m_requestedAction = ACTION_DISPENSE_END;
    }
    else if (sCommand.find("DispenseButtonLights") != string::npos)
    {
@@ -530,7 +534,7 @@ DF_ERROR messageMediator::parseCommandString()
 
       std::string ratios = sCommand.substr(found3 + 1, found4 - found3 - 1);
       debugOutput::sendMessage("Dispense Ratios : " + ratios, MSG_INFO);
-      
+
       m_machine->m_productDispensers[getRequestedSlot() - 1].setSelectedProduct(pNumberDispenseProduct);
       m_machine->m_productDispensers[getRequestedSlot() - 1].setCustomMixParametersToSelectedProduct(pnumbers, ratios);
       // int pnumber = m_machine->m_productDispensers[getRequestedSlot() - 1].getCustomMixPNumberFromMixIndex(0);
@@ -547,11 +551,11 @@ DF_ERROR messageMediator::parseCommandString()
       std::size_t found0 = sCommand.find(delimiter);
       std::size_t found1 = sCommand.find(delimiter, found0 + 1);
       std::size_t found2 = sCommand.find(delimiter, found1 + 1);
-      
+
       debugOutput::sendMessage(to_string(found0), MSG_INFO);
       debugOutput::sendMessage(to_string(found1), MSG_INFO);
       debugOutput::sendMessage(to_string(found2), MSG_INFO);
-      
+
       std::string dispenseCommand = sCommand.substr(found0 + 1, found1 - found0 - 1);
       debugOutput::sendMessage("Dispense command: " + dispenseCommand, MSG_INFO);
       parseDispenseCommand(dispenseCommand);
@@ -563,30 +567,20 @@ DF_ERROR messageMediator::parseCommandString()
 
       m_machine->m_productDispensers[getRequestedSlot() - 1].setSelectedProduct(pNumberDispenseProduct);
    }
-   else if (sCommand.find("Order") != string::npos)
+   else if (sCommand.find("orderDetails") != string::npos)
    {
-      // e.g.   Order|1sd|2.2|super30off
-      debugOutput::sendMessage("Order command found", MSG_INFO);
+      // e.g.   orderDetails|2.2|super30off  // price|couponcode
+      debugOutput::sendMessage("Order details received", MSG_INFO);
       std::string delimiter = "|";
       std::size_t found0 = sCommand.find(delimiter);
       std::size_t found1 = sCommand.find(delimiter, found0 + 1);
       std::size_t found2 = sCommand.find(delimiter, found1 + 1);
-      std::size_t found3 = sCommand.find(delimiter, found2 + 1);
 
       debugOutput::sendMessage(to_string(found0), MSG_INFO);
       debugOutput::sendMessage(to_string(found1), MSG_INFO);
       debugOutput::sendMessage(to_string(found2), MSG_INFO);
-      debugOutput::sendMessage(to_string(found3), MSG_INFO);
 
-      // if (found1 != string::npos)
-      //    cout<< std::to_string(found1) << "\n";
-
-      // std::size_t found = str.find(str2);
-      std::string dispenseCommand = sCommand.substr(found0 + 1, found1 - found0 - 1);
-      debugOutput::sendMessage("Dispense command: " + dispenseCommand, MSG_INFO);
-      parseDispenseCommand(dispenseCommand);
-
-      std::string pricestr = sCommand.substr(found1 + 1, found2 - found1 - 1);
+      std::string pricestr = sCommand.substr(found0 + 1, found1 - found0 - 1);
       double price = std::stod(pricestr);
       m_requestedDiscountPrice = price;
       debugOutput::sendMessage("(Discount) price : " + to_string(m_requestedDiscountPrice), MSG_INFO);
@@ -594,13 +588,50 @@ DF_ERROR messageMediator::parseCommandString()
       std::string promoCode = "";
       if (found1 != string::npos)
       {
-         promoCode = sCommand.substr(found2 + 1, found3 - found2 - 1);
+         promoCode = sCommand.substr(found1 + 1, found2 - found1 - 1);
       }
       m_promoCode = promoCode;
       debugOutput::sendMessage("Promo code" + m_promoCode, MSG_INFO);
 
-      m_machine->m_productDispensers[getRequestedSlot() - 1].setBasePNumberAsSingleDispenseSelectedProduct();
    }
+   // else if (sCommand.find("Order") != string::npos)
+   // {
+   //    // e.g.   Order|1sd|2.2|super30off
+   //    debugOutput::sendMessage("Order command found", MSG_INFO);
+   //    std::string delimiter = "|";
+   //    std::size_t found0 = sCommand.find(delimiter);
+   //    std::size_t found1 = sCommand.find(delimiter, found0 + 1);
+   //    std::size_t found2 = sCommand.find(delimiter, found1 + 1);
+   //    std::size_t found3 = sCommand.find(delimiter, found2 + 1);
+
+   //    debugOutput::sendMessage(to_string(found0), MSG_INFO);
+   //    debugOutput::sendMessage(to_string(found1), MSG_INFO);
+   //    debugOutput::sendMessage(to_string(found2), MSG_INFO);
+   //    debugOutput::sendMessage(to_string(found3), MSG_INFO);
+
+   //    // if (found1 != string::npos)
+   //    //    cout<< std::to_string(found1) << "\n";
+
+   //    // std::size_t found = str.find(str2);
+   //    std::string dispenseCommand = sCommand.substr(found0 + 1, found1 - found0 - 1);
+   //    debugOutput::sendMessage("Dispense command: " + dispenseCommand, MSG_INFO);
+   //    parseDispenseCommand(dispenseCommand);
+
+   //    std::string pricestr = sCommand.substr(found1 + 1, found2 - found1 - 1);
+   //    double price = std::stod(pricestr);
+   //    m_requestedDiscountPrice = price;
+   //    debugOutput::sendMessage("(Discount) price : " + to_string(m_requestedDiscountPrice), MSG_INFO);
+
+   //    std::string promoCode = "";
+   //    if (found1 != string::npos)
+   //    {
+   //       promoCode = sCommand.substr(found2 + 1, found3 - found2 - 1);
+   //    }
+   //    m_promoCode = promoCode;
+   //    debugOutput::sendMessage("Promo code" + m_promoCode, MSG_INFO);
+
+   //    m_machine->m_productDispensers[getRequestedSlot() - 1].setBasePNumberAsSingleDispenseSelectedProduct();
+   // }
    else if (sCommand.length() == 3)
    //  first_char == '1' ||
    //  first_char == '2' ||
@@ -675,7 +706,7 @@ DF_ERROR messageMediator::parseCommandString()
 
 void messageMediator::sendTemperatureData()
 {
-    //debugOutput::sendMessage("Temperature requested", MSG_INFO);   //check if we send the temperature data
+   // debugOutput::sendMessage("Temperature requested", MSG_INFO);   //check if we send the temperature data
    double temperature_1 = 666.0;
    double temperature_2 = 666.0;
 
@@ -746,7 +777,7 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
             actionChar = sCommand[i];
          }
 
-         if (sCommand[i] == SIZE_SMALL_CHAR || sCommand[i] == SIZE_MEDIUM_CHAR || sCommand[i] == SIZE_LARGE_CHAR || sCommand[i] == SIZE_CUSTOM_CHAR || sCommand[i] == SIZE_TEST_CHAR)
+         if (sCommand[i] == SIZE_SMALL_CHAR || sCommand[i] == SIZE_MEDIUM_CHAR || sCommand[i] == SIZE_LARGE_CHAR || sCommand[i] == SIZE_CUSTOM_CHAR || sCommand[i] == SIZE_SAMPLE_CHAR || sCommand[i] == SIZE_TEST_CHAR)
          {
             volumeChar = (sCommand[i]);
          }
@@ -863,6 +894,12 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
       case SIZE_TEST_CHAR:
          debugOutput::sendMessage("Requested volume test", MSG_INFO);
          m_requestedSize = SIZE_TEST_CHAR;
+         e_ret = OK;
+         break;
+
+      case SIZE_SAMPLE_CHAR:
+         debugOutput::sendMessage("Requested volume sample", MSG_INFO);
+         m_requestedSize = SIZE_SAMPLE_CHAR;
          e_ret = OK;
          break;
 

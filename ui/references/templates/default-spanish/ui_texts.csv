@@ -216,3 +216,14 @@ page_maintenance_general->pushButton_shutdown,Shut down\n(unplugging power is ok
 page_maintenance_general->pushButton_reboot,Minimize Soapstand App
 page_maintenance_general->label_feedback,Feedback
 page_maintenance_general->label_status_feedback,Command Feedback
+
+# page_product_overview
+page_product_freeSample->pushButton_select_product_page,<- back
+page_product_freeSample->label_discount_tag,Discount
+page_product_freeSample->pushButton_continue,Continue
+page_product_freeSample->label_total,Total
+page_product_freeSample->lineEdit_promo_code->valid,Promo Code Valid
+page_product_freeSample->lineEdit_promo_code->invalid,Promo Code Invalid
+page_product_freeSample->lineEdit_promo_code->network_error,Network error, could not verify. Try again.
+page_product_freeSample->lineEdit_promo_code->invite,Tap here to enter promo code
+page_product_freeSample->label_selected_volume->custom_volume,Custom Volume<br>(maximum: %1)

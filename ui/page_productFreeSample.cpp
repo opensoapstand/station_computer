@@ -44,7 +44,7 @@ page_product_freeSample::page_product_freeSample(QWidget *parent) : QWidget(pare
 
     ui->label_gif->hide();
     statusbarLayout = new QVBoxLayout(this);
-    keyboardLayout = new QVBoxLayout(this);
+    bottomLayout = new QVBoxLayout;
 }
 
 /*
@@ -87,12 +87,12 @@ void page_product_freeSample::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
     p_keyboard->initializeKeyboard(false, ui->lineEdit_promo_code);
-    statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
-    // statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
-    statusbarLayout->addWidget(p_keyboard);    
-    statusbarLayout->setContentsMargins(14, 1374, 15, 51); // int left, int top, int right, int bottom);
-     
-    // keyboardLayout->setContentsMargins(0, 0, 0, 0);
+    statusbarLayout->removeWidget(p_keyboard);
+
+    bottomLayout->addSpacing(500);
+    bottomLayout->addWidget(p_statusbar);  
+    statusbarLayout->addWidget(p_keyboard);
+    statusbarLayout->setContentsMargins(0, 1374, 0, 0);
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
 
@@ -175,6 +175,8 @@ void page_product_freeSample::onSelectTimeoutTick()
 void page_product_freeSample::enterButtonPressed(){
     if (m_readyToSendCoupon && p_page_idle->thisMachine->getCouponState() != enabled_processing_input)
     {
+        statusbarLayout->addLayout(bottomLayout);
+        this->setLayout(statusbarLayout);
         m_readyToSendCoupon = false;
         qDebug() << "Done clicked, initiated apply promo.";
         // hack, sometimes it appears like the 'done' button code is called twice.
@@ -257,7 +259,7 @@ void page_product_freeSample::reset_and_show_page_elements()
         ui->lineEdit_promo_code->show();
         ui->pushButton_promo_input->show();
         ui->pushButton_continue->show();
-        ui->pushButton_continue->raise();
+        // ui->pushButton_continue->raise();
 
     }
     break;
@@ -279,6 +281,7 @@ void page_product_freeSample::reset_and_show_page_elements()
         // p_keyboard->setVisibility(true);
         p_keyboard->registerCallBack(std::bind(&page_product_freeSample::enterButtonPressed, this));
         p_keyboard->initializeKeyboard(true, ui->lineEdit_promo_code);
+        statusbarLayout->removeItem(bottomLayout);
         ui->lineEdit_promo_code->clear();
         ui->lineEdit_promo_code->show();
         p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_promo_code, "promoCode", PAGE_PRODUCT_FREESAMPLE_CSS);
@@ -484,7 +487,6 @@ void page_product_freeSample::on_pushButton_continue()
     ui->pushButton_to_help->setEnabled(false);
     ui->pushButton_previous_page->setEnabled(false);  
     hideCurrentPageAndShowProvided(p_page_dispense);
-  
 }
 
 void page_product_freeSample::return_to_selectProductPage()

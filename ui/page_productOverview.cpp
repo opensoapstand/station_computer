@@ -15,6 +15,7 @@
 //***************************************
 
 #include "page_productOverview.h"
+#include "page_maintenance_dispenser.h"
 #include "ui_page_productOverview.h"
 #include <iostream>
 #include <string>
@@ -54,7 +55,7 @@ page_product_overview::page_product_overview(QWidget *parent) : QWidget(parent),
 
     ui->label_gif->hide();
     statusbarLayout = new QVBoxLayout(this);
-    // keyboardLayout = new QVBoxLayout(this);
+    bottomLayout = new QVBoxLayout;
 }
 
 /*
@@ -110,11 +111,16 @@ void page_product_overview::showEvent(QShowEvent *event)
     {
         qDebug() << QString::number(i) + " : " + QString::number(customRatios[i]);
     }
-
-    statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
     // statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
-    statusbarLayout->addWidget(p_keyboard);   
-    // statusbarLayout->setContentsMargins(14, 1374, 15, 51); // int left, int top, int right, int bottom);
+    bottomLayout->addSpacing(500);
+    bottomLayout->addWidget(p_statusbar);   
+    // statusbarLayout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Expanding));
+    // statusbarLayout->addSpacing(1374);
+    statusbarLayout->addWidget(p_keyboard);
+    statusbarLayout->setContentsMargins(0, 1374, 0, 0);
+    // statusbarLayout->addLayout(bottomLayout);
+    // this->setLayout(statusbarLayout);
+    // statusbarLayout->setContentsMargins(0, 1374, 0, 0); // int left, int top, int right, int bottom);
     // p_keyboard->move(15, 1371);
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
@@ -364,6 +370,7 @@ void page_product_overview::reset_and_show_page_elements()
         qDebug() << "Coupon state: Show keyboard";
         p_keyboard->registerCallBack(std::bind(&page_product_overview::enterButtonPressed, this));
         p_keyboard->initializeKeyboard(true, ui->lineEdit_promo_code);
+        statusbarLayout->removeItem(bottomLayout);
         ui->lineEdit_promo_code->clear();
         ui->lineEdit_promo_code->show();
         p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_promo_code, "promoCode", PAGE_PRODUCT_OVERVIEW_CSS);
@@ -586,6 +593,8 @@ void page_product_overview::apply_promo_code(QString promocode)
 void page_product_overview::enterButtonPressed(){
     if (m_readyToSendCoupon && p_page_idle->thisMachine->getCouponState() != enabled_processing_input)
     {
+        statusbarLayout->addLayout(bottomLayout);
+        this->setLayout(statusbarLayout);
         m_readyToSendCoupon = false;
         qDebug() << "Done clicked, initiated apply promo.";
         // hack, sometimes it appears like the 'done' button code is called twice.

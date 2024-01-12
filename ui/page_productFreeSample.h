@@ -125,7 +125,7 @@ private:
     QShowEvent *dispenseEvent;
     QShowEvent *wifiErrorEvent;
     QVBoxLayout *statusbarLayout;
-    QVBoxLayout *keyboardLayout;
+    QVBoxLayout *bottomLayout;
 };
 
 #endif // PAYSELECT_H

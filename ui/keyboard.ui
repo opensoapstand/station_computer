@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1051</width>
+    <width>1080</width>
     <height>495</height>
    </rect>
   </property>
@@ -16,7 +16,7 @@
   <widget class="QWidget" name="keyboard_3" native="true">
    <property name="geometry">
     <rect>
-     <x>0</x>
+     <x>15</x>
      <y>0</y>
      <width>1051</width>
      <height>495</height>

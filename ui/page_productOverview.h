@@ -90,7 +90,7 @@ private slots:
     void updatePriceLabel();
     void on_pushButton_to_help_clicked();
     void onSelectTimeoutTick();
-    // void keyboardButtonPressed(int);
+    void keyboardButtonPressed(int);
 
 private:
 
@@ -123,7 +123,6 @@ private:
     QShowEvent *dispenseEvent;
     QShowEvent *wifiErrorEvent;
     QVBoxLayout *statusbarLayout;
-    QVBoxLayout *keyboardLayout;
 };
 
 #endif // PAYSELECT_H

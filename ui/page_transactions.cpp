@@ -33,7 +33,7 @@ page_transactions::page_transactions(QWidget *parent) : QWidget(parent),
 void page_transactions::setPage(page_idle *pageIdle, statusbar *p_statusbar)
 {
         this->p_page_idle = pageIdle;
-        this->p_statusbar = p_statusbar; 
+        this->p_statusbar = p_statusbar;
 }
 
 page_transactions::~page_transactions()
@@ -132,12 +132,12 @@ void page_transactions::populateList()
                 int pnumber = p_page_idle->thisMachine->getProductByPNumber(0)->convertPStringToPInt(recent_transactions[i][4]);
 
                 p_page_idle->thisMachine->getProductByPNumber(pnumber)->getProductProperties(
-                                                                                             &name,
-                                                                                             &name_ui,
-                                                                                             &product_type,
-                                                                                             &description_ui,
-                                                                                             &features_ui,
-                                                                                             &ingredients_ui);
+                    &name,
+                    &name_ui,
+                    &product_type,
+                    &description_ui,
+                    &features_ui,
+                    &ingredients_ui);
 
                 for (int j = 1; j < 4; j++)
                 {
@@ -181,12 +181,16 @@ void page_transactions::on_pushButton_print_clicked(bool checked)
                         QString transactionIndex = recent_transactions[rowIndex - 1][0];
                         qDebug() << "Selected row: " << rowIndex << " with dispense index: " + transactionIndex << ". Send to receipt printer.";
 
-                        p_page_idle->thisMachine->dfUtility->send_command_to_FSM("Printer", true);
-                        usleep(50000);
-                        QString command = "t" + transactionIndex;
+                        // p_page_idle->thisMachine->dfUtility->send_command_to_FSM("Printer", true);
+                        // usleep(50000);
+                        // QString command = "t" + transactionIndex;
+                        // p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
+                        // usleep(50000);
+                        // p_page_idle->thisMachine->dfUtility->send_command_to_FSM("q", true);
+
+
+                        QString command = "thermalprinterPrintTransaction|" + transactionIndex + "|";
                         p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
-                        usleep(50000);
-                        p_page_idle->thisMachine->dfUtility->send_command_to_FSM("q", true);
                 }
         }
         else

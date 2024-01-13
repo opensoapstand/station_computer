@@ -622,7 +622,7 @@ void machine::print_receipt(string name_receipt, string receipt_cost, string rec
 
         usleep(3500000);
     }
-    debugOutput::sendMessage("end sleep", MSG_INFO);
+    debugOutput::sendMessage("End receipt printing", MSG_INFO);
 }
 
 bool machine::getPumpReversalEnabled()

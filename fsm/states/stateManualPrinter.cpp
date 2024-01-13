@@ -46,7 +46,7 @@ DF_ERROR stateManualPrinter::onEntry()
 {
    m_state_requested = STATE_MANUAL_PRINTER;
    DF_ERROR e_ret = OK;
-   debugOutput::sendMessage("Test printer manually.", MSG_INFO);
+   debugOutput::sendMessage("Enter Printer commmands state.", MSG_INFO);
 
    printerr = g_machine.receipt_printer;
 
@@ -57,7 +57,7 @@ DF_ERROR stateManualPrinter::onEntry()
    if (!g_machine.getPcb24VPowerSwitchStatus())
    {
       g_machine.pcb24VPowerSwitch(true); // printers take their power from the 24V converted to 5V (because of the high current)
-      // usleep(1200000);                   // wait for printer to come online.
+      usleep(1200000);                   // wait for printer to come online.
       printerr->resetPollCount();
    }
 
@@ -67,6 +67,31 @@ DF_ERROR stateManualPrinter::onEntry()
 DF_ERROR stateManualPrinter::onAction()
 {
    DF_ERROR e_ret = OK;
+
+   // not a new command, reuse when coming from idle.
+   if (m_pMessaging->getAction() == ACTION_UI_COMMAND_PRINTER_SEND_STATUS)
+   {
+      debugOutput::sendMessage("Multi command. Send printer status and exit.", MSG_INFO);
+      sendPrinterStatus();
+      m_state_requested = STATE_IDLE;
+   }
+   else if (ACTION_UI_COMMAND_PRINT_TRANSACTION == m_pMessaging->getAction())
+   {
+      // ACTION_TRANSACTION_ID
+      int id = m_pMessaging->getCommandValue();
+      debugOutput::sendMessage("Print transaction id : " + to_string(id), MSG_INFO);
+      printTransaction(id);
+      m_state_requested = STATE_IDLE;
+   }
+   else if (ACTION_UI_COMMAND_TEST_PRINT == m_pMessaging->getAction())
+   {
+      // ACTION_TRANSACTION_ID
+      int id = m_pMessaging->getCommandValue();
+      debugOutput::sendMessage("Print test print. ", MSG_INFO);
+       printTest();
+      m_state_requested = STATE_IDLE;
+   }
+
 
    // Check if Command String is ready
    if (m_pMessaging->isCommandStringReadyToBeParsed())
@@ -379,6 +404,7 @@ DF_ERROR stateManualPrinter::printTest()
    //  system(printer_command_string.c_str());
 
    //  printerr->setBarcodeHeight(100);
+    usleep(3000000);                   // wait for printer to come online.
 }
 
 // Advances to Dispense Idle

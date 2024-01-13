@@ -25,6 +25,7 @@
 #include <sys/socket.h>
 #include <string>
 #include <unistd.h>
+#include "../../library/printer/Adafruit_Thermal.h"
 
 #define DELAY_USEC 1
 
@@ -186,6 +187,68 @@ void messageMediator::setMachine(machine *machine)
       }
       this->m_machine = machine;
    }
+}
+
+void messageMediator::sendPrinterStatus()
+{
+   debugOutput::sendMessage("af;ldoeofoeflodleodloelodeolode.", MSG_INFO);
+   if (!m_machine->getPcb24VPowerSwitchStatus())
+   {
+      m_machine->pcb24VPowerSwitch(true); // printers take their power from the 24V converted to 5V (because of the high current)
+      // usleep(1200000);                   // wait for printer to come online.
+      printerr->resetPollCount();
+   }
+
+   bool isOnline;
+   bool hasPaper;
+   debugOutput::sendMessage("af;eja;fuaeijfaesiofj.", MSG_INFO);
+   getPrinterStatus(&isOnline, &hasPaper);
+
+   string statusString;
+   if (isOnline)
+   {
+      if (hasPaper)
+      {
+         statusString = "printerstatus11";
+      }
+      else
+      {
+         statusString = "printerstatus10";
+      }
+   }
+   else
+   {
+      statusString = "printerstatus00";
+   }
+
+   sendMessageOverIP(statusString, true); // send to UI // if commented out: Let's communicate by setting the db fields only
+   m_machine->pcb24VPowerSwitch(false);
+}
+
+void messageMediator::getPrinterStatus(bool *r_isOnline, bool *r_hasPaper)
+{
+   bool isOnline = printerr->testComms(); // first call returns always "online"
+   isOnline = printerr->testComms();      // first call returns always "online"
+
+   bool hasPaper = false;
+
+   if (isOnline)
+   {
+      hasPaper = printerr->hasPaper();
+   }
+
+   if (printerr->getPollCountLimitReached())
+   {
+
+      printerr->resetPollCount();
+      debugOutput::sendMessage("Pollcount LIMIT REACHED. Will restart Printer ", MSG_INFO);
+      m_machine->pcb24VPowerSwitch(false);
+      usleep(1200000); // 2000000ok //1500000ok //1200000ok //1000000nok
+      m_machine->pcb24VPowerSwitch(true);
+      // usleep(2000000); //1000000
+   }
+   *r_isOnline = r_isOnline;
+   *r_hasPaper = hasPaper;
 }
 
 // Sends a progress of dispensing to QT through a socket
@@ -475,11 +538,7 @@ DF_ERROR messageMediator::parseCommandString()
       m_machine->pcb3point3VPowerSwitch(switchPcbOnElseOff);
       m_requestedAction = ACTION_NO_ACTION;
    }
-   else if (sCommand.find("stopDispense") != string::npos)
-   {
-      debugOutput::sendMessage("Action: Abort Dispense Request", MSG_INFO);
-      m_requestedAction = ACTION_DISPENSE_END;
-   }
+
    else if (sCommand.find("DispenseButtonLights") != string::npos)
    {
       // simple is alive command will reset to idle state
@@ -499,6 +558,11 @@ DF_ERROR messageMediator::parseCommandString()
          m_machine->setButtonLightsBehaviour(Button_lights_behaviour::IDLE_OFF);
       }
       m_requestedAction = ACTION_NO_ACTION;
+   }
+   else if (sCommand.find("stopDispense") != string::npos)
+   {
+      debugOutput::sendMessage("Action: Abort Dispense Request", MSG_INFO);
+      m_requestedAction = ACTION_DISPENSE_END;
    }
    else if (sCommand.find("dispenseCustomMix") != string::npos)
    {
@@ -592,7 +656,6 @@ DF_ERROR messageMediator::parseCommandString()
       }
       m_promoCode = promoCode;
       debugOutput::sendMessage("Promo code" + m_promoCode, MSG_INFO);
-
    }
    // else if (sCommand.find("Order") != string::npos)
    // {
@@ -647,11 +710,42 @@ DF_ERROR messageMediator::parseCommandString()
    {
       m_requestedAction = ACTION_UI_COMMAND_PRINTER_MENU;
    }
+   else if (sCommand.find("getThermalprinterStatus") != string::npos)
+   {
+      // debugOutput::sendMessage("Printer status request received.", MSG_INFO);
+      // sendPrinterStatus();
+      m_requestedAction = ACTION_UI_COMMAND_PRINTER_SEND_STATUS;
+   }
+   else if (sCommand.find("thermalprinterPrintTest") != string::npos)
+   {
+      // debugOutput::sendMessage("Printer status request received.", MSG_INFO);
+      // sendPrinterStatus();
+      m_requestedAction = ACTION_UI_COMMAND_TEST_PRINT;
+   }
+   else if (sCommand.find("thermalprinterPrintTransaction") != string::npos)
+   {
+      // debugOutput::sendMessage("Printer status request received.", MSG_INFO);
+      // sendPrinterStatus();
+
+      debugOutput::sendMessage("Print transaction command received", MSG_INFO);
+      std::string delimiter = "|";
+      std::size_t found0 = sCommand.find(delimiter);
+      std::size_t found1 = sCommand.find(delimiter, found0 + 1);
+
+      debugOutput::sendMessage(to_string(found0), MSG_INFO);
+      debugOutput::sendMessage(to_string(found1), MSG_INFO);
+
+      std::string id = sCommand.substr(found0 + 1, found1 - found0 - 1);
+      int transaction_id = std::stoi(id);
+      debugOutput::sendMessage("Transaction id: " + to_string(transaction_id), MSG_INFO);
+
+      m_requestedAction = ACTION_UI_COMMAND_PRINT_TRANSACTION;
+      m_commandValue = transaction_id;
+   }
    else if (
        // other commands
        first_char == ACTION_MANUAL_PUMP_PWM_SET ||
-       first_char == ACTION_MANUAL_PUMP_SET ||
-       first_char == ACTION_PRINT_TRANSACTION)
+       first_char == ACTION_MANUAL_PUMP_SET)
    {
       m_requestedAction = first_char;
       std::string number = sCommand.substr(1, sCommand.size());

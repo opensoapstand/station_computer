@@ -81,6 +81,9 @@ public:
 
    DF_ERROR setSendingBehaviour(bool enableElseDisableSending);
 
+   void getPrinterStatus(bool *r_isOnline, bool *r_hasPaper);
+   void sendPrinterStatus();
+
 private:
    bool m_enable_sending = true;
    int messageIP;
@@ -110,6 +113,7 @@ private:
    static void *doKBThread(void *pThreadArgs);
    static void *doIPThread(void *pThreadArgs);
    machine *m_machine;
+   Adafruit_Thermal* printerr;
 
 };
 

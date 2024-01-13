@@ -108,9 +108,10 @@ DF_ERROR stateDispenseEnd::onAction()
     }
     else
     {
+        debugOutput::sendMessage("Normal transaction.", MSG_INFO);
         e_ret = handleTransactionPayment();
 
-        debugOutput::sendMessage("Normal transaction.", MSG_INFO);
+        debugOutput::sendMessage("Normal transaction end handling.", MSG_INFO);
         dispenseEndUpdateDB(true);
 
 #define ENABLE_TRANSACTION_TO_CLOUD
@@ -119,7 +120,7 @@ DF_ERROR stateDispenseEnd::onAction()
         std::string paymentMethod = g_machine.getPaymentMethod();
 
         double price = getFinalPrice();
-        if (paymentMethod == "qr" && price!= 0.0)
+        if (paymentMethod == "qr" && price != 0.0)
         {
             // these transactions are dealt with in the UI
         }
@@ -259,11 +260,13 @@ DF_ERROR stateDispenseEnd::handleTransactionPayment()
     {
         debugOutput::sendMessage("Printing receipt:", MSG_INFO);
         setup_and_print_receipt();
+        debugOutput::sendMessage("Done printing receipt.", MSG_INFO);
     }
     else
     {
         debugOutput::sendMessage("WARNING: No payment method detected.", MSG_INFO);
     }
+    debugOutput::sendMessage("taeijesijf: ." + e_ret, MSG_INFO);
     return e_ret;
 }
 
@@ -626,7 +629,7 @@ double stateDispenseEnd::getFinalPrice()
     double price;
     // bool isCustomSizeEnabled = g_machine.m_productDispensers.getProduct()->getIsSizeEnabled(SIZE_CUSTOM_CHAR);
     // If custom volume is enabled, adjust the price to actual quantity dispensed
-    if (size == SIZE_CUSTOM_CHAR )
+    if (size == SIZE_CUSTOM_CHAR)
     {
 
         bool isDiscountEnabled;
@@ -648,8 +651,9 @@ double stateDispenseEnd::getFinalPrice()
         }
 
         price = price_per_ml * volume_dispensed;
-        if(size != SIZE_CUSTOM_CHAR){
-            price = std::min(price,m_pMessaging->getRequestedPrice());
+        if (size != SIZE_CUSTOM_CHAR)
+        {
+            price = std::min(price, m_pMessaging->getRequestedPrice());
         }
     }
     else if (size == SIZE_TEST_CHAR)
@@ -664,7 +668,7 @@ double stateDispenseEnd::getFinalPrice()
 }
 
 // This function prints the receipts by calling a system function (could be done better)
-DF_ERROR stateDispenseEnd::setup_and_print_receipt()
+void stateDispenseEnd::setup_and_print_receipt()
 {
 
     // printerr.connectToPrinter();
@@ -799,10 +803,14 @@ DF_ERROR stateDispenseEnd::setup_and_print_receipt()
     strftime(now, 50, "%F %T", timeinfo);
 
     machine tmp;
-    // receipt_cost = m_pMessaging->getRequestedPrice();
     string promoCode = m_pMessaging->getCouponCode();
     debugOutput::sendMessage("Price changed to " + receipt_cost, MSG_INFO);
     tmp.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, now, units, paymentMethod, plu, promoCode, true);
+    for (int i = 0; i < 100; i++)
+    {
+        debugOutput::sendMessage("End receipt print from end dispense.", MSG_INFO);
+        usleep(100000);
+    }
 }
 
 // DF_ERROR stateDispenseEnd::print_text(string text)

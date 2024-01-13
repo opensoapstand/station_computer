@@ -125,7 +125,7 @@ private:
     keyboard *p_keyboard;
     QString idle_page_type;
 
-    bool tappingBlockedUntilPrinterReply;
+    bool m_tappingBlockedUntilPrinterReply;
 
     QVBoxLayout *statusbarLayout; 
     

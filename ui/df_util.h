@@ -165,7 +165,7 @@ using namespace std;
 #define PAGE_HELP_BACKGROUND_GENERIC_WHITE "background_generic_white_empty.png"
 #define PAGE_HELP_BACKGROUND_PATH "background_help.png"
 #define SEND_DISPENSE_START "d"
-#define SEND_DISPENSE_STOP "f"
+// #define SEND_DISPENSE_STOP "f"
 #define SEND_REPAIR_PCA "pcabugfix"
 #define SEND_DISPENSE_AUTOFILL "a"
 

@@ -387,14 +387,7 @@ bool page_product::stopSelectTimers()
 
 void page_product::hideCurrentPageAndShowProductMenu()
 {
-    if (p_page_idle->thisMachine->m_template == "default_AP2")
-    {
-        this->hideCurrentPageAndShowProvided(p_page_product_menu);
-    }
-    else
-    {
-        this->hideCurrentPageAndShowProvided(p_page_select_product);
-    }
+    p_page_idle->thisMachine->hasMixing() ? this->hideCurrentPageAndShowProvided(p_page_product_menu) : this->hideCurrentPageAndShowProvided(p_page_select_product);
 }
     
 void page_product::hideCurrentPageAndShowProvided(QWidget *pageToShow)

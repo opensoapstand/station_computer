@@ -97,7 +97,7 @@ void page_product_freeSample::showEvent(QShowEvent *event)
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
     // p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(ui->promoKeyboard); 
-    if (p_page_idle->thisMachine->m_template == "default_AP2"){
+    if (p_page_idle->thisMachine->hasMixing()){
         ui->promoKeyboard->findChild<QLabel*>("label_keyboard_background")->setGeometry(QRect(0, 0, 841, 364));
         ui->promoKeyboard->findChild<QPushButton*>("a")->setGeometry(QRect(53, 179, 62, 62));
         ui->promoKeyboard->findChild<QPushButton*>("b")->setGeometry(QRect(403, 252, 62, 62));
@@ -296,7 +296,7 @@ void page_product_freeSample::reset_and_show_page_elements()
         // ui->lineEdit_promo_code->setText(promo_code_input_text);
         ui->lineEdit_promo_code->setText("Valid Coupon: " + entered_coupon_code);
         QString coupon_icon_path = p_page_idle->thisMachine->getTemplatePathFromName(COUPON_ICON_AVAILABLE_PATH);
-        if (p_page_idle->thisMachine->m_template == "default_AP2"){
+        if (p_page_idle->thisMachine->hasMixing()){
             p_page_idle->thisMachine->addPictureToLabel(ui->label_coupon_icon, coupon_icon_path);
         }
         ui->label_invoice_discount_name->hide();
@@ -537,11 +537,7 @@ void page_product_freeSample::on_pushButton_continue()
 
 void page_product_freeSample::return_to_selectProductPage()
 {
-    if(p_page_idle->thisMachine->m_template == "default_AP2"){
-        hideCurrentPageAndShowProvided(p_page_product_mixing);
-    }else{
-        hideCurrentPageAndShowProvided(p_page_product);
-    }
+    p_page_idle->thisMachine->hasMixing() ? hideCurrentPageAndShowProvided(p_page_product_mixing) : hideCurrentPageAndShowProvided(p_page_product);
 }
 
 void page_product_freeSample::on_pushButton_select_product_page_clicked()
@@ -560,7 +556,7 @@ void page_product_freeSample:: setup_qr_code(){
         // build up qr content (link)
         QString qrdata = "https://www.aelen.com/freesample";
         // create qr code graphics
-        p_page_idle->thisMachine->m_template == "default_AP2" ? paintSampleQR(painter, QSize(360, 360), qrdata, QColor("white")) : paintSampleQR(painter, QSize(360, 360), qrdata, QColor("white"));
+        p_page_idle->thisMachine->hasMixing() ? paintSampleQR(painter, QSize(360, 360), qrdata, QColor("white")) : paintSampleQR(painter, QSize(360, 360), qrdata, QColor("white"));
         // paintSampleQR(painter, QSize(360, 360), qrdata, QColor("white"));
         ui->label_qrCode->setPixmap(map);
         // _paymentTimeoutSec = QR_PAGE_TIMEOUT_SECONDS;
@@ -597,7 +593,7 @@ void page_product_freeSample::paintSampleQR(QPainter &painter, const QSize sz, c
             const int color = qr.getModule(x, y); // 0 for white, 1 for black
             if (0 != color)
             {
-                if (p_page_idle->thisMachine->m_template == "default_AP2"){
+                if (p_page_idle->thisMachine->hasMixing()){
                     QColor customColor("#FFF7ED");
                     painter.setBrush(customColor);
                 }

@@ -140,6 +140,9 @@ public:
 
     pnumberproduct *getProductByPNumber(int pnumber);
     pnumberproduct *getSlotBaseProduct(int slot);
+    void setSelectedBottle(int pnumber);
+    pnumberproduct *getSelectedBottle();
+    bool hasSelectedBottle();
     void setSelectedProduct(int pnumber);
     pnumberproduct *getSelectedProduct();
 
@@ -244,6 +247,10 @@ public:
     double m_temperature2;
     double m_alert_temperature2;
     QString m_payment;
+    int m_screen_sleep_time24h;
+    int m_screen_wakeup_time24h;
+    int m_buy_bottle_1;
+    int m_buy_bottle_2;
 
     int m_is_enabled;
     QString m_status_text;
@@ -268,6 +275,7 @@ public:
     void resetTransactionLogging();
     void addToTransactionLogging(QString text);
     QString getTransactionLogging();
+    bool hasMixing();
 
 public slots:
 
@@ -276,6 +284,7 @@ signals:
 private:
     dispenser_slot *m_selectedSlot; // used for maintenance mode!!  , or derived from selectedProduct.
     pnumberproduct *m_selectedProduct;
+    pnumberproduct *m_selectedBottle;
     QVector<int> dispenseProductsMenuOptions;
     dispenser_slot *m_slots;
     pnumberproduct m_pnumberproducts[HIGHEST_PNUMBER_COUNT];

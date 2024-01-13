@@ -317,6 +317,24 @@ int machine::getSlotFromBasePNumber(int base_pnumber)
     return slot_with_base_pnumber;
 }
 
+pnumberproduct *machine::getSelectedBottle()
+{
+    return m_selectedBottle;
+}
+
+void machine::setSelectedBottle(int pnumber)
+{
+    // pnumber is the index. Clever... until you have one million options....
+    m_selectedBottle = &m_pnumberproducts[pnumber];
+}
+
+bool machine::hasSelectedBottle(){
+    if(m_buy_bottle_1 || m_buy_bottle_2){
+        return true;
+    }else{
+        return false;
+    }
+}
 
 pnumberproduct *machine::getSelectedProduct()
 {
@@ -1052,7 +1070,11 @@ void machine::loadMachineParameterFromDb()
         &m_is_enabled,
         &m_status_text,
         &m_payment,
-        &m_size_unit);
+        &m_size_unit,
+        &m_screen_sleep_time24h,
+        &m_screen_wakeup_time24h,
+        &m_buy_bottle_1,
+        &m_buy_bottle_2);
 
     qDebug() << "Machine ID as loaded from db: " << getMachineId();
     qDebug() << "Template folder from db : " << getTemplateFolder();
@@ -1568,4 +1590,12 @@ QStringList machine::getChildNames(QObject *parent)
     }
 
     return childNames;
+}
+
+bool machine::hasMixing(){
+    if(m_hardware_version == "AP2" || m_hardware_version == "AP3"){
+        return true;
+    }else{
+        return false;
+    }
 }

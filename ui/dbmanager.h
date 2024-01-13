@@ -115,7 +115,11 @@ public:
                                  int *is_enabled,
                                  QString *status_text,
                                  QString *payment,
-                                 QString *size_unit
+                                 QString *size_unit,
+                                 int *screen_sleep_time24h,
+                                 int *screen_wakeup_time24h,
+                                 int *buy_bottle_1,
+                                 int *buy_bottle_2
 
     );
     QString getHardwareVersion();

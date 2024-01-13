@@ -15,6 +15,7 @@
 
 #include "page_idle.h"
 #include "machine.h"
+#include "page_buybottle.h"
 #include "page_product_menu.h"
 #include "ui_page_idle.h"
 #include "page_idle_products.h"
@@ -82,10 +83,11 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     tappingBlockedUntilPrinterReply = false;
 }
 
-void page_idle::setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products, page_error_wifi *p_page_error_wifi, statusbar *p_statusbar, page_product_menu *p_page_product_menu, keyboard *p_keyboard)
+void page_idle::setPage(page_select_product *p_page_select_product, page_buyBottle *p_page_buyBottle, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products, page_error_wifi *p_page_error_wifi, statusbar *p_statusbar, page_product_menu *p_page_product_menu, keyboard *p_keyboard)
 {
     // Chained to KB Listener
     this->p_pageSelectProduct = p_page_select_product;
+    this->p_page_buyBottle = p_page_buyBottle;
     this->p_page_product_menu = p_page_product_menu;
     this->p_page_maintenance = pageMaintenance;
     this->p_page_maintenance_general = pageMaintenanceGeneral;
@@ -600,14 +602,10 @@ void page_idle::on_pushButton_to_select_product_page_clicked()
 
 void page_idle::hideCurrentPageAndShowProductMenu()
 {
-    if (thisMachine->m_template == "default_AP2")
-    {
-
-        this->hideCurrentPageAndShowProvided(p_page_product_menu, true);
-    }
-    else
-    {
-        this->hideCurrentPageAndShowProvided(p_pageSelectProduct, true);
+    if(thisMachine->hasSelectedBottle()){
+        this->hideCurrentPageAndShowProvided(p_page_buyBottle, true);
+    }else{
+        thisMachine->hasMixing() ? this->hideCurrentPageAndShowProvided(p_page_product_menu, true) : this->hideCurrentPageAndShowProvided(p_pageSelectProduct, true);
     }
 }
 

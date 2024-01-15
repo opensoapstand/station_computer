@@ -535,7 +535,6 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     double volume_dispensed_since_restock = ceil(productDispensers[slot_index].getProduct()->getVolumeDispensedSinceLastRestock());
     double volume_dispensed_total_ever = ceil(productDispensers[slot_index].getProduct()->getVolumeDispensedTotalEver());
     double volume_remaining = ceil(productDispensers[slot_index].getProduct()->getVolumeRemaining());
-
     double dispensed_volume = ceil(productDispensers[slot_index].getVolumeDispensed());
 
     double updated_volume_remaining;

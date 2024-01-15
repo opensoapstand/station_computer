@@ -143,7 +143,7 @@ void page_end::sendDispenseEndToCloud()
 
     QString units = p_page_idle->thisMachine->selectedProduct->getUnitsForSlot();
     QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl(), units, false, false);
-    QString volume_remaining = p_page_idle->thisMachine->selectedProduct->getVolumeRemainingCorrectUnits(false);
+    QString volume_remaining = p_page_idle->thisMachine->selectedProduct->getVolumeRemainingInMl();
     QString soapstand_product_serial = p_page_idle->thisMachine->selectedProduct->getProductDrinkfillSerial();
     QString promoCode = this->p_page_idle->thisMachine->getCouponCode();
     qDebug() << "Send data at finish of order : " << order_id << ". Total dispensed: " << dispensed_correct_units << "corrected units send to soapstandportal: " << dispensed_correct_units;

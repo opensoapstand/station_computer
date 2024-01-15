@@ -111,6 +111,7 @@ public:
     void setPaymentMethod(QString paymentMethod);
     QString setActivePaymentMethod(QString activePaymentMethod);
 
+    QString getVolumeRemainingInMl();
 
     // double getDiscountPercentageFraction();
     // QString getCouponCode();

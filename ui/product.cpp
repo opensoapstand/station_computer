@@ -390,6 +390,10 @@ QString product::getVolumeRemainingCorrectUnits(bool addUnits)
     return volume_as_string;
 }
 
+QString product::getVolumeRemainingInMl(){
+    return QString::number(m_volume_remaining, 'f',2);
+}
+
 QString product::getVolumeDispensedSinceRestockCorrectUnits()
 {
     QString units = getUnitsForSlot();

@@ -335,106 +335,107 @@ void page_dispenser::dispensing_end_admin()
     {
         this->cancelPayment = true;
     }
-    if(isFreeEmailOrder)
+    if (isFreeEmailOrder)
     {
         qDebug() << "Free email order";
     }
     else
     {
-        switch(paymentMethod)
+        switch (paymentMethod)
         {
-            //If payment method is Tap canada
-            case 1:
+        // If payment method is Tap canada
+        case 1:
+        {
+            if (this->cancelPayment)
             {
-                if(this->cancelPayment)
+                ui->label_indicate_active_spout->hide();
+                ui->label_to_refill->hide();
+                p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_finishTransactionMessage, "no_pay");
+                p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_CANCEL);
+                std::map<std::string, std::string> response;
+                qDebug() << "dispense end: tap payment No volume dispensed.";
+                com.page_init();
+                pktToSend = paymentPacket.reversePurchasePacket();
+                if (sendToUX410())
                 {
-                    ui->label_indicate_active_spout->hide();
-                    ui->label_to_refill->hide();
-                    p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_finishTransactionMessage, "no_pay");
-                    p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_CANCEL);
-                    std::map<std::string, std::string> response;
-                    qDebug() << "dispense end: tap payment No volume dispensed.";
-                    com.page_init();
-                    pktToSend = paymentPacket.reversePurchasePacket();
-                    if (sendToUX410())
-                    {
-                        waitForUX410();
-                        qDebug() << "Payment Reversed" << endl;
-                        pktResponded.clear();
-                        com.flushSerial();
-                    }
-                    tapPaymentObject["status"] = "Voided";
-                    p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
+                    waitForUX410();
+                    qDebug() << "Payment Reversed" << endl;
+                    pktResponded.clear();
+                    com.flushSerial();
                 }
-                else
-                {
-                    //Successful transaction. Capturing payment
-                    QString base_text = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_finishTransactionMessage, "display_price");
-                    ui->label_finishTransactionMessage->setText(base_text.arg(QString::number(current_price, 'f', 2))); // will replace %1 character in string by the provide text
-                    p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
-                    tapPaymentObject["status"] = "CAPTURED";
-                    p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
-                }
-                break;
+                tapPaymentObject["status"] = "Voided";
+                p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
             }
-            case 2:
+            else
             {
-                //If active payment method is Tap USA
-                if(this->cancelPayment)
+                // Successful transaction. Capturing payment
+                QString base_text = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_finishTransactionMessage, "display_price");
+                ui->label_finishTransactionMessage->setText(base_text.arg(QString::number(current_price, 'f', 2))); // will replace %1 character in string by the provide text
+                p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
+                tapPaymentObject["status"] = "CAPTURED";
+                p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
+            }
+            break;
+        }
+        case 2:
+        {
+            // If active payment method is Tap USA
+            if (this->cancelPayment)
+            {
+                // Reversing the payment back to the Tapped card
+                ui->label_indicate_active_spout->hide();
+                ui->label_to_refill->hide();
+                p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_finishTransactionMessage, "no_pay");
+                p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_CANCEL);
+                std::map<std::string, std::string> response;
+                qDebug() << "dispense end: tap payment No volume dispensed.";
+                if (tapPaymentObject.find("saf_num") != tapPaymentObject.end())
                 {
-                    //Reversing the payment back to the Tapped card
-                    ui->label_indicate_active_spout->hide();
-                    ui->label_to_refill->hide();
-                    p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_finishTransactionMessage, "no_pay");
-                    p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_CANCEL);
-                    std::map<std::string, std::string> response;
-                    qDebug() << "dispense end: tap payment No volume dispensed.";
-                    if (tapPaymentObject.find("saf_num") != tapPaymentObject.end())
-                    {
-                        std::cout << "Voiding transaction";
-                        qDebug() << "SAF_NUM" << QString::fromStdString(tapPaymentObject["saf_num"]);
-                        tapPaymentObject["ctrout_saf"] = tapPaymentObject["saf_num"];
-                        response = voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["saf_num"]);
-                    }
-                    else if (tapPaymentObject.find("ctroutd") != tapPaymentObject.end())
-                    {
-                        qDebug() << "CTROUTD" << QString::fromStdString(tapPaymentObject["ctroutd"]);
-                        response = voidTransaction(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["ctroutd"]);
-                        tapPaymentObject["ctrout_saf"] = tapPaymentObject["ctroutd"];
-                    }
+                    std::cout << "Voiding transaction";
+                    qDebug() << "SAF_NUM" << QString::fromStdString(tapPaymentObject["saf_num"]);
+                    tapPaymentObject["ctrout_saf"] = tapPaymentObject["saf_num"];
+                    response = voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["saf_num"]);
+                }
+                else if (tapPaymentObject.find("ctroutd") != tapPaymentObject.end())
+                {
+                    qDebug() << "CTROUTD" << QString::fromStdString(tapPaymentObject["ctroutd"]);
+                    response = voidTransaction(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["ctroutd"]);
+                    tapPaymentObject["ctrout_saf"] = tapPaymentObject["ctroutd"];
+                }
+                tapPaymentObject["amount"] = stream.str();
+                tapPaymentObject["status"] = "Voided";
+                p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
+                finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
+            }
+            else
+            {
+                QString base_text = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_finishTransactionMessage, "display_price");
+                ui->label_finishTransactionMessage->setText(base_text.arg(QString::number(current_price, 'f', 2))); // will replace %1 character in string by the provide text
+                p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
+                if (tapPaymentObject.find("ctroutd") != tapPaymentObject.end())
+                {
+                    qDebug() << "CTROUTD" << QString::fromStdString(tapPaymentObject["ctroutd"]);
+                    tapPaymentObject["ctrout_saf"] = tapPaymentObject["ctroutd"];
+                    std::map<std::string, std::string> testResponse = capture(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["ctroutd"], stream.str());
                     tapPaymentObject["amount"] = stream.str();
-                    tapPaymentObject["status"] = "Voided";
-                    p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
-                    finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
                 }
-                else
+                else if (tapPaymentObject.find("saf_num") != tapPaymentObject.end())
                 {
-                    QString base_text = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_finishTransactionMessage, "display_price");
-                    ui->label_finishTransactionMessage->setText(base_text.arg(QString::number(current_price, 'f', 2))); // will replace %1 character in string by the provide text
-                    p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
-                    if (tapPaymentObject.find("ctroutd") != tapPaymentObject.end())
-                    {
-                        qDebug() << "CTROUTD" << QString::fromStdString(tapPaymentObject["ctroutd"]);
-                        tapPaymentObject["ctrout_saf"] = tapPaymentObject["ctroutd"];
-                        std::map<std::string, std::string> testResponse = capture(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["ctroutd"], stream.str());
-                        tapPaymentObject["amount"] = stream.str();
-                    }
-                    else if (tapPaymentObject.find("saf_num") != tapPaymentObject.end())
-                    {
-                        qDebug() << "SAF_NUM" << QString::fromStdString(tapPaymentObject["saf_num"]);
-                        tapPaymentObject["ctrout_saf"] = tapPaymentObject["saf_num"];
-                        std::map<std::string, std::string> testResponse = editSaf(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["saf_num"], stream.str(), "ELIGIBLE");
-                        tapPaymentObject["amount"] = stream.str();
-                    }
-                    tapPaymentObject["status"] = "CAPTURED";
-                    p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
-                    finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
+                    qDebug() << "SAF_NUM" << QString::fromStdString(tapPaymentObject["saf_num"]);
+                    tapPaymentObject["ctrout_saf"] = tapPaymentObject["saf_num"];
+                    std::map<std::string, std::string> testResponse = editSaf(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["saf_num"], stream.str(), "ELIGIBLE");
+                    tapPaymentObject["amount"] = stream.str();
                 }
-                break;
+                tapPaymentObject["status"] = "CAPTURED";
+                p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
+                finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
             }
-            default:{
-                break;
-            }
+            break;
+        }
+        default:
+        {
+            break;
+        }
         }
     }
     // else if (this->cancelPayment && (paymentMethod == PAYMENT_TAP_USA || paymentMethod == PAYMENT_TAP_CANADA))
@@ -539,26 +540,35 @@ void page_dispenser::force_finish_dispensing()
     dispensing_end_admin();
 }
 
-QString page_dispenser::getStartDispensingCommand()
-{
-    // build up command that will be sent to fsm
-    QString command = QString::number(p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
-    command.append(p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar());
-    command.append(SEND_DISPENSE_START);
-    return command;
-}
-
 void page_dispenser::fsmSendStartDispensing()
 {
-    QString dispenseCommand = getStartDispensingCommand();
-    QString priceCommand = QString::number(p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize()));
-    QString promoCommand = p_page_idle->thisMachine->getCouponCode();
+    QString dispenseCommand = QString::number(p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
+    dispenseCommand.append(p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar());
+    dispenseCommand.append(SEND_DISPENSE_START);
+
+    QString price = QString::number(p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize()));
+    QString promoCode = p_page_idle->thisMachine->getCouponCode();
 
     QString delimiter = QString("|");
-    QString preamble = "Order";
-    QString command = preamble + delimiter + dispenseCommand + delimiter + priceCommand + delimiter + promoCommand + delimiter;
+    QString preamble = "orderDetails";
+    QString order_command = preamble + delimiter + price + delimiter + promoCode + delimiter;
+    qDebug() << "Send order details to FSM: " << order_command;
+    p_page_idle->thisMachine->dfUtility->send_command_to_FSM(order_command, true);
+    
 
-    qDebug() << "Send start command to FSM: " << command;
+    bool isCustomMix = p_page_idle->thisMachine->getSelectedProduct()->isCustomMix();
+    int pNumberSelectedProduct = p_page_idle->thisMachine->getSelectedProduct()->getPNumber();
+    QString command;
+    if (isCustomMix)
+    {
+        QString pNumbersAsCsvString = this->p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbersAsCsv();
+        QString pNumberRatiosAsCsvString = this->p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosAsCsv();
+        command = "dispenseCustomMix|" + dispenseCommand + "|" + QString::number(pNumberSelectedProduct) + "|" + pNumbersAsCsvString + "|" + pNumberRatiosAsCsvString + "|"; // dipenseMix|slot|dispensePNumber|pnumberscsv|ratioscsv
+    }
+    else
+    {
+        command = "dispensePNumber|" + dispenseCommand + "|" + QString::number(pNumberSelectedProduct) + "|"; // dispensePNumber|slot|dispensePNumber
+    }
     p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
     this->isDispensing = true;
     qDebug() << "Dispensing started.";
@@ -569,9 +579,10 @@ void page_dispenser::fsmSendStopDispensing()
     qDebug() << "Send STOP dispensing to fsm";
     this->isDispensing = false;
 
-    QString command = QString::number(p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
-    command.append(p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar());
-    command.append(SEND_DISPENSE_STOP);
+    // QString command = QString::number(p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
+    // command.append(p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar());
+    // command.append(SEND_DISPENSE_STOP);
+    QString command = "stopDispense";
     p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
 }
 
@@ -789,19 +800,22 @@ void page_dispenser::on_pushButton_abort_clicked()
         msgBox_abort = new QMessageBox();
         msgBox_abort->setObjectName("msgBox_abort");
         msgBox_abort->setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
-        switch(paymentMethod){
-            case 0:
-            case 1:
-            case 2:{
-                QString searchString = this->objectName() + "->" + msgBox_abort->objectName() + "->" + "qr_tap";
-                p_page_idle->thisMachine->setTextToObject(msgBox_abort, p_page_idle->thisMachine->getTemplateText(searchString));
-                break;
-            }
-            default:{
-                QString searchString = this->objectName() + "->" + msgBox_abort->objectName() + "->" + "default";
-                p_page_idle->thisMachine->setTextToObject(msgBox_abort, p_page_idle->thisMachine->getTemplateText(searchString));
-                break;
-            }
+        switch (paymentMethod)
+        {
+        case 0:
+        case 1:
+        case 2:
+        {
+            QString searchString = this->objectName() + "->" + msgBox_abort->objectName() + "->" + "qr_tap";
+            p_page_idle->thisMachine->setTextToObject(msgBox_abort, p_page_idle->thisMachine->getTemplateText(searchString));
+            break;
+        }
+        default:
+        {
+            QString searchString = this->objectName() + "->" + msgBox_abort->objectName() + "->" + "default";
+            p_page_idle->thisMachine->setTextToObject(msgBox_abort, p_page_idle->thisMachine->getTemplateText(searchString));
+            break;
+        }
         }
         // if (paymentMethod == PAYMENT_QR || paymentMethod == PAYMENT_TAP_USA || paymentMethod == PAYMENT_TAP_CANADA)
         // {
@@ -829,8 +843,7 @@ void page_dispenser::on_pushButton_abort_clicked()
                     msgBox_abort->deleteLater();
                     msgBox_abort = nullptr;
                 }
-                qDebug() << "msgBox_abort timed out. "; 
-                });
+                qDebug() << "msgBox_abort timed out. "; });
         timeoutTimer->start(MESSAGE_BOX_TIMEOUT_DEFAULT_MILLIS); // Set the timeout duration in milliseconds (5000 = 5 seconds)
 
         int ret = msgBox_abort->exec();
@@ -868,21 +881,23 @@ void page_dispenser::on_pushButton_problems_clicked()
         QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "shopify";
         p_page_idle->thisMachine->setTextToObject(msgBox_problems, p_page_idle->thisMachine->getTemplateText(searchString));
     }
-    switch(paymentMethod)
+    switch (paymentMethod)
     {
-        case 0:
-        case 1:
-        case 2:{
-            QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "qr_tap";
-            p_page_idle->thisMachine->setTextToObject(msgBox_problems, p_page_idle->thisMachine->getTemplateText(searchString));
-            break;
-        }
-        default:{
-            QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "default";
-            p_page_idle->thisMachine->setTextToObject(msgBox_problems, p_page_idle->thisMachine->getTemplateText(searchString));
-            break;
-        }
-        }
+    case 0:
+    case 1:
+    case 2:
+    {
+        QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "qr_tap";
+        p_page_idle->thisMachine->setTextToObject(msgBox_problems, p_page_idle->thisMachine->getTemplateText(searchString));
+        break;
+    }
+    default:
+    {
+        QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "default";
+        p_page_idle->thisMachine->setTextToObject(msgBox_problems, p_page_idle->thisMachine->getTemplateText(searchString));
+        break;
+    }
+    }
     // else if (paymentMethod == "qr" || paymentMethod == PAYMENT_TAP_USA || paymentMethod == PAYMENT_TAP_CANADA)
     // {
     //     QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "qr_tap";

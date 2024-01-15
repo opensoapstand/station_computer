@@ -612,7 +612,6 @@ void page_product_mixing::on_pushButton_order_sample_clicked()
 {
     qDebug() << "Button sample clicked";
     p_page_idle->thisMachine->getSelectedProduct()->setSelectedSize(SIZE_SAMPLE_INDEX);
-    qDebug() << p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize();
     hideCurrentPageAndShowProvided(p_page_product_freeSample);
 }
 
@@ -677,7 +676,7 @@ void page_product_mixing::additivePlusButtonsPressed(int index){
 }
 
 void page_product_mixing::on_pushButton_recommended_clicked(){
-    p_page_idle->thisMachine->getSelectedProduct()->setDefaultAdditivesRatioModifier(p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size() - 1);
+    p_page_idle->thisMachine->getSelectedProduct()->resetCustomMixRatioParameters();
     for (int j = 0; j < 5; j++){
         if(isAdditiveEnabled(j)){
             double additivePRatio = p_page_idle->thisMachine->getSelectedProduct()->getAdditivesRatioModifier(j);

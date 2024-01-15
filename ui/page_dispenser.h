@@ -75,7 +75,6 @@ public:
     // QString getCouponCodeUsed();
     // void startDispensing();
     void force_finish_dispensing();
-    QString getStartDispensingCommand();
 
     QString previousDispenseStatus;
 

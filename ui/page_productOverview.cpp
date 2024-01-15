@@ -101,10 +101,18 @@ void page_product_overview::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
+    qDebug() << "is Custom mix? : " << p_page_idle->thisMachine->getSelectedProduct()->isCustomMix();
+    QVector<double> customRatios = p_page_idle->thisMachine->getSelectedProduct()->getCustomMixRatios();
+    qDebug() << "Mixing products (includes base) ratios:";
+
+    for (int i = 0; i < customRatios.size(); i++)
+    {
+        qDebug() << QString::number(i) + " : " + QString::number(customRatios[i]);
+    }
+
     statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
-    // statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
-    statusbarLayout->addWidget(p_keyboard);    
-    statusbarLayout->setContentsMargins(14, 1374, 15, 51); // int left, int top, int right, int bottom);
+    statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
+    // statusbarLayout->addWidget(p_keyboard);    
     // p_keyboard->move(15, 1371);
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
@@ -403,9 +411,9 @@ void page_product_overview::reset_and_show_page_elements()
     case (enabled_show_keyboard):
     {
         qDebug() << "Coupon state: Show keyboard";
-        // ui->promoKeyboard->show();
-        p_keyboard->registerCallBack(std::bind(&page_product_overview::enterButtonPressed, this));
-        p_keyboard->initializeKeyboard(true, ui->lineEdit_promo_code);
+        ui->promoKeyboard->show();
+        // p_keyboard->registerCallBack(std::bind(&page_product_overview::enterButtonPressed, this));
+        // p_keyboard->initializeKeyboard(true, ui->lineEdit_promo_code);
         ui->lineEdit_promo_code->clear();
         ui->lineEdit_promo_code->show();
         p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_promo_code, "promoCode", PAGE_PRODUCT_OVERVIEW_CSS);
@@ -452,7 +460,7 @@ void page_product_overview::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 
     selectIdleTimer->stop();
     statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
-    statusbarLayout->removeWidget(p_keyboard); // Only one instance can be shown. So, has to be added/removed per page.
+    // statusbarLayout->removeWidget(p_keyboard); // Only one instance can be shown. So, has to be added/removed per page.
 
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
 }
@@ -641,43 +649,43 @@ void page_product_overview::enterButtonPressed(){
     }
 }
 
-// void page_product_overview::keyboardButtonPressed(int buttonID)
-// {
-//     QAbstractButton *buttonpressed = ui->buttonGroup->button(buttonID);
-//     QString buttonText = buttonpressed->objectName();
+void page_product_overview::keyboardButtonPressed(int buttonID)
+{
+    QAbstractButton *buttonpressed = ui->buttonGroup->button(buttonID);
+    QString buttonText = buttonpressed->objectName();
 
-//     if (buttonText == "backspace")
-//     {
-//         ui->lineEdit_promo_code->backspace();
-//     }
-//     else if (buttonText == "done")
-//     {
-//         if (m_readyToSendCoupon && p_page_idle->thisMachine->getCouponState() != enabled_processing_input)
-//         {
-//             m_readyToSendCoupon = false;
-//             qDebug() << "Done clicked, initiated apply promo.";
+    if (buttonText == "backspace")
+    {
+        ui->lineEdit_promo_code->backspace();
+    }
+    else if (buttonText == "done")
+    {
+        if (m_readyToSendCoupon && p_page_idle->thisMachine->getCouponState() != enabled_processing_input)
+        {
+            m_readyToSendCoupon = false;
+            qDebug() << "Done clicked, initiated apply promo.";
 
-//             // hack, sometimes it appears like the 'done' button code is called twice.
-//             p_page_idle->thisMachine->setCouponState(enabled_processing_input);
-//             reset_and_show_page_elements();
-//             apply_promo_code(ui->lineEdit_promo_code->text());
-//         }
-//         else
-//         {
-//             qDebug() << "ASSERT ERROR: Illegal press. Still processing other call.";
-//         }
-//     }
-//     else if (buttonText.mid(0, 3) == "num")
-//     {
-//         ui->lineEdit_promo_code->setText(ui->lineEdit_promo_code->text() + buttonText.mid(3, 1));
-//     }
-//     else
-//     {
-//         ui->lineEdit_promo_code->setText(ui->lineEdit_promo_code->text() + buttonText);
-//     }
+            // hack, sometimes it appears like the 'done' button code is called twice.
+            p_page_idle->thisMachine->setCouponState(enabled_processing_input);
+            reset_and_show_page_elements();
+            apply_promo_code(ui->lineEdit_promo_code->text());
+        }
+        else
+        {
+            qDebug() << "ASSERT ERROR: Illegal press. Still processing other call.";
+        }
+    }
+    else if (buttonText.mid(0, 3) == "num")
+    {
+        ui->lineEdit_promo_code->setText(ui->lineEdit_promo_code->text() + buttonText.mid(3, 1));
+    }
+    else
+    {
+        ui->lineEdit_promo_code->setText(ui->lineEdit_promo_code->text() + buttonText);
+    }
 
-//     qDebug() << "Promo code input field: " << ui->lineEdit_promo_code->text();
-// }
+    qDebug() << "Promo code input field: " << ui->lineEdit_promo_code->text();
+}
 
 void page_product_overview::on_pushButton_previous_page_clicked()
 {

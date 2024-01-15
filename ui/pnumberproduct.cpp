@@ -142,6 +142,10 @@ QVector<int> pnumberproduct::getMixPNumbers()
 {
     return m_mixPNumbers;
 }
+QVector<double> pnumberproduct::getMixRatios()
+{
+    return m_mixRatios;
+}
 
 void pnumberproduct::loadProductPropertiesFromDb()
 {
@@ -217,7 +221,7 @@ bool pnumberproduct::toggleSizeEnabled(int size)
 
 bool pnumberproduct::setSizeEnabled(int size, bool enabled)
 {
-    QString sizeIndexToText[7] = {"Invalid", "small", "medium", "large", "custom", "test","sample"};
+    QString sizeIndexToText[7] = {"Invalid", "small", "medium", "large", "custom", "test", "sample"};
     // m_sizeIndexIsEnabled[size] = enabled;
     qDebug() << "Size enabled" << size;
     QString column_name = QString("is_enabled_%1").arg(sizeIndexToText[size]);
@@ -318,7 +322,7 @@ double pnumberproduct::getVolumeBySize(int size)
 
 void pnumberproduct::setPrice(int size, double price)
 {
-    QString price_columns[6] = {"size_error", "price_small", "price_medium", "price_large", "price_custom","price_sample"};
+    QString price_columns[6] = {"size_error", "price_small", "price_medium", "price_large", "price_custom", "price_sample"};
     QString column_name = price_columns[size];
 
     qDebug() << "Open db: set p roduct price";
@@ -425,7 +429,7 @@ void pnumberproduct::setVolumePerTickForSlot(QString volumePerTickInput)
 void pnumberproduct::configureVolumeToSizeForSlot(QString volumeInput, int size)
 {
     double volume = inputTextToMlConvertUnits(volumeInput);
-    QString volume_columns[6] = {"invalid_size", "size_small", "size_medium", "size_large", "size_custom_max","size_sample"};
+    QString volume_columns[6] = {"invalid_size", "size_small", "size_medium", "size_large", "size_custom_max", "size_sample"};
     QString column_name = volume_columns[size];
 
     qInfo() << "Open db: size to volume";
@@ -489,7 +493,7 @@ QString pnumberproduct::getSizeAsVolumeWithCorrectUnits(int size, bool roundValu
     double v;
     double volume_oz;
     QString units;
-    
+
     v = getVolumeBySize(size);
     units = getSizeUnit();
     volume_as_string = df_util::getConvertedStringVolumeFromMl(v, units, roundValue, addUnits);
@@ -605,23 +609,88 @@ void pnumberproduct::setDispenseSpeedPercentage(int percentage)
 //     // DO  NOT USE
 //     return m_payment_deprecated;
 // }
+bool pnumberproduct::isCustomMix()
+{
+    bool isCustomMix = false;
 
-void pnumberproduct::setDefaultAdditivesRatioModifier(int size){
-    m_additivesRatioModifier.clear();
-    for(int i = 0; i < size; i++){
-        m_additivesRatioModifier.append(1);
+    for (int i = 0; i < getMixRatios().size(); i++)
+    {
+        if (m_customMixRatios[i] != getMixRatios()[i])
+        {
+            // qInfo() << "i: normal mix ratio: " << getMixRatios()[i]<< "  custom: " << m_customMixRatios[i];
+            isCustomMix = true;
+        }
+    }
+    return isCustomMix;
+}
+
+void pnumberproduct::resetCustomMixRatioParameters()
+{
+    // the mixing ratios might be altered by the user. For this we use a ratio-modifier.
+    // additives is mixPNumbers - base product.
+    m_additivesCustomMixRatioModifiers.clear();
+    for (int i = 0; i < getMixRatios().size() - 1; i++)
+    {
+        m_additivesCustomMixRatioModifiers.append(1);
+    }
+    m_customMixRatios.clear();
+    for (int i = 0; i < getMixRatios().size(); i++)
+    {
+
+        m_customMixRatios.append(getMixRatios()[i]); // add base product ratio
     }
 }
 
-void pnumberproduct::adjustAdditivesRatioModifier(int index, double additiveModifier){
-    m_additivesRatioModifier[index] = additiveModifier;
+void pnumberproduct::adjustAdditivesRatioModifier(int index, double additiveModifier)
+{
+
+    m_additivesCustomMixRatioModifiers[index] = additiveModifier;
+    setCustomMixRatios();
 }
 
 QVector<double> pnumberproduct::getAdditivesRatioModifier()
 {
-    return m_additivesRatioModifier;
+    return m_additivesCustomMixRatioModifiers;
 }
 
-double pnumberproduct::getAdditivesRatioModifier(int index){
-    return m_additivesRatioModifier[index];
+QVector<double> pnumberproduct::getCustomMixRatios()
+{
+    return m_customMixRatios;
+}
+
+void pnumberproduct::setCustomMixRatios()
+{
+    // two options:
+    //    1. keep rations e.g. 0.7,0.2,0.1 --> 0.1 become custom *2 ==> 0.2  ==> remaining 0.7+0.2 used to be 90%, but will now be 80%, so: modifier: 0.8/0.9  ==> new ratios = 62.22%,17.77%,20% ONLY WORKS FOR ONE CHANGE AT A TIME
+    //    or
+    //    2. used modifiers to change the additives percentages and use "the rest" to add with base product. e.g. 0.7,0.2,0.1   --> 0.1 becomes custom 0.2 ==> 0.2,0.2 for the addtives = 40% ==> base will be 60% now.    0.6,0.2,0.2 as end custom mix
+
+    // let's keep it simple and use method 2, always recalculate for zero.
+
+    double custom_ratios_total = 0;
+    m_customMixRatios.clear();
+    m_customMixRatios.append(getMixRatios()[0]); // add base product ratio
+    for (int i = 1; i < getMixRatios().size(); i++)
+    {
+        // go over all ADDITIVES (skip base)
+        // ratio_modifiers_total += m_additivesCustomMixRatioModifiers[i - 1];
+        double customRatio = m_additivesCustomMixRatioModifiers[i - 1] * getMixRatios()[i];
+        custom_ratios_total += customRatio;
+        m_customMixRatios.append(customRatio);
+    }
+
+    if (custom_ratios_total > 1.0)
+    {
+        qDebug() << "ERROR: too much additives added, will reset to default.";
+        resetCustomMixRatioParameters();
+    }
+    else
+    {
+        m_customMixRatios[0] = 1.0 - custom_ratios_total;
+    }
+}
+
+double pnumberproduct::getAdditivesRatioModifier(int index)
+{
+    return m_additivesCustomMixRatioModifiers[index];
 }

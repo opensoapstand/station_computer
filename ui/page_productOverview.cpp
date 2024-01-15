@@ -135,7 +135,8 @@ void page_product_overview::showEvent(QShowEvent *event)
     ui->pushButton_previous_page->setStyleSheet(styleSheet);
     ui->pushButton_continue->setStyleSheet(styleSheet);
     ui->pushButton_continue_additional->setStyleSheet(styleSheet);
-
+    ui->pushButton_continue->setEnabled(true);
+    ui->pushButton_continue_additional->setEnabled(true);
     if( p_page_idle->thisMachine->selectedProduct->getPaymentMethod()==PAYMENT_TAP_SERIAL){
         ui->pushButton_continue->raise();
         // ui->pushButton_continue_additional->show();
@@ -544,6 +545,8 @@ void page_product_overview::on_pushButton_continue(int buttonID)
 {
     qDebug() << "page_product_overview: Pay button";
     ui->pushButton_to_help->setEnabled(false);
+    ui->pushButton_continue->setEnabled(false);
+    ui->pushButton_continue_additional->setEnabled(false);
     ui->pushButton_previous_page->setEnabled(false);
     QAbstractButton *buttonpressed = ui->buttonGroup_continue->button(buttonID);
     QString buttonName = buttonpressed->accessibleName();

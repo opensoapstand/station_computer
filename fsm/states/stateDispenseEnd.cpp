@@ -56,32 +56,34 @@ DF_ERROR stateDispenseEnd::onEntry()
 
 DF_ERROR stateDispenseEnd::onAction()
 {
-    debugOutput::sendMessage("onAction Dispense End...", MSG_STATE);
-
     DF_ERROR e_ret = OK;
+    debugOutput::sendMessage("onAction Dispense End...", MSG_STATE);
+    double price = getFinalPrice();
+
+    double volume_dispensed = g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed();
+    std::string message = "finalVolumeDispensed|" + std::to_string(volume_dispensed) + "|";
+    usleep(100000); // send message delay
+    m_pMessaging->sendMessageOverIP(message, true); // send to UI
 
     g_machine.m_productDispensers[m_slot_index].stopSelectedProductDispense();
 
     // handle minimum dispensing
-    bool is_valid_dispense = g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed() >= MINIMUM_DISPENSE_VOLUME_ML;
+    bool is_valid_dispense = volume_dispensed >= MINIMUM_DISPENSE_VOLUME_ML;
 
     if (!is_valid_dispense)
     {
         g_machine.m_productDispensers[m_slot_index].resetSelectedProductVolumeDispensed();
 
-        debugOutput::sendMessage("Not a valid dispense. Volume set to zero. " + std::to_string(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed()), MSG_STATE);
+        debugOutput::sendMessage("Not a valid dispense. Volume set to zero. " + std::to_string(volume_dispensed), MSG_STATE);
     }
 
     // send dispensed volume to ui (will be used to write to portal)
-    usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
 
     if (g_machine.m_productDispensers[m_slot_index].isSelectedProductVolumeTargetReached())
     {
         usleep(100000);                                      // send message delay (pause from previous message) desperate attempt to prevent crashes
         m_pMessaging->sendMessageOverIP("Target Hit", true); // send to UI
     }
-    // send dispensed volume to ui (will be used to write to portal)
-    usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
 
     // bool empty_stock_detected = false;
     // // handle empty container detection
@@ -93,18 +95,15 @@ DF_ERROR stateDispenseEnd::onAction()
     // adjust to nearest lower fixed volume if less dispensed than requested
     adjustSizeToDispensedVolume();
 
-    // crash test ok until here.
     // SIZE_TEST_CHAR is sent during Maintenance Mode dispenses - we do not want to record these in the transaction database, or print receipts...
     if (g_machine.m_productDispensers[m_slot_index].getSelectedSizeAsChar() == SIZE_TEST_CHAR)
     {
-        // debugOutput::sendMessage("Not a transaction: Test dispensing. (" + to_string(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed()) + "ml).", MSG_INFO);
+        // debugOutput::sendMessage("Not a transaction: Test dispensing. (" + to_string(volume_dispensed) + "ml).", MSG_INFO);
         // dispenseEndUpdateDB(false); // update the db dispense statistics
     }
     else if (!is_valid_dispense)
     {
-        debugOutput::sendMessage("Not a transaction: No minimum quantity of product dispensed (" + to_string(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed()) + "ml). ", MSG_INFO);
-
-        // check for technical problems
+        debugOutput::sendMessage("Not a transaction: No minimum quantity of product dispensed (" + to_string(volume_dispensed) + "ml). ", MSG_INFO);
         dispenseEndUpdateDB(false); // update the db dispense statistics
     }
     else
@@ -118,8 +117,7 @@ DF_ERROR stateDispenseEnd::onAction()
 #ifdef ENABLE_TRANSACTION_TO_CLOUD
 
         std::string paymentMethod = g_machine.getPaymentMethod();
-
-        double price = getFinalPrice();
+        
         if (paymentMethod == "qr" && price != 0.0)
         {
             // these transactions are dealt with in the UI
@@ -136,16 +134,11 @@ DF_ERROR stateDispenseEnd::onAction()
 #endif
     }
 
-    double price = getFinalPrice();
     debugOutput::sendMessage("Post dispense final price: " + to_string(price), MSG_INFO);
-    double volume = g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed();
-    std::string message = "finalVolumeDispensed|" + std::to_string(volume) + "|";
-    m_pMessaging->sendMessageOverIP(message, true); // send to UI
+
 
     // send dispensed volume to ui (will be used to write to portal)
-    usleep(1000000); // send message delay (pause from previous message) desperate attempt to prevent crashes
     m_state_requested = STATE_IDLE;
-    usleep(100000);                                           // often the transaction end command is sent too quickly to the ui.
     m_pMessaging->sendMessageOverIP("Transaction End", true); // send to UI
 
     return e_ret;

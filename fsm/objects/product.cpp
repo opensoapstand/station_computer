@@ -24,13 +24,14 @@ product::product()
 
 product::~product()
 {
+    debugOutput::sendMessage("product: ~product", MSG_INFO);
 }
 
-void product::init(int pnumber, string size_unit, string paymentMethod)
+void product::init(int pnumber)
 {
     m_pnumber = pnumber;
-    m_display_unit = size_unit;
-    m_paymentMethod = paymentMethod;
+    // m_display_unit = size_unit;
+    // m_paymentMethod = paymentMethod;
     this->loadParameters();
 }
 
@@ -53,7 +54,7 @@ int product::getBasePNumber()
 {
     if (!isMixingProduct())
     {
-        if (m_mix_pnumbers_count == 1)
+        if (m_mix_pnumbers_count == 1) // if exactly one mix_pnumber, we consider it the base
         {
             return m_mix_pnumbers[0];
         }
@@ -225,7 +226,7 @@ void product::registerFlowSensorTickFromInterrupt()
 {
     // tick from flowsensor interrupt will increase dispensed volume.
     // cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
-    debugOutput::sendMessage("Product: Interrupt poll TICK from pcb." + getPNumberAsPString(), MSG_INFO);
+    debugOutput::sendMessage("Product: Interrupt TICK from pcb." + getPNumberAsPString(), MSG_INFO);
     m_nVolumeDispensed += getVolumePerTick() * m_concentration_multiplier;
 }
 
@@ -246,6 +247,10 @@ double product::getProductVolumeDispensedTotalEver()
 double product::getProductVolumeDispensedSinceLastRestock()
 {
     return m_nVolumeDispensedSinceRestock;
+}
+
+char product::getTargetVolumeAsChar(){
+    return getSizeCharFromTargetVolume(m_nVolumeTarget);
 }
 
 char product::getSizeCharFromTargetVolume(double volume)
@@ -391,10 +396,10 @@ double product::getPrice(char size)
     }
 }
 
-string product::getPaymentMethod()
-{
-    return m_paymentMethod;
-}
+// string product::getPaymentMethod()
+// {
+//     return m_paymentMethod;
+// }
 bool product::getIsEnabled()
 {
     return this->m_is_enabled;
@@ -458,18 +463,18 @@ int product::sizeCharToSizeIndex(char size)
     return size_index;
 }
 
-string product::getDisplayUnits()
-{
-    return m_display_unit;
-}
+// string product::getDisplayUnits()
+// {
+//     return m_display_unit;
+// }
 
-string product::getFinalPLU(char size, double price)
+string product::getFinalPLU(char size, double price, string paymentMethod)
 {
 
     string base_plu = getBasePLU(size);
     char chars_plu_dynamic_formatted[MAX_BUF];
 
-    std::string paymentMethod = getPaymentMethod();
+    // std::string paymentMethod = getPaymentMethod();
     if (paymentMethod == "plu")
     {
         return base_plu;
@@ -540,26 +545,26 @@ string product::getFinalPLU(char size, double price)
     return base_plu;
 }
 
-double product::convertVolumeMetricToDisplayUnits(double volume)
-{
-    double converted_volume;
+// double product::convertVolumeMetricToDisplayUnits(double volume)
+// {
+//     double converted_volume;
 
-    if (getDisplayUnits() == "oz")
-    {
+//     if (getDisplayUnits() == "oz")
+//     {
 
-        converted_volume = volume * ML_TO_OZ;
-    }
-    else if (getDisplayUnits() == "g")
-    {
+//         converted_volume = volume * ML_TO_OZ;
+//     }
+//     else if (getDisplayUnits() == "g")
+//     {
 
-        converted_volume = volume * 1;
-    }
-    else
-    {
-        converted_volume = volume;
-    }
-    return converted_volume;
-}
+//         converted_volume = volume * 1;
+//     }
+//     else
+//     {
+//         converted_volume = volume;
+//     }
+//     return converted_volume;
+// }
 
 int product::getRetractionTimeMillis()
 {
@@ -817,6 +822,7 @@ bool product::loadParameters()
     bool success = true;
     if (getPNumber() != CUSTOM_MIX_PNUMBER)
     {
+        debugOutput::sendMessage("Product: Data loading for product: " + to_string(getPNumber()), MSG_INFO);
         success &= loadProductParametersFromDb();
         loadProductPropertiesFromCsv();
     }else{

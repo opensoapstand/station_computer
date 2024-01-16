@@ -25,6 +25,7 @@
 #include <sys/socket.h>
 #include <string>
 #include <unistd.h>
+#include "../../library/printer/Adafruit_Thermal.h"
 
 #define DELAY_USEC 1
 
@@ -34,7 +35,7 @@ bool messageMediator::m_fExitThreads = false;
 bool messageMediator::m_bCommandStringReceived = false;
 string messageMediator::m_receiveStringBuffer;
 string messageMediator::m_processCommand;
-int messageMediator::m_RequestedProductIndexInt;
+int messageMediator::m_requested_slot;
 int messageMediator::m_nSolenoid;
 char messageMediator::m_requestedAction;
 int messageMediator::m_commandValue;
@@ -186,6 +187,68 @@ void messageMediator::setMachine(machine *machine)
       }
       this->m_machine = machine;
    }
+}
+
+void messageMediator::sendPrinterStatus()
+{
+   debugOutput::sendMessage("af;ldoeofoeflodleodloelodeolode.", MSG_INFO);
+   if (!m_machine->getPcb24VPowerSwitchStatus())
+   {
+      m_machine->pcb24VPowerSwitch(true); // printers take their power from the 24V converted to 5V (because of the high current)
+      // usleep(1200000);                   // wait for printer to come online.
+      printerr->resetPollCount();
+   }
+
+   bool isOnline;
+   bool hasPaper;
+   debugOutput::sendMessage("af;eja;fuaeijfaesiofj.", MSG_INFO);
+   getPrinterStatus(&isOnline, &hasPaper);
+
+   string statusString;
+   if (isOnline)
+   {
+      if (hasPaper)
+      {
+         statusString = "printerstatus11";
+      }
+      else
+      {
+         statusString = "printerstatus10";
+      }
+   }
+   else
+   {
+      statusString = "printerstatus00";
+   }
+
+   sendMessageOverIP(statusString, true); // send to UI // if commented out: Let's communicate by setting the db fields only
+   m_machine->pcb24VPowerSwitch(false);
+}
+
+void messageMediator::getPrinterStatus(bool *r_isOnline, bool *r_hasPaper)
+{
+   bool isOnline = printerr->testComms(); // first call returns always "online"
+   isOnline = printerr->testComms();      // first call returns always "online"
+
+   bool hasPaper = false;
+
+   if (isOnline)
+   {
+      hasPaper = printerr->hasPaper();
+   }
+
+   if (printerr->getPollCountLimitReached())
+   {
+
+      printerr->resetPollCount();
+      debugOutput::sendMessage("Pollcount LIMIT REACHED. Will restart Printer ", MSG_INFO);
+      m_machine->pcb24VPowerSwitch(false);
+      usleep(1200000); // 2000000ok //1500000ok //1200000ok //1000000nok
+      m_machine->pcb24VPowerSwitch(true);
+      // usleep(2000000); //1000000
+   }
+   *r_isOnline = r_isOnline;
+   *r_hasPaper = hasPaper;
 }
 
 // Sends a progress of dispensing to QT through a socket
@@ -475,11 +538,7 @@ DF_ERROR messageMediator::parseCommandString()
       m_machine->pcb3point3VPowerSwitch(switchPcbOnElseOff);
       m_requestedAction = ACTION_NO_ACTION;
    }
-   else if (sCommand.find("stopDispense") != string::npos)
-   {
-      debugOutput::sendMessage("Action: Abort Dispense Request", MSG_INFO);
-      m_requestedAction = ACTION_DISPENSE_END;
-   }
+
    else if (sCommand.find("DispenseButtonLights") != string::npos)
    {
       // simple is alive command will reset to idle state
@@ -499,6 +558,11 @@ DF_ERROR messageMediator::parseCommandString()
          m_machine->setButtonLightsBehaviour(Button_lights_behaviour::IDLE_OFF);
       }
       m_requestedAction = ACTION_NO_ACTION;
+   }
+   else if (sCommand.find("stopDispense") != string::npos)
+   {
+      debugOutput::sendMessage("Action: Abort Dispense Request", MSG_INFO);
+      m_requestedAction = ACTION_DISPENSE_END;
    }
    else if (sCommand.find("dispenseCustomMix") != string::npos)
    {
@@ -561,11 +625,11 @@ DF_ERROR messageMediator::parseCommandString()
       parseDispenseCommand(dispenseCommand);
 
       std::string pNumberDispenseProduct_str = sCommand.substr(found1 + 1, found2 - found1 - 1);
-      debugOutput::sendMessage("Selected Dispense PNumber : " + pNumberDispenseProduct_str, MSG_INFO);
 
       int pNumberDispenseProduct = std::stoi(pNumberDispenseProduct_str);
 
       m_machine->m_productDispensers[getRequestedSlot() - 1].setSelectedProduct(pNumberDispenseProduct);
+      debugOutput::sendMessage("Selected Dispense PNumber (for slot " + to_string(getRequestedSlot()) + " ): " + to_string(m_machine->m_productDispensers[getRequestedSlot() - 1].getSelectedPNumber()), MSG_INFO);
    }
    else if (sCommand.find("orderDetails") != string::npos)
    {
@@ -592,7 +656,7 @@ DF_ERROR messageMediator::parseCommandString()
       }
       m_promoCode = promoCode;
       debugOutput::sendMessage("Promo code" + m_promoCode, MSG_INFO);
-
+      m_requestedAction = ACTION_NO_ACTION;
    }
    // else if (sCommand.find("Order") != string::npos)
    // {
@@ -647,11 +711,42 @@ DF_ERROR messageMediator::parseCommandString()
    {
       m_requestedAction = ACTION_UI_COMMAND_PRINTER_MENU;
    }
+   else if (sCommand.find("getThermalprinterStatus") != string::npos)
+   {
+      // debugOutput::sendMessage("Printer status request received.", MSG_INFO);
+      // sendPrinterStatus();
+      m_requestedAction = ACTION_UI_COMMAND_PRINTER_SEND_STATUS;
+   }
+   else if (sCommand.find("thermalprinterPrintTest") != string::npos)
+   {
+      // debugOutput::sendMessage("Printer status request received.", MSG_INFO);
+      // sendPrinterStatus();
+      m_requestedAction = ACTION_UI_COMMAND_TEST_PRINT;
+   }
+   else if (sCommand.find("thermalprinterPrintTransaction") != string::npos)
+   {
+      // debugOutput::sendMessage("Printer status request received.", MSG_INFO);
+      // sendPrinterStatus();
+
+      debugOutput::sendMessage("Print transaction command received", MSG_INFO);
+      std::string delimiter = "|";
+      std::size_t found0 = sCommand.find(delimiter);
+      std::size_t found1 = sCommand.find(delimiter, found0 + 1);
+
+      debugOutput::sendMessage(to_string(found0), MSG_INFO);
+      debugOutput::sendMessage(to_string(found1), MSG_INFO);
+
+      std::string id = sCommand.substr(found0 + 1, found1 - found0 - 1);
+      int transaction_id = std::stoi(id);
+      debugOutput::sendMessage("Transaction id: " + to_string(transaction_id), MSG_INFO);
+
+      m_requestedAction = ACTION_UI_COMMAND_PRINT_TRANSACTION;
+      m_commandValue = transaction_id;
+   }
    else if (
        // other commands
        first_char == ACTION_MANUAL_PUMP_PWM_SET ||
-       first_char == ACTION_MANUAL_PUMP_SET ||
-       first_char == ACTION_PRINT_TRANSACTION)
+       first_char == ACTION_MANUAL_PUMP_SET)
    {
       m_requestedAction = first_char;
       std::string number = sCommand.substr(1, sCommand.size());
@@ -740,7 +835,7 @@ void messageMediator::resetAction()
 void messageMediator::setDispenseCommandToDummy()
 {
    m_requestedAction = ACTION_DUMMY;
-   m_RequestedProductIndexInt = PRODUCT_SLOT_DUMMY;
+   m_requested_slot = PRODUCT_SLOT_DUMMY;
    m_requestedSize = SIZE_DUMMY;
 }
 
@@ -756,7 +851,7 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
    char volumeChar = SIZE_DUMMY;
 
    m_requestedAction = ACTION_DUMMY;
-   m_RequestedProductIndexInt = PRODUCT_SLOT_DUMMY;
+   m_requested_slot = PRODUCT_SLOT_DUMMY;
    m_requestedSize = SIZE_DUMMY;
 
    // if (isdigit(sCommand[0]))
@@ -788,63 +883,63 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
    {
    case PRODUCT_DUMMY:
    {
-      m_RequestedProductIndexInt = PRODUCT_SLOT_DUMMY;
+      m_requested_slot = PRODUCT_SLOT_DUMMY;
       debugOutput::sendMessage("Invalid product char.", MSG_INFO);
       e_ret = OK;
       break;
    }
    case '1':
    {
-      m_RequestedProductIndexInt = 1;
+      m_requested_slot = 1;
       debugOutput::sendMessage("Product from slot 1 requested", MSG_INFO);
       e_ret = OK;
       break;
    }
    case '2':
    {
-      m_RequestedProductIndexInt = 2;
+      m_requested_slot = 2;
       debugOutput::sendMessage("Product from slot 2 requested", MSG_INFO);
       e_ret = OK;
       break;
    }
    case '3':
    {
-      m_RequestedProductIndexInt = 3;
+      m_requested_slot = 3;
       debugOutput::sendMessage("Product from slot 3 requested", MSG_INFO);
       e_ret = OK;
       break;
    }
    case '4':
    {
-      m_RequestedProductIndexInt = 4;
+      m_requested_slot = 4;
       debugOutput::sendMessage("Product from slot 4 requested", MSG_INFO);
       e_ret = OK;
       break;
    }
    case '5':
    {
-      m_RequestedProductIndexInt = 5;
+      m_requested_slot = 5;
       debugOutput::sendMessage("Product from slot 5 requested", MSG_INFO);
       e_ret = OK;
       break;
    }
    case '6':
    {
-      m_RequestedProductIndexInt = 6;
+      m_requested_slot = 6;
       debugOutput::sendMessage("Product from slot 6 requested", MSG_INFO);
       e_ret = OK;
       break;
    }
    case '7':
    {
-      m_RequestedProductIndexInt = 7;
+      m_requested_slot = 7;
       debugOutput::sendMessage("Product from slot 7 requested", MSG_INFO);
       e_ret = OK;
       break;
    }
    case '8':
    {
-      m_RequestedProductIndexInt = 8;
+      m_requested_slot = 8;
       debugOutput::sendMessage("Product from slot 8 requested", MSG_INFO);
       e_ret = OK;
       break;

@@ -89,9 +89,11 @@ public:
     QTimer *userRoleTimeOutTimer;
     int _userRoleTimeOutTimerSec;
     QTimer *rebootNightlyTimeOutTimer;
+    int _rebootNightlyTimeOutTimerSec;
     QTime *currentTime;
     QTimer *pingTapDeviceTimer;
-    int _rebootNightlyTimeOutTimerSec;
+    QTimer *receiptPrinterFeedBackTimer;
+    int _receiptPrinterFeedBackTimerSec;
     int _millisecondsUntilSetTime;
     int _delaytime_seconds;
 
@@ -110,6 +112,8 @@ private slots:
     void on_pushButton_test_clicked();
     void onUserRoleTimeOutTimerTick();
     void onRebootNightlyTimeOutTimerTick();
+    void onReceiptPrinterFeedBackTimerTick();
+
     void on_pushButton_reboot_nightly_clicked();
     void pingTapDevice();
     void rebootTapDevice();
@@ -125,7 +129,7 @@ private:
     keyboard *p_keyboard;
     QString idle_page_type;
 
-    bool tappingBlockedUntilPrinterReply;
+    bool m_tappingBlockedUntilPrinterReply;
 
     QVBoxLayout *statusbarLayout; 
     

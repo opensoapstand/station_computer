@@ -154,7 +154,7 @@ void page_select_product::displayProducts()
     // for (uint8_t option_index = 0; option_index < p_page_idle->thisMachine->getOptionCount(); option_index++)
     {
 
-        int option_index = (DISPENSE_PRODUCTS_PER_BASE_LINE_MAX * slot_index);
+        int option_index = (DISPENSE_PRODUCTS_PER_BASE_LINE_MAX * slot_index); // option menu has more drinks, we need to take that into account
         qDebug() << "Page select. Set up option: " << option_index + 1;
         QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_SELECT_PRODUCT_CSS);
 
@@ -262,7 +262,7 @@ void page_select_product::displayProducts()
         {
             labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
         }
-        else if (!(p_page_idle->thisMachine->isProductVolumeInContainer(p_page_idle->thisMachine->getProductFromMenuOption(slot_index + 1)->getPNumber())))
+        else if (!(p_page_idle->thisMachine->isProductVolumeInContainer(p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getPNumber())))
         {
 
             labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->empty"));
@@ -310,19 +310,19 @@ void page_select_product::select_product(int option)
 // FIXME: This is terrible...no time to make array reference to hold button press functions
 void page_select_product::on_pushButton_selection1_clicked()
 {
-    select_product(1);
+    select_product(DISPENSE_PRODUCTS_PER_BASE_LINE_MAX *0 + 1 );
 }
 void page_select_product::on_pushButton_selection2_clicked()
 {
-    select_product(2);
+    select_product(DISPENSE_PRODUCTS_PER_BASE_LINE_MAX *1 + 1);
 }
 void page_select_product::on_pushButton_selection3_clicked()
 {
-    select_product(3);
+    select_product(DISPENSE_PRODUCTS_PER_BASE_LINE_MAX *2 + 1);
 }
 void page_select_product::on_pushButton_selection4_clicked()
 {
-    select_product(4);
+    select_product(DISPENSE_PRODUCTS_PER_BASE_LINE_MAX *3 + 1);
 }
 
 void page_select_product::onProductPageTimeoutTick()

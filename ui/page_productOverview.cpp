@@ -634,7 +634,7 @@ void page_product_overview::apply_promo_code(QString promocode)
                 if (http_code == 200)
                 {
                     json coupon_obj = json::parse(readBuffer);
-                    if (coupon_obj["active"])
+                    if (coupon_obj["active"] && coupon_obj["discount_amount"]!=0)
                     {
                         qDebug() << "Backend coupon response: Valid. Discount percentage: " << new_percent;
                         new_percent = coupon_obj["discount_amount"];

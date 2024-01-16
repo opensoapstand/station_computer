@@ -579,6 +579,7 @@ void machine::resetCouponDiscount()
     m_min_threshold_vol_ml_discount = "0";
     m_max_threshold_vol_ml_discount = "0";
     m_max_dollar_amount_discount = "0";
+    setCouponCode("");
 }
 
 double machine::getDiscountPercentageFraction()
@@ -1150,6 +1151,11 @@ void machine::setAllowedPaymentMethods(ActivePaymentMethod paymentMethod)
 QString machine::getMachineId()
 {
     return m_machine_id;
+}
+
+QString machine::getMachineLocation()
+{
+    return m_location;
 }
 
 QString machine::getClientId()

@@ -75,6 +75,7 @@ public:
     double getPriceCorrected(int pnumber);
 
     QString getMachineId();
+    QString getMachineLocation();
     QString getPaymentMethod();
     void setPaymentMethod(QString paymentMethod);
     bool getCouponsEnabled();

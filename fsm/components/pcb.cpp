@@ -268,12 +268,24 @@ bool pcb::getMCP23017Input(uint8_t slot, int posIndex, uint8_t GPIORegister)
     return (ReadByte(get_MCP23017_address_from_slot(slot), GPIORegister) & (1 << posIndex));
 }
 
-void pcb::outputMCP23017IORegisters(uint8_t slot){
-     uint8_t register_gpioA_value = getMCP23017Register(1, MCP23017_REGISTER_GPA);
-    uint8_t register_gpioB_value = getMCP23017Register(1, MCP23017_REGISTER_GPB);
-    std::bitset<8> binaryA(register_gpioA_value);
-    std::bitset<8> binaryB(register_gpioB_value);
-    debugOutput::sendMessage("Pcb: MCP23017 status for slot: " + std::to_string(slot) + " GPA : " + binaryA.to_string() + " GPB : " + binaryB.to_string(), MSG_INFO);
+void pcb::outputMCP23017IORegisters(uint8_t slot)
+{
+    switch (pcb_version)
+    {
+
+    case EN258_4SLOTS:
+    case EN258_8SLOTS:
+    {
+
+        uint8_t register_gpioA_value = getMCP23017Register(1, MCP23017_REGISTER_GPA);
+        uint8_t register_gpioB_value = getMCP23017Register(1, MCP23017_REGISTER_GPB);
+        std::bitset<8> binaryA(register_gpioA_value);
+        std::bitset<8> binaryB(register_gpioB_value);
+        debugOutput::sendMessage("Pcb: MCP23017 status for slot: " + std::to_string(slot) + " GPA : " + binaryA.to_string() + " GPB : " + binaryB.to_string(), MSG_INFO);
+    }
+    break;
+    default:;
+    }
 }
 
 void pcb::setMCP23017Output(uint8_t slot, int posIndex, bool onElseOff, uint8_t GPIORegister)
@@ -321,7 +333,9 @@ void pcb::pcb_refresh()
         dispenseButtonRefresh();
         refreshFlowSensors();
         // independentDispensingRefresh(); // ATTENTION:  this is the state machine. involves more than just pumps....
-    }else{
+    }
+    else
+    {
 
         usleep(5000000);
         debugOutput::sendMessage("ASSERT ERROR: PCB not detected. Replace pcb? i2c working correctly?", MSG_ERROR);
@@ -794,7 +808,7 @@ void pcb::initialize_pcb()
     }
     break;
     }
-    
+
     setFlowSensorTypeDefaults();
     flowSensorsDisableAll();
     debugOutput::sendMessage("pcb initialized. version: " + toString(pcb_version), MSG_INFO);
@@ -1483,7 +1497,7 @@ void pcb::setFlowSensorType(uint8_t slot, FlowSensorType sensorType)
 void pcb::registerFlowSensorTickCallback(int slot, std::function<void()> callback)
 {
 
-    flowSensorTickCallbacks[slot-1] = callback;
+    flowSensorTickCallbacks[slot - 1] = callback;
 }
 
 void pcb::pollFlowSensor(uint8_t slot)
@@ -2209,43 +2223,38 @@ void pcb::setAdditiveSolenoid(uint8_t slot, int additivePosition, bool onElseOff
     case (EN258_4SLOTS):
     case (EN258_8SLOTS):
     {
-        switch(additivePosition){
-            case(1):
-            {
-                    setSolenoidFromArray(slot, EN258_SOLENOID_ADDITIVE_1, onElseOff);
-
-            }
-            break;
-            case(2):
-            {
-                    setSolenoidFromArray(slot, EN258_SOLENOID_ADDITIVE_2, onElseOff);
-
-            }
-            break;
-            case(3):
-            {
-                    setSolenoidFromArray(slot, EN258_SOLENOID_ADDITIVE_3, onElseOff);
-
-            }
-            break;
-            case(4):
-            {
-                    setSolenoidFromArray(slot, EN258_SOLENOID_ADDITIVE_4, onElseOff);
-
-            }
-            break;
-            case(5):
-            {
-                    setSolenoidFromArray(slot, EN258_SOLENOID_ADDITIVE_5, onElseOff);
-
-            }
-            break;
-            default:
-            {
-                   debugOutput::sendMessage("Pcb: Additive position not available." + std::to_string(additivePosition), MSG_ERROR);
-
-            }
-            break;
+        switch (additivePosition)
+        {
+        case (1):
+        {
+            setSolenoidFromArray(slot, EN258_SOLENOID_ADDITIVE_1, onElseOff);
+        }
+        break;
+        case (2):
+        {
+            setSolenoidFromArray(slot, EN258_SOLENOID_ADDITIVE_2, onElseOff);
+        }
+        break;
+        case (3):
+        {
+            setSolenoidFromArray(slot, EN258_SOLENOID_ADDITIVE_3, onElseOff);
+        }
+        break;
+        case (4):
+        {
+            setSolenoidFromArray(slot, EN258_SOLENOID_ADDITIVE_4, onElseOff);
+        }
+        break;
+        case (5):
+        {
+            setSolenoidFromArray(slot, EN258_SOLENOID_ADDITIVE_5, onElseOff);
+        }
+        break;
+        default:
+        {
+            debugOutput::sendMessage("Pcb: Additive position not available." + std::to_string(additivePosition), MSG_ERROR);
+        }
+        break;
         }
     }
     break;

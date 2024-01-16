@@ -32,6 +32,7 @@ stateDispense::stateDispense(messageMediator *message)
 // DTOR
 stateDispense::~stateDispense()
 {
+    debugOutput::sendMessage("stateDispense: ~stateDispense", MSG_INFO);
 }
 
 // Overload for Debugger output

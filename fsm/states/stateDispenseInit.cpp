@@ -27,6 +27,7 @@ stateDispenseInit::stateDispenseInit(messageMediator *message)
 // DTOR
 stateDispenseInit::~stateDispenseInit()
 {
+    debugOutput::sendMessage("stateDispenseInit: ~stateDispenseInit", MSG_INFO);
 }
 
 // Overload for Debugger output

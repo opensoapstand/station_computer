@@ -206,6 +206,11 @@ product *dispenser::getSelectedProduct()
     return getProductFromPNumber(m_selected_pnumber);
 }
 
+int dispenser::getSelectedPNumber()
+{
+    return m_selected_pnumber;
+}
+
 void dispenser::setAdditiveFromPositionAsSingleDispenseSelectedProduct(int position)
 {
     int pnumber = getAdditivePNumber(position);
@@ -377,10 +382,6 @@ product *dispenser::getActiveProduct()
     return getProductFromPNumber(m_active_pnumber);
 }
 
-int dispenser::getSelectedPNumber()
-{
-    return m_selected_pnumber;
-}
 
 int dispenser::getActivePNumber()
 {

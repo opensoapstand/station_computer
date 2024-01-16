@@ -33,6 +33,7 @@ stateManualPrinter::stateManualPrinter(messageMediator *message)
 stateManualPrinter::~stateManualPrinter()
 {
    // delete stuff
+   debugOutput::sendMessage("stateManualPrinter: ~stateManualPrinter", MSG_INFO);
 }
 
 // Overload for Debugger output

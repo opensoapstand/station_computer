@@ -193,7 +193,7 @@ void page_dispenser::showEvent(QShowEvent *event)
             x = 880;
             break;
         }
-        ui->label_indicate_active_spout->move(x, 980);
+        ui->label_indicate_active_spout->move(x, 1600);
         // ui->label_indicate_active_spout->move(x, ui->label_indicate_active_spout->y());
     }
     else

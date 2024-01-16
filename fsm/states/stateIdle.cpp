@@ -35,6 +35,7 @@ stateIdle::stateIdle(messageMediator *message)
 stateIdle::~stateIdle()
 {
    // delete stuff
+   debugOutput::sendMessage("stateIdle: ~stateIdle", MSG_INFO);
 }
 
 // Overload for Debugger output

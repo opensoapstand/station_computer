@@ -24,6 +24,7 @@ product::product()
 
 product::~product()
 {
+    debugOutput::sendMessage("product: ~product", MSG_INFO);
 }
 
 void product::init(int pnumber, string size_unit, string paymentMethod)
@@ -53,7 +54,7 @@ int product::getBasePNumber()
 {
     if (!isMixingProduct())
     {
-        if (m_mix_pnumbers_count == 1)
+        if (m_mix_pnumbers_count == 1) // if exactly one mix_pnumber, we consider it the base
         {
             return m_mix_pnumbers[0];
         }

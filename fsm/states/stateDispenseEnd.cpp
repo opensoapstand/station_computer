@@ -112,7 +112,6 @@ DF_ERROR stateDispenseEnd::onAction()
         debugOutput::sendMessage("Normal transaction.", MSG_INFO);
         e_ret = handleTransactionPayment();
 
-        debugOutput::sendMessage("Normal transaction end handling.", MSG_INFO);
         dispenseEndUpdateDB(true);
 
 #define ENABLE_TRANSACTION_TO_CLOUD
@@ -259,15 +258,13 @@ DF_ERROR stateDispenseEnd::handleTransactionPayment()
     }
     else if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13" || paymentMethod == "barcode_EAN-2" || paymentMethod == "plu")
     {
-        debugOutput::sendMessage("Printing receipt:", MSG_INFO);
+        debugOutput::sendMessage("Print receipt:", MSG_INFO);
         setup_and_print_receipt();
-        debugOutput::sendMessage("Done printing receipt.", MSG_INFO);
     }
     else
     {
         debugOutput::sendMessage("WARNING: No payment method detected.", MSG_INFO);
     }
-    debugOutput::sendMessage("taeijesijf: ." + e_ret, MSG_INFO);
     return e_ret;
 }
 
@@ -673,7 +670,6 @@ double stateDispenseEnd::getFinalPrice()
 void stateDispenseEnd::setup_and_print_receipt()
 {
 
-    // printerr.connectToPrinter();
     char chars_cost[MAX_BUF];
     char chars_volume_formatted[MAX_BUF];
     char chars_price_per_ml_formatted[MAX_BUF];
@@ -683,7 +679,6 @@ void stateDispenseEnd::setup_and_print_receipt()
     std::string paymentMethod = g_machine.getPaymentMethod();
     std::string name_receipt = (g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getProductName());
 
-    // std::string units = (g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getDisplayUnits());
     std::string units =  g_machine.getSizeUnit();
     double price = getFinalPrice();
     double price_per_ml;
@@ -805,10 +800,10 @@ void stateDispenseEnd::setup_and_print_receipt()
 
     strftime(now, 50, "%F %T", timeinfo);
 
-    machine tmp;
+    // machine tmp;
     string promoCode = m_pMessaging->getCouponCode();
     debugOutput::sendMessage("Price changed to " + receipt_cost, MSG_INFO);
-    tmp.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, now, units, paymentMethod, plu, promoCode, true);
+    g_machine.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, now, units, paymentMethod, plu, promoCode, true);
     // for (int i = 0; i < 100; i++)
     // {
     //     debugOutput::sendMessage("End receipt print from end dispense.", MSG_INFO);

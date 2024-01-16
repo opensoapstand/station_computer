@@ -105,7 +105,7 @@ dispenser::dispenser()
 
 dispenser::~dispenser()
 {
-    debugOutput::sendMessage("Dispenser: ~dispenser (destroyed)", MSG_INFO);
+    debugOutput::sendMessage("Dispenser: ~dispenser " + to_string(getSlot()) + "(destroyed)", MSG_INFO);
 
     delete m_pcb;
     m_pcb = nullptr;
@@ -362,7 +362,6 @@ void dispenser::setActiveProduct(int pnumber)
 char dispenser::getSelectedSizeAsChar()
 {
     return getSelectedProduct()->getTargetVolumeAsChar();
-    
 }
 
 double dispenser::getSelectedSizeAsVolume()
@@ -382,7 +381,6 @@ product *dispenser::getActiveProduct()
     // active products cannot be dispenseProducts (if the dispense product is not the same as a base or additive) e.g. ginger kombucha is not dispensable, its components (base kombucha, addtives: suger, ginger flavor) are.
     return getProductFromPNumber(m_active_pnumber);
 }
-
 
 int dispenser::getActivePNumber()
 {
@@ -714,7 +712,7 @@ DF_ERROR dispenser::stopActivePNumberDispense()
     debugOutput::sendMessage("Dispenser: Stop Active PNumber dispense " + to_string(getActivePNumber()), MSG_INFO);
 
     setActiveProductSolenoid(false);
-    
+
     m_pcb->flowSensorsDisableAll();
 }
 
@@ -739,10 +737,14 @@ void dispenser::linkDispenserFlowSensorTick()
 
 void dispenser::registerFlowSensorTickFromPcb()
 {
-    getActiveProduct()->registerFlowSensorTickFromPcb();
-    if (getActivePNumber() != getSelectedPNumber()){
-        getSelectedProduct()->registerFlowSensorTickFromPcb();
 
+    // the actual dispensed produce gets always registered
+    getActiveProduct()->registerFlowSensorTickFromPcb();
+
+    // if this is part of a mix, register the tick also for the mix volume
+    if (getActivePNumber() != getSelectedPNumber())
+    {
+        getSelectedProduct()->registerFlowSensorTickFromPcb();
     }
 }
 
@@ -1240,25 +1242,29 @@ unsigned short dispenser::getPumpSpeed()
 ////////////////////////////////////////////////////////////
 // I/O Flow Sensor
 
+// #define INTERRUPT_DRIVE_FLOW_SENSOR_TICKS
+#ifdef INTERRUPT_DRIVE_FLOW_SENSOR_TICKS
 // TODO: Call this function on Dispense onEntry()
 DF_ERROR dispenser::initGlobalFlowsensorIO(int pin)
 {
     DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
-    // *m_pIsDispensing = false;
     std::string msg = "Dispenser: initGlobalFlowsensorIO. Position: " + std::to_string(getSlot()) + " (pin: " + std::to_string(pin) + ")";
-    // debugOutput::sendMessage("-----dispenser::initGlobalFlowsensorIO-----", MSG_INFO);
     debugOutput::sendMessage(msg, MSG_INFO);
 
     m_pFlowsensor = new FSModdyseyx86GPIO();
     m_pFlowsensor->setPinNumber(pin);
     m_pFlowsensor->setPinAsInputElseOutput(true);
     m_pFlowsensor->registerProduct(getSelectedProduct());
+
+// enable global interrupt driven flowsensor ticks, the alternative is polling over i2c
+
     m_pFlowsensor->startListener_flowsensor();
     e_ret = OK;
 
     return e_ret;
 }
+#endif
 
 ////////////////////////////////////////////////////////////
 // Flow
@@ -1482,7 +1488,7 @@ const char *dispenser::getDispenseStatusAsString()
 string dispenser::getDispenseUpdateString()
 {
     // string intro =
-    string message= "Dispenser: Dispense Product: P-" + std::to_string(getSelectedPNumber());
+    string message = "Dispenser: Dispense Product: P-" + std::to_string(getSelectedPNumber());
     if (getSelectedProduct()->isMixingProduct())
     {
         message +=
@@ -1508,7 +1514,7 @@ void dispenser::setSlotStateToEmpty()
 {
     if (m_isEmptyContainerDetectionEnabled)
     {
-        
+
         setSlotState(SLOT_STATE_PROBLEM_EMPTY);
     }
     else

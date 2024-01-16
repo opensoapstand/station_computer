@@ -656,6 +656,7 @@ DF_ERROR messageMediator::parseCommandString()
       }
       m_promoCode = promoCode;
       debugOutput::sendMessage("Promo code" + m_promoCode, MSG_INFO);
+      m_requestedAction = ACTION_NO_ACTION;
    }
    // else if (sCommand.find("Order") != string::npos)
    // {

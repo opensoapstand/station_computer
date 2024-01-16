@@ -37,6 +37,7 @@
 #define CONFIG_DB_PATH "/home/df-admin/production/db/configuration.db"
 #define USAGE_DB_PATH "/home/df-admin/production/db/usage.db"
 
+// #define INTERRUPT_DRIVE_FLOW_SENSOR_TICKS  // enable for global interrupt per flow sensor tick. This is the old style. New style is polling of the pin state over i2c.
 #define PRODUCT_DETAILS_TSV_PATH "/home/df-admin/production/references/products/product_details.tsv" // https://docs.google.com/spreadsheets/d/17WR2gRyPIDIlGKBy1YKFAqN-Hyw_3VOJ6JCmfcAtjVk/edit#gid=169583479 download as .tsv file
 #define UI_TEXTS_CSV_NAME "ui_texts.csv"
 #define UI_ELEMENT_PROPERTIES_NAME "ui_element_properties.txt"

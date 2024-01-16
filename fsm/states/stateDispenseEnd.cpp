@@ -809,11 +809,11 @@ void stateDispenseEnd::setup_and_print_receipt()
     string promoCode = m_pMessaging->getCouponCode();
     debugOutput::sendMessage("Price changed to " + receipt_cost, MSG_INFO);
     tmp.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, now, units, paymentMethod, plu, promoCode, true);
-    for (int i = 0; i < 100; i++)
-    {
-        debugOutput::sendMessage("End receipt print from end dispense.", MSG_INFO);
-        usleep(100000);
-    }
+    // for (int i = 0; i < 100; i++)
+    // {
+    //     debugOutput::sendMessage("End receipt print from end dispense.", MSG_INFO);
+    //     usleep(100000);
+    // }
 }
 
 // DF_ERROR stateDispenseEnd::print_text(string text)

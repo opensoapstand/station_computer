@@ -547,7 +547,9 @@ void page_dispenser::fsmSendStartDispensing()
     dispenseCommand.append(p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar());
     dispenseCommand.append(SEND_DISPENSE_START);
 
+    qDebug() << "base price: " << QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize());
     QString price = QString::number(p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize()));
+    qDebug() << "discounted price: " << price;
     QString promoCode = p_page_idle->thisMachine->getCouponCode();
 
     QString delimiter = QString("|");
@@ -555,6 +557,8 @@ void page_dispenser::fsmSendStartDispensing()
     QString order_command = preamble + delimiter + price + delimiter + promoCode + delimiter;
     qDebug() << "Send order details to FSM: " << order_command;
     p_page_idle->thisMachine->dfUtility->send_command_to_FSM(order_command, true);
+    QThread::msleep(50); // Sleep for 50 milliseconds
+    
     
 
     bool isCustomMix = p_page_idle->thisMachine->getSelectedProduct()->isCustomMix();
@@ -571,6 +575,7 @@ void page_dispenser::fsmSendStartDispensing()
         command = "dispensePNumber|" + dispenseCommand + "|" + QString::number(pNumberSelectedProduct) + "|"; // dispensePNumber|slot|dispensePNumber
     }
     p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
+    
     this->isDispensing = true;
     qDebug() << "Dispensing started.";
 }
@@ -585,6 +590,7 @@ void page_dispenser::fsmSendStopDispensing()
     // command.append(SEND_DISPENSE_STOP);
     QString command = "stopDispense";
     p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
+    
 }
 
 void page_dispenser::onArrowAnimationStepTimerTick()
@@ -958,6 +964,7 @@ void page_dispenser::on_pushButton_problems_clicked()
         // send repair command
         qDebug() << "Send repair command to fsm";
         p_page_idle->thisMachine->dfUtility->send_command_to_FSM(SEND_REPAIR_PCA, true);
+        
         break;
     }
     default:

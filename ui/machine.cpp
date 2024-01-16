@@ -16,7 +16,6 @@ machine::machine()
     setRole(UserRole::user);
     setCouponState(no_state);
 
-
     // IPC Networking
     dfUtility = new df_util();
     dispenseProductsMenuOptions.resize(MENU_PRODUCT_SELECTION_OPTIONS_MAX);
@@ -44,7 +43,7 @@ void machine::initMachine()
         m_slots[slot_index].setSlot(slot_index + 1);
         m_slots[slot_index].setDb(m_db);
         m_slots[slot_index].loadSlotParametersFromDb();
-       // m_slots[slot_index].setEmptyContainerDetectionEnabled(getEmptyContainerDetectionEnabled());
+        // m_slots[slot_index].setEmptyContainerDetectionEnabled(getEmptyContainerDetectionEnabled());
     }
 
     // QVector<int> all_dispense_pnumbers = getAllUniqueDispensePNumbers();
@@ -318,7 +317,6 @@ int machine::getSlotFromBasePNumber(int base_pnumber)
     return slot_with_base_pnumber;
 }
 
-
 pnumberproduct *machine::getSelectedProduct()
 {
     return m_selectedProduct;
@@ -474,13 +472,18 @@ bool machine::isSlotCountBiggerThanMaxSlotCount(int slot_count)
 
 void machine::dispenseButtonLightsAnimateState(bool animateElseOff)
 {
-    if (animateElseOff)
+    // if there are no button animation programs available, do nothing...
+    int m_button_animation_program = m_dispense_buttons_count / 1000; 
+    if (m_button_animation_program > 0)
     {
-        dfUtility->send_command_to_FSM("DispenseButtonLights|ANIMATE", true);
-    }
-    else
-    {
-        dfUtility->send_command_to_FSM("DispenseButtonLights|OFF", true);
+        if (animateElseOff)
+        {
+            dfUtility->send_command_to_FSM("DispenseButtonLights|ANIMATE", true);
+        }
+        else
+        {
+            dfUtility->send_command_to_FSM("DispenseButtonLights|OFF", true);
+        }
     }
 }
 
@@ -540,7 +543,6 @@ void machine::resetCouponDiscount()
     m_min_threshold_vol_ml_discount = "0";
     m_max_threshold_vol_ml_discount = "0";
     m_max_dollar_amount_discount = "0";
-    
 }
 
 double machine::getDiscountPercentageFraction()
@@ -767,8 +769,8 @@ void machine::fsmReceiveTemperature(double temperature_1, double temperature_2)
 {
     m_temperature = temperature_1;
     m_temperature2 = temperature_2;
-    //qDebug() << "Temperature received from FSM in machine: " << m_temperature;
-    //qDebug() << "Temperature 2 received from FSM in machine: " << m_temperature2;
+    // qDebug() << "Temperature received from FSM in machine: " << m_temperature;
+    // qDebug() << "Temperature 2 received from FSM in machine: " << m_temperature2;
 
     writeTemperatureToDb(m_temperature, m_temperature2);
 
@@ -784,7 +786,8 @@ double machine::getTemperature_1()
     return m_temperature;
 }
 
-QString machine::getSizeUnit(){
+QString machine::getSizeUnit()
+{
     return m_size_unit;
 }
 
@@ -1002,17 +1005,19 @@ QString machine::getHelpPageHtmlText()
     return m_help_text_html;
 }
 
-void machine::resetTransactionLogging(){
+void machine::resetTransactionLogging()
+{
     transactionLogging = "";
-
 }
 
-void machine::addToTransactionLogging(QString text){
+void machine::addToTransactionLogging(QString text)
+{
     transactionLogging += text;
     qDebug() << "Transaction Logging: " << transactionLogging;
 }
 
-QString machine::getTransactionLogging(){
+QString machine::getTransactionLogging()
+{
     return transactionLogging;
 }
 
@@ -1092,11 +1097,13 @@ void machine::setActivePaymentMethod(ActivePaymentMethod paymentMethod)
     m_activePaymentMethod = paymentMethod;
 }
 
-std::vector<ActivePaymentMethod> machine::getAllowedPaymentMethods(){
+std::vector<ActivePaymentMethod> machine::getAllowedPaymentMethods()
+{
     return allowedPaymentMethods;
 }
 
-void machine::setAllowedPaymentMethods(ActivePaymentMethod paymentMethod){
+void machine::setAllowedPaymentMethods(ActivePaymentMethod paymentMethod)
+{
     allowedPaymentMethods.push_back(paymentMethod);
 }
 
@@ -1168,7 +1175,8 @@ void machine::addPictureToLabel(QLabel *label, QString picturePath)
     }
 }
 
-void machine::addPictureToLabelCircle(QLabel *label, QString picturePath){
+void machine::addPictureToLabelCircle(QLabel *label, QString picturePath)
+{
     if (df_util::pathExists(picturePath))
     {
         QPixmap picture(picturePath);
@@ -1194,7 +1202,6 @@ void machine::addPictureToLabelCircle(QLabel *label, QString picturePath){
         qDebug() << "Can't add picture to label: " << label->objectName() << " " << picturePath;
     }
 }
-
 
 void machine::addCssClassToObject(QWidget *element, QString classname, QString css_file_name)
 {
@@ -1391,13 +1398,13 @@ void machine::applyPropertiesToQWidget(QWidget *widget)
 
     if (selectedElement != elementDynamicPropertiesMap_template.end())
     {
-        // if found in template dynamic properties 
+        // if found in template dynamic properties
         qDebug() << "element " << combinedName << "found in template. json string: " << selectedElement->second;
         propertiesJsonString = selectedElement->second; // second implies the value of the key:value pair in the associative array
     }
     else
     {
-// if found in default hardware template dynamic properties
+        // if found in default hardware template dynamic properties
         selectedElement = elementDynamicPropertiesMap_default_hardware.find(combinedName);
         if (selectedElement != elementDynamicPropertiesMap_default_hardware.end())
         {

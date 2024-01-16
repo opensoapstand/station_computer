@@ -191,6 +191,7 @@ void page_transactions::on_pushButton_print_clicked(bool checked)
 
                         QString command = "thermalprinterPrintTransaction|" + transactionIndex + "|";
                         p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
+                        
                 }
         }
         else

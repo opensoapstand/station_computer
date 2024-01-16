@@ -226,7 +226,7 @@ void product::registerFlowSensorTickFromInterrupt()
 {
     // tick from flowsensor interrupt will increase dispensed volume.
     // cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
-    debugOutput::sendMessage("Product: Interrupt poll TICK from pcb." + getPNumberAsPString(), MSG_INFO);
+    debugOutput::sendMessage("Product: Interrupt TICK from pcb." + getPNumberAsPString(), MSG_INFO);
     m_nVolumeDispensed += getVolumePerTick() * m_concentration_multiplier;
 }
 

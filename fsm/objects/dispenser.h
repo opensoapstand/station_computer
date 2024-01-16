@@ -102,9 +102,9 @@ public:
       // DF_ERROR initButtonsShutdownAndMaintenance();
       DF_ERROR setSlot(int slot);
       int getSlot();
-
+#ifdef INTERRUPT_DRIVE_FLOW_SENSOR_TICKS
       DF_ERROR initGlobalFlowsensorIO(int pinint);
-
+#endif
       void setPumpReversalEnabled(bool isEnabled);
       void setEmptyContainerDetectionEnabled(bool isEnabled);
       void setPumpSlowStartStopEnabled(bool isEnabled);

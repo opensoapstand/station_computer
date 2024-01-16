@@ -56,15 +56,15 @@ void machine::setup(product *pnumbers)
     // switch_3point3V->writePin(true);
 
     syncSoftwareVersionWithDb();
-    initProductDispensers(); 
-    loadGeneralProperties(true); 
+    initProductDispensers();
+    loadGeneralProperties(true);
 }
+
 int machine::getDispensersCount()
 {
     // slots, dispensers, lines,... it's all the same
     return 4;
 }
-
 
 double machine::convertVolumeMetricToDisplayUnits(double volume)
 {
@@ -95,8 +95,10 @@ void machine::initProductDispensers()
         // m_g_machine.m_productDispensers[slot_index].setup(&this, g_pnumbers);
         m_productDispensers[slot_index].setup(control_pcb, m_pnumbers);
         m_productDispensers[slot_index].setSlot(slot_index + 1);
+        
+        #ifdef INTERRUPT_DRIVE_FLOW_SENSOR_TICKS
         m_productDispensers[slot_index].initGlobalFlowsensorIO(IO_PIN_FLOW_SENSOR);
-
+        #endif
         setFlowSensorCallBack(slot_index + 1);
     }
 }
@@ -110,7 +112,7 @@ void machine::loadGeneralProperties(bool loadDispenserParameters)
         for (int slot_index = 0; slot_index < getDispensersCount(); slot_index++)
         {
             m_productDispensers[slot_index].loadGeneralProperties();
-        m_productDispensers[slot_index].setEmptyContainerDetectionEnabled(getEmptyContainerDetectionEnabled());
+            m_productDispensers[slot_index].setEmptyContainerDetectionEnabled(getEmptyContainerDetectionEnabled());
         }
     }
 }
@@ -163,7 +165,7 @@ void machine::refresh()
 
 void machine::setFlowSensorCallBack(int slot)
 {
-    
+
     int slot_index = slot - 1;
     // control_pcb->registerFlowSensorTickCallback(std::bind(&dispenser::registerFlowSensorTickCallback, &m_productDispensers[slot_index]));
     // m_productDispensers[slot_index].linkActiveProductVolumeUpdate(); // CALL THIS FOR EVERY ACTIVE PRODUCT CHANGE during a mixing dispense.

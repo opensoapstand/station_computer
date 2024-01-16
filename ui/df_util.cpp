@@ -222,6 +222,8 @@ void df_util::send_command_to_FSM(QString command, bool isLoggingMessage)
     // this->send_msg = msg;
     send_to_FSM(command, isLoggingMessage);
     m_IsSendingFSM = false;
+    // 
+    QThread::msleep(50); // Sleep for 50 milliseconds
 }
 
 void df_util::executeVirtualClick(int x, int y)

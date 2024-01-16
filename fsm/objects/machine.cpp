@@ -178,6 +178,8 @@ string machine::getMachineId()
 {
     return m_machine_id;
 }
+
+
 // void machine::loadButtonPropertiesFromDb()
 // {
 //     rc = sqlite3_open(CONFIG_DB_PATH, &db);

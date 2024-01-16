@@ -38,6 +38,7 @@ stateInit::stateInit(messageMediator *message)
 stateInit::~stateInit()
 {
     // delete stuff
+    debugOutput::sendMessage("stateInit: ~stateInit", MSG_INFO);
 }
 
 // Overload for Debugger output

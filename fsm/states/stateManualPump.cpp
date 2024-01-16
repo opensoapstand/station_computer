@@ -35,6 +35,8 @@ stateManualPump::stateManualPump(messageMediator *message)
 stateManualPump::~stateManualPump()
 {
    // delete stuff
+   debugOutput::sendMessage("stateManualPump: ~stateManualPump", MSG_INFO);
+
 }
 
 // Overload for Debugger output

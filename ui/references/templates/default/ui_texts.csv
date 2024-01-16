@@ -29,8 +29,16 @@ page_idle->label_reboot_nightly_title,NIGHTLY REBOOT
 page_idle->label_reboot_nightly_text,System will be rebooted in<br>%1 second(s)
 page_idle->pushButton_reboot_nightly,Cancel
 page_idle->label_reboot_nightly_text->count_down,System will be rebooted in<br>%1 second(s)
-#################### page_idle_products
 
+#################### page_buyBottle
+page_buyBottle->pushButton_to_idle,<- back
+page_buyBottle->label_buyBottle_title,Do you need a bottle?
+page_buyBottle->label_button_no_text_L,No
+page_buyBottle->label_button_no_text_S,I have one
+page_buyBottle->label_button_yes_text_S_1,I'll buy one
+page_buyBottle->label_button_yes_text_S_2,I'll buy one
+
+#################### page_idle_products
 #tap here to refill your soap
 page_idle_products->label_title,Quick and easy soap refill,<br>just a tap away.
 page_idle_products->label_printer_status->assistance_printer_offline,Assistance needed<br>Receipt Printer offline.

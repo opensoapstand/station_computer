@@ -14,6 +14,7 @@
 //***************************************
 
 #include "df_util.h"
+#include "page_buybottle.h"
 #include "page_transactions.h"
 #include "page_help.h"
 #include "page_init.h"
@@ -176,6 +177,8 @@ int main(int argc, char *argv[])
     qDebug() << "Constructor page_email";
     page_email *p_page_email = new page_email();
     qDebug() << "All Pages created.";
+    page_buyBottle *p_page_buyBottle = new page_buyBottle();
+    qDebug() << "All Pages created.";
 
     DbManager db_config;
     machine thisMachine;
@@ -239,10 +242,11 @@ int main(int argc, char *argv[])
 
     p_page_maintenance_general->setPage(p_page_maintenance, p_page_idle, p_page_idle_products, p_statusbar);
     p_page_maintenance->setPage(p_page_idle, p_page_maintenance_dispenser, p_page_maintenance_general, p_page_select_product, p_page_product, p_statusbar);
-    p_page_idle->setPage(p_page_select_product, p_page_maintenance, p_page_maintenance_general, p_page_idle_products, p_page_wifi_error, p_statusbar, p_page_product_menu, p_keyboard);
+    p_page_idle->setPage(p_page_select_product, p_page_buyBottle, p_page_maintenance, p_page_maintenance_general, p_page_idle_products, p_page_wifi_error, p_statusbar, p_page_product_menu, p_keyboard);
     p_page_idle_products->setPage(p_page_idle, p_page_select_product);
+    p_page_buyBottle->setPage(p_page_idle, p_page_select_product, p_page_help, p_statusbar);
     p_page_product_menu->setPage(p_page_product, p_page_product_mixing, p_page_idle_products, p_page_idle, p_page_maintenance, p_page_help, p_statusbar);
-    p_page_select_product->setPage(p_page_product, p_page_idle_products, p_page_idle, p_page_maintenance, p_page_help, p_statusbar);
+    p_page_select_product->setPage(p_page_product, p_page_buyBottle, p_page_idle_products, p_page_idle, p_page_maintenance, p_page_help, p_statusbar);
     p_page_product->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_help, p_page_product_overview, p_statusbar,p_page_product_menu);
     p_page_product_mixing->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_help, p_page_product_overview, p_statusbar,p_page_product_menu,p_page_product_freeSample);
     p_page_payment_qr->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help, p_statusbar, p_page_product_mixing);

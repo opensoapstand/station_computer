@@ -75,6 +75,8 @@ public:
 
     QString getProductPicturePath();
 
+    double getPriceOfSelectedBottle();
+    double getVolumeOfSelectedBottle();
     double getVolumeOfSelectedSize(); // productt
     double getVolumeBySize(int size); // productt
 

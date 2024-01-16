@@ -79,13 +79,18 @@ void machine::loadDynamicContent()
         m_pnumberproducts[all_pnumbers[pnumber_index]].loadProductProperties();
         m_pnumberproducts[all_pnumbers[pnumber_index]].setSizeUnit(getSizeUnit()); // volumeUnit is a machine wide parameter
     }
-
+    loadBottle();
     loadTextsFromTemplateCsv();                                // dynamic content (text by template)
     loadTextsFromDefaultHardwareCsv();                         // dynamic styling (css by template)
     loadTextsFromDefaultCsv();                                 // dynamic styling (css by template)
     loadElementDynamicPropertiesFromTemplate();                // dynamic elements (position, visibility)
     loadElementDynamicPropertiesFromDefaultHardwareTemplate(); // dynamic elements (position, visibility)
     loadElementDynamicPropertiesFromDefaultTemplate();         // dynamic elements (position, visibility)
+}
+
+void machine::loadBottle(){
+    if(m_buy_bottle_1){m_pnumberproducts[m_buy_bottle_1].loadProductProperties();}
+    if(m_buy_bottle_2){m_pnumberproducts[m_buy_bottle_2].loadProductProperties();}
 }
 
 QVector<int> machine::getAllDispensePNumbersFromSlot(int slot)
@@ -317,6 +322,37 @@ int machine::getSlotFromBasePNumber(int base_pnumber)
     return slot_with_base_pnumber;
 }
 
+pnumberproduct *machine::getSelectedBottle()
+{
+    return m_selectedBottle;
+}
+
+void machine::setSelectedBottle(int pnumber)
+{
+    // pnumber is the index. Clever... until you have one million options....
+    m_selectedBottle = &m_pnumberproducts[pnumber];
+}
+
+void machine::resetSelectedBottle(){
+    m_selectedBottle = NULL;
+}
+
+bool machine::hasSelectedBottle(){
+    if(getSelectedBottle()){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+bool machine::hasBuyBottleOption(){
+    if(m_buy_bottle_1 || m_buy_bottle_2){
+        return true;
+    }else{
+        return false;
+    }
+}
+
 pnumberproduct *machine::getSelectedProduct()
 {
     return m_selectedProduct;
@@ -369,7 +405,7 @@ void machine::setSelectedSlotFromSelectedProduct()
 
     int slot = getSlotFromBasePNumber(base_pnumber);
     setSelectedSlot(slot);
-    qDebug() << "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS set selected slot: " << slot;
+    qDebug() << "set selected slot: " << slot;
 }
 
 bool machine::isDispenseAreaBelowElseBesideScreen()
@@ -1059,7 +1095,11 @@ void machine::loadMachineParameterFromDb()
         &m_is_enabled,
         &m_status_text,
         &m_payment,
-        &m_size_unit);
+        &m_size_unit,
+        &m_screen_sleep_time24h,
+        &m_screen_wakeup_time24h,
+        &m_buy_bottle_1,
+        &m_buy_bottle_2);
 
     qDebug() << "Machine ID as loaded from db: " << getMachineId();
     qDebug() << "Template folder from db : " << getTemplateFolder();
@@ -1577,4 +1617,12 @@ QStringList machine::getChildNames(QObject *parent)
     }
 
     return childNames;
+}
+
+bool machine::hasMixing(){
+    if(m_hardware_version == "AP2" || m_hardware_version == "AP3"){
+        return true;
+    }else{
+        return false;
+    }
 }

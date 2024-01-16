@@ -17,7 +17,7 @@
 
 #include "page_select_product.h"
 #include "ui_page_select_product.h"
-
+#include "page_buybottle.h"
 #include "page_product.h"
 #include "page_product_mixing.h"
 #include "page_idle.h"
@@ -69,9 +69,10 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference
  */
-void page_select_product::setPage(page_product *p_page_product, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp, statusbar *p_statusbar)
+void page_select_product::setPage(page_product *p_page_product, page_buyBottle *p_page_buyBottle, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp, statusbar *p_statusbar)
 {
     this->p_page_product = p_page_product;
+    this->p_page_buyBottle = p_page_buyBottle;
     this->p_page_idle = pageIdle;
     this->p_page_maintenance = pageMaintenance;
     this->p_page_help = pageHelp;
@@ -360,7 +361,11 @@ void page_select_product::on_pushButton_to_idle_clicked()
 {
     qDebug() << "Back to Idle Page Button pressed";
     // p_page_idle->setDiscountPercentage(0.0);
-    hideCurrentPageAndShowProvided(p_page_idle);
+    if(p_page_idle->thisMachine->hasBuyBottleOption()){
+        hideCurrentPageAndShowProvided(p_page_buyBottle);
+    }else{
+        hideCurrentPageAndShowProvided(p_page_idle);
+    }
 }
 
 void page_select_product::on_pushButton_help_page_clicked()

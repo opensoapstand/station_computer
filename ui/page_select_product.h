@@ -19,7 +19,9 @@
 #include "df_util.h"
 #include "page_maintenance.h"
 #include "page_help.h"
+#include "page_buybottle.h"
 
+class page_buyBottle;
 class page_product;
 class page_idle;
 class page_maintenance;
@@ -37,7 +39,7 @@ class page_select_product : public QWidget
 
 public:
     explicit page_select_product(QWidget *parent = nullptr);
-    void setPage(page_product *p_page_product, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp, statusbar *p_statusbar);
+    void setPage(page_product *p_page_product, page_buyBottle *p_page_buyBottle, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp, statusbar *p_statusbar);
     ~page_select_product();
     
     void select_product(int slot);
@@ -75,6 +77,7 @@ private:
     void resizeEvent(QResizeEvent *event);
     Ui::page_select_product *ui;
     // productPage_2 *selection_PageTwo;
+    page_buyBottle *p_page_buyBottle;
     page_product *p_page_product;
     page_idle* p_page_idle;
     page_maintenance* p_page_maintenance;

@@ -98,6 +98,7 @@ using namespace std;
 #define STATUSBAR_CSS                                   "statusbar.css"
 #define KEYBOARD_CSS                                   "keyboard.css"
 #define PAGE_IDLE_CSS                                   "page_idle.css"
+#define PAGE_BUY_BOTTLE_CSS                             "page_buyBottle.css"
 #define PAGE_PRODUCT_MENU_CSS                           "page_product_menu.css"
 #define PAGE_SELECT_PRODUCT_CSS                         "page_select_product.css"
 #define PAGE_PRODUCT_CSS                                "page_product.css"
@@ -117,6 +118,7 @@ using namespace std;
 #define PAGE_EMAIL_CSS                                  "page_email.css"
 
 #define PAGE_IDLE_BACKGROUND_PATH                       "background_idle.png"
+#define PAGE_BUY_BOTTLE_BACKGROUND_PATH                 "background_buy_bottle.png"
 #define PAGE_IDLE_PRODUCTS_BACKGROUND_PATH              "background_idle_products.png"
 #define PAGE_END_BACKGROUND_PATH                        "background_end.png"
 #define PAGE_TRANSACTIONS_BACKGROUND_PATH               "background_transactions.png"

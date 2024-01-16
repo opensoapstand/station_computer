@@ -34,6 +34,7 @@ FORMS += \
     page_maintenance_general.ui \
     page_idle_products.ui \
     statusbar.ui \
+    page_buybottle.ui
 
 HEADERS += \
     dfuicommthread.h \
@@ -78,7 +79,8 @@ HEADERS += \
     machine.h \
     statusbar.h \
     keyboard.h \
-    pnumberproduct.h
+    pnumberproduct.h \
+    page_buybottle.h
 
 SOURCES += \
     dfuicommthread.cpp \
@@ -123,7 +125,8 @@ SOURCES += \
     machine.cpp \
     statusbar.cpp \
     keyboard.cpp \
-    pnumberproduct.cpp
+    pnumberproduct.cpp \
+    page_buybottle.cpp
 
 RESOURCES += \
     src.qrc

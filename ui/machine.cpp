@@ -132,7 +132,7 @@ QVector<int> machine::getAllUsedPNumbersFromSlots()
         {
             // qDebug() << "flbijb" << slotpnumbers[i];
             uniquePNumbers.insert(slotpnumbers[i]);
-        }
+        }   
     }
 
     // Convert the QSet to a QVector
@@ -270,7 +270,8 @@ bool machine::getIsOptionAvailable(int productOption)
     // available as in: is it enabled, not empty, no technical problem,... (assumes the option exists and is linked to a valid pnumber)
 
     // products will need an "isEnabled" and "statustext" column too.
-    // todo
+    
+
 
     // check if slot for option is valid
     // check if all pnumbers for options are valid
@@ -321,6 +322,13 @@ int machine::getSlotFromBasePNumber(int base_pnumber)
     }
     return slot_with_base_pnumber;
 }
+
+dispenser_slot *machine::getSlotFromOption(int productOption){
+    qDebug() << "Product option" << productOption;
+    int slot = static_cast<int>(std::round(productOption/DISPENSE_PRODUCTS_PER_BASE_LINE_MAX));   
+    return &m_slots[slot];
+}
+
 
 pnumberproduct *machine::getSelectedBottle()
 {
@@ -579,6 +587,7 @@ void machine::resetCouponDiscount()
     m_min_threshold_vol_ml_discount = "0";
     m_max_threshold_vol_ml_discount = "0";
     m_max_dollar_amount_discount = "0";
+    setCouponCode("");
 }
 
 double machine::getDiscountPercentageFraction()
@@ -1150,6 +1159,11 @@ void machine::setAllowedPaymentMethods(ActivePaymentMethod paymentMethod)
 QString machine::getMachineId()
 {
     return m_machine_id;
+}
+
+QString machine::getMachineLocation()
+{
+    return m_location;
 }
 
 QString machine::getClientId()

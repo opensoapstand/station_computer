@@ -755,9 +755,10 @@ void page_dispenser::fsmReceiveTargetVolumeReached()
     {
         qDebug() << "Target reached from controller.";
         this->isDispensing = false;
-        updateVolumeDisplayed(p_page_idle->thisMachine->getSelectedProduct()->getVolumeOfSelectedSize(), true); // make sure the fill bottle graphics are completed
+
+        // The idea is to show the target number, but Lode believes it should show the real number dispensed.
+        //updateVolumeDisplayed(p_page_idle->thisMachine->getSelectedProduct()->getVolumeOfSelectedSize(), true); // make sure the fill bottle graphics are completed
         p_page_idle->thisMachine->addToTransactionLogging("\n 8: Target Reached - True");
-        // transactionLogging += "\n 8: Target Reached - True";
         dispensing_end_admin();
     }
     else

@@ -77,7 +77,7 @@ page_product_overview->lineEdit_promo_code->valid,Promo Code Valid
 page_product_overview->lineEdit_promo_code->invalid,Promo Code Invalid
 page_product_overview->lineEdit_promo_code->ineligible,Promo Code Not Eligible At This Station
 page_product_overview->lineEdit_promo_code->network_error,Network error, could not verify. Try again.
-page_product_overview->lineEdit_promo_code->invite,Tap here to Enter Promo Code / Coupon
+page_product_overview->lineEdit_promo_code->invite,Tap here to enter Promo Code / Coupon
 page_product_overview->label_selected_volume->custom_volume,Custom Volume<br>(maximum: %1)
 page_product_overview->pushButton_continue->proceed_free,Proceed
 page_product_overview->pushButton_continue->proceed_pay,Continue
@@ -283,7 +283,7 @@ page_product_freeSample->lineEdit_promo_code->valid,Promo Code Valid
 page_product_freeSample->lineEdit_promo_code->invalid,Promo Code Invalid
 page_product_freeSample->lineEdit_promo_code->ineligible,Promo Code Not Eligible At This Station
 page_product_freeSample->lineEdit_promo_code->network_error,Network error, could not verify. Try again.
-page_product_freeSample->lineEdit_promo_code->invite,Tap here to Enter Promo Code / Coupon
+page_product_freeSample->lineEdit_promo_code->invite,Tap here to enter Promo Code / Coupon
 page_product_freeSample->label_selected_volume->custom_volume,Custom Volume<br>(maximum: %1)
 page_product_freeSample->pushButton_continue->proceed_free,Proceed
 page_product_freeSample->pushButton_continue->proceed_pay,Continue

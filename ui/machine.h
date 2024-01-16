@@ -75,6 +75,7 @@ public:
     double getPriceCorrected(int pnumber);
 
     QString getMachineId();
+    QString getMachineLocation();
     QString getPaymentMethod();
     void setPaymentMethod(QString paymentMethod);
     bool getCouponsEnabled();
@@ -125,6 +126,8 @@ public:
     void setSelectedSlotFromSelectedProduct();
     void setSelectedSlot();
     int getSlotFromBasePNumber(int base_pnumber);
+    dispenser_slot *getSlotFromOption(int productOption);
+
     dispenser_slot *getSelectedSlot();
 
     void initProductOptions();

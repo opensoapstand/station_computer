@@ -193,7 +193,8 @@ void page_product_freeSample::showEvent(QShowEvent *event)
     QString keyboard_picture_path = p_page_idle->thisMachine->getTemplatePathFromName(KEYBOARD_IMAGE_PATH);
     p_page_idle->thisMachine->addPictureToLabel(ui->label_keyboard_background, keyboard_picture_path);
     ui->label_keyboard_background->lower();
-    
+    p_page_idle->thisMachine->setCouponState(enabled_not_set);
+
     ui->pushButton_continue->hide();
     
     _selectIdleTimeoutSec = 400;
@@ -437,7 +438,9 @@ void page_product_freeSample::apply_promo_code(QString promocode)
                 if (http_code == 200)
                 {
                     json coupon_obj = json::parse(readBuffer);
-                    if (coupon_obj["active"])
+                    //For free samples, the coupons are created with 0% discount as the price is already 0. 
+                    // With 0 price, customer need to have a valid coupon code to restrict the system abuse
+                    if (coupon_obj["active"] && coupon_obj["discount_amount"]==0)
                     {
                         qDebug() << "Backend coupon response: Valid. Discount percentage: " << new_percent;
                         new_percent = coupon_obj["discount_amount"];
@@ -475,47 +478,8 @@ void page_product_freeSample::apply_promo_code(QString promocode)
     reset_and_show_page_elements();
 }
 
-// void page_product_freeSample::keyboardButtonPressed(int buttonID)
-// {
-//     QAbstractButton *buttonpressed = ui->buttonGroup->button(buttonID);
-//     QString buttonText = buttonpressed->objectName();
-
-//     if (buttonText == "backspace")
-//     {
-//         ui->lineEdit_promo_code->backspace();
-//     }
-//     else if (buttonText == "done")
-//     {
-//         if (m_readyToSendCoupon && p_page_idle->thisMachine->getCouponState() != enabled_processing_input)
-//         {
-//             m_readyToSendCoupon = false;
-//             qDebug() << "Done clicked, initiated apply promo.";
-
-//             // hack, sometimes it appears like the 'done' button code is called twice.
-//             p_page_idle->thisMachine->setCouponState(enabled_processing_input);
-//             reset_and_show_page_elements();
-//             apply_promo_code(ui->lineEdit_promo_code->text());
-//         }
-//         else
-//         {
-//             qDebug() << "ASSERT ERROR: Illegal press. Still processing other call.";
-//         }
-//     }
-//     else if (buttonText.mid(0, 3) == "num")
-//     {
-//         ui->lineEdit_promo_code->setText(ui->lineEdit_promo_code->text() + buttonText.mid(3, 1));
-//     }
-//     else
-//     {
-//         ui->lineEdit_promo_code->setText(ui->lineEdit_promo_code->text() + buttonText);
-//     }
-
-//     qDebug() << "Promo code input field: " << ui->lineEdit_promo_code->text();
-// }
-
 void page_product_freeSample::on_pushButton_previous_page_clicked()
 {
-
     this->return_to_selectProductPage();
 }
 
@@ -537,6 +501,8 @@ void page_product_freeSample::on_pushButton_continue()
 
 void page_product_freeSample::return_to_selectProductPage()
 {
+    p_page_idle->thisMachine->resetCouponDiscount();
+    p_page_idle->thisMachine->setCouponState(enabled_not_set);
     p_page_idle->thisMachine->hasMixing() ? hideCurrentPageAndShowProvided(p_page_product_mixing) : hideCurrentPageAndShowProvided(p_page_product);
 }
 
@@ -552,21 +518,18 @@ void page_product_freeSample:: setup_qr_code(){
         map.fill(QColor("#895E25"));
         
         QPainter painter(&map);
-
+        //Retrieve station id from database and convert hyphen (-) with underscore(_)
+        QString stationId = p_page_idle->thisMachine->getMachineId().replace("-","_").toLower();
+        //Retrieve station location from database. Split the name using comma delimiter as to use first identifier only.
+        //Lowercase the location and convert hyphen (-) with underscore(_)
+        QString stationLocation = p_page_idle->thisMachine->getMachineLocation().split(',').first().replace("-","_").toLower();
         // build up qr content (link)
-        QString qrdata = "https://www.aelen.com/freesample";
+        // https://www.aelen.com/freesip?utm_source=station_ubc_nest_ap_2&utm_medium=qr&utm_campaign=free_sip
+        QString qrdata = "https://www.aelen.com/freesip?utm_source=station_" +stationLocation +"_" +stationId +"&utm_medium=qr&utm_campaign=free_sip";
         // create qr code graphics
         p_page_idle->thisMachine->hasMixing() ? paintSampleQR(painter, QSize(360, 360), qrdata, QColor("white")) : paintSampleQR(painter, QSize(360, 360), qrdata, QColor("white"));
         // paintSampleQR(painter, QSize(360, 360), qrdata, QColor("white"));
         ui->label_qrCode->setPixmap(map);
-        // _paymentTimeoutSec = QR_PAGE_TIMEOUT_SECONDS;
-
-        // _paymentTimeLabel = QR_PAGE_TIMEOUT_SECONDS;
-
-        // _pageTimeoutCounterSecondsLeft = QR_PAGE_TIMEOUT_SECONDS;
-
-        // _qrProcessedPeriodicalCheckSec = QR_PROCESSED_PERIODICAL_CHECK_SECONDS;
-        // qrPeriodicalCheckTimer->start(1000);
 }
 
 
@@ -604,7 +567,3 @@ void page_product_freeSample::paintSampleQR(QPainter &painter, const QSize sz, c
         }
     }
 }
-
-// void page_product_freeSample:: on_pushButton_repeated_sample_clicked(){
-//     qDebug() << "repeated";
-// }

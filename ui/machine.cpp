@@ -43,6 +43,7 @@ void machine::initMachine()
         m_slots[slot_index].setSlot(slot_index + 1);
         m_slots[slot_index].setDb(m_db);
         m_slots[slot_index].loadSlotParametersFromDb();
+        // m_slots[slot_index].setEmptyContainerDetectionEnabled(getEmptyContainerDetectionEnabled());
     }
 
     // QVector<int> all_dispense_pnumbers = getAllUniqueDispensePNumbers();
@@ -76,14 +77,20 @@ void machine::loadDynamicContent()
     {
         // qDebug() << "machine: load product properties for pnumber:" << (all_pnumbers[pnumber_index]);
         m_pnumberproducts[all_pnumbers[pnumber_index]].loadProductProperties();
+        m_pnumberproducts[all_pnumbers[pnumber_index]].setSizeUnit(getSizeUnit()); // volumeUnit is a machine wide parameter
     }
-
+    loadBottle();
     loadTextsFromTemplateCsv();                                // dynamic content (text by template)
     loadTextsFromDefaultHardwareCsv();                         // dynamic styling (css by template)
     loadTextsFromDefaultCsv();                                 // dynamic styling (css by template)
     loadElementDynamicPropertiesFromTemplate();                // dynamic elements (position, visibility)
     loadElementDynamicPropertiesFromDefaultHardwareTemplate(); // dynamic elements (position, visibility)
     loadElementDynamicPropertiesFromDefaultTemplate();         // dynamic elements (position, visibility)
+}
+
+void machine::loadBottle(){
+    if(m_buy_bottle_1){m_pnumberproducts[m_buy_bottle_1].loadProductProperties();}
+    if(m_buy_bottle_2){m_pnumberproducts[m_buy_bottle_2].loadProductProperties();}
 }
 
 QVector<int> machine::getAllDispensePNumbersFromSlot(int slot)
@@ -176,20 +183,20 @@ void machine::initProductOptions()
     dispenseProductsMenuOptions.fill(DUMMY_PNUMBER);
     for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
     {
-        qDebug() << "slot: " << (slot_index+1) ;
+        qDebug() << "slot: " << (slot_index + 1);
         QVector<int> dispense_pnumbers = getAllDispensePNumbersFromSlot(slot_index + 1);
         for (int i = 0; i < dispense_pnumbers.size(); i++)
         {
-            int position = 1 + slot_index * MENU_DISPENSE_OPTIONS_PER_BASE_MAXIMUM + i;
+            int position = 1 + slot_index * DISPENSE_PRODUCTS_PER_BASE_LINE_MAX + i;
             setProductToMenuOption(position, dispense_pnumbers[i]);
-            qDebug() << "pnumber. : : " << (dispense_pnumbers[i]) << "at option" << position ;
+            qDebug() << "pnumber. : : " << (dispense_pnumbers[i]) << "at option" << position;
         }
     }
 
-
-    for (int i = 0; i < dispenseProductsMenuOptions.size(); ++i) {
+    for (int i = 0; i < dispenseProductsMenuOptions.size(); ++i)
+    {
         int option = dispenseProductsMenuOptions[i];
-        qDebug() << "Option eef" << (i+1) << ": " << option;
+        qDebug() << "Option eef" << (i + 1) << ": " << option;
     }
 }
 
@@ -214,7 +221,8 @@ void machine::setProductToMenuOption(int productOption, int pnumber)
     dispenseProductsMenuOptions[productOption - 1] = pnumber;
 }
 
-bool machine::isOptionExisting(int productOption){
+bool machine::isOptionExisting(int productOption)
+{
     if (productOption == 0)
     {
         qDebug() << "ERROR:  option numbering start from 1!!!";
@@ -229,8 +237,9 @@ pnumberproduct *machine::getProductFromMenuOption(int productOption)
     // option start counting from 1
     // slotPosition starts at 1
 
-    if (!isOptionExisting(productOption)){
-        qDebug() << "ASSERT ERROR: non existing number (dummy or not valid). undefined behaviour from now on";
+    if (!isOptionExisting(productOption))
+    {
+        qDebug() << "ASSERT ERROR: non existing number (dummy or not valid). undefined behaviour from now on" << productOption;
     }
 
     int pnumber = dispenseProductsMenuOptions[productOption - 1];
@@ -238,13 +247,15 @@ pnumberproduct *machine::getProductFromMenuOption(int productOption)
     return &m_pnumberproducts[pnumber];
 }
 
-pnumberproduct *machine::getSlotBaseProduct(int slot){
+pnumberproduct *machine::getSlotBaseProduct(int slot)
+{
     int basePNumber = m_slots[slot - 1].getBasePNumber();
     return &m_pnumberproducts[basePNumber];
 }
 
 pnumberproduct *machine::getProductByPNumber(int pnumber)
 {
+    qDebug() << pnumber;
     return &m_pnumberproducts[pnumber];
 }
 
@@ -311,10 +322,35 @@ int machine::getSlotFromBasePNumber(int base_pnumber)
     return slot_with_base_pnumber;
 }
 
-dispenser_slot *machine::getSelectedSlot()
+pnumberproduct *machine::getSelectedBottle()
 {
+    return m_selectedBottle;
+}
 
-    return selectedSlot;
+void machine::setSelectedBottle(int pnumber)
+{
+    // pnumber is the index. Clever... until you have one million options....
+    m_selectedBottle = &m_pnumberproducts[pnumber];
+}
+
+void machine::resetSelectedBottle(){
+    m_selectedBottle = NULL;
+}
+
+bool machine::hasSelectedBottle(){
+    if(getSelectedBottle()){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+bool machine::hasBuyBottleOption(){
+    if(m_buy_bottle_1 || m_buy_bottle_2){
+        return true;
+    }else{
+        return false;
+    }
 }
 
 pnumberproduct *machine::getSelectedProduct()
@@ -347,6 +383,16 @@ void machine::setSlots(dispenser_slot *slotss)
     m_slots = slotss; // slots is a TYPE in QT. so we can't use it as a variable name
 }
 
+dispenser_slot *machine::getSelectedSlot()
+{
+
+    return m_selectedSlot;
+}
+
+void machine::setSelectedSlot(int slot)
+{
+    m_selectedSlot = &m_slots[slot - 1];
+}
 void machine::setSelectedSlotFromSelectedProduct()
 {
 
@@ -358,8 +404,8 @@ void machine::setSelectedSlotFromSelectedProduct()
     int base_pnumber = m_selectedProduct->getFirstMixPNumberOrPNumberAsBasePNumber(); // if this is not a mix, it will return the main p number.
 
     int slot = getSlotFromBasePNumber(base_pnumber);
-
-    selectedSlot = &m_slots[slot - 1];
+    setSelectedSlot(slot);
+    qDebug() << "set selected slot: " << slot;
 }
 
 bool machine::isDispenseAreaBelowElseBesideScreen()
@@ -399,7 +445,7 @@ bool machine::isAelenPillarElseSoapStand()
 QString machine::getHardwareMajorVersion()
 {
     // e.g. AP2, SS1, ...
-    return m_hardware_version.left(3); // 
+    return m_hardware_version.left(3); //
 }
 
 int machine::getSlotCount()
@@ -462,13 +508,18 @@ bool machine::isSlotCountBiggerThanMaxSlotCount(int slot_count)
 
 void machine::dispenseButtonLightsAnimateState(bool animateElseOff)
 {
-    if (animateElseOff)
+    // if there are no button animation programs available, do nothing...
+    int m_button_animation_program = m_dispense_buttons_count / 1000; 
+    if (m_button_animation_program > 0)
     {
-        dfUtility->send_command_to_FSM("DispenseButtonLights|ANIMATE", true);
-    }
-    else
-    {
-        dfUtility->send_command_to_FSM("DispenseButtonLights|OFF", true);
+        if (animateElseOff)
+        {
+            dfUtility->send_command_to_FSM("DispenseButtonLights|ANIMATE", true);
+        }
+        else
+        {
+            dfUtility->send_command_to_FSM("DispenseButtonLights|OFF", true);
+        }
     }
 }
 
@@ -503,7 +554,7 @@ void machine::initCouponState()
 
     setDiscountPercentageFraction(0.0);
     setCouponCode("");
-    m_max_dollar_amount_discount = "666.0";
+    m_max_dollar_amount_discount = "0";
 }
 
 void machine::setRebootState(StateReboot state)
@@ -520,6 +571,14 @@ void machine::setDiscountPercentageFraction(double percentageFraction)
     // ratio = percentage / 100;
     qDebug() << "Set discount percentage as a fraction. " << QString::number(percentageFraction, 'f', 3);
     m_discount_percentage_fraction = percentageFraction;
+}
+
+void machine::resetCouponDiscount()
+{
+    m_discount_percentage_fraction = 0;
+    m_min_threshold_vol_ml_discount = "0";
+    m_max_threshold_vol_ml_discount = "0";
+    m_max_dollar_amount_discount = "0";
 }
 
 double machine::getDiscountPercentageFraction()
@@ -539,6 +598,7 @@ double machine::getPriceWithDiscount(double price)
     // there is a maximum absolute number of discount available.
     // will return discounted price
     double discount = price * m_discount_percentage_fraction;
+    qDebug() << "Discount: " << m_max_dollar_amount_discount;
     max_discount = m_max_dollar_amount_discount.toDouble();
     double resulting_discount = (max_discount == 0.0) ? discount : std::min(max_discount, discount); // if discount > max_discount, take max_discount
     return (price - resulting_discount);
@@ -551,8 +611,8 @@ double machine::getPriceCorrectedForSelectedSize(int pnumber, bool maximumVolume
     pnumberproduct *product = getProductByPNumber(all_pnumbers[pnumber]);
     if (product->is_valid_size_selected())
     {
+        qDebug() << "Selected size" << product->getSelectedSize();
         price = product->getBasePrice(product->getSelectedSize());
-
         if (maximumVolumeForCustom && (product->getSelectedSize() == SIZE_CUSTOM_INDEX))
         {
             // price is per ml for custom size, so, we multiply it by the maximum amount of dispensed volume if
@@ -623,8 +683,9 @@ QString machine::getTemplateFolder()
             template_name = QString(TEMPLATES_DEFAULT_NAME) + "_" + getHardwareMajorVersion();
         }
     }
-
-    return QString(TEMPLATES_ROOT_PATH) + template_name + "/";
+    QString templateFolder = QString(TEMPLATES_ROOT_PATH) + template_name + "/";
+    qDebug() << "Get template folder : " << templateFolder;
+    return templateFolder;
 }
 
 QString machine::getTemplatePathFromName(QString fileName)
@@ -642,7 +703,7 @@ QString machine::getTemplatePathFromName(QString fileName)
 
         if (!df_util::pathExists(filePath))
         {
-            qDebug() << "File not found in default hardware folder : " + filePath;
+            qDebug() << "File not found in default hardware folder: " + filePath + " Will try default.";
             // check if file exists in default template
             filePath = QString(TEMPLATES_ROOT_PATH) + QString(TEMPLATES_DEFAULT_NAME) + "/" + fileName;
             if (!df_util::pathExists(filePath))
@@ -759,6 +820,11 @@ void machine::fsmReceiveTemperature(double temperature_1, double temperature_2)
 double machine::getTemperature_1()
 {
     return m_temperature;
+}
+
+QString machine::getSizeUnit()
+{
+    return m_size_unit;
 }
 
 void machine::getTemperatureFromController()
@@ -975,6 +1041,22 @@ QString machine::getHelpPageHtmlText()
     return m_help_text_html;
 }
 
+void machine::resetTransactionLogging()
+{
+    transactionLogging = "";
+}
+
+void machine::addToTransactionLogging(QString text)
+{
+    transactionLogging += text;
+    qDebug() << "Transaction Logging: " << transactionLogging;
+}
+
+QString machine::getTransactionLogging()
+{
+    return transactionLogging;
+}
+
 void machine::loadMachineParameterFromDb()
 {
     qDebug() << "DB call: Load all machine parameters";
@@ -1012,7 +1094,12 @@ void machine::loadMachineParameterFromDb()
         &m_software_version_controller,
         &m_is_enabled,
         &m_status_text,
-        &m_payment);
+        &m_payment,
+        &m_size_unit,
+        &m_screen_sleep_time24h,
+        &m_screen_wakeup_time24h,
+        &m_buy_bottle_1,
+        &m_buy_bottle_2);
 
     qDebug() << "Machine ID as loaded from db: " << getMachineId();
     qDebug() << "Template folder from db : " << getTemplateFolder();
@@ -1038,6 +1125,26 @@ void machine::setPaymentMethod(QString paymentMethod)
 {
     qDebug() << "Open db: set payment method";
     m_db->updateTableMachineWithText("payment", paymentMethod);
+}
+
+ActivePaymentMethod machine::getActivePaymentMethod()
+{
+    return m_activePaymentMethod;
+}
+
+void machine::setActivePaymentMethod(ActivePaymentMethod paymentMethod)
+{
+    m_activePaymentMethod = paymentMethod;
+}
+
+std::vector<ActivePaymentMethod> machine::getAllowedPaymentMethods()
+{
+    return allowedPaymentMethods;
+}
+
+void machine::setAllowedPaymentMethods(ActivePaymentMethod paymentMethod)
+{
+    allowedPaymentMethods.push_back(paymentMethod);
 }
 
 QString machine::getMachineId()
@@ -1099,9 +1206,36 @@ void machine::addPictureToLabel(QLabel *label, QString picturePath)
 
         int w = label->width();
         int h = label->height();
+        // // // set a scaled pixmap to a w x h window keeping its aspect ratio
+        label->setPixmap(picture.scaled(w, h, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    }
+    else
+    {
+        qDebug() << "Can't add picture to label: " << label->objectName() << " " << picturePath;
+    }
+}
 
-        // // set a scaled pixmap to a w x h window keeping its aspect ratio
-        label->setPixmap(picture.scaled(w, h, Qt::KeepAspectRatio));
+void machine::addPictureToLabelCircle(QLabel *label, QString picturePath)
+{
+    if (df_util::pathExists(picturePath))
+    {
+        QPixmap picture(picturePath);
+        QPixmap mask(picture.size());
+        mask.fill(Qt::transparent);
+
+        // Draw smooth ellipse on mask
+        QPainter painter(&mask);
+        painter.setRenderHint(QPainter::Antialiasing);
+        painter.setBrush(QBrush(Qt::white));
+        painter.drawEllipse(0, 0, picture.width(), picture.height());
+
+        // Apply mask to picture
+        picture.setMask(mask.mask());
+
+        // Set a scaled pixmap to a w x h window keeping its aspect ratio
+        int w = label->width();
+        int h = label->height();
+        label->setPixmap(picture.scaled(w, h, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     }
     else
     {
@@ -1173,7 +1307,6 @@ QString machine::getTemplateTextByElementNameAndPageAndIdentifier(QWidget *p_ele
 {
     // QString element_page_and_name = getTemplateTextByElementNameAndPage(p_element);
     QString element_page_and_name = getCombinedElementPageAndName(p_element);
-
     QString searchString = element_page_and_name + "->" + identifier;
     return getTemplateText(searchString);
 }
@@ -1299,31 +1432,33 @@ void machine::applyPropertiesToQWidget(QWidget *widget)
 
     QString combinedName = getCombinedElementPageAndName(widget);
 
-    auto it = elementDynamicPropertiesMap_template.find(combinedName);
-    QString jsonString;
+    auto selectedElement = elementDynamicPropertiesMap_template.find(combinedName); // find element in associative array
+    QString propertiesJsonString;
     bool valid = true;
 
-    if (it != elementDynamicPropertiesMap_template.end())
+    if (selectedElement != elementDynamicPropertiesMap_template.end())
     {
-        qDebug() << "element " << combinedName << "found in template. json string: " << it->second;
-        jsonString = it->second;
+        // if found in template dynamic properties
+        qDebug() << "element " << combinedName << "found in template. json string: " << selectedElement->second;
+        propertiesJsonString = selectedElement->second; // second implies the value of the key:value pair in the associative array
     }
     else
     {
-
-        it = elementDynamicPropertiesMap_default_hardware.find(combinedName);
-        if (it != elementDynamicPropertiesMap_default_hardware.end())
+        // if found in default hardware template dynamic properties
+        selectedElement = elementDynamicPropertiesMap_default_hardware.find(combinedName);
+        if (selectedElement != elementDynamicPropertiesMap_default_hardware.end())
         {
-            qDebug() << "element " << combinedName << "found in default hardware. json string: " << it->second;
-            jsonString = it->second;
+            qDebug() << "element " << combinedName << "found in default hardware template. json string: " << selectedElement->second;
+            propertiesJsonString = selectedElement->second;
         }
         else
         {
-            it = elementDynamicPropertiesMap_default.find(combinedName);
-            if (it != elementDynamicPropertiesMap_default.end())
+            // if found in default template dynamic properties
+            selectedElement = elementDynamicPropertiesMap_default.find(combinedName);
+            if (selectedElement != elementDynamicPropertiesMap_default.end())
             {
-                qDebug() << "element " << combinedName << "found in default. json string: " << it->second;
-                jsonString = it->second;
+                qDebug() << "element " << combinedName << "found in default template. json string: " << selectedElement->second;
+                propertiesJsonString = selectedElement->second;
             }
             else
             {
@@ -1338,7 +1473,7 @@ void machine::applyPropertiesToQWidget(QWidget *widget)
         return;
     }
 
-    QJsonObject jsonObject = df_util::parseJsonString(jsonString);
+    QJsonObject jsonObject = df_util::parseJsonString(propertiesJsonString);
 
     int x = widget->x();
     int y = widget->y();
@@ -1482,4 +1617,12 @@ QStringList machine::getChildNames(QObject *parent)
     }
 
     return childNames;
+}
+
+bool machine::hasMixing(){
+    if(m_hardware_version == "AP2" || m_hardware_version == "AP3"){
+        return true;
+    }else{
+        return false;
+    }
 }

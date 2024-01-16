@@ -232,6 +232,29 @@ line-height: 29px;</string>
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="label_qr_background">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>349</y>
+     <width>600</width>
+     <height>706</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <zorder>label_qr_background</zorder>
   <zorder>pushButton_refresh</zorder>
   <zorder>pushButton_previous_page</zorder>
   <zorder>label_product_price</zorder>

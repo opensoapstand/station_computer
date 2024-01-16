@@ -17,6 +17,9 @@ public:
 
     int getFirstMixPNumberOrPNumberAsBasePNumber();
     QVector<int> getMixPNumbers();
+    QString getMixPNumbersAsCsv();
+    QString getMixRatiosAsCsv();
+    QVector<double> getMixRatios();
 
     void loadProductPropertiesFromProductsFile();
     void getProductProperties(QString *name, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui);
@@ -72,6 +75,8 @@ public:
 
     QString getProductPicturePath();
 
+    double getPriceOfSelectedBottle();
+    double getVolumeOfSelectedBottle();
     double getVolumeOfSelectedSize(); // productt
     double getVolumeBySize(int size); // productt
 
@@ -82,8 +87,9 @@ public:
     double getVolumePerTickForSlot();                                 // productt
     void setVolumePerTickForSlot(QString volumePerTickInput);         // productt
 
-    QString getUnitsForSlot();              // productt
-    QString getSizeAsVolume(QString units); // productt
+    void setSizeUnit(QString units);
+    QString getSizeUnit();              // productt
+    // QString getSizeAsVolume(QString units); // productt
 
     QString getSizeAsVolumeWithCorrectUnits(bool round, bool addUnits);                // productt
     QString getSizeAsVolumeWithCorrectUnits(int size, bool roundValue, bool addUnits); // productt
@@ -108,12 +114,22 @@ public:
     QString getStatusText();
     void setStatusText(QString statusText);
 
+    bool isCustomMix();
+    void resetCustomMixRatioParameters();
+    void adjustAdditivesRatioModifier(int index, double additiveModifier);
+    QVector<double> getAdditivesRatioModifier();
+    double getAdditivesRatioModifier(int index);
+    QVector<double> getCustomMixRatios();
+    void setCustomMixRatios();
+
 private:
     int m_PNumber;
     int m_basePNumber;
     bool m_isBaseProduct; // 100%, no additives.
     QVector<int> m_mixPNumbers;
     QVector<double> m_mixRatios;
+    QVector<double> m_additivesCustomMixRatioModifiers;
+    QVector<double> m_customMixRatios;
 
     int m_selected_size;
     double DispensedVolumeMl;

@@ -99,9 +99,52 @@ int pnumberproduct::getFirstMixPNumberOrPNumberAsBasePNumber()
     }
 }
 
+QString pnumberproduct::getMixPNumbersAsCsv()
+{
+    QString csvString;
+    if (m_mixPNumbers.size() > 0)
+    {
+        for (int i = 0; i < m_mixPNumbers.size(); ++i)
+        {
+            csvString += QString::number(m_mixPNumbers[i]);
+            if (i < m_mixPNumbers.size() - 1) // Don't add a comma after the last element
+                csvString += ",";
+        }
+    }
+    else
+    {
+        csvString += QString::number(m_PNumber);
+    }
+    return csvString;
+}
+
+QString pnumberproduct::getMixRatiosAsCsv()
+{
+    QString csvString;
+    if (m_mixRatios.size() > 0)
+    {
+
+        for (int i = 0; i < m_mixRatios.size(); ++i)
+        {
+            csvString += QString::number(m_mixRatios[i]);
+            if (i < m_mixRatios.size() - 1) // Don't add a comma after the last element
+                csvString += ",";
+        }
+    }
+    else
+    {
+        csvString += "1";
+    }
+    return csvString;
+}
+
 QVector<int> pnumberproduct::getMixPNumbers()
 {
     return m_mixPNumbers;
+}
+QVector<double> pnumberproduct::getMixRatios()
+{
+    return m_mixRatios;
 }
 
 void pnumberproduct::loadProductPropertiesFromDb()
@@ -112,7 +155,7 @@ void pnumberproduct::loadProductPropertiesFromDb()
                                   &m_soapstand_product_serial,
                                   m_mixPNumbers,
                                   m_mixRatios,
-                                  &m_size_unit,
+                                  //   &m_size_unit,
                                   //   &m_currency_deprecated, //_dummy_deprecated
                                   //   &m_payment_deprecated,  //_deprecated,
                                   &m_name_receipt,
@@ -134,16 +177,17 @@ void pnumberproduct::loadProductPropertiesFromDb()
                                   &m_status_text,
                                   m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
 
-        int pnumberFromDb = convertPStringToPInt(m_soapstand_product_serial);
+    int pnumberFromDb = convertPStringToPInt(m_soapstand_product_serial);
 
-        if (getPNumber() != pnumberFromDb){
-            qDebug() << "ERROR: Could not load from DB: " << getPNumber() <<" was set as: " << pnumberFromDb;
-        }
-        
-        // else{
-        //     qDebug() << "Loaded from DB: " << getPNumber() <<" with db pnumber: " << pnumberFromDb;
+    if (getPNumber() != pnumberFromDb)
+    {
+        qDebug() << "ERROR: Could not load from DB: " << getPNumber() << " was set as: " << pnumberFromDb;
+    }
 
-        // }
+    // else{
+    //     qDebug() << "Loaded from DB: " << getPNumber() <<" with db pnumber: " << pnumberFromDb;
+
+    // }
 }
 
 bool pnumberproduct::getIsProductEnabled()
@@ -177,8 +221,9 @@ bool pnumberproduct::toggleSizeEnabled(int size)
 
 bool pnumberproduct::setSizeEnabled(int size, bool enabled)
 {
-    QString sizeIndexToText[6] = {"Invalid", "small", "medium", "large", "custom", "test"};
+    QString sizeIndexToText[7] = {"Invalid", "small", "medium", "large", "custom", "test", "sample"};
     // m_sizeIndexIsEnabled[size] = enabled;
+    qDebug() << "Size enabled" << size;
     QString column_name = QString("is_enabled_%1").arg(sizeIndexToText[size]);
     m_db->updateTableProductsWithInt(getPNumber(), column_name, enabled);
 }
@@ -189,6 +234,7 @@ bool pnumberproduct::getSizeEnabled(int size)
     qDebug() << "Size enabled? for: " << size << "enabled? : " << m_sizeIndexIsEnabled[size];
     return m_sizeIndexIsEnabled[size];
 }
+
 char pnumberproduct::getSelectedSizeAsChar()
 {
     // ! = invalid.
@@ -250,6 +296,17 @@ bool pnumberproduct::is_valid_size_selected()
     return true;
 }
 
+double pnumberproduct::getPriceOfSelectedBottle(){
+    //size: 1 for default bottle size
+    return getBasePrice(1);
+}
+
+double pnumberproduct::getVolumeOfSelectedBottle()
+{
+    //size: 1 for default bottle size
+    return getVolumeBySize(1);
+}
+
 double pnumberproduct::getVolumeOfSelectedSize()
 {
     double volume;
@@ -267,7 +324,6 @@ double pnumberproduct::getVolumeOfSelectedSize()
 
 double pnumberproduct::getVolumeBySize(int size)
 {
-
     return m_sizeIndexVolumes[size];
 }
 
@@ -277,7 +333,7 @@ double pnumberproduct::getVolumeBySize(int size)
 
 void pnumberproduct::setPrice(int size, double price)
 {
-    QString price_columns[5] = {"size_error", "price_small", "price_medium", "price_large", "price_custom"};
+    QString price_columns[6] = {"size_error", "price_small", "price_medium", "price_large", "price_custom", "price_sample"};
     QString column_name = price_columns[size];
 
     qDebug() << "Open db: set p roduct price";
@@ -318,7 +374,7 @@ void pnumberproduct::setVolumeDispensedMl(double volumeMl)
 
 double pnumberproduct::inputTextToMlConvertUnits(QString inputValueAsText)
 {
-    if (getUnitsForSlot() == "oz")
+    if (getSizeUnit() == "oz")
     {
         return df_util::convertOzToMl(inputValueAsText.toDouble());
     }
@@ -350,7 +406,12 @@ double pnumberproduct::getRestockVolume()
     return m_volume_full;
 }
 
-QString pnumberproduct::getUnitsForSlot()
+void pnumberproduct::setSizeUnit(QString unit)
+{
+    m_size_unit = unit;
+}
+
+QString pnumberproduct::getSizeUnit()
 {
 
     return m_size_unit;
@@ -359,7 +420,7 @@ QString pnumberproduct::getUnitsForSlot()
 QString pnumberproduct::getVolumePerTickAsStringForSlot()
 {
     double vol_per_tick = getVolumePerTickForSlot();
-    QString units = getUnitsForSlot();
+    QString units = getSizeUnit();
 
     return df_util::getConvertedStringVolumeFromMl(vol_per_tick, units, false, true);
 }
@@ -379,7 +440,7 @@ void pnumberproduct::setVolumePerTickForSlot(QString volumePerTickInput)
 void pnumberproduct::configureVolumeToSizeForSlot(QString volumeInput, int size)
 {
     double volume = inputTextToMlConvertUnits(volumeInput);
-    QString volume_columns[5] = {"invalid_size", "size_small", "size_medium", "size_large", "size_custom_max"};
+    QString volume_columns[6] = {"invalid_size", "size_small", "size_medium", "size_large", "size_custom_max", "size_sample"};
     QString column_name = volume_columns[size];
 
     qInfo() << "Open db: size to volume";
@@ -417,7 +478,7 @@ double pnumberproduct::getVolumeRemaining()
 
 QString pnumberproduct::getVolumeRemainingCorrectUnits(bool addUnits)
 {
-    QString units = getUnitsForSlot();
+    QString units = getSizeUnit();
     QString volume_as_string = df_util::getConvertedStringVolumeFromMl(getVolumeRemaining(), units, false, addUnits);
 
     return volume_as_string;
@@ -425,14 +486,14 @@ QString pnumberproduct::getVolumeRemainingCorrectUnits(bool addUnits)
 
 QString pnumberproduct::getVolumeDispensedSinceRestockCorrectUnits()
 {
-    QString units = getUnitsForSlot();
+    QString units = getSizeUnit();
     QString volume_as_string = df_util::getConvertedStringVolumeFromMl(m_volume_dispensed_since_restock, units, false, true);
     return volume_as_string;
 }
 
 QString pnumberproduct::getTotalDispensedCorrectUnits()
 {
-    QString units = getUnitsForSlot();
+    QString units = getSizeUnit();
     QString volume_as_string = df_util::getConvertedStringVolumeFromMl(m_volume_dispensed_total, units, false, true);
     return volume_as_string;
 }
@@ -445,7 +506,7 @@ QString pnumberproduct::getSizeAsVolumeWithCorrectUnits(int size, bool roundValu
     QString units;
 
     v = getVolumeBySize(size);
-    units = getUnitsForSlot();
+    units = getSizeUnit();
     volume_as_string = df_util::getConvertedStringVolumeFromMl(v, units, roundValue, addUnits);
     return volume_as_string;
 }
@@ -518,7 +579,7 @@ QString pnumberproduct::getAwsProductId()
 
 QString pnumberproduct::getFullVolumeCorrectUnits(bool addUnits)
 {
-    QString units = getUnitsForSlot();
+    QString units = getSizeUnit();
     QString volume_as_string = df_util::getConvertedStringVolumeFromMl(m_volume_full, units, false, addUnits);
     return volume_as_string;
 }
@@ -559,3 +620,88 @@ void pnumberproduct::setDispenseSpeedPercentage(int percentage)
 //     // DO  NOT USE
 //     return m_payment_deprecated;
 // }
+bool pnumberproduct::isCustomMix()
+{
+    bool isCustomMix = false;
+
+    for (int i = 0; i < getMixRatios().size(); i++)
+    {
+        if (m_customMixRatios[i] != getMixRatios()[i])
+        {
+            // qInfo() << "i: normal mix ratio: " << getMixRatios()[i]<< "  custom: " << m_customMixRatios[i];
+            isCustomMix = true;
+        }
+    }
+    return isCustomMix;
+}
+
+void pnumberproduct::resetCustomMixRatioParameters()
+{
+    // the mixing ratios might be altered by the user. For this we use a ratio-modifier.
+    // additives is mixPNumbers - base product.
+    m_additivesCustomMixRatioModifiers.clear();
+    for (int i = 0; i < getMixRatios().size() - 1; i++)
+    {
+        m_additivesCustomMixRatioModifiers.append(1);
+    }
+    m_customMixRatios.clear();
+    for (int i = 0; i < getMixRatios().size(); i++)
+    {
+
+        m_customMixRatios.append(getMixRatios()[i]); // add base product ratio
+    }
+}
+
+void pnumberproduct::adjustAdditivesRatioModifier(int index, double additiveModifier)
+{
+
+    m_additivesCustomMixRatioModifiers[index] = additiveModifier;
+    setCustomMixRatios();
+}
+
+QVector<double> pnumberproduct::getAdditivesRatioModifier()
+{
+    return m_additivesCustomMixRatioModifiers;
+}
+
+QVector<double> pnumberproduct::getCustomMixRatios()
+{
+    return m_customMixRatios;
+}
+
+void pnumberproduct::setCustomMixRatios()
+{
+    // two options:
+    //    1. keep rations e.g. 0.7,0.2,0.1 --> 0.1 become custom *2 ==> 0.2  ==> remaining 0.7+0.2 used to be 90%, but will now be 80%, so: modifier: 0.8/0.9  ==> new ratios = 62.22%,17.77%,20% ONLY WORKS FOR ONE CHANGE AT A TIME
+    //    or
+    //    2. used modifiers to change the additives percentages and use "the rest" to add with base product. e.g. 0.7,0.2,0.1   --> 0.1 becomes custom 0.2 ==> 0.2,0.2 for the addtives = 40% ==> base will be 60% now.    0.6,0.2,0.2 as end custom mix
+
+    // let's keep it simple and use method 2, always recalculate for zero.
+
+    double custom_ratios_total = 0;
+    m_customMixRatios.clear();
+    m_customMixRatios.append(getMixRatios()[0]); // add base product ratio
+    for (int i = 1; i < getMixRatios().size(); i++)
+    {
+        // go over all ADDITIVES (skip base)
+        // ratio_modifiers_total += m_additivesCustomMixRatioModifiers[i - 1];
+        double customRatio = m_additivesCustomMixRatioModifiers[i - 1] * getMixRatios()[i];
+        custom_ratios_total += customRatio;
+        m_customMixRatios.append(customRatio);
+    }
+
+    if (custom_ratios_total > 1.0)
+    {
+        qDebug() << "ERROR: too much additives added, will reset to default.";
+        resetCustomMixRatioParameters();
+    }
+    else
+    {
+        m_customMixRatios[0] = 1.0 - custom_ratios_total;
+    }
+}
+
+double pnumberproduct::getAdditivesRatioModifier(int index)
+{
+    return m_additivesCustomMixRatioModifiers[index];
+}

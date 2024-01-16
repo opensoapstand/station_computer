@@ -34,8 +34,16 @@
 #define CSV_PRODUCT_COL_INGREDIENTS_UI 10
 #define CSV_PRODUCT_COL_NOTES 11
 
+#define DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX 6
+
 #define PRODUCT_DISPENSERS_MAX 4
-#define PNUMBERS_COUNT 100
+
+#define DUMMY_PNUMBER 2
+#define CUSTOM_MIX_PNUMBER 1
+
+
+#define ADDITIVES_PER_SLOT_COUNT_MAX 5
+#define PNUMBERS_COUNT 200
 #define MINIMUM_DISPENSE_VOLUME_ML 10
 
 // #define ENABLE_MULTI_BUTTON
@@ -59,6 +67,8 @@
 //#define FLOWSENSOR_DEJITTER_MICROS 10000ULL  // AICHI flow sensor
 #define IO_PIN_BUTTON_4 410   // connector pin 36 for EN-29 pcb
 #define IO_PIN_ENABLE_24V 410 // connector pin 36 for EN-134 pcb
+#define IO_PIN_ENABLE_3point3V 389 // connector pin 28 for EN258 pcb
+#define IO_PIN_ENABLE_5V 338       // connector pin 12 for EN258 pcb
 
 #define PIC_PROGRAMMER_PIN_VPP 337
 #define PIC_PROGRAMMER_PIN_PGC 412
@@ -72,7 +82,7 @@
 #define SLOW_START_INCREASE_PERIOD_MILLIS 2 // set to 0 for instant start
 #define SLOW_STOP_PERIOD_MILLIS 1           // set to 0 for instant stop
 
-#define DISPENSE_STATUS_UPDATE_DELTA_MILLIS 500 // period of which controller can send status to ui and logging and terminal
+#define DISPENSE_STATUS_UPDATE_DELTA_MILLIS 1000 // period of which controller can send status to ui and logging and terminal
 
 #define SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS 3000
 // #define EMPTY_CONTAINER_DETECTION_FLOW_THRESHOLD_ML_PER_S 15 // reference: at 2l/min we have 33ml/s
@@ -97,7 +107,7 @@
 #define SIZE_LARGE_CHAR 'l'
 #define SIZE_CUSTOM_CHAR 'c'
 #define SIZE_TEST_CHAR 't'
-// #define SIZE_AUTO_CHAR 'a'
+#define SIZE_SAMPLE_CHAR 'f'
 #define SIZE_DUMMY 'x'
 #define SIZE_SMALLER_THAN_SMALL '0'
 #define SIZE_EMPTY_CONTAINER_DETECTED_CHAR 'i' // hack to accomodate for empty container or dispense timeout
@@ -106,7 +116,6 @@
 #define ACTION_DISPENSE 'd'
 #define ACTION_RESET 'b'
 #define ACTION_AUTOFILL 'a'
-// #define CLEAN_CHAR 'c'
 
 #define ACTION_NO_ACTION '-'
 #define ACTION_DISPENSE_END 'f'
@@ -114,9 +123,11 @@
 #define ACTION_QUIT 'q'
 #define ACTION_MANUAL_PUMP_PWM_SET 'i'
 #define ACTION_MANUAL_PUMP_SET 'n'
-#define ACTION_PRINT_TRANSACTION 't'
+#define ACTION_PRINT_TRANSACTION '@'
+#define ACTION_UI_COMMAND_PRINT_TRANSACTION '+'
+#define ACTION_UI_COMMAND_TEST_PRINT '='
 
-// #define ACTION_UI_COMMAND_PRINTER_SEND_STATUS 'a'
+#define ACTION_UI_COMMAND_PRINTER_SEND_STATUS '$'
 #define ACTION_UI_COMMAND_PRINTER_MENU 'p'
 #define ACTION_HELP 'h'
 
@@ -180,7 +191,7 @@ struct Time_val
 };
 typedef struct Time_val Time_val;
 
-#define TABLE_PRODUCTS_COLUMN_COUNT 53
+#define TABLE_PRODUCTS_COLUMN_COUNT 54
 
 typedef enum DF_FSM
 {

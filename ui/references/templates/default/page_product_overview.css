@@ -3,7 +3,7 @@ QPushButton {
 }
 
 
-#pushButton_continue {
+#pushButton_continue, #pushButton_continue_additional{
     font-family: 'Brevia';
     font-style: normal;
     font-weight: 200;
@@ -110,6 +110,10 @@ QLabel {
     text-transform: capitalize;
     color: #438080;
 }
+#label_page_title, #label_checkout_title, #label_invoice_size_title, #label_invoice_coupon_title{
+    color: transparent;
+    background: transparent;
+}
 #label_selected_volume{
     font-family: 'Brevia';
     font-style: normal;
@@ -121,6 +125,10 @@ QLabel {
     /* qproperty-alignment: AlignCenter; */
     border: 2px solid #5E8580;
 }
+#label_invoice_additives_overview, #label_coupon_icon{
+    color: transparent;
+    background: transparent;
+}
 .labelOrderOverview{
     font-family: 'Montserrat';
     font-style: normal;
@@ -128,6 +136,10 @@ QLabel {
     font-size: 28px;
     line-height: 40px;
     color: #58595B;
+}
+#label_invoice_size_title{
+    color: transparent;
+    background: none;
 }
 #label_invoice_box{
     border: 2px solid #5E8580;
@@ -168,9 +180,14 @@ QLabel {
     border:8px solid #248C8C;
     border-radius: 20px;
 }
-#label_product_photo {
-    border: 2px solid #5E8580;
-}
 #line_invoice{
     border: none;
 }
+#label_product_photo {
+    border: 2px solid #5E8580;
+    background-image: url(%IMAGE_PATH%);
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+

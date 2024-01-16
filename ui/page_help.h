@@ -16,6 +16,7 @@
 #include "df_util.h"
 #include "page_select_product.h"
 #include "page_product.h"
+#include "page_product_mixing.h"
 #include "page_transactions.h"
 #include "page_qr_payment.h"
 #include "page_idle.h"

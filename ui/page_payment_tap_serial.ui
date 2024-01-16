@@ -199,6 +199,15 @@ color: #58595B;</string>
     <bool>true</bool>
    </property>
   </widget>
+  <zorder>pushButton_previous_page</zorder>
+  <zorder>pushButton_to_idle</zorder>
+  <zorder>order_total_amount</zorder>
+  <zorder>order_drink_amount</zorder>
+  <zorder>pushButton_payment_bypass</zorder>
+  <zorder>productLabel</zorder>
+  <zorder>label_title</zorder>
+  <zorder>preauthLabel</zorder>
+  <zorder>animated_Label</zorder>
  </widget>
  <resources/>
  <connections/>

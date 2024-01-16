@@ -165,7 +165,6 @@ std::vector<uint8_t> transactionPacket::resetDevice()
     //ETX is 0x03                                               //03
     packet.setPacketDataLen();                                  //00 05
     packet.setPacketLRC();                                      //LRC
-
     return packet.getPacket();
 }
 

@@ -22,7 +22,7 @@
 #include <pthread.h>
 
 #include "dispenser.h"
-#include "machine.h" 
+#include "machine.h"
 
 #include <stdio.h>
 #include <cstring>
@@ -32,7 +32,7 @@
 #include "../../library/socket/ClientSocket.h"
 
 // Forward declaration  to avoid circular dependencies problem
-class machine; 
+class machine;
 
 class messageMediator
 {
@@ -58,7 +58,7 @@ public:
    // dispense command
    char getAction() { return m_requestedAction; }
    void resetAction();
-   int getRequestedSlot() { return m_RequestedProductIndexInt; }
+   int getRequestedSlot() { return m_requested_slot; }
    char getRequestedSize() { return m_requestedSize; }
    int getCommandValue() { return m_commandValue; }
    void setRequestedSize(char size);
@@ -79,7 +79,13 @@ public:
    // bool m_handlingRequest;
    // bool isBusySendingMessage();
 
+   DF_ERROR setSendingBehaviour(bool enableElseDisableSending);
+
+   void getPrinterStatus(bool *r_isOnline, bool *r_hasPaper);
+   void sendPrinterStatus();
+
 private:
+   bool m_enable_sending = true;
    int messageIP;
    static bool m_fExitThreads;
 
@@ -90,7 +96,7 @@ private:
    static string m_processCommand;
    static bool m_bCommandStringReceived;
 
-   static int m_RequestedProductIndexInt;
+   static int m_requested_slot;
    static int m_nSolenoid;
    static char m_requestedAction;
    static double m_nVolumeTarget;
@@ -107,6 +113,8 @@ private:
    static void *doKBThread(void *pThreadArgs);
    static void *doIPThread(void *pThreadArgs);
    machine *m_machine;
+   Adafruit_Thermal* printerr;
+
 };
 
 #endif

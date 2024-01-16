@@ -18,135 +18,177 @@
 #include "../objects/debugOutput.h"
 #include <fstream>
 
-// Default CTOR
 product::product()
 {
+}
+
+product::~product()
+{
+    debugOutput::sendMessage("product: ~product", MSG_INFO);
 }
 
 void product::init(int pnumber)
 {
     m_pnumber = pnumber;
+    // m_display_unit = size_unit;
+    // m_paymentMethod = paymentMethod;
     this->loadParameters();
 }
 
-static int db_sql_callback(void *data, int argc, char **argv, char **azColName)
-{
-    int i;
-    //    fprintf(stderr, "%s: ", (const char *)data);
-
-    for (i = 0; i < argc; i++)
-    {
-        printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
-        // if()
-    }
-
-    // setProductName("test");
-    // setIsStillProduct(false);
-
-    printf("\n");
-    return 0;
-}
-
-// DTOR
-product::~product()
-{
-}
-
-// Set the Product option slot
-// void product::setSlot(int slot)
-// {
-//     m_pnumber = slot;
-// }
-// Set the Product option slot
-int product::getSlot()
+int product::getPNumber()
 {
     return m_pnumber;
 }
 
-void product::loadProductPropertiesFromCsv()
+string product::getPNumberAsPString()
 {
-    // Create an input filestream
-    std::ifstream products_file(PRODUCT_DETAILS_TSV_PATH);
+    return "P-" + std::to_string(m_pnumber);
+}
 
-    if (!products_file.is_open())
+string product::getProductName()
+{
+    return m_product_properties[CSV_PRODUCT_COL_NAME];
+}
+
+int product::getBasePNumber()
+{
+    if (!isMixingProduct())
     {
-        debugOutput::sendMessage("Products file path could not be opened: " + std::string(PRODUCT_DETAILS_TSV_PATH), MSG_ERROR);
-        return;
-    }
-
-    std::string line;
-
-    while (std::getline(products_file, line))
-    {
-        std::string delimiter = "\t";
-        size_t pos = 0;
-        uint8_t token_index = 0;
-        std::string token;
-        while ((pos = line.find(delimiter)) != std::string::npos)
+        if (m_mix_pnumbers_count == 1) // if exactly one mix_pnumber, we consider it the base
         {
-            token = line.substr(0, pos);
-            m_product_properties[token_index] = token;
-            token_index++;
-            line.erase(0, pos + delimiter.length());
+            return m_mix_pnumbers[0];
         }
-
-        // for (uint8_t i=0;i<token_index;i++){
-        //     debugOutput::sendMessage(split_line[i] , MSG_INFO);
-
-        // }
-        // debugOutput::sendMessage(m_product_properties[CSV_PRODUCT_COL_ID] , MSG_INFO);
-        // debugOutput::sendMessage(getPNumberAsPString() , MSG_INFO);
-        // debugOutput::sendMessage(m_product_properties[CSV_PRODUCT_COL_NAME_UI] , MSG_INFO);
-
-        bool stringsAreDifferent;
-        // debugOutput::sendMessage("Product found in products file and loaded:"
-        stringsAreDifferent = m_product_properties[CSV_PRODUCT_COL_ID].compare(getPNumberAsPString());
-        if (!(stringsAreDifferent))
+        else
         {
-            debugOutput::sendMessage("Product found in products file and loaded: " + m_product_properties[CSV_PRODUCT_COL_ID] + " " + m_product_properties[CSV_PRODUCT_COL_NAME], MSG_INFO);
-            return;
+            return m_pnumber;
         }
     }
-    debugOutput::sendMessage("Could not load product from products file (not found). Pnumber " + std::to_string(m_pnumber), MSG_ERROR);
+    else
+    {
+        return m_mix_pnumbers[0];
+    }
 }
 
-// Set the Product Name
-// TODO: Redefine function prototype, no argument.
-// void product::setProductName(string productName)
-// {
-//     // TODO: SQLite database Query could be better option.
-//     m_name = productName;
-// }
-
-double product::getVolumePerTick()
+int product::getMixProductsCount()
 {
-    return m_nVolumePerTick;
+    // sum of additives and base
+    return m_mix_pnumbers_count;
 }
 
-bool product::registerFlowSensorTick()
+int product::getAdditivesCount()
 {
-    // tick from flowsensor interrupt will increase dispensed volume.
-    //    cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
-    // cout << getVolumePerTick()<< endl;
-    // cout << "TICKTICK"<< endl;
-    // cout << m_concentration_multiplier <<endl;
-
-    m_nVolumeDispensed += getVolumePerTick() * m_concentration_multiplier;
-
-    // m_nVolumeDispensed += 100.0;
+    if (isMixingProduct())
+    {
+        return m_mix_pnumbers_count - 1; // subtract base product
+    }
+    else
+    {
+        return 0;
+    }
 }
-void product::setVolumeDispensed(double volume)
+
+double product::getAdditiveMixRatio(int position)
 {
-    m_nVolumeDispensed = volume;
+    if (position == 0)
+    {
+        debugOutput::sendMessage("ASSERT ERROR: mixing position cannot be zero. ", MSG_ERROR);
+        return 0;
+    }
+    return getMixRatio(position);
 }
+
+double product::getBaseMixRatio()
+{
+    // ratio of base product
+    if (!isMixingProduct())
+    {
+        return 1.0;
+    }
+    else
+    {
+        return getMixRatio(0);
+    }
+}
+
+double product::getMixRatio(int position)
+{
+    // ratio of mixing product (pos 0=base,  pos>=1 = additives.  pos1=additive1,...)
+    if (!isMixingProduct())
+    {
+        return 1.0;
+    }
+    return m_mix_ratios[position];
+}
+
+int product::getAdditivePNumber(int position)
+{
+    if (position == 0)
+    {
+        // position starts from 1
+        debugOutput::sendMessage("ASSERT ERROR: Additives numbering starts from 1. 0 was provided.", MSG_ERROR);
+    }
+    if (position > getAdditivesCount())
+    {
+        debugOutput::sendMessage("ASSERT ERROR: Additives position provided is too high. Additive does not exist.", MSG_ERROR);
+        return PRODUCT_DUMMY;
+    }
+    return getMixPNumber(position); // first position is base pnumber. but mix pnumbers start from 1.
+}
+
+int product::getMixPNumber(int position)
+{
+    //  for (uint8_t i=0;i<m_mix_pnumbers_count;i++){
+    //     debugOutput::sendMessage("array tesrrrrrrrtstj:  " + to_string(m_mix_pnumbers[i]) + " at pos: " + to_string(i), MSG_INFO);
+    // }
+
+    return m_mix_pnumbers[position]; // first position is base pnumber. but pnumbers additives start from 1.
+}
+
+bool product::isMixingProduct()
+{
+    // the implications are big: mixing products have a lot less properties than actual products (i.e. no calibration parameter)
+    bool isMix = false;
+    if (m_mix_pnumbers_count <= 0)
+    {
+        isMix = false;
+    }
+    else if (m_mix_pnumbers_count == 1)
+    {
+        isMix = false;
+    }
+    else if (m_mix_pnumbers_count > 1)
+    {
+        isMix = true;
+    }
+    return isMix;
+}
+
+void product::getMixRatios(double *&mixRatios, int &count)
+{
+    mixRatios = m_mix_ratios;
+    count = m_mix_ratios_count;
+}
+void product::getMixPNumbers(int *&pnumbers, int &count)
+{
+    pnumbers = m_mix_pnumbers;
+    count = m_mix_pnumbers_count;
+}
+
 double product::getVolumeDispensed()
 {
     return m_nVolumeDispensed;
 }
+
+void product::setVolumeDispensed(double volume)
+{
+    m_nVolumeDispensed = volume;
+}
+
 void product::resetVolumeDispensed()
 {
     m_nVolumeDispensed = 0;
 }
+
 double product::getThresholdFlow()
 {
     // minimum threshold to consider dispensing.
@@ -157,8 +199,8 @@ double product::getThresholdFlow_max_allowed()
 
     if (m_nThresholdFlow_maximum_allowed < getThresholdFlow())
     {
-        // 2023-11: in the db, column "calibration_const" was reused to hold this variable, for AP. if not set, set it to an arbitray high value 
-                return 1000.0; // 1L per second. magic number
+        // 2023-11: in the db, column "calibration_const" was reused to hold this variable, for AP. if not set, set it to an arbitray high value
+        return 1000.0; // 1L per second. magic number
     }
     else
     {
@@ -166,19 +208,26 @@ double product::getThresholdFlow_max_allowed()
         return m_nThresholdFlow_maximum_allowed;
     }
 }
-int product::getRetractionTimeMillis()
+
+double product::getVolumePerTick()
 {
-    return m_nRetractionTimeMillis;
+    return m_nVolumePerTick;
+}
+void product::registerFlowSensorTickFromPcb()
+{
+    // tick from flowsensor interrupt will increase dispensed volume.
+    // cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
+    // cout << "Flow poll TICK from pcb." << endl;
+    debugOutput::sendMessage("product: Flow poll TICK from pcb." + getPNumberAsPString(), MSG_INFO);
+    m_nVolumeDispensed += getVolumePerTick() * m_concentration_multiplier;
 }
 
-int product::getPWM()
+void product::registerFlowSensorTickFromInterrupt()
 {
-    return m_nDispenseSpeedPWM;
-}
-
-double product::getVolPerTick()
-{
-    return m_volumePerTick;
+    // tick from flowsensor interrupt will increase dispensed volume.
+    // cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
+    debugOutput::sendMessage("Product: Interrupt TICK from pcb." + getPNumberAsPString(), MSG_INFO);
+    m_nVolumeDispensed += getVolumePerTick() * m_concentration_multiplier;
 }
 
 double product::getVolumeFull()
@@ -189,15 +238,19 @@ double product::getVolumeRemaining()
 {
     return m_nVolumeRemaining;
 }
-double product::getVolumeDispensedTotalEver()
+double product::getProductVolumeDispensedTotalEver()
 {
     // total volume ever dispensed by this slot.
     return m_nVolumeDispensedTotalEver;
 }
 
-double product::getVolumeDispensedSinceLastRestock()
+double product::getProductVolumeDispensedSinceLastRestock()
 {
     return m_nVolumeDispensedSinceRestock;
+}
+
+char product::getTargetVolumeAsChar(){
+    return getSizeCharFromTargetVolume(m_nVolumeTarget);
 }
 
 char product::getSizeCharFromTargetVolume(double volume)
@@ -220,13 +273,32 @@ char product::getSizeCharFromTargetVolume(double volume)
     {
         return 'c';
     }
+    else if (volume == m_nVolumeTarget_f)
+    {
+        return 'f';
+    }
     else
     {
         debugOutput::sendMessage("Get size from volume, not found, will default to custom dispense for volume " + to_string(volume), MSG_INFO);
         return 'c';
     }
 }
-double product::getTargetVolume(char size)
+double product::getTargetVolume()
+{
+    return m_nVolumeTarget;
+}
+
+void product::setTargetVolume(double volume)
+{
+    m_nVolumeTarget = volume;
+}
+
+void product::setTargetVolumeFromSize(char size)
+{
+    m_nVolumeTarget = getVolumeFromSize(size);
+}
+
+double product::getVolumeFromSize(char size)
 {
     if (size == 's')
     {
@@ -243,6 +315,10 @@ double product::getTargetVolume(char size)
     else if (size == 'c')
     {
         return m_nVolumeTarget_c_max;
+    }
+    else if (size == 'f')
+    {
+        return m_nVolumeTarget_f;
     }
     else if (size == 't')
     {
@@ -262,11 +338,11 @@ double product::getTargetVolume(char size)
 // {
 //     // custom volume pricing is per ml. Often, pricing is more optimal when larger volumes are dispensed.
 //     // if the volume provide is larger than "large volume pricing", the price per milliliter will be adjusted to match that.
-//     if (volume >= getTargetVolume(SIZE_LARGE_CHAR))
+//     if (volume >= getVolumeFromSize(SIZE_LARGE_CHAR))
 //     {
 //         // go for discount
 //         // price per ml
-//         double largePricePerMl = getPrice(SIZE_LARGE_CHAR) / getTargetVolume(SIZE_LARGE_CHAR);
+//         double largePricePerMl = getPrice(SIZE_LARGE_CHAR) / getVolumeFromSize(SIZE_LARGE_CHAR);
 
 //         return largePricePerMl;
 
@@ -320,6 +396,10 @@ double product::getPrice(char size)
     }
 }
 
+// string product::getPaymentMethod()
+// {
+//     return m_paymentMethod;
+// }
 bool product::getIsEnabled()
 {
     return this->m_is_enabled;
@@ -383,18 +463,18 @@ int product::sizeCharToSizeIndex(char size)
     return size_index;
 }
 
-string product::getDisplayUnits()
-{
-    return m_display_unit;
-}
+// string product::getDisplayUnits()
+// {
+//     return m_display_unit;
+// }
 
-string product::getFinalPLU(char size, double price)
+string product::getFinalPLU(char size, double price, string paymentMethod)
 {
 
     string base_plu = getBasePLU(size);
     char chars_plu_dynamic_formatted[MAX_BUF];
 
-    std::string paymentMethod = getPaymentMethod();
+    // std::string paymentMethod = getPaymentMethod();
     if (paymentMethod == "plu")
     {
         return base_plu;
@@ -465,35 +545,35 @@ string product::getFinalPLU(char size, double price)
     return base_plu;
 }
 
-double product::convertVolumeMetricToDisplayUnits(double volume)
+// double product::convertVolumeMetricToDisplayUnits(double volume)
+// {
+//     double converted_volume;
+
+//     if (getDisplayUnits() == "oz")
+//     {
+
+//         converted_volume = volume * ML_TO_OZ;
+//     }
+//     else if (getDisplayUnits() == "g")
+//     {
+
+//         converted_volume = volume * 1;
+//     }
+//     else
+//     {
+//         converted_volume = volume;
+//     }
+//     return converted_volume;
+// }
+
+int product::getRetractionTimeMillis()
 {
-    double converted_volume;
-
-    if (getDisplayUnits() == "oz")
-    {
-
-        converted_volume = volume * ML_TO_OZ;
-    }
-    else if (getDisplayUnits() == "g")
-    {
-
-        converted_volume = volume * 1;
-    }
-    else
-    {
-        converted_volume = volume;
-    }
-    return converted_volume;
+    return m_nRetractionTimeMillis;
 }
 
-int product::getPNumber()
+int product::getPWM()
 {
-    return m_pnumber;
-}
-
-string product::getPNumberAsPString()
-{
-    return "P-" + std::to_string(m_pnumber);
+    return m_nDispenseSpeedPWM;
 }
 
 string product::getBasePLU(char size)
@@ -533,6 +613,7 @@ string product::getBasePLU(char size)
 // }
 void product::executeSQLStatement(string sql_string)
 {
+    // In fsm, we're only reading the db. Avoid writing. All results are sent to UI for updating db. This was a necessary transition...
 
     int rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
@@ -556,23 +637,17 @@ bool product::isColumnInTable(string table, string column_name_to_find)
     int status;
     status = sqlite3_step(stmt);
     int row = 0;
-    // debugOutput::sendMessage("process record: " + sql_string, MSG_INFO);
     while (status == SQLITE_ROW)
     {
-        // debugOutput::sendMessage("roooow " + std::to_string(row), MSG_INFO);
         int columns_count = 3;
         for (int column_index = 0; column_index < columns_count; column_index++)
         {
-
-            // debugOutput::sendMessage("dcolumn index " + std::to_string(column_index), MSG_INFO);
             // for every row, go over all the the items (0=cid, 1=name, 2=type,3=notnull,...)
-
             switch (column_index)
             {
             case (1):
             {
                 string column_name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
-                // debugOutput::sendMessage("col name: " +column_name, MSG_INFO);
                 if (!column_name.compare(column_name_to_find))
                 {
                     // FOUND returns 0
@@ -604,11 +679,8 @@ bool product::isDbValid()
         "mix_pnumbers",
         "mix_ratios",
         "productId",
-        "slot",
         "name",
-        "size_unit",
         "currency",
-        "payment",
         "name_receipt",
         "concentrate_multiplier",
         "dispense_speed",
@@ -652,8 +724,10 @@ bool product::isDbValid()
         "size_custom_discount",
         "price_custom_discount",
         "is_enabled",
-        "status_text"
-
+        "status_text",
+        "is_enabled_sample",
+        "size_sample",
+        "price_sample"
     };
     bool is_valid = true;
 
@@ -727,11 +801,6 @@ bool product::isDbValid()
     return is_valid;
 }
 
-string product::getProductName()
-{
-    return m_product_properties[CSV_PRODUCT_COL_NAME];
-}
-
 std::string product::dbFieldAsValidString(sqlite3_stmt *stmt, int column_index)
 {
     // protect against null values in db.
@@ -751,18 +820,56 @@ std::string product::dbFieldAsValidString(sqlite3_stmt *stmt, int column_index)
 bool product::loadParameters()
 {
     bool success = true;
-    success &= loadParametersFromDb();
-    success &= loadParametersFromCsv();
+    if (getPNumber() != CUSTOM_MIX_PNUMBER)
+    {
+        debugOutput::sendMessage("Product: Data loading for product: " + to_string(getPNumber()), MSG_INFO);
+        success &= loadProductParametersFromDb();
+        loadProductPropertiesFromCsv();
+    }else{
+        debugOutput::sendMessage("No data loading for custom mix product.", MSG_INFO);
+    }
     return success;
 }
-bool product::loadParametersFromCsv()
-{
 
-    loadProductPropertiesFromCsv();
-    return true;
+void product::loadProductPropertiesFromCsv()
+{
+    // Create an input filestream
+    std::ifstream products_file(PRODUCT_DETAILS_TSV_PATH);
+
+    if (!products_file.is_open())
+    {
+        debugOutput::sendMessage("Products file path could not be opened: " + std::string(PRODUCT_DETAILS_TSV_PATH), MSG_ERROR);
+        return;
+    }
+
+    std::string line;
+
+    while (std::getline(products_file, line))
+    {
+        std::string delimiter = "\t";
+        size_t pos = 0;
+        uint8_t token_index = 0;
+        std::string token;
+        while ((pos = line.find(delimiter)) != std::string::npos)
+        {
+            token = line.substr(0, pos);
+            m_product_properties[token_index] = token;
+            token_index++;
+            line.erase(0, pos + delimiter.length());
+        }
+
+        bool stringsAreDifferent;
+        stringsAreDifferent = m_product_properties[CSV_PRODUCT_COL_ID].compare(getPNumberAsPString());
+        if (!(stringsAreDifferent))
+        {
+            debugOutput::sendMessage("Product found in products file and loaded: " + m_product_properties[CSV_PRODUCT_COL_ID] + " " + m_product_properties[CSV_PRODUCT_COL_NAME], MSG_INFO);
+            return;
+        }
+    }
+    debugOutput::sendMessage("Could not load product from products file (not found). Pnumber " + std::to_string(m_pnumber), MSG_ERROR);
 }
 
-bool product::loadParametersFromDb()
+bool product::loadProductParametersFromDb()
 {
 
     for (uint8_t i = 0; i < 4; i++)
@@ -786,40 +893,41 @@ bool product::loadParametersFromDb()
                         "mix_ratios,"
                         "productId,"
                         "name,"
-                        "size_unit,"
-                        "payment,"
+                        "is_enabled,"
                         "concentrate_multiplier,"
-                        "dispense_speed," // 8
+                        "dispense_speed," // 7
                         "threshold_flow,"
-                        "retraction_time," // 10
+                        "retraction_time," // 9
                         "calibration_const,"
                         "volume_per_tick,"
                         "volume_full,"
                         "volume_remaining,"
-                        "volume_dispensed_since_restock," // 15
+                        "volume_dispensed_since_restock," // 14
                         "volume_dispensed_total,"
                         "is_enabled_small,"
                         "is_enabled_medium,"
-                        "is_enabled_large," // 19
+                        "is_enabled_large," // 18
                         "is_enabled_custom,"
                         "size_small,"
                         "size_medium,"
                         "size_large,"
                         "size_custom_min,"
-                        "size_custom_max," // 25
+                        "size_custom_max," // 24
                         "price_small,"
                         "price_medium,"
                         "price_large,"
-                        "price_custom," // 29
+                        "price_custom," // 28
                         "plu_small,"
                         "plu_medium,"
                         "plu_large,"
                         "plu_custom,"
-                        "is_enabled_custom_discount," //
+                        "is_enabled_custom_discount," // 33
                         "size_custom_discount,"
-                        "price_custom_discount," //
-                        "is_enabled,"
-                        "status_text"
+                        "price_custom_discount," // 35
+                        "status_text,"            // 36
+                        "is_enabled_sample,"
+                        "size_sample,"
+                        "price_sample"
                         " FROM products WHERE soapstand_product_serial='" +
                         std::to_string(m_pnumber) + "';";
 
@@ -840,69 +948,80 @@ bool product::loadParametersFromDb()
         // debugOutput::sendMessage("colll count:  " + to_string(columns_count), MSG_INFO);
 
         m_pnumber = std::stoi(product::dbFieldAsValidString(stmt, 0));
-        m_mix_pnumbers = product::dbFieldAsValidString(stmt, 1);
-        m_mix_ratios = product::dbFieldAsValidString(stmt, 2);
+        m_mix_pnumbers_str = product::dbFieldAsValidString(stmt, 1);
+        m_mix_ratios_str = product::dbFieldAsValidString(stmt, 2);
 
         m_product_id_combined_with_location_for_backend = product::dbFieldAsValidString(stmt, 3);
         m_name = product::dbFieldAsValidString(stmt, 4);
-        m_display_unit = product::dbFieldAsValidString(stmt, 5);
-        m_paymentMethod = product::dbFieldAsValidString(stmt, 6);
-        m_concentration_multiplier = sqlite3_column_double(stmt, 7);
+        // m_display_unit = product::dbFieldAsValidString(stmt, 5);
+        m_is_enabled = sqlite3_column_int(stmt, 5);
+        // m_paymentMethod = product::dbFieldAsValidString(stmt, 6);
+        m_concentration_multiplier = sqlite3_column_double(stmt, 6);
 
         if (m_concentration_multiplier < 0.00000001)
         {
-            debugOutput::sendMessage("Concentration multiplier was not set. Will default to 1. Was:" + to_string(m_concentration_multiplier), MSG_INFO);
+            debugOutput::sendMessage("Concentration multiplier was not set. Will default to 1. Was:" + std::to_string(m_concentration_multiplier), MSG_INFO);
             m_concentration_multiplier = 1.0;
         }
 
-        m_nDispenseSpeedPWM = sqlite3_column_int(stmt, 8);
-        m_nThresholdFlow = sqlite3_column_double(stmt, 9);
-        m_nRetractionTimeMillis = sqlite3_column_int(stmt, 10);
-        m_nThresholdFlow_maximum_allowed = sqlite3_column_double(stmt, 11); // debugOutput::sendMessage("DB_PRODUCTS_CALIBRATION_CONST (reused for maximum flow rate):" + to_string(m_nThresholdFlow_maximum_allowed), MSG_INFO);
-        m_nVolumePerTick = sqlite3_column_double(stmt, 12);
-        m_nVolumeFull = sqlite3_column_double(stmt, 13);
-        m_nVolumeRemaining = sqlite3_column_double(stmt, 14);
-        m_nVolumeDispensedSinceRestock = sqlite3_column_double(stmt, 15);
-        m_nVolumeDispensedTotalEver = sqlite3_column_double(stmt, 16);
-        isEnabledSizes[SIZE_INDEX_SMALL] = sqlite3_column_int(stmt, 17);
-        isEnabledSizes[SIZE_INDEX_MEDIUM] = sqlite3_column_int(stmt, 18);
-        isEnabledSizes[SIZE_INDEX_LARGE] = sqlite3_column_int(stmt, 19);
-        isEnabledSizes[SIZE_INDEX_CUSTOM] = sqlite3_column_int(stmt, 20);
-        m_nVolumeTarget_s = sqlite3_column_double(stmt, 21);
-        m_nVolumeTarget_m = sqlite3_column_double(stmt, 22);
-        m_nVolumeTarget_l = sqlite3_column_double(stmt, 23);
-        m_nVolumeTarget_c_min = sqlite3_column_double(stmt, 24);
-        m_nVolumeTarget_c_max = sqlite3_column_double(stmt, 25);
-        m_price_small = sqlite3_column_double(stmt, 26);
-        m_price_medium = sqlite3_column_double(stmt, 27);
-        m_price_large = sqlite3_column_double(stmt, 28);
-        m_price_custom_per_ml = sqlite3_column_double(stmt, 29);
-        m_nPLU_small = product::dbFieldAsValidString(stmt, 30);
-        m_nPLU_medium = product::dbFieldAsValidString(stmt, 31);
-        m_nPLU_large = product::dbFieldAsValidString(stmt, 32);
-        m_nPLU_custom = product::dbFieldAsValidString(stmt, 33);
-        m_is_enabled_custom_discount = sqlite3_column_int(stmt, 34);
-        m_nVolumeTarget_custom_discount = sqlite3_column_double(stmt, 35);
-        m_price_custom_discount_per_liter = sqlite3_column_double(stmt, 36);
-        m_is_enabled = sqlite3_column_int(stmt, 37);
-        m_status_text = product::dbFieldAsValidString(stmt, 38);
+        m_nDispenseSpeedPWM = sqlite3_column_int(stmt, 7);
+        m_nThresholdFlow = sqlite3_column_double(stmt, 8);
+        m_nRetractionTimeMillis = sqlite3_column_int(stmt, 9);
+        m_nThresholdFlow_maximum_allowed = sqlite3_column_double(stmt, 10);
+        m_nVolumePerTick = sqlite3_column_double(stmt, 11);
+        m_nVolumeFull = sqlite3_column_double(stmt, 12);
+        m_nVolumeRemaining = sqlite3_column_double(stmt, 13);
+        m_nVolumeDispensedSinceRestock = sqlite3_column_double(stmt, 14);
+        m_nVolumeDispensedTotalEver = sqlite3_column_double(stmt, 15);
+        isEnabledSizes[SIZE_INDEX_SMALL] = sqlite3_column_int(stmt, 16);
+        isEnabledSizes[SIZE_INDEX_MEDIUM] = sqlite3_column_int(stmt, 17);
+        isEnabledSizes[SIZE_INDEX_LARGE] = sqlite3_column_int(stmt, 18);
+        isEnabledSizes[SIZE_INDEX_CUSTOM] = sqlite3_column_int(stmt, 19);
+        m_nVolumeTarget_s = sqlite3_column_double(stmt, 20);
+        m_nVolumeTarget_m = sqlite3_column_double(stmt, 21);
+        m_nVolumeTarget_l = sqlite3_column_double(stmt, 22);
+        m_nVolumeTarget_c_min = sqlite3_column_double(stmt, 23);
+        m_nVolumeTarget_c_max = sqlite3_column_double(stmt, 24);
+        m_price_small = sqlite3_column_double(stmt, 25);
+        m_price_medium = sqlite3_column_double(stmt, 26);
+        m_price_large = sqlite3_column_double(stmt, 27);
+        m_price_custom_per_ml = sqlite3_column_double(stmt, 28);
+        m_nPLU_small = product::dbFieldAsValidString(stmt, 29);
+        m_nPLU_medium = product::dbFieldAsValidString(stmt, 30);
+        m_nPLU_large = product::dbFieldAsValidString(stmt, 31);
+        m_nPLU_custom = product::dbFieldAsValidString(stmt, 32);
+        m_is_enabled_custom_discount = sqlite3_column_int(stmt, 33);
+        m_nVolumeTarget_custom_discount = sqlite3_column_double(stmt, 34);
+        m_price_custom_discount_per_liter = sqlite3_column_double(stmt, 35);
 
+        m_status_text = product::dbFieldAsValidString(stmt, 36);
+        m_nVolumeTarget_f = sqlite3_column_double(stmt, 38);
         status = sqlite3_step(stmt); // next record
-        // every sqlite3_step returns a row. if it returns 0, it's run over all the rows.
+
+        // every sqlite3_step returns a row. if status is 101=SQLITE_DONE, it's run over all the rows.
     }
+
+    parseMixPNumbersAndRatiosCsv(m_mix_pnumbers_str, m_mix_ratios_str);
+    // product::parseDoubleCsvString(m_mix_ratios_str, m_mix_ratios, m_mix_ratios_count);
+    // product::parseIntCsvString(m_mix_pnumbers_str, m_mix_pnumbers, m_mix_pnumbers_count);
+
+    // if (m_mix_pnumbers_count != m_mix_ratios_count)
+    // {
+    //     debugOutput::sendMessage("DB mixing ASSERT ERROR: Amount of mixing pnumber and their ratios is not equal!!! pnumbers:" + m_mix_pnumbers_str + " mixing ratios: " + m_mix_ratios_str, MSG_ERROR);
+    // }
 
     m_pnumber_loaded_from_db = false;
     if (numberOfRecordsFound == 1)
     {
-
-        debugOutput::sendMessage("DB status: " + to_string(status), MSG_INFO);
-        debugOutput::sendMessage("target vaolume serial number: : " + m_pnumber, MSG_INFO);
-        debugOutput::sendMessage("mix pnumbers: : " + m_mix_pnumbers, MSG_INFO);
-        debugOutput::sendMessage("mix ratios: : " + m_mix_ratios, MSG_INFO);
-        debugOutput::sendMessage("target vaolume s: : " + to_string(m_nVolumeTarget_s), MSG_INFO);
-        debugOutput::sendMessage("target vaolume medium: : " + to_string(m_nVolumeTarget_m), MSG_INFO);
-        debugOutput::sendMessage("target vaolume l: : " + to_string(m_nVolumeTarget_l), MSG_INFO);
-        debugOutput::sendMessage("target vaolume custom: : " + to_string(m_price_custom_per_ml), MSG_INFO);
+        debugOutput::sendMessage("DB loading ok. Found one match. status: " + to_string(status), MSG_INFO);
+        debugOutput::sendMessage("DB target volume serial number: : " + m_pnumber, MSG_INFO);
+        debugOutput::sendMessage("DB mix pnumbers: : " + m_mix_pnumbers_str, MSG_INFO);
+        debugOutput::sendMessage("DB default mix ratios: : " + m_mix_ratios_str, MSG_INFO);
+        debugOutput::sendMessage("DB target volume small:  " + to_string(m_nVolumeTarget_s), MSG_INFO);
+        debugOutput::sendMessage("DB target volume medium: " + to_string(m_nVolumeTarget_m), MSG_INFO);
+        debugOutput::sendMessage("DB target volume large : " + to_string(m_nVolumeTarget_l), MSG_INFO);
+        debugOutput::sendMessage("DB target volume free : " + to_string(m_nVolumeTarget_f), MSG_INFO);
+        debugOutput::sendMessage("DB target volume custom: " + to_string(m_price_custom_per_ml), MSG_INFO);
         m_pnumber_loaded_from_db = true;
     }
     else if (numberOfRecordsFound > 1)
@@ -911,7 +1030,7 @@ bool product::loadParametersFromDb()
     }
     else
     {
-        // debugOutput::sendMessage("No db record for product: " + std::to_string(m_pnumber), MSG_INFO);
+        debugOutput::sendMessage("No db record for product: " + std::to_string(m_pnumber), MSG_ERROR);
         // debugOutput::sendMessage("no records for: " + sql_string, MSG_INFO);
     }
 
@@ -969,4 +1088,60 @@ bool product::testParametersFromDb()
     sqlite3_finalize(stmt);
     sqlite3_close(db);
     return pwm;
+}
+
+void product::parseMixPNumbersAndRatiosCsv(const std::string &mixPNumbersCsvString, const std::string &mixRatiosCsvString)
+{
+
+    product::parseDoubleCsvString(mixRatiosCsvString, m_mix_ratios, m_mix_ratios_count);
+    product::parseIntCsvString(mixPNumbersCsvString, m_mix_pnumbers, m_mix_pnumbers_count);
+
+    if (m_mix_pnumbers_count != m_mix_ratios_count)
+    {
+        debugOutput::sendMessage("DB mixing ASSERT ERROR: Amount of mixing pnumber and their ratios is not equal!!! pnumbers:" + mixPNumbersCsvString + " mixing ratios: " + mixRatiosCsvString, MSG_ERROR);
+    }
+
+   
+}
+
+void product::parseIntCsvString(const std::string &csvString, int *intArray, int &size)
+{
+    std::stringstream ss(csvString);
+    std::string token;
+    size = 0;
+
+    while (std::getline(ss, token, ','))
+    {
+
+        if (size < DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX)
+        {
+            intArray[size] = std::stoi(token);
+            // debugOutput::sendMessage("array teststj:  " + to_string(intArray[size]) + " at pos: " + to_string(size), MSG_INFO);
+
+            size++;
+        }
+        else
+        {
+            debugOutput::sendMessage("ERROR: Array size exceeded maximum limit (will stop adding):  " + std::to_string(size), MSG_ERROR);
+        }
+    }
+}
+
+void product::parseDoubleCsvString(const std::string &csvString, double *doubleArray, int &size)
+{
+    std::stringstream ss(csvString);
+    std::string token;
+    size = 0;
+
+    while (std::getline(ss, token, ','))
+    {
+        if (size < DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX)
+        {
+            doubleArray[size++] = std::stod(token);
+        }
+        else
+        {
+            debugOutput::sendMessage("ERROR: Array size exceeded maximum limit (will stop adding):  " + std::to_string(size), MSG_ERROR);
+        }
+    }
 }

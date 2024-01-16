@@ -34,19 +34,37 @@ page_product_menu->label_dispense_products_section_title,2. Pick a drink
 
 #page_select_product
 page_select_product->label_pick_soap,Discover our Beverages
-page_select_product->pushButton_to_idle,←back
+page_select_product->pushButton_to_idle,←BACK
 page_select_product->no_text,
 
-
 # Page_product 
-page_product->pushButton_back,←back
+page_product->pushButton_back,←BACK
+
+#page_product_mixing
+page_product_mixing->pushButton_back,←BACK
+page_product_mixing->label_customize_drink,1. Customize Your Drink
+page_product_mixing->label_select_quantity,2. Select Quantity
+page_product_mixing->label_additives_background,Non-customizable product
+page_product_mixing->label_product_ingredients_title,Curated Ingredients
+page_product_mixing->pushButton_continue,Continue
+page_product_mixing->custom_volume,Custom Volume
+page_product_mixing->pushButton_recommended,Recommended
+page_product_mixing->pushButton_order_sample,Try a sample
 
 # page_product_overview
-page_product_overview->pushButton_select_product_page,←back
+page_product_overview->label_page_title,Your Order
+page_product_overview->label_checkout_title,Checkout
+page_product_overview->label_invoice_size_title,Size: 
+page_product_overview->label_invoice_coupon_title,Promo Code / Coupon
+page_product_overview->pushButton_select_product_page,←BACK
 page_product_overview->label_total,Total Amount
 page_product_overview->pushButton_continue->proceed_free,Proceed
 page_product_overview->pushButton_continue->proceed_pay,Proceed to Pay
-
+page_product_overview->pushButton_continue,Continue
+page_product_overview->pushButton_continue->proceed_pay_tap,Pay with TAP
+page_product_overview->pushButton_continue->proceed_pay_qr,Pay with QR
+page_product_overview->pushButton_continue_additional->proceed_pay_qr,Pay with QR
+page_product_overview->label_selected_volume->custom_volume,Custom Volume (maximum: %1)
 
 # page_dispenser
 page_dispenser->label_to_refill,To Refill
@@ -58,13 +76,10 @@ page_end->pushButton_contact,Feedback
 
 # page_help
 page_help->pushButton_to_idle,←back
-<<<<<<< HEAD
-=======
 page_help->pushButton_to_transactions,transactions→
->>>>>>> develop
 
 # page_sendFeedback
-page_sendFeedback->pushButton_previous_page,←back
+page_sendFeedback->pushButton_previous_page,←BACK
 page_sendFeedback->checkBox_1_Label,I love this, keep me in the loop.
 page_sendFeedback->checkBox_2_Label,User interface problem
 page_sendFeedback->checkBox_3_Label,Drink dispensing problem
@@ -75,19 +90,38 @@ page_sendFeedback->label_thanks_for_feedback,Thank you for <br> your feedback
 page_sendFeedback->pushButton_send,Send
 
 # page_qr_payment
-page_qr_payment->pushButton_previous_page,←back
-page_qr_payment->label_title->pay_by_phone,Pay by Phone
-page_qr_payment->label_steps,<style>        li:{margin-top:10px; margin-left: 5px;}        </style>        <ol>        <li><span class='tab'></span>Scan QR code with phone camera<br></li>        <li><span class='tab'></span>Click to open the link that appears<br></li>        <li><span class='tab'></span>Follow payment instructions on phone<br></li>        <li><span class='tab'></span>The station will proceed after payment<br></li>        <li><span class='tab'></span>Refill your beverage!</li>        </ol>        <style>        li:{margin-top:10px;}        </style>        <ol>       
+page_qr_payment->pushButton_previous_page,←BACK
+page_qr_payment->label_title->pay_by_phone,Scan to Pay
+page_qr_payment->label_scan->label_scan_1,QR Pay
+page_qr_payment->label_scan->finalize_transaction,\n Please follow the instructions in <br>your phone browser
+page_qr_payment->label_steps,<ol><li><span class='tab'></span>Scan QR code with phone camera</li>        <li><span class='tab'></span>Click to open the link that appears</li>        <li><span class='tab'></span>Follow payment instructions on phone</li>        <li><span class='tab'></span>The station will proceed after payment</li>        <li><span class='tab'></span>Refill your beverage!</li>        </ol>  
 
 # page_payment_tap_tcp
-page_payment_tap_tcp->pushButton_previous_page,←back
+page_payment_tap_tcp->pushButton_previous_page,←BACK
 
 # page_payment_tap_serial
-page_payment_tap_serial->pushButton_previous_page,←back
+page_payment_tap_serial->pushButton_previous_page,←BACK
+page_payment_tap_serial->animated_Label->cancel,Please wait a moment to choose another product
 
 # page_email
-page_email->pushButton_to_product_overview,←back
+page_email->pushButton_to_product_overview,←BACK
 page_email->label_email_title,To dispense free sample<br>Please kindly enter your email address
 page_email->keyboardTextEntry->email_placeholder,Please enter your email address
 page_email->keyboardTextEntry->invalid,Incorrect email address, please enter valid email address
 page_email->pushButton_continue, Submit email for free dispense!
+
+# page_product_freeSample
+page_product_freeSample->label_page_title,Free Sample
+page_product_freeSample->label_checkout_title,Checkout
+page_product_freeSample->label_invoice_size_title,Size: 
+page_product_freeSample->label_invoice_coupon_title,Promo Code / Coupon
+page_product_freeSample->pushButton_select_product_page,←BACK
+page_product_freeSample->label_total,Total Amount
+page_product_freeSample->pushButton_continue->proceed_free,Proceed
+page_product_freeSample->pushButton_continue->proceed_pay,Proceed to Pay
+page_product_freeSample->pushButton_continue,Continue
+page_product_freeSample->pushButton_continue->proceed_pay_tap,Pay with TAP
+page_product_freeSample->pushButton_continue->proceed_pay_qr,Pay with QR
+page_product_freeSample->pushButton_continue_additional->proceed_pay_qr,Pay with QR
+page_product_freeSample->label_selected_volume->custom_volume,Custom Volume (maximum: %1)
+page_product_freeSample->label_steps,<ol><li><span class='tab'></span>Scan QR code with phone camera <br/>or enter <span style='color: red;'>aelen.com/freesample </span> in your browser</li>        <li><span class='tab'></span>Click to open the link that appears</li>        <li><span class='tab'></span>Enter your email to receive a promotional coupon</li>        <li><span class='tab'></span>Enter the received coupon below</li>        <li><span class='tab'></span>Refill your beverage!</li>        </ol>  

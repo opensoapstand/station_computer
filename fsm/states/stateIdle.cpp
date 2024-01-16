@@ -22,7 +22,7 @@
 // Default CTOR
 stateIdle::stateIdle()
 {
-   productDispensers = g_productDispensers;
+   // productDispensers = g_productDispensers;
 }
 
 // CTOR Linked to IP Thread Socket Listener
@@ -35,6 +35,7 @@ stateIdle::stateIdle(messageMediator *message)
 stateIdle::~stateIdle()
 {
    // delete stuff
+   debugOutput::sendMessage("stateIdle: ~stateIdle", MSG_INFO);
 }
 
 // Overload for Debugger output
@@ -104,8 +105,8 @@ DF_ERROR stateIdle::onAction()
             m_state_requested = STATE_DISPENSE_INIT;
          }
       }
-      else if (m_pMessaging->getAction() == ACTION_NO_ACTION){
-
+      else if (m_pMessaging->getAction() == ACTION_NO_ACTION)
+      {
       }
       else if (m_pMessaging->getAction() == ACTION_RESET)
       {
@@ -116,6 +117,10 @@ DF_ERROR stateIdle::onAction()
       {
          debugOutput::sendMessage("Request application exit.", MSG_INFO);
          m_state_requested = STATE_END;
+      }
+      else if (m_pMessaging->getAction() == ACTION_UI_COMMAND_PRINTER_SEND_STATUS || m_pMessaging->getAction() == ACTION_UI_COMMAND_PRINT_TRANSACTION || m_pMessaging->getAction() == ACTION_UI_COMMAND_TEST_PRINT)
+      {
+         m_state_requested = STATE_MANUAL_PRINTER;
       }
       else if ('1' == m_pMessaging->getAction() || ACTION_UI_COMMAND_PRINTER_MENU == m_pMessaging->getAction())
       {
@@ -132,17 +137,17 @@ DF_ERROR stateIdle::onAction()
       }
       else if ('4' == m_pMessaging->getAction())
       {
-         
+
          debugOutput::sendMessage("Before reload parameters from product", MSG_INFO);
-         bool success = this->productDispensers[0].getSelectedProduct()->loadParameters();
-         this->productDispensers[0].loadGeneralProperties();
-         g_machine.loadGeneralProperties();
+         bool success = g_machine.m_productDispensers[0].getSelectedProduct()->loadParameters();
+         g_machine.loadGeneralProperties(false);
+         g_machine.m_productDispensers[0].loadGeneralProperties();
 
          debugOutput::sendMessage("After" + to_string(success), MSG_INFO);
       }
       else if ('5' == m_pMessaging->getAction())
       {
-        m_pMessaging->sendTemperatureData();
+         m_pMessaging->sendTemperatureData();
       }
       else
       {

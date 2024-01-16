@@ -34,6 +34,7 @@ stateManualConfig::stateManualConfig(messageMediator *message)
 stateManualConfig::~stateManualConfig()
 {
    // delete stuff
+   debugOutput::sendMessage("stateManualConfig: ~stateManualConfig", MSG_INFO);
 }
 
 // Overload for Debugger output
@@ -49,7 +50,7 @@ DF_ERROR stateManualConfig::onEntry()
    DF_ERROR e_ret = OK;
    debugOutput::sendMessage("Config manually.", MSG_INFO);
    m_active_pump_index = 0;
-   productDispensers = g_productDispensers;
+   // productDispensers = g_productDispensers;
    return e_ret;
 }
 
@@ -63,12 +64,12 @@ DF_ERROR stateManualConfig::onAction()
       DF_ERROR ret_msg;
       ret_msg = m_pMessaging->parseCommandString();
 
-      
       if (m_pMessaging->getAction() == ACTION_RESET)
       {
          m_pMessaging->sendMessageOverIP("Init Ready", true); // send to UI
          m_state_requested = STATE_IDLE;
-      }else if ('0' == m_pMessaging->getAction() || ACTION_QUIT == m_pMessaging->getAction())
+      }
+      else if ('0' == m_pMessaging->getAction() || ACTION_QUIT == m_pMessaging->getAction())
       {
          debugOutput::sendMessage("Exit Manual Config State", MSG_INFO);
 
@@ -76,7 +77,7 @@ DF_ERROR stateManualConfig::onAction()
       }
       else if ('1' == m_pMessaging->getAction())
       {
-         debugOutput::sendMessage("Get active slot pca9534 info (active slot: " + to_string((uint8_t)m_active_pump_index+1) + ")", MSG_INFO);
+         debugOutput::sendMessage("Get active slot pca9534 info (active slot: " + to_string((uint8_t)m_active_pump_index + 1) + ")", MSG_INFO);
          readRelevantRegisters();
       }
       else if (ACTION_MANUAL_PUMP_SET == m_pMessaging->getAction())
@@ -87,9 +88,9 @@ DF_ERROR stateManualConfig::onAction()
       }
       else if ('2' == m_pMessaging->getAction())
       {
-         productDispensers[m_active_pump_index].the_pcb->PCA9534SendByteToSlot(m_active_pump_index + 1, 0x01, 0b00100000); // Output pin values register (has no influence on input values)
-         productDispensers[m_active_pump_index].the_pcb->PCA9534SendByteToSlot(m_active_pump_index + 1, 0x03, 0b01011000); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
-         debugOutput::sendMessage("Sent EN-134 default configuration to PCA9534 of slot: " + to_string(m_active_pump_index+1), MSG_INFO);
+         g_machine.m_productDispensers[m_active_pump_index].m_pcb->PCA9534SendByteToSlot(m_active_pump_index + 1, 0x01, 0b00100000); // Output pin values register (has no influence on input values)
+         g_machine.m_productDispensers[m_active_pump_index].m_pcb->PCA9534SendByteToSlot(m_active_pump_index + 1, 0x03, 0b01011000); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
+         debugOutput::sendMessage("Sent EN-134 default configuration to PCA9534 of slot: " + to_string(m_active_pump_index + 1), MSG_INFO);
          readRelevantRegisters();
       }
       else if ('3' == m_pMessaging->getAction())
@@ -152,9 +153,9 @@ std::string uint8ToBinaryString(uint8_t x)
 void stateManualConfig::readRelevantRegisters()
 {
    uint8_t val;
-   val = productDispensers[m_active_pump_index].the_pcb->PCA9534ReadRegisterFromSlot(m_active_pump_index + 1, 0x03);
+   val = g_machine.m_productDispensers[m_active_pump_index].m_pcb->PCA9534ReadRegisterFromSlot(m_active_pump_index + 1, 0x03);
    debugOutput::sendMessage("Pin direction register 0x03: " + to_string(val) + "(" + uint8ToBinaryString(val) + ")", MSG_INFO);
-   val = productDispensers[m_active_pump_index].the_pcb->PCA9534ReadRegisterFromSlot(m_active_pump_index + 1, 0x01);
+   val = g_machine.m_productDispensers[m_active_pump_index].m_pcb->PCA9534ReadRegisterFromSlot(m_active_pump_index + 1, 0x01);
    debugOutput::sendMessage("Pin output val reg     0x01: " + to_string(val) + "(" + uint8ToBinaryString(val) + ")", MSG_INFO);
 }
 

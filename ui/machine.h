@@ -4,6 +4,7 @@
 #include "df_util.h"
 #include "pnumberproduct.h"
 #include "dbmanager.h"
+#include <vector>
 
 typedef enum UserRole
 {
@@ -34,8 +35,15 @@ typedef enum StateReboot
     triggered_wait_for_delay,
     delay_elapsed,
     user_cancelled_reboot
-
 } StateReboot;
+
+typedef enum ActivePaymentMethod
+{
+    qr,
+    tap_canada,
+    tap_usa,
+    receipt_printer,
+} ActivePaymentMethod;
 
 class product; //  forward declaration.
 
@@ -56,6 +64,8 @@ public:
     void checkForHighTemperatureAndDisableProducts();
 
     bool isSessionLocked();
+
+    QString getSizeUnit();
 
     void dispenseButtonLightsAnimateState(bool animateElseOff);
     bool slotNumberValidityCheck(int slot);
@@ -111,7 +121,9 @@ public:
     void setSlots(dispenser_slot *slotss);
     bool isSlotCountBiggerThanMaxSlotCount(int slot_count);
 
+    void setSelectedSlot(int slot);
     void setSelectedSlotFromSelectedProduct();
+    void setSelectedSlot();
     int getSlotFromBasePNumber(int base_pnumber);
     dispenser_slot *getSelectedSlot();
 
@@ -128,6 +140,11 @@ public:
 
     pnumberproduct *getProductByPNumber(int pnumber);
     pnumberproduct *getSlotBaseProduct(int slot);
+    void setSelectedBottle(int pnumber);
+    void resetSelectedBottle();
+    pnumberproduct *getSelectedBottle();
+    bool hasSelectedBottle();
+    bool hasBuyBottleOption();
     void setSelectedProduct(int pnumber);
     pnumberproduct *getSelectedProduct();
 
@@ -150,9 +167,16 @@ public:
     StateReboot getRebootState();
     void setRebootState(StateReboot state);
 
+    ActivePaymentMethod getActivePaymentMethod();
+    void setActivePaymentMethod(ActivePaymentMethod paymentMethod);
+
+    std::vector<ActivePaymentMethod> getAllowedPaymentMethods();
+    void setAllowedPaymentMethods(ActivePaymentMethod paymentMethod);
+
     void setProducts(product *products);
 
     void setDiscountPercentageFraction(double percentageFraction);
+    void resetCouponDiscount();
     double getDiscountPercentageFraction();
     double getPriceCorrectedForSelectedSize(int pnumber, bool maximumVolumeForCustom);
     double getDiscountAmount(double price);
@@ -160,6 +184,7 @@ public:
 
     QStringList getChildNames(QObject *parent);
     void loadDynamicContent();
+    void loadBottle();
     QString getCSS(QString cssName);
     void addCssClassToObject(QWidget *element, QString classname, QString css_file_name);
     void setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier);
@@ -180,6 +205,7 @@ public:
     QString getHardwareMajorVersion();
 
     void addPictureToLabel(QLabel *label, QString picturePath);
+    void addPictureToLabelCircle(QLabel *label, QString picturePath);
     void addPictureToButton(QPushButton *button, QString picturePath);
     void addClientLogoToLabel(QLabel *label);
     void setBackgroundPictureFromTemplateToPage(QWidget *page, QString imageName);
@@ -189,6 +215,8 @@ public:
     void applyDynamicPropertiesFromTemplateToWidgetChildren(QWidget *widget);
 
     bool isProductVolumeInContainer(int pnumber);
+
+    // void activateKeyboard(QWidget *page);
 
     QString m_machine_id;
     QString m_client_id;
@@ -215,12 +243,17 @@ public:
     QString m_help_text_html;
     QString m_idle_page_type;
     QString m_admin_pwd;
+    QString m_size_unit;
     double m_temperature;
     double m_alert_temperature;
     QString m_software_version_controller;
     double m_temperature2;
     double m_alert_temperature2;
     QString m_payment;
+    int m_screen_sleep_time24h;
+    int m_screen_wakeup_time24h;
+    int m_buy_bottle_1;
+    int m_buy_bottle_2;
 
     int m_is_enabled;
     QString m_status_text;
@@ -242,13 +275,19 @@ public:
     QVector<int> getAllUniqueDispensePNumbers();
     QVector<int> getAllDispensePNumbersFromSlot(int slot);
 
+    void resetTransactionLogging();
+    void addToTransactionLogging(QString text);
+    QString getTransactionLogging();
+    bool hasMixing();
+
 public slots:
 
 signals:
 
 private:
-    dispenser_slot *selectedSlot; // deprecated, derived from selectedProduct.
+    dispenser_slot *m_selectedSlot; // used for maintenance mode!!  , or derived from selectedProduct.
     pnumberproduct *m_selectedProduct;
+    pnumberproduct *m_selectedBottle;
     QVector<int> dispenseProductsMenuOptions;
     dispenser_slot *m_slots;
     pnumberproduct m_pnumberproducts[HIGHEST_PNUMBER_COUNT];
@@ -269,13 +308,16 @@ private:
     double max_discount = 0.0;
     QString m_promoCode;
     StateReboot m_stateReboot;
-
+    ActivePaymentMethod m_activePaymentMethod;
+    std::vector<ActivePaymentMethod> allowedPaymentMethods;
     DbManager *m_db;
     UserRole active_role;
 
     QString m_pump_id_slots[MAX_SLOT_COUNT];
     int m_is_enabled_slots[MAX_SLOT_COUNT];
     QString m_status_text_slots[MAX_SLOT_COUNT];
+    QString transactionLogging;
+
 
 };
 

@@ -75,7 +75,6 @@ public:
     // QString getCouponCodeUsed();
     // void startDispensing();
     void force_finish_dispensing();
-    QString getStartDispensingCommand();
 
     QString previousDispenseStatus;
 
@@ -104,7 +103,7 @@ private slots:
 private:
     bool isDispensing = false;
     bool cancelPayment = false;
-    QString paymentMethod = "";
+    ActivePaymentMethod paymentMethod;
     bool askForFeedbackAtEnd;
     // **** GUI *****
     Ui::page_dispenser *ui;

@@ -70,6 +70,10 @@ gpio_odyssey::gpio_odyssey()
  */
 gpio_odyssey::gpio_odyssey(int pinNumber)
 {
+        setPinNumber(pinNumber);
+}
+void gpio_odyssey::setPinNumber(int pinNumber)
+{
         std::string msg = "------gpio_odyssey------ pin:" + std::to_string(pinNumber);
         debugOutput::sendMessage(msg, MSG_INFO);
 
@@ -107,8 +111,6 @@ gpio_odyssey::gpio_odyssey(int pinNumber)
         uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
         /* -------------------------------------------------------------------------------------- */
-
-        return;
 }
 
 // DTOR

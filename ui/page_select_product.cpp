@@ -17,8 +17,9 @@
 
 #include "page_select_product.h"
 #include "ui_page_select_product.h"
-
+#include "page_buybottle.h"
 #include "page_product.h"
+#include "page_product_mixing.h"
 #include "page_idle.h"
 #include "df_util.h"
 
@@ -68,9 +69,10 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference
  */
-void page_select_product::setPage(page_product *p_page_product, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp, statusbar *p_statusbar)
+void page_select_product::setPage(page_product *p_page_product, page_buyBottle *p_page_buyBottle, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp, statusbar *p_statusbar)
 {
     this->p_page_product = p_page_product;
+    this->p_page_buyBottle = p_page_buyBottle;
     this->p_page_idle = pageIdle;
     this->p_page_maintenance = pageMaintenance;
     this->p_page_help = pageHelp;
@@ -153,7 +155,7 @@ void page_select_product::displayProducts()
     // for (uint8_t option_index = 0; option_index < p_page_idle->thisMachine->getOptionCount(); option_index++)
     {
 
-        int option_index = (MENU_DISPENSE_OPTIONS_PER_BASE_MAXIMUM * slot_index);
+        int option_index = (DISPENSE_PRODUCTS_PER_BASE_LINE_MAX * slot_index); // option menu has more drinks, we need to take that into account
         qDebug() << "Page select. Set up option: " << option_index + 1;
         QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_SELECT_PRODUCT_CSS);
 
@@ -261,7 +263,7 @@ void page_select_product::displayProducts()
         {
             labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
         }
-        else if (!(p_page_idle->thisMachine->isProductVolumeInContainer(p_page_idle->thisMachine->getProductFromMenuOption(slot_index + 1)->getPNumber())))
+        else if (!(p_page_idle->thisMachine->isProductVolumeInContainer(p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getPNumber())))
         {
 
             labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->empty"));
@@ -309,19 +311,19 @@ void page_select_product::select_product(int option)
 // FIXME: This is terrible...no time to make array reference to hold button press functions
 void page_select_product::on_pushButton_selection1_clicked()
 {
-    select_product(1);
+    select_product(DISPENSE_PRODUCTS_PER_BASE_LINE_MAX *0 + 1 );
 }
 void page_select_product::on_pushButton_selection2_clicked()
 {
-    select_product(2);
+    select_product(DISPENSE_PRODUCTS_PER_BASE_LINE_MAX *1 + 1);
 }
 void page_select_product::on_pushButton_selection3_clicked()
 {
-    select_product(3);
+    select_product(DISPENSE_PRODUCTS_PER_BASE_LINE_MAX *2 + 1);
 }
 void page_select_product::on_pushButton_selection4_clicked()
 {
-    select_product(4);
+    select_product(DISPENSE_PRODUCTS_PER_BASE_LINE_MAX *3 + 1);
 }
 
 void page_select_product::onProductPageTimeoutTick()
@@ -359,7 +361,11 @@ void page_select_product::on_pushButton_to_idle_clicked()
 {
     qDebug() << "Back to Idle Page Button pressed";
     // p_page_idle->setDiscountPercentage(0.0);
-    hideCurrentPageAndShowProvided(p_page_idle);
+    if(p_page_idle->thisMachine->hasBuyBottleOption()){
+        hideCurrentPageAndShowProvided(p_page_buyBottle);
+    }else{
+        hideCurrentPageAndShowProvided(p_page_idle);
+    }
 }
 
 void page_select_product::on_pushButton_help_page_clicked()

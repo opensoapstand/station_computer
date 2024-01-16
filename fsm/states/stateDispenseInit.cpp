@@ -27,6 +27,7 @@ stateDispenseInit::stateDispenseInit(messageMediator *message)
 // DTOR
 stateDispenseInit::~stateDispenseInit()
 {
+    debugOutput::sendMessage("stateDispenseInit: ~stateDispenseInit", MSG_INFO);
 }
 
 // Overload for Debugger output
@@ -44,8 +45,6 @@ DF_ERROR stateDispenseInit::onEntry()
     m_state_requested = STATE_DISPENSE_INIT;
     DF_ERROR e_ret = OK;
 
-    productDispensers = g_productDispensers;
-
     size = m_pMessaging->getRequestedSize();
     if (size == SIZE_DUMMY){
         debugOutput::sendMessage("ASSERT ERROR: Size not set. Will not continue.",  MSG_ERROR);
@@ -53,14 +52,21 @@ DF_ERROR stateDispenseInit::onEntry()
     }
 
     dispenser_index = m_pMessaging->getRequestedSlot() - 1;
+
     if (dispenser_index == PRODUCT_SLOT_DUMMY){
         debugOutput::sendMessage("ASSERT ERROR: Slot number not set. Will not continue.",  MSG_ERROR);
         m_state_requested = STATE_IDLE;
     }
 
-    debugOutput::sendMessage("dispense init, we (re)load parameters from database.", MSG_INFO);
+    debugOutput::sendMessage("Dispense init: (re)load relevant parameters from database.", MSG_INFO);
 
-    bool success = this->productDispensers[dispenser_index].getSelectedProduct()->loadParameters();
+    g_machine.loadGeneralProperties(false);
+    g_machine.m_productDispensers[dispenser_index].loadGeneralProperties();
+
+    debugOutput::sendMessage("Dispense init: Load selected product parameters. Slot: " + to_string(dispenser_index + 1) + " Product: " + to_string(g_machine.m_productDispensers[dispenser_index].getSelectedPNumber()), MSG_INFO);
+    // debugOutput::sendMessage("Dispense init: Load selected product parameters66666. Slot: " + to_string(dispenser_index + 1) + " Product: " + to_string(g_machine.m_productDispensers[dispenser_index].getSelectedProduct()->getPNumber()), MSG_INFO);
+    bool success = g_machine.m_productDispensers[dispenser_index].getSelectedProduct()->loadParameters();
+
     if (!success)
     {
         debugOutput::sendMessage("Did not reload parameters from database", MSG_INFO);
@@ -75,29 +81,23 @@ DF_ERROR stateDispenseInit::onAction()
 {
 
     DF_ERROR e_ret = OK;
-    this->productDispensers[dispenser_index].loadGeneralProperties();
-    g_machine.loadGeneralProperties();
-    debugOutput::sendMessage(std::string("SLOT dispenesrs erstate: ") + productDispensers[dispenser_index].getSlotStateAsString(),
-                             MSG_INFO);
 
+    g_machine.m_productDispensers[dispenser_index].getSelectedProduct()->setTargetVolumeFromSize(size);
 
     debugOutput::sendMessage("Chosen dispenser slot: " +
-                                 std::to_string(productDispensers[dispenser_index].getSlot()) +
+                                 std::to_string(g_machine.m_productDispensers[dispenser_index].getSlot()) +
                                  " target volume: " +
-                                 std::to_string(productDispensers[dispenser_index].getSelectedProduct()->getTargetVolume(size)),
+                                 std::to_string(g_machine.m_productDispensers[dispenser_index].getSelectedProduct()->getTargetVolume()),
+                             MSG_INFO);
+    debugOutput::sendMessage(std::string("Dispenser slot state: ") + g_machine.m_productDispensers[dispenser_index].getSlotStateAsString(),
                              MSG_INFO);
 
-    productDispensers[dispenser_index].initDispense(
-        productDispensers[dispenser_index].getSelectedProduct()->getTargetVolume(size)
-        ,productDispensers[dispenser_index].getSelectedProduct()->getPrice(size)
+    g_machine.m_productDispensers[dispenser_index].startSelectedProductDispense(
+        size,
+        g_machine.m_productDispensers[dispenser_index].getSelectedProduct()->getPrice(size)
         );
 
-    // productDispensers[dispenser_index].getSelectedProduct()->productInfo();
-    // productDispensers[dispenser_index].getSelectedProduct()->productVolumeInfo();
-
-    productDispensers[dispenser_index].startDispense();
     
-
     
     m_state_requested = STATE_DISPENSE;
     return e_ret;

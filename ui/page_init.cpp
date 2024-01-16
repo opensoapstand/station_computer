@@ -35,7 +35,7 @@ page_init::page_init(QWidget *parent) : QWidget(parent),
     rebootTimer = new QTimer(this);
     rebootTimer->setInterval(1000);
     connect(rebootTimer, SIGNAL(timeout()), this, SLOT(onRebootTimeoutTick()));
-    // connect(this, SIGNAL(tapSetupInitialized()), this, SLOT(showIdlePage()));
+    connect(this, SIGNAL(tapSetupInitialized()), this, SLOT(showIdlePage()));
 }
 
 void page_init::setPage(page_idle *pageIdle)
@@ -63,6 +63,33 @@ void page_init::showEvent(QShowEvent *event)
 
     initIdleTimer->start(1000);
     paymentMethod = p_page_idle->thisMachine->getPaymentMethod();
+    if (paymentMethod == PAYMENT_TAP_CANADA_QR){
+        p_page_idle->thisMachine->setActivePaymentMethod(ActivePaymentMethod::tap_canada);
+        p_page_idle->thisMachine->setAllowedPaymentMethods(ActivePaymentMethod::tap_canada);
+        p_page_idle->thisMachine->setAllowedPaymentMethods(ActivePaymentMethod::qr);
+    }
+    else if (paymentMethod == PAYMENT_TAP_CANADA){
+        p_page_idle->thisMachine->setActivePaymentMethod(ActivePaymentMethod::tap_canada);
+        p_page_idle->thisMachine->setAllowedPaymentMethods(ActivePaymentMethod::tap_canada);
+    }
+    else if (paymentMethod == PAYMENT_TAP_USA_QR){
+        p_page_idle->thisMachine->setActivePaymentMethod(ActivePaymentMethod::tap_usa);
+        p_page_idle->thisMachine->setAllowedPaymentMethods(ActivePaymentMethod::tap_usa);
+        p_page_idle->thisMachine->setAllowedPaymentMethods(ActivePaymentMethod::qr);
+    }
+    else if(paymentMethod == PAYMENT_TAP_USA){
+        p_page_idle->thisMachine->setActivePaymentMethod(ActivePaymentMethod::tap_usa);
+        p_page_idle->thisMachine->setAllowedPaymentMethods(ActivePaymentMethod::tap_usa);
+    }
+    else if(paymentMethod == PAYMENT_QR){
+        p_page_idle->thisMachine->setActivePaymentMethod(ActivePaymentMethod::qr);
+        p_page_idle->thisMachine->setAllowedPaymentMethods(ActivePaymentMethod::qr);
+    }
+    else{
+        p_page_idle->thisMachine->setActivePaymentMethod(ActivePaymentMethod::receipt_printer);
+        p_page_idle->thisMachine->setAllowedPaymentMethods(ActivePaymentMethod::receipt_printer);
+    }
+    activePaymentMethod = p_page_idle->thisMachine->getActivePaymentMethod();
 #ifdef START_FSM_FROM_UI
     start_controller = true;
 #else
@@ -78,15 +105,26 @@ void page_init::showEvent(QShowEvent *event)
     {
         QString command = "Ping";
         p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
-
-        if (paymentMethod == PAYMENT_TAP_TCP || paymentMethod == PAYMENT_TAP_SERIAL)
-        {
-            // Thread setup for non-blocking tap payment initialization
-            // Using bind for non-static functions
-            auto bindFn = std::bind(&page_init::initiateTapPayment, this);
-            tapInitThread = std::thread(bindFn);
-            tapInitThread.detach();
+        
+        switch(activePaymentMethod){
+            case tap_canada:
+            case tap_usa:{
+                // Thread setup for non-blocking tap payment initialization
+                // Using bind for non-static functions
+                auto bindFn = std::bind(&page_init::initiateTapPayment, this);
+                tapInitThread = std::thread(bindFn);
+                tapInitThread.detach();
+                break;
+            }
         }
+        // if (paymentMethod == PAYMENT_TAP_USA || paymentMethod == PAYMENT_TAP_CANADA)
+        // {
+        //     // Thread setup for non-blocking tap payment initialization
+        //     // Using bind for non-static functions
+        //     auto bindFn = std::bind(&page_init::initiateTapPayment, this);
+        //     tapInitThread = std::thread(bindFn);
+        //     tapInitThread.detach();
+        // }
     }
 }
 
@@ -100,10 +138,17 @@ void page_init::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 void page_init::initReadySlot(void)
 {
     qDebug() << "Signal: init ready from fsm";
-    if (paymentMethod != PAYMENT_TAP_TCP && paymentMethod != PAYMENT_TAP_SERIAL)
-    {
-        hideCurrentPageAndShowProvided(p_page_idle);
+    switch(activePaymentMethod){
+        case qr:
+        case receipt_printer:{
+            hideCurrentPageAndShowProvided(p_page_idle);
+            break;
+        }
     }
+    // if (paymentMethod != PAYMENT_TAP_USA && paymentMethod != PAYMENT_TAP_CANADA)
+    // {
+    //     hideCurrentPageAndShowProvided(p_page_idle);
+    // }
 }
 
 void page_init::onInitTimeoutTick()
@@ -113,15 +158,23 @@ void page_init::onInitTimeoutTick()
         ui->label_init_message->setText(ui->label_init_message->text() + ".");
         QString command = "Ping";
         p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
+        
     }
     else
     {
         initIdleTimer->stop();
         qDebug() << "init: No connection with controller. Timeout trying.";
-        if (paymentMethod != PAYMENT_TAP_TCP && paymentMethod != PAYMENT_TAP_SERIAL)
-        {
+        switch(activePaymentMethod){
+        case qr:
+        case receipt_printer:{
             hideCurrentPageAndShowProvided(p_page_idle);
+            break;
         }
+        }
+        // if (paymentMethod != PAYMENT_TAP_USA && paymentMethod != PAYMENT_TAP_CANADA)
+        // {
+        //     hideCurrentPageAndShowProvided(p_page_idle);
+        // }
     }
 }
 
@@ -149,17 +202,28 @@ void page_init::initiateTapPayment()
     // Waiting for payment label setup
     QString waitingForPayment = p_page_idle->thisMachine->getTemplateText("page_init->label_fail_message->tap_payment");
     p_page_idle->thisMachine->setTextToObject(ui->label_fail_message, waitingForPayment);
-
-    if (paymentMethod == PAYMENT_TAP_TCP)
-    {
-        page_payment_tap_tcp paymentObject;
-        paymentObject.initiate_tap_setup();
+    switch(activePaymentMethod){
+        case tap_usa:{
+            page_payment_tap_tcp paymentObject;
+            paymentObject.initiate_tap_setup();
+            break;
+        }
+        case tap_canada:{
+            page_payment_tap_serial paymentSerialObject;
+            paymentSerialObject.tap_serial_initiate();
+            break;
+        }
     }
-    else if (paymentMethod == PAYMENT_TAP_SERIAL)
-    {
-        page_payment_tap_serial paymentSerialObject;
-        paymentSerialObject.tap_serial_initiate();
-    }
+    // if (paymentMethod == PAYMENT_TAP_USA)
+    // {
+    //     page_payment_tap_tcp paymentObject;
+    //     paymentObject.initiate_tap_setup();
+    // }
+    // else if (paymentMethod == PAYMENT_TAP_CANADA)
+    // {
+    //     page_payment_tap_serial paymentSerialObject;
+    //     paymentSerialObject.tap_serial_initiate();
+    // }
 
     emit tapSetupInitialized(); 
 }

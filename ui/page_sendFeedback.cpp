@@ -60,7 +60,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, page_product *page_product, page_end *page_thankyou, statusbar *p_statusbar)
+void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, page_product *page_product, page_end *page_end, statusbar *p_statusbar)
 {
 
     this->p_page_select_product = pageSelect;
@@ -279,7 +279,7 @@ void page_sendFeedback::on_pushButton_send_clicked()
         // send to backend
         QString MachineSerialNumber = p_page_idle->thisMachine->getMachineId();
         QString customFeedback = ui->textEdit_custom_message->toPlainText();
-        QString curl_param = "problems=" + problems + " " + customFeedback + "&MachineSerialNumber=" + MachineSerialNumber;
+        QString curl_param = "problems=" + problems + " ," + customFeedback + "&MachineSerialNumber=" + MachineSerialNumber;
         qDebug() << "Curl params" << curl_param;
         curl_param_array = curl_param.toLocal8Bit();
         qDebug() << curl_param_array;

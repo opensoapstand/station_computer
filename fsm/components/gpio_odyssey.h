@@ -28,8 +28,10 @@ public:
 	DF_ERROR setPinAsInputElseOutput(bool input);
 	DF_ERROR readPin(bool *level);
 	DF_ERROR writePin(bool level);
-	private:
-		int m_nPin;
+	void setPinNumber(int pinNumber);
+
+private:
+	int m_nPin;
 };
 
 #endif

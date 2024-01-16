@@ -99,7 +99,7 @@ QStringList df_util::getFileList(const QString &folderPath)
 
 char df_util::sizeIndexToChar(int size_index)
 {
-    char size_to_char[SIZES_COUNT] = {'!', 's', 'm', 'l', 'c', 't'}; // last c "test mode should become a t"
+    char size_to_char[SIZES_COUNT] = {'!', 's', 'm', 'l', 'c', 't','f'}; // last c "test mode should become a t"
     return size_to_char[size_index];
 }
 
@@ -222,6 +222,8 @@ void df_util::send_command_to_FSM(QString command, bool isLoggingMessage)
     // this->send_msg = msg;
     send_to_FSM(command, isLoggingMessage);
     m_IsSendingFSM = false;
+    // 
+    QThread::msleep(50); // Sleep for 50 milliseconds
 }
 
 void df_util::executeVirtualClick(int x, int y)

@@ -16,6 +16,9 @@ mCommunication::mCommunication(){
 }
 
 mCommunication::~mCommunication() {
+     if (fd != -1) {
+        close(fd);
+    }
 }
 
 bool mCommunication::page_init(){
@@ -34,7 +37,6 @@ bool mCommunication::page_init(){
         return bRet;
     }
     else {
-
         //set the serial port setting for MONERIS h/w
         struct termios SerialPortSettings;	/* Create the structure                          */
 
@@ -120,40 +122,30 @@ void mCommunication::clearBuffer(){
 
 std::vector<uint8_t> mCommunication::readForAck()
 {
-    uint8_t buffer[1] = {};
-    long int readSize = -1;
     std::vector<uint8_t> pktRead;
-    int readcount = 0;
-    while (readcount < 3){
-        if (readSize == -1){
-            readSize = read(fd, buffer, 1);
-            readcount++;
-        }
-        if (readSize != -1){
+    char buffer[1];
+    ssize_t readSize = -1;
+
+    for (int readcount = 0; readcount < 3; ++readcount) {
+        if ((readSize = read(fd, buffer, 1)) != -1) {
             break;
         }
+
         usleep(500000);
     }
 
-    std::cout << "\n"<<strerror(errno) << "\n";
-
-    if (readSize == -1)
-    {
-        std::cout << "Read failed -1" << endl;
-        pktRead.clear();
+    if (readSize == -1) {
+        std::cerr << "Read failed: " << strerror(errno) << std::endl;
         pktRead.push_back(0xFF);
         return pktRead;
     }
-    else{
-        // std::cout << "Read size" << readSize;
-        pktRead.reserve(uint(readSize));
-        for (int i = 0; i < readSize; i++){ //store read bytes into vector
-            // std::cout << buffer[i];
-            pktRead.push_back(buffer[i]);
-        }
-    //    tcflush(fd, TCIOFLUSH);
-        return pktRead;
+
+    pktRead.reserve(1);
+    for (int i = 0; i < 1; ++i) {
+        pktRead.push_back(buffer[i]);
     }
+
+    return pktRead;
 }
 
 bool mCommunication::sendPacket(std::vector<uint8_t> fullPkt, uint pktSize){ //Sets pinID on
@@ -192,7 +184,11 @@ void mCommunication::flushSerial()
 
 bool mCommunication::closeCom()
 {
-    close(fd);
+     if (fd != -1) {
+        close(fd);
+        fd = -1;
+    }
+
     return true;
 }
 

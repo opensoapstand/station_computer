@@ -29,8 +29,16 @@ page_idle->label_reboot_nightly_title,NIGHTLY REBOOT
 page_idle->label_reboot_nightly_text,System will be rebooted in<br>%1 second(s)
 page_idle->pushButton_reboot_nightly,Cancel
 page_idle->label_reboot_nightly_text->count_down,System will be rebooted in<br>%1 second(s)
-#################### page_idle_products
 
+#################### page_buyBottle
+page_buyBottle->pushButton_to_idle,<- back
+page_buyBottle->label_buyBottle_title,Do you need a bottle?
+page_buyBottle->label_button_no_text_L,No
+page_buyBottle->label_button_no_text_S,I have one
+page_buyBottle->label_button_yes_text_S_1,I'll buy one
+page_buyBottle->label_button_yes_text_S_2,I'll buy one
+
+#################### page_idle_products
 #tap here to refill your soap
 page_idle_products->label_title,Quick and easy soap refill,<br>just a tap away.
 page_idle_products->label_printer_status->assistance_printer_offline,Assistance needed<br>Receipt Printer offline.
@@ -59,6 +67,9 @@ page_product->custom_volume,Custom Volume
 page_product_overview->pushButton_select_product_page,<- back
 page_product_overview->label_discount_tag,Discount
 page_product_overview->pushButton_continue,Continue
+page_product_overview->pushButton_continue->proceed_pay_tap,Pay with TAP
+page_product_overview->pushButton_continue->proceed_pay_qr,Pay with QR
+page_product_overview->pushButton_continue_additional->proceed_pay_qr,Pay with QR
 page_product_overview->label_pay,efijaiefj
 page_product_overview->label_total->non_custom_volume,Total
 page_product_overview->label_total->custom_volume,Price for maximum %1
@@ -66,7 +77,7 @@ page_product_overview->lineEdit_promo_code->valid,Promo Code Valid
 page_product_overview->lineEdit_promo_code->invalid,Promo Code Invalid
 page_product_overview->lineEdit_promo_code->ineligible,Promo Code Not Eligible At This Station
 page_product_overview->lineEdit_promo_code->network_error,Network error, could not verify. Try again.
-page_product_overview->lineEdit_promo_code->invite,Tap here to enter promo code
+page_product_overview->lineEdit_promo_code->invite,Tap here to Enter Promo Code / Coupon
 page_product_overview->label_selected_volume->custom_volume,Custom Volume<br>(maximum: %1)
 page_product_overview->pushButton_continue->proceed_free,Proceed
 page_product_overview->pushButton_continue->proceed_pay,Continue
@@ -257,3 +268,23 @@ page_maintenance_general->pushButton_shutdown,Shut down\n(unplugging power is ok
 page_maintenance_general->pushButton_reboot,Minimize Soapstand App
 page_maintenance_general->label_feedback,Feedback
 page_maintenance_general->label_status_feedback,Command Feedback
+
+#################### page_product_freeSample
+page_product_freeSample->pushButton_select_product_page,<- back
+page_product_freeSample->label_discount_tag,Discount
+page_product_freeSample->pushButton_continue,Continue
+page_product_freeSample->pushButton_continue->proceed_pay_tap,Pay with TAP
+page_product_freeSample->pushButton_continue->proceed_pay_qr,Pay with QR
+page_product_freeSample->pushButton_continue_additional->proceed_pay_qr,Pay with QR
+page_product_freeSample->label_pay,efijaiefj
+page_product_freeSample->label_total->non_custom_volume,Total
+page_product_freeSample->label_total->custom_volume,Price for maximum %1
+page_product_freeSample->lineEdit_promo_code->valid,Promo Code Valid
+page_product_freeSample->lineEdit_promo_code->invalid,Promo Code Invalid
+page_product_freeSample->lineEdit_promo_code->ineligible,Promo Code Not Eligible At This Station
+page_product_freeSample->lineEdit_promo_code->network_error,Network error, could not verify. Try again.
+page_product_freeSample->lineEdit_promo_code->invite,Tap here to Enter Promo Code / Coupon
+page_product_freeSample->label_selected_volume->custom_volume,Custom Volume<br>(maximum: %1)
+page_product_freeSample->pushButton_continue->proceed_free,Proceed
+page_product_freeSample->pushButton_continue->proceed_pay,Continue
+page_product_freeSample->label_total,Total Amount

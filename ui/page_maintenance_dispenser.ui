@@ -545,7 +545,6 @@
     </property>
     <property name="font">
      <font>
-      <family>Proxima Nova ScOsf</family>
       <pointsize>14</pointsize>
       <weight>75</weight>
       <bold>true</bold>
@@ -586,7 +585,7 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>1500</y>
+     <y>1570</y>
      <width>251</width>
      <height>251</height>
     </rect>
@@ -599,7 +598,7 @@
    <property name="geometry">
     <rect>
      <x>330</x>
-     <y>1500</y>
+     <y>1470</y>
      <width>351</width>
      <height>20</height>
     </rect>
@@ -1556,7 +1555,7 @@
    <property name="geometry">
     <rect>
      <x>330</x>
-     <y>1520</y>
+     <y>1490</y>
      <width>701</width>
      <height>51</height>
     </rect>
@@ -1656,11 +1655,193 @@
     <string>Temperature2</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="pushButton_active_pnumber_base">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>1720</y>
+     <width>101</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_active_pnumber_additive_1">
+   <property name="geometry">
+    <rect>
+     <x>450</x>
+     <y>1720</y>
+     <width>101</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_active_pnumber_additive_2">
+   <property name="geometry">
+    <rect>
+     <x>560</x>
+     <y>1720</y>
+     <width>101</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_active_pnumber_additive_3">
+   <property name="geometry">
+    <rect>
+     <x>670</x>
+     <y>1720</y>
+     <width>101</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_active_pnumber_additive_4">
+   <property name="geometry">
+    <rect>
+     <x>780</x>
+     <y>1720</y>
+     <width>101</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_active_pnumber_additive_5">
+   <property name="geometry">
+    <rect>
+     <x>890</x>
+     <y>1720</y>
+     <width>101</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_dispense_pnumber_1">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>1570</y>
+     <width>101</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_dispense_pnumber_2">
+   <property name="geometry">
+    <rect>
+     <x>450</x>
+     <y>1570</y>
+     <width>101</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_dispense_pnumber_3">
+   <property name="geometry">
+    <rect>
+     <x>560</x>
+     <y>1570</y>
+     <width>101</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_dispense_pnumber_4">
+   <property name="geometry">
+    <rect>
+     <x>670</x>
+     <y>1570</y>
+     <width>101</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_dispense_pnumber_5">
+   <property name="geometry">
+    <rect>
+     <x>780</x>
+     <y>1570</y>
+     <width>101</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_dispense_pnumber_6">
+   <property name="geometry">
+    <rect>
+     <x>890</x>
+     <y>1570</y>
+     <width>101</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>1690</y>
+     <width>511</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Available single products (pure products available in this dispenser):</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_7">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>1540</y>
+     <width>521</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Available dispense products (user selectable mixes or single products) :</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_edit_product"/>
   <buttongroup name="buttonGroup_keypad"/>
+  <buttongroup name="buttonGroup_edit_product"/>
  </buttongroups>
 </ui>

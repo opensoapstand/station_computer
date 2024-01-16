@@ -27,6 +27,7 @@
 #include <string.h>
 #include <errno.h>
 #include "../dftypes.h"
+#include <functional>
 
 #include "../objects/debugOutput.h"
 
@@ -55,7 +56,7 @@
 
 #define TEMPERATURE_OPTIONAL_EXTERNAL_MCP9808_1_ADDRESS 0b0011000 // EN134 EN258
 #define TEMPERATURE_OPTIONAL_EXTERNAL_MCP9808_2_ADDRESS 0b0011001 // EN134 EN258
-#define TEMPERATURE_ADC_ADS7830 0b1001000                        // EN258
+#define TEMPERATURE_ADC_ADS7830 0b1001000                         // EN258
 
 #define DUMMY_ADDRESS 0b0100011
 
@@ -71,8 +72,6 @@
 #define PCA9534_EN134_PIN_OUT_BUTTON_LED_LOW_IS_ON 5
 #define PCA9534_EN134_PIN_IN_FLOW_SENSOR_TICKS 6
 #define PCA9534_EN134_PIN_OUT_FLOW_SENSOR_ENABLE 7
-
-
 
 #define MCP23017_REGISTER_GPA 0x09
 #define MCP23017_REGISTER_GPB 0x19
@@ -95,6 +94,22 @@
 #define MCP23017_EN258_GPB6_PIN_OUT_SOLENOID_4 6
 #define MCP23017_EN258_GPB7_PIN_OUT_SOLENOID_5 7
 
+#define EN258_SOLENOID_SPOUT 8   // dispense solenoid position (corresponds with printed solenoid number on pcb)
+#define EN258_SOLENOID_BASE 7   // base product
+#define EN258_SOLENOID_ADDITIVE_1 6
+#define EN258_SOLENOID_ADDITIVE_2 5
+#define EN258_SOLENOID_ADDITIVE_3 4
+#define EN258_SOLENOID_ADDITIVE_4 3
+#define EN258_SOLENOID_ADDITIVE_5 2
+#define EN258_SOLENOID_ADDITIVE_6 1
+
+// #define EN258_SOLENOID_BASE 2
+// #define EN258_SOLENOID_ADDITIVE_1 3
+// #define EN258_SOLENOID_ADDITIVE_2 4
+// #define EN258_SOLENOID_ADDITIVE_3 5
+// #define EN258_SOLENOID_ADDITIVE_4 6
+// #define EN258_SOLENOID_ADDITIVE_5 7
+// #define EN258_SOLENOID_SPOUT 8
 
 #define PUMP_START_DELAY_MILLIS 100
 #define PUMP_STOP_BEFORE_BACKTRACK_TIME_MILLIS 0
@@ -139,6 +154,13 @@ public:
         EN258_8SLOTS
     };
 
+    enum FlowSensorType
+    {
+        NOTSET,
+        AICHI,
+        DIGMESA
+    };
+
     pcb(void);
     pcb(const char *);
     ~pcb();
@@ -151,11 +173,13 @@ public:
     bool isTemperatureSensorMCP9808Available_1();
     bool isTemperatureSensorMCP9808Available_2(); // 2nd sensor
     bool isTemperatureSensorADS7830Available();   // 2nd sensor
+    std::string toString(PcbVersion version);
 
-    
     unsigned char getPumpPWM();
     bool setPumpPWM(uint8_t pwm_val);
     bool setPumpSpeedPercentage(uint8_t speed_percentage);
+    int getSlotCountByPcbType();
+    void setDispenseButtonLightsAllOff();
     bool setPumpsDisableAll();
     bool setPumpEnable(uint8_t slot);
     void independentDispensingRefresh();
@@ -173,23 +197,28 @@ public:
     bool getDispenseButtonEdge(uint8_t slot);
     bool getDispenseButtonEdgePositive(uint8_t slot);
     bool getDispenseButtonEdgeNegative(uint8_t slot);
-    void virtualButtonPressHack(uint8_t slot);
-    void virtualButtonUnpressHack(uint8_t slot);
+    // void virtualButtonPressHack(uint8_t slot);
+    // void virtualButtonUnpressHack(uint8_t slot);
     void dispenseButtonRefresh();
     void dispenseButtonRefreshPerSlot(uint8_t slot);
     bool getDispenseButtonState(uint8_t slot);
 
     void disableAllSolenoidsOfSlot(uint8_t slot);
     void setSolenoidFromArray(uint8_t slot, uint8_t position, bool onElseOff);
-    void setSolenoidOnePerSlot(uint8_t slot, bool onElseOff);
-    uint64_t getFlowSensorTotalPulses(uint8_t slot);
-    uint64_t getFlowSensorPulsesSinceEnabling(uint8_t slot);
-    void resetFlowSensorTotalPulses(uint8_t slot);
+    void setSpoutSolenoid(uint8_t slot, bool onElseOff);
+    void setAdditiveSolenoid(uint8_t slot, int additivePosition, bool onElseOff);
+    void setBaseSolenoid(uint8_t slot, bool onElseOff);
+
+    void setFlowSensorTypeDefaults();
+    void setFlowSensorType(uint8_t slot, FlowSensorType sensorType);
+    FlowSensorType getFlowSensorType(uint8_t slot);
     void refreshFlowSensors();
     void flowSensorEnable(uint8_t slot);
     void flowSensorsDisableAll();
-    // PcbVersion enum PcbVersion;
-    enum PcbVersion pcb_version;
+    // uint64_t getFlowSensorPulsesForDispenser(uint8_t slot);
+    uint64_t getFlowSensorPulsesSinceEnabling(uint8_t slot);
+    // void resetFlowSensorPulsesForDispenser(uint8_t slot);
+
     uint8_t PCA9534ReadRegisterFromSlot(uint8_t slot, uint8_t reg);
 
     void PCA9534SendByteToSlot(uint8_t slot, unsigned char reg, unsigned char byte);
@@ -210,12 +239,17 @@ public:
     uint8_t get_MCP23017_address_from_slot(uint8_t slot);
     uint8_t getMCP23017Register(uint8_t slot, uint8_t reg);
     void setMCP23017Register(uint8_t slot, uint8_t reg, uint8_t value);
-    void setFlowSensorTypeEN258(uint8_t slot, bool isDigmesaElseAichi);
-    bool getFlowSensorTypeEN258DigmesaElseAichi(uint8_t slot);
+
+    void outputMCP23017IORegisters(uint8_t slot);
+
+    void registerFlowSensorTickCallback(int slot, std::function<void()> callback);
+    PcbVersion pcb_version;
+
 private:
 
+    std::function<void()> flowSensorTickCallbacks[MAX_SLOT_COUNT];
 
-    bool flowSensorDigmesaElseAichi[MAX_SLOT_COUNT];
+    FlowSensorType flowSensorsType[MAX_SLOT_COUNT];
     bool dispenseButtonStateMemory[MAX_SLOT_COUNT];
     bool dispenseButtonIsDebounced[MAX_SLOT_COUNT];
     bool dispenseButtonStateDebounced[MAX_SLOT_COUNT];
@@ -225,12 +259,13 @@ private:
 
     bool slotEnabled[MAX_SLOT_COUNT]; // in SED8433 this is not needed(pump ON =  pump enable  with button hardwired on pcb ). in EN-134: this enable high AND button press -> pump ON
     // bool slotEnabledMemory[MAX_SLOT_COUNT];
-    void refreshFlowSensor(uint8_t slot);
+    void pollFlowSensor(uint8_t slot);
 
     uint64_t flowSensorTickReceivedEpoch[MAX_SLOT_COUNT];
     bool flowSensorStateMemory[MAX_SLOT_COUNT];
 
-    uint64_t flow_sensor_total_pulses[MAX_SLOT_COUNT];
+
+    // uint64_t flow_sensor_pulses_for_dispenser[MAX_SLOT_COUNT];
     uint64_t flow_sensor_pulses_since_enable[MAX_SLOT_COUNT];
 
     uint64_t button_[MAX_SLOT_COUNT];

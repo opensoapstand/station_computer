@@ -21,6 +21,7 @@
 #include "page_help.h"
 
 class page_product;
+class page_product_mixing;
 class page_idle;
 class page_maintenance;
 class page_help;
@@ -38,7 +39,7 @@ class page_product_menu : public QWidget
 
 public:
     explicit page_product_menu(QWidget *parent = nullptr);
-    void setPage(page_product *p_page_product, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp, statusbar *p_statusbar);
+    void setPage(page_product *p_page_product, page_product_mixing *p_page_product_mixing, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp, statusbar *p_statusbar);
     ~page_product_menu();
 
     void select_product(int slot);
@@ -51,6 +52,7 @@ public:
 
     QPushButton *pushButtons_dispense_product[6];
     QLabel *labels_dispense_product_picture[6];
+    QLabel *labels_dispense_product_name[6];
 
     QPushButton *pushButtons_product_select[4];
     QLabel *labels_product_picture[4];
@@ -103,6 +105,7 @@ private:
     Ui::page_product_menu *ui;
     // productPage_2 *selection_PageTwo;
     page_product *p_page_product;
+    page_product_mixing *p_page_product_mixing;
     page_idle *p_page_idle;
     page_maintenance *p_page_maintenance;
     page_help *p_page_help;

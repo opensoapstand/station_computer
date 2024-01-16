@@ -150,31 +150,35 @@ void page_maintenance_general::printerStatusFeedback(bool isOnline, bool hasPape
 void page_maintenance_general::send_check_printer_status_command()
 {
     // qDebug() << "Send check printer status to controller";
-    p_page_idle->thisMachine->dfUtility->send_command_to_FSM("Printer", true);
-    usleep(50000);
-    usleep(1200000); // minimum
-    // usleep(5000000); 
-    // p_page_idle->thisMachine->dfUtility->send_command_to_FSM("1");
-    // usleep(5000000); 
-    p_page_idle->thisMachine->dfUtility->send_command_to_FSM("1", false);
-    usleep(50000);
+
+    qDebug() << "Request printer status from controller";
+    p_page_idle->thisMachine->dfUtility->send_command_to_FSM("getThermalprinterStatus", true);
+    // p_page_idle->thisMachine->dfUtility->send_command_to_FSM("Printer", true);
+    // usleep(50000);
+    // usleep(1200000); // minimum
+    // // usleep(5000000); 
+    // // p_page_idle->thisMachine->dfUtility->send_command_to_FSM("1");
+    // // usleep(5000000); 
+    // p_page_idle->thisMachine->dfUtility->send_command_to_FSM("1", false);
+    // usleep(50000);
 }
 
 void page_maintenance_general::on_pushButton_printer_check_status_clicked()
 {
-    // qDebug() << "Maintenance general. yoooo.";
+    qDebug() << "Maintenance general. Clicked check printer status.";
     send_check_printer_status_command();
     ui->pushButton_printer_check_status->hide();
 }
 
-void page_maintenance_general::on_printer_test_print_button_clicked()
+void page_maintenance_general::on_pushButton_printer_test_print_clicked()
 {
-    qDebug() << "Send test printer to controller";
-    p_page_idle->thisMachine->dfUtility->send_command_to_FSM("Printer", true);
-    usleep(50000);
-    p_page_idle->thisMachine->dfUtility->send_command_to_FSM("1", true);
-    usleep(50000);
-    p_page_idle->thisMachine->dfUtility->send_command_to_FSM("q", true);
+    qDebug() << "Maintenance general. Clicked get printer to print test.";
+    // p_page_idle->thisMachine->dfUtility->send_command_to_FSM("Printer", true);
+    // usleep(50000);
+    // p_page_idle->thisMachine->dfUtility->send_command_to_FSM("1", true);
+    // usleep(50000);
+    // p_page_idle->thisMachine->dfUtility->send_command_to_FSM("q", true);
+    p_page_idle->thisMachine->dfUtility->send_command_to_FSM("thermalprinterPrintTest", true);
 }
 
 void page_maintenance_general::on_checkBox_enable_pump_ramping_clicked(bool checked)
@@ -588,3 +592,16 @@ void page_maintenance_general::on_pushButton_restart_electronics_clicked()
 
     qApp->exit(); // restart UI. The problem with only controller restart is that there are two screens now.
 }
+
+void page_maintenance_general::on_checkBox_enable_pcb_3point3V_clicked(bool checked)
+{
+    if (checked){
+
+        p_page_idle->thisMachine->dfUtility->send_command_to_FSM("pcbPower|ON", true);
+    }else{
+        p_page_idle->thisMachine->dfUtility->send_command_to_FSM("pcbPower|OFF", true);
+
+    }
+}
+
+

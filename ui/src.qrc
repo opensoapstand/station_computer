@@ -56,7 +56,9 @@
         <file>page_qr_payment.cpp</file>
         <file>page_qr_payment.h</file>
         <file>page_product.cpp</file>
+        <file>page_product_mixing.cpp</file>
         <file>page_product.h</file>
+        <file>page_product_mixing.h</file>
         <file>page_select_product.cpp</file>
         <file>page_select_product.h</file>
         <file>page_end.cpp</file>
@@ -68,6 +70,7 @@
         <file>ui_page_maintenance.h</file>
         <file>ui_page_qr_payment.h</file>
         <file>ui_page_product.h</file>
+        <file>ui_page_product_mixing.h</file>
         <file>ui_page_select_product.h</file>
         <file>ui_page_end.h</file>
 

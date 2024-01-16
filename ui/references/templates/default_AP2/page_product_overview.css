@@ -6,59 +6,63 @@ QPushButton {
     border: none;
 }
 .promoCode{
-    font-family: "EuropaNuova-Regular"; 
+    font-family: "Lato"; 
     font-style: normal; 
     font-weight: 700; 
-    font-size: 28px; 
-    line-height: 44px; 
-    color: #58595B;
-    border: 3px solid #CCC9C7;
-    border-radius: 5px;
+    font-size: 24px; 
+    color: #908981;
+    padding: 10px;
+    border: 2px solid black;
+    border-radius: 10px;
 }
 .promoCode_network_error{
-    font-family: Montserrat; 
+    font-family: "Lato"; 
     font-style: normal; 
-    font-weight: bold; 
-    font-size: 28px; 
-    line-height: 44px; 
+    font-weight: 700; 
+    font-size: 24px; 
+    padding: 10px;
     color: #da980a;
-    border: 1px solid #da980a;
+    border: 2px solid #58595B;
+    border-radius: 10px;
 }
 .promoCode_invalid{
-    font-family: "EuropaNuova-Regular"; 
+    font-family: "Lato"; 
     font-style: normal; 
-    font-weight: 400; 
-    font-size: 28px; 
-    line-height: 44px;
+    font-weight: 700; 
+    font-size: 24px; 
+    padding: 10px;
     color: #f44336;
-    border: 1px solid #f44336;
+    border: 2px solid #58595B;
+    border-radius: 10px;
 }
 .promoCode_processing{
-    font-family: Montserrat; 
+    font-family: "Lato"; 
     font-style: normal; 
-    font-weight: bold; 
-    font-size: 28px; 
-    line-height: 44px; 
+    font-weight: 700; 
+    font-size: 24px; 
+    padding: 10px;
     color: #858585;
-    border: 1px solid #858585;
+    border: 2px solid #858585;
+    border-radius: 10px;
 }
 .promoCode_valid{
-    font-family: "EuropaNuova-Regular"; 
+    font-family: "Lato"; 
     font-style: normal; 
-    font-weight: 400; 
-    font-size: 28px; 
-    line-height: 44px; 
-    color: #5E8580;
-    border: 1px solid #58595B;
+    font-weight: 700; 
+    font-size: 24px; 
+    padding: 10px;
+    color: #895E25;
+    border: 2px solid #58595B;
+    border-radius: 10px;
 }
 #pushButton_select_product_page{ 
-    font-family: 'EuropaNuova-Regular';
+    font-family: 'Lato';
     font-style: normal;
-    font-weight: 700;
-    font-size: 35px;
-    color: #221F20;
+    font-weight: 400;
+    font-size: 24px;
+    color: #001810;
     text-align: left;
-    qproperty-alignment: AlignLeft;
+    qproperty-alignment: AlignCenter;
     border: none;
 }
 /* .buttonPromo {
@@ -80,89 +84,122 @@ QPushButton {
 }
 
 #pushButton_continue{
-    font-family: 'EuropaNuova-Regular';
+    font-family: 'Lato';
     font-style: normal;
     font-weight: 400;
-    background-color: #221F20;
+    background-color: #895E25;
     font-size: 47px;
     text-align: center;
     line-height: auto;
     qproperty-alignment: AlignCenter;
     border-radius: 25px;
-    color: #FFFFFF;
-    border: 1px solid #221F20;
+    color: #FEFBF9;
+    border: none;
 }
 
+#pushButton_continue_additional{
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 400;
+    background-color: #895E25;
+    font-size: 47px;
+    text-align: center;
+    line-height: auto;
+    qproperty-alignment: AlignCenter;
+    border-radius: 25px;
+    color: #FEFBF9;
+    border: none;
+}
 
 QLabel {
     position: absolute;
-    width: 870px;
-    height: 102px;
-    left: 99px;
-    top: 261px;
-    font-family: 'Montserrat';
+    font-family: 'Lato';
     font-style: normal;
-    font-weight: 500;
-    font-size: 42px;
-    line-height: 48px;
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 45px;
     text-transform: capitalize;
-    color: #438080;
+    color: #211403;
+}
+
+#label_page_title{
+    color: #211403;
+    font-family: 'El Messiri';
+    font-size: 64px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+#label_checkout_title{
+    color: #211403;
+    font-family: 'El Messiri';
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
 }
 
 .labelOrderOverview{
-    font-family: 'EuropaNuova-Regular';
+    color: #211403;
+    font-family: 'Lato';
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+#label_invoice_size_title{
+    color: #211403;
+    font-family: 'Lato';
+    font-size: 30px;
     font-style: normal;
     font-weight: 400;
-    font-size: 34px;
-    line-height: 20px;
-    color: #221F20;
 }
 
 #label_invoice_price{
-    font-family: 'EuropaNuova-Regular';
+    font-family: 'Lato';
     font-style: normal;
     font-weight: 700;
-    font-size: 34px;
-    line-height: 40px;
-    color: #221F20;
+    font-size: 30px;
+    color: #211403;
+}
+#label_invoice_coupon_title{
+    color: #211403;
+    font-family: 'Lato';
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 700;
 }
 #label_invoice_box{
-    /* border: 2px solid #221F20; */
-    background: transparent;
-    border-radius: 0px;
-    box-shadow: 0px -5px 4px rgba(0, 0, 0, 0.25);
+    background: #FFF7ED;
+    border-radius: 25px;
 }
-
+#label_invoice_additives_overview{
+    color: #211403;
+    font-family: 'Lato';
+    font-size: 30px;
+    font-weight: 400;
+    font-style: normal;
+}
 .labelDiscount{
-    font-family: 'EuropaNuova-Regular';
+    font-family: 'Lato';
     font-style: normal;
     font-weight: 700;
-    font-size: 34px;
-    line-height: 28px;
-    color: #5E8580;
+    font-size: 30px;
+    color: #895E25;
     text-align: right;
 }
-.labelDiscountName{
-    font-family: 'EuropaNuova-Regular';
+.labelDiscountName, #label_discount_tag{
+    color: transparent;
+    background: transparent;
+}
+#label_total, #label_invoice_price_total{
+    font-family: 'Lato';
     font-style: normal;
     font-weight: 700;
-    font-size: 34px;
-    line-height: 29px;
-    color: #221F20;
-}
-#label_total{
-    font-family: 'EuropaNuova-Regular';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 34px;
-    line-height: 29px;
-    color: #221F20;
-}
-#label_invoice_price_total{
-    font-family: "EuropaNuova-Regular";
-    font-weight: 700;
-    font-size: 34px;
-    color: #221F20;
+    font-size: 30px;
+    color: #221403;
 }
 #label_gif{
     font-family: 'Montserrat';
@@ -175,27 +212,27 @@ QLabel {
     border:8px solid #248C8C;
     border-radius: 20px;
 }
-#label_product_photo {
-    /* border: 2px solid #5E8580; */
-}
 #label_selected_volume{
-    font-family: 'EuropaNuova-Regular';
+    color: #211403;
+    font-family: 'Lato';
+    font-size: 30px;
     font-style: normal;
-    font-weight: 700;
-    font-size: 32px;
-    line-height: 99px;
-    color: #221F20;
-    text-align: center;
-    /* qproperty-alignment: AlignCenter; */
-    /* border: 3px solid #221F20; */
-    border-radius: 20px;
-    margin-left: 5px;
-    margin-bottom: 8px;
-    /* background: #CCC9C7; */
-    background: #FFFFFF;
-
+    font-weight: 400;
+    line-height: 45px;
+    qproperty-alignment: 'AlignVCenter | AlignLeft';
 }
 
 #line_invoice{
-    background: #221F20;
+    border: 3px solid black;
 }
+#label_product_photo {
+    background-image: url(%IMAGE_PATH%);
+    border-top-left-radius: 0px;
+    border-top-right-radius: 100px;
+    border-bottom-right-radius: 100px;
+    border-bottom-left-radius: 100px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-clip: content;
+}
+

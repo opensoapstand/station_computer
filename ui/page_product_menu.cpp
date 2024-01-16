@@ -18,7 +18,8 @@
 #include "page_product_menu.h"
 #include "ui_page_product_menu.h"
 
-#include "page_product.h"
+// #include "page_product.h"
+#include "page_product_mixing.h"
 #include "page_idle.h"
 #include "df_util.h"
 
@@ -62,6 +63,13 @@ page_product_menu::page_product_menu(QWidget *parent) : QWidget(parent),
     labels_dispense_product_picture[4] = ui->label_dispense_product_picture_5;
     labels_dispense_product_picture[5] = ui->label_dispense_product_picture_6;
 
+    labels_dispense_product_name[0] = ui->label_dispense_product_name_1;
+    labels_dispense_product_name[1] = ui->label_dispense_product_name_2;
+    labels_dispense_product_name[2] = ui->label_dispense_product_name_3;
+    labels_dispense_product_name[3] = ui->label_dispense_product_name_4;
+    labels_dispense_product_name[4] = ui->label_dispense_product_name_5;
+    labels_dispense_product_name[5] = ui->label_dispense_product_name_6;
+
     // pushButtons_product_select[0] = ui->pushButton_selection1;
     // pushButtons_product_select[1] = ui->pushButton_selection2;
     // pushButtons_product_select[2] = ui->pushButton_selection3;
@@ -102,9 +110,10 @@ page_product_menu::page_product_menu(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference
  */
-void page_product_menu::setPage(page_product *p_page_product, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp, statusbar *p_statusbar)
+void page_product_menu::setPage(page_product *p_page_product, page_product_mixing *p_page_product_mixing, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp, statusbar *p_statusbar)
 {
     this->p_page_product = p_page_product;
+    this->p_page_product_mixing = p_page_product_mixing;
     this->p_page_idle = pageIdle;
     this->p_page_maintenance = pageMaintenance;
     this->p_page_help = pageHelp;
@@ -150,20 +159,23 @@ void page_product_menu::showEvent(QShowEvent *event)
         labels_base_product_bg[slot_index]->setStyleSheet(styleSheet);
         pushButtons_base_product[slot_index]->setProperty("class", "pushButton_base_product");
         pushButtons_base_product[slot_index]->setStyleSheet(styleSheet);
+        
+        // QString picturePath = p_page_idle->thisMachine->getSlotBaseProduct(slot_index + 1)->getProductPicturePath();
+        // styleSheet.replace("%IMAGE_PATH%", picturePath);
+        
+        p_page_idle->thisMachine->addPictureToLabelCircle(labels_base_product_picture[slot_index], p_page_idle->thisMachine->getSlotBaseProduct(slot_index + 1)->getProductPicturePath());
         labels_base_product_picture[slot_index]->setProperty("class", "label_base_product_picture");
         labels_base_product_picture[slot_index]->setStyleSheet(styleSheet);
         qDebug() << p_page_idle->thisMachine->getSlotBaseProduct(slot_index + 1)->getProductPicturePath();
-        p_page_idle->thisMachine->addPictureToLabel(labels_base_product_picture[slot_index], p_page_idle->thisMachine->getSlotBaseProduct(slot_index + 1)->getProductPicturePath());
 
         labels_base_product_name[slot_index]->setProperty("class", "label_base_product_name");
         labels_base_product_name[slot_index]->setStyleSheet(styleSheet);
-        QString product_name = p_page_idle->thisMachine->getSlotBaseProduct(slot_index + 1)->getProductName();
-        qDebug() << product_name;
-        labels_base_product_name[slot_index]->setText(product_name);
+        QString product_type = p_page_idle->thisMachine->getSlotBaseProduct(slot_index + 1)->getProductType();
+        qDebug() << product_type;
+        labels_base_product_name[slot_index]->setText(product_type);
     }
 
     select_base_product_in_menu(0);
-
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_product_menu_title);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_to_idle);
 
@@ -331,14 +343,20 @@ void page_product_menu::displayProducts()
 void page_product_menu::displayDispenseProductsMenu()
 {
     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_PRODUCT_MENU_CSS);
-    for (int sub_menu_index = 0; sub_menu_index < MENU_DISPENSE_OPTIONS_PER_BASE_MAXIMUM; sub_menu_index++)
+    for (int sub_menu_index = 0; sub_menu_index < DISPENSE_PRODUCTS_PER_BASE_LINE_MAX; sub_menu_index++)
     {
-        int option_index = m_selectedBaseProductIndex * MENU_DISPENSE_OPTIONS_PER_BASE_MAXIMUM + sub_menu_index;
+        int option_index = m_selectedBaseProductIndex * DISPENSE_PRODUCTS_PER_BASE_LINE_MAX + sub_menu_index;
 
         if (p_page_idle->thisMachine->isOptionExisting(option_index + 1))
         {
             pnumberproduct *dispenseProduct = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1);
-            p_page_idle->thisMachine->addPictureToLabel(labels_dispense_product_picture[sub_menu_index], dispenseProduct->getProductPicturePath());
+            // p_page_idle->thisMachine->addPictureToLabel(labels_dispense_product_picture[sub_menu_index], dispenseProduct->getProductPicturePath());
+
+            QString picturePath = dispenseProduct->getProductPicturePath();
+            QString increment_text = "%IMAGE_PATH%1%";
+            QString image_path_for_position = increment_text.arg(sub_menu_index);
+            styleSheet.replace(image_path_for_position, picturePath);
+
 
             qDebug() << "Set up sub menu for item: " << sub_menu_index + 1 << " which is option: " << option_index + 1 << " which has pnumber; " << p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getPNumber();
 
@@ -347,13 +365,20 @@ void page_product_menu::displayDispenseProductsMenu()
             labels_dispense_product_picture[sub_menu_index]->setProperty("class", "label_base_product_picture");
             labels_dispense_product_picture[sub_menu_index]->setStyleSheet(styleSheet);
 
+            QString dispense_product_name = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductName();
+            labels_dispense_product_name[sub_menu_index]->setProperty("class", "label_dispense_product_name");
+            labels_dispense_product_name[sub_menu_index]->setStyleSheet(styleSheet);
+            labels_dispense_product_name[sub_menu_index]->setText(dispense_product_name);
+
             pushButtons_dispense_product[sub_menu_index]->show();
             labels_dispense_product_picture[sub_menu_index]->show();
+            labels_dispense_product_name[sub_menu_index]->show();
             pushButtons_dispense_product[sub_menu_index]->raise();
         }else{
             qDebug() << "Set up sub menu for item: " << sub_menu_index + 1 << "Invalid pnumber product. Will hide option. ";
             pushButtons_dispense_product[sub_menu_index]->hide();
             labels_dispense_product_picture[sub_menu_index]->hide();
+            labels_dispense_product_name[sub_menu_index]->hide();
         }
     }
 }
@@ -385,15 +410,16 @@ void page_product_menu::select_product(int option)
 {
     if (p_page_idle->thisMachine->getIsOptionAvailable(option))
     {
-        qDebug() << "Option select and available: " << option;
         p_page_idle->thisMachine->setSelectedProductByOption(option);
         p_page_idle->thisMachine->setSelectedSlotFromSelectedProduct();
 
-        hideCurrentPageAndShowProvided(p_page_product);
+        p_page_idle->thisMachine->getSelectedProduct()->resetCustomMixRatioParameters();
+
+        p_page_idle->thisMachine->hasMixing() ? hideCurrentPageAndShowProvided(p_page_product_mixing) : hideCurrentPageAndShowProvided(p_page_product);
     }
     else
     {
-        qDebug() << "Option not available: " << option;
+        qDebug() << "Invalid choice. Option not available: " << option;
     }
 }
 

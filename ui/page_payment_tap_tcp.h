@@ -42,6 +42,7 @@ extern std::atomic<bool> stop_authorization_thread;
 
 class statusbar;
 class page_product;
+class page_product_mixing;
 class page_dispenser;
 class page_idle;
 class page_help;
@@ -67,7 +68,7 @@ class page_payment_tap_tcp : public QWidget
 public:
     // **** GUI Setup ****
     explicit page_payment_tap_tcp(QWidget *parent = nullptr);
-    void setPage(page_product *p_page_product, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp, statusbar *p_statusbar);
+    void setPage(page_product *p_page_product, page_product_mixing *p_page_product_mixing, page_error_wifi *pageWifiError, page_dispenser *page_dispenser, page_idle *pageIdle, page_help *pageHelp, statusbar *p_statusbar);
     ~page_payment_tap_tcp();
 
     void showEvent(QShowEvent *event);
@@ -81,8 +82,8 @@ public:
 
     StateTapPayment state_tap_payment; 
 
-private slots:
 
+private slots:
     // Navigation
     void on_pushButton_previous_page_clicked();
     void on_pushButton_payment_bypass_clicked();
@@ -96,9 +97,11 @@ private slots:
 
     void idlePaymentTimeout();
 private:
+     QMessageBox* msgBox;
     // **** GUI ****
     Ui::page_payment_tap_tcp *ui;
     page_product *p_page_product;
+    page_product_mixing *p_page_product_mixing;
     page_dispenser *p_page_dispense;
     page_idle *p_page_idle;
     page_help *p_page_help;

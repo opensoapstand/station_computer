@@ -36,6 +36,19 @@ page_maintenance_dispenser::page_maintenance_dispenser(QWidget *parent) : QWidge
 
     connect(ui->buttonGroup_edit_product, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroup_edit_product_Pressed(int)));
     connect(ui->buttonGroup_keypad, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroup_keypad_Pressed(int)));
+
+    buttons_select_additive[0] = ui->pushButton_active_pnumber_additive_1;
+    buttons_select_additive[1] = ui->pushButton_active_pnumber_additive_2;
+    buttons_select_additive[2] = ui->pushButton_active_pnumber_additive_3;
+    buttons_select_additive[3] = ui->pushButton_active_pnumber_additive_4;
+    buttons_select_additive[4] = ui->pushButton_active_pnumber_additive_5;
+
+    buttons_select_mix[0] = ui->pushButton_dispense_pnumber_1;
+    buttons_select_mix[1] = ui->pushButton_dispense_pnumber_2;
+    buttons_select_mix[2] = ui->pushButton_dispense_pnumber_3;
+    buttons_select_mix[3] = ui->pushButton_dispense_pnumber_4;
+    buttons_select_mix[4] = ui->pushButton_dispense_pnumber_5;
+    buttons_select_mix[5] = ui->pushButton_dispense_pnumber_6;
 }
 
 // DTOR
@@ -63,10 +76,13 @@ void page_maintenance_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToS
 void page_maintenance_dispenser::showEvent(QShowEvent *event)
 {
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
-    statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
-    statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
+    statusbarLayout->addWidget(p_statusbar);                 // Only one instance can be shown. So, has to be added/removed per page.
+    statusbarLayout->setContentsMargins(0, 1874, 0, 0);      // int left, int top, int right, int bottom);
     qDebug() << "Active Slot: " << QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
     QWidget::showEvent(event);
+
+    m_activePNumber = this->p_page_idle->thisMachine->getSelectedSlot()->getBasePNumber();
+    this->p_page_idle->thisMachine->setSelectedProduct(m_activePNumber);
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
 
@@ -93,8 +109,54 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     ui->label_action_feedback->setStyleSheet(styleSheet);
     ui->label_status_dispenser->setStyleSheet(styleSheet);
     ui->pushButton_set_volume_remaining->setStyleSheet(styleSheet);
-    ui->label_action_feedback->setText("");
 
+    ui->pushButton_active_pnumber_base->setProperty("class", "product_active");
+    ui->pushButton_active_pnumber_base->setStyleSheet(styleSheet);
+    ui->pushButton_active_pnumber_base->setText("Base\nP-" + QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getBasePNumber()));
+
+    // first, pretend like there are no dispense products
+    for (int dispense_product_position = 1; dispense_product_position <= DISPENSE_PRODUCTS_PER_BASE_LINE_MAX; dispense_product_position++)
+    {
+        buttons_select_mix[dispense_product_position - 1]->setProperty("class", "product_not_available");
+        buttons_select_mix[dispense_product_position - 1]->setStyleSheet(styleSheet);
+        buttons_select_mix[dispense_product_position - 1]->setText("Dispense Product " + QString::number(dispense_product_position) + "\nN/A");
+        buttons_select_mix[dispense_product_position - 1]->setEnabled(false);
+        // buttons_select_mix[dispense_product_position - 1]->hide();
+    }
+
+    // set up for all available dispense products
+    int dispense_product_position = 1;
+    while (dispense_product_position <= this->p_page_idle->thisMachine->getSelectedSlot()->getDispenseProductsCount())
+    {
+        buttons_select_mix[dispense_product_position - 1]->setEnabled(true);
+        int pnumber = this->p_page_idle->thisMachine->getSelectedSlot()->getDispensePNumber(dispense_product_position);
+        buttons_select_mix[dispense_product_position - 1]->setText("Dispense Product " + QString::number(dispense_product_position) + "\nP-" + QString::number(pnumber));
+        buttons_select_mix[dispense_product_position - 1]->show();
+        dispense_product_position++;
+    }
+
+    // first, pretend like there are no additives
+    for (int additive_position = 1; additive_position <= ADDITIVES_PER_SLOT_COUNT_MAX; additive_position++)
+    {
+        buttons_select_additive[additive_position - 1]->setProperty("class", "product_not_available");
+        buttons_select_additive[additive_position - 1]->setStyleSheet(styleSheet);
+        buttons_select_additive[additive_position - 1]->setText("Additive " + QString::number(additive_position) + "\nN/A");
+        buttons_select_additive[additive_position - 1]->setEnabled(false);
+        // buttons_select_additive[additive_position - 1]->hide();
+    }
+
+    // set up for all available additives
+    int additive_position = 1;
+    while (additive_position <= this->p_page_idle->thisMachine->getSelectedSlot()->getAdditiveCount())
+    {
+        buttons_select_additive[additive_position - 1]->setEnabled(true);
+        int pnumber = this->p_page_idle->thisMachine->getSelectedSlot()->getAdditivePNumber(additive_position);
+        buttons_select_additive[additive_position - 1]->setText("Additive " + QString::number(additive_position) + "\nP-" + QString::number(pnumber));
+        buttons_select_additive[additive_position - 1]->show();
+        additive_position++;
+    }
+
+    ui->label_action_feedback->setText("");
     _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 
     ui->numberEntry->hide();
@@ -113,19 +175,6 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     ui->pushButton_set_max_temperature->setVisible(false);
     ui->label_setting_temperature->hide();
     ui->label_setting_temperature_2->hide();
-
-    // ui->label_setting_temperature->setVisible(false);
-    // double temperature = getTemperatureConfigure();
-    // debugOutput::sendMessage("Temperature in Celsius: " + std::to_string(temperature), MSG_INFO);
-    //  ui->label_setting_temperature->setText("Temp="+temperature);
-    //     ui->label_setting_temperature->setText("Temp = " + QString::number(temperature));
-    //    pcb myPcb;
-
-    //   // Call the `getTemperatureConfigure()` function
-    //    double temperature = myPcb.getTemperature_1();
-
-    //   // Use the temperature value as needed
-    //    ui->label_setting_temperature->setText("Temp = " + QString::number(temperature));
 
     isDispenseButtonPressed = false;
     activeEditField = "";
@@ -147,7 +196,51 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
         p_page_idle->thisMachine->loadDynamicContent();
     }
 
-    this->units_selected_product = this->p_page_idle->thisMachine->getSelectedProduct()->getUnitsForSlot();
+    // BASE PNUMBER
+    if (this->p_page_idle->thisMachine->getSelectedSlot()->getBasePNumber() == this->p_page_idle->thisMachine->getSelectedProduct()->getPNumber())
+    {
+        p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_active_pnumber_base, "product_active", PAGE_MAINTENANCE_DISPENSER_CSS);
+    }
+    else
+    {
+        p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_active_pnumber_base, "product_not_active", PAGE_MAINTENANCE_DISPENSER_CSS);
+    }
+
+    // available additives
+    int additive_position = 1;
+    while (additive_position <= this->p_page_idle->thisMachine->getSelectedSlot()->getAdditiveCount())
+    {
+        int pnumber = this->p_page_idle->thisMachine->getSelectedSlot()->getAdditivePNumber(additive_position);
+
+        if (pnumber == this->p_page_idle->thisMachine->getSelectedProduct()->getPNumber())
+        {
+            p_page_idle->thisMachine->addCssClassToObject(buttons_select_additive[additive_position - 1], "product_active", PAGE_MAINTENANCE_DISPENSER_CSS);
+        }
+        else
+        {
+            p_page_idle->thisMachine->addCssClassToObject(buttons_select_additive[additive_position - 1], "product_not_active", PAGE_MAINTENANCE_DISPENSER_CSS);
+        }
+        additive_position++;
+    }
+
+    // available dispense products
+    int dispense_product_position = 1;
+    while (dispense_product_position <= this->p_page_idle->thisMachine->getSelectedSlot()->getDispenseProductsCount())
+    {
+        int pnumber = this->p_page_idle->thisMachine->getSelectedSlot()->getDispensePNumber(dispense_product_position);
+
+        if (pnumber == this->p_page_idle->thisMachine->getSelectedProduct()->getPNumber())
+        {
+            p_page_idle->thisMachine->addCssClassToObject(buttons_select_mix[dispense_product_position - 1], "product_active", PAGE_MAINTENANCE_DISPENSER_CSS);
+        }
+        else
+        {
+            p_page_idle->thisMachine->addCssClassToObject(buttons_select_mix[dispense_product_position - 1], "product_not_active", PAGE_MAINTENANCE_DISPENSER_CSS);
+        }
+        dispense_product_position++;
+    }
+
+    this->units_selected_product = this->p_page_idle->thisMachine->getSizeUnit();
     ui->label_volume_per_tick->setText(p_page_idle->thisMachine->getSelectedProduct()->getVolumePerTickAsStringForSlot() + "/tick");
     ui->label_product_name->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductName());
 
@@ -188,13 +281,13 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
 
     if (p_page_idle->thisMachine->getSelectedSlot()->getIsSlotEnabled())
     {
-        //if slot is enabled, set button text to "make unavailable"
+        // if slot is enabled, set button text to "make unavailable"
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_set_status, "unavailable");
         p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_set_status, "pushButton_set_status_unavailable", PAGE_MAINTENANCE_DISPENSER_CSS);
     }
     else
     {
-        //if slot is disabled
+        // if slot is disabled
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_set_status, "available");
         p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_set_status, "pushButton_set_status_available", PAGE_MAINTENANCE_DISPENSER_CSS);
     }
@@ -417,9 +510,27 @@ void page_maintenance_dispenser::autoDispenseStart(int size)
 void page_maintenance_dispenser::dispense_test_start()
 {
     qDebug() << "Start dispense in maintenance mode. (FYI: if app crashes, it's probably about the update volume interrupts caused by the controller sending data.)";
-    QString command = QString::number(p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
-    command.append("t");
-    command.append(SEND_DISPENSE_START);
+    QString dispenseCommand = QString::number(p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
+    dispenseCommand.append("m");
+    // dispenseCommand.append("t");
+    dispenseCommand.append(SEND_DISPENSE_START);
+
+    // #define DISPENSE_CUSTOM_MIX
+
+#ifdef DISPENSE_CUSTOM_MIX
+    // check if pnumber is a mix.
+    QString pNumbersAsCsvString = this->p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbersAsCsv();
+    QString pNumberRatiosAsCsvString = this->p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosAsCsv();
+    int pNumberSelectedProduct = this->p_page_idle->thisMachine->getSelectedProduct()->getPNumber();
+
+    QString command = "dispenseCustomMix|" + dispenseCommand + "|" + QString::number(pNumberSelectedProduct) + "|" + pNumbersAsCsvString + "|" + pNumberRatiosAsCsvString + "|"; // dipenseMix|slot|dispensePNumber|pnumberscsv|ratioscsv
+#else
+
+    int pNumberSelectedProduct = this->p_page_idle->thisMachine->getSelectedProduct()->getPNumber();
+
+    QString command = "dispensePNumber|" + dispenseCommand + "|" + QString::number(pNumberSelectedProduct) + "|"; // dispensePNumber|slot|dispensePNumber
+
+#endif
 
     reset_all_dispense_stats();
     dispenseTimer->start(100);
@@ -448,9 +559,10 @@ void page_maintenance_dispenser::dispense_test_end(bool sendStopToController)
         if (sendStopToController)
         {
             qDebug() << "Manually finish dispense in maintenance mode.";
-            QString command = QString::number(p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
-            command.append("t");
-            command.append(SEND_DISPENSE_STOP);
+            // QString command = QString::number(p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
+            // command.append("t");
+            // command.append(SEND_DISPENSE_STOP);
+            QString command = "stopDispense";
             p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
         }
         else
@@ -1148,4 +1260,74 @@ void page_maintenance_dispenser::on_checkBox_enable_custom_clicked()
 {
     p_page_idle->thisMachine->getSelectedProduct()->toggleSizeEnabled(SIZE_CUSTOM_INDEX);
     updateProductLabelValues(true);
+}
+
+void page_maintenance_dispenser::setSelectedProduct(int pnumber)
+{
+    if (!isDispenserPumpEnabledWarningBox())
+    {
+        this->p_page_idle->thisMachine->setSelectedProduct(pnumber);
+        reset_all_dispense_stats();
+        updateProductLabelValues(false);
+    }
+}
+
+void page_maintenance_dispenser::on_pushButton_active_pnumber_base_clicked()
+{
+    setSelectedProduct(this->p_page_idle->thisMachine->getSelectedSlot()->getBasePNumber());
+}
+
+void page_maintenance_dispenser::on_pushButton_active_pnumber_additive_1_clicked()
+{
+    setSelectedProduct(this->p_page_idle->thisMachine->getSelectedSlot()->getAdditivePNumber(1));
+}
+
+void page_maintenance_dispenser::on_pushButton_active_pnumber_additive_2_clicked()
+{
+    setSelectedProduct(this->p_page_idle->thisMachine->getSelectedSlot()->getAdditivePNumber(2));
+}
+
+void page_maintenance_dispenser::on_pushButton_active_pnumber_additive_3_clicked()
+{
+    setSelectedProduct(this->p_page_idle->thisMachine->getSelectedSlot()->getAdditivePNumber(3));
+}
+
+void page_maintenance_dispenser::on_pushButton_active_pnumber_additive_4_clicked()
+{
+    setSelectedProduct(this->p_page_idle->thisMachine->getSelectedSlot()->getAdditivePNumber(4));
+}
+
+void page_maintenance_dispenser::on_pushButton_active_pnumber_additive_5_clicked()
+{
+    setSelectedProduct(this->p_page_idle->thisMachine->getSelectedSlot()->getAdditivePNumber(5));
+}
+
+void page_maintenance_dispenser::on_pushButton_dispense_pnumber_1_clicked()
+{
+    setSelectedProduct(this->p_page_idle->thisMachine->getSelectedSlot()->getDispensePNumber(1));
+}
+
+void page_maintenance_dispenser::on_pushButton_dispense_pnumber_2_clicked()
+{
+    setSelectedProduct(this->p_page_idle->thisMachine->getSelectedSlot()->getDispensePNumber(2));
+}
+
+void page_maintenance_dispenser::on_pushButton_dispense_pnumber_3_clicked()
+{
+    setSelectedProduct(this->p_page_idle->thisMachine->getSelectedSlot()->getDispensePNumber(3));
+}
+
+void page_maintenance_dispenser::on_pushButton_dispense_pnumber_4_clicked()
+{
+    setSelectedProduct(this->p_page_idle->thisMachine->getSelectedSlot()->getDispensePNumber(4));
+}
+
+void page_maintenance_dispenser::on_pushButton_dispense_pnumber_5_clicked()
+{
+    setSelectedProduct(this->p_page_idle->thisMachine->getSelectedSlot()->getDispensePNumber(5));
+}
+
+void page_maintenance_dispenser::on_pushButton_dispense_pnumber_6_clicked()
+{
+    setSelectedProduct(this->p_page_idle->thisMachine->getSelectedSlot()->getDispensePNumber(6));
 }

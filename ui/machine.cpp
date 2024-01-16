@@ -189,14 +189,15 @@ void machine::initProductOptions()
         {
             int position = 1 + slot_index * DISPENSE_PRODUCTS_PER_BASE_LINE_MAX + i;
             setProductToMenuOption(position, dispense_pnumbers[i]);
-            qDebug() << "pnumber. : : " << (dispense_pnumbers[i]) << "at option" << position;
+            qDebug() << "pnumber : " << (dispense_pnumbers[i]) << "at option" << position;
         }
     }
 
+    // display all options: 
     for (int i = 0; i < dispenseProductsMenuOptions.size(); ++i)
     {
-        int option = dispenseProductsMenuOptions[i];
-        qDebug() << "Option eef" << (i + 1) << ": " << option;
+        int product = dispenseProductsMenuOptions[i];
+        qDebug() << "Option " << (i + 1) << ": " << product;
     }
 }
 
@@ -325,7 +326,7 @@ int machine::getSlotFromBasePNumber(int base_pnumber)
 
 dispenser_slot *machine::getSlotFromOption(int productOption){
     qDebug() << "Product option" << productOption;
-    int slot = static_cast<int>(std::round(productOption/DISPENSE_PRODUCTS_PER_BASE_LINE_MAX)) + 1;   
+    int slot = static_cast<int>(std::round(productOption/DISPENSE_PRODUCTS_PER_BASE_LINE_MAX));   
     return &m_slots[slot];
 }
 
@@ -489,7 +490,7 @@ int machine::getSlotCount()
         }
         else if (m_hardware_version.startsWith("SS2"))
         {
-            slot_count = 4;
+            slot_count = 3;
         }
         else
         {

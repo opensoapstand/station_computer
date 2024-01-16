@@ -126,6 +126,8 @@ public:
     void setSelectedSlotFromSelectedProduct();
     void setSelectedSlot();
     int getSlotFromBasePNumber(int base_pnumber);
+    dispenser_slot *getSlotFromOption(int productOption);
+
     dispenser_slot *getSelectedSlot();
 
     void initProductOptions();

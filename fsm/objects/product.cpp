@@ -277,6 +277,10 @@ char product::getSizeCharFromTargetVolume(double volume)
     {
         return 'f';
     }
+    else if (volume == TEST_DISPENSE_TARGET_VOLUME)
+    {
+        return 't';
+    }
     else
     {
         debugOutput::sendMessage("Get size from volume, not found, will default to custom dispense for volume " + to_string(volume), MSG_INFO);

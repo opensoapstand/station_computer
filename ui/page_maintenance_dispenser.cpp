@@ -511,7 +511,7 @@ void page_maintenance_dispenser::dispense_test_start()
 {
     qDebug() << "Start dispense in maintenance mode. (FYI: if app crashes, it's probably about the update volume interrupts caused by the controller sending data.)";
     QString dispenseCommand = QString::number(p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
-    dispenseCommand.append("m");
+    dispenseCommand.append("t");
     // dispenseCommand.append("t");
     dispenseCommand.append(SEND_DISPENSE_START);
 
@@ -614,7 +614,7 @@ void page_maintenance_dispenser::update_volume_received_dispense_stats(double di
 
     if (this->units_selected_product == "oz")
     {
-        ui->label_status_volume_dispensed->setText(QString::number(vol_dispensed / volume_per_tick_buffer) + "ticks x " + QString::number(df_util::convertMlToOz(volume_per_tick_buffer), 'f', 2) + "oz/tick = " + QString::number(vol_dispensed) + df_util::getConvertedStringVolumeFromMl(vol_dispensed, "oz", false, true));
+        ui->label_status_volume_dispensed->setText(QString::number(vol_dispensed / volume_per_tick_buffer) + "ticks x " + QString::number(df_util::convertMlToOz(volume_per_tick_buffer), 'f', 2) + "oz/tick = " + df_util::getConvertedStringVolumeFromMl(vol_dispensed, "oz", false, true));
     }
     else
     {
@@ -625,7 +625,17 @@ void page_maintenance_dispenser::update_volume_received_dispense_stats(double di
     if (vol_dispensed > 0)
     {
         QString vol_per_tick_for_1000ml = QString::number(1000 / (vol_dispensed / volume_per_tick_buffer), 'f', 2);
-        ui->label_calibration_result->setText(vol_per_tick_for_1000ml + "ml/tick"); // calibration constant if 1000ml were dispensed.
+
+        if (this->units_selected_product == "oz")
+        {
+            QString val = df_util::getConvertedStringVolumeFromMl(1000 / (vol_dispensed / volume_per_tick_buffer), "oz", false, false);
+            ui->label_calibration_result->setText( val + "oz/tick"); // calibration constant if 1000ml were dispensed.
+            // ui->label_calibration_result->setText( QString::number(df_util::getConvertedStringVolumeFromMl(vol_per_tick_for_1000ml, "oz", false, false)) + "oz/tick"); // calibration constant if 1000ml were dispensed.
+        }
+        else
+        {
+            ui->label_calibration_result->setText(vol_per_tick_for_1000ml + "ml/tick"); // calibration constant if 1000ml were dispensed.
+        }
     }
 }
 

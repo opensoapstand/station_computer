@@ -56,10 +56,9 @@ void machine::setup(product *pnumbers)
     // switch_3point3V->writePin(true);
 
     syncSoftwareVersionWithDb();
-    initProductDispensers();
-    loadGeneralProperties(true);
+    initProductDispensers(); 
+    loadGeneralProperties(true); 
 }
-
 int machine::getDispensersCount()
 {
     // slots, dispensers, lines,... it's all the same
@@ -75,6 +74,7 @@ void machine::initProductDispensers()
         m_productDispensers[slot_index].setup(control_pcb, m_pnumbers);
         m_productDispensers[slot_index].setSlot(slot_index + 1);
         m_productDispensers[slot_index].initGlobalFlowsensorIO(IO_PIN_FLOW_SENSOR);
+
         setFlowSensorCallBack(slot_index + 1);
     }
 }
@@ -88,6 +88,7 @@ void machine::loadGeneralProperties(bool loadDispenserParameters)
         for (int slot_index = 0; slot_index < getDispensersCount(); slot_index++)
         {
             m_productDispensers[slot_index].loadGeneralProperties();
+        m_productDispensers[slot_index].setEmptyContainerDetectionEnabled(getEmptyContainerDetectionEnabled());
         }
     }
 }

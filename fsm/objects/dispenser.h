@@ -106,6 +106,7 @@ public:
       DF_ERROR initGlobalFlowsensorIO(int pinint);
 
       void setPumpReversalEnabled(bool isEnabled);
+      void setEmptyContainerDetectionEnabled(bool isEnabled);
       void setPumpSlowStartStopEnabled(bool isEnabled);
       unsigned short getPumpSpeed();
       DF_ERROR setPumpDirectionForward();
@@ -204,6 +205,7 @@ public:
 private:
       int m_slot;
 
+      bool m_isEmptyContainerDetectionEnabled = false;
       bool m_isPumpReversalEnabled = false;
       bool m_isPumpSlowStartStopEnabled = false;
       bool isPumpSoftStarting;

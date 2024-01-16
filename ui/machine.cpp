@@ -44,6 +44,7 @@ void machine::initMachine()
         m_slots[slot_index].setSlot(slot_index + 1);
         m_slots[slot_index].setDb(m_db);
         m_slots[slot_index].loadSlotParametersFromDb();
+       // m_slots[slot_index].setEmptyContainerDetectionEnabled(getEmptyContainerDetectionEnabled());
     }
 
     // QVector<int> all_dispense_pnumbers = getAllUniqueDispensePNumbers();
@@ -559,10 +560,7 @@ double machine::getPriceWithDiscount(double price)
     // there is a maximum absolute number of discount available.
     // will return discounted price
     double discount = price * m_discount_percentage_fraction;
-<<<<<<< HEAD
-=======
     qDebug() << "Discount: " << m_max_dollar_amount_discount;
->>>>>>> develop
     max_discount = m_max_dollar_amount_discount.toDouble();
     double resulting_discount = (max_discount == 0.0) ? discount : std::min(max_discount, discount); // if discount > max_discount, take max_discount
     return (price - resulting_discount);

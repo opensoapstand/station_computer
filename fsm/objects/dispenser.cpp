@@ -315,11 +315,6 @@ bool dispenser::isPNumberValidInThisDispenser(int pnumber, bool mustBeAdditiveOr
         {
             isValid = true;
         }
-<<<<<<< HEAD
-=======
-        debugOutput::sendMessage("EAN-13 barcode dynamically formatted: " + plu_dynamic_formatted, MSG_ERROR);
-        return plu_dynamic_formatted;
->>>>>>> develop
     }
 
     if (!isValid)
@@ -1130,6 +1125,10 @@ DF_ERROR dispenser::pumpSlowStartHandler()
     }
 }
 
+void dispenser::setEmptyContainerDetectionEnabled(bool isEnabled)
+{
+    m_isEmptyContainerDetectionEnabled = isEnabled;
+};
 void dispenser::setPumpReversalEnabled(bool isEnabled)
 {
     m_isPumpReversalEnabled = isEnabled;
@@ -1505,7 +1504,7 @@ const char *dispenser::getSlotStateAsString()
 
 void dispenser::setSlotStateToEmpty()
 {
-    if (getEmptyContainerDetectionEnabled())
+    if (m_isEmptyContainerDetectionEnabled)
     {
         
         setSlotState(SLOT_STATE_PROBLEM_EMPTY);

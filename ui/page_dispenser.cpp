@@ -158,15 +158,15 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     previousDispenseStatus = "NO STATE";
 
-    if (p_page_idle->thisMachine->getSlotCount() == 1)
-    {
-        // single spout
+    // if (p_page_idle->thisMachine->getSlotCount() == 1)
+    // {
+    //     // single spout
+    //     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
+    // }
+    // else
+    // {
         p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
-    }
-    else
-    {
-        p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH);
-    }
+    // }
 
     // p_page_idle->thisMachine->addPictureToLabel(ui->label_indicate_active_spout, p_page_idle->thisMachine->getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_DOWN));
 
@@ -193,7 +193,8 @@ void page_dispenser::showEvent(QShowEvent *event)
             x = 880;
             break;
         }
-        ui->label_indicate_active_spout->move(x, ui->label_indicate_active_spout->y());
+        ui->label_indicate_active_spout->move(x, 980);
+        // ui->label_indicate_active_spout->move(x, ui->label_indicate_active_spout->y());
     }
     else
     {
@@ -224,15 +225,9 @@ void page_dispenser::showEvent(QShowEvent *event)
     arrowAnimationStepTimer->start();
     resetDispenseTimeout();
 
-<<<<<<< HEAD
     p_page_idle->thisMachine->getSelectedProduct()->resetVolumeDispensed();
     updatelabel_volume_dispensed_ml(p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl());
     paymentMethod = p_page_idle->thisMachine->getActivePaymentMethod();
-=======
-    p_page_idle->thisMachine->selectedProduct->resetVolumeDispensed();
-    updatelabel_volume_dispensed_ml(p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl());
-    paymentMethod = p_page_idle->thisMachine->selectedProduct->getActivePaymentMethod();
->>>>>>> develop
 
     fsmSendStartDispensing();
 }
@@ -887,15 +882,11 @@ void page_dispenser::on_pushButton_problems_clicked()
         QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "shopify";
         p_page_idle->thisMachine->setTextToObject(msgBox_problems, p_page_idle->thisMachine->getTemplateText(searchString));
     }
-<<<<<<< HEAD
     switch (paymentMethod)
     {
     case 0:
     case 1:
     case 2:
-=======
-    else if (paymentMethod == PAYMENT_QR || paymentMethod == PAYMENT_TAP_TCP || paymentMethod == PAYMENT_TAP_SERIAL)
->>>>>>> develop
     {
         QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "qr_tap";
         p_page_idle->thisMachine->setTextToObject(msgBox_problems, p_page_idle->thisMachine->getTemplateText(searchString));

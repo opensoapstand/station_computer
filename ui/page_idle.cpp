@@ -425,9 +425,9 @@ void page_idle::onReceiptPrinterFeedBackTimerTick()
     {
         _receiptPrinterFeedBackTimerSec = PAGE_IDLE_RECEIPT_PRINTER_TIMEOUT_SECONDS;
 
-        if (tappingBlockedUntilPrinterReply)
+        if (m_tappingBlockedUntilPrinterReply)
         {
-            tappingBlockedUntilPrinterReply = false;
+            m_tappingBlockedUntilPrinterReply = false;
 
             qDebug() << "Warning: receipt printer did not respond in time! Unblocked now.  ";
         }
@@ -479,14 +479,8 @@ void page_idle::onRebootNightlyTimeOutTimerTick()
                 thisMachine->setRebootState(wait_for_trigger);
                 _delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
                 stateScreenCheck = state_screen_check_not_initiated;
-<<<<<<< HEAD
                 QString paymentMethod = thisMachine->getPaymentMethod(); 
                 if(paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA){
-=======
-                QString paymentMethod = thisMachine->getProduct(1)->getPaymentMethod();
-                if (paymentMethod == PAYMENT_TAP_SERIAL)
-                {
->>>>>>> develop
                     rebootTapDevice();
                 }
                 QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -r 0";
@@ -685,35 +679,18 @@ void page_idle::on_pushButton_reboot_nightly_clicked()
     thisMachine->setRebootState(user_cancelled_reboot);
 }
 
-<<<<<<< HEAD
 void page_idle::pingTapDevice(){
     QString paymentMethod = thisMachine->getPaymentMethod(); 
     if(paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA){
         qDebug() << "Pinging Tap Serial Device";
-=======
-void page_idle::pingTapDevice()
-{
-    QString paymentMethod = thisMachine->getProduct(1)->getPaymentMethod();
-    if (paymentMethod == PAYMENT_TAP_SERIAL)
-    {
-        qDebug() << "Pinging Tap Device";
->>>>>>> develop
         page_payment_tap_serial paymentSerialObject;
         paymentSerialObject.getLanInfo();
     }
 }
 
-<<<<<<< HEAD
 void page_idle::rebootTapDevice(){
         qDebug() << "Rebooting Tap Device";
         page_payment_tap_serial paymentSerialObject;
         paymentSerialObject.resetDevice();
     
-=======
-void page_idle::rebootTapDevice()
-{
-    qDebug() << "Rebooting Tap Device at Midnight";
-    page_payment_tap_serial paymentSerialObject;
-    paymentSerialObject.resetDevice();
->>>>>>> develop
 }

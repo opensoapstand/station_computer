@@ -235,7 +235,7 @@ pnumberproduct *machine::getProductFromMenuOption(int productOption)
 
     if (!isOptionExisting(productOption))
     {
-        qDebug() << "ASSERT ERROR: non existing number (dummy or not valid). undefined behaviour from now on";
+        qDebug() << "ASSERT ERROR: non existing number (dummy or not valid). undefined behaviour from now on" << productOption;
     }
 
     int pnumber = dispenseProductsMenuOptions[productOption - 1];

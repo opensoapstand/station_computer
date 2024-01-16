@@ -817,6 +817,7 @@ bool product::loadParameters()
     bool success = true;
     if (getPNumber() != CUSTOM_MIX_PNUMBER)
     {
+        debugOutput::sendMessage("Product: Data loading for product: " + to_string(getPNumber()), MSG_INFO);
         success &= loadProductParametersFromDb();
         loadProductPropertiesFromCsv();
     }else{

@@ -681,7 +681,7 @@ int machine::convertPStringToPNumber(const std::string &inputString)
 
 void machine::loadMachineParametersFromDb()
 {
-    debugOutput::sendMessage("Machine load db par", MSG_INFO);
+    debugOutput::sendMessage("Machine load db parameters", MSG_INFO);
 
     int rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
@@ -795,5 +795,5 @@ void machine::loadMachineParametersFromDb()
         setHardwareVersionFromString(m_hardware_version_str);
         status = sqlite3_step(stmt); // next record
     }
-    debugOutput::sendMessage("Machine load db: finished. status: " + to_string(status), MSG_INFO);
+    debugOutput::sendMessage("Machine load db: finished . status(101=done,all good): " + to_string(status), MSG_INFO);
 }

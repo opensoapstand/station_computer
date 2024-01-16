@@ -31,6 +31,7 @@ stateEnd::stateEnd(messageMediator *message)
 stateEnd::~stateEnd()
 {
    // delete stuff
+   debugOutput::sendMessage("stateEnd: ~stateEnd", MSG_INFO);
 }
 
 // Overload for Debugger output

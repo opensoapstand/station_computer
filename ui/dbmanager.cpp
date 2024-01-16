@@ -480,7 +480,6 @@ void DbManager::getAllProductProperties(int pnumber,
             *price_custom_discount = qry.value(47).toDouble();
             //Sample size assignment
             isSizeEnabled[6] = qry.value(50).toInt();
-            qDebug() <<"Ashwani" <<isSizeEnabled[6];
             volumes[6] = qry.value(51).toDouble();
             prices[6] = qry.value(52).toDouble();
         }
@@ -528,7 +527,11 @@ void DbManager::getAllMachineProperties(
     int *is_enabled,
     QString *status_text,
     QString *payment,
-    QString *size_unit)
+    QString *size_unit,
+    int *screen_sleep_time24h,
+    int *screen_wakeup_time24h,
+    int *buy_bottle_1,
+    int *buy_bottle_2)
 {
     qDebug() << " db... all machine properties from: " << CONFIG_DB_PATH;
     {
@@ -568,7 +571,11 @@ void DbManager::getAllMachineProperties(
             "is_enabled,"
             "status_text,"
             "payment,"  // 29
-            "size_unit" // 30
+            "size_unit," // 30
+            "screen_sleep_time24h,"
+            "screen_wakeup_time24h,"
+            "buy_bottle_1,"
+            "buy_bottle_2"
             " FROM machine"
 
         );
@@ -614,6 +621,10 @@ void DbManager::getAllMachineProperties(
             *status_text = qry.value(28).toString();
             *payment = qry.value(29).toString();
             *size_unit = qry.value(30).toString();
+            *screen_sleep_time24h = qry.value(31).toInt();
+            *screen_wakeup_time24h = qry.value(32).toInt();
+            *buy_bottle_1 = qry.value(33).toInt();
+            *buy_bottle_2 = qry.value(34).toInt();
         }
         qry.finish();
     }

@@ -48,8 +48,7 @@ public:
     void printerStatusFeedback(bool isOnline, bool hasPaper);
     void updateLabelValues();
 
-    void on_pushButton_printer_check_status_clicked();
-    void on_printer_test_print_button_clicked();
+    // void on_pushButton_printer_check_status_clicked();
     void send_check_printer_status_command();
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
 
@@ -73,7 +72,7 @@ private slots:
     // void on_wifiButton_clicked();
     // void onPage_maintenanceTimeoutTick();
 
-    // void on_pushButton_printer_check_status_clicked();
+    void on_pushButton_printer_check_status_clicked();
 
     void on_pushButton_wifi_networks_clicked();
 
@@ -86,6 +85,8 @@ private slots:
     void on_pushButton_restart_electronics_clicked();
 
     void on_checkBox_enable_pcb_3point3V_clicked(bool checked);
+
+    void on_pushButton_printer_test_print_clicked();
 
 private:
     void showEvent(QShowEvent *event);

@@ -48,6 +48,7 @@ do
             sudo systemctl stop controller_soapstand
             sudo systemctl start ui_soapstand.service
             sudo systemctl start controller_soapstand.service
+        
         ;;
         "Enable Autostart")
             sudo systemctl enable ui_soapstand.service

@@ -4,6 +4,8 @@
 #include <QWidget>
 #include "page_idle.h"
 
+class page_idle;
+
 namespace Ui
 {
     class statusbar;

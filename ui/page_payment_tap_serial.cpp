@@ -129,11 +129,7 @@ void page_payment_tap_serial::on_pushButton_previous_page_clicked()
 
     if (exitConfirm())
     {
-        if(p_page_idle->thisMachine->m_template == "default_AP2"){
-            hideCurrentPageAndShowProvided(p_page_product_mixing,true);
-        }else{
-            hideCurrentPageAndShowProvided(p_page_product,true);
-        }
+        p_page_idle->thisMachine->hasMixing() ? hideCurrentPageAndShowProvided(p_page_product_mixing,true) : hideCurrentPageAndShowProvided(p_page_product,true);
     }
 }
 

@@ -536,7 +536,9 @@ QString product::getPaymentMethod()
 }
 
 QString product::setActivePaymentMethod(QString activePaymentMethod){
+    qDebug() << "ppfepaepifjaief";
     m_activePayment = activePaymentMethod;
+    qDebug() << "ppfepaepifjaieffffffffffffff";
 }
 
 

@@ -250,7 +250,7 @@ double machine::getDiscountAmount(double price)
 double machine::getPriceWithDiscount(double price)
 {
     double discount = price * m_discount_percentage_fraction;
-    qDebug() << m_max_dollar_amount_discount;
+    qDebug() << "Discount: " << m_max_dollar_amount_discount;
     max_discount = m_max_dollar_amount_discount.toDouble();
     double result = (max_discount == 0.0) ? discount : std::min(max_discount, discount);
     return (price - result);

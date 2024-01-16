@@ -310,7 +310,6 @@ void page_product_overview::reset_and_show_page_elements()
 
 void page_product_overview::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
-
     if (p_page_idle->thisMachine->getCouponState() == enabled_show_keyboard ||
         p_page_idle->thisMachine->getCouponState() == enabled_invalid_input ||
         p_page_idle->thisMachine->getCouponState() == enabled_processing_input ||
@@ -556,13 +555,17 @@ void page_product_overview::on_pushButton_continue(int buttonID)
     }
     double selectedPrice = p_page_idle->thisMachine->selectedProduct->getBasePrice();
     double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
-    if (selectedPrice == 0.0 || finalPrice == 0.0)
-    {
-        hideCurrentPageAndShowProvided(p_page_email);
+   
+    // if (selectedPrice == 0.0 || finalPrice == 0.0)
+    // {
+    //      qDebug() << "email";
+    //     hideCurrentPageAndShowProvided(p_page_email);
 
-    }
-    else if (paymentMethod == PAYMENT_QR)
+    // }
+    // else 
+    if (paymentMethod == PAYMENT_QR)
     {
+        qDebug() << "QR payment";
         CURL *curl;
         CURLcode res;
         curl = curl_easy_init();
@@ -595,24 +598,31 @@ void page_product_overview::on_pushButton_continue(int buttonID)
     }
     else if (paymentMethod == PAYMENT_TAP_TCP)
     {
+        qDebug() << "Payment: Tap tcp";
         p_page_idle->thisMachine->selectedProduct->setActivePaymentMethod(PAYMENT_TAP_TCP);
         hideCurrentPageAndShowProvided(p_page_payment_tap_tcp);
     }
     else if (paymentMethod == PAYMENT_TAP_SERIAL)
     {
+        qDebug() << "Payment: Tap serial";
         p_page_idle->thisMachine->selectedProduct->setActivePaymentMethod(PAYMENT_TAP_SERIAL);
         hideCurrentPageAndShowProvided(p_page_payment_tap_serial);
     }
     else if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
     {
-        p_page_idle->thisMachine->selectedProduct->setActivePaymentMethod(paymentMethod);
+        qDebug() << "Payment: plu/barcode";
+        qDebug() << p_page_idle->thisMachine->selectedProduct->getProductName();
+
+       p_page_idle->thisMachine->selectedProduct->setActivePaymentMethod(paymentMethod);
         hideCurrentPageAndShowProvided(p_page_dispense);
+        
     }
     else
     {
         qDebug() << "WARNING: No payment method detected.";
         hideCurrentPageAndShowProvided(p_page_dispense);
     }
+    
 }
 
 void page_product_overview::return_to_selectProductPage()

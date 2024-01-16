@@ -71,11 +71,15 @@ page_idle::page_idle(QWidget *parent) : QWidget(parent),
     rebootNightlyTimeOutTimer = new QTimer(this);
     rebootNightlyTimeOutTimer->setInterval(1000);
     connect(rebootNightlyTimeOutTimer, SIGNAL(timeout()), this, SLOT(onRebootNightlyTimeOutTimerTick()));
-    // thisMachine->setRebootState(initial_state);
+
+    receiptPrinterFeedBackTimer = new QTimer(this);
+    receiptPrinterFeedBackTimer->setInterval(1000);
+    connect(receiptPrinterFeedBackTimer, SIGNAL(timeout()), this, SLOT(onReceiptPrinterFeedBackTimerTick()));
+
     pingTapDeviceTimer = new QTimer(this);
     connect(pingTapDeviceTimer, SIGNAL(timeout()), this, SLOT(pingTapDevice()));
     // Set the ping timer to every 30 mins
-    pingTapDeviceTimer->start(30 * 60 * 1000); 
+    pingTapDeviceTimer->start(30 * 60 * 1000);
 
     tappingBlockedUntilPrinterReply = false;
 }
@@ -212,6 +216,10 @@ void page_idle::showEvent(QShowEvent *event)
 
     rebootNightlyTimeOutTimer->start(1000);
     _rebootNightlyTimeOutTimerSec = PAGE_IDLE_REBOOT_NIGHTLY_TIMEOUT_SECONDS;
+
+    receiptPrinterFeedBackTimer->start(1000);
+    _receiptPrinterFeedBackTimerSec = PAGE_IDLE_RECEIPT_PRINTER_TIMEOUT_SECONDS;
+
     _delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
 
 // #define PLAY_VIDEO
@@ -403,6 +411,27 @@ void page_idle::onUserRoleTimeOutTimerTick()
     }
 }
 
+void page_idle::onReceiptPrinterFeedBackTimerTick()
+{
+
+    _receiptPrinterFeedBackTimerSec--;
+    if (_receiptPrinterFeedBackTimerSec >= 0)
+    {
+        return;
+    }
+    else
+    {
+        _receiptPrinterFeedBackTimerSec = PAGE_IDLE_RECEIPT_PRINTER_TIMEOUT_SECONDS;
+
+        if (tappingBlockedUntilPrinterReply)
+        {
+            tappingBlockedUntilPrinterReply = false;
+
+            qDebug() << "Warning: receipt printer did not respond in time! Unblocked now.  ";
+        }
+    }
+}
+
 void page_idle::onRebootNightlyTimeOutTimerTick()
 {
     _rebootNightlyTimeOutTimerSec--;
@@ -448,8 +477,9 @@ void page_idle::onRebootNightlyTimeOutTimerTick()
                 thisMachine->setRebootState(wait_for_trigger);
                 _delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
                 stateScreenCheck = state_screen_check_not_initiated;
-                QString paymentMethod = thisMachine->getProduct(1)->getPaymentMethod(); 
-                if(paymentMethod== PAYMENT_TAP_SERIAL){
+                QString paymentMethod = thisMachine->getProduct(1)->getPaymentMethod();
+                if (paymentMethod == PAYMENT_TAP_SERIAL)
+                {
                     rebootTapDevice();
                 }
                 QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -r 0";
@@ -484,17 +514,15 @@ void page_idle::refreshTemperature()
 
     //  QString base_text = "Current Temperature: %1 °C"; //Assuming you have the base_text defined somewhere else or you can define it here.
 
-    thisMachine->getTemperatureFromController(); 
-
+    thisMachine->getTemperatureFromController();
 
     QString base_text = thisMachine->getTemplateTextByElementNameAndPage(ui->label_show_temperature);
     float temperature = thisMachine->getTemperature_1();
     QString temperatureStr = QString::number(temperature, 'f', 1);
-    
-// qDebug() << "Temperature:" << temperatureStr;
+
+    // qDebug() << "Temperature:" << temperatureStr;
     ui->label_show_temperature->setText(base_text.arg(temperatureStr));
     ui->label_show_temperature->show();
-
 
     if (thisMachine->isTemperatureTooHigh_1())
     {
@@ -522,7 +550,7 @@ void page_idle::onPollTemperatureTimerTick()
     }
 
     _pollTemperatureTimerTimeoutSec = PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS;
- 
+
     if (thisMachine->isAelenPillarElseSoapStand())
     {
         refreshTemperature();
@@ -549,6 +577,7 @@ void page_idle::checkReceiptPrinterStatus()
 
     if (thisMachine->hasReceiptPrinter())
     {
+        _receiptPrinterFeedBackTimerSec = PAGE_IDLE_RECEIPT_PRINTER_TIMEOUT_SECONDS;
         qDebug() << "Check receipt printer functionality.";
         this->p_page_maintenance_general->send_check_printer_status_command();
         // ui->pushButton_to_select_product_page->hide(); // when printer needs to be restarted, it can take some time. Make sure nobody presses the button in that interval (to prevent crashes)
@@ -614,7 +643,7 @@ void page_idle::hideCurrentPageAndShowProvided(QWidget *pageToShow, bool createN
 
         thisMachine->pageTransition(this, pageToShow);
         idlePageTypeSelectorTimer->stop();
-     //   pollTemperatureTimer->stop(); // this is to stop the temperature sensor reading
+        //   pollTemperatureTimer->stop(); // this is to stop the temperature sensor reading
         testForFrozenScreenTimer->stop();
         userRoleTimeOutTimer->stop();
         statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
@@ -636,18 +665,20 @@ void page_idle::on_pushButton_reboot_nightly_clicked()
     thisMachine->setRebootState(user_cancelled_reboot);
 }
 
-void page_idle::pingTapDevice(){
-    QString paymentMethod = thisMachine->getProduct(1)->getPaymentMethod(); 
-    if(paymentMethod == PAYMENT_TAP_SERIAL){
+void page_idle::pingTapDevice()
+{
+    QString paymentMethod = thisMachine->getProduct(1)->getPaymentMethod();
+    if (paymentMethod == PAYMENT_TAP_SERIAL)
+    {
         qDebug() << "Pinging Tap Device";
         page_payment_tap_serial paymentSerialObject;
         paymentSerialObject.getLanInfo();
     }
 }
 
-void page_idle::rebootTapDevice(){
-        qDebug() << "Rebooting Tap Device at Midnight";
-        page_payment_tap_serial paymentSerialObject;
-        paymentSerialObject.resetDevice();
-    
+void page_idle::rebootTapDevice()
+{
+    qDebug() << "Rebooting Tap Device at Midnight";
+    page_payment_tap_serial paymentSerialObject;
+    paymentSerialObject.resetDevice();
 }

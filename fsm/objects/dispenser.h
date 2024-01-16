@@ -77,7 +77,7 @@ public:
       void setBasePNumberAsSingleDispenseSelectedProduct();
       product *getSelectedProduct();
       bool setSelectedProduct(int pnumber);
-      void setSelectedSizeAsChar(char size);
+      // void setSelectedSizeAsChar(char size);
       char getSelectedSizeAsChar();
       double getSelectedSizeAsVolume();
 

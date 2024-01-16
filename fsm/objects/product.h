@@ -89,6 +89,7 @@ public:
         double getVolumeFromSize(char size);
         char getSizeCharFromTargetVolume(double volume);
         void setTargetVolumeFromSize(char size);
+        char getTargetVolumeAsChar();
         void setTargetVolume(double volume);
         double getTargetVolume();
         int sizeCharToSizeIndex(char size);

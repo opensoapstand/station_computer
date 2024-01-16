@@ -105,7 +105,7 @@ dispenser::dispenser()
 
 dispenser::~dispenser()
 {
-    debugOutput::sendMessage("Dispenser: ~dispenser", MSG_INFO);
+    debugOutput::sendMessage("Dispenser: ~dispenser (destroyed)", MSG_INFO);
 
     delete m_pcb;
     m_pcb = nullptr;
@@ -354,14 +354,15 @@ void dispenser::setActiveProduct(int pnumber)
     m_active_pnumber = pnumber;
 }
 
-void dispenser::setSelectedSizeAsChar(char size)
-{
-    m_selectedSizeAsChar = size;
-};
+// void dispenser::setSelectedSizeAsChar(char size)
+// {
+//     m_selectedSizeAsChar = size;
+// };
 
 char dispenser::getSelectedSizeAsChar()
 {
-    return m_selectedSizeAsChar;
+    return getSelectedProduct()->getTargetVolumeAsChar();
+    
 }
 
 double dispenser::getSelectedSizeAsVolume()

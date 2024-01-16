@@ -7,9 +7,9 @@
 
 #include <QVector>
 
+
 // TODO: Refactor to fit with dfuicommthread
 // #define START_FSM_FROM_UI //enabled by default (start controller from ui)
-
 #define UI_VERSION "3.0"
 
 #define OPTION_SLOT_INVALID 0
@@ -70,6 +70,7 @@ using namespace std;
 #define PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS 6
 #define PAGE_IDLE_PRODUCTS_STEP_DISPLAY_TIME_SECONDS 1
 #define PAGE_IDLE_REBOOT_NIGHTLY_TIMEOUT_SECONDS 1
+#define PAGE_IDLE_RECEIPT_PRINTER_TIMEOUT_SECONDS 3
 #define PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN 300
 
 #define QR_PAGE_TIMEOUT_SECONDS  420

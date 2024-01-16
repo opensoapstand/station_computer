@@ -224,9 +224,15 @@ void page_dispenser::showEvent(QShowEvent *event)
     arrowAnimationStepTimer->start();
     resetDispenseTimeout();
 
+<<<<<<< HEAD
     p_page_idle->thisMachine->getSelectedProduct()->resetVolumeDispensed();
     updatelabel_volume_dispensed_ml(p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl());
     paymentMethod = p_page_idle->thisMachine->getActivePaymentMethod();
+=======
+    p_page_idle->thisMachine->selectedProduct->resetVolumeDispensed();
+    updatelabel_volume_dispensed_ml(p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl());
+    paymentMethod = p_page_idle->thisMachine->selectedProduct->getActivePaymentMethod();
+>>>>>>> develop
 
     fsmSendStartDispensing();
 }
@@ -881,11 +887,15 @@ void page_dispenser::on_pushButton_problems_clicked()
         QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "shopify";
         p_page_idle->thisMachine->setTextToObject(msgBox_problems, p_page_idle->thisMachine->getTemplateText(searchString));
     }
+<<<<<<< HEAD
     switch (paymentMethod)
     {
     case 0:
     case 1:
     case 2:
+=======
+    else if (paymentMethod == PAYMENT_QR || paymentMethod == PAYMENT_TAP_TCP || paymentMethod == PAYMENT_TAP_SERIAL)
+>>>>>>> develop
     {
         QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "qr_tap";
         p_page_idle->thisMachine->setTextToObject(msgBox_problems, p_page_idle->thisMachine->getTemplateText(searchString));

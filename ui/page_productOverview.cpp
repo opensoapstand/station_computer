@@ -201,7 +201,26 @@ void page_product_overview::showEvent(QShowEvent *event)
     ui->pushButton_previous_page->setStyleSheet(styleSheet);
     ui->pushButton_continue->setStyleSheet(styleSheet);
     ui->pushButton_continue_additional->setStyleSheet(styleSheet);
-    
+    ui->pushButton_continue->setEnabled(true);
+    ui->pushButton_continue_additional->setEnabled(true);
+    if( p_page_idle->thisMachine->selectedProduct->getPaymentMethod()==PAYMENT_TAP_SERIAL){
+        ui->pushButton_continue->raise();
+        // ui->pushButton_continue_additional->show();
+        ui->pushButton_continue_additional->raise();
+
+        ui->pushButton_continue->setFixedSize(QSize(360,92));
+        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay_tap");
+        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue_additional, "proceed_pay_qr");
+
+    }
+    else{
+        ui->pushButton_continue->raise();
+        ui->pushButton_continue_additional->lower();
+
+        ui->pushButton_continue->setFixedSize(QSize(740,92));
+        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay");
+
+    }
     // p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "offline");
     // p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "offline");
 
@@ -449,7 +468,6 @@ void page_product_overview::reset_and_show_page_elements()
 
 void page_product_overview::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
-
     if (p_page_idle->thisMachine->getCouponState() == enabled_show_keyboard ||
         p_page_idle->thisMachine->getCouponState() == enabled_invalid_input ||
         p_page_idle->thisMachine->getCouponState() == enabled_processing_input ||
@@ -704,22 +722,33 @@ void page_product_overview::on_pushButton_continue(int buttonID)
 {
     
     ui->pushButton_to_help->setEnabled(false);
-    ui->pushButton_previous_page->setEnabled(false);    
+    ui->pushButton_continue->setEnabled(false);
+    ui->pushButton_continue_additional->setEnabled(false);
+    ui->pushButton_previous_page->setEnabled(false);
     QAbstractButton *buttonpressed = ui->buttonGroup_continue->button(buttonID);
-    int activePaymentMethod = buttonpressed->property("activePaymentMethod").toInt();
-    // QString paymentMethod = p_page_idle->thisMachine->getPaymentMethod();
-    // if(buttonName=="paymentMethodAdditional"){
-    //     paymentMethod = PAYMENT_QR;
-    // }
-    double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
-    double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
-    if (selectedPrice == 0.0 || finalPrice == 0.0)
-    {
-        hideCurrentPageAndShowProvided(p_page_email);
-        return;
+    QString buttonName = buttonpressed->accessibleName();
+    QString paymentMethod = p_page_idle->thisMachine->selectedProduct->getPaymentMethod();
+    if(buttonName=="paymentMethodAdditional"){
+        paymentMethod = PAYMENT_QR;
     }
-    switch(activePaymentMethod){
-        case 0:
+    double selectedPrice = p_page_idle->thisMachine->selectedProduct->getBasePrice();
+    double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
+   
+    // if (selectedPrice == 0.0 || finalPrice == 0.0)
+    // {
+    //      qDebug() << "email";
+    //     hideCurrentPageAndShowProvided(p_page_email);
+
+    // }
+    // else 
+    if (paymentMethod == PAYMENT_QR)
+    {
+        qDebug() << "QR payment";
+        CURL *curl;
+        CURLcode res;
+        curl = curl_easy_init();
+        p_page_idle->thisMachine->selectedProduct->setActivePaymentMethod(PAYMENT_QR);
+        if (!curl)
         {
             p_page_idle->thisMachine->setActivePaymentMethod(ActivePaymentMethod::qr);
             CURL *curl;
@@ -770,56 +799,36 @@ void page_product_overview::on_pushButton_continue(int buttonID)
             hideCurrentPageAndShowProvided(p_page_dispense);
             break;
         }
+        curl_easy_cleanup(curl);
+        readBuffer = "";
     }
-    // else if (paymentMethod == PAYMENT_QR)
-    // {
-    //     CURL *curl;
-    //     CURLcode res;
-    //     curl = curl_easy_init();
+    else if (paymentMethod == PAYMENT_TAP_TCP)
+    {
+        qDebug() << "Payment: Tap tcp";
+        p_page_idle->thisMachine->selectedProduct->setActivePaymentMethod(PAYMENT_TAP_TCP);
+        hideCurrentPageAndShowProvided(p_page_payment_tap_tcp);
+    }
+    else if (paymentMethod == PAYMENT_TAP_SERIAL)
+    {
+        qDebug() << "Payment: Tap serial";
+        p_page_idle->thisMachine->selectedProduct->setActivePaymentMethod(PAYMENT_TAP_SERIAL);
+        hideCurrentPageAndShowProvided(p_page_payment_tap_serial);
+    }
+    else if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
+    {
+        qDebug() << "Payment: plu/barcode";
+        qDebug() << p_page_idle->thisMachine->selectedProduct->getProductName();
 
-    //     if (!curl)
-    //     {
-    //         qDebug() << "page_product_overview: cURL failed init";
-    //         return;
-    //     }
-
-    //     curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/ping");
-    //     curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
-
-    //     res = curl_easy_perform(curl);
-    //     if (res != CURLE_OK)
-    //     {
-    //         qDebug() << "ERROR: Failed to reach soapstandportal. error code: " + QString::number(res);
-    //         hideCurrentPageAndShowProvided(p_page_wifi_error);
-    //     }
-    //     else
-    //     {
-    //         QString feedback = QString::fromUtf8(readBuffer.c_str());
-    //         qDebug() << "Server feedback readbuffer: " << feedback;
-
-    //         ui->label_invoice_price->text();
-    //         hideCurrentPageAndShowProvided(p_page_payment_qr);
-    //     }
-    //     curl_easy_cleanup(curl);
-    //     readBuffer = "";
-    // }
-    // else if (paymentMethod == PAYMENT_TAP_USA)
-    // {
-    //     hideCurrentPageAndShowProvided(p_page_payment_tap_tcp);
-    // }
-    // else if (paymentMethod == PAYMENT_TAP_CANADA)
-    // {
-    //     hideCurrentPageAndShowProvided(p_page_payment_tap_serial);
-    // }
-    // else if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
-    // {
-    //     hideCurrentPageAndShowProvided(p_page_dispense);
-    // }
-    // else
-    // {
-    //     qDebug() << "WARNING: No payment method detected.";
-    //     hideCurrentPageAndShowProvided(p_page_dispense);
-    // }
+       p_page_idle->thisMachine->selectedProduct->setActivePaymentMethod(paymentMethod);
+        hideCurrentPageAndShowProvided(p_page_dispense);
+        
+    }
+    else
+    {
+        qDebug() << "WARNING: No payment method detected.";
+        hideCurrentPageAndShowProvided(p_page_dispense);
+    }
+    
 }
 
 void page_product_overview::return_to_selectProductPage()

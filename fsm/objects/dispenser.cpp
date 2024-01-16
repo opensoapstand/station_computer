@@ -315,6 +315,11 @@ bool dispenser::isPNumberValidInThisDispenser(int pnumber, bool mustBeAdditiveOr
         {
             isValid = true;
         }
+<<<<<<< HEAD
+=======
+        debugOutput::sendMessage("EAN-13 barcode dynamically formatted: " + plu_dynamic_formatted, MSG_ERROR);
+        return plu_dynamic_formatted;
+>>>>>>> develop
     }
 
     if (!isValid)
@@ -1498,9 +1503,25 @@ const char *dispenser::getSlotStateAsString()
     return state_str;
 }
 
+void dispenser::setSlotStateToEmpty()
+{
+    if (getEmptyContainerDetectionEnabled())
+    {
+        
+        setSlotState(SLOT_STATE_PROBLEM_EMPTY);
+    }
+    else
+    {
+        debugOutput::sendMessage("Empty container detection disabled. But, there is no alternative yet. It detected an empty container, so we'll set it to empty.", MSG_INFO);
+        setSlotState(SLOT_STATE_PROBLEM_EMPTY);
+    }
+}
+
 void dispenser::setSlotState(Slot_state state)
 {
     slot_state = state;
+    std::string stateStr = getSlotStateAsString();
+    debugOutput::sendMessage("Slot state set to  : " + stateStr, MSG_INFO);
 }
 
 Slot_state dispenser::getSlotState()
@@ -1511,27 +1532,27 @@ Slot_state dispenser::getSlotState()
 
 void dispenser::updateSlotState()
 {
-    switch (slot_state)
+    switch (getSlotState())
     {
     case SLOT_STATE_WARNING_PRIMING:
     {
         if (getDispenseStatus() == FLOW_STATE_EMPTY)
         {
-            slot_state = SLOT_STATE_PROBLEM_EMPTY;
+            setSlotStateToEmpty();
         }
         if (getDispenseStatus() == FLOW_STATE_PRIME_FAIL_OR_EMPTY)
         {
-            slot_state = SLOT_STATE_PROBLEM_NEEDS_ATTENTION;
+            setSlotState(SLOT_STATE_PROBLEM_NEEDS_ATTENTION);
         }
 
         if (getDispenseStatus() == FLOW_STATE_NOT_PUMPING_NOT_DISPENSING)
         {
-            slot_state = SLOT_STATE_AVAILABLE;
+            setSlotState(SLOT_STATE_AVAILABLE);
         }
 
         if (getDispenseStatus() == FLOW_STATE_DISPENSING)
         {
-            slot_state = SLOT_STATE_AVAILABLE;
+            setSlotState(SLOT_STATE_AVAILABLE);
         }
         break;
     }
@@ -1540,15 +1561,15 @@ void dispenser::updateSlotState()
 
         if (getDispenseStatus() == FLOW_STATE_PRIMING_OR_EMPTY)
         {
-            slot_state = SLOT_STATE_WARNING_PRIMING;
+            setSlotState(SLOT_STATE_WARNING_PRIMING);
         }
         if (getDispenseStatus() == FLOW_STATE_EMPTY)
         {
-            slot_state = SLOT_STATE_PROBLEM_EMPTY;
+            setSlotStateToEmpty();
         }
         if (getDispenseStatus() == FLOW_STATE_PRIME_FAIL_OR_EMPTY)
         {
-            slot_state = SLOT_STATE_PROBLEM_NEEDS_ATTENTION;
+            setSlotState(SLOT_STATE_PROBLEM_NEEDS_ATTENTION);
         }
 
         break;
@@ -1557,11 +1578,11 @@ void dispenser::updateSlotState()
     {
         if (getDispenseStatus() == FLOW_STATE_EMPTY)
         {
-            slot_state = SLOT_STATE_PROBLEM_EMPTY;
+            setSlotStateToEmpty();
         }
         if (getDispenseStatus() == FLOW_STATE_PRIME_FAIL_OR_EMPTY)
         {
-            slot_state = SLOT_STATE_PROBLEM_NEEDS_ATTENTION;
+            setSlotState(SLOT_STATE_PROBLEM_NEEDS_ATTENTION);
         }
         break;
     }
@@ -1569,7 +1590,7 @@ void dispenser::updateSlotState()
     {
         if (getDispenseStatus() == FLOW_STATE_DISPENSING)
         {
-            slot_state = SLOT_STATE_AVAILABLE;
+            setSlotState(SLOT_STATE_AVAILABLE);
         }
         break;
     }
@@ -1577,7 +1598,7 @@ void dispenser::updateSlotState()
     {
         if (getDispenseStatus() == FLOW_STATE_DISPENSING)
         {
-            slot_state = SLOT_STATE_AVAILABLE;
+            setSlotState(SLOT_STATE_AVAILABLE);
         }
         break;
     }

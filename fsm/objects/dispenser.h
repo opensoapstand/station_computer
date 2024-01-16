@@ -125,6 +125,7 @@ public:
       Dispense_behaviour getDispenseStatus();
       Slot_state getSlotState();
       void setSlotState(Slot_state state);
+      void setSlotStateToEmpty();
       void updateSlotState();
       void analyseSlotState();
 

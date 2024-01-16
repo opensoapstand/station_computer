@@ -539,11 +539,18 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     char size = g_machine.m_productDispensers[m_slot_index].getSelectedSizeAsChar();
 
     // everything rounded to the ml.
+<<<<<<< HEAD
     double volume_dispensed_since_restock = ceil(g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getProductVolumeDispensedSinceLastRestock());
     double volume_dispensed_total_ever = ceil(g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getProductVolumeDispensedTotalEver());
     double volume_remaining = ceil(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeRemaining());
 
     double dispensed_volume = ceil(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed());
+=======
+    double volume_dispensed_since_restock = ceil(productDispensers[slot_index].getProduct()->getVolumeDispensedSinceLastRestock());
+    double volume_dispensed_total_ever = ceil(productDispensers[slot_index].getProduct()->getVolumeDispensedTotalEver());
+    double volume_remaining = ceil(productDispensers[slot_index].getProduct()->getVolumeRemaining());
+    double dispensed_volume = ceil(productDispensers[slot_index].getVolumeDispensed());
+>>>>>>> develop
 
     double updated_volume_remaining;
     double updated_volume_dispensed_since_restock;

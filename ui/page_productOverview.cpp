@@ -186,6 +186,26 @@ void page_product_overview::showEvent(QShowEvent *event)
     ui->label_invoice_discount_amount->setStyleSheet(styleSheet);
     ui->label_invoice_box->setStyleSheet(styleSheet);
 
+    ui->label_invoice_bottle->setProperty("class", "labelOrderOverview");
+    ui->label_invoice_bottle_price->setProperty("class", "labelOrderOverview");
+    ui->label_invoice_bottle->setStyleSheet(styleSheet);
+    ui->label_invoice_bottle_price->setStyleSheet(styleSheet);
+
+    ui->label_invoice_bottle->hide();
+    ui->label_invoice_bottle_price->hide();
+    if(p_page_idle->thisMachine->hasSelectedBottle()){
+        // if customer seleted bottle, update bottle price and label for invoice
+        ui->label_invoice_bottle->show();
+        ui->label_invoice_bottle_price->show();
+
+        QString productName = p_page_idle->thisMachine->getSelectedBottle()->getProductName();
+        QString volume = QString::number(p_page_idle->thisMachine->getSelectedBottle()->getVolumeOfSelectedBottle());
+        QString unit = p_page_idle->thisMachine->getSizeUnit();
+        ui->label_invoice_bottle->setText(productName + " " + volume + " " + unit);
+        
+        ui->label_invoice_bottle_price->setText("$" + QString::number(p_page_idle->thisMachine->getSelectedBottle()->getPriceOfSelectedBottle(), 'f', 2));
+    }
+
     ui->label_invoice_discount_name->setProperty("class", "labelDiscountName");
     ui->label_invoice_discount_name->setStyleSheet(styleSheet);
     ui->label_total->setStyleSheet(styleSheet);
@@ -535,10 +555,30 @@ void page_product_overview::updatePriceLabel()
         // promo codes get reset when going to idle page.
         double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
         qDebug() << "Selcted price" << selectedPrice;
-        double selectedPriceCorrected = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
-        qDebug() << "Selcted price corrected" << selectedPriceCorrected;
+        double selectedPriceCorrected;
+        double selectedBottlePrice;
+        double discountAmount;
         double discountFraction = p_page_idle->thisMachine->getDiscountPercentageFraction();
-        double discountAmount = selectedPrice - selectedPriceCorrected;
+        // checking if either bottle option is enabled
+        if(p_page_idle->thisMachine->hasBuyBottleOption()){
+            // check if customer has selected a bottle to purchase
+            if(p_page_idle->thisMachine->hasSelectedBottle()){ 
+                selectedBottlePrice = p_page_idle->thisMachine->getSelectedBottle()->getPriceOfSelectedBottle();
+                selectedPriceCorrected = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice) + selectedBottlePrice;
+                qDebug() << "Selcted price corrected" << selectedPriceCorrected;
+                discountAmount = selectedPrice - (selectedPriceCorrected - selectedBottlePrice);
+            }else{
+                selectedPriceCorrected = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
+                qDebug() << "Selcted price corrected" << selectedPriceCorrected;
+                discountAmount = selectedPrice - selectedPriceCorrected;
+                //do hide labels for bottle
+            }
+        }else{
+            selectedPriceCorrected = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
+            qDebug() << "Selcted price corrected" << selectedPriceCorrected;
+            discountAmount = selectedPrice - selectedPriceCorrected;
+        }
+        
         ui->label_invoice_discount_amount->setText("-$" + QString::number(discountAmount, 'f', 2));
         ui->label_selected_volume->setText(selected_volume);
         ui->label_invoice_price->setText("$" + QString::number(selectedPrice, 'f', 2));

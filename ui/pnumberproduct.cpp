@@ -296,6 +296,17 @@ bool pnumberproduct::is_valid_size_selected()
     return true;
 }
 
+double pnumberproduct::getPriceOfSelectedBottle(){
+    //size: 1 for default bottle size
+    return getBasePrice(1);
+}
+
+double pnumberproduct::getVolumeOfSelectedBottle()
+{
+    //size: 1 for default bottle size
+    return getVolumeBySize(1);
+}
+
 double pnumberproduct::getVolumeOfSelectedSize()
 {
     double volume;

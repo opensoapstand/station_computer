@@ -138,7 +138,7 @@ void page_idle::showEvent(QShowEvent *event)
     {
         thisMachine->initCouponState();
     }
-
+    thisMachine->resetSelectedBottle(); // reset selected bottle to default = empty
     thisMachine->setSelectedProduct(0); // default selected product is necessary to deal with things if no product is chosen yet e.g. show transaction history
 
     thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_IDLE_BACKGROUND_PATH);
@@ -602,7 +602,7 @@ void page_idle::on_pushButton_to_select_product_page_clicked()
 
 void page_idle::hideCurrentPageAndShowProductMenu()
 {
-    if(thisMachine->hasSelectedBottle()){
+    if(thisMachine->hasBuyBottleOption()){
         this->hideCurrentPageAndShowProvided(p_page_buyBottle, true);
     }else{
         thisMachine->hasMixing() ? this->hideCurrentPageAndShowProvided(p_page_product_menu, true) : this->hideCurrentPageAndShowProvided(p_pageSelectProduct, true);

@@ -29,12 +29,15 @@ public:
     int _userRoleTimeOutTimerSec;
     bool areBothBottleButtonsActivated();
     bool isBottleButtonActivated(int bottlePNum);
+    QString getBottleVolumeText(int bottlOption);
 private slots:
     void onUserRoleTimeOutTimerTick();
     void onProductPageTimeoutTick();
     void on_pushButton_to_idle_clicked();
     void on_pushButton_help_page_clicked();
     void on_pushButton_no_clicked();
+    void on_pushButton_yes_1_clicked();
+    void on_pushButton_yes_2_clicked();
 private:
     void showEvent(QShowEvent *event);
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);

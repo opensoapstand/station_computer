@@ -141,8 +141,10 @@ public:
     pnumberproduct *getProductByPNumber(int pnumber);
     pnumberproduct *getSlotBaseProduct(int slot);
     void setSelectedBottle(int pnumber);
+    void resetSelectedBottle();
     pnumberproduct *getSelectedBottle();
     bool hasSelectedBottle();
+    bool hasBuyBottleOption();
     void setSelectedProduct(int pnumber);
     pnumberproduct *getSelectedProduct();
 
@@ -182,6 +184,7 @@ public:
 
     QStringList getChildNames(QObject *parent);
     void loadDynamicContent();
+    void loadBottle();
     QString getCSS(QString cssName);
     void addCssClassToObject(QWidget *element, QString classname, QString css_file_name);
     void setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier);

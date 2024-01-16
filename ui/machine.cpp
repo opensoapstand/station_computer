@@ -325,7 +325,7 @@ int machine::getSlotFromBasePNumber(int base_pnumber)
 
 dispenser_slot *machine::getSlotFromOption(int productOption){
     qDebug() << "Product option" << productOption;
-    int slot = static_cast<int>(std::round(productOption/DISPENSE_PRODUCTS_PER_BASE_LINE_MAX)) + 1;   
+    int slot = static_cast<int>(std::round(productOption/DISPENSE_PRODUCTS_PER_BASE_LINE_MAX));   
     return &m_slots[slot];
 }
 

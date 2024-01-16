@@ -250,7 +250,7 @@ bool DbManager::updateTableSlotsWithDouble(int slot, QString column, double valu
 
 bool DbManager::updateTableSlotsWithText(int slot, QString column, QString value)
 {
-    QString sql_text = QString("UPDATE slots SET %1='%2' WHERE slot=%3").arg(column, value, QString::number(slot));
+    QString sql_text = QString("UPDATE slots SET %1='%2' WHERE slot_id=%3").arg(column, value, QString::number(slot));
     return executeQuery(sql_text);
 }
 
@@ -480,7 +480,6 @@ void DbManager::getAllProductProperties(int pnumber,
             *price_custom_discount = qry.value(47).toDouble();
             //Sample size assignment
             isSizeEnabled[6] = qry.value(50).toInt();
-            qDebug() <<"Ashwani" <<isSizeEnabled[6];
             volumes[6] = qry.value(51).toDouble();
             prices[6] = qry.value(52).toDouble();
         }

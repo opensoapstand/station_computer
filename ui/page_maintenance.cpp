@@ -130,7 +130,8 @@ void page_maintenance::showEvent(QShowEvent *event)
         labels_product_name[slot_index]->setText(p_page_idle->thisMachine->getSlotBaseProduct(slot_index+1)->getProductName());
         int product_slot_enabled = p_page_idle->thisMachine->getSlotBaseProduct(slot_index+1)->getIsProductEnabled();
 
-        QString product_status_text = p_page_idle->thisMachine->getSlotBaseProduct(slot_index+1)->getStatusText();
+        // QString product_status_text = p_page_idle->thisMachine->getSlotBaseProduct(slot_index+1)->getStatusText();
+        QString product_status_text = p_page_idle->thisMachine->getSlotByPosition(slot_index+1)->getStatusText();
         QString status_display_text = "";
 
         int pnumber = p_page_idle->thisMachine->getSlotBaseProduct(slot_index+1)->getPNumber();

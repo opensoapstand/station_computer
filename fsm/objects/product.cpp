@@ -27,11 +27,11 @@ product::~product()
     debugOutput::sendMessage("product: ~product", MSG_INFO);
 }
 
-void product::init(int pnumber, string size_unit, string paymentMethod)
+void product::init(int pnumber)
 {
     m_pnumber = pnumber;
-    m_display_unit = size_unit;
-    m_paymentMethod = paymentMethod;
+    // m_display_unit = size_unit;
+    // m_paymentMethod = paymentMethod;
     this->loadParameters();
 }
 
@@ -392,10 +392,10 @@ double product::getPrice(char size)
     }
 }
 
-string product::getPaymentMethod()
-{
-    return m_paymentMethod;
-}
+// string product::getPaymentMethod()
+// {
+//     return m_paymentMethod;
+// }
 bool product::getIsEnabled()
 {
     return this->m_is_enabled;
@@ -459,18 +459,18 @@ int product::sizeCharToSizeIndex(char size)
     return size_index;
 }
 
-string product::getDisplayUnits()
-{
-    return m_display_unit;
-}
+// string product::getDisplayUnits()
+// {
+//     return m_display_unit;
+// }
 
-string product::getFinalPLU(char size, double price)
+string product::getFinalPLU(char size, double price, string paymentMethod)
 {
 
     string base_plu = getBasePLU(size);
     char chars_plu_dynamic_formatted[MAX_BUF];
 
-    std::string paymentMethod = getPaymentMethod();
+    // std::string paymentMethod = getPaymentMethod();
     if (paymentMethod == "plu")
     {
         return base_plu;
@@ -541,26 +541,26 @@ string product::getFinalPLU(char size, double price)
     return base_plu;
 }
 
-double product::convertVolumeMetricToDisplayUnits(double volume)
-{
-    double converted_volume;
+// double product::convertVolumeMetricToDisplayUnits(double volume)
+// {
+//     double converted_volume;
 
-    if (getDisplayUnits() == "oz")
-    {
+//     if (getDisplayUnits() == "oz")
+//     {
 
-        converted_volume = volume * ML_TO_OZ;
-    }
-    else if (getDisplayUnits() == "g")
-    {
+//         converted_volume = volume * ML_TO_OZ;
+//     }
+//     else if (getDisplayUnits() == "g")
+//     {
 
-        converted_volume = volume * 1;
-    }
-    else
-    {
-        converted_volume = volume;
-    }
-    return converted_volume;
-}
+//         converted_volume = volume * 1;
+//     }
+//     else
+//     {
+//         converted_volume = volume;
+//     }
+//     return converted_volume;
+// }
 
 int product::getRetractionTimeMillis()
 {

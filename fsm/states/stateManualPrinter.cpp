@@ -428,15 +428,15 @@ DF_ERROR stateManualPrinter::setup_receipt_from_pnumber_and_dispense_data(int pn
    //  std::string plu = g_machine.m_productDispensers[slot-1].getSelectedProduct()->getBasePLU( SIZE_CUSTOM_CHAR  );
 
    char size = g_pnumbers[pnumber].getSizeCharFromTargetVolume(volume_requested);
-   string plu = g_pnumbers[pnumber].getFinalPLU(size, price);
+   string plu = g_pnumbers[pnumber].getFinalPLU(size, price, g_machine.getPaymentMethod());
 
-   std::string units = g_pnumbers[pnumber].getDisplayUnits();
+   std::string units =  g_machine.getSizeUnit();
    std::string paymentMethod = g_machine.getPaymentMethod();
 
    char chars_cost[MAX_BUF];
    char chars_volume_formatted[MAX_BUF];
 
-   std::string char_units_formatted = g_pnumbers[pnumber].getDisplayUnits();
+   std::string char_units_formatted = g_machine.getSizeUnit();
 
    snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.0f", volume_dispensed);
 

@@ -321,7 +321,8 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
     std::string machine_id = g_machine.getMachineId();
     // std::string pid = getProductID(m_slot);
     std::string pid = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->m_product_id_combined_with_location_for_backend;
-    std::string units = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getDisplayUnits();
+    // std::string units = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getDisplayUnits();
+    std::string units = g_machine.getSizeUnit();
     std::string readBuffer;
     std::string volume_remaining_units_converted_string;
     std::string coupon = m_pMessaging->getCouponCode();
@@ -337,11 +338,11 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
     }
     else
     {
-        double dv = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->convertVolumeMetricToDisplayUnits(dispensed_volume);
+        double dv = g_machine.convertVolumeMetricToDisplayUnits(dispensed_volume);
         dispensed_volume_units_converted = to_string(dv);
     }
 
-    volume_remaining_converted = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->convertVolumeMetricToDisplayUnits(volume_remaining);
+    volume_remaining_converted = g_machine.convertVolumeMetricToDisplayUnits(volume_remaining);
     volume_remaining_units_converted_string = to_string(volume_remaining_converted);
 
     std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&size_unit=" + units + "&price=" + price_string + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + end_time + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer&volume_remaining_ml=" + to_string(volume_remaining) + "&quantity_dispensed_ml=" + to_string(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed()) + "&volume_remaining=" + volume_remaining_units_converted_string + "&coupon=" + coupon + "&buttonDuration=" + button_press_duration + "&buttonTimes=" + dispense_button_count + "&pnumber=" + pnumberString;
@@ -682,7 +683,8 @@ void stateDispenseEnd::setup_and_print_receipt()
     std::string paymentMethod = g_machine.getPaymentMethod();
     std::string name_receipt = (g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getProductName());
 
-    std::string units = (g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getDisplayUnits());
+    // std::string units = (g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getDisplayUnits());
+    std::string units =  g_machine.getSizeUnit();
     double price = getFinalPrice();
     double price_per_ml;
     debugOutput::sendMessage("Price final for receipt:" + to_string(price), MSG_INFO);
@@ -733,13 +735,13 @@ void stateDispenseEnd::setup_and_print_receipt()
         debugOutput::sendMessage("invalid size provided" + size, MSG_INFO);
     }
 
-    std::string plu = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getFinalPLU(size, price);
+    std::string plu = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getFinalPLU(size, price, g_machine.getPaymentMethod());
 
     // convert units
     if (units == "oz")
     {
         // volume_dispensed = ceil(volume_dispensed * ML_TO_OZ);
-        volume_dispensed = ceil(g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->convertVolumeMetricToDisplayUnits(volume_dispensed));
+        volume_dispensed = ceil(g_machine.convertVolumeMetricToDisplayUnits(volume_dispensed));
         price_per_ml = price_per_ml / ML_TO_OZ;
     }
 

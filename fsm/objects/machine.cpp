@@ -65,6 +65,28 @@ int machine::getDispensersCount()
     return 4;
 }
 
+
+double machine::convertVolumeMetricToDisplayUnits(double volume)
+{
+    double converted_volume;
+
+    if (getSizeUnit() == "oz")
+    {
+
+        converted_volume = volume * ML_TO_OZ;
+    }
+    else if (getSizeUnit() == "g")
+    {
+
+        converted_volume = volume * 1;
+    }
+    else
+    {
+        converted_volume = volume;
+    }
+    return converted_volume;
+}
+
 void machine::initProductDispensers()
 {
     for (int slot_index = 0; slot_index < getDispensersCount(); slot_index++)

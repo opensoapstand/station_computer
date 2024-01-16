@@ -113,9 +113,9 @@ page_end->label_message_2->any_pay2,By refilling you've helped keep a<br>plastic
 page_end->label_message->finish_transaction,Finishing<br>transaction
 
 #################### page_help
-page_help->pushButton_to_transactions,Transaction History ->
-page_help->pushButton_to_maintenance,Settings
-page_help->pushButton_to_feedback,Contact Us
+page_help->pushButton_to_transactions,transaction history ->
+page_help->pushButton_to_maintenance,settings
+page_help->pushButton_to_feedback,contact Us
 page_help->pushButton_to_idle,<- back
 page_help->label_keyboardInfo,Provide maintainer or administrator password, followed by "Done". 
 
@@ -128,7 +128,7 @@ page_transactions->label_title,Most Recent Transactions
 page_sendFeedback->pushButton_previous_page,<- back
 page_sendFeedback->label_select_problem,Please provide feedback
 page_sendFeedback->label_still_cant_find,
-page_sendFeedback->label_email,Email us at: hello@aelen.com
+page_sendFeedback->label_contact_info,Contact us at: (+1)604-283-5311<br>Email us at: hello@aelen.com
 page_sendFeedback->checkBox_1_Label,I love this, keep me in the loop.
 page_sendFeedback->checkBox_2_Label,User interface problem
 page_sendFeedback->checkBox_3_Label,Soap dispensing problem
@@ -264,8 +264,8 @@ page_maintenance_general->pushButton_minimize,Minimize Soapstand App
 page_maintenance_general->pushButton_restart_electronics,Restart Soapstand App (ui+fsm)
 page_maintenance_general->pushButton_restart_UI,Restart UI only
 page_maintenance_general->pushButton_reboot,Restart Computer
-page_maintenance_general->pushButton_shutdown,Shut down\n(unplugging power is ok too)
-page_maintenance_general->pushButton_reboot,Minimize Soapstand App
+page_maintenance_general->pushButton_shutdown,Shut Down
+page_maintenance_general->pushButton_reboot,Restart Station
 page_maintenance_general->label_feedback,Feedback
 page_maintenance_general->label_status_feedback,Command Feedback
 

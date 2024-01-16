@@ -213,8 +213,10 @@ void page_product_overview::showEvent(QShowEvent *event)
     ui->line_invoice->setStyleSheet(styleSheet);
     ui->pushButton_select_product_page->setStyleSheet(styleSheet);
 
-    QString picturePath = p_page_idle->thisMachine->getSelectedProduct()->getProductPicturePath();
-    styleSheet.replace("%IMAGE_PATH%", picturePath);
+    if(p_page_idle->thisMachine->hasMixing()){
+        QString picturePath = p_page_idle->thisMachine->getSelectedProduct()->getProductPicturePath();
+        styleSheet.replace("%IMAGE_PATH%", picturePath);
+    }
     ui->label_product_photo->setStyleSheet(styleSheet);
     /* Hacky transparent button */
     ui->pushButton_previous_page->setProperty("class", "buttonBGTransparent");
@@ -345,7 +347,9 @@ void page_product_overview::reset_and_show_page_elements()
     qDebug() << "Reset and show page elements";
 
     QString bitmap_location;
-    // p_page_idle->thisMachine->addPictureToLabel(ui->label_product_photo, p_page_idle->thisMachine->getSelectedProduct()->getProductPicturePath());
+    if(!p_page_idle->thisMachine->hasMixing()){
+        p_page_idle->thisMachine->addPictureToLabel(ui->label_product_photo, p_page_idle->thisMachine->getSelectedProduct()->getProductPicturePath());
+    }
     // ui->label_selected_price->setText("$" + QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize(), 'f', 2));
     QString full_path = p_page_idle->thisMachine->getTemplatePathFromName(IMAGE_BUTTON_HELP);
     p_page_idle->thisMachine->addPictureToLabel(ui->label_help, full_path);

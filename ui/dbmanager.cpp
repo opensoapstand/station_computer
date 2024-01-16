@@ -250,7 +250,7 @@ bool DbManager::updateTableSlotsWithDouble(int slot, QString column, double valu
 
 bool DbManager::updateTableSlotsWithText(int slot, QString column, QString value)
 {
-    QString sql_text = QString("UPDATE slots SET %1='%2' WHERE slot=%3").arg(column, value, QString::number(slot));
+    QString sql_text = QString("UPDATE slots SET %1='%2' WHERE slot_id=%3").arg(column, value, QString::number(slot));
     return executeQuery(sql_text);
 }
 

@@ -10,7 +10,7 @@
 
 // TODO: Refactor to fit with dfuicommthread
 // #define START_FSM_FROM_UI //enabled by default (start controller from ui)
-#define UI_VERSION "3.0"
+#define UI_VERSION "3.1"
 
 #define OPTION_SLOT_INVALID 0
 #define MAX_SLOT_COUNT 20 // number of slots

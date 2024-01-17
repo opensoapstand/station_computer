@@ -373,6 +373,19 @@ void machine::setSelectedProduct(int pnumber)
     m_selectedProduct = &m_pnumberproducts[pnumber];
 }
 
+bool machine::isSlotExisiting(int slot_index){
+    if(m_hardware_version == "SS2"){
+        qDebug() << "############# getSlotCount" << getSlotCount();
+        if(slot_index < getSlotCount()){
+            qDebug() << slot_index;
+            return true;
+        }else{
+            qDebug() << slot_index;
+            return false;
+        }
+    }
+}
+
 dispenser_slot *machine::getSlotByPosition(int slotPosition)
 {
     // DO YOU NEED TO USE THIS?

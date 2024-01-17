@@ -249,7 +249,8 @@ double product::getProductVolumeDispensedSinceLastRestock()
     return m_nVolumeDispensedSinceRestock;
 }
 
-char product::getTargetVolumeAsChar(){
+char product::getTargetVolumeAsChar()
+{
     return getSizeCharFromTargetVolume(m_nVolumeTarget);
 }
 
@@ -276,6 +277,10 @@ char product::getSizeCharFromTargetVolume(double volume)
     else if (volume == m_nVolumeTarget_f)
     {
         return 'f';
+    }
+    else if (volume == TEST_DISPENSE_TARGET_VOLUME)
+    {
+        return 't';
     }
     else
     {
@@ -472,6 +477,7 @@ string product::getFinalPLU(char size, double price, string paymentMethod)
 {
 
     string base_plu = getBasePLU(size);
+    debugOutput::sendMessage("Base PLU: " + base_plu, MSG_INFO);
     char chars_plu_dynamic_formatted[MAX_BUF];
 
     // std::string paymentMethod = getPaymentMethod();
@@ -578,8 +584,11 @@ int product::getPWM()
 
 string product::getBasePLU(char size)
 {
+    debugOutput::sendMessage("get plu for size:  " + to_string(size), MSG_ERROR);
     if (size == 's')
     {
+        debugOutput::sendMessage("plu smaalalll " + m_nPLU_small, MSG_ERROR);
+
         return m_nPLU_small;
     }
     else if (size == 'm')
@@ -727,8 +736,7 @@ bool product::isDbValid()
         "status_text",
         "is_enabled_sample",
         "size_sample",
-        "price_sample"
-    };
+        "price_sample"};
     bool is_valid = true;
 
     int rc = sqlite3_open(CONFIG_DB_PATH, &db);
@@ -825,7 +833,9 @@ bool product::loadParameters()
         debugOutput::sendMessage("Product: Data loading for product: " + to_string(getPNumber()), MSG_INFO);
         success &= loadProductParametersFromDb();
         loadProductPropertiesFromCsv();
-    }else{
+    }
+    else
+    {
         debugOutput::sendMessage("No data loading for custom mix product.", MSG_INFO);
     }
     return success;
@@ -924,7 +934,7 @@ bool product::loadProductParametersFromDb()
                         "is_enabled_custom_discount," // 33
                         "size_custom_discount,"
                         "price_custom_discount," // 35
-                        "status_text,"            // 36
+                        "status_text,"           // 36
                         "is_enabled_sample,"
                         "size_sample,"
                         "price_sample"
@@ -1021,7 +1031,12 @@ bool product::loadProductParametersFromDb()
         debugOutput::sendMessage("DB target volume medium: " + to_string(m_nVolumeTarget_m), MSG_INFO);
         debugOutput::sendMessage("DB target volume large : " + to_string(m_nVolumeTarget_l), MSG_INFO);
         debugOutput::sendMessage("DB target volume free : " + to_string(m_nVolumeTarget_f), MSG_INFO);
+        debugOutput::sendMessage("DB PL small:  " + m_nPLU_small, MSG_INFO);
+        debugOutput::sendMessage("DB PLU medium: " + m_nPLU_medium, MSG_INFO);
+        debugOutput::sendMessage("DB PLU large : " + m_nPLU_large, MSG_INFO);
+        debugOutput::sendMessage("DB target volume free : " + to_string(m_nVolumeTarget_f), MSG_INFO);
         debugOutput::sendMessage("DB target volume custom: " + to_string(m_price_custom_per_ml), MSG_INFO);
+
         m_pnumber_loaded_from_db = true;
     }
     else if (numberOfRecordsFound > 1)
@@ -1100,8 +1115,6 @@ void product::parseMixPNumbersAndRatiosCsv(const std::string &mixPNumbersCsvStri
     {
         debugOutput::sendMessage("DB mixing ASSERT ERROR: Amount of mixing pnumber and their ratios is not equal!!! pnumbers:" + mixPNumbersCsvString + " mixing ratios: " + mixRatiosCsvString, MSG_ERROR);
     }
-
-   
 }
 
 void product::parseIntCsvString(const std::string &csvString, int *intArray, int &size)

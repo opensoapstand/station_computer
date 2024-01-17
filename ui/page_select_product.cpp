@@ -110,7 +110,7 @@ void page_select_product::showEvent(QShowEvent *event)
 
     displayProducts();
 
-    for (uint8_t slot_index = 0; slot_index < p_page_idle->thisMachine->getSlotCount(); slot_index++)
+    for (uint8_t slot_index = 0; slot_index < REQUIRED_SLOT_COUNT; slot_index++)
     // for (uint8_t option_index = 0; option_index < p_page_idle->thisMachine->getOptionCount(); option_index++)
     {
         labels_product_overlay_text[slot_index]->setStyleSheet(styleSheet);
@@ -151,7 +151,7 @@ void page_select_product::displayProducts()
     QString product_name;
     QString product_status_text;
 
-    for (uint8_t slot_index = 0; slot_index < p_page_idle->thisMachine->getSlotCount(); slot_index++)
+    for (uint8_t slot_index = 0; slot_index < REQUIRED_SLOT_COUNT; slot_index++)
     // for (uint8_t option_index = 0; option_index < p_page_idle->thisMachine->getOptionCount(); option_index++)
     {
 
@@ -164,7 +164,7 @@ void page_select_product::displayProducts()
         p_page_idle->thisMachine->addPictureToLabel(labels_product_picture[slot_index], p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductPicturePath());
         product_type = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductType();
         product_name = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductName();
-        if (!p_page_idle->thisMachine->getSlotFromOption(option_index + 1)->getIsSlotEnabled())
+        if (!p_page_idle->thisMachine->getSlotByPosition(slot_index+1)->getIsSlotEnabled())
         {
             p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[slot_index], "label_product_overlay_unavailable", PAGE_SELECT_PRODUCT_CSS);
             labels_product_overlay_text[slot_index]->setStyleSheet(styleSheet);
@@ -178,9 +178,9 @@ void page_select_product::displayProducts()
             p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[slot_index], "label_product_overlay_available", PAGE_SELECT_PRODUCT_CSS);
         }
 
-        product_status_text = p_page_idle->thisMachine->getSlotFromOption(option_index + 1)->getStatusText();
+        product_status_text = p_page_idle->thisMachine->getSlotByPosition(slot_index+1)->getStatusText();
 
-        qDebug() << "Product: " << product_type << "At Option: " << (option_index + 1) << ", enabled: " << p_page_idle->thisMachine->getSlotFromOption(option_index + 1)->getIsSlotEnabled() << " Status text: " << product_status_text;
+        qDebug() << "Product: " << product_type << "At Option: " << (option_index + 1) << ", enabled: " << p_page_idle->thisMachine->getSlotByPosition(slot_index+1)->getIsSlotEnabled() << " Status text: " << product_status_text;
 
         labels_product_name[slot_index]->setText(product_name);
 
@@ -257,7 +257,7 @@ void page_select_product::displayProducts()
         {
             labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
         }
-        else if (!p_page_idle->thisMachine->getSlotFromOption(option_index + 1)->getIsSlotEnabled())
+        else if (!p_page_idle->thisMachine->getSlotByPosition(slot_index+1)->getIsSlotEnabled())
         {
             labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
         }
@@ -286,8 +286,16 @@ void page_select_product::displayProducts()
         {
             labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->default"));
         }
-
         labels_product_type[slot_index]->setText(type_text);
+
+        if(!p_page_idle->thisMachine->isSlotExisiting(slot_index)){
+            pushButtons_product_select[slot_index]->hide();
+            labels_product_picture[slot_index]->hide();
+            labels_product_icon[slot_index]->hide();
+            labels_product_type[slot_index]->hide();
+            labels_product_name[slot_index]->hide();
+            labels_product_overlay_text[slot_index]->hide();
+        }
     }
 }
 

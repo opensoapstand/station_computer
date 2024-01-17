@@ -214,7 +214,7 @@ QLabel {
 #line_invoice{
     border: 3px solid black;
 }
-#label_product_photo {
+/* #label_product_photo {
     background-image: url(%IMAGE_PATH%);
     background-repeat: no-repeat;
     background-size: contain;
@@ -222,4 +222,4 @@ QLabel {
     border-top-right-radius: 25px;
     border-bottom-right-radius: 25px;
     border-bottom-left-radius: 25px;
-}
+} */

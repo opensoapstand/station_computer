@@ -98,7 +98,7 @@ DF_ERROR stateDispenseEnd::onAction()
     // SIZE_TEST_CHAR is sent during Maintenance Mode dispenses - we do not want to record these in the transaction database, or print receipts...
     if (g_machine.m_productDispensers[m_slot_index].getSelectedSizeAsChar() == SIZE_TEST_CHAR)
     {
-        // debugOutput::sendMessage("Not a transaction: Test dispensing. (" + to_string(volume_dispensed) + "ml).", MSG_INFO);
+        debugOutput::sendMessage("Not a transaction: Test dispensing. (" + to_string(volume_dispensed) + "ml).", MSG_INFO);
         // dispenseEndUpdateDB(false); // update the db dispense statistics
     }
     else if (!is_valid_dispense)
@@ -241,7 +241,6 @@ DF_ERROR stateDispenseEnd::handleTransactionPayment()
     else if (paymentMethod == "tap")
     {
         // sleep(5);
-
         // debugOutput::sendMessage("Dispense OnEXIT", MSG_INFO);
         // debugOutput::sendMessage("------Cleaning Mode------", MSG_INFO);
         // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", MSG_INFO);
@@ -662,7 +661,7 @@ double stateDispenseEnd::getFinalPrice()
 // This function prints the receipts by calling a system function (could be done better)
 void stateDispenseEnd::setup_and_print_receipt()
 {
-
+    
     char chars_cost[MAX_BUF];
     char chars_volume_formatted[MAX_BUF];
     char chars_price_per_ml_formatted[MAX_BUF];
@@ -712,17 +711,19 @@ void stateDispenseEnd::setup_and_print_receipt()
     }
     else if (size == 't')
     {
+        debugOutput::sendMessage("No recreipts printed for test dispenses", MSG_INFO);
         volume_dispensed = g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed();
         // normal
         // price_per_ml = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getPrice(size);
         // with reduction for larger quantities
         price_per_ml = 0;
+        return; // no receipts for tests
     }
     else
     {
         debugOutput::sendMessage("invalid size provided" + size, MSG_INFO);
     }
-
+    
     std::string plu = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getFinalPLU(size, price, g_machine.getPaymentMethod());
 
     // convert units

@@ -335,11 +335,11 @@ text-align: center;
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_email">
+  <widget class="QLabel" name="label_contact_info">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>1580</y>
+     <y>1540</y>
      <width>1041</width>
      <height>114</height>
     </rect>
@@ -1770,7 +1770,7 @@ font: 11pt &quot;Montserrat&quot;;</string>
   <zorder>checkBox_5</zorder>
   <zorder>checkBox_1</zorder>
   <zorder>label_still_cant_find</zorder>
-  <zorder>label_email</zorder>
+  <zorder>label_contact_info</zorder>
   <zorder>pushButton_previous_page</zorder>
   <zorder>label_enter_feedback</zorder>
   <zorder>pushButton_start_input</zorder>

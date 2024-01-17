@@ -89,8 +89,14 @@ void machine::loadDynamicContent()
 }
 
 void machine::loadBottle(){
-    if(m_buy_bottle_1){m_pnumberproducts[m_buy_bottle_1].loadProductProperties();}
-    if(m_buy_bottle_2){m_pnumberproducts[m_buy_bottle_2].loadProductProperties();}
+    if(m_buy_bottle_1){
+        m_pnumberproducts[m_buy_bottle_1].loadProductProperties();
+        m_pnumberproducts[m_buy_bottle_1].setSizeUnit(getSizeUnit());
+    }
+    if(m_buy_bottle_2){
+        m_pnumberproducts[m_buy_bottle_2].loadProductProperties();
+        m_pnumberproducts[m_buy_bottle_2].setSizeUnit(getSizeUnit());
+    }
 }
 
 QVector<int> machine::getAllDispensePNumbersFromSlot(int slot)
@@ -189,14 +195,15 @@ void machine::initProductOptions()
         {
             int position = 1 + slot_index * DISPENSE_PRODUCTS_PER_BASE_LINE_MAX + i;
             setProductToMenuOption(position, dispense_pnumbers[i]);
-            qDebug() << "pnumber. : : " << (dispense_pnumbers[i]) << "at option" << position;
+            qDebug() << "pnumber : " << (dispense_pnumbers[i]) << "at option" << position;
         }
     }
 
+    // display all options: 
     for (int i = 0; i < dispenseProductsMenuOptions.size(); ++i)
     {
-        int option = dispenseProductsMenuOptions[i];
-        qDebug() << "Option eef" << (i + 1) << ": " << option;
+        int product = dispenseProductsMenuOptions[i];
+        qDebug() << "Option " << (i + 1) << ": " << product;
     }
 }
 
@@ -372,6 +379,19 @@ void machine::setSelectedProduct(int pnumber)
     m_selectedProduct = &m_pnumberproducts[pnumber];
 }
 
+bool machine::isSlotExisiting(int slot_index){
+    if(m_hardware_version == "SS2"){
+        qDebug() << "############# getSlotCount" << getSlotCount();
+        if(slot_index < getSlotCount()){
+            qDebug() << slot_index;
+            return true;
+        }else{
+            qDebug() << slot_index;
+            return false;
+        }
+    }
+}
+
 dispenser_slot *machine::getSlotByPosition(int slotPosition)
 {
     // DO YOU NEED TO USE THIS?
@@ -489,7 +509,7 @@ int machine::getSlotCount()
         }
         else if (m_hardware_version.startsWith("SS2"))
         {
-            slot_count = 4;
+            slot_count = 3;
         }
         else
         {

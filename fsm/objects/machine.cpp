@@ -95,10 +95,10 @@ void machine::initProductDispensers()
         // m_g_machine.m_productDispensers[slot_index].setup(&this, g_pnumbers);
         m_productDispensers[slot_index].setup(control_pcb, m_pnumbers);
         m_productDispensers[slot_index].setSlot(slot_index + 1);
-        
-        #ifdef INTERRUPT_DRIVE_FLOW_SENSOR_TICKS
+
+#ifdef INTERRUPT_DRIVE_FLOW_SENSOR_TICKS
         m_productDispensers[slot_index].initGlobalFlowsensorIO(IO_PIN_FLOW_SENSOR);
-        #endif
+#endif
         setFlowSensorCallBack(slot_index + 1);
     }
 }
@@ -203,7 +203,6 @@ string machine::getMachineId()
 {
     return m_machine_id;
 }
-
 
 // void machine::loadButtonPropertiesFromDb()
 // {
@@ -577,12 +576,24 @@ void machine::print_receipt(string name_receipt, string receipt_cost, string rec
     if (receipt_cost == "0.00")
     {
         debugOutput::sendMessage("Free Order", MSG_INFO);
-        std::string out2 = "Promo Used: " + promoCode;
-        receipt_printer->printText(out2.c_str());
-        std::string out3 = "Enjoy your free product!";
-        receipt_printer->printText(out3.c_str());
-        std::string out4 = "Thank you for supporting \npackage-free!";
-        receipt_printer->printText(out4.c_str());
+
+        if (!promoCode.empty())
+        {
+            std::string out2 = "Promo Used: " + promoCode;
+            receipt_printer->printText(out2.c_str());
+        }
+
+        if (paymentMethod == "plu")
+        {
+            debugOutput::sendMessage("PLU without barcode:" + plu, MSG_INFO);
+            std::string out5 = "PLU: " + plu;
+            receipt_printer->printText(out5.c_str());
+        }
+
+        // std::string out3 = "Enjoy your free product!";
+        // receipt_printer->printText(out3.c_str());
+        // std::string out4 = "Thank you for supporting \npackage-free!";
+        // receipt_printer->printText(out4.c_str());
     }
     else if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13" || paymentMethod == "barcode_EAN-2")
     {

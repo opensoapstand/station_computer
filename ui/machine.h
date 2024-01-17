@@ -80,7 +80,7 @@ public:
     void setPaymentMethod(QString paymentMethod);
     bool getCouponsEnabled();
     bool getShowTransactionHistory();
-    bool isAelenPillarElseSoapStand();
+
     bool isDispenseAreaBelowElseBesideScreen();
 
     void registerUserInteraction(QWidget *page);
@@ -110,7 +110,6 @@ public:
     bool getPumpRampingEnabled();
     QString getHelpPageHtmlText();
 
-    dispenser_slot *getSlotByPosition(int slotPosition);
     bool getIsMachineEnabled();
     void setIsMachineEnabled(bool isEnabled);
     void setIsMachineEnabled(bool isEnabled, QString statusText);
@@ -126,6 +125,7 @@ public:
     void setSelectedSlotFromSelectedProduct();
     void setSelectedSlot();
     int getSlotFromBasePNumber(int base_pnumber);
+    dispenser_slot *getSlotByPosition(int slotPosition);
     dispenser_slot *getSlotFromOption(int productOption);
 
     dispenser_slot *getSelectedSlot();
@@ -206,6 +206,7 @@ public:
     void loadElementDynamicPropertiesFromDefaultTemplate();
 
     QString getHardwareMajorVersion();
+    bool isAelenPillarElseSoapStand();
 
     void addPictureToLabel(QLabel *label, QString picturePath);
     void addPictureToLabelCircle(QLabel *label, QString picturePath);
@@ -320,8 +321,6 @@ private:
     int m_is_enabled_slots[MAX_SLOT_COUNT];
     QString m_status_text_slots[MAX_SLOT_COUNT];
     QString transactionLogging;
-
-
 };
 
 #endif // MACHINE_H

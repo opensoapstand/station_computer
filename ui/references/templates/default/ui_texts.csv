@@ -263,7 +263,6 @@ page_maintenance_general->pushButton_printer_test_print,Test Print
 page_maintenance_general->pushButton_minimize,Minimize Soapstand App
 page_maintenance_general->pushButton_restart_electronics,Restart Soapstand App (ui+fsm)
 page_maintenance_general->pushButton_restart_UI,Restart UI only
-page_maintenance_general->pushButton_reboot,Restart Computer
 page_maintenance_general->pushButton_shutdown,Shut Down
 page_maintenance_general->pushButton_reboot,Restart Station
 page_maintenance_general->label_feedback,Feedback

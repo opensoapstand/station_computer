@@ -110,6 +110,7 @@ public:
     bool getPumpRampingEnabled();
     QString getHelpPageHtmlText();
 
+    bool isSlotExisiting(int slot_index);
     dispenser_slot *getSlotByPosition(int slotPosition);
     bool getIsMachineEnabled();
     void setIsMachineEnabled(bool isEnabled);

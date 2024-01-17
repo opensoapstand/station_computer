@@ -14,6 +14,7 @@
 
 #define OPTION_SLOT_INVALID 0
 #define MAX_SLOT_COUNT 20 // number of slots
+#define REQUIRED_SLOT_COUNT 4
 
 #define SIZES_COUNT 7
 #define MINIMUM_DISPENSE_VOLUME_ML 10.0

@@ -43,6 +43,7 @@
 #label_button_no_text_L{
     color: #5E8580;
     text-align: center;
+    qproperty-alignment: AlignCenter;
     font-family: 'Montserrat';
     font-size: 36px;
     font-style: normal;
@@ -60,6 +61,7 @@
 .label_button_yes_L{
     color: #FFF;
     text-align: center;
+    qproperty-alignment: AlignCenter;
     font-family: 'Montserrat';
     font-size: 36px;
     font-style: normal;

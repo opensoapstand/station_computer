@@ -171,10 +171,14 @@ bool page_buyBottle::isBottleButtonActivated(int bottlePNum){
 
 QString page_buyBottle::getBottleVolumeText(int bottlOption)
 {
-    QString volume = QString::number(p_page_idle->thisMachine->getProductByPNumber(bottlOption)->getVolumeOfSelectedBottle());
+    QString volume;
     QString unit = p_page_idle->thisMachine->getSizeUnit();
-    QString bottleVolume = volume + " " + unit;
-    return bottleVolume;
+    if(unit == "oz"){
+        volume = p_page_idle->thisMachine->getProductByPNumber(bottlOption)->getSizeAsVolumeWithCorrectUnits(1, true, true);
+    }else{
+        volume = QString::number(p_page_idle->thisMachine->getProductByPNumber(bottlOption)->getVolumeOfSelectedBottle()) + unit;
+    }
+    return volume;
 }
 
 void page_buyBottle::hideCurrentPageAndShowProvided(QWidget *pageToShow)

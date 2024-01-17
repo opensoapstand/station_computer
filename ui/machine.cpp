@@ -89,8 +89,14 @@ void machine::loadDynamicContent()
 }
 
 void machine::loadBottle(){
-    if(m_buy_bottle_1){m_pnumberproducts[m_buy_bottle_1].loadProductProperties();}
-    if(m_buy_bottle_2){m_pnumberproducts[m_buy_bottle_2].loadProductProperties();}
+    if(m_buy_bottle_1){
+        m_pnumberproducts[m_buy_bottle_1].loadProductProperties();
+        m_pnumberproducts[m_buy_bottle_1].setSizeUnit(getSizeUnit());
+    }
+    if(m_buy_bottle_2){
+        m_pnumberproducts[m_buy_bottle_2].loadProductProperties();
+        m_pnumberproducts[m_buy_bottle_2].setSizeUnit(getSizeUnit());
+    }
 }
 
 QVector<int> machine::getAllDispensePNumbersFromSlot(int slot)

@@ -661,7 +661,7 @@ double stateDispenseEnd::getFinalPrice()
 // This function prints the receipts by calling a system function (could be done better)
 void stateDispenseEnd::setup_and_print_receipt()
 {
-
+    
     char chars_cost[MAX_BUF];
     char chars_volume_formatted[MAX_BUF];
     char chars_price_per_ml_formatted[MAX_BUF];
@@ -678,7 +678,6 @@ void stateDispenseEnd::setup_and_print_receipt()
 
     double volume_dispensed;
     char size = g_machine.m_productDispensers[m_slot_index].getSelectedSizeAsChar();
-    debugOutput::sendMessage("Dispensed size as char:" + to_string(size), MSG_INFO);
 
     if (size == 's')
     {
@@ -724,7 +723,7 @@ void stateDispenseEnd::setup_and_print_receipt()
     {
         debugOutput::sendMessage("invalid size provided" + size, MSG_INFO);
     }
-
+    
     std::string plu = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getFinalPLU(size, price, g_machine.getPaymentMethod());
 
     // convert units

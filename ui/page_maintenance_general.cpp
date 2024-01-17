@@ -75,7 +75,6 @@ void page_maintenance_general::showEvent(QShowEvent *event)
     ui->label_aws_port->setText("AWS backend port: " + QString::number(p_page_idle->thisMachine->m_aws_port));
     ui->label_machine_id->setText("Station id: " + p_page_idle->thisMachine->getMachineId());
 
-
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_back);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_connectivity);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_wifi_networks);
@@ -88,7 +87,6 @@ void page_maintenance_general::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_settings);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_restart_electronics);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_restart_UI);
-    p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_reboot);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_shutdown);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_reboot);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_feedback);

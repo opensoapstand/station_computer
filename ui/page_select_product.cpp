@@ -164,7 +164,7 @@ void page_select_product::displayProducts()
         p_page_idle->thisMachine->addPictureToLabel(labels_product_picture[slot_index], p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductPicturePath());
         product_type = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductType();
         product_name = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductName();
-        if (!p_page_idle->thisMachine->getSlotFromOption(option_index + 1)->getIsSlotEnabled())
+        if (!p_page_idle->thisMachine->getSlotByPosition(slot_index+1)->getIsSlotEnabled())
         {
             p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[slot_index], "label_product_overlay_unavailable", PAGE_SELECT_PRODUCT_CSS);
             labels_product_overlay_text[slot_index]->setStyleSheet(styleSheet);
@@ -178,9 +178,9 @@ void page_select_product::displayProducts()
             p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[slot_index], "label_product_overlay_available", PAGE_SELECT_PRODUCT_CSS);
         }
 
-        product_status_text = p_page_idle->thisMachine->getSlotFromOption(option_index + 1)->getStatusText();
+        product_status_text = p_page_idle->thisMachine->getSlotByPosition(slot_index+1)->getStatusText();
 
-        qDebug() << "Product: " << product_type << "At Option: " << (option_index + 1) << ", enabled: " << p_page_idle->thisMachine->getSlotFromOption(option_index + 1)->getIsSlotEnabled() << " Status text: " << product_status_text;
+        qDebug() << "Product: " << product_type << "At Option: " << (option_index + 1) << ", enabled: " << p_page_idle->thisMachine->getSlotByPosition(slot_index+1)->getIsSlotEnabled() << " Status text: " << product_status_text;
 
         labels_product_name[slot_index]->setText(product_name);
 
@@ -257,7 +257,7 @@ void page_select_product::displayProducts()
         {
             labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
         }
-        else if (!p_page_idle->thisMachine->getSlotFromOption(option_index + 1)->getIsSlotEnabled())
+        else if (!p_page_idle->thisMachine->getSlotByPosition(slot_index+1)->getIsSlotEnabled())
         {
             labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
         }

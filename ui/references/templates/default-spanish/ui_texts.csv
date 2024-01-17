@@ -106,10 +106,10 @@ page_sendFeedback->pushButton_previous_page,<- back
 page_sendFeedback->label_select_problem,Please provide feedback
 page_sendFeedback->label_still_cant_find,
 page_sendFeedback->label_contact_info,Contact us at: (+1)604-283-5311<br>Email us at: hello@aelen.com
-page_sendFeedback->checkBox_1_Label,I love this, keep me in the loop.
+page_sendFeedback->checkBox_1_Label,I love this, keep me in the loop
 page_sendFeedback->checkBox_2_Label,User interface problem
 page_sendFeedback->checkBox_3_Label,Soap dispensing problem
-page_sendFeedback->checkBox_4_Label,Soap dispensing problem
+page_sendFeedback->checkBox_4_Label,Payment problem
 page_sendFeedback->checkBox_5_Label,Other
 page_sendFeedback->label_enter_feedback,Please enter details or comments below.<br>Provide email for feedback.
 page_sendFeedback->label_thanks_for_feedback,Thank you for <br> your feedback

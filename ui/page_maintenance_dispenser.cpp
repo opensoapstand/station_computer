@@ -465,40 +465,48 @@ void page_maintenance_dispenser::autoDispenseStart(int size)
     {
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_enable_pump, "disable_pump");
         p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_enable_pump, "pump_disable", PAGE_MAINTENANCE_DISPENSER_CSS);
-        qDebug() << "Autofill small quantity pressed.";
-        QString command = QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
+        qDebug() << "Autofill quantity pressed.";
+        QString dispenseCommand = QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
 
         switch (size)
         {
         case SIZE_SMALL_INDEX:
         {
-            command.append("s");
+            dispenseCommand.append("s");
         }
         break;
         case SIZE_MEDIUM_INDEX:
         {
-            command.append("m");
+            dispenseCommand.append("m");
         }
         break;
         case SIZE_LARGE_INDEX:
         {
-            command.append("l");
+            dispenseCommand.append("l");
         }
         break;
         default:
         {
             qDebug() << "ERROR: size type not specified. will chose small size.";
-            command.append("s");
+            dispenseCommand.append("s");
         }
         break;
         }
-        command.append(SEND_DISPENSE_AUTOFILL);
+        dispenseCommand.append(SEND_DISPENSE_AUTOFILL);
 
         reset_all_dispense_stats();
         dispenseTimer->start(100);
         update_volume_received_dispense_stats(0);
 
+        // p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
+
+
+        int pNumberSelectedProduct = this->p_page_idle->thisMachine->getSelectedProduct()->getPNumber();
+
+        QString command = "dispensePNumber|" + dispenseCommand + "|" + QString::number(pNumberSelectedProduct) + "|"; // dispensePNumber|slot|dispensePNumber
+
         p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
+
 
         is_pump_enabled_for_dispense = true;
     }

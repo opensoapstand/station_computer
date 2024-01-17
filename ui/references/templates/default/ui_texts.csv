@@ -190,7 +190,7 @@ page_maintenance->status_text->not_enabled,Not enabled
 page_maintenance->status_text->assistance,Assistance Needed
 page_maintenance->status_text->coming_soon,Coming soon
 page_maintenance->status_text->sold_out,Sold Out
-page_maintenance->status_text->default,No<br>Status
+page_maintenance->status_text->default,No status
 page_maintenance->label_title_maintenance_mode,Maintenance mode
 page_maintenance->pushButton_to_previous_page,<- back
 page_maintenance->pushButton_general_settings,general settings->
@@ -263,7 +263,6 @@ page_maintenance_general->pushButton_printer_test_print,Test Print
 page_maintenance_general->pushButton_minimize,Minimize Soapstand App
 page_maintenance_general->pushButton_restart_electronics,Restart Soapstand App (ui+fsm)
 page_maintenance_general->pushButton_restart_UI,Restart UI only
-page_maintenance_general->pushButton_reboot,Restart Computer
 page_maintenance_general->pushButton_shutdown,Shut Down
 page_maintenance_general->pushButton_reboot,Restart Station
 page_maintenance_general->label_feedback,Feedback

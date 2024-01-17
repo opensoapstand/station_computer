@@ -32,7 +32,7 @@ public:
     QString getBottleVolumeText(int bottlOption);
 private slots:
     void onUserRoleTimeOutTimerTick();
-    void onProductPageTimeoutTick();
+    void onbottlePageTimeoutTick();
     void on_pushButton_to_idle_clicked();
     void on_pushButton_help_page_clicked();
     void on_pushButton_no_clicked();
@@ -47,8 +47,8 @@ private:
     page_help* p_page_help;
     statusbar *p_statusbar;
 
-    int _productPageTimeoutSec;
-    QTimer* productPageEndTimer;
+    int _bottlePageTimeoutSec;
+    QTimer* bottlePageEndTimer;
 
     QVBoxLayout *statusbarLayout; 
 };

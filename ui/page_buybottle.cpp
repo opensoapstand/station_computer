@@ -14,9 +14,9 @@ page_buyBottle::page_buyBottle(QWidget *parent) :
     userRoleTimeOutTimer->setInterval(1000);
     connect(userRoleTimeOutTimer, SIGNAL(timeout()), this, SLOT(onUserRoleTimeOutTimerTick()));
 
-    productPageEndTimer = new QTimer(this);
-    productPageEndTimer->setInterval(1000);
-    connect(productPageEndTimer, SIGNAL(timeout()), this, SLOT(onProductPageTimeoutTick()));
+    bottlePageEndTimer = new QTimer(this);
+    bottlePageEndTimer->setInterval(1000);
+    connect(bottlePageEndTimer, SIGNAL(timeout()), this, SLOT(onbottlePageTimeoutTick()));
 
     statusbarLayout = new QVBoxLayout(this);
 }
@@ -40,9 +40,12 @@ void page_buyBottle::showEvent(QShowEvent *event)
 
     statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
     statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
-
+    
     userRoleTimeOutTimer->start(1000);
     _userRoleTimeOutTimerSec = PAGE_IDLE_USER_ROLE_TIMEOUT_SECONDS;
+
+    bottlePageEndTimer->start(1000);
+    _bottlePageTimeoutSec = PAGE_BOTTLE_PAGE_TIMEOUT_SECONDS;
 
     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_BUY_BOTTLE_CSS);
     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_BUY_BOTTLE_BACKGROUND_PATH);
@@ -135,15 +138,17 @@ void page_buyBottle::onUserRoleTimeOutTimerTick()
     }
 }
 
-void page_buyBottle::onProductPageTimeoutTick()
+void page_buyBottle::onbottlePageTimeoutTick()
 {
-    if (--_productPageTimeoutSec >= 0)
+    _bottlePageTimeoutSec= _bottlePageTimeoutSec - 1;
+    if (_bottlePageTimeoutSec >= 0)
     {
-        // qDebug() << "Tick Down: " << _productPageTimeoutSec;
+        // qDebug() << "Tick Down: " << _bottlePageTimeoutSec;
     }
     else
     {
-        // qDebug() << "Timer Done!" << _productPageTimeoutSec;
+        _bottlePageTimeoutSec = PAGE_BOTTLE_PAGE_TIMEOUT_SECONDS;
+        // qDebug() << "Timer Done!" << _bottlePageTimeoutSec;
         hideCurrentPageAndShowProvided(p_page_idle);
     }
 }
@@ -174,7 +179,7 @@ QString page_buyBottle::getBottleVolumeText(int bottlOption)
 
 void page_buyBottle::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
-    productPageEndTimer->stop();
+    bottlePageEndTimer->stop();
     qDebug() << "Exit buy bottle page.";
     this->raise();
     statusbarLayout->removeWidget(p_statusbar);

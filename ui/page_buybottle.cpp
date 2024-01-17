@@ -15,7 +15,7 @@ page_buyBottle::page_buyBottle(QWidget *parent) :
     connect(userRoleTimeOutTimer, SIGNAL(timeout()), this, SLOT(onUserRoleTimeOutTimerTick()));
 
     productPageEndTimer = new QTimer(this);
-    productPageEndTimer->setInterval(1000);
+    productPageEndTimer->setInterval(18000);
     connect(productPageEndTimer, SIGNAL(timeout()), this, SLOT(onProductPageTimeoutTick()));
 
     statusbarLayout = new QVBoxLayout(this);
@@ -40,7 +40,7 @@ void page_buyBottle::showEvent(QShowEvent *event)
 
     statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
     statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
-
+    productPageEndTimer->start();
     userRoleTimeOutTimer->start(1000);
     _userRoleTimeOutTimerSec = PAGE_IDLE_USER_ROLE_TIMEOUT_SECONDS;
 
@@ -134,7 +134,17 @@ void page_buyBottle::onUserRoleTimeOutTimerTick()
         _userRoleTimeOutTimerSec = PAGE_IDLE_USER_ROLE_TIMEOUT_SECONDS;
     }
 }
-
+//////////////////////////////////
+//////////////////////////////////
+//////////////////////////////////
+//////////////////////////////////
+//////////////////////////////////
+//////////////////////////////////
+//////////////////////////////////
+//////////////////////////////////
+//////////////////////////////////
+//////////////////////////////////
+//////////////////////////////////
 void page_buyBottle::onProductPageTimeoutTick()
 {
     if (--_productPageTimeoutSec >= 0)

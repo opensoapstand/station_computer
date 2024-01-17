@@ -110,7 +110,7 @@ void page_select_product::showEvent(QShowEvent *event)
 
     displayProducts();
 
-    for (uint8_t slot_index = 0; slot_index < p_page_idle->thisMachine->getSlotCount(); slot_index++)
+    for (uint8_t slot_index = 0; slot_index < REQUIRED_SLOT_COUNT; slot_index++)
     // for (uint8_t option_index = 0; option_index < p_page_idle->thisMachine->getOptionCount(); option_index++)
     {
         labels_product_overlay_text[slot_index]->setStyleSheet(styleSheet);
@@ -151,7 +151,7 @@ void page_select_product::displayProducts()
     QString product_name;
     QString product_status_text;
 
-    for (uint8_t slot_index = 0; slot_index < p_page_idle->thisMachine->getSlotCount(); slot_index++)
+    for (uint8_t slot_index = 0; slot_index < REQUIRED_SLOT_COUNT; slot_index++)
     // for (uint8_t option_index = 0; option_index < p_page_idle->thisMachine->getOptionCount(); option_index++)
     {
 
@@ -286,8 +286,16 @@ void page_select_product::displayProducts()
         {
             labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->default"));
         }
-
         labels_product_type[slot_index]->setText(type_text);
+
+        if(!p_page_idle->thisMachine->isSlotExisiting(slot_index)){
+            pushButtons_product_select[slot_index]->hide();
+            labels_product_picture[slot_index]->hide();
+            labels_product_icon[slot_index]->hide();
+            labels_product_type[slot_index]->hide();
+            labels_product_name[slot_index]->hide();
+            labels_product_overlay_text[slot_index]->hide();
+        }
     }
 }
 

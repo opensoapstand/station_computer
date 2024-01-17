@@ -104,7 +104,14 @@ void page_maintenance::showEvent(QShowEvent *event)
     QString title = QString("Soapstand UI v%1").arg(UI_VERSION);
     ui->label_ui_version->setText(title);
 
-    for (uint8_t slot_index = 0; slot_index < p_page_idle-> thisMachine->getSlotCount(); slot_index++)
+    uint8_t slot_count;
+    if(p_page_idle->thisMachine->hasMixing()){
+        slot_count = p_page_idle->thisMachine->getSlotCount();
+    }else{
+        slot_count = REQUIRED_SLOT_COUNT;
+    }
+
+    for (uint8_t slot_index = 0; slot_index < slot_count; slot_index++)
     {
 
         p_page_idle->thisMachine->setTemplateTextToObject(labels_product_position[slot_index]);
@@ -167,6 +174,13 @@ void page_maintenance::showEvent(QShowEvent *event)
             status_display_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->default");
         }
         labels_product_status[slot_index]->setText(status_display_text);
+
+        if(!p_page_idle->thisMachine->isSlotExisiting(slot_index)){
+            labels_product_name[slot_index]->hide();
+            labels_product_status[slot_index]->hide();
+            pushButtons_products[slot_index]->hide();
+            labels_product_position[slot_index]->hide();
+        }
     }
     qDebug() << "End maintenance load";
 }

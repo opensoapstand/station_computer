@@ -285,7 +285,6 @@ public:
     void addToTransactionLogging(QString text);
     QString getTransactionLogging();
     bool hasMixing();
-
 public slots:
 
 signals:

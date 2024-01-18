@@ -50,7 +50,7 @@ void keyboard::keyboardButtonPressed(int buttonID)
     {
         foreach (QAbstractButton *button, ui->buttonGroup->buttons())
         {
-            if (button->text() == "Space" || button->text() == "Done" || button->text() == "Cancel" || button->text() == "Clear" || button->text() == "Backspace")
+            if (button->text() == "Space" || button->text() == "Done" || button->text() == "Cancel" || button->text() == "Clear" || button->text() == "Backspace" || button->text() == "Return")
             {
             }
             else
@@ -63,7 +63,7 @@ void keyboard::keyboardButtonPressed(int buttonID)
     {
         foreach (QAbstractButton *button, ui->buttonGroup->buttons())
         {
-            if (button->text() == "Space" || button->text() == "Done" || button->text() == "Cancel" || button->text() == "Clear" || button->text() == "Backspace")
+            if (button->text() == "Space" || button->text() == "Done" || button->text() == "Cancel" || button->text() == "Clear" || button->text() == "Backspace" || button->text() == "Return")
             {
                 // doing nothing
             }

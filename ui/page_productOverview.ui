@@ -785,7 +785,7 @@ color: #7F8080;</string>
    </property>
    <property name="geometry">
     <rect>
-     <x>110</x>
+     <x>120</x>
      <y>830</y>
      <width>841</width>
      <height>320</height>
@@ -2465,8 +2465,6 @@ outline: none;
    <zorder>w</zorder>
    <zorder>num1</zorder>
   </widget>
-  <zorder>pushButton_continue</zorder>
-  <zorder>pushButton_continue_additional</zorder>
   <zorder>label_help</zorder>
   <zorder>label_invoice_box</zorder>
   <zorder>label_invoice_price</zorder>
@@ -2494,6 +2492,8 @@ outline: none;
   <zorder>line_invoice</zorder>
   <zorder>label_invoice_bottle_price</zorder>
   <zorder>label_invoice_bottle</zorder>
+  <zorder>pushButton_continue</zorder>
+  <zorder>pushButton_continue_additional</zorder>
   <zorder>promoKeyboard</zorder>
  </widget>
  <resources/>

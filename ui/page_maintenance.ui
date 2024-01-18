@@ -300,14 +300,14 @@
   <widget class="QLabel" name="label_product_1_position">
    <property name="geometry">
     <rect>
-     <x>340</x>
+     <x>220</x>
      <y>290</y>
-     <width>51</width>
+     <width>281</width>
      <height>31</height>
     </rect>
    </property>
    <property name="text">
-    <string>P1</string>
+    <string>Dispenser 1</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
@@ -316,14 +316,14 @@
   <widget class="QLabel" name="label_product_2_position">
    <property name="geometry">
     <rect>
-     <x>685</x>
+     <x>585</x>
      <y>290</y>
-     <width>71</width>
+     <width>271</width>
      <height>31</height>
     </rect>
    </property>
    <property name="text">
-    <string>P2</string>
+    <string>Dispenser 2</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
@@ -332,14 +332,14 @@
   <widget class="QLabel" name="label_product_3_position">
    <property name="geometry">
     <rect>
-     <x>340</x>
+     <x>220</x>
      <y>750</y>
-     <width>51</width>
+     <width>281</width>
      <height>31</height>
     </rect>
    </property>
    <property name="text">
-    <string>P3</string>
+    <string>Dispenser 3</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
@@ -348,14 +348,14 @@
   <widget class="QLabel" name="label_product_4_position">
    <property name="geometry">
     <rect>
-     <x>680</x>
+     <x>580</x>
      <y>750</y>
-     <width>71</width>
+     <width>281</width>
      <height>31</height>
     </rect>
    </property>
    <property name="text">
-    <string>P4</string>
+    <string>Dispenser 4</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>

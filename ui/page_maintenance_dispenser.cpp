@@ -588,14 +588,13 @@ bool page_maintenance_dispenser::isDispenserPumpEnabledWarningBox()
     {
         qDebug() << "USER REQUESTED NON ALLOWED ACTION: Show Window saying this can't be done during 'pump enabled' --> ";
         QMessageBox msgBox;
-        msgBox.setWindowFlags(Qt::FramelessWindowHint);
+        msgBox.setWindowFlags(Qt::FramelessWindowHint| Qt::Dialog);  // Qt::Dialog makes it 'modal' which means  you HAVE to take action and you can't click next to it
         msgBox.setText("<p align=center>Not possible<br>while dispense pump<br>is enabled!</p>");
 
         p_page_idle->thisMachine->addCssClassToObject(&msgBox, "msgBoxbutton msgBox", PAGE_MAINTENANCE_DISPENSER_CSS);
         msgBox.setStandardButtons(QMessageBox::Ok);
         msgBox.exec();
     }
-
     return is_pump_enabled_for_dispense;
 }
 
@@ -732,7 +731,7 @@ void page_maintenance_dispenser::on_pushButton_restock_clicked()
 
         // ARE YOU SURE YOU WANT TO COMPLETE?
         QMessageBox msgBox;
-        msgBox.setWindowFlags(Qt::FramelessWindowHint);
+        msgBox.setWindowFlags(Qt::FramelessWindowHint| Qt::Dialog);
         msgBox.setText("<p align=center>Are you sure you want to restock the product?</p>");
 
         p_page_idle->thisMachine->addCssClassToObject(&msgBox, "msgBoxbutton msgBox", PAGE_MAINTENANCE_DISPENSER_CSS);
@@ -789,7 +788,7 @@ void page_maintenance_dispenser::on_pushButton_set_status_clicked()
         if (isEnabled)
         {
             QMessageBox msgBox_set_availabilty;
-            msgBox_set_availabilty.setWindowFlags(Qt::FramelessWindowHint);
+            msgBox_set_availabilty.setWindowFlags(Qt::FramelessWindowHint| Qt::Dialog);
 
             msgBox_set_availabilty.setText("<p align=center>Label product as 'coming soon' <br>(if no, it will be set as 'sold out')?</p>");
 

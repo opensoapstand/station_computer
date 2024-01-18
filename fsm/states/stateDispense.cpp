@@ -32,6 +32,7 @@ stateDispense::stateDispense(messageMediator *message)
 // DTOR
 stateDispense::~stateDispense()
 {
+    debugOutput::sendMessage("stateDispense: ~stateDispense", MSG_INFO);
 }
 
 // Overload for Debugger output
@@ -122,7 +123,7 @@ DF_ERROR stateDispense::onAction()
 
    if (m_pMessaging->getAction() == ACTION_RESET)
    {
-      m_pMessaging->sendMessageOverIP("Init Ready", true); // send to UI
+      m_pMessaging->sendMessageOverIP("Init Ready received. Will reset.", true); // send to UI
       m_state_requested = STATE_IDLE;
       stopPumping();
       return e_ret = OK;

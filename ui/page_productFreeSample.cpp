@@ -95,6 +95,54 @@ void page_product_freeSample::showEvent(QShowEvent *event)
     statusbarLayout->setContentsMargins(0, 1374, 0, 0);
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+<<<<<<< HEAD
+=======
+    // p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(ui->promoKeyboard); 
+    if (p_page_idle->thisMachine->hasMixing()){
+        ui->promoKeyboard->findChild<QLabel*>("label_keyboard_background")->setGeometry(QRect(0, 0, 841, 364));
+        ui->promoKeyboard->findChild<QPushButton*>("a")->setGeometry(QRect(53, 179, 62, 62));
+        ui->promoKeyboard->findChild<QPushButton*>("b")->setGeometry(QRect(403, 252, 62, 62));
+        ui->promoKeyboard->findChild<QPushButton*>("backspace")->setGeometry(QRect(728, 179, 62, 62));
+        ui->promoKeyboard->findChild<QPushButton*>("c")->setGeometry(QRect(253, 252, 62, 62));
+        ui->promoKeyboard->findChild<QPushButton*>("d")->setGeometry(QRect(203, 179, 62, 62));
+        ui->promoKeyboard->findChild<QPushButton*>("done")->setGeometry(QRect(628, 252, 125, 62));
+        ui->promoKeyboard->findChild<QPushButton*>("e")->setGeometry(QRect(203, 107, 62, 62));
+        ui->promoKeyboard->findChild<QPushButton*>("f")->setGeometry(QRect(278, 179, 62, 62));
+        ui->promoKeyboard->findChild<QPushButton*>("g")->setGeometry(QRect(353, 179, 62, 62));
+        ui->promoKeyboard->findChild<QPushButton*>("h")->setGeometry(QRect(428, 179, 62, 62));
+        ui->promoKeyboard->findChild<QPushButton*>("i")->setGeometry(QRect(578, 107, 62, 62));
+        ui->promoKeyboard->findChild<QPushButton*>("j")->setGeometry(QRect(503, 179, 62, 62));
+        ui->promoKeyboard->findChild<QPushButton*>("k")->setGeometry(QRect(578, 179, 62, 62));
+        ui->promoKeyboard->findChild<QPushButton*>("l")->setGeometry(QRect(653, 179, 62, 62));
+        ui->promoKeyboard->findChild<QPushButton*>("m")->setGeometry(QRect(553, 252, 62, 62));
+        ui->promoKeyboard->findChild<QPushButton*>("n")->setGeometry(QRect(478, 252, 62, 62));
+        ui->promoKeyboard->findChild<QPushButton*>("num0")->setGeometry(QRect(728, 50, 62, 47));
+        ui->promoKeyboard->findChild<QPushButton*>("num1")->setGeometry(QRect(53, 50, 62, 47));
+        ui->promoKeyboard->findChild<QPushButton*>("num2")->setGeometry(QRect(128, 50, 62, 47));
+        ui->promoKeyboard->findChild<QPushButton*>("num3")->setGeometry(QRect(203, 50, 62, 47));
+        ui->promoKeyboard->findChild<QPushButton*>("num4")->setGeometry(QRect(278, 50, 62, 47));
+        ui->promoKeyboard->findChild<QPushButton*>("num5")->setGeometry(QRect(353, 50, 62, 47));
+        ui->promoKeyboard->findChild<QPushButton*>("num6")->setGeometry(QRect(428, 50, 62, 47));
+        ui->promoKeyboard->findChild<QPushButton*>("num7")->setGeometry(QRect(503, 50, 62, 47));
+        ui->promoKeyboard->findChild<QPushButton*>("num8")->setGeometry(QRect(578, 50, 62, 47));
+        ui->promoKeyboard->findChild<QPushButton*>("num9")->setGeometry(QRect(653, 50, 62, 47));
+        ui->promoKeyboard->findChild<QPushButton*>("o")->setGeometry(QRect(653, 107, 62, 62));
+        ui->promoKeyboard->findChild<QPushButton*>("p")->setGeometry(QRect(728, 107, 62, 62));
+        ui->promoKeyboard->findChild<QPushButton*>("q")->setGeometry(QRect(53, 107, 62, 62));
+        ui->promoKeyboard->findChild<QPushButton*>("r")->setGeometry(QRect(278, 107, 62, 62));
+        ui->promoKeyboard->findChild<QPushButton*>("s")->setGeometry(QRect(128, 179, 62, 62));
+        ui->promoKeyboard->findChild<QPushButton*>("t")->setGeometry(QRect(353, 107, 62, 62));
+        ui->promoKeyboard->findChild<QPushButton*>("u")->setGeometry(QRect(503, 107, 62, 62));
+        ui->promoKeyboard->findChild<QPushButton*>("v")->setGeometry(QRect(328, 252, 62, 62));
+        ui->promoKeyboard->findChild<QPushButton*>("w")->setGeometry(QRect(128, 107, 62, 62));
+        ui->promoKeyboard->findChild<QPushButton*>("x")->setGeometry(QRect(178, 252, 62, 62));
+        ui->promoKeyboard->findChild<QPushButton*>("y")->setGeometry(QRect(428, 107, 62, 62));
+        ui->promoKeyboard->findChild<QPushButton*>("z")->setGeometry(QRect(103, 252, 62, 62));
+
+        QString coupon_icon_path = p_page_idle->thisMachine->getTemplatePathFromName(COUPON_ICON_UNAVAILABLE_PATH);
+        p_page_idle->thisMachine->addPictureToLabel(ui->label_coupon_icon, coupon_icon_path);
+    }
+>>>>>>> d06c152057d3ae34ac8992a05940904d20d4a84c
 
     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_PRODUCT_FREESAMPLE_CSS);
     ui->label_page_title->setStyleSheet(styleSheet);
@@ -142,12 +190,22 @@ void page_product_freeSample::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_page_title);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_select_product_page);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_discount_tag);
+<<<<<<< HEAD
     QString product_additives_overview;
     if(additivies_overview(product_additives_overview) == ""){
         ui->label_invoice_additives_overview->setText("Non-customizable product");
     }else{
         ui->label_invoice_additives_overview->setText(additivies_overview(product_additives_overview));
     }
+=======
+   
+    QString keyboard = KEYBOARD_IMAGE_PATH;
+    QString keyboard_picture_path = p_page_idle->thisMachine->getTemplatePathFromName(KEYBOARD_IMAGE_PATH);
+    p_page_idle->thisMachine->addPictureToLabel(ui->label_keyboard_background, keyboard_picture_path);
+    ui->label_keyboard_background->lower();
+    p_page_idle->thisMachine->setCouponState(enabled_not_set);
+
+>>>>>>> d06c152057d3ae34ac8992a05940904d20d4a84c
     ui->pushButton_continue->hide();
     
     _selectIdleTimeoutSec = 400;
@@ -392,7 +450,9 @@ void page_product_freeSample::apply_promo_code(QString promocode)
                 if (http_code == 200)
                 {
                     json coupon_obj = json::parse(readBuffer);
-                    if (coupon_obj["active"])
+                    //For free samples, the coupons are created with 0% discount as the price is already 0. 
+                    // With 0 price, customer need to have a valid coupon code to restrict the system abuse
+                    if (coupon_obj["active"] && coupon_obj["discount_amount"]==0)
                     {
                         qDebug() << "Backend coupon response: Valid. Discount percentage: " << new_percent;
                         new_percent = coupon_obj["discount_amount"];
@@ -430,47 +490,8 @@ void page_product_freeSample::apply_promo_code(QString promocode)
     reset_and_show_page_elements();
 }
 
-// void page_product_freeSample::keyboardButtonPressed(int buttonID)
-// {
-//     QAbstractButton *buttonpressed = ui->buttonGroup->button(buttonID);
-//     QString buttonText = buttonpressed->objectName();
-
-//     if (buttonText == "backspace")
-//     {
-//         ui->lineEdit_promo_code->backspace();
-//     }
-//     else if (buttonText == "done")
-//     {
-//         if (m_readyToSendCoupon && p_page_idle->thisMachine->getCouponState() != enabled_processing_input)
-//         {
-//             m_readyToSendCoupon = false;
-//             qDebug() << "Done clicked, initiated apply promo.";
-
-//             // hack, sometimes it appears like the 'done' button code is called twice.
-//             p_page_idle->thisMachine->setCouponState(enabled_processing_input);
-//             reset_and_show_page_elements();
-//             apply_promo_code(ui->lineEdit_promo_code->text());
-//         }
-//         else
-//         {
-//             qDebug() << "ASSERT ERROR: Illegal press. Still processing other call.";
-//         }
-//     }
-//     else if (buttonText.mid(0, 3) == "num")
-//     {
-//         ui->lineEdit_promo_code->setText(ui->lineEdit_promo_code->text() + buttonText.mid(3, 1));
-//     }
-//     else
-//     {
-//         ui->lineEdit_promo_code->setText(ui->lineEdit_promo_code->text() + buttonText);
-//     }
-
-//     qDebug() << "Promo code input field: " << ui->lineEdit_promo_code->text();
-// }
-
 void page_product_freeSample::on_pushButton_previous_page_clicked()
 {
-
     this->return_to_selectProductPage();
 }
 
@@ -491,6 +512,11 @@ void page_product_freeSample::on_pushButton_continue()
 
 void page_product_freeSample::return_to_selectProductPage()
 {
+<<<<<<< HEAD
+=======
+    p_page_idle->thisMachine->resetCouponDiscount();
+    p_page_idle->thisMachine->setCouponState(enabled_not_set);
+>>>>>>> d06c152057d3ae34ac8992a05940904d20d4a84c
     p_page_idle->thisMachine->hasMixing() ? hideCurrentPageAndShowProvided(p_page_product_mixing) : hideCurrentPageAndShowProvided(p_page_product);
 }
 
@@ -506,21 +532,18 @@ void page_product_freeSample:: setup_qr_code(){
         map.fill(QColor("#895E25"));
         
         QPainter painter(&map);
-
+        //Retrieve station id from database and convert hyphen (-) with underscore(_)
+        QString stationId = p_page_idle->thisMachine->getMachineId().replace("-","_").toLower();
+        //Retrieve station location from database. Split the name using comma delimiter as to use first identifier only.
+        //Lowercase the location and convert hyphen (-) with underscore(_)
+        QString stationLocation = p_page_idle->thisMachine->getMachineLocation().split(',').first().replace("-","_").toLower();
         // build up qr content (link)
-        QString qrdata = "https://www.aelen.com/freesample";
+        // https://www.aelen.com/freesip?utm_source=station_ubc_nest_ap_2&utm_medium=qr&utm_campaign=free_sip
+        QString qrdata = "https://www.aelen.com/freesip?utm_source=station_" +stationLocation +"_" +stationId +"&utm_medium=qr&utm_campaign=free_sip";
         // create qr code graphics
         p_page_idle->thisMachine->hasMixing() ? paintSampleQR(painter, QSize(360, 360), qrdata, QColor("white")) : paintSampleQR(painter, QSize(360, 360), qrdata, QColor("white"));
         // paintSampleQR(painter, QSize(360, 360), qrdata, QColor("white"));
         ui->label_qrCode->setPixmap(map);
-        // _paymentTimeoutSec = QR_PAGE_TIMEOUT_SECONDS;
-
-        // _paymentTimeLabel = QR_PAGE_TIMEOUT_SECONDS;
-
-        // _pageTimeoutCounterSecondsLeft = QR_PAGE_TIMEOUT_SECONDS;
-
-        // _qrProcessedPeriodicalCheckSec = QR_PROCESSED_PERIODICAL_CHECK_SECONDS;
-        // qrPeriodicalCheckTimer->start(1000);
 }
 
 

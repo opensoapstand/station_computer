@@ -75,11 +75,12 @@ public:
     double getPriceCorrected(int pnumber);
 
     QString getMachineId();
+    QString getMachineLocation();
     QString getPaymentMethod();
     void setPaymentMethod(QString paymentMethod);
     bool getCouponsEnabled();
     bool getShowTransactionHistory();
-    bool isAelenPillarElseSoapStand();
+
     bool isDispenseAreaBelowElseBesideScreen();
 
     void registerUserInteraction(QWidget *page);
@@ -109,7 +110,8 @@ public:
     bool getPumpRampingEnabled();
     QString getHelpPageHtmlText();
 
-    dispenser_slot *getSlotByPosition(int slotPosition);
+    bool isSlotExisiting(int slot_index);
+
     bool getIsMachineEnabled();
     void setIsMachineEnabled(bool isEnabled);
     void setIsMachineEnabled(bool isEnabled, QString statusText);
@@ -125,6 +127,9 @@ public:
     void setSelectedSlotFromSelectedProduct();
     void setSelectedSlot();
     int getSlotFromBasePNumber(int base_pnumber);
+    dispenser_slot *getSlotByPosition(int slotPosition);
+    dispenser_slot *getSlotFromOption(int productOption);
+
     dispenser_slot *getSelectedSlot();
 
     void initProductOptions();
@@ -140,6 +145,11 @@ public:
 
     pnumberproduct *getProductByPNumber(int pnumber);
     pnumberproduct *getSlotBaseProduct(int slot);
+    void setSelectedBottle(int pnumber);
+    void resetSelectedBottle();
+    pnumberproduct *getSelectedBottle();
+    bool hasSelectedBottle();
+    bool hasBuyBottleOption();
     void setSelectedProduct(int pnumber);
     pnumberproduct *getSelectedProduct();
 
@@ -179,6 +189,7 @@ public:
 
     QStringList getChildNames(QObject *parent);
     void loadDynamicContent();
+    void loadBottle();
     QString getCSS(QString cssName);
     void addCssClassToObject(QWidget *element, QString classname, QString css_file_name);
     void setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier);
@@ -197,6 +208,7 @@ public:
     void loadElementDynamicPropertiesFromDefaultTemplate();
 
     QString getHardwareMajorVersion();
+    bool isAelenPillarElseSoapStand();
 
     void addPictureToLabel(QLabel *label, QString picturePath);
     void addPictureToLabelCircle(QLabel *label, QString picturePath);
@@ -244,6 +256,10 @@ public:
     double m_temperature2;
     double m_alert_temperature2;
     QString m_payment;
+    int m_screen_sleep_time24h;
+    int m_screen_wakeup_time24h;
+    int m_buy_bottle_1;
+    int m_buy_bottle_2;
 
     int m_is_enabled;
     QString m_status_text;
@@ -276,6 +292,7 @@ signals:
 private:
     dispenser_slot *m_selectedSlot; // used for maintenance mode!!  , or derived from selectedProduct.
     pnumberproduct *m_selectedProduct;
+    pnumberproduct *m_selectedBottle;
     QVector<int> dispenseProductsMenuOptions;
     dispenser_slot *m_slots;
     pnumberproduct m_pnumberproducts[HIGHEST_PNUMBER_COUNT];
@@ -305,8 +322,6 @@ private:
     int m_is_enabled_slots[MAX_SLOT_COUNT];
     QString m_status_text_slots[MAX_SLOT_COUNT];
     QString transactionLogging;
-
-
 };
 
 #endif // MACHINE_H

@@ -80,7 +80,7 @@ page_help->pushButton_to_transactions,transactions→
 
 # page_sendFeedback
 page_sendFeedback->pushButton_previous_page,←BACK
-page_sendFeedback->checkBox_1_Label,I love this, keep me in the loop.
+page_sendFeedback->checkBox_1_Label,I love this, keep me in the loop
 page_sendFeedback->checkBox_2_Label,User interface problem
 page_sendFeedback->checkBox_3_Label,Drink dispensing problem
 page_sendFeedback->checkBox_4_Label,Payment problem

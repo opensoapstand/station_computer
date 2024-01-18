@@ -187,3 +187,4 @@ void dispenser_slot::setSlot(int slot)
     }
     m_dispenser_slot = slot;
 }
+

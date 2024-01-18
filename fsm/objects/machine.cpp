@@ -66,6 +66,27 @@ int machine::getDispensersCount()
     return 4;
 }
 
+double machine::convertVolumeMetricToDisplayUnits(double volume)
+{
+    double converted_volume;
+
+    if (getSizeUnit() == "oz")
+    {
+
+        converted_volume = volume * ML_TO_OZ;
+    }
+    else if (getSizeUnit() == "g")
+    {
+
+        converted_volume = volume * 1;
+    }
+    else
+    {
+        converted_volume = volume;
+    }
+    return converted_volume;
+}
+
 void machine::initProductDispensers()
 {
     for (int slot_index = 0; slot_index < getDispensersCount(); slot_index++)
@@ -74,7 +95,10 @@ void machine::initProductDispensers()
         // m_g_machine.m_productDispensers[slot_index].setup(&this, g_pnumbers);
         m_productDispensers[slot_index].setup(control_pcb, m_pnumbers);
         m_productDispensers[slot_index].setSlot(slot_index + 1);
+
+#ifdef INTERRUPT_DRIVE_FLOW_SENSOR_TICKS
         m_productDispensers[slot_index].initGlobalFlowsensorIO(IO_PIN_FLOW_SENSOR);
+#endif
         setFlowSensorCallBack(slot_index + 1);
     }
 }
@@ -88,6 +112,7 @@ void machine::loadGeneralProperties(bool loadDispenserParameters)
         for (int slot_index = 0; slot_index < getDispensersCount(); slot_index++)
         {
             m_productDispensers[slot_index].loadGeneralProperties();
+            m_productDispensers[slot_index].setEmptyContainerDetectionEnabled(getEmptyContainerDetectionEnabled());
         }
     }
 }
@@ -140,7 +165,7 @@ void machine::refresh()
 
 void machine::setFlowSensorCallBack(int slot)
 {
-    
+
     int slot_index = slot - 1;
     // control_pcb->registerFlowSensorTickCallback(std::bind(&dispenser::registerFlowSensorTickCallback, &m_productDispensers[slot_index]));
     // m_productDispensers[slot_index].linkActiveProductVolumeUpdate(); // CALL THIS FOR EVERY ACTIVE PRODUCT CHANGE during a mixing dispense.
@@ -178,6 +203,7 @@ string machine::getMachineId()
 {
     return m_machine_id;
 }
+
 // void machine::loadButtonPropertiesFromDb()
 // {
 //     rc = sqlite3_open(CONFIG_DB_PATH, &db);
@@ -550,12 +576,24 @@ void machine::print_receipt(string name_receipt, string receipt_cost, string rec
     if (receipt_cost == "0.00")
     {
         debugOutput::sendMessage("Free Order", MSG_INFO);
-        std::string out2 = "Promo Used: " + promoCode;
-        receipt_printer->printText(out2.c_str());
-        std::string out3 = "Enjoy your free product!";
-        receipt_printer->printText(out3.c_str());
-        std::string out4 = "Thank you for supporting \npackage-free!";
-        receipt_printer->printText(out4.c_str());
+
+        if (!promoCode.empty())
+        {
+            std::string out2 = "Promo Used: " + promoCode;
+            receipt_printer->printText(out2.c_str());
+        }
+
+        if (paymentMethod == "plu")
+        {
+            debugOutput::sendMessage("PLU without barcode:" + plu, MSG_INFO);
+            std::string out5 = "PLU: " + plu;
+            receipt_printer->printText(out5.c_str());
+        }
+
+        // std::string out3 = "Enjoy your free product!";
+        // receipt_printer->printText(out3.c_str());
+        // std::string out4 = "Thank you for supporting \npackage-free!";
+        // receipt_printer->printText(out4.c_str());
     }
     else if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13" || paymentMethod == "barcode_EAN-2")
     {
@@ -622,7 +660,7 @@ void machine::print_receipt(string name_receipt, string receipt_cost, string rec
 
         usleep(3500000);
     }
-    debugOutput::sendMessage("end sleep", MSG_INFO);
+    debugOutput::sendMessage("End receipt printing", MSG_INFO);
 }
 
 bool machine::getPumpReversalEnabled()
@@ -680,7 +718,7 @@ int machine::convertPStringToPNumber(const std::string &inputString)
 
 void machine::loadMachineParametersFromDb()
 {
-    debugOutput::sendMessage("Machine load db par", MSG_INFO);
+    debugOutput::sendMessage("Machine load db parameters", MSG_INFO);
 
     int rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;
@@ -794,5 +832,5 @@ void machine::loadMachineParametersFromDb()
         setHardwareVersionFromString(m_hardware_version_str);
         status = sqlite3_step(stmt); // next record
     }
-    debugOutput::sendMessage("Machine load db: finished. status: " + to_string(status), MSG_INFO);
+    debugOutput::sendMessage("Machine load db: finished . status(101=done,all good): " + to_string(status), MSG_INFO);
 }

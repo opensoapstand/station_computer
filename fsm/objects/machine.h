@@ -51,6 +51,8 @@ public:
     bool getPcb3point3VPowerSwitchStatus();
     void pcb3point3VPowerSwitch(bool enableElseDisable);
 
+     double convertVolumeMetricToDisplayUnits(double volume);
+
     // void print_text(string text);
     void print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string char_units_formatted, string paymentMethod, string plu, string promoCode, bool sleep_until_printed);
     gpio *switch_24V;

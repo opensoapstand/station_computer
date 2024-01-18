@@ -90,7 +90,7 @@ private slots:
     void updatePriceLabel();
     void on_pushButton_to_help_clicked();
     void onSelectTimeoutTick();
-    // void keyboardButtonPressed(int);
+    void keyboardButtonPressed(int);
 
 private:
 

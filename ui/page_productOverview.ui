@@ -719,6 +719,66 @@ color: #58595B;
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="label_invoice_bottle">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>1258</y>
+     <width>500</width>
+     <height>34</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_invoice_bottle_price">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>709</x>
+     <y>1243</y>
+     <width>251</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(/home/df-admin/production/references/background.png);
+font-style: normal;
+font-weight: normal;
+font-size: 24px;
+line-height: 29px;
+
+color: #7F8080;</string>
+   </property>
+   <property name="text">
+    <string>$ 0.00</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+   </property>
+  </widget>
   <zorder>pushButton_continue</zorder>
   <zorder>pushButton_continue_additional</zorder>
   <zorder>label_help</zorder>
@@ -746,11 +806,14 @@ color: #58595B;
   <zorder>label_coupon_icon</zorder>
   <zorder>label_invoice_additives_overview</zorder>
   <zorder>line_invoice</zorder>
+  <zorder>promoKeyboard</zorder>
+  <zorder>label_invoice_bottle_price</zorder>
+  <zorder>label_invoice_bottle</zorder>
  </widget>
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_continue"/>
   <buttongroup name="buttonGroup"/>
+  <buttongroup name="buttonGroup_continue"/>
  </buttongroups>
 </ui>

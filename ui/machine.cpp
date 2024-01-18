@@ -16,7 +16,6 @@ machine::machine()
     setRole(UserRole::user);
     setCouponState(no_state);
 
-
     // IPC Networking
     dfUtility = new df_util();
     dispenseProductsMenuOptions.resize(MENU_PRODUCT_SELECTION_OPTIONS_MAX);
@@ -44,6 +43,7 @@ void machine::initMachine()
         m_slots[slot_index].setSlot(slot_index + 1);
         m_slots[slot_index].setDb(m_db);
         m_slots[slot_index].loadSlotParametersFromDb();
+        // m_slots[slot_index].setEmptyContainerDetectionEnabled(getEmptyContainerDetectionEnabled());
     }
 
     // QVector<int> all_dispense_pnumbers = getAllUniqueDispensePNumbers();
@@ -79,13 +79,24 @@ void machine::loadDynamicContent()
         m_pnumberproducts[all_pnumbers[pnumber_index]].loadProductProperties();
         m_pnumberproducts[all_pnumbers[pnumber_index]].setSizeUnit(getSizeUnit()); // volumeUnit is a machine wide parameter
     }
-
+    loadBottle();
     loadTextsFromTemplateCsv();                                // dynamic content (text by template)
     loadTextsFromDefaultHardwareCsv();                         // dynamic styling (css by template)
     loadTextsFromDefaultCsv();                                 // dynamic styling (css by template)
     loadElementDynamicPropertiesFromTemplate();                // dynamic elements (position, visibility)
     loadElementDynamicPropertiesFromDefaultHardwareTemplate(); // dynamic elements (position, visibility)
     loadElementDynamicPropertiesFromDefaultTemplate();         // dynamic elements (position, visibility)
+}
+
+void machine::loadBottle(){
+    if(m_buy_bottle_1){
+        m_pnumberproducts[m_buy_bottle_1].loadProductProperties();
+        m_pnumberproducts[m_buy_bottle_1].setSizeUnit(getSizeUnit());
+    }
+    if(m_buy_bottle_2){
+        m_pnumberproducts[m_buy_bottle_2].loadProductProperties();
+        m_pnumberproducts[m_buy_bottle_2].setSizeUnit(getSizeUnit());
+    }
 }
 
 QVector<int> machine::getAllDispensePNumbersFromSlot(int slot)
@@ -127,7 +138,7 @@ QVector<int> machine::getAllUsedPNumbersFromSlots()
         {
             // qDebug() << "flbijb" << slotpnumbers[i];
             uniquePNumbers.insert(slotpnumbers[i]);
-        }
+        }   
     }
 
     // Convert the QSet to a QVector
@@ -184,14 +195,15 @@ void machine::initProductOptions()
         {
             int position = 1 + slot_index * DISPENSE_PRODUCTS_PER_BASE_LINE_MAX + i;
             setProductToMenuOption(position, dispense_pnumbers[i]);
-            qDebug() << "pnumber. : : " << (dispense_pnumbers[i]) << "at option" << position;
+            qDebug() << "pnumber : " << (dispense_pnumbers[i]) << "at option" << position;
         }
     }
 
+    // display all options: 
     for (int i = 0; i < dispenseProductsMenuOptions.size(); ++i)
     {
-        int option = dispenseProductsMenuOptions[i];
-        qDebug() << "Option eef" << (i + 1) << ": " << option;
+        int product = dispenseProductsMenuOptions[i];
+        qDebug() << "Option " << (i + 1) << ": " << product;
     }
 }
 
@@ -234,7 +246,7 @@ pnumberproduct *machine::getProductFromMenuOption(int productOption)
 
     if (!isOptionExisting(productOption))
     {
-        qDebug() << "ASSERT ERROR: non existing number (dummy or not valid). undefined behaviour from now on";
+        qDebug() << "ASSERT ERROR: non existing number (dummy or not valid). undefined behaviour from now on" << productOption;
     }
 
     int pnumber = dispenseProductsMenuOptions[productOption - 1];
@@ -265,7 +277,8 @@ bool machine::getIsOptionAvailable(int productOption)
     // available as in: is it enabled, not empty, no technical problem,... (assumes the option exists and is linked to a valid pnumber)
 
     // products will need an "isEnabled" and "statustext" column too.
-    // todo
+    
+
 
     // check if slot for option is valid
     // check if all pnumbers for options are valid
@@ -317,6 +330,43 @@ int machine::getSlotFromBasePNumber(int base_pnumber)
     return slot_with_base_pnumber;
 }
 
+dispenser_slot *machine::getSlotFromOption(int productOption){
+    qDebug() << "Product option" << productOption;
+    int slot = static_cast<int>(std::round(productOption/DISPENSE_PRODUCTS_PER_BASE_LINE_MAX));   
+    return &m_slots[slot];
+}
+
+
+pnumberproduct *machine::getSelectedBottle()
+{
+    return m_selectedBottle;
+}
+
+void machine::setSelectedBottle(int pnumber)
+{
+    // pnumber is the index. Clever... until you have one million options....
+    m_selectedBottle = &m_pnumberproducts[pnumber];
+}
+
+void machine::resetSelectedBottle(){
+    m_selectedBottle = NULL;
+}
+
+bool machine::hasSelectedBottle(){
+    if(getSelectedBottle()){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+bool machine::hasBuyBottleOption(){
+    if(m_buy_bottle_1 || m_buy_bottle_2){
+        return true;
+    }else{
+        return false;
+    }
+}
 
 pnumberproduct *machine::getSelectedProduct()
 {
@@ -327,6 +377,19 @@ void machine::setSelectedProduct(int pnumber)
 {
     // pnumber is the index. Clever... until you have one million options....
     m_selectedProduct = &m_pnumberproducts[pnumber];
+}
+
+bool machine::isSlotExisiting(int slot_index){
+    if(m_hardware_version == "SS2"){
+        qDebug() << "############# getSlotCount" << getSlotCount();
+        if(slot_index < getSlotCount()){
+            qDebug() << slot_index;
+            return true;
+        }else{
+            qDebug() << slot_index;
+            return false;
+        }
+    }
 }
 
 dispenser_slot *machine::getSlotByPosition(int slotPosition)
@@ -370,7 +433,7 @@ void machine::setSelectedSlotFromSelectedProduct()
 
     int slot = getSlotFromBasePNumber(base_pnumber);
     setSelectedSlot(slot);
-    qDebug() << "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS set selected slot: " << slot;
+    qDebug() << "set selected slot: " << slot;
 }
 
 bool machine::isDispenseAreaBelowElseBesideScreen()
@@ -446,7 +509,7 @@ int machine::getSlotCount()
         }
         else if (m_hardware_version.startsWith("SS2"))
         {
-            slot_count = 4;
+            slot_count = 3;
         }
         else
         {
@@ -473,13 +536,18 @@ bool machine::isSlotCountBiggerThanMaxSlotCount(int slot_count)
 
 void machine::dispenseButtonLightsAnimateState(bool animateElseOff)
 {
-    if (animateElseOff)
+    // if there are no button animation programs available, do nothing...
+    int m_button_animation_program = m_dispense_buttons_count / 1000; 
+    if (m_button_animation_program > 0)
     {
-        dfUtility->send_command_to_FSM("DispenseButtonLights|ANIMATE", true);
-    }
-    else
-    {
-        dfUtility->send_command_to_FSM("DispenseButtonLights|OFF", true);
+        if (animateElseOff)
+        {
+            dfUtility->send_command_to_FSM("DispenseButtonLights|ANIMATE", true);
+        }
+        else
+        {
+            dfUtility->send_command_to_FSM("DispenseButtonLights|OFF", true);
+        }
     }
 }
 
@@ -539,7 +607,7 @@ void machine::resetCouponDiscount()
     m_min_threshold_vol_ml_discount = "0";
     m_max_threshold_vol_ml_discount = "0";
     m_max_dollar_amount_discount = "0";
-    
+    setCouponCode("");
 }
 
 double machine::getDiscountPercentageFraction()
@@ -559,6 +627,7 @@ double machine::getPriceWithDiscount(double price)
     // there is a maximum absolute number of discount available.
     // will return discounted price
     double discount = price * m_discount_percentage_fraction;
+    qDebug() << "Discount: " << m_max_dollar_amount_discount;
     max_discount = m_max_dollar_amount_discount.toDouble();
     double resulting_discount = (max_discount == 0.0) ? discount : std::min(max_discount, discount); // if discount > max_discount, take max_discount
     return (price - resulting_discount);
@@ -765,8 +834,8 @@ void machine::fsmReceiveTemperature(double temperature_1, double temperature_2)
 {
     m_temperature = temperature_1;
     m_temperature2 = temperature_2;
-    //qDebug() << "Temperature received from FSM in machine: " << m_temperature;
-    //qDebug() << "Temperature 2 received from FSM in machine: " << m_temperature2;
+    // qDebug() << "Temperature received from FSM in machine: " << m_temperature;
+    // qDebug() << "Temperature 2 received from FSM in machine: " << m_temperature2;
 
     writeTemperatureToDb(m_temperature, m_temperature2);
 
@@ -782,7 +851,8 @@ double machine::getTemperature_1()
     return m_temperature;
 }
 
-QString machine::getSizeUnit(){
+QString machine::getSizeUnit()
+{
     return m_size_unit;
 }
 
@@ -1000,17 +1070,19 @@ QString machine::getHelpPageHtmlText()
     return m_help_text_html;
 }
 
-void machine::resetTransactionLogging(){
+void machine::resetTransactionLogging()
+{
     transactionLogging = "";
-
 }
 
-void machine::addToTransactionLogging(QString text){
+void machine::addToTransactionLogging(QString text)
+{
     transactionLogging += text;
     qDebug() << "Transaction Logging: " << transactionLogging;
 }
 
-QString machine::getTransactionLogging(){
+QString machine::getTransactionLogging()
+{
     return transactionLogging;
 }
 
@@ -1052,7 +1124,11 @@ void machine::loadMachineParameterFromDb()
         &m_is_enabled,
         &m_status_text,
         &m_payment,
-        &m_size_unit);
+        &m_size_unit,
+        &m_screen_sleep_time24h,
+        &m_screen_wakeup_time24h,
+        &m_buy_bottle_1,
+        &m_buy_bottle_2);
 
     qDebug() << "Machine ID as loaded from db: " << getMachineId();
     qDebug() << "Template folder from db : " << getTemplateFolder();
@@ -1090,17 +1166,24 @@ void machine::setActivePaymentMethod(ActivePaymentMethod paymentMethod)
     m_activePaymentMethod = paymentMethod;
 }
 
-std::vector<ActivePaymentMethod> machine::getAllowedPaymentMethods(){
+std::vector<ActivePaymentMethod> machine::getAllowedPaymentMethods()
+{
     return allowedPaymentMethods;
 }
 
-void machine::setAllowedPaymentMethods(ActivePaymentMethod paymentMethod){
+void machine::setAllowedPaymentMethods(ActivePaymentMethod paymentMethod)
+{
     allowedPaymentMethods.push_back(paymentMethod);
 }
 
 QString machine::getMachineId()
 {
     return m_machine_id;
+}
+
+QString machine::getMachineLocation()
+{
+    return m_location;
 }
 
 QString machine::getClientId()
@@ -1166,7 +1249,8 @@ void machine::addPictureToLabel(QLabel *label, QString picturePath)
     }
 }
 
-void machine::addPictureToLabelCircle(QLabel *label, QString picturePath){
+void machine::addPictureToLabelCircle(QLabel *label, QString picturePath)
+{
     if (df_util::pathExists(picturePath))
     {
         QPixmap picture(picturePath);
@@ -1192,7 +1276,6 @@ void machine::addPictureToLabelCircle(QLabel *label, QString picturePath){
         qDebug() << "Can't add picture to label: " << label->objectName() << " " << picturePath;
     }
 }
-
 
 void machine::addCssClassToObject(QWidget *element, QString classname, QString css_file_name)
 {
@@ -1389,13 +1472,13 @@ void machine::applyPropertiesToQWidget(QWidget *widget)
 
     if (selectedElement != elementDynamicPropertiesMap_template.end())
     {
-        // if found in template dynamic properties 
+        // if found in template dynamic properties
         qDebug() << "element " << combinedName << "found in template. json string: " << selectedElement->second;
         propertiesJsonString = selectedElement->second; // second implies the value of the key:value pair in the associative array
     }
     else
     {
-// if found in default hardware template dynamic properties
+        // if found in default hardware template dynamic properties
         selectedElement = elementDynamicPropertiesMap_default_hardware.find(combinedName);
         if (selectedElement != elementDynamicPropertiesMap_default_hardware.end())
         {

@@ -105,6 +105,7 @@ void page_init::showEvent(QShowEvent *event)
     {
         QString command = "Ping";
         p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
+        
         switch(activePaymentMethod){
             case tap_canada:
             case tap_usa:{
@@ -157,6 +158,7 @@ void page_init::onInitTimeoutTick()
         ui->label_init_message->setText(ui->label_init_message->text() + ".");
         QString command = "Ping";
         p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
+        
     }
     else
     {

@@ -296,6 +296,17 @@ bool pnumberproduct::is_valid_size_selected()
     return true;
 }
 
+double pnumberproduct::getPriceOfSelectedBottle(){
+    //size: 1 for default bottle size
+    return getBasePrice(1);
+}
+
+double pnumberproduct::getVolumeOfSelectedBottle()
+{
+    //size: 1 for default bottle size
+    return getVolumeBySize(1);
+}
+
 double pnumberproduct::getVolumeOfSelectedSize()
 {
     double volume;
@@ -496,6 +507,7 @@ QString pnumberproduct::getSizeAsVolumeWithCorrectUnits(int size, bool roundValu
 
     v = getVolumeBySize(size);
     units = getSizeUnit();
+    qDebug() << "unitsssssss" << units;
     volume_as_string = df_util::getConvertedStringVolumeFromMl(v, units, roundValue, addUnits);
     return volume_as_string;
 }

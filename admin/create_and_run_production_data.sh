@@ -5,6 +5,8 @@ echo "stop soapstand services"
 sudo systemctl stop ui_soapstand.service
 sudo systemctl stop controller_soapstand.service
 sudo systemctl stop check_connectivity.service
+sudo systemctl stop ssh_monitor.service
+
 
 # create production data
 sudo ./create_production_data.sh

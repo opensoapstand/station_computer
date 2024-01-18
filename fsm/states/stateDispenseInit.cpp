@@ -27,6 +27,7 @@ stateDispenseInit::stateDispenseInit(messageMediator *message)
 // DTOR
 stateDispenseInit::~stateDispenseInit()
 {
+    debugOutput::sendMessage("stateDispenseInit: ~stateDispenseInit", MSG_INFO);
 }
 
 // Overload for Debugger output
@@ -62,7 +63,8 @@ DF_ERROR stateDispenseInit::onEntry()
     g_machine.loadGeneralProperties(false);
     g_machine.m_productDispensers[dispenser_index].loadGeneralProperties();
 
-    debugOutput::sendMessage("Dispense init: Load selected product parameters: ", MSG_INFO);
+    debugOutput::sendMessage("Dispense init: Load selected product parameters. Slot: " + to_string(dispenser_index + 1) + " Product: " + to_string(g_machine.m_productDispensers[dispenser_index].getSelectedPNumber()), MSG_INFO);
+    // debugOutput::sendMessage("Dispense init: Load selected product parameters66666. Slot: " + to_string(dispenser_index + 1) + " Product: " + to_string(g_machine.m_productDispensers[dispenser_index].getSelectedProduct()->getPNumber()), MSG_INFO);
     bool success = g_machine.m_productDispensers[dispenser_index].getSelectedProduct()->loadParameters();
 
     if (!success)

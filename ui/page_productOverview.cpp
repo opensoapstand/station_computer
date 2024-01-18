@@ -217,11 +217,16 @@ void page_product_overview::showEvent(QShowEvent *event)
     {
         ui->label_invoice_additives_overview->setText(additivies_overview(product_additives_overview));
     }
+    QString keyboard = KEYBOARD_IMAGE_PATH;
+    QString keyboard_picture_path = p_page_idle->thisMachine->getTemplatePathFromName(KEYBOARD_IMAGE_PATH);
+    p_page_idle->thisMachine->addPictureToLabel(ui->label_keyboard_background, keyboard_picture_path);
+    ui->label_keyboard_background->lower();
 
     _selectIdleTimeoutSec = 400;
     selectIdleTimer->start(1000);
     reset_and_show_page_elements();
-    check_to_page_email();
+    // ready to be killed off;
+    // check_to_page_email();
     std::vector<ActivePaymentMethod> paymentMethods = p_page_idle->thisMachine->getAllowedPaymentMethods();
     size_t numberOfPaymentMethods = paymentMethods.size();
     switch (paymentMethods[0])
@@ -336,6 +341,7 @@ void page_product_overview::reset_and_show_page_elements()
     ui->label_invoice_name->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductName());
 
     // by default hide all coupon and discount elements.
+    ui->promoKeyboard->hide();
     ui->pushButton_promo_input->hide();
     ui->lineEdit_promo_code->hide();
     ui->label_invoice_discount_amount->hide();
@@ -395,7 +401,8 @@ void page_product_overview::reset_and_show_page_elements()
         ui->label_discount_tag->show();
         ui->lineEdit_promo_code->show();
         ui->pushButton_promo_input->show();
-        check_to_page_email();
+        // ready to be killed off;
+        // check_to_page_email();
     }
     break;
     case (disabled):
@@ -749,14 +756,15 @@ void page_product_overview::on_pushButton_continue(int buttonID)
     double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
     double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
 
-    if (p_page_idle->thisMachine->isAelenPillarElseSoapStand())
-    {
-        if (selectedPrice == 0.0 || finalPrice == 0.0)
-        {
-            hideCurrentPageAndShowProvided(p_page_email);
-            return;
-        }
-    }
+    // ready to be killed off;
+    // if (p_page_idle->thisMachine->isAelenPillarElseSoapStand())
+    // {
+    //     if (selectedPrice == 0.0 || finalPrice == 0.0)
+    //     {
+    //         hideCurrentPageAndShowProvided(p_page_email);
+    //         return;
+    //     }
+    // }
 
     switch (activePaymentMethod)
     {
@@ -874,20 +882,20 @@ void page_product_overview::on_pushButton_select_product_page_clicked()
     this->return_to_selectProductPage();
 }
 
-void page_product_overview::check_to_page_email()
-{
-    double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
-    double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
-    if (finalPrice == 0.0 || selectedPrice == 0.0)
-    {
-        ui->pushButton_continue_additional->lower();
-        ui->pushButton_continue->setFixedSize(QSize(740, 100));
-        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_free");
-    }
-    // else{
-    // p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay");
-    // }
-}
+// void page_product_overview::check_to_page_email()
+// {
+//     double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
+//     double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
+//     if (finalPrice == 0.0 || selectedPrice == 0.0)
+//     {
+//         ui->pushButton_continue_additional->lower();
+//         ui->pushButton_continue->setFixedSize(QSize(740, 100));
+//         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_free");
+//     }
+//     // else{
+//     // p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay");
+//     // }
+// }
 
 QString page_product_overview::additivies_overview(QString product_additives_overview)
 {

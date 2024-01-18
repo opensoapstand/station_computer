@@ -785,8 +785,8 @@ color: #7F8080;</string>
    </property>
    <property name="geometry">
     <rect>
-     <x>590</x>
-     <y>730</y>
+     <x>110</x>
+     <y>830</y>
      <width>841</width>
      <height>320</height>
     </rect>
@@ -2425,6 +2425,7 @@ outline: none;
      <string>TextLabel</string>
     </property>
    </widget>
+   <zorder>label_keyboard_background</zorder>
    <zorder>num0</zorder>
    <zorder>num2</zorder>
    <zorder>done</zorder>
@@ -2463,7 +2464,6 @@ outline: none;
    <zorder>l</zorder>
    <zorder>w</zorder>
    <zorder>num1</zorder>
-   <zorder>label_keyboard_background</zorder>
   </widget>
   <zorder>pushButton_continue</zorder>
   <zorder>pushButton_continue_additional</zorder>

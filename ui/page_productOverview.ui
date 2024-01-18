@@ -779,6 +779,1692 @@ color: #7F8080;</string>
     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
   </widget>
+  <widget class="QWidget" name="promoKeyboard" native="true">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>590</x>
+     <y>730</y>
+     <width>841</width>
+     <height>320</height>
+    </rect>
+   </property>
+   <property name="mouseTracking">
+    <bool>false</bool>
+   </property>
+   <property name="tabletTracking">
+    <bool>true</bool>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <widget class="QPushButton" name="num1">
+    <property name="geometry">
+     <rect>
+      <x>53</x>
+      <y>32</y>
+      <width>62</width>
+      <height>47</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>47</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>47</height>
+     </size>
+    </property>
+    <property name="tabletTracking">
+     <bool>false</bool>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="num2">
+    <property name="geometry">
+     <rect>
+      <x>128</x>
+      <y>32</y>
+      <width>62</width>
+      <height>47</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>47</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>47</height>
+     </size>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="num3">
+    <property name="geometry">
+     <rect>
+      <x>203</x>
+      <y>32</y>
+      <width>62</width>
+      <height>47</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>47</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>47</height>
+     </size>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
+    <property name="contextMenuPolicy">
+     <enum>Qt::PreventContextMenu</enum>
+    </property>
+    <property name="acceptDrops">
+     <bool>false</bool>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="num4">
+    <property name="geometry">
+     <rect>
+      <x>278</x>
+      <y>32</y>
+      <width>62</width>
+      <height>47</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>47</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>47</height>
+     </size>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="num5">
+    <property name="geometry">
+     <rect>
+      <x>353</x>
+      <y>32</y>
+      <width>62</width>
+      <height>47</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>47</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>47</height>
+     </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="num6">
+    <property name="geometry">
+     <rect>
+      <x>428</x>
+      <y>32</y>
+      <width>62</width>
+      <height>47</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>47</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>47</height>
+     </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="num7">
+    <property name="geometry">
+     <rect>
+      <x>503</x>
+      <y>32</y>
+      <width>62</width>
+      <height>47</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>47</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>47</height>
+     </size>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::ClickFocus</enum>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="num8">
+    <property name="geometry">
+     <rect>
+      <x>578</x>
+      <y>32</y>
+      <width>62</width>
+      <height>47</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>47</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>47</height>
+     </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="num9">
+    <property name="geometry">
+     <rect>
+      <x>653</x>
+      <y>32</y>
+      <width>62</width>
+      <height>47</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>47</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>47</height>
+     </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="num0">
+    <property name="geometry">
+     <rect>
+      <x>728</x>
+      <y>32</y>
+      <width>62</width>
+      <height>47</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>47</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>47</height>
+     </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="q">
+    <property name="geometry">
+     <rect>
+      <x>53</x>
+      <y>89</y>
+      <width>62</width>
+      <height>62</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="w">
+    <property name="geometry">
+     <rect>
+      <x>128</x>
+      <y>89</y>
+      <width>62</width>
+      <height>62</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="e">
+    <property name="geometry">
+     <rect>
+      <x>203</x>
+      <y>89</y>
+      <width>62</width>
+      <height>62</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="r">
+    <property name="geometry">
+     <rect>
+      <x>278</x>
+      <y>89</y>
+      <width>62</width>
+      <height>62</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="t">
+    <property name="geometry">
+     <rect>
+      <x>353</x>
+      <y>89</y>
+      <width>62</width>
+      <height>62</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="y">
+    <property name="geometry">
+     <rect>
+      <x>428</x>
+      <y>89</y>
+      <width>62</width>
+      <height>62</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="u">
+    <property name="geometry">
+     <rect>
+      <x>503</x>
+      <y>89</y>
+      <width>62</width>
+      <height>62</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="i">
+    <property name="geometry">
+     <rect>
+      <x>578</x>
+      <y>89</y>
+      <width>62</width>
+      <height>62</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="o">
+    <property name="geometry">
+     <rect>
+      <x>653</x>
+      <y>89</y>
+      <width>62</width>
+      <height>62</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="p">
+    <property name="geometry">
+     <rect>
+      <x>728</x>
+      <y>89</y>
+      <width>62</width>
+      <height>62</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="a">
+    <property name="geometry">
+     <rect>
+      <x>53</x>
+      <y>161</y>
+      <width>62</width>
+      <height>62</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="s">
+    <property name="geometry">
+     <rect>
+      <x>128</x>
+      <y>161</y>
+      <width>62</width>
+      <height>62</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="d">
+    <property name="geometry">
+     <rect>
+      <x>203</x>
+      <y>161</y>
+      <width>62</width>
+      <height>62</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="g">
+    <property name="geometry">
+     <rect>
+      <x>353</x>
+      <y>161</y>
+      <width>62</width>
+      <height>62</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="f">
+    <property name="geometry">
+     <rect>
+      <x>278</x>
+      <y>161</y>
+      <width>62</width>
+      <height>62</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="h">
+    <property name="geometry">
+     <rect>
+      <x>428</x>
+      <y>161</y>
+      <width>62</width>
+      <height>62</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="j">
+    <property name="geometry">
+     <rect>
+      <x>503</x>
+      <y>161</y>
+      <width>62</width>
+      <height>62</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="k">
+    <property name="geometry">
+     <rect>
+      <x>578</x>
+      <y>161</y>
+      <width>62</width>
+      <height>62</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="l">
+    <property name="geometry">
+     <rect>
+      <x>653</x>
+      <y>161</y>
+      <width>62</width>
+      <height>62</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="z">
+    <property name="geometry">
+     <rect>
+      <x>103</x>
+      <y>234</y>
+      <width>62</width>
+      <height>62</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="x">
+    <property name="geometry">
+     <rect>
+      <x>178</x>
+      <y>234</y>
+      <width>62</width>
+      <height>62</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="c">
+    <property name="geometry">
+     <rect>
+      <x>253</x>
+      <y>234</y>
+      <width>62</width>
+      <height>62</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="v">
+    <property name="geometry">
+     <rect>
+      <x>328</x>
+      <y>234</y>
+      <width>62</width>
+      <height>62</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="b">
+    <property name="geometry">
+     <rect>
+      <x>403</x>
+      <y>234</y>
+      <width>62</width>
+      <height>62</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="n">
+    <property name="geometry">
+     <rect>
+      <x>478</x>
+      <y>234</y>
+      <width>62</width>
+      <height>62</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="m">
+    <property name="geometry">
+     <rect>
+      <x>553</x>
+      <y>234</y>
+      <width>62</width>
+      <height>62</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>62</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="backspace">
+    <property name="geometry">
+     <rect>
+      <x>728</x>
+      <y>161</y>
+      <width>77</width>
+      <height>62</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>87</width>
+      <height>62</height>
+     </size>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="done">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>628</x>
+      <y>234</y>
+      <width>125</width>
+      <height>64</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>125</width>
+      <height>64</height>
+     </size>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::ClickFocus</enum>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background:transparent;
+background-color:rgba(238, 238, 236,0);
+border:none;
+outline: none;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QLabel" name="label_keyboard_background">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>841</width>
+      <height>321</height>
+     </rect>
+    </property>
+    <property name="accessibleName">
+     <string/>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <zorder>num0</zorder>
+   <zorder>num2</zorder>
+   <zorder>done</zorder>
+   <zorder>h</zorder>
+   <zorder>t</zorder>
+   <zorder>num7</zorder>
+   <zorder>j</zorder>
+   <zorder>num4</zorder>
+   <zorder>z</zorder>
+   <zorder>g</zorder>
+   <zorder>o</zorder>
+   <zorder>p</zorder>
+   <zorder>y</zorder>
+   <zorder>q</zorder>
+   <zorder>n</zorder>
+   <zorder>num9</zorder>
+   <zorder>v</zorder>
+   <zorder>b</zorder>
+   <zorder>c</zorder>
+   <zorder>m</zorder>
+   <zorder>backspace</zorder>
+   <zorder>num3</zorder>
+   <zorder>num8</zorder>
+   <zorder>d</zorder>
+   <zorder>x</zorder>
+   <zorder>i</zorder>
+   <zorder>e</zorder>
+   <zorder>k</zorder>
+   <zorder>num5</zorder>
+   <zorder>r</zorder>
+   <zorder>num6</zorder>
+   <zorder>f</zorder>
+   <zorder>s</zorder>
+   <zorder>u</zorder>
+   <zorder>a</zorder>
+   <zorder>l</zorder>
+   <zorder>w</zorder>
+   <zorder>num1</zorder>
+   <zorder>label_keyboard_background</zorder>
+  </widget>
   <zorder>pushButton_continue</zorder>
   <zorder>pushButton_continue_additional</zorder>
   <zorder>label_help</zorder>
@@ -806,14 +2492,14 @@ color: #7F8080;</string>
   <zorder>label_coupon_icon</zorder>
   <zorder>label_invoice_additives_overview</zorder>
   <zorder>line_invoice</zorder>
-  <zorder>promoKeyboard</zorder>
   <zorder>label_invoice_bottle_price</zorder>
   <zorder>label_invoice_bottle</zorder>
+  <zorder>promoKeyboard</zorder>
  </widget>
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup"/>
   <buttongroup name="buttonGroup_continue"/>
+  <buttongroup name="buttonGroup"/>
  </buttongroups>
 </ui>

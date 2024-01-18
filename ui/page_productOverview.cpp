@@ -248,7 +248,7 @@ void page_product_overview::showEvent(QShowEvent *event)
     }
     if (numberOfPaymentMethods == 1)
     {
-        ui->pushButton_continue->raise();
+        // ui->pushButton_continue->raise();
         ui->pushButton_continue_additional->lower();
         ui->pushButton_continue->setFixedSize(QSize(740, 100));
         ui->pushButton_continue->setProperty("activePaymentMethod", paymentMethods[0]);

@@ -432,11 +432,13 @@ DF_ERROR stateManualPrinter::setup_receipt_from_pnumber_and_dispense_data(int pn
 
    std::string units =  g_machine.getSizeUnit();
    std::string paymentMethod = g_machine.getPaymentMethod();
+   volume_dispensed = g_machine.convertVolumeMetricToDisplayUnits(volume_dispensed);
 
    char chars_cost[MAX_BUF];
    char chars_volume_formatted[MAX_BUF];
 
    std::string char_units_formatted = g_machine.getSizeUnit();
+
 
    snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.0f", volume_dispensed);
 

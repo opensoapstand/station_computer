@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1125</width>
+    <width>1080</width>
     <height>1920</height>
    </rect>
   </property>
@@ -29,29 +29,13 @@ font-weight: normal;
 font-size: 23px;
 line-height: 29px;</string>
   </property>
-  <widget class="QPushButton" name="pushButton_previous_page">
-   <property name="geometry">
-    <rect>
-     <x>70</x>
-     <y>1757</y>
-     <width>281</width>
-     <height>100</height>
-    </rect>
-   </property>
-   <property name="accessibleName">
-    <string/>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
   <widget class="QPushButton" name="pushButton_to_help">
    <property name="geometry">
     <rect>
-     <x>446</x>
-     <y>1727</y>
-     <width>211</width>
-     <height>191</height>
+     <x>970</x>
+     <y>30</y>
+     <width>75</width>
+     <height>75</height>
     </rect>
    </property>
    <property name="accessibleName">
@@ -59,100 +43,6 @@ line-height: 29px;</string>
    </property>
    <property name="text">
     <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_invoice_price">
-   <property name="geometry">
-    <rect>
-     <x>709</x>
-     <y>993</y>
-     <width>251</width>
-     <height>80</height>
-    </rect>
-   </property>
-   <property name="accessibleName">
-    <string/>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font-family: Montserrat;
-background-image: url(/home/df-admin/production/references/background.png);
-font-style: normal;
-font-weight: bold;
-font-size: 24px;
-line-height: 29px;
-
-color: #7F8080;</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_invoice_price_total">
-   <property name="geometry">
-    <rect>
-     <x>659</x>
-     <y>1340</y>
-     <width>301</width>
-     <height>44</height>
-    </rect>
-   </property>
-   <property name="accessibleName">
-    <string/>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font-family: Montserrat;
-background-image: url(background.png);
-font-style: light;
-font-weight: bold;
-font-size: 36px;
-line-height: 44px;
-
-color: #58595B;</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_selected_price">
-   <property name="geometry">
-    <rect>
-     <x>668</x>
-     <y>830</y>
-     <width>317</width>
-     <height>55</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Montserrat</family>
-     <pointsize>-1</pointsize>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="accessibleName">
-    <string/>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">color: #FFFFFF;
-font-family: Montserrat;
-font-style: bold;
-font-weight:bold;
-font-size: 36px;
-line-height: 24px;
-text-align: center;</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
    </property>
   </widget>
   <widget class="QLineEdit" name="lineEdit_promo_code">
@@ -161,8 +51,8 @@ text-align: center;</string>
    </property>
    <property name="geometry">
     <rect>
-     <x>145</x>
-     <y>1294</y>
+     <x>146</x>
+     <y>1344</y>
      <width>791</width>
      <height>70</height>
     </rect>
@@ -192,8 +82,8 @@ text-align: center;</string>
   <widget class="QPushButton" name="pushButton_promo_input">
    <property name="geometry">
     <rect>
-     <x>145</x>
-     <y>1294</y>
+     <x>146</x>
+     <y>1344</y>
      <width>791</width>
      <height>70</height>
     </rect>
@@ -223,10 +113,10 @@ text-align: center;</string>
   <widget class="QLabel" name="label_invoice_name">
    <property name="geometry">
     <rect>
-     <x>130</x>
-     <y>993</y>
-     <width>581</width>
-     <height>91</height>
+     <x>81</x>
+     <y>1062</y>
+     <width>655</width>
+     <height>36</height>
     </rect>
    </property>
    <property name="accessibleName">
@@ -251,70 +141,6 @@ color: #58595B;
    </property>
    <property name="text">
     <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_invoice_discount_name">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>130</x>
-     <y>1400</y>
-     <width>641</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="accessibleName">
-    <string/>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">position: absolute;
-height: 29px;
-left: 17.31%;
-right: 43.8%;
-top: calc(50% - 29px/2 + 389.5px);
-
-font-family: Montserrat;
-font-style: normal;
-font-weight: normal;
-font-size: 24px;
-line-height: 29px;
-
-color: #58595B;
-
-</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_discount_tag">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>130</x>
-     <y>1175</y>
-     <width>185</width>
-     <height>34</height>
-    </rect>
-   </property>
-   <property name="accessibleName">
-    <string/>
-   </property>
-   <property name="layoutDirection">
-    <enum>Qt::LeftToRight</enum>
-   </property>
-   <property name="styleSheet">
-    <string notr="true"/>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_select_product_page">
@@ -336,10 +162,10 @@ color: #58595B;
   <widget class="QLabel" name="label_invoice_box">
    <property name="geometry">
     <rect>
-     <x>94</x>
-     <y>890</y>
-     <width>891</width>
-     <height>760</height>
+     <x>50</x>
+     <y>1013</y>
+     <width>980</width>
+     <height>449</height>
     </rect>
    </property>
    <property name="font">
@@ -388,29 +214,13 @@ text-align: center;</string>
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="label_total">
-   <property name="geometry">
-    <rect>
-     <x>130</x>
-     <y>1340</y>
-     <width>641</width>
-     <height>44</height>
-    </rect>
-   </property>
-   <property name="accessibleName">
-    <string/>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_help">
    <property name="geometry">
     <rect>
-     <x>478</x>
-     <y>1773</y>
-     <width>125</width>
-     <height>125</height>
+     <x>980</x>
+     <y>40</y>
+     <width>50</width>
+     <height>50</height>
     </rect>
    </property>
    <property name="accessibleName">
@@ -420,38 +230,13 @@ text-align: center;</string>
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="Line" name="line_invoice">
-   <property name="geometry">
-    <rect>
-     <x>137</x>
-     <y>1280</y>
-     <width>821</width>
-     <height>5</height>
-    </rect>
-   </property>
-   <property name="accessibleName">
-    <string/>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Plain</enum>
-   </property>
-   <property name="lineWidth">
-    <number>1</number>
-   </property>
-   <property name="midLineWidth">
-    <number>3</number>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
   <widget class="QPushButton" name="pushButton_continue">
    <property name="geometry">
     <rect>
-     <x>188</x>
-     <y>1541</y>
-     <width>740</width>
-     <height>92</height>
+     <x>235</x>
+     <y>1546</y>
+     <width>600</width>
+     <height>100</height>
     </rect>
    </property>
    <property name="font">
@@ -478,7 +263,7 @@ text-align: center;</string>
   <widget class="QLabel" name="label_page_title">
    <property name="geometry">
     <rect>
-     <x>398</x>
+     <x>435</x>
      <y>200</y>
      <width>305</width>
      <height>100</height>
@@ -494,8 +279,8 @@ text-align: center;</string>
   <widget class="QLabel" name="label_invoice_size_title">
    <property name="geometry">
     <rect>
-     <x>80</x>
-     <y>1129</y>
+     <x>81</x>
+     <y>1179</y>
      <width>66</width>
      <height>45</height>
     </rect>
@@ -527,8 +312,8 @@ color: #58595B;
   <widget class="QLabel" name="label_invoice_coupon_title">
    <property name="geometry">
     <rect>
-     <x>80</x>
-     <y>1233</y>
+     <x>81</x>
+     <y>1283</y>
      <width>300</width>
      <height>36</height>
     </rect>
@@ -543,8 +328,8 @@ color: #58595B;
   <widget class="QLabel" name="label_coupon_icon">
    <property name="geometry">
     <rect>
-     <x>80</x>
-     <y>1307</y>
+     <x>81</x>
+     <y>1362</y>
      <width>45</width>
      <height>45</height>
     </rect>
@@ -559,8 +344,8 @@ color: #58595B;
   <widget class="QLabel" name="label_invoice_additives_overview">
    <property name="geometry">
     <rect>
-     <x>80</x>
-     <y>1073</y>
+     <x>81</x>
+     <y>1123</y>
      <width>920</width>
      <height>45</height>
     </rect>
@@ -579,7 +364,7 @@ color: #58595B;
    <property name="geometry">
     <rect>
      <x>360</x>
-     <y>300</y>
+     <y>308</y>
      <width>360</width>
      <height>360</height>
     </rect>
@@ -603,10 +388,10 @@ color: #58595B;
   <widget class="QLabel" name="label_selected_volume">
    <property name="geometry">
     <rect>
-     <x>538</x>
-     <y>256</y>
-     <width>445</width>
-     <height>450</height>
+     <x>153</x>
+     <y>1179</y>
+     <width>470</width>
+     <height>45</height>
     </rect>
    </property>
    <property name="font">
@@ -639,30 +424,55 @@ text-align: center;</string>
   <widget class="QLabel" name="label_steps">
    <property name="geometry">
     <rect>
-     <x>120</x>
-     <y>540</y>
-     <width>980</width>
-     <height>501</height>
+     <x>240</x>
+     <y>768</y>
+     <width>600</width>
+     <height>168</height>
     </rect>
    </property>
    <property name="text">
     <string>steps</string>
    </property>
   </widget>
+  <widget class="QLabel" name="label_web_url">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>698</y>
+     <width>720</width>
+     <height>65</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_invoice_title">
+   <property name="geometry">
+    <rect>
+     <x>51</x>
+     <y>941</y>
+     <width>163</width>
+     <height>47</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
   <zorder>pushButton_continue</zorder>
   <zorder>label_help</zorder>
   <zorder>label_invoice_box</zorder>
-  <zorder>label_invoice_price</zorder>
   <zorder>lineEdit_promo_code</zorder>
-  <zorder>pushButton_previous_page</zorder>
-  <zorder>label_invoice_price_total</zorder>
   <zorder>label_invoice_name</zorder>
-  <zorder>label_selected_price</zorder>
-  <zorder>label_invoice_discount_name</zorder>
-  <zorder>label_discount_tag</zorder>
   <zorder>pushButton_select_product_page</zorder>
   <zorder>pushButton_promo_input</zorder>
-  <zorder>label_total</zorder>
   <zorder>label_gif</zorder>
   <zorder>pushButton_to_help</zorder>
   <zorder>label_page_title</zorder>
@@ -670,14 +480,12 @@ text-align: center;</string>
   <zorder>label_invoice_coupon_title</zorder>
   <zorder>label_coupon_icon</zorder>
   <zorder>label_invoice_additives_overview</zorder>
-  <zorder>line_invoice</zorder>
   <zorder>label_qrCode</zorder>
   <zorder>label_selected_volume</zorder>
   <zorder>label_steps</zorder>
+  <zorder>label_web_url</zorder>
+  <zorder>label_invoice_title</zorder>
  </widget>
  <resources/>
  <connections/>
- <buttongroups>
-  <buttongroup name="buttonGroup"/>
- </buttongroups>
 </ui>

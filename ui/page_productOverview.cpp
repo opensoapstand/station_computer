@@ -126,7 +126,8 @@ void page_product_overview::showEvent(QShowEvent *event)
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
     // p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(ui->promoKeyboard);
-
+    QString coupon_icon_path = p_page_idle->thisMachine->getTemplatePathFromName(COUPON_ICON_UNAVAILABLE_PATH);
+    p_page_idle->thisMachine->addPictureToLabel(ui->label_coupon_icon, coupon_icon_path);
     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_PRODUCT_OVERVIEW_CSS);
     ui->label_page_title->setStyleSheet(styleSheet);
     ui->label_checkout_title->setStyleSheet(styleSheet);

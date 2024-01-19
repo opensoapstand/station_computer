@@ -83,7 +83,6 @@ signals:
 
 private slots:
     // **** Navigation ****
-    void on_pushButton_previous_page_clicked();
     void on_pushButton_continue();
 
     void on_lineEdit_promo_codeInput_clicked();

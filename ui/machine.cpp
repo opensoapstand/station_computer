@@ -88,12 +88,15 @@ void machine::loadDynamicContent()
     loadElementDynamicPropertiesFromDefaultTemplate();         // dynamic elements (position, visibility)
 }
 
-void machine::loadBottle(){
-    if(m_buy_bottle_1){
+void machine::loadBottle()
+{
+    if (m_buy_bottle_1)
+    {
         m_pnumberproducts[m_buy_bottle_1].loadProductProperties();
         m_pnumberproducts[m_buy_bottle_1].setSizeUnit(getSizeUnit());
     }
-    if(m_buy_bottle_2){
+    if (m_buy_bottle_2)
+    {
         m_pnumberproducts[m_buy_bottle_2].loadProductProperties();
         m_pnumberproducts[m_buy_bottle_2].setSizeUnit(getSizeUnit());
     }
@@ -138,7 +141,7 @@ QVector<int> machine::getAllUsedPNumbersFromSlots()
         {
             // qDebug() << "flbijb" << slotpnumbers[i];
             uniquePNumbers.insert(slotpnumbers[i]);
-        }   
+        }
     }
 
     // Convert the QSet to a QVector
@@ -199,7 +202,7 @@ void machine::initProductOptions()
         }
     }
 
-    // display all options: 
+    // display all options:
     for (int i = 0; i < dispenseProductsMenuOptions.size(); ++i)
     {
         int product = dispenseProductsMenuOptions[i];
@@ -277,8 +280,6 @@ bool machine::getIsOptionAvailable(int productOption)
     // available as in: is it enabled, not empty, no technical problem,... (assumes the option exists and is linked to a valid pnumber)
 
     // products will need an "isEnabled" and "statustext" column too.
-    
-
 
     // check if slot for option is valid
     // check if all pnumbers for options are valid
@@ -330,12 +331,12 @@ int machine::getSlotFromBasePNumber(int base_pnumber)
     return slot_with_base_pnumber;
 }
 
-dispenser_slot *machine::getSlotFromOption(int productOption){
+dispenser_slot *machine::getSlotFromOption(int productOption)
+{
     qDebug() << "Product option" << productOption;
-    int slot = static_cast<int>(std::round(productOption/DISPENSE_PRODUCTS_PER_BASE_LINE_MAX));   
+    int slot = static_cast<int>(std::round(productOption / DISPENSE_PRODUCTS_PER_BASE_LINE_MAX));
     return &m_slots[slot];
 }
-
 
 pnumberproduct *machine::getSelectedBottle()
 {
@@ -348,22 +349,31 @@ void machine::setSelectedBottle(int pnumber)
     m_selectedBottle = &m_pnumberproducts[pnumber];
 }
 
-void machine::resetSelectedBottle(){
+void machine::resetSelectedBottle()
+{
     m_selectedBottle = NULL;
 }
 
-bool machine::hasSelectedBottle(){
-    if(getSelectedBottle()){
+bool machine::hasSelectedBottle()
+{
+    if (getSelectedBottle())
+    {
         return true;
-    }else{
+    }
+    else
+    {
         return false;
     }
 }
 
-bool machine::hasBuyBottleOption(){
-    if(m_buy_bottle_1 || m_buy_bottle_2){
+bool machine::hasBuyBottleOption()
+{
+    if (m_buy_bottle_1 || m_buy_bottle_2)
+    {
         return true;
-    }else{
+    }
+    else
+    {
         return false;
     }
 }
@@ -379,13 +389,18 @@ void machine::setSelectedProduct(int pnumber)
     m_selectedProduct = &m_pnumberproducts[pnumber];
 }
 
-bool machine::isSlotExisiting(int slot_index){
-    if(m_hardware_version == "SS2"){
+bool machine::isSlotExisiting(int slot_index)
+{
+    if (m_hardware_version == "SS2")
+    {
         qDebug() << "############# getSlotCount" << getSlotCount();
-        if(slot_index < getSlotCount()){
+        if (slot_index < getSlotCount())
+        {
             qDebug() << slot_index;
             return true;
-        }else{
+        }
+        else
+        {
             qDebug() << slot_index;
             return false;
         }
@@ -476,6 +491,11 @@ QString machine::getHardwareMajorVersion()
     return m_hardware_version.left(3); //
 }
 
+bool machine::isSlotAvailable(int slot)
+{
+    return slot <= getSlotCount();
+}
+
 int machine::getSlotCount()
 {
     // check hardwarenumber
@@ -510,6 +530,7 @@ int machine::getSlotCount()
         else if (m_hardware_version.startsWith("SS2"))
         {
             slot_count = 3;
+            qDebug() << " ss2  slot count 3";
         }
         else
         {
@@ -537,7 +558,7 @@ bool machine::isSlotCountBiggerThanMaxSlotCount(int slot_count)
 void machine::dispenseButtonLightsAnimateState(bool animateElseOff)
 {
     // if there are no button animation programs available, do nothing...
-    int m_button_animation_program = m_dispense_buttons_count / 1000; 
+    int m_button_animation_program = m_dispense_buttons_count / 1000;
     if (m_button_animation_program > 0)
     {
         if (animateElseOff)
@@ -1653,10 +1674,14 @@ QStringList machine::getChildNames(QObject *parent)
     return childNames;
 }
 
-bool machine::hasMixing(){
-    if(m_hardware_version == "AP2" || m_hardware_version == "AP3"){
+bool machine::hasMixing()
+{
+    if (m_hardware_version == "AP2" || m_hardware_version == "AP3")
+    {
         return true;
-    }else{
+    }
+    else
+    {
         return false;
     }
 }

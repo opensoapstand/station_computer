@@ -207,6 +207,7 @@ page_maintenance->label_qr_manual_description,Scan for user manual
 
 
 #################### page_maintenance_dispenser
+page_maintenance_dispenser->slot_shortcut,slot %1
 page_maintenance_dispenser->pushButton_to_previous_page,<- back
 page_maintenance_dispenser->label_calibration_instructions,Flowsensor calibration instructions:<br>1.Enable the pump<br>2.Take a measuring cup and dispense until the 1liter mark<br>3.Check the calibration value<br>4.Update the calibration value if different
 page_maintenance_dispenser->pushButton_set_restock_volume,Define restock volume

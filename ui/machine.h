@@ -122,6 +122,7 @@ public:
     int getSlotCount();
     void setSlots(dispenser_slot *slotss);
     bool isSlotCountBiggerThanMaxSlotCount(int slot_count);
+    bool isSlotAvailable(int slot);
 
     void setSelectedSlot(int slot);
     void setSelectedSlotFromSelectedProduct();

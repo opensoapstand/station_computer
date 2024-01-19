@@ -194,10 +194,10 @@ page_maintenance->status_text->default,No status
 page_maintenance->label_title_maintenance_mode,Maintenance mode
 page_maintenance->pushButton_to_previous_page,<- back
 page_maintenance->pushButton_general_settings,general settings->
-page_maintenance->label_product_1_position,P1
-page_maintenance->label_product_2_position,P2
-page_maintenance->label_product_3_position,P3
-page_maintenance->label_product_4_position,P4
+page_maintenance->label_product_1_position,Dispenser 1
+page_maintenance->label_product_2_position,Dispenser 2
+page_maintenance->label_product_3_position,Dispenser 3
+page_maintenance->label_product_4_position,Dispenser 4
 page_maintenance->label_role->user,Logged in as User. Use the machine as a customer.
 page_maintenance->label_role->maintainer,Logged in as Maintainer: <br/>Swap out products and perform <br/> basic maintenance and tests.
 page_maintenance->label_role->admin,Logged in as Administrator: Full rights.

@@ -2499,7 +2499,7 @@ outline: none;
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_continue"/>
   <buttongroup name="buttonGroup"/>
+  <buttongroup name="buttonGroup_continue"/>
  </buttongroups>
 </ui>

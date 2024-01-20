@@ -99,6 +99,7 @@ using namespace std;
 #define PAGE_FEEDBACK_CSS                               "page_sendFeedback.css"
 #define STATUSBAR_CSS                                   "statusbar.css"
 #define KEYBOARD_CSS                                   "keyboard.css"
+#define INPUT_WIDGET_CSS                                "input_widget.css"
 #define PAGE_IDLE_CSS                                   "page_idle.css"
 #define PAGE_BUY_BOTTLE_CSS                             "page_buyBottle.css"
 #define PAGE_PRODUCT_MENU_CSS                           "page_product_menu.css"

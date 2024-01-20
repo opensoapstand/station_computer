@@ -80,7 +80,7 @@ public:
                                  QString *status_text,
                                  bool *isSizeEnabled, double *prices, double *volumes, QString *PLUs, QString *PIDs);
 
-    void getAllMachineProperties(QString *machine_id,
+    bool getAllMachineProperties(QString *machine_id,
                                  QString *soapstand_customer_id,
                                  QString *ttttemplate,
                                  QString *location,

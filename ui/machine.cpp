@@ -389,24 +389,6 @@ void machine::setSelectedProduct(int pnumber)
     m_selectedProduct = &m_pnumberproducts[pnumber];
 }
 
-bool machine::isSlotExisiting(int slot_index)
-{
-    if (m_hardware_version == "SS2")
-    {
-        qDebug() << "############# getSlotCount" << getSlotCount();
-        if (slot_index < getSlotCount())
-        {
-            qDebug() << slot_index;
-            return true;
-        }
-        else
-        {
-            qDebug() << slot_index;
-            return false;
-        }
-    }
-}
-
 dispenser_slot *machine::getSlotByPosition(int slotPosition)
 {
     // DO YOU NEED TO USE THIS?
@@ -491,7 +473,7 @@ QString machine::getHardwareMajorVersion()
     return m_hardware_version.left(3); //
 }
 
-bool machine::isSlotAvailable(int slot)
+bool machine::isSlotExisting(int slot)
 {
     return slot <= getSlotCount();
 }
@@ -540,9 +522,8 @@ int machine::getSlotCount()
     }
     if (isSlotCountBiggerThanMaxSlotCount(slot_count))
     {
-        qDebug() << "ERROR - Slot Count:" << slot_count << " exceeded MAX_SLOT_COUNT:" << MAX_SLOT_COUNT << "threshold";
+        slot_count = MAX_SLOT_COUNT;
     }
-    //  qDebug() << "AMOUNT OFF SLOTTST. " << slot_count;
 
     return slot_count;
     // dispensers is the same as slots.
@@ -552,7 +533,12 @@ int machine::getSlotCount()
 
 bool machine::isSlotCountBiggerThanMaxSlotCount(int slot_count)
 {
-    return (slot_count > MAX_SLOT_COUNT);
+    bool exceeded = slot_count > MAX_SLOT_COUNT;
+    if (exceeded)
+    {
+        qDebug() << "ERROR - Slot Count:" << slot_count << " exceeded MAX_SLOT_COUNT:" << MAX_SLOT_COUNT << "threshold";
+    }
+    return exceeded;
 }
 
 void machine::dispenseButtonLightsAnimateState(bool animateElseOff)
@@ -1107,11 +1093,16 @@ QString machine::getTransactionLogging()
     return transactionLogging;
 }
 
+bool machine::isDBLoaded()
+{
+    return m_database_loaded_successfully;
+}
+
 void machine::loadMachineParameterFromDb()
 {
     qDebug() << "DB call: Load all machine parameters";
 
-    m_db->getAllMachineProperties(
+    m_database_loaded_successfully = m_db->getAllMachineProperties(
         &m_machine_id,
         &m_client_id,
         &m_template,
@@ -1152,7 +1143,7 @@ void machine::loadMachineParameterFromDb()
         &m_buy_bottle_2);
 
     qDebug() << "Machine ID as loaded from db: " << getMachineId();
-    qDebug() << "Template folder from db : " << getTemplateFolder();
+    qDebug() << "Template folder: " << getTemplateFolder();
 }
 
 QString machine::getIdlePageType()

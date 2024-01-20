@@ -67,6 +67,8 @@ public:
 
     QString getSizeUnit();
 
+    bool isDBLoaded();
+
     void dispenseButtonLightsAnimateState(bool animateElseOff);
     bool slotNumberValidityCheck(int slot);
 
@@ -110,8 +112,6 @@ public:
     bool getPumpRampingEnabled();
     QString getHelpPageHtmlText();
 
-    bool isSlotExisiting(int slot_index);
-
     bool getIsMachineEnabled();
     void setIsMachineEnabled(bool isEnabled);
     void setIsMachineEnabled(bool isEnabled, QString statusText);
@@ -122,7 +122,7 @@ public:
     int getSlotCount();
     void setSlots(dispenser_slot *slotss);
     bool isSlotCountBiggerThanMaxSlotCount(int slot_count);
-    bool isSlotAvailable(int slot);
+    bool isSlotExisting(int slot);
 
     void setSelectedSlot(int slot);
     void setSelectedSlotFromSelectedProduct();
@@ -264,6 +264,7 @@ public:
 
     int m_is_enabled;
     QString m_status_text;
+    bool m_database_loaded_successfully = false;
 
     QString m_min_threshold_vol_ml_discount;
     QString m_max_threshold_vol_ml_discount;

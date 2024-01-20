@@ -26,7 +26,7 @@ public:
     void receiveTemperatureFromFsm(double temperature_1, double temperature_2);
     // void receiveTemperatureFromFsm(double temperature_1);
     // void receiveTemperature2FromFsm(double temperature2);
-    void initReadySlot();
+    void controllerReadySlot();
     // void MMSlot();
     void messageHandlerFinishedSlot();
 

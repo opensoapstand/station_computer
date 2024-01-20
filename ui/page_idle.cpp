@@ -481,8 +481,9 @@ void page_idle::onRebootNightlyTimeOutTimerTick()
                 thisMachine->setRebootState(wait_for_trigger);
                 _delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
                 stateScreenCheck = state_screen_check_not_initiated;
-                QString paymentMethod = thisMachine->getPaymentMethod(); 
-                if(paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA){
+                QString paymentMethod = thisMachine->getPaymentMethod();
+                if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA)
+                {
                     rebootTapDevice();
                 }
                 QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -r 0";
@@ -630,10 +631,22 @@ void page_idle::on_pushButton_to_select_product_page_clicked()
 
 void page_idle::hideCurrentPageAndShowProductMenu()
 {
-    if(thisMachine->hasBuyBottleOption()){
+    if (thisMachine->hasBuyBottleOption())
+    {
+        qDebug() << "hhashsh botttlele";
         this->hideCurrentPageAndShowProvided(p_page_buyBottle, true);
-    }else{
-        thisMachine->hasMixing() ? this->hideCurrentPageAndShowProvided(p_page_product_menu, true) : this->hideCurrentPageAndShowProvided(p_pageSelectProduct, true);
+    }
+    else
+    {
+        if (thisMachine->hasMixing())
+        {
+            this->hideCurrentPageAndShowProvided(p_page_product_menu, true);
+        }
+        else
+        {
+
+            this->hideCurrentPageAndShowProvided(p_pageSelectProduct, true);
+        }
     }
 }
 
@@ -677,18 +690,20 @@ void page_idle::on_pushButton_reboot_nightly_clicked()
     thisMachine->setRebootState(user_cancelled_reboot);
 }
 
-void page_idle::pingTapDevice(){
-    QString paymentMethod = thisMachine->getPaymentMethod(); 
-    if(paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA){
+void page_idle::pingTapDevice()
+{
+    QString paymentMethod = thisMachine->getPaymentMethod();
+    if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA)
+    {
         qDebug() << "Pinging Tap Serial Device";
         page_payment_tap_serial paymentSerialObject;
         paymentSerialObject.getLanInfo();
     }
 }
 
-void page_idle::rebootTapDevice(){
-        qDebug() << "Rebooting Tap Device";
-        page_payment_tap_serial paymentSerialObject;
-        paymentSerialObject.resetDevice();
-    
+void page_idle::rebootTapDevice()
+{
+    qDebug() << "Rebooting Tap Device";
+    page_payment_tap_serial paymentSerialObject;
+    paymentSerialObject.resetDevice();
 }

@@ -81,7 +81,6 @@ void page_maintenance::showEvent(QShowEvent *event)
     ui->label_qr_user_manual->setStyleSheet(styleSheet);
     ui->label_qr_manual_description->setProperty("class", "label_qr");
     ui->label_qr_manual_description->setStyleSheet(styleSheet);
-    qDebug() << "Setting QR label picture and style*/*/*/*///////////////////////******************////////////********";
     ui->label_machine_id->setProperty("class", "label_machine_ui");
     ui->label_machine_id->setStyleSheet(styleSheet);
 
@@ -105,13 +104,14 @@ void page_maintenance::showEvent(QShowEvent *event)
     ui->label_ui_version->setText(title);
 
     uint8_t slot_count;
-    if(p_page_idle->thisMachine->hasMixing()){
-        slot_count = p_page_idle->thisMachine->getSlotCount();
-    }else{
-        slot_count = REQUIRED_SLOT_COUNT;
-    }
+    
+    // slot_count = p_page_idle->thisMachine->getSlotCount();
 
-    for (uint8_t slot_index = 0; slot_index < slot_count; slot_index++)
+    // if (slot_count > MAINTENANCE_PAGE_SLOT_COUNT_MAX){
+    //         slot_count = MAINTENANCE_PAGE_SLOT_COUNT_MAX;
+    // }
+
+    for (uint8_t slot_index = 0; slot_index < MAINTENANCE_PAGE_SLOT_COUNT_MAX; slot_index++)
     {
 
         p_page_idle->thisMachine->setTemplateTextToObject(labels_product_position[slot_index]);
@@ -176,7 +176,7 @@ void page_maintenance::showEvent(QShowEvent *event)
         }
         labels_product_status[slot_index]->setText(status_display_text);
 
-        if(!p_page_idle->thisMachine->isSlotExisiting(slot_index)){
+        if(!p_page_idle->thisMachine->isSlotExisting(slot_index)){
             labels_product_name[slot_index]->hide();
             labels_product_status[slot_index]->hide();
             pushButtons_products[slot_index]->hide();

@@ -492,7 +492,7 @@ void DbManager::getAllProductProperties(int pnumber,
     df_util::csvQStringToQVectorDouble(mix_ratios_str, mixRatios);
 }
 
-void DbManager::getAllMachineProperties(
+bool DbManager::getAllMachineProperties(
     QString *machine_id,
     QString *soapstand_customer_id,
     QString *ttttemplate,
@@ -533,6 +533,7 @@ void DbManager::getAllMachineProperties(
     int *buy_bottle_1,
     int *buy_bottle_2)
 {
+    bool success;
     qDebug() << " db... all machine properties from: " << CONFIG_DB_PATH;
     {
         QSqlDatabase db = openDb(CONFIG_DB_PATH);
@@ -579,13 +580,13 @@ void DbManager::getAllMachineProperties(
             " FROM machine"
 
         );
-        bool success;
+        
         success = qry.exec();
         if (!success)
         {
             qDebug() << "Did not execute sql. "
                      << qry.lastError() << " | " << qry.lastQuery();
-            // success = false;
+            
         }
 
         while (qry.next())
@@ -629,6 +630,7 @@ void DbManager::getAllMachineProperties(
         qry.finish();
     }
     closeDb();
+    return success;
 }
 
 uint32_t DbManager::getNumberOfRows(QString table)

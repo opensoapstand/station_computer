@@ -194,10 +194,10 @@ page_maintenance->status_text->default,No status
 page_maintenance->label_title_maintenance_mode,Maintenance mode
 page_maintenance->pushButton_to_previous_page,<- back
 page_maintenance->pushButton_general_settings,general settings->
-page_maintenance->label_product_1_position,P1
-page_maintenance->label_product_2_position,P2
-page_maintenance->label_product_3_position,P3
-page_maintenance->label_product_4_position,P4
+page_maintenance->label_product_1_position,Dispenser 1
+page_maintenance->label_product_2_position,Dispenser 2
+page_maintenance->label_product_3_position,Dispenser 3
+page_maintenance->label_product_4_position,Dispenser 4
 page_maintenance->label_role->user,Logged in as User. Use the machine as a customer.
 page_maintenance->label_role->maintainer,Logged in as Maintainer: <br/>Swap out products and perform <br/> basic maintenance and tests.
 page_maintenance->label_role->admin,Logged in as Administrator: Full rights.
@@ -207,6 +207,7 @@ page_maintenance->label_qr_manual_description,Scan for user manual
 
 
 #################### page_maintenance_dispenser
+page_maintenance_dispenser->slot_shortcut,slot %1
 page_maintenance_dispenser->pushButton_to_previous_page,<- back
 page_maintenance_dispenser->label_calibration_instructions,Flowsensor calibration instructions:<br>1.Enable the pump<br>2.Take a measuring cup and dispense until the 1liter mark<br>3.Check the calibration value<br>4.Update the calibration value if different
 page_maintenance_dispenser->pushButton_set_restock_volume,Define restock volume

@@ -123,9 +123,9 @@ DF_ERROR stateDispense::onAction()
 
    if (m_pMessaging->getAction() == ACTION_RESET)
    {
-      m_pMessaging->sendMessageOverIP("Init Ready received. Will reset.", true); // send to UI
       m_state_requested = STATE_IDLE;
       stopPumping();
+      m_pMessaging->sendMessageOverIP("Init Ready", true); // send to UI
       return e_ret = OK;
    }
 

@@ -88,6 +88,12 @@ void machine::loadDynamicContent()
     loadElementDynamicPropertiesFromDefaultTemplate();         // dynamic elements (position, visibility)
 }
 
+void machine::reboot(){
+    qDebug() << "Will reboot machine now.";
+    QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -r 0";
+    system(qPrintable(command));
+}
+
 void machine::loadBottle()
 {
     if (m_buy_bottle_1)

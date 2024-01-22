@@ -61,6 +61,32 @@
     <string/>
    </property>
   </widget>
+  <widget class="QPushButton" name="pushButton_continue">
+   <property name="geometry">
+    <rect>
+     <x>390</x>
+     <y>1410</y>
+     <width>131</width>
+     <height>121</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Continue anyways</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_reboot">
+   <property name="geometry">
+    <rect>
+     <x>540</x>
+     <y>1410</y>
+     <width>131</width>
+     <height>121</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Reboot</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

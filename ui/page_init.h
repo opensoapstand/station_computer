@@ -58,6 +58,10 @@ private slots:
     void onInitTimeoutTick();
     void onRebootTimeoutTick();
 
+    void on_pushButton_continue_clicked();
+
+    void on_pushButton_reboot_clicked();
+
 private:
     Ui::page_init *ui;
     page_idle *p_page_idle;
@@ -65,11 +69,10 @@ private:
     int _initIdleTimeoutSec;
     QTimer *rebootTimer;
     int _rebootTimeoutSec;
-    bool start_controller;
     ActivePaymentMethod activePaymentMethod;
 
-    bool m_controller_ready;
-    bool m_tap_payment_ready;
+    bool m_controller_ready=false;
+    bool m_tap_payment_ready=false;
     
 };
 

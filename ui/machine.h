@@ -99,6 +99,8 @@ public:
     void resetSessionId();
     QString getSessionId();
 
+    void reboot();
+
     QString getClientId();
 
     QString getTemplateFolder();

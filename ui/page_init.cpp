@@ -121,6 +121,8 @@ void page_init::showEvent(QShowEvent *event)
         break;
     }
     }
+    ui->pushButton_continue->hide();
+    ui->pushButton_reboot->hide();
 }
 
 void page_init::hideCurrentPageAndShowProvided(QWidget *pageToShow)
@@ -164,6 +166,7 @@ void page_init::onInitTimeoutTick()
             {
                 ready = false;
                 qDebug() << "init: Waiting for tap payment ready";
+                label_text += "Tap payment not yet initialized. <br>";
             }
             else
             {
@@ -199,7 +202,9 @@ void page_init::onInitTimeoutTick()
     else
     {
         initIdleTimer->stop();
-        qDebug() << "init: No signal received from controller. Timed out while waiting. UI Program needs to be restarted.";
+        qDebug() << "init: Timed out while waiting to be ready. Restart application manually, or wait for auto reboot.";
+        ui->pushButton_continue->show();
+        ui->pushButton_reboot->show();
     }
 }
 
@@ -215,7 +220,7 @@ void page_init::onRebootTimeoutTick()
         rebootTimer->stop();
 
         // REBOOT!
-        system("./release/reboot.sh");
+        p_page_idle->thisMachine->reboot();
     }
 }
 
@@ -244,4 +249,13 @@ void page_init::initiateTapPayment()
     }
 
     m_tap_payment_ready = true;
+}
+void page_init::on_pushButton_continue_clicked()
+{
+    hideCurrentPageAndShowProvided(p_page_idle);
+}
+
+void page_init::on_pushButton_reboot_clicked()
+{
+    p_page_idle->thisMachine->reboot();
 }

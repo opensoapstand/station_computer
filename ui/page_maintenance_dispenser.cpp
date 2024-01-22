@@ -1151,6 +1151,7 @@ void page_maintenance_dispenser::sendRestockToCloud()
 
     curl_param_array = curl_param.toLocal8Bit();
     curl_data = curl_param_array.data();
+    QString portal_base_url = this->p_page_idle->thisMachine->getPortalBaseUrl();
 
     curl = curl_easy_init();
     if (!curl)
@@ -1160,7 +1161,7 @@ void page_maintenance_dispenser::sendRestockToCloud()
         return;
     }
 
-    curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/resetStock");
+    curl_easy_setopt(curl, CURLOPT_URL, (portal_base_url+"api/machine_data/resetStock").toUtf8().constData());
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback3);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
@@ -1222,9 +1223,9 @@ void page_maintenance_dispenser::update_changes_to_portal()
         qDebug() << "cURL failed to page_init at thank you end";
         return;
     }
-    qDebug() << "Before pushing";
+    QString portal_base_url = this->p_page_idle->thisMachine->getPortalBaseUrl();
 
-    curl_easy_setopt(curl2, CURLOPT_URL, "https://soapstandportal.com/api/product/update_product_from_station");
+    curl_easy_setopt(curl2, CURLOPT_URL, (portal_base_url+"api/product/update_product_from_station").toUtf8().constData());
     curl_easy_setopt(curl2, CURLOPT_POSTFIELDS, curl_param_array2.data());
     curl_easy_setopt(curl2, CURLOPT_WRITEFUNCTION, WriteCallback4);
     curl_easy_setopt(curl2, CURLOPT_WRITEDATA, &readBuffer);

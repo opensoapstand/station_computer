@@ -207,6 +207,7 @@ void page_end::sendDispenseEndToCloud()
     QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl(), units, false, false);
     QString volume_remaining = p_page_idle->thisMachine->getSelectedProduct()->getVolumeRemainingCorrectUnits(false);
     QString soapstand_product_serial = p_page_idle->thisMachine->getSelectedProduct()->getPNumberAsPString();
+    QString portal_base_url = this->p_page_idle->thisMachine->getPortalBaseUrl();
     QString promoCode = this->p_page_idle->thisMachine->getCouponCode();
     qDebug() << "Send data at finish of order : " << order_id << ". Total dispensed: " << dispensed_correct_units << "corrected units send to soapstandportal: " << dispensed_correct_units;
     if (dispensed_correct_units == 0)
@@ -230,7 +231,7 @@ void page_end::sendDispenseEndToCloud()
         return;
     }
 
-    curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/updateOrder");
+    curl_easy_setopt(curl, CURLOPT_URL, (portal_base_url+"api/machine_data/updateOrder").toUtf8().constData());
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback2);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);

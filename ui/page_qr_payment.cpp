@@ -175,12 +175,12 @@ void page_qr_payment::setupQrOrder()
             map.fill(QColor("black"));
         }
         QPainter painter(&map);
-
+        QString portal_base_url = p_page_idle->thisMachine->getPortalBaseUrl();
         // build up qr content (link)
-        QString qrdata = "https://soapstandportal.com/payment?oid=" + orderId;
+        QString qrdata = portal_base_url + "payment?oid=" + orderId;
         if ((p_page_idle->thisMachine->getMachineId()).left(2) == "AP")
         {
-            qrdata = "https://soapstandportal.com/paymentAelen?oid=" + orderId;
+            qrdata = portal_base_url+"paymentAelen?oid=" + orderId;
         }
         // create qr code graphics
         p_page_idle->thisMachine->hasMixing() ? paintQR(painter, QSize(451, 451), qrdata, QColor("white")) : paintQR(painter, QSize(360, 360), qrdata, QColor("white"));
@@ -227,6 +227,7 @@ bool page_qr_payment::createOrderIdAndSendToBackend()
     QString quantity_requested = p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(false, false);
     char drinkSize = p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar();
     double originalPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
+    QString portal_base_url = p_page_idle->thisMachine->getPortalBaseUrl();
     // if (drinkSize == 'c')
     // {
     //     originalPrice = p_page_idle->thisMachine->getSelectedProduct()->getPriceCustom();
@@ -248,11 +249,11 @@ bool page_qr_payment::createOrderIdAndSendToBackend()
 
     if (!curl1)
     {
-        qDebug() << "pagepayement cURL Failed to init : " + curl_order_parameters_string + "to: " + "https://soapstandportal.com/api/machine_data/createOrderInDb";
+        qDebug() << "pagepayement cURL Failed to init : " + curl_order_parameters_string + "to: " +portal_base_url +  "api/machine_data/createOrderInDb";
         return shouldShowQR;
     }
 
-    curl_easy_setopt(curl1, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/createOrderInDb");
+    curl_easy_setopt(curl1, CURLOPT_URL, (portal_base_url+"api/machine_data/createOrderInDb").toUtf8().constData());
     curl_easy_setopt(curl1, CURLOPT_POSTFIELDS, curl_order_parameters.data());
     curl_easy_setopt(curl1, CURLOPT_WRITEFUNCTION, WriteCallback);
     curl_easy_setopt(curl1, CURLOPT_WRITEDATA, &readBuffer);

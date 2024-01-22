@@ -394,6 +394,7 @@ size_t WriteCallback_coupon2(char *contents, size_t size, size_t nmemb, void *us
 void page_product_freeSample::apply_promo_code(QString promocode)
 {
     QString image_path = p_page_idle->thisMachine->getTemplatePathFromName("soapstandspinner.gif");
+    
     QMovie *movie = new QMovie(image_path);
     ui->label_gif->setMovie(movie);
     movie->start();
@@ -402,6 +403,8 @@ void page_product_freeSample::apply_promo_code(QString promocode)
     long http_code = 0;
     QString machine_id = p_page_idle->thisMachine->getMachineId();
     QString product_serial = p_page_idle->thisMachine->getSelectedProduct()->getPNumberAsPString();
+    QString portal_base_url = this->p_page_idle->thisMachine->getPortalBaseUrl();
+
     // csuccess
     p_page_idle->thisMachine->setCouponState(enabled_invalid_input);
 
@@ -417,7 +420,7 @@ void page_product_freeSample::apply_promo_code(QString promocode)
                 p_page_idle->thisMachine->setCouponState(network_error);
                 return;
             }
-            curl_easy_setopt(curl, CURLOPT_URL, ("https://soapstandportal.com/api/coupon/find/" + promocode + "/" + machine_id + "/" + product_serial).toUtf8().constData());
+            curl_easy_setopt(curl, CURLOPT_URL, (portal_base_url+"api/coupon/find/" + promocode + "/" + machine_id + "/" + product_serial).toUtf8().constData());
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback_coupon2);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
             res = curl_easy_perform(curl);

@@ -629,6 +629,7 @@ void page_product_overview::apply_promo_code(QString promocode)
     long http_code = 0;
     QString machine_id = p_page_idle->thisMachine->getMachineId();
     QString product_serial = p_page_idle->thisMachine->getSelectedProduct()->getPNumberAsPString();
+    QString portal_base_url = p_page_idle->thisMachine->getPortalBaseUrl();
     // csuccess
     p_page_idle->thisMachine->setCouponState(enabled_invalid_input);
 
@@ -644,7 +645,7 @@ void page_product_overview::apply_promo_code(QString promocode)
                 p_page_idle->thisMachine->setCouponState(network_error);
                 return;
             }
-            curl_easy_setopt(curl, CURLOPT_URL, ("https://soapstandportal.com/api/coupon/find/" + promocode + "/" + machine_id + "/" + product_serial).toUtf8().constData());
+            curl_easy_setopt(curl, CURLOPT_URL, (portal_base_url+"api/coupon/find/" + promocode + "/" + machine_id + "/" + product_serial).toUtf8().constData());
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback_coupon1);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
             res = curl_easy_perform(curl);
@@ -778,6 +779,7 @@ void page_product_overview::on_pushButton_continue(int buttonID)
     ui->pushButton_previous_page->setEnabled(false);
     QAbstractButton *buttonpressed = ui->buttonGroup_continue->button(buttonID);
     int activePaymentMethod = buttonpressed->property("activePaymentMethod").toInt();
+    QString portal_base_url = p_page_idle->thisMachine->getPortalBaseUrl();
     // QString paymentMethod = p_page_idle->thisMachine->getPaymentMethod();
     // if(buttonName=="paymentMethodAdditional"){
     //     paymentMethod = PAYMENT_QR;
@@ -809,7 +811,7 @@ void page_product_overview::on_pushButton_continue(int buttonID)
             return;
         }
 
-        curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/ping");
+        curl_easy_setopt(curl, CURLOPT_URL, (portal_base_url+"api/machine_data/ping").toUtf8().constData());
         curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
 
         res = curl_easy_perform(curl);

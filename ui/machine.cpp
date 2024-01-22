@@ -1128,7 +1128,8 @@ void machine::loadMachineParameterFromDb()
         &m_screen_sleep_time24h,
         &m_screen_wakeup_time24h,
         &m_buy_bottle_1,
-        &m_buy_bottle_2);
+        &m_buy_bottle_2,
+        &m_portal_base_url);
 
     qDebug() << "Machine ID as loaded from db: " << getMachineId();
     qDebug() << "Template folder from db : " << getTemplateFolder();
@@ -1659,4 +1660,8 @@ bool machine::hasMixing(){
     }else{
         return false;
     }
+}
+
+QString machine::getPortalBaseUrl(){
+    return m_portal_base_url;
 }

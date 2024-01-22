@@ -237,6 +237,7 @@ void page_sendFeedback::on_pushButton_send_clicked()
 {
     qDebug() << "Send button pressed";
     QVBoxLayout *layout = new QVBoxLayout();
+    QString portal_base_url = p_page_idle->thisMachine->getPortalBaseUrl();
 
     // revert
     QStringList problemList;
@@ -279,7 +280,10 @@ void page_sendFeedback::on_pushButton_send_clicked()
         // send to backend
         QString MachineSerialNumber = p_page_idle->thisMachine->getMachineId();
         QString customFeedback = ui->textEdit_custom_message->toPlainText();
-        QString curl_param = "problems=" + problems + " ," + customFeedback + "&MachineSerialNumber=" + MachineSerialNumber;
+        if(customFeedback!=""){
+            problems = problems + " ," + customFeedback;
+        }
+        QString curl_param = "problems=" + problems + "&MachineSerialNumber=" + MachineSerialNumber;
         qDebug() << "Curl params" << curl_param;
         curl_param_array = curl_param.toLocal8Bit();
         qDebug() << curl_param_array;
@@ -291,7 +295,7 @@ void page_sendFeedback::on_pushButton_send_clicked()
             return;
         }
 
-        curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/alert/sendFeedbackEmail");
+        curl_easy_setopt(curl, CURLOPT_URL, (portal_base_url + "api/alert/sendFeedbackEmail").toUtf8().constData());
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallbackFeedback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);

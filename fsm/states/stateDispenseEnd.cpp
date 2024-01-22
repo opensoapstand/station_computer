@@ -308,6 +308,7 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
     std::string product = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->m_name;
     // std::string machine_id = getMachineID();
     std::string machine_id = g_machine.getMachineId();
+    std::string portal_base_url = g_machine.getPortalBaseUrl();
     // std::string pid = getProductID(m_slot);
     std::string pid = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->m_product_id_combined_with_location_for_backend;
     // std::string units = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getDisplayUnits();
@@ -345,9 +346,9 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
         return e_ret;
     }
 
-    debugOutput::sendMessage("cURL init success. Will send: https://soapstandportal.com/api/machine_data/pushPrinterOrder?" + curl_param, MSG_INFO);
+    debugOutput::sendMessage("cURL init success. Will send: " + portal_base_url+ "/api/machine_data/pushPrinterOrder?" + curl_param, MSG_INFO);
 
-    curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/pushPrinterOrder");
+    curl_easy_setopt(curl, CURLOPT_URL, portal_base_url + "api/machine_data/pushPrinterOrder");
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, buffer);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);

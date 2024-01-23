@@ -24,7 +24,7 @@
 #include "page_maintenance.h"
 #include "dbmanager.h"
 #include "page_sendFeedback.h"
-
+#include <QStackedWidget>
 class page_select_product;
 class page_qr_payment;
 class page_idle;
@@ -83,6 +83,11 @@ private:
     input_widget *p_input_widget;
 
     int _helpIdleTimeoutSec;
+
+            QPushButton *button2;
+        QPushButton *button3;
+        QPushButton *button4;
+        QPushButton *button5;
 
     QResizeEvent *helpResize;
     QString maintenance_pwd;

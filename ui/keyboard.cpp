@@ -99,8 +99,8 @@ void keyboard::keyboardButtonPressed(int buttonID)
         //     p_page_overview->reset_and_show_page_elements();
         //     p_page_overview->apply_promo_code(widgetForTextEdit->text());
         // }
-        is_keyboard_visible = false;
-        refresh();
+        // is_keyboard_visible = false;
+        // refresh();
     }
     else if (buttonText == "&&")
     {

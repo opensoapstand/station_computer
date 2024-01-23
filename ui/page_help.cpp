@@ -34,8 +34,13 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     connect(ui->buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(keyboardButtonPressed(int)));
 
     statusbarLayout = new QVBoxLayout(this);
+    keyboardLayout = new QVBoxLayout(this);//will not show, can only add one qvboxlayout per widget
     bottomLayout = new QVBoxLayout;
-    keyboardLayout = new QVBoxLayout;
+    button2 = new QPushButton();
+    button3 = new QPushButton();
+    button4 = new QPushButton();
+    button5 = new QPushButton();
+
 }
 
 // DTOR
@@ -116,24 +121,37 @@ void page_help::showEvent(QShowEvent *event)
     if(p_page_idle->thisMachine->hasMixing()){
         p_keyboard->initializeKeyboard(false, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
         p_input_widget->toggleInputWidget(false);
-        // weird behavior for page width keyboard widget won't center, this is the work around
-        p_keyboard->findChild<QWidget *>("keyboard_3")->setGeometry(10, 0, 1040, 495);
-        bottomLayout->addSpacing(500);
-        bottomLayout->addWidget(p_statusbar);  
+        statusbarLayout->removeWidget(p_keyboard);    
+        statusbarLayout->removeWidget(p_input_widget);  
 
-        // statusbarLayout->setSpacing(0);
-        statusbarLayout->setContentsMargins(10, 1288, 0, 0);
-        statusbarLayout->addWidget(p_input_widget);
-        keyboardLayout->addWidget(p_keyboard);
-        statusbarLayout->addLayout(keyboardLayout);
-
-        // keyboardLayout->setContentsMargins(10, 1288, 0, 0);
-        // statusbarLayout->addWidget(p_input_widget); 
-        // statusbarLayout->addWidget(p_keyboard);
-        this->setLayout(statusbarLayout);
-        statusbarLayout->update(); 
-        this->update();
         ui->keyboard_3->hide();
+
+        // when declaring custom widget, please remember to goto QT Creator and set the max size and min size for the parent cutsom widget 
+        // (otherwise will have extra white space when delcare custom widget)
+        // navigate to custom widget, right click on the parent widget, hover over Size Constraints, and select set Minimum Size and Maximum Size
+        p_input_widget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+        p_input_widget->setContentsMargins(0, 0, 0, 0);
+
+        p_keyboard->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+        p_keyboard->setContentsMargins(0, 0, 0, 0);
+        // p_keyboard->findChild<QWidget *>("keyboard_3")->setGeometry(21, -25, 1040, 495);
+
+        p_statusbar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+        p_statusbar->setContentsMargins(0, 0, 0, 0); 
+
+        statusbarLayout->setSpacing(0);
+        statusbarLayout->setContentsMargins(0, 0, 0, 0);
+        // statusbarLayout->addWidget(button2);
+        // statusbarLayout->addWidget(button3);
+        statusbarLayout->addWidget(p_input_widget);  
+        // statusbarLayout->addWidget(button4);
+        statusbarLayout->addWidget(p_keyboard);   
+
+        statusbarLayout->addWidget(p_statusbar);   
+        // statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
+
+        statusbarLayout->setAlignment(Qt::AlignBottom | Qt::AlignVCenter);
+
     }else{
         ui->keyboard_3->hide();
         ui->keyboardTextEntry->setText("");
@@ -146,7 +164,8 @@ void page_help::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     helpIdleTimer->stop();
     if(p_page_idle->thisMachine->hasMixing()){
-        statusbarLayout->removeItem(bottomLayout); // Only one instance can be shown. So, has to be added/removed per page.
+        // statusbarLayout->removeItem(bottomLayout); // Only one instance can be shown. So, has to be added/removed per page.
+        statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
 
     }else{
         ui->keyboard_3->hide();
@@ -219,10 +238,12 @@ void page_help::doneButtonPressed(){
         if (p_page_idle->thisMachine->isAllowedAsMaintainer())
         {
             hideCurrentPageAndShowProvided(p_page_maintenance);
+            p_keyboard->initializeKeyboard(false, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
         }
         else
         {
             p_input_widget->findChild<QLineEdit *>("lineEdit_input")->setText("");
+            p_keyboard->initializeKeyboard(true, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
         }
     }
 
@@ -362,3 +383,4 @@ void page_help::on_pushButton_to_feedback_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_feedback);
 }
+

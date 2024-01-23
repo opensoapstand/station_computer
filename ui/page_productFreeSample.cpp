@@ -189,6 +189,8 @@ void page_product_freeSample::enterButtonPressed(){
         p_page_idle->thisMachine->setCouponState(enabled_processing_input);
         reset_and_show_page_elements();
         apply_promo_code(ui->lineEdit_promo_code->text());
+        p_keyboard->initializeKeyboard(false, ui->lineEdit_promo_code);
+
     }
     else
     {

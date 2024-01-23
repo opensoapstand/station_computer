@@ -1525,7 +1525,7 @@ void pcb::pollFlowSensor(uint8_t slot)
         {
         case (pcb::DIGMESA):
         {
-            state = getMCP23017Input(slot, MCP23017_EN258_GPA7_PIN_OUT_FLOW_SENSOR_DIGMESA, MCP23017_REGISTER_GPA);
+            state = getMCP23017Input(slot, MCP23017_EN258_GPA7_PIN_IN_FLOW_SENSOR_DIGMESA, MCP23017_REGISTER_GPA);
         }
         break;
         case (pcb::AICHI):

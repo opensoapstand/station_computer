@@ -259,7 +259,7 @@ bool DbManager::addPageClick(const QString &page)
     return true;
 }
 
-void DbManager::getAllSlotProperties(int slot,
+bool DbManager::getAllSlotProperties(int slot,
                                      QVector<int> &dispensePNumbers,
                                      int &basePNumber,
                                      QVector<int> &additivesPNumbers,
@@ -284,7 +284,7 @@ void DbManager::getAllSlotProperties(int slot,
             qDebug() << "Open db: Attempted to load all slot properties for slot: " << slot;
             qDebug() << "Did not execute sql. "
                      << qry.lastError() << " | " << qry.lastQuery();
-            // success = false;
+            return false;
         }
 
         QString additivesAsString;
@@ -320,9 +320,10 @@ void DbManager::getAllSlotProperties(int slot,
         }
     }
     closeDb();
+    return true;
 }
 
-void DbManager::getAllProductProperties(int pnumber,
+bool DbManager::getAllProductProperties(int pnumber,
                                         QString *productId,
                                         QString *soapstand_product_serial,
                                         QVector<int> &mixPNumbers,
@@ -425,7 +426,7 @@ void DbManager::getAllProductProperties(int pnumber,
             qDebug() << "Open db: Attempted to load all product properties for pnumber: " << pnumber;
             qDebug() << "Did not execute sql. "
                      << qry.lastError() << " | " << qry.lastQuery();
-            return;
+            return false;
         }
 
         while (qry.next())
@@ -490,6 +491,7 @@ void DbManager::getAllProductProperties(int pnumber,
 
     df_util::csvQStringToQVectorInt(mix_pnumbers_str, mixPNumbers);
     df_util::csvQStringToQVectorDouble(mix_ratios_str, mixRatios);
+    return true;
 }
 
 bool DbManager::getAllMachineProperties(
@@ -584,9 +586,9 @@ bool DbManager::getAllMachineProperties(
         success = qry.exec();
         if (!success)
         {
+            qDebug() << "Open db: Attempted to load machine properties";
             qDebug() << "Did not execute sql. "
                      << qry.lastError() << " | " << qry.lastQuery();
-            
         }
 
         while (qry.next())

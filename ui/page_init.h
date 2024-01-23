@@ -71,6 +71,8 @@ private:
     int _rebootTimeoutSec;
     ActivePaymentMethod activePaymentMethod;
 
+    QString m_label_init_status_text;
+
     bool m_controller_ready=false;
     bool m_tap_payment_ready=false;
     

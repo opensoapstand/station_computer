@@ -1,1 +1,14 @@
 /* no css file for init */
+QPushButton { 
+
+    font-family: 'Brevia';
+    font-style: normal;
+    font-weight: 50;
+    font-size: 32px;
+    color: #003840;
+    background-color: #FFFFFF;
+    border: 0px;
+ 
+    border-radius: 20px;
+    border: none;
+}

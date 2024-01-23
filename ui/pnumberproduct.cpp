@@ -12,11 +12,13 @@ void pnumberproduct::setDb(DbManager *db)
     m_db = db;
 }
 
-void pnumberproduct::loadProductProperties()
+bool pnumberproduct::loadProductProperties()
 {
+    bool success = true;
     qDebug() << "Load properties from db and csv for pnumer: " << getPNumber();
-    loadProductPropertiesFromDb();
-    loadProductPropertiesFromProductsFile();
+    success &= loadProductPropertiesFromDb();
+    success &= loadProductPropertiesFromProductsFile();
+    return success;
 }
 
 QString pnumberproduct::convertPNumberToPNotation(int pnumber)
@@ -43,13 +45,13 @@ void pnumberproduct::getProductProperties(QString *name, QString *name_ui, QStri
     *ingredients_ui = m_ingredients_ui;
 }
 
-void pnumberproduct::loadProductPropertiesFromProductsFile()
+bool pnumberproduct::loadProductPropertiesFromProductsFile()
 {
     QFile file(PRODUCT_DETAILS_TSV_PATH);
     if (!file.open(QIODevice::ReadOnly))
     {
         qDebug() << "ERROR: Opening product details file. Expect unexpected behaviour now! ";
-        return;
+        return false;
     }
 
     QTextStream in(&file);
@@ -74,6 +76,7 @@ void pnumberproduct::loadProductPropertiesFromProductsFile()
         }
     }
     file.close();
+    return true;
 }
 
 void pnumberproduct::setPNumber(int pnumber)
@@ -147,10 +150,10 @@ QVector<double> pnumberproduct::getMixRatios()
     return m_mixRatios;
 }
 
-void pnumberproduct::loadProductPropertiesFromDb()
+bool pnumberproduct::loadProductPropertiesFromDb()
 {
     qDebug() << "Open db: db load pnumberproduct properties for pnumberproduct for pnumber: " << getPNumber();
-    m_db->getAllProductProperties(getPNumber(),
+    bool succes = m_db->getAllProductProperties(getPNumber(),
                                   &m_aws_product_id,
                                   &m_soapstand_product_serial,
                                   m_mixPNumbers,
@@ -183,11 +186,7 @@ void pnumberproduct::loadProductPropertiesFromDb()
     {
         qDebug() << "ERROR: Could not load from DB: " << getPNumber() << " was set as: " << pnumberFromDb;
     }
-
-    // else{
-    //     qDebug() << "Loaded from DB: " << getPNumber() <<" with db pnumber: " << pnumberFromDb;
-
-    // }
+    return succes;
 }
 
 bool pnumberproduct::getIsProductEnabled()

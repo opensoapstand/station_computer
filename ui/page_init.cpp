@@ -54,7 +54,16 @@ void page_init::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
-    if (!p_page_idle->thisMachine->isDBLoaded())
+    QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_INIT_CSS);
+    ui->pushButton_continue->setStyleSheet(styleSheet);
+    ui->pushButton_continue->hide();
+    ui->pushButton_reboot->setStyleSheet(styleSheet);
+    ui->pushButton_reboot->hide();
+
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_continue);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_reboot);
+
+    if (!p_page_idle->thisMachine->isMachineDBLoaded())
     {
         qDebug() << "Init: ERROR: Configuration Db not loaded. Probably wrong layout. Please repair and restart config.db";
     }
@@ -121,8 +130,6 @@ void page_init::showEvent(QShowEvent *event)
         break;
     }
     }
-    ui->pushButton_continue->hide();
-    ui->pushButton_reboot->hide();
 }
 
 void page_init::hideCurrentPageAndShowProvided(QWidget *pageToShow)
@@ -142,19 +149,44 @@ void page_init::onInitTimeoutTick()
 {
     if (--_initIdleTimeoutSec >= 0)
     {
-        QString label_text = "";
+        m_label_init_status_text = "";
 
         bool ready = true;
-        if (!p_page_idle->thisMachine->isDBLoaded())
+
+        if (!p_page_idle->thisMachine->isMachineDBLoaded())
         {
 
-            qDebug() << "init: Database not loaded. Probably corrupt or incorrect layout. Please fix.";
-            label_text += "Database corrupt. Please fix. <br>";
+            qDebug() << "init: Machine db table not loaded. Probably corrupt or incorrect database layout. Please fix.";
+            ready = false;
+            m_label_init_status_text += "Load machine parameters. ERROR<br>";
+        }
+        else
+        {
+            m_label_init_status_text += "Load machine parameters. OK<br>";
+        }
+
+        if (!p_page_idle->thisMachine->isSlotsLoaded())
+        {
+
+            qDebug() << "init: Slots not loaded. Probably corrupt or incorrect database layout. Please fix.";
+            m_label_init_status_text += "Load slot parameters. ERROR<br>";
             ready = false;
         }
         else
         {
-            label_text += "Database loaded. <br>";
+            m_label_init_status_text += "Load slot parameters. OK<br>";
+        }
+
+        if (!p_page_idle->thisMachine->isProductsLoaded())
+        {
+
+            qDebug() << "init: Products not loaded. Probably corrupt or incorrect database layout. Please fix.";
+            m_label_init_status_text += "Load products. ERROR<br>";
+            ready = false;
+        }
+        else
+        {
+            m_label_init_status_text += "Load products. OK<br>";
         }
 
         switch (activePaymentMethod)
@@ -166,11 +198,11 @@ void page_init::onInitTimeoutTick()
             {
                 ready = false;
                 qDebug() << "init: Waiting for tap payment ready";
-                label_text += "Tap payment not yet initialized. <br>";
+                m_label_init_status_text += "Load Tap payment. INIT ERROR<br>";
             }
             else
             {
-                label_text += "Tap payment initialized. <br>";
+                m_label_init_status_text += "Load Tap payment. INIT OK<br>";
             }
             break;
         }
@@ -185,14 +217,16 @@ void page_init::onInitTimeoutTick()
             QString command = "Ping";
             p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
             ready = false;
-            label_text += "Waiting for controller. <br>";
+            m_label_init_status_text += "Controller status. WAITING<br>";
         }
         else
         {
-            label_text += "Controller ready. <br>";
+            m_label_init_status_text += "Controller status. OK<br>";
         }
+        QString timeout_message = QString("Timeout in %1s<br>").arg(QString::number(_initIdleTimeoutSec));
+        // label_text += timeout_message;
 
-        ui->label_init_message->setText(label_text);
+        ui->label_init_message->setText(m_label_init_status_text + timeout_message);
 
         if (ready)
         {
@@ -201,10 +235,12 @@ void page_init::onInitTimeoutTick()
     }
     else
     {
+        ui->label_init_message->setText(m_label_init_status_text);
         initIdleTimer->stop();
-        qDebug() << "init: Timed out while waiting to be ready. Restart application manually, or wait for auto reboot.";
+
         ui->pushButton_continue->show();
         ui->pushButton_reboot->show();
+        qDebug() << "init: Timed out while waiting to be ready. Restart application manually, or wait for auto reboot.";
     }
 }
 

@@ -766,7 +766,8 @@ void runMainTest()
         pcb_to_test->flowSensorsDisableAll();
         for (uint8_t slot = 1; slot <= 4; slot++)
         {
-            pcb_to_test->setFlowSensorType(slot, pcb::AICHI);
+            // pcb_to_test->setFlowSensorType(slot, pcb::AICHI);
+            pcb_to_test->setFlowSensorType(slot, pcb::FlowSensorType::DIGMESA);
             // pcb_to_test->resetFlowSensorPulsesForDispenser(slot);
         }
 

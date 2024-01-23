@@ -62,23 +62,32 @@ void machine::initMachine()
     loadDynamicContent(); // part of it is redundant of what's been done here, but not everything. So, do it again.
 }
 
-void machine::loadDynamicContent()
+bool machine::loadDynamicContent()
 {
     // load global machine data
-    loadMachineParameterFromDb();
+    bool success = true;
+    success &= loadMachineParameterFromDb();
+
+    m_slots_loaded_successfully = true;
     for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
     {
-        m_slots[slot_index].loadSlotParametersFromDb();
+        m_slots_loaded_successfully &= m_slots[slot_index].loadSlotParametersFromDb();
     }
+    success &= m_slots_loaded_successfully;
 
     // load properties of all used pnumbers
     QVector<int> all_pnumbers = getAllUsedPNumbersFromSlots();
+
+    m_products_loaded_successfully = true;
     for (int pnumber_index = 0; pnumber_index < all_pnumbers.size(); pnumber_index++)
     {
         // qDebug() << "machine: load product properties for pnumber:" << (all_pnumbers[pnumber_index]);
-        m_pnumberproducts[all_pnumbers[pnumber_index]].loadProductProperties();
+        m_products_loaded_successfully &= m_pnumberproducts[all_pnumbers[pnumber_index]].loadProductProperties();
         m_pnumberproducts[all_pnumbers[pnumber_index]].setSizeUnit(getSizeUnit()); // volumeUnit is a machine wide parameter
     }
+
+    success &= m_products_loaded_successfully;
+
     loadBottle();
     loadTextsFromTemplateCsv();                                // dynamic content (text by template)
     loadTextsFromDefaultHardwareCsv();                         // dynamic styling (css by template)
@@ -86,6 +95,8 @@ void machine::loadDynamicContent()
     loadElementDynamicPropertiesFromTemplate();                // dynamic elements (position, visibility)
     loadElementDynamicPropertiesFromDefaultHardwareTemplate(); // dynamic elements (position, visibility)
     loadElementDynamicPropertiesFromDefaultTemplate();         // dynamic elements (position, visibility)
+
+    return success;
 }
 
 void machine::reboot(){
@@ -175,25 +186,8 @@ void machine::setDb(DbManager *db)
     m_db = db;
 }
 
-// void machine::initProductOptions(const QVector<int> &pnumbersToBeSetAsOptions)
 void machine::initProductOptions()
 {
-
-    // dynamically size options array
-    // dispenseProductsMenuOptions.clear();
-    // int dispenseProductsCount = pnumbersToBeSetAsOptions.size();
-    // if (dispenseProductsCount > MENU_PRODUCT_SELECTION_OPTIONS_MAX)
-    // {
-    //     dispenseProductsCount = MENU_PRODUCT_SELECTION_OPTIONS_MAX;
-    // }
-
-    // dispenseProductsMenuOptions.resize(dispenseProductsCount);
-
-    // for (int i = 0; i < dispenseProductsCount; ++i)
-    // {
-    //     qDebug() << pnumbersToBeSetAsOptions[i];
-    //     setProductToMenuOption(i + 1, pnumbersToBeSetAsOptions[i]);
-    // }
     dispenseProductsMenuOptions.resize(MENU_PRODUCT_SELECTION_OPTIONS_MAX);
     dispenseProductsMenuOptions.fill(DUMMY_PNUMBER);
     for (int slot_index = 0; slot_index < getSlotCount(); slot_index++)
@@ -582,9 +576,13 @@ StateCoupon machine::getCouponState()
 
 void machine::initCouponState()
 {
+    setDiscountPercentageFraction(0.0);
+    setCouponCode("");
+    m_max_dollar_amount_discount = "0";
+
     if (getCouponsEnabled())
     {
-        qDebug() << "Machine: Coupons enabled ";
+        qDebug() << "Machine: Coupons enabled. Coupon state initialized.";
         m_stateCoupon = enabled_not_set;
     }
     else
@@ -593,9 +591,7 @@ void machine::initCouponState()
         m_stateCoupon = disabled;
     }
 
-    setDiscountPercentageFraction(0.0);
-    setCouponCode("");
-    m_max_dollar_amount_discount = "0";
+    
 }
 
 void machine::setRebootState(StateReboot state)
@@ -610,7 +606,7 @@ StateReboot machine::getRebootState()
 void machine::setDiscountPercentageFraction(double percentageFraction)
 {
     // ratio = percentage / 100;
-    qDebug() << "Set discount percentage as a fraction. " << QString::number(percentageFraction, 'f', 3);
+    // qDebug() << "Set discount percentage as a fraction. " << QString::number(percentageFraction, 'f', 3);
     m_discount_percentage_fraction = percentageFraction;
 }
 
@@ -620,7 +616,7 @@ void machine::resetCouponDiscount()
     m_min_threshold_vol_ml_discount = "0";
     m_max_threshold_vol_ml_discount = "0";
     m_max_dollar_amount_discount = "0";
-    setCouponCode("");
+    // setCouponCode("");
 }
 
 double machine::getDiscountPercentageFraction()
@@ -710,14 +706,12 @@ QString machine::getTemplateFolder()
     // check for exact template folder.
     // if it doesn't exist, check for hardware default template folder.
     // if it doesn't exist, check for default template folder.
-
     QString template_name = m_template;
     if (template_name.isEmpty())
     {
         QString hardware_specific_template = QString(TEMPLATES_ROOT_PATH) + QString(TEMPLATES_DEFAULT_NAME) + "_" + getHardwareMajorVersion();
         if (!df_util::pathExists(hardware_specific_template))
         {
-
             template_name = QString(TEMPLATES_DEFAULT_NAME);
         }
         else
@@ -726,7 +720,7 @@ QString machine::getTemplateFolder()
         }
     }
     QString templateFolder = QString(TEMPLATES_ROOT_PATH) + template_name + "/";
-    qDebug() << "Get template folder : " << templateFolder;
+    // qDebug() << "Get template folder : " << templateFolder;
     return templateFolder;
 }
 
@@ -738,14 +732,16 @@ QString machine::getTemplatePathFromName(QString fileName)
 
     if (!df_util::pathExists(filePath))
     {
-        qDebug() << "File not found in template folder : " + filePath;
+        // qDebug() << "File not found in template folder : " + filePath;
+
         // check if file exist in hardware specific default template
         // e.g.  // "/home/df-admin/production/references/templates/default_SS2/page_idle.css"
         filePath = QString(TEMPLATES_ROOT_PATH) + QString(TEMPLATES_DEFAULT_NAME) + "_" + getHardwareMajorVersion() + "/" + fileName;
 
         if (!df_util::pathExists(filePath))
         {
-            qDebug() << "File not found in default hardware folder: " + filePath + " Will try default.";
+            // qDebug() << "File not found in default hardware folder: " + filePath + " Will try default.";
+            
             // check if file exists in default template
             filePath = QString(TEMPLATES_ROOT_PATH) + QString(TEMPLATES_DEFAULT_NAME) + "/" + fileName;
             if (!df_util::pathExists(filePath))
@@ -1099,16 +1095,24 @@ QString machine::getTransactionLogging()
     return transactionLogging;
 }
 
-bool machine::isDBLoaded()
+bool machine::isMachineDBLoaded()
 {
-    return m_database_loaded_successfully;
+    return m_machine_database_table_loaded_successfully;
+}
+bool machine::isSlotsLoaded()
+{
+    return m_slots_loaded_successfully;
+}
+bool machine::isProductsLoaded()
+{
+    return m_products_loaded_successfully;
 }
 
-void machine::loadMachineParameterFromDb()
+bool machine::loadMachineParameterFromDb()
 {
     qDebug() << "DB call: Load all machine parameters";
 
-    m_database_loaded_successfully = m_db->getAllMachineProperties(
+    m_machine_database_table_loaded_successfully = m_db->getAllMachineProperties(
         &m_machine_id,
         &m_client_id,
         &m_template,
@@ -1150,6 +1154,7 @@ void machine::loadMachineParameterFromDb()
 
     qDebug() << "Machine ID as loaded from db: " << getMachineId();
     qDebug() << "Template folder: " << getTemplateFolder();
+    return m_machine_database_table_loaded_successfully;
 }
 
 QString machine::getIdlePageType()

@@ -130,6 +130,8 @@ void page_idle::showEvent(QShowEvent *event)
 
     thisMachine->loadDynamicContent();
 
+    qDebug() << "Template folder : " << thisMachine->getTemplateFolder();
+
     thisMachine->dispenseButtonLightsAnimateState(true);
     thisMachine->setCouponState(enabled_not_set);
 
@@ -142,6 +144,7 @@ void page_idle::showEvent(QShowEvent *event)
     {
         thisMachine->initCouponState();
     }
+    
     thisMachine->resetSelectedBottle(); // reset selected bottle to default = empty
     thisMachine->setSelectedProduct(0); // default selected product is necessary to deal with things if no product is chosen yet e.g. show transaction history
 
@@ -162,6 +165,7 @@ void page_idle::showEvent(QShowEvent *event)
     thisMachine->setTemplateTextToObject(ui->label_reboot_nightly_text);
     thisMachine->setTemplateTextToObject(ui->label_reboot_nightly_title);
     thisMachine->setTemplateTextToObject(ui->pushButton_reboot_nightly);
+    
     QString reboot_nightly_icon_path = thisMachine->getTemplatePathFromName(REBOOT_NIGHTLY_ICON_PATH);
     thisMachine->addPictureToLabel(ui->label_reboot_nightly_icon, reboot_nightly_icon_path);
 
@@ -225,7 +229,6 @@ void page_idle::showEvent(QShowEvent *event)
     _receiptPrinterFeedBackTimerSec = PAGE_IDLE_RECEIPT_PRINTER_TIMEOUT_SECONDS;
 
     _delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
-
 // #define PLAY_VIDEO
 #ifdef PLAY_VIDEO
     // player = new QMediaPlayer(this);

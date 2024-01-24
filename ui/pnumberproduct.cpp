@@ -153,14 +153,11 @@ QVector<double> pnumberproduct::getMixRatios()
 bool pnumberproduct::loadProductPropertiesFromDb()
 {
     qDebug() << "Open db: db load pnumberproduct properties for pnumberproduct for pnumber: " << getPNumber();
-    bool succes = m_db->getAllProductProperties(getPNumber(),
+    bool success = m_db->getAllProductProperties(getPNumber(),
                                   &m_aws_product_id,
                                   &m_soapstand_product_serial,
                                   m_mixPNumbers,
                                   m_mixRatios,
-                                  //   &m_size_unit,
-                                  //   &m_currency_deprecated, //_dummy_deprecated
-                                  //   &m_payment_deprecated,  //_deprecated,
                                   &m_name_receipt,
                                   &m_concentrate_multiplier,
                                   &m_dispense_speed,
@@ -184,9 +181,10 @@ bool pnumberproduct::loadProductPropertiesFromDb()
 
     if (getPNumber() != pnumberFromDb)
     {
-        qDebug() << "ERROR: Could not load from DB: " << getPNumber() << " was set as: " << pnumberFromDb;
+        qDebug() << "ERROR: Could not load from DB: " << getPNumber() << " : " << pnumberFromDb;
+        success = false;
     }
-    return succes;
+    return success;
 }
 
 bool pnumberproduct::getIsProductEnabled()
@@ -543,16 +541,6 @@ QString pnumberproduct::getProductType()
 
 QString pnumberproduct::getProductPicturePath()
 {
-    // QString pnumber = m_soapstand_product_serial;
-    // // qDebug() << "pnumber before p nodted " << pnumber;
-
-    // // Check if serial starts with "P-"
-    // if (!pnumber.startsWith("P-"))
-    // {
-    //     // Add "P-" prefix if it's missing
-    //     pnumber.prepend("P-");
-    // }
-    // // qDebug() << "pnumber P- notated " << pnumber;
     QString path = QString(PRODUCT_PICTURES_ROOT_PATH).arg(getPNumberAsPString());
     qDebug() << "Picture path: " << path;
     return path;
@@ -609,17 +597,6 @@ void pnumberproduct::setDispenseSpeedPercentage(int percentage)
     m_db->updateTableProductsWithInt(getPNumber(), "dispense_speed", pwm);
 }
 
-// void pnumberproduct::setPaymentMethod(QString paymentMethod)
-// {
-//     qDebug() << "Open db: set payment method";
-//     m_db->updateTableProductsWithText(getPNumber(), "payment", paymentMethod);
-// }
-
-// QString pnumberproduct::getPaymentMethod()
-// {
-//     // DO  NOT USE
-//     return m_payment_deprecated;
-// }
 bool pnumberproduct::isCustomMix()
 {
     bool isCustomMix = false;

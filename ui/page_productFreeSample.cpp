@@ -43,7 +43,6 @@ page_product_freeSample::page_product_freeSample(QWidget *parent) : QWidget(pare
 
     ui->label_gif->hide();
     statusbarLayout = new QVBoxLayout(this);
-    bottomLayout = new QVBoxLayout;
 }
 
 /*
@@ -87,10 +86,20 @@ void page_product_freeSample::showEvent(QShowEvent *event)
     p_keyboard->initializeKeyboard(false, ui->lineEdit_promo_code);
     statusbarLayout->removeWidget(p_keyboard);
 
-    bottomLayout->addSpacing(500);
-    bottomLayout->addWidget(p_statusbar);  
-    statusbarLayout->addWidget(p_keyboard);
-    statusbarLayout->setContentsMargins(0, 1425, 0, 0);
+    p_keyboard->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+    p_keyboard->setContentsMargins(0, 0, 0, 0);
+    p_keyboard->findChild<QWidget *>("keyboard_3")->setGeometry(21, 0, 1040, 495);
+
+    p_statusbar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+    p_statusbar->setContentsMargins(0, 0, 0, 0); 
+
+    statusbarLayout->setSpacing(0);
+    statusbarLayout->setContentsMargins(0, 0, 0, 0);
+
+    statusbarLayout->addWidget(p_keyboard);   
+    statusbarLayout->addWidget(p_statusbar);   
+
+    statusbarLayout->setAlignment(Qt::AlignBottom | Qt::AlignVCenter);
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
 
@@ -181,8 +190,6 @@ void page_product_freeSample::onSelectTimeoutTick()
 void page_product_freeSample::enterButtonPressed(){
     if (m_readyToSendCoupon && p_page_idle->thisMachine->getCouponState() != enabled_processing_input)
     {
-        statusbarLayout->addLayout(bottomLayout);
-        this->setLayout(statusbarLayout);
         m_readyToSendCoupon = false;
         qDebug() << "Done clicked, initiated apply promo.";
         // hack, sometimes it appears like the 'done' button code is called twice.
@@ -190,7 +197,6 @@ void page_product_freeSample::enterButtonPressed(){
         reset_and_show_page_elements();
         apply_promo_code(ui->lineEdit_promo_code->text());
         p_keyboard->initializeKeyboard(false, ui->lineEdit_promo_code);
-
     }
     else
     {
@@ -285,7 +291,6 @@ void page_product_freeSample::reset_and_show_page_elements()
         // p_keyboard->setVisibility(true);
         p_keyboard->registerCallBack(std::bind(&page_product_freeSample::enterButtonPressed, this));
         p_keyboard->initializeKeyboard(true, ui->lineEdit_promo_code);
-        statusbarLayout->removeItem(bottomLayout);
         ui->lineEdit_promo_code->clear();
         ui->lineEdit_promo_code->show();
         p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_promo_code, "promoCode", PAGE_PRODUCT_FREESAMPLE_CSS);
@@ -327,8 +332,8 @@ void page_product_freeSample::hideCurrentPageAndShowProvided(QWidget *pageToShow
     }
 
     selectIdleTimer->stop();
-    statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
-    statusbarLayout->removeWidget(p_keyboard); // Only one instance can be shown. So, has to be added/removed per page.
+    statusbarLayout->removeWidget(p_statusbar);
+    statusbarLayout->removeWidget(p_keyboard);
 
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
 }
@@ -436,7 +441,6 @@ void page_product_freeSample::apply_promo_code(QString promocode)
 void page_product_freeSample::on_lineEdit_promo_codeInput_clicked()
 {
     p_page_idle->thisMachine->setCouponState(enabled_show_keyboard);
-    statusbarLayout->removeWidget(p_statusbar);
     reset_and_show_page_elements();
 }
 

@@ -34,13 +34,6 @@ page_help::page_help(QWidget *parent) : QWidget(parent),
     connect(ui->buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(keyboardButtonPressed(int)));
 
     statusbarLayout = new QVBoxLayout(this);
-    keyboardLayout = new QVBoxLayout(this);//will not show, can only add one qvboxlayout per widget
-    bottomLayout = new QVBoxLayout;
-    button2 = new QPushButton();
-    button3 = new QPushButton();
-    button4 = new QPushButton();
-    button5 = new QPushButton();
-
 }
 
 // DTOR
@@ -48,7 +41,7 @@ page_help::~page_help()
 {
     delete ui;
 }
-void page_help::setPage(page_select_product *pageSelect, page_product *page_product, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_transactions *pageTransactions, page_maintenance *pageMaintenance, page_sendFeedback *pageFeedback, statusbar *p_statusbar, keyboard *keyboard, input_widget *input_widget)
+void page_help::setPage(page_select_product *pageSelect, page_product *page_product, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_transactions *pageTransactions, page_maintenance *pageMaintenance, page_sendFeedback *pageFeedback, page_how_to *page_howTo, statusbar *p_statusbar, keyboard *keyboard, input_widget *input_widget)
 {
     this->p_page_idle = pageIdle;
     this->p_page_feedback = pageFeedback;
@@ -57,6 +50,7 @@ void page_help::setPage(page_select_product *pageSelect, page_product *page_prod
     this->p_page_select_product = pageSelect;
     this->p_page_transactions = pageTransactions;
     this->p_page_maintenance = pageMaintenance;
+    this->p_page_howTo = page_howTo;
     this->p_statusbar = p_statusbar;
     this->p_keyboard = keyboard;
     this->p_input_widget = input_widget;
@@ -80,11 +74,13 @@ void page_help::showEvent(QShowEvent *event)
     ui->pushButton_resetTimeout->setStyleSheet(styleSheet);
     ui->pushButton_to_maintenance->setStyleSheet(styleSheet);
     ui->pushButton_to_feedback->setStyleSheet(styleSheet);
+    ui->pushButton_to_howTo->setStyleSheet(styleSheet);
 
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_to_transactions);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_to_maintenance);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_to_feedback);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_to_idle);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_to_howTo);
     ui->label_keyboardInfo->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "label_keyboardInfo")); // p_page_idle->thisMachine->setTemplateTextToObject(ui->label_keyboardInfo); // does not work because the parent is the keyboard, not the page.
 
     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_PATH);
@@ -130,29 +126,25 @@ void page_help::showEvent(QShowEvent *event)
         // (otherwise will have extra white space when delcare custom widget)
         // navigate to custom widget, right click on the parent widget, hover over Size Constraints, and select set Minimum Size and Maximum Size
         p_input_widget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
-        p_input_widget->setContentsMargins(0, 0, 0, 0);
+        p_input_widget->setContentsMargins(0, 0, 0, 0); // int left, int top, int right, int bottom);
 
         p_keyboard->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
         p_keyboard->setContentsMargins(0, 0, 0, 0);
-        // p_keyboard->findChild<QWidget *>("keyboard_3")->setGeometry(21, -25, 1040, 495);
+        p_keyboard->findChild<QWidget *>("keyboard_3")->setGeometry(21, -25, 1040, 495); // int x, int y, int width, int height;
 
         p_statusbar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
         p_statusbar->setContentsMargins(0, 0, 0, 0); 
 
         statusbarLayout->setSpacing(0);
         statusbarLayout->setContentsMargins(0, 0, 0, 0);
-        // statusbarLayout->addWidget(button2);
-        // statusbarLayout->addWidget(button3);
         statusbarLayout->addWidget(p_input_widget);  
-        // statusbarLayout->addWidget(button4);
         statusbarLayout->addWidget(p_keyboard);   
-
         statusbarLayout->addWidget(p_statusbar);   
-        // statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
 
         statusbarLayout->setAlignment(Qt::AlignBottom | Qt::AlignVCenter);
 
     }else{
+        ui->pushButton_to_howTo->hide();
         ui->keyboard_3->hide();
         ui->keyboardTextEntry->setText("");
         statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
@@ -164,7 +156,6 @@ void page_help::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     helpIdleTimer->stop();
     if(p_page_idle->thisMachine->hasMixing()){
-        // statusbarLayout->removeItem(bottomLayout); // Only one instance can be shown. So, has to be added/removed per page.
         statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
 
     }else{
@@ -178,6 +169,10 @@ void page_help::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 void page_help::on_pushButton_to_idle_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_idle);
+}
+
+void page_help::on_pushButton_to_howTo_clicked(){
+    hideCurrentPageAndShowProvided(p_page_howTo);
 }
 
 void page_help::onHelpTimeoutTick()
@@ -218,7 +213,6 @@ void page_help::on_pushButton_to_maintenance_clicked()
             p_keyboard->registerCallBack(std::bind(&page_help::doneButtonPressed, this));
             p_keyboard->initializeKeyboard(true, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
             p_input_widget->toggleInputWidget(true);
-            statusbarLayout->removeItem(bottomLayout);
         }else{
             ui->keyboard_3->show();
         }
@@ -228,7 +222,6 @@ void page_help::on_pushButton_to_maintenance_clicked()
 void page_help::doneButtonPressed(){
     qDebug() << "DONE CLICKED";
     QString textEntry = p_input_widget->findChild<QLineEdit *>("lineEdit_input")->text();
-    statusbarLayout->addLayout(bottomLayout);
 
     // if role was already set, do not check pwd.
     if (!p_page_idle->thisMachine->isAllowedAsMaintainer())

@@ -100,6 +100,7 @@ using namespace std;
 #define PRODUCT_PICTURES_ROOT_PATH                      "/home/df-admin/production/references/products/%1.png"
 #define CLIENT_LOGO_PATH                                "/home/df-admin/production/references/logos/%1_logo_white.png"
 #define PAGE_HELP_CSS                                   "page_help.css"
+#define PAGE_HOWTO_CSS                                  "page_how_to.css"
 #define PAGE_FEEDBACK_CSS                               "page_sendFeedback.css"
 #define STATUSBAR_CSS                                   "statusbar.css"
 #define KEYBOARD_CSS                                   "keyboard.css"
@@ -175,6 +176,7 @@ using namespace std;
 
 #define PAGE_HELP_BACKGROUND_GENERIC_WHITE "background_generic_white_empty.png"
 #define PAGE_HELP_BACKGROUND_PATH "background_help.png"
+#define PAGE_HOWTO_BACKGROUND_PATH "background_how_to.png"
 #define SEND_DISPENSE_START "d"
 // #define SEND_DISPENSE_STOP "f"
 #define SEND_REPAIR_PCA "pcabugfix"

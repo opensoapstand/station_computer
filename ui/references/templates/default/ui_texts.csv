@@ -115,7 +115,7 @@ page_end->label_message->finish_transaction,Finishing<br>transaction
 #################### page_help
 page_help->pushButton_to_transactions,transaction history ->
 page_help->pushButton_to_maintenance,settings
-page_help->pushButton_to_feedback,contact Us
+page_help->pushButton_to_feedback,contact us
 page_help->pushButton_to_idle,<- back
 page_help->label_keyboardInfo,Provide maintainer or administrator password, followed by "Done". 
 

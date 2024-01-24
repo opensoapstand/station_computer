@@ -79,8 +79,9 @@ page_dispenser->label_press,press and hold the<br>button
 page_end->pushButton_contact,Feedback
 
 # page_help
-page_help->pushButton_to_idle,←back
-page_help->pushButton_to_transactions,transactions→
+page_help->pushButton_to_idle,←BACK
+page_help->pushButton_to_transactions,TRANSACTIONS→
+page_help->pushButton_to_howTo,instructions
 
 # page_sendFeedback
 page_sendFeedback->pushButton_previous_page,←BACK

@@ -31,37 +31,30 @@
 }
 
 QPushButton {
-   font-family: 'EuropaNuova-ExtraBold';
+   color: #895E25;
+   text-align: center;
+   qproperty-alignment: AlignVCenter;
+   font-family: 'Lato';
    font-style: normal;
    font-weight: 400;
    font-size: 32px;
-   color: white;
-   background-color: #221F20;
-   border: 2px solid white;
-   text-align: center;
-   border-radius: 20px;  
+   background-color: #FEFCFA;
+   border: 5px solid 895E25;
+   border-radius: 25px;
 }
 
+#pushButton_to_idle, #pushButton_to_transactions{
+   font-family: 'Lato';
+   font-style: normal;
+   font-weight: 400;
+   font-size: 24px;
+   color: #001810;
+   text-align: left;
+   qproperty-alignment: AlignCenter;
+   border: none;
+}
 #pushButton_to_transactions{
    text-align: right;
-   font-family: 'EuropaNuova-Regular';
-   font-style: normal;
-   font-weight: 700;
-   font-size: 35px;
-   color: #221F20;
-   qproperty-alignment: AlignCenter;
-   border: none;
-}
-
-#pushButton_to_idle{
-   text-align: left;
-   font-family: 'EuropaNuova-Regular';
-   font-style: normal;
-   font-weight: 700;
-   font-size: 35px;
-   color: #221F20;
-   qproperty-alignment: AlignCenter;
-   border: none;
 }
 
 /* QPushButton#pushButton_refresh {

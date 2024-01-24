@@ -56,7 +56,6 @@ page_product_overview::page_product_overview(QWidget *parent) : QWidget(parent),
 
     ui->label_gif->hide();
     statusbarLayout = new QVBoxLayout(this);
-    bottomLayout = new QVBoxLayout;
 }
 
 /*
@@ -115,10 +114,21 @@ void page_product_overview::showEvent(QShowEvent *event)
 
     if (p_page_idle->thisMachine->hasMixing())
     {
-        bottomLayout->addSpacing(500);
-        bottomLayout->addWidget(p_statusbar);   
-        statusbarLayout->addWidget(p_keyboard);
-        statusbarLayout->setContentsMargins(0, 1374, 0, 0);
+        p_keyboard->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+        p_keyboard->setContentsMargins(0, 0, 0, 0);
+        p_keyboard->findChild<QWidget *>("keyboard_3")->setGeometry(21, 0, 1040, 495);
+
+        p_statusbar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+        p_statusbar->setContentsMargins(0, 0, 0, 0); 
+
+        statusbarLayout->setSpacing(0);
+        statusbarLayout->setContentsMargins(0, 0, 0, 0);
+
+        statusbarLayout->addWidget(p_keyboard);   
+        statusbarLayout->addSpacing(15);
+        statusbarLayout->addWidget(p_statusbar);   
+
+        statusbarLayout->setAlignment(Qt::AlignBottom | Qt::AlignVCenter);
     }else{
         statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
         statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
@@ -424,7 +434,6 @@ void page_product_overview::reset_and_show_page_elements()
         if(p_page_idle->thisMachine->hasMixing()){
             p_keyboard->registerCallBack(std::bind(&page_product_overview::enterButtonPressed, this));
             p_keyboard->initializeKeyboard(true, ui->lineEdit_promo_code);
-            statusbarLayout->removeItem(bottomLayout);
         }else{
             ui->promoKeyboard->show();
         }
@@ -473,8 +482,7 @@ void page_product_overview::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     }
 
     selectIdleTimer->stop();
-    statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
-    // statusbarLayout->removeWidget(p_keyboard); // Only one instance can be shown. So, has to be added/removed per page.
+    statusbarLayout->removeWidget(p_statusbar);
 
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
 }
@@ -677,8 +685,6 @@ void page_product_overview::enterButtonPressed()
 {
     if (m_readyToSendCoupon && p_page_idle->thisMachine->getCouponState() != enabled_processing_input)
     {
-        statusbarLayout->addLayout(bottomLayout);
-        this->setLayout(statusbarLayout);
         m_readyToSendCoupon = false;
         qDebug() << "Done clicked, initiated apply promo.";
         // hack, sometimes it appears like the 'done' button code is called twice.
@@ -740,7 +746,6 @@ void page_product_overview::on_pushButton_previous_page_clicked()
 void page_product_overview::on_lineEdit_promo_codeInput_clicked()
 {
     p_page_idle->thisMachine->setCouponState(enabled_show_keyboard);
-    statusbarLayout->removeWidget(p_statusbar);
     reset_and_show_page_elements();
 }
 

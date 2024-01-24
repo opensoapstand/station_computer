@@ -670,7 +670,6 @@ void page_maintenance_dispenser::update_volume_received_dispense_stats(double di
         {
             QString val = df_util::getConvertedStringVolumeFromMl(1000 / (vol_dispensed / volume_per_tick_buffer), "oz", false, false);
             ui->label_calibration_result->setText(val + "oz/tick"); // calibration constant if 1000ml were dispensed.
-            // ui->label_calibration_result->setText( QString::number(df_util::getConvertedStringVolumeFromMl(vol_per_tick_for_1000ml, "oz", false, false)) + "oz/tick"); // calibration constant if 1000ml were dispensed.
         }
         else
         {

@@ -54,7 +54,7 @@ class machine : public QObject
 public:
     machine();
     ~machine();
-    void loadMachineParameterFromDb();
+    bool loadMachineParameterFromDb();
     void setDb(DbManager *db);
     DbManager *getDb();
     void initMachine();
@@ -67,7 +67,9 @@ public:
 
     QString getSizeUnit();
 
-    bool isDBLoaded();
+    bool isMachineDBLoaded();
+    bool isSlotsLoaded();
+    bool isProductsLoaded();
 
     void dispenseButtonLightsAnimateState(bool animateElseOff);
     bool slotNumberValidityCheck(int slot);
@@ -98,6 +100,8 @@ public:
     void createSessionId();
     void resetSessionId();
     QString getSessionId();
+
+    void reboot();
 
     QString getClientId();
 
@@ -189,7 +193,7 @@ public:
     double getPriceWithDiscount(double price);
 
     QStringList getChildNames(QObject *parent);
-    void loadDynamicContent();
+    bool loadDynamicContent();
     void loadBottle();
     QString getCSS(QString cssName);
     void addCssClassToObject(QWidget *element, QString classname, QString css_file_name);
@@ -264,7 +268,9 @@ public:
     QString m_freesample_end_url;
     int m_is_enabled;
     QString m_status_text;
-    bool m_database_loaded_successfully = false;
+    bool m_machine_database_table_loaded_successfully = false;
+    bool m_slots_loaded_successfully = false;
+    bool m_products_loaded_successfully = false;
 
     QString m_min_threshold_vol_ml_discount;
     QString m_max_threshold_vol_ml_discount;

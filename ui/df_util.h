@@ -65,7 +65,7 @@
 using namespace std;
 
 
-#define PAGE_INIT_READY_TIMEOUT_SECONDS 20
+#define PAGE_INIT_READY_TIMEOUT_SECONDS 10
 #define PAGE_INIT_REBOOT_TIMEOUT_SECONDS 3600
 #define PAGE_IDLE_DELAY_BEFORE_ENTERING_IDLE_PRODUCTS 15
 #define PAGE_IDLE_DELAY_BEFORE_ENTERING_IDLE_PRODUCTS 15
@@ -103,8 +103,9 @@ using namespace std;
 #define PAGE_HOWTO_CSS                                  "page_how_to.css"
 #define PAGE_FEEDBACK_CSS                               "page_sendFeedback.css"
 #define STATUSBAR_CSS                                   "statusbar.css"
-#define KEYBOARD_CSS                                   "keyboard.css"
 #define INPUT_WIDGET_CSS                                "input_widget.css"
+#define KEYBOARD_CSS                                    "keyboard.css"
+#define PAGE_INIT_CSS                                   "page_init.css"
 #define PAGE_IDLE_CSS                                   "page_idle.css"
 #define PAGE_BUY_BOTTLE_CSS                             "page_buyBottle.css"
 #define PAGE_PRODUCT_MENU_CSS                           "page_product_menu.css"

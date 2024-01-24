@@ -266,8 +266,8 @@ void page_init::initiateTapPayment()
 
     this->showFullScreen();
     // Waiting for payment label setup
-    QString waitingForPayment = p_page_idle->thisMachine->getTemplateText("page_init->label_fail_message->tap_payment");
-    p_page_idle->thisMachine->setTextToObject(ui->label_fail_message, waitingForPayment);
+    // QString waitingForPayment = p_page_idle->thisMachine->getTemplateText("page_init->label_fail_message->tap_payment");
+    // p_page_idle->thisMachine->setTextToObject(ui->label_fail_message, waitingForPayment);
     switch (activePaymentMethod)
     {
     case tap_usa:

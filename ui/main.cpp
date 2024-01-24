@@ -277,6 +277,7 @@ int main(int argc, char *argv[])
     QObject::connect(&dfUiServer, &DfUiServer::signalUpdateVolume, p_page_dispense, &page_dispenser::fsmReceivedVolumeDispensed);
     QObject::connect(&dfUiServer, &DfUiServer::signalDispenseStatus, p_page_dispense, &page_dispenser::fsmReceiveDispenserStatus);
     QObject::connect(&dfUiServer, &DfUiServer::finalVolumeDispensed, p_page_end, &page_end::fsmReceiveFinalDispensedVolume);
+    QObject::connect(&dfUiServer, &DfUiServer::finalTransactionMessage, p_page_end, &page_end::fsmReceiveFinalTransactionMessage);
     QObject::connect(&dfUiServer, &DfUiServer::signalDispenseRate, p_page_dispense, &page_dispenser::fsmReceiveDispenseRate);
     QObject::connect(&dfUiServer, &DfUiServer::targetHit, p_page_dispense, &page_dispenser::fsmReceiveTargetVolumeReached);
     QObject::connect(&dfUiServer, &DfUiServer::noFlowAbort, p_page_dispense, &page_dispenser::fsmReceiveNoFlowAbort);

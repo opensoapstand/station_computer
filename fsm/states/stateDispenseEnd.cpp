@@ -124,10 +124,10 @@ DF_ERROR stateDispenseEnd::onAction()
         }
         else
         {
-            bool success = false;
+            // bool success = false;
             // make sure to do this after dispenseEndUpdateDB
             // at that point remaining product volume is already updated in db, and in Product
-            success = sendTransactionToCloud(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeRemaining());
+            // success = sendTransactionToCloud(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeRemaining());
         }
 #else
         debugOutput::sendMessage("NOT SENDING transaction to cloud.", MSG_INFO);
@@ -135,7 +135,7 @@ DF_ERROR stateDispenseEnd::onAction()
     }
 
     debugOutput::sendMessage("Post dispense final price: " + to_string(price), MSG_INFO);
-
+    sendEndTransactionMessageToUI();
 
     // send dispensed volume to ui (will be used to write to portal)
     m_state_requested = STATE_IDLE;
@@ -812,3 +812,15 @@ void stateDispenseEnd::setup_and_print_receipt()
 //     string printer_command_string = "echo '\n" + printerstring + "' > /dev/ttyS4";
 //     system(printer_command_string.c_str());
 // }
+
+void stateDispenseEnd:: sendEndTransactionMessageToUI(){
+    std::string start_time = g_machine.m_productDispensers[m_slot_index].getSelectedProductDispenseStartTime();
+    std::string end_time = g_machine.m_productDispensers[m_slot_index].getSelectedProductDispenseEndTime();
+    std::string button_press_duration = to_string(g_machine.m_productDispensers[m_slot_index].getButtonPressedTotalMillis());
+    std::string button_press_count = to_string(g_machine.m_productDispensers[m_slot_index].getDispenseButtonPressesDuringDispensing());
+    
+    std::string message = "finalTransactionMessage|start_time|" + start_time+"|end_time|" + end_time+"|button_press_duration|"+button_press_duration \
+                            + "|button_press_count|" + button_press_count;
+    usleep(100000); // send message delay
+    m_pMessaging->sendMessageOverIP(message, true); // send to UI
+}

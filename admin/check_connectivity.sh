@@ -23,7 +23,7 @@ folder="/home/df-admin/production/logging/wifi"
 mkdir -p "$folder" && touch "$folder"/logging.txt
 
 #initialize soapstandportal POST request variables
-url=$portalBaseUrl + "api/stationStatus/add"
+url="${portalBaseUrl}api/stationStatus/add"
 payload="{\"MachineSerialNumber\" : \"$machineId\",\"wifiStrength\": \"$wifi_strength\",\"temperature_1\": \"$temperatureValue1\",\"temperature_2\": \"$temperatureValue2\"}"
 response=$(curl -X POST -H "Content-Type: application/json" -d "$payload" "$url")
 

@@ -180,7 +180,7 @@ using namespace std;
 #define PAYMENT_TAP_USA                                 "tap_usa"
 #define PAYMENT_TAP_CANADA_QR                           "tap_canada_qr"
 #define PAYMENT_TAP_USA_QR                              "tap_usa_qr"
-
+#define PAYMENT_RECEIPT_PRINTER                         "receipt_printer"
 
 class df_util : public QWidget
 {

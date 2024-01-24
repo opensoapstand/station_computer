@@ -4,6 +4,8 @@
 #include <QThread>
 #include <QTcpSocket>
 #include <QDebug>
+#include <QStringList>
+
 
 #include "df_util.h"
 
@@ -24,6 +26,7 @@ signals:
     void noFlowAbortSignal(void);
     void updateVolumeSignal(double dispensed);
     void updateFinalVolumeDispensedSignal(double dispensed);
+    void finalTransactionMessageSignal(QString start_time, QString end_time, double button_press_duration, double button_press_count);
     void dispenseRateSignal(double flowrate);
     void dispenseStatusSignal(QString status);
     void printerStatusSignal(bool isOnline, bool hasPaper);

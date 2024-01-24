@@ -558,8 +558,6 @@ void page_dispenser::fsmSendStartDispensing()
     qDebug() << "Send order details to FSM: " << order_command;
     p_page_idle->thisMachine->dfUtility->send_command_to_FSM(order_command, true);
     QThread::msleep(50); // Sleep for 50 milliseconds
-    
-    
 
     bool isCustomMix = p_page_idle->thisMachine->getSelectedProduct()->isCustomMix();
     int pNumberSelectedProduct = p_page_idle->thisMachine->getSelectedProduct()->getPNumber();
@@ -584,6 +582,8 @@ void page_dispenser::fsmSendStopDispensing()
 {
     qDebug() << "Send STOP dispensing to fsm";
     this->isDispensing = false;
+    QString endTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+    p_page_idle->thisMachine->getSelectedSlot()->setDispenseEndTime(endTime);
 
     // QString command = QString::number(p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
     // command.append(p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar());

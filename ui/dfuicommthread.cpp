@@ -147,6 +147,17 @@ QByteArray DfUiCommThread::readyRead()
 
         emit updateFinalVolumeDispensedSignal(volumeDispensed);
     }
+    else if (Data.contains("finalTransactionMessage|"))
+    {
+
+        QStringList dataObjectList = QString(Data).split('|');
+        QString start_time = dataObjectList[2]; 
+        QString end_time = dataObjectList[4];
+        double button_press_duration = dataObjectList[6].toDouble();
+        double button_press_count = dataObjectList[8].toDouble();
+
+        emit finalTransactionMessageSignal(start_time, end_time,button_press_duration, button_press_count);
+    }
     else
     {
         qDebug() << "Non actionable message from fsm received: " << Data;

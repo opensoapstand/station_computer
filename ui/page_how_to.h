@@ -43,6 +43,7 @@ private:
     void showEvent(QShowEvent *event);
 
     Ui::page_how_to *ui;
+    int number_of_steps;
     page_select_product* p_page_select_product;
     page_qr_payment* p_page_payment;
     page_idle* p_page_idle;

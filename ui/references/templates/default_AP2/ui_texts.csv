@@ -83,6 +83,18 @@ page_help->pushButton_to_idle,←BACK
 page_help->pushButton_to_transactions,TRANSACTIONS→
 page_help->pushButton_to_howTo,instructions
 
+#page_how_to
+page_how_to->label_page_title,How to Use
+page_how_to->label_step01_heading,01. Pick
+page_how_to->label_step01_instruction,Pick your drink and customize to your liking.
+page_how_to->label_step02_heading,02. Pay
+page_how_to->label_step02_instruction,Pay with Tap or QR.
+page_how_to->label_step03_heading,03. Dispense
+page_how_to->label_step03_instruction,Bring bottle up to indicated nozzle, then press and hold to dispense.
+page_how_to->pushButton_to_feedback,Contact us 
+page_how_to->pushButton_to_help,←BACK
+page_how_to->pushButton_to_maintenance,Settings
+
 # page_sendFeedback
 page_sendFeedback->pushButton_previous_page,←BACK
 page_sendFeedback->checkBox_1_Label,I love this, keep me in the loop

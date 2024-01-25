@@ -83,7 +83,7 @@
 #define MCP23017_EN258_GPA4_NOT_USED 4
 #define MCP23017_EN258_GPA5_NOT_USED 5
 #define MCP23017_EN258_GPA6_PIN_IN_FLOW_SENSOR_AICHI 6
-#define MCP23017_EN258_GPA7_PIN_OUT_FLOW_SENSOR_DIGMESA 7
+#define MCP23017_EN258_GPA7_PIN_IN_FLOW_SENSOR_DIGMESA 7
 
 #define MCP23017_EN258_GPB0_PIN_IN_BUTTON 0
 #define MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON 1
@@ -240,7 +240,7 @@ public:
     uint8_t getMCP23017Register(uint8_t slot, uint8_t reg);
     void setMCP23017Register(uint8_t slot, uint8_t reg, uint8_t value);
 
-    void outputMCP23017IORegisters(uint8_t slot);
+    void displayMCP23017IORegisters(uint8_t slot);
 
     void registerFlowSensorTickCallback(int slot, std::function<void()> callback);
     PcbVersion pcb_version;

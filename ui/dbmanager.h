@@ -46,14 +46,14 @@ public:
     void addUserInteraction(QString session_id, QString role, QString page, QString event);
     void addUserInteraction(QString session_id, QString role, QString page, QString event, QString data);
 
-    void getAllSlotProperties(int slot,
+    bool getAllSlotProperties(int slot,
                               QVector<int> &dispensePNumbers,
                               int &basePNumber,
                               QVector<int> &additivesPNumbers,
                               bool &is_enabled,
                               QString &status_text);
 
-    void getAllProductProperties(int pnumber,
+    bool getAllProductProperties(int pnumber,
                                  QString *productId,
                                  QString *soapstand_product_serial,
                                  QVector<int> &mixPNumbers,
@@ -80,7 +80,7 @@ public:
                                  QString *status_text,
                                  bool *isSizeEnabled, double *prices, double *volumes, QString *PLUs, QString *PIDs);
 
-    void getAllMachineProperties(QString *machine_id,
+    bool getAllMachineProperties(QString *machine_id,
                                  QString *soapstand_customer_id,
                                  QString *ttttemplate,
                                  QString *location,

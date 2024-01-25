@@ -117,15 +117,15 @@ DF_ERROR stateDispense::onAction()
       debugOutput::sendMessage(g_machine.m_productDispensers[slot_index].getDispenseUpdateString(), MSG_INFO);
       debugOutput::sendMessage(dispenseStatusStr, MSG_INFO);
       debugOutput::sendMessage(to_string(g_machine.getPcb()->getFlowSensorPulsesSinceEnabling(slot)), MSG_INFO);
-      g_machine.getPcb()->outputMCP23017IORegisters(slot);
+      g_machine.getPcb()->displayMCP23017IORegisters(slot);
 #endif
    }
 
    if (m_pMessaging->getAction() == ACTION_RESET)
    {
-      m_pMessaging->sendMessageOverIP("Init Ready received. Will reset.", true); // send to UI
       m_state_requested = STATE_IDLE;
       stopPumping();
+      m_pMessaging->sendMessageOverIP("Init Ready", true); // send to UI
       return e_ret = OK;
    }
 

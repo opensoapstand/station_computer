@@ -40,7 +40,7 @@ public:
     void showEvent(QShowEvent *event);
     ~page_init();
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
-    void initReadySlot();
+    void controllerReadySlot();
     df_util *dfUtility;
 
     DfUiCommThread *dfComm;
@@ -49,7 +49,7 @@ public:
     std::thread tapInitThread;
 
 public slots:
-    void showIdlePage();
+    // void showIdlePage();
 
 signals:
     void tapSetupInitialized();
@@ -58,6 +58,10 @@ private slots:
     void onInitTimeoutTick();
     void onRebootTimeoutTick();
 
+    void on_pushButton_continue_clicked();
+
+    void on_pushButton_reboot_clicked();
+
 private:
     Ui::page_init *ui;
     page_idle *p_page_idle;
@@ -65,8 +69,13 @@ private:
     int _initIdleTimeoutSec;
     QTimer *rebootTimer;
     int _rebootTimeoutSec;
-    bool start_controller;
     ActivePaymentMethod activePaymentMethod;
+
+    QString m_label_init_status_text;
+
+    bool m_controller_ready=false;
+    bool m_tap_payment_ready=false;
+    
 };
 
 #endif // INIT_H

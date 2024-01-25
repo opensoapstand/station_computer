@@ -31,7 +31,7 @@ public:
     int getAdditiveCount();
     QVector<int> getAdditivePNumbers();
 
-    void loadSlotParametersFromDb();
+    bool loadSlotParametersFromDb();
 
     // Setters and Getters
     void setSlot(int slot);

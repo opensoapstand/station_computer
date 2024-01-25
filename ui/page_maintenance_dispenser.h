@@ -58,6 +58,7 @@ public:
     void dispense_test_start();
     void update_volume_received_dispense_stats(double dispensed);
     void reset_all_dispense_stats();
+    void showSlotShortcut(int slot);
 
 private slots:
     void updateProductLabelValues(bool reloadFromDb);
@@ -133,6 +134,16 @@ private slots:
 
     void on_pushButton_dispense_pnumber_6_clicked();
 
+    void on_pushButton_activate_slot_1_clicked();
+
+    void on_pushButton_activate_slot_2_clicked();
+
+    void on_pushButton_activate_slot_3_clicked();
+
+    void on_pushButton_activate_slot_4_clicked();
+
+    void on_pushButton_activate_slot_5_clicked();
+
 private:
     void setSelectedProduct(int pnumber);
     void setStatusTextLabel(QLabel* label, QString statusText, bool displayRawStatus);
@@ -143,6 +154,7 @@ private:
 
 
     QPushButton *buttons_select_additive[ADDITIVES_PER_SLOT_COUNT_MAX];
+    QPushButton *buttons_slot_shortcuts[BASE_LINE_COUNT_MAX];
 
     QPushButton *buttons_select_mix[DISPENSE_PRODUCTS_PER_BASE_LINE_MAX];
 

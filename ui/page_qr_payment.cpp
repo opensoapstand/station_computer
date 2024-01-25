@@ -417,7 +417,7 @@ bool page_qr_payment::exitConfirm()
     // QMessageBox msgBox;
     msgBox = new QMessageBox();
 
-    msgBox->setWindowFlags(Qt::FramelessWindowHint);
+    msgBox->setWindowFlags(Qt::FramelessWindowHint| Qt::Dialog);
     QString searchString;
     if (state_payment == s_payment_processing || state_payment == s_payment_done)
     {
@@ -479,7 +479,7 @@ bool page_qr_payment::exitConfirm()
 //     qDebug() << "In exit confirm";
 //     QMessageBox msgBox;
 
-//     msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
+//     msgBox.setWindowFlags(Qt::FramelessWindowHint| Qt::Dialog); // do not show messagebox header with program name
 //     if (state_payment == s_payment_processing || state_payment == s_payment_done)
 //     {
 //         QString searchString = this->objectName() + "->msgBox_cancel->default";
@@ -523,7 +523,7 @@ bool page_qr_payment::exitConfirm()
 //     qDebug() << "In exit confirm";
 
 //     QMessageBox msgBox;
-//     msgBox.setWindowFlags(Qt::FramelessWindowHint);
+//     msgBox.setWindowFlags(Qt::FramelessWindowHint| Qt::Dialog);
 
 //     if (state_payment == s_payment_processing || state_payment == s_payment_done)
 //     {

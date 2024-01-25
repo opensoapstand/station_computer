@@ -130,6 +130,8 @@ void page_idle::showEvent(QShowEvent *event)
 
     thisMachine->loadDynamicContent();
 
+    qDebug() << "Template folder : " << thisMachine->getTemplateFolder();
+
     thisMachine->dispenseButtonLightsAnimateState(true);
     thisMachine->setCouponState(enabled_not_set);
 
@@ -142,6 +144,7 @@ void page_idle::showEvent(QShowEvent *event)
     {
         thisMachine->initCouponState();
     }
+    
     thisMachine->resetSelectedBottle(); // reset selected bottle to default = empty
     thisMachine->setSelectedProduct(0); // default selected product is necessary to deal with things if no product is chosen yet e.g. show transaction history
 
@@ -162,6 +165,7 @@ void page_idle::showEvent(QShowEvent *event)
     thisMachine->setTemplateTextToObject(ui->label_reboot_nightly_text);
     thisMachine->setTemplateTextToObject(ui->label_reboot_nightly_title);
     thisMachine->setTemplateTextToObject(ui->pushButton_reboot_nightly);
+    
     QString reboot_nightly_icon_path = thisMachine->getTemplatePathFromName(REBOOT_NIGHTLY_ICON_PATH);
     thisMachine->addPictureToLabel(ui->label_reboot_nightly_icon, reboot_nightly_icon_path);
 
@@ -225,7 +229,6 @@ void page_idle::showEvent(QShowEvent *event)
     _receiptPrinterFeedBackTimerSec = PAGE_IDLE_RECEIPT_PRINTER_TIMEOUT_SECONDS;
 
     _delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
-
 // #define PLAY_VIDEO
 #ifdef PLAY_VIDEO
     // player = new QMediaPlayer(this);
@@ -481,8 +484,9 @@ void page_idle::onRebootNightlyTimeOutTimerTick()
                 thisMachine->setRebootState(wait_for_trigger);
                 _delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
                 stateScreenCheck = state_screen_check_not_initiated;
-                QString paymentMethod = thisMachine->getPaymentMethod(); 
-                if(paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA){
+                QString paymentMethod = thisMachine->getPaymentMethod();
+                if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA)
+                {
                     rebootTapDevice();
                 }
                 QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -r 0";
@@ -630,10 +634,22 @@ void page_idle::on_pushButton_to_select_product_page_clicked()
 
 void page_idle::hideCurrentPageAndShowProductMenu()
 {
-    if(thisMachine->hasBuyBottleOption()){
+    if (thisMachine->hasBuyBottleOption())
+    {
+        qDebug() << "hhashsh botttlele";
         this->hideCurrentPageAndShowProvided(p_page_buyBottle, true);
-    }else{
-        thisMachine->hasMixing() ? this->hideCurrentPageAndShowProvided(p_page_product_menu, true) : this->hideCurrentPageAndShowProvided(p_pageSelectProduct, true);
+    }
+    else
+    {
+        if (thisMachine->hasMixing())
+        {
+            this->hideCurrentPageAndShowProvided(p_page_product_menu, true);
+        }
+        else
+        {
+
+            this->hideCurrentPageAndShowProvided(p_pageSelectProduct, true);
+        }
     }
 }
 
@@ -677,18 +693,20 @@ void page_idle::on_pushButton_reboot_nightly_clicked()
     thisMachine->setRebootState(user_cancelled_reboot);
 }
 
-void page_idle::pingTapDevice(){
-    QString paymentMethod = thisMachine->getPaymentMethod(); 
-    if(paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA){
+void page_idle::pingTapDevice()
+{
+    QString paymentMethod = thisMachine->getPaymentMethod();
+    if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA)
+    {
         qDebug() << "Pinging Tap Serial Device";
         page_payment_tap_serial paymentSerialObject;
         paymentSerialObject.getLanInfo();
     }
 }
 
-void page_idle::rebootTapDevice(){
-        qDebug() << "Rebooting Tap Device";
-        page_payment_tap_serial paymentSerialObject;
-        paymentSerialObject.resetDevice();
-    
+void page_idle::rebootTapDevice()
+{
+    qDebug() << "Rebooting Tap Device";
+    page_payment_tap_serial paymentSerialObject;
+    paymentSerialObject.resetDevice();
 }

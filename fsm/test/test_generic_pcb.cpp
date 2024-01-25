@@ -779,18 +779,23 @@ void runMainTest()
 
                 if (pcb_to_test->getDispenseButtonEdgePositive(slot))
                 {
+                    debugOutput::sendMessage("+++++++++++++ positive button edge ++++++++++++++++++++++++++++", MSG_INFO);
+
                     pcb_to_test->setSingleDispenseButtonLight(slot, true);
                     pcb_to_test->setPumpEnable(slot);
                     pcb_to_test->startPump(slot);
                     pcb_to_test->setSolenoidFromArray(slot, 8, true);
                     pcb_to_test->getFlowSensorPulsesSinceEnabling(slot);
+                    pcb_to_test->displayMCP23017IORegisters(slot);
                 }
 
                 if (pcb_to_test->getDispenseButtonEdgeNegative(slot))
                 {
+                    debugOutput::sendMessage("--------------- negative button edge ----------------------", MSG_INFO);
                     pcb_to_test->setSingleDispenseButtonLight(slot, false);
                     pcb_to_test->setPumpsDisableAll();
                     pcb_to_test->setSolenoidFromArray(slot, 8, false);
+                    pcb_to_test->displayMCP23017IORegisters(slot);
                     // debugOutput::sendMessage("Flow sensor pulses during button press: " + std::to_string(pcb_to_test->getFlowSensorPulsesSinceEnabling(slot)), MSG_INFO);
                     // pcb_to_test->resetFlowSensorPulsesForDispenser(slot);
                 }

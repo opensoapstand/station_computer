@@ -240,7 +240,7 @@ public:
     uint8_t getMCP23017Register(uint8_t slot, uint8_t reg);
     void setMCP23017Register(uint8_t slot, uint8_t reg, uint8_t value);
 
-    void outputMCP23017IORegisters(uint8_t slot);
+    void displayMCP23017IORegisters(uint8_t slot);
 
     void registerFlowSensorTickCallback(int slot, std::function<void()> callback);
     PcbVersion pcb_version;

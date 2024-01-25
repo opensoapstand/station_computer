@@ -95,13 +95,11 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
 
     this->p_page_idle->thisMachine->setSelectedProduct(m_activePNumber);
 
-
     // shortcuts to other slots
     for (int slot_index = 0; slot_index < BASE_LINE_COUNT_MAX; slot_index++)
     {
-        if (this->p_page_idle->thisMachine->isSlotExisting(slot_index + 1) 
-            && this->p_page_idle->thisMachine->isAllowedAsAdmin()  // while transitioning, it's easy to tap the hidden page and get out of the UI this is a security risk. 
-            )
+        if (this->p_page_idle->thisMachine->isSlotExisting(slot_index + 1) && this->p_page_idle->thisMachine->isAllowedAsAdmin() // while transitioning, it's easy to tap the hidden page and get out of the UI this is a security risk.
+        )
         {
             QString button_text = this->p_page_idle->thisMachine->getTemplateTextByPage(this, "slot_shortcut");
             buttons_slot_shortcuts[slot_index]->setText(button_text.arg(slot_index + 1));

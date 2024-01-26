@@ -75,6 +75,7 @@ void page_help::showEvent(QShowEvent *event)
     ui->pushButton_to_maintenance->setStyleSheet(styleSheet);
     ui->pushButton_to_feedback->setStyleSheet(styleSheet);
     ui->pushButton_to_howTo->setStyleSheet(styleSheet);
+    ui->html_help_text->setStyleSheet(styleSheet);
 
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_to_transactions);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_to_maintenance);
@@ -220,7 +221,6 @@ void page_help::on_pushButton_to_maintenance_clicked()
 }
 
 void page_help::doneButtonPressed(){
-    qDebug() << "DONE CLICKED";
     QString textEntry = p_input_widget->findChild<QLineEdit *>("lineEdit_input")->text();
 
     // if role was already set, do not check pwd.

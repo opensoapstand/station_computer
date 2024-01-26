@@ -57,6 +57,10 @@ QPushButton {
    text-align: right;
 }
 
+#html_help_text{
+   background: transparent;
+}
+
 /* QPushButton#pushButton_refresh {
    background-color: transparent;
    border: 0px;

@@ -107,4 +107,22 @@ page_payment_tap_serial->animated_Label,{"x": 221, "y": 327, "width": 639, "heig
 page_payment_tap_tcp->pushButton_to_idle,{"x": 460, "y": 1760, "width": 161, "height": 141}
 page_payment_tap_tcp->animated_Label,{"x": 221, "y": 327, "width": 639, "height": 639}
 
+page_help->html_help_text,{"x": 100, "y": 270, "width": 891, "height": 1191}
+page_help->html_text_label,{"x": 100, "y": 270, "width": 891, "height": 1231}
+page_help->keyboard_3,{"x": 20, "y": 1420, "width": 1051, "height": 441}
+page_help->pushButton_resetTimeout,{"x": 0, "y": -6, "width": 1125, "height": 1931}
+page_help->pushButton_to_feedback,{"x": 50, "y": 1800, "width": 221, "height": 71}
+page_help->pushButton_to_howTo,{"x": 430, "y": 1800, "width": 221, "height": 71}
+page_help->pushButton_to_idle,{"x": 70, "y": 40, "width": 401, "height": 41}
+page_help->pushButton_to_maintenance,{"x": 810, "y": 1800, "width": 221, "height": 71}
+page_help->pushButton_to_transactions,{"x": 610, "y": 40, "width": 401, "height": 41}
+
+page_end->label_client_logo,{"x": 370, "y": 1710, "width": 351, "height": 211}
+page_end->label_manufacturer_logo,{"x": 300, "y": 250, "width": 471, "height": 331}
+page_end->label_message,{"x": 110, "y": 590, "width": 841, "height": 420}
+page_end->label_message_2,{"x": 0, "y": 1020, "width": 1081, "height": 480}
+page_end->label_volume_dispensed,{"x": 240, "y": 1530, "width": 600, "height": 71}
+page_end->label_volume_dispensed_ml,{"x": 240, "y": 1620, "width": 600, "height": 71}
+page_end->pushButton_contact,{"x": 340, "y": 1380, "width": 400, "height": 101}
+page_end->pushButton_to_idle,{"x": 0, "y": 10, "width": 1080, "height": 1920}
 

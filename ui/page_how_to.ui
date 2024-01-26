@@ -182,6 +182,36 @@
     <string>pushButton_to_maintenance</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="pushButton_resetTimeout">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1080</width>
+     <height>1920</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-image: url(/home/df-admin/production/references/background.png);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <zorder>pushButton_resetTimeout</zorder>
+  <zorder>pushButton_to_help</zorder>
+  <zorder>label_page_title</zorder>
+  <zorder>label_step01_image</zorder>
+  <zorder>label_step02_image</zorder>
+  <zorder>label_step03_image</zorder>
+  <zorder>label_step01_heading</zorder>
+  <zorder>label_step02_heading</zorder>
+  <zorder>label_step03_heading</zorder>
+  <zorder>label_step01_instruction</zorder>
+  <zorder>label_step02_instruction</zorder>
+  <zorder>label_step03_instruction</zorder>
+  <zorder>pushButton_to_feedback</zorder>
+  <zorder>pushButton_to_maintenance</zorder>
  </widget>
  <resources/>
  <connections/>

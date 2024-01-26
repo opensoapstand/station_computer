@@ -146,3 +146,7 @@ page_product_freeSample->pushButton_continue->proceed_pay_qr,Pay with QR
 page_product_freeSample->pushButton_continue_additional->proceed_pay_qr,Pay with QR
 page_product_freeSample->label_selected_volume->custom_volume,Custom Volume (maximum: %1)
 page_product_freeSample->label_steps,<ol><li><span class='tab'></span>Scan QR to get your coupon.</li>        <li><span class='tab'></span>Enter the coupon code.</li>        <li><span class='tab'></span>Enjoy your Sip!</li></ol>  
+
+
+# input_widget
+input_widget->label_input_info,Enter password followed by the "Return" key to enter maintenance mode

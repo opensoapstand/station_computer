@@ -29,6 +29,9 @@ void input_widget::showEvent(QShowEvent *event)
     ui->label_input_background->setStyleSheet(styleSheet);
     ui->label_input_info->setStyleSheet(styleSheet);
     ui->lineEdit_input->setStyleSheet(styleSheet);
+
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->label_input_info);
+
     refresh();
 }
 

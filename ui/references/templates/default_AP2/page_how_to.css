@@ -15,13 +15,18 @@
     font-weight: 700;
 }
 
-/* .stepImages{
+.stepImages{
     border-top-left-radius: 0px;
     border-top-right-radius: 100px;
     border-bottom-right-radius: 100px;
     border-bottom-left-radius: 100px;
-    border: 1px solid black;
-} */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-clip: content;
+    color: transparent;
+}
 
 .setpInstruction{
     color: #211403;
@@ -55,25 +60,19 @@
     background: #FEFCFA;
 }
 
-#label_step01_image{
-    border-top-left-radius: 0px;
-    border-top-right-radius: 100px;
-    border-bottom-right-radius: 100px;
-    border-bottom-left-radius: 100px;
-    background-image: url(%IMAGE_PATH1%);
-}
-#label_step02_image{
-    border-top-left-radius: 0px;
-    border-top-right-radius: 100px;
-    border-bottom-right-radius: 100px;
-    border-bottom-left-radius: 100px;
-    background-image: url(%IMAGE_PATH2%);
-}
-#label_step03_image{
-    border-top-left-radius: 0px;
-    border-top-right-radius: 100px;
-    border-bottom-right-radius: 100px;
-    border-bottom-left-radius: 100px;
-    background-image: url(%IMAGE_PATH3%);
+.buttonBGTransparent{
+    background-color: transparent;
+    border: 0px;
 }
 
+#label_step01_image{
+    background-image: url(%IMAGE_PATH1%);
+}
+
+#label_step02_image{
+    background-image: url(%IMAGE_PATH2%);
+}
+
+#label_step03_image{
+    background-image: url(%IMAGE_PATH3%);
+}

@@ -1687,3 +1687,11 @@ bool machine::hasMixing()
         return false;
     }
 }
+
+void machine::setFreeSampleEndURL(QString ending_url){
+    m_freesample_end_url = ending_url;
+}
+
+QString machine::getFreeSampleEndURL(){
+    return m_freesample_end_url;
+}

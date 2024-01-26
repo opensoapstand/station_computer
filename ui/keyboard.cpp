@@ -50,7 +50,7 @@ void keyboard::keyboardButtonPressed(int buttonID)
     {
         foreach (QAbstractButton *button, ui->buttonGroup->buttons())
         {
-            if (button->text() == "Space" || button->text() == "Done" || button->text() == "Cancel" || button->text() == "Clear" || button->text() == "Backspace")
+            if (button->text() == "Space" || button->text() == "Done" || button->text() == "Cancel" || button->text() == "Clear" || button->text() == "Backspace" || button->text() == "Return")
             {
             }
             else
@@ -63,7 +63,7 @@ void keyboard::keyboardButtonPressed(int buttonID)
     {
         foreach (QAbstractButton *button, ui->buttonGroup->buttons())
         {
-            if (button->text() == "Space" || button->text() == "Done" || button->text() == "Cancel" || button->text() == "Clear" || button->text() == "Backspace")
+            if (button->text() == "Space" || button->text() == "Done" || button->text() == "Cancel" || button->text() == "Clear" || button->text() == "Backspace" || button->text() == "Return")
             {
                 // doing nothing
             }
@@ -85,7 +85,7 @@ void keyboard::keyboardButtonPressed(int buttonID)
     {
         widgetForTextEdit->setText(widgetForTextEdit->text() + " ");
     }
-    else if (buttonText == "Return")
+    else if (buttonText == "Return" || buttonText == "Done")
     {
         if(callbackFunction){
             callbackFunction();
@@ -99,8 +99,8 @@ void keyboard::keyboardButtonPressed(int buttonID)
         //     p_page_overview->reset_and_show_page_elements();
         //     p_page_overview->apply_promo_code(widgetForTextEdit->text());
         // }
-        is_keyboard_visible = false;
-        refresh();
+        // is_keyboard_visible = false;
+        // refresh();
     }
     else if (buttonText == "&&")
     {
@@ -119,19 +119,10 @@ void keyboard::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
     QString styleSheet = p_page_idle->thisMachine->getCSS(KEYBOARD_CSS);
     ui->keyboard_3->setStyleSheet(styleSheet);
-    // ui->statusbar_bg->setStyleSheet(styleSheet);
-    // ui->label_active_role->setStyleSheet(styleSheet);
-    // ui->label_session_id->setStyleSheet(styleSheet);
-    // ui->label_coupon_code->setStyleSheet(styleSheet);
-    // ui->pushButton_hide->setStyleSheet(styleSheet);
 
     QString keyboard = UNIVERSAL_KEYBOARD_IMAGE_PATH;
     QString keyboard_picture_path = p_page_idle->thisMachine->getTemplatePathFromName(keyboard);
     p_page_idle->thisMachine->addPictureToLabel(ui->label_keyboard_background, keyboard_picture_path);
-
-    // ui->pushButton_active_role->setStyleSheet(styleSheet);
-    // p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_active_role, "normal", STATUSBAR_CSS);
-    // p_page_idle->thisMachine->addCssClassToObject(ui->label_active_role, "normal", STATUSBAR_CSS);
 
     refresh();
 }

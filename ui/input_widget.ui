@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>input_widget</class>
+ <widget class="QWidget" name="input_widget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1080</width>
+    <height>160</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1080</width>
+    <height>160</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1080</width>
+    <height>160</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QLineEdit" name="lineEdit_input">
+   <property name="geometry">
+    <rect>
+     <x>47</x>
+     <y>75</y>
+     <width>987</width>
+     <height>70</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>50</height>
+    </size>
+   </property>
+   <property name="echoMode">
+    <enum>QLineEdit::Password</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_input_info">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>32</y>
+     <width>875</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Enter password followed by the &quot;Done&quot; key to enter maintenance mode</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_input_background">
+   <property name="geometry">
+    <rect>
+     <x>21</x>
+     <y>0</y>
+     <width>1040</width>
+     <height>160</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <zorder>label_input_background</zorder>
+  <zorder>label_input_info</zorder>
+  <zorder>lineEdit_input</zorder>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

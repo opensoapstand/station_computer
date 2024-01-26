@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1080</width>
+    <width>1125</width>
     <height>1920</height>
    </rect>
   </property>
@@ -21,7 +21,7 @@
     <rect>
      <x>0</x>
      <y>-6</y>
-     <width>1081</width>
+     <width>1125</width>
      <height>1931</height>
     </rect>
    </property>
@@ -558,6 +558,22 @@
       </attribute>
      </widget>
     </item>
+    <item row="4" column="10">
+     <widget class="QPushButton" name="pushButton_229">
+      <property name="maximumSize">
+       <size>
+        <width>50</width>
+        <height>50</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>{</string>
+      </property>
+      <attribute name="buttonGroup">
+       <string notr="true">buttonGroup</string>
+      </attribute>
+     </widget>
+    </item>
     <item row="5" column="2">
      <widget class="QPushButton" name="pushButton_233">
       <property name="maximumSize">
@@ -1073,22 +1089,6 @@
       </attribute>
      </widget>
     </item>
-    <item row="4" column="10">
-     <widget class="QPushButton" name="pushButton_229">
-      <property name="maximumSize">
-       <size>
-        <width>50</width>
-        <height>50</height>
-       </size>
-      </property>
-      <property name="text">
-       <string>{</string>
-      </property>
-      <attribute name="buttonGroup">
-       <string notr="true">buttonGroup</string>
-      </attribute>
-     </widget>
-    </item>
     <item row="2" column="7">
      <widget class="QPushButton" name="pushButton_200">
       <property name="maximumSize">
@@ -1168,9 +1168,9 @@
   <widget class="QLabel" name="html_text_label">
    <property name="geometry">
     <rect>
-     <x>140</x>
+     <x>100</x>
      <y>270</y>
-     <width>800</width>
+     <width>891</width>
      <height>1231</height>
     </rect>
    </property>
@@ -1210,6 +1210,19 @@
     <string>back</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="pushButton_to_howTo">
+   <property name="geometry">
+    <rect>
+     <x>430</x>
+     <y>1800</y>
+     <width>221</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Instructions</string>
+   </property>
+  </widget>
   <zorder>html_text_label</zorder>
   <zorder>pushButton_resetTimeout</zorder>
   <zorder>pushButton_to_transactions</zorder>
@@ -1217,6 +1230,7 @@
   <zorder>pushButton_to_feedback</zorder>
   <zorder>html_help_text</zorder>
   <zorder>pushButton_to_idle</zorder>
+  <zorder>pushButton_to_howTo</zorder>
   <zorder>keyboard_3</zorder>
  </widget>
  <resources/>

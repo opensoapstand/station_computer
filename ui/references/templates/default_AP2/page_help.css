@@ -37,9 +37,22 @@ QPushButton {
    font-family: 'Lato';
    font-style: normal;
    font-weight: 400;
-   font-size: 32px;
+   font-size: 48px;
    background-color: #FEFCFA;
    border: 5px solid 895E25;
+   border-radius: 25px;
+}
+
+#pushButton_to_howTo{
+   font-family: 'Lato';
+   font-style: normal;
+   font-weight: 400;
+   color: #FEFCFA;
+   text-align: center;
+   qproperty-alignment: AlignVCenter;
+   font-size: 48px;
+   background: #895E25;
+   border: 5px solid #895E25;
    border-radius: 25px;
 }
 
@@ -56,6 +69,7 @@ QPushButton {
 #pushButton_to_transactions{
    text-align: right;
 }
+
 
 #html_help_text{
    background: transparent;

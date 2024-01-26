@@ -81,7 +81,9 @@ page_end->pushButton_contact,Feedback
 # page_help
 page_help->pushButton_to_idle,←BACK
 page_help->pushButton_to_transactions,TRANSACTIONS→
-page_help->pushButton_to_howTo,instructions
+page_help->pushButton_to_howTo,Instruction
+page_help->pushButton_to_maintenance,Settings
+page_help->pushButton_to_feedback,Contact us
 
 #page_how_to
 page_how_to->label_page_title,How to Use

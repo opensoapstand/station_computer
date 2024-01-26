@@ -408,21 +408,12 @@ void page_product_menu::select_base_product_in_menu(int base_product_index)
 
 void page_product_menu::select_submenu_option(int position)
 {
-
-
     int option = m_selectedBaseProductIndex * DISPENSE_PRODUCTS_PER_BASE_LINE_MAX + position;
-
-
     if (p_page_idle->thisMachine->getIsOptionAvailable(option))
     {
         p_page_idle->thisMachine->setSelectedProductByOption(option);
-
-
         p_page_idle->thisMachine->setSelectedSlotFromSelectedProduct();
-        qDebug() << "Invalid choice. Option not available: " << option;
-
         p_page_idle->thisMachine->getSelectedProduct()->resetCustomMixRatioParameters();
-
         p_page_idle->thisMachine->hasMixing() ? hideCurrentPageAndShowProvided(p_page_product_mixing) : hideCurrentPageAndShowProvided(p_page_product);
     }
     else

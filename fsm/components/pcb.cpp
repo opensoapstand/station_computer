@@ -268,7 +268,7 @@ bool pcb::getMCP23017Input(uint8_t slot, int posIndex, uint8_t GPIORegister)
     return (ReadByte(get_MCP23017_address_from_slot(slot), GPIORegister) & (1 << posIndex));
 }
 
-void pcb::outputMCP23017IORegisters(uint8_t slot)
+void pcb::displayMCP23017IORegisters(uint8_t slot)
 {
     switch (pcb_version)
     {
@@ -277,8 +277,8 @@ void pcb::outputMCP23017IORegisters(uint8_t slot)
     case EN258_8SLOTS:
     {
 
-        uint8_t register_gpioA_value = getMCP23017Register(1, MCP23017_REGISTER_GPA);
-        uint8_t register_gpioB_value = getMCP23017Register(1, MCP23017_REGISTER_GPB);
+        uint8_t register_gpioA_value = getMCP23017Register(slot, MCP23017_REGISTER_GPA);
+        uint8_t register_gpioB_value = getMCP23017Register(slot, MCP23017_REGISTER_GPB);
         std::bitset<8> binaryA(register_gpioA_value);
         std::bitset<8> binaryB(register_gpioB_value);
         debugOutput::sendMessage("Pcb: MCP23017 status for slot: " + std::to_string(slot) + " GPA : " + binaryA.to_string() + " GPB : " + binaryB.to_string(), MSG_INFO);
@@ -340,6 +340,10 @@ void pcb::pcb_refresh()
         usleep(5000000);
         debugOutput::sendMessage("ASSERT ERROR: PCB not detected. Replace pcb? i2c working correctly?", MSG_ERROR);
     }
+}
+
+bool pcb::isPcbValid(){
+    return get_pcb_version() != INVALID;
 }
 void pcb::setup()
 {
@@ -987,12 +991,12 @@ void pcb::setSingleDispenseButtonLight(uint8_t slot, bool onElseOff)
     {
         if (onElseOff)
         {
-            // debugOutput::sendMessage("Set button light on: " + to_string(slot), MSG_INFO);
+            // debugOutput::sendMessage("Pcb: slot " + to_string(slot) + ": Button light ON " , MSG_INFO);
             setMCP23017Output(slot, MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON, false, MCP23017_REGISTER_GPB);
         }
         else
         {
-            // debugOutput::sendMessage("Set button light off: " + to_string(slot), MSG_INFO);
+            // debugOutput::sendMessage("Pcb: slot " + to_string(slot) + ": Button light OFF " , MSG_INFO);
             setMCP23017Output(slot, MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON, true, MCP23017_REGISTER_GPB);
         }
     };
@@ -1525,7 +1529,7 @@ void pcb::pollFlowSensor(uint8_t slot)
         {
         case (pcb::DIGMESA):
         {
-            state = getMCP23017Input(slot, MCP23017_EN258_GPA7_PIN_OUT_FLOW_SENSOR_DIGMESA, MCP23017_REGISTER_GPA);
+            state = getMCP23017Input(slot, MCP23017_EN258_GPA7_PIN_IN_FLOW_SENSOR_DIGMESA, MCP23017_REGISTER_GPA);
         }
         break;
         case (pcb::AICHI):

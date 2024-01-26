@@ -1509,9 +1509,9 @@ text-align: center;
    <property name="geometry">
     <rect>
      <x>851</x>
-     <y>1730</y>
+     <y>1718</y>
      <width>179</width>
-     <height>110</height>
+     <height>122</height>
     </rect>
    </property>
    <property name="autoFillBackground">
@@ -1521,20 +1521,6 @@ text-align: center;
     <string>Try Sample</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_background_sample">
-   <property name="geometry">
-    <rect>
-     <x>860</x>
-     <y>1740</y>
-     <width>170</width>
-     <height>100</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <zorder>label_background_sample</zorder>
   <zorder>label_background_custom</zorder>
   <zorder>pushButton_order_sample</zorder>
   <zorder>pushButton_order_custom</zorder>

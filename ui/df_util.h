@@ -9,12 +9,11 @@
 
 
 // TODO: Refactor to fit with dfuicommthread
-// #define START_FSM_FROM_UI //enabled by default (start controller from ui)
 #define UI_VERSION "3.1"
 
 #define OPTION_SLOT_INVALID 0
-#define MAX_SLOT_COUNT 20 // number of slots
-#define REQUIRED_SLOT_COUNT 4
+#define SELECT_PRODUCT_PAGE_SLOT_COUNT_MAX 4
+#define MAINTENANCE_PAGE_SLOT_COUNT_MAX 4
 
 #define SIZES_COUNT 7
 #define MINIMUM_DISPENSE_VOLUME_ML 10.0
@@ -29,6 +28,7 @@
 
 #define ADDITIVES_PER_SLOT_COUNT_MAX 5
 #define BASE_LINE_COUNT_MAX 5 // maximum amount of base lines
+#define MAX_SLOT_COUNT BASE_LINE_COUNT_MAX // number of slots
 #define DISPENSE_PRODUCTS_PER_BASE_LINE_MAX 6   // drinks per base line  (not dynamic, redo ui elements in qt creator when changing... )
 #define MENU_PRODUCT_SELECTION_OPTIONS_MAX BASE_LINE_COUNT_MAX * DISPENSE_PRODUCTS_PER_BASE_LINE_MAX // the offered selection of product to the user
 #define DUMMY_PNUMBER 1
@@ -64,6 +64,10 @@
 
 using namespace std;
 
+
+#define PAGE_INIT_READY_TIMEOUT_SECONDS 10
+#define PAGE_INIT_REBOOT_TIMEOUT_SECONDS 3600
+#define PAGE_IDLE_DELAY_BEFORE_ENTERING_IDLE_PRODUCTS 15
 #define PAGE_IDLE_DELAY_BEFORE_ENTERING_IDLE_PRODUCTS 15
 #define STATUS_BAR_REFRESH_PERIOD_SECONDS 3
 #define PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS 60 // 60
@@ -96,9 +100,12 @@ using namespace std;
 #define PRODUCT_PICTURES_ROOT_PATH                      "/home/df-admin/production/references/products/%1.png"
 #define CLIENT_LOGO_PATH                                "/home/df-admin/production/references/logos/%1_logo_white.png"
 #define PAGE_HELP_CSS                                   "page_help.css"
+#define PAGE_HOWTO_CSS                                  "page_how_to.css"
 #define PAGE_FEEDBACK_CSS                               "page_sendFeedback.css"
 #define STATUSBAR_CSS                                   "statusbar.css"
-#define KEYBOARD_CSS                                   "keyboard.css"
+#define INPUT_WIDGET_CSS                                "input_widget.css"
+#define KEYBOARD_CSS                                    "keyboard.css"
+#define PAGE_INIT_CSS                                   "page_init.css"
 #define PAGE_IDLE_CSS                                   "page_idle.css"
 #define PAGE_BUY_BOTTLE_CSS                             "page_buyBottle.css"
 #define PAGE_PRODUCT_MENU_CSS                           "page_product_menu.css"
@@ -170,6 +177,10 @@ using namespace std;
 
 #define PAGE_HELP_BACKGROUND_GENERIC_WHITE "background_generic_white_empty.png"
 #define PAGE_HELP_BACKGROUND_PATH "background_help.png"
+#define PAGE_HOWTO_BACKGROUND_PATH "background_how_to.png"
+#define PAGE_HOWTO_STEP1 "page_howTo_step1.png"
+#define PAGE_HOWTO_STEP2 "page_howTo_step2.png"
+#define PAGE_HOWTO_STEP3 "page_howTo_step3.png"
 #define SEND_DISPENSE_START "d"
 // #define SEND_DISPENSE_STOP "f"
 #define SEND_REPAIR_PCA "pcabugfix"

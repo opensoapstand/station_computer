@@ -179,7 +179,7 @@ void page_payment_tap_tcp::showEvent(QShowEvent *event)
     msgBox = nullptr;
 
     qDebug() << "Prepare tap order";
-    tapPaymentHandler();
+    // tapPaymentHandler();
 }
 
 void page_payment_tap_tcp::hideCurrentPageAndShowProvided(QWidget *pageToShow)
@@ -367,7 +367,7 @@ bool page_payment_tap_tcp::exitConfirm()
     {
         // ARE YOU SURE YOU WANT TO EXIT?
         msgBox = new QMessageBox();
-        msgBox->setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
+        msgBox->setWindowFlags(Qt::FramelessWindowHint| Qt::Dialog); // do not show messagebox header with program name
         p_page_idle->thisMachine->addCssClassToObject(msgBox, "msgBoxbutton msgBox", PAGE_TAP_PAYMENT_CSS);
         QString searchString = this->objectName() + "->msgBox_cancel";
         // p_page_idle->thisMachine->setTextToObject(&msgBox, p_page_idle->thisMachine->getTemplateText(searchString));

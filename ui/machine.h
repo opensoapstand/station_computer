@@ -54,7 +54,7 @@ class machine : public QObject
 public:
     machine();
     ~machine();
-    void loadMachineParameterFromDb();
+    bool loadMachineParameterFromDb();
     void setDb(DbManager *db);
     DbManager *getDb();
     void initMachine();
@@ -66,6 +66,10 @@ public:
     bool isSessionLocked();
 
     QString getSizeUnit();
+
+    bool isMachineDBLoaded();
+    bool isSlotsLoaded();
+    bool isProductsLoaded();
 
     void dispenseButtonLightsAnimateState(bool animateElseOff);
     bool slotNumberValidityCheck(int slot);
@@ -97,6 +101,8 @@ public:
     void resetSessionId();
     QString getSessionId();
 
+    void reboot();
+
     QString getClientId();
 
     QString getTemplateFolder();
@@ -110,8 +116,6 @@ public:
     bool getPumpRampingEnabled();
     QString getHelpPageHtmlText();
 
-    bool isSlotExisiting(int slot_index);
-
     bool getIsMachineEnabled();
     void setIsMachineEnabled(bool isEnabled);
     void setIsMachineEnabled(bool isEnabled, QString statusText);
@@ -122,6 +126,7 @@ public:
     int getSlotCount();
     void setSlots(dispenser_slot *slotss);
     bool isSlotCountBiggerThanMaxSlotCount(int slot_count);
+    bool isSlotExisting(int slot);
 
     void setSelectedSlot(int slot);
     void setSelectedSlotFromSelectedProduct();
@@ -188,7 +193,7 @@ public:
     double getPriceWithDiscount(double price);
 
     QStringList getChildNames(QObject *parent);
-    void loadDynamicContent();
+    bool loadDynamicContent();
     void loadBottle();
     QString getCSS(QString cssName);
     void addCssClassToObject(QWidget *element, QString classname, QString css_file_name);
@@ -260,9 +265,12 @@ public:
     int m_screen_wakeup_time24h;
     int m_buy_bottle_1;
     int m_buy_bottle_2;
-
+    QString m_freesample_end_url;
     int m_is_enabled;
     QString m_status_text;
+    bool m_machine_database_table_loaded_successfully = false;
+    bool m_slots_loaded_successfully = false;
+    bool m_products_loaded_successfully = false;
 
     QString m_min_threshold_vol_ml_discount;
     QString m_max_threshold_vol_ml_discount;
@@ -285,7 +293,8 @@ public:
     void addToTransactionLogging(QString text);
     QString getTransactionLogging();
     bool hasMixing();
-
+    void setFreeSampleEndURL(QString ending_url);
+    QString getFreeSampleEndURL();
 public slots:
 
 signals:

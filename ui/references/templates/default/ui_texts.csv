@@ -15,8 +15,10 @@
 
 #################### page_init
 page_init->label_init_message,Wait for controller signal.
-page_init->label_fail_message->tap_payment,Waiting for payment...
-page_init->label_fail_message,Timeout. No Response from controller. Will start standalone mode. If controller becomes active, commands will be executed. If not, no commands will be executed.
+# page_init->label_fail_message->tap_payment,Waiting for payment...
+# page_init->label_fail_message,Timeout. No Response from controller. Will start standalone mode. If controller becomes active, commands will be executed. If not, no commands will be executed.
+page_init->pushButton_continue,Continue\nanyways
+page_init->pushButton_reboot,Reboot
 
 #################### page_idle
 page_idle->label_welcome_message->testargument,Refill %1 here!<br>Tap screen to start
@@ -115,7 +117,7 @@ page_end->label_message->finish_transaction,Finishing<br>transaction
 #################### page_help
 page_help->pushButton_to_transactions,transaction history ->
 page_help->pushButton_to_maintenance,settings
-page_help->pushButton_to_feedback,contact Us
+page_help->pushButton_to_feedback,contact us
 page_help->pushButton_to_idle,<- back
 page_help->label_keyboardInfo,Provide maintainer or administrator password, followed by "Done". 
 
@@ -194,10 +196,10 @@ page_maintenance->status_text->default,No status
 page_maintenance->label_title_maintenance_mode,Maintenance mode
 page_maintenance->pushButton_to_previous_page,<- back
 page_maintenance->pushButton_general_settings,general settings->
-page_maintenance->label_product_1_position,P1
-page_maintenance->label_product_2_position,P2
-page_maintenance->label_product_3_position,P3
-page_maintenance->label_product_4_position,P4
+page_maintenance->label_product_1_position,Dispenser 1
+page_maintenance->label_product_2_position,Dispenser 2
+page_maintenance->label_product_3_position,Dispenser 3
+page_maintenance->label_product_4_position,Dispenser 4
 page_maintenance->label_role->user,Logged in as User. Use the machine as a customer.
 page_maintenance->label_role->maintainer,Logged in as Maintainer: <br/>Swap out products and perform <br/> basic maintenance and tests.
 page_maintenance->label_role->admin,Logged in as Administrator: Full rights.
@@ -207,6 +209,7 @@ page_maintenance->label_qr_manual_description,Scan for user manual
 
 
 #################### page_maintenance_dispenser
+page_maintenance_dispenser->slot_shortcut,slot %1
 page_maintenance_dispenser->pushButton_to_previous_page,<- back
 page_maintenance_dispenser->label_calibration_instructions,Flowsensor calibration instructions:<br>1.Enable the pump<br>2.Take a measuring cup and dispense until the 1liter mark<br>3.Check the calibration value<br>4.Update the calibration value if different
 page_maintenance_dispenser->pushButton_set_restock_volume,Define restock volume
@@ -267,23 +270,3 @@ page_maintenance_general->pushButton_shutdown,Shut Down
 page_maintenance_general->pushButton_reboot,Restart Station
 page_maintenance_general->label_feedback,Feedback
 page_maintenance_general->label_status_feedback,Command Feedback
-
-#################### page_product_freeSample
-page_product_freeSample->pushButton_select_product_page,<- back
-page_product_freeSample->label_discount_tag,Discount
-page_product_freeSample->pushButton_continue,Continue
-page_product_freeSample->pushButton_continue->proceed_pay_tap,Pay with TAP
-page_product_freeSample->pushButton_continue->proceed_pay_qr,Pay with QR
-page_product_freeSample->pushButton_continue_additional->proceed_pay_qr,Pay with QR
-page_product_freeSample->label_pay,efijaiefj
-page_product_freeSample->label_total->non_custom_volume,Total
-page_product_freeSample->label_total->custom_volume,Price for maximum %1
-page_product_freeSample->lineEdit_promo_code->valid,Promo Code Valid
-page_product_freeSample->lineEdit_promo_code->invalid,Promo Code Invalid
-page_product_freeSample->lineEdit_promo_code->ineligible,Promo Code Not Eligible At This Station
-page_product_freeSample->lineEdit_promo_code->network_error,Network error, could not verify. Try again.
-page_product_freeSample->lineEdit_promo_code->invite,Tap here to enter Promo Code / Coupon
-page_product_freeSample->label_selected_volume->custom_volume,Custom Volume<br>(maximum: %1)
-page_product_freeSample->pushButton_continue->proceed_free,Proceed
-page_product_freeSample->pushButton_continue->proceed_pay,Continue
-page_product_freeSample->label_total,Total Amount

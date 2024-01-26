@@ -99,7 +99,8 @@ bool machine::loadDynamicContent()
     return success;
 }
 
-void machine::reboot(){
+void machine::reboot()
+{
     qDebug() << "Will reboot machine now.";
     QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -r 0";
     system(qPrintable(command));
@@ -309,6 +310,7 @@ int machine::getSlotFromBasePNumber(int base_pnumber)
 {
     int occurences_of_base_pnumber = 0;
     int slot_with_base_pnumber;
+
     for (uint8_t slot_index = 0; slot_index < getSlotCount(); slot_index++)
     {
         int base_pnumber_in_slot = m_slots[slot_index].getBasePNumber();
@@ -420,7 +422,6 @@ void machine::setSelectedSlot(int slot)
 }
 void machine::setSelectedSlotFromSelectedProduct()
 {
-
     // FOR NOW this will only return a slot if the selected product has a base_product.
 
     // check base product from selected product
@@ -428,6 +429,7 @@ void machine::setSelectedSlotFromSelectedProduct()
 
     int base_pnumber = m_selectedProduct->getFirstMixPNumberOrPNumberAsBasePNumber(); // if this is not a mix, it will return the main p number.
 
+    qDebug() << "Base pnumber : " << base_pnumber;
     int slot = getSlotFromBasePNumber(base_pnumber);
     setSelectedSlot(slot);
     qDebug() << "set selected slot: " << slot;
@@ -590,8 +592,6 @@ void machine::initCouponState()
         qDebug() << "Machine: Coupons disabled.";
         m_stateCoupon = disabled;
     }
-
-    
 }
 
 void machine::setRebootState(StateReboot state)
@@ -741,7 +741,7 @@ QString machine::getTemplatePathFromName(QString fileName)
         if (!df_util::pathExists(filePath))
         {
             // qDebug() << "File not found in default hardware folder: " + filePath + " Will try default.";
-            
+
             // check if file exists in default template
             filePath = QString(TEMPLATES_ROOT_PATH) + QString(TEMPLATES_DEFAULT_NAME) + "/" + fileName;
             if (!df_util::pathExists(filePath))

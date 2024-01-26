@@ -167,6 +167,7 @@ public:
     void setup();
     void pcb_refresh();
     void initialize_pcb(void);
+    bool isPcbValid();
     bool define_pcb_version(void);
     PcbVersion get_pcb_version();
     bool isSlotAvailable(uint8_t slot);
@@ -174,6 +175,7 @@ public:
     bool isTemperatureSensorMCP9808Available_2(); // 2nd sensor
     bool isTemperatureSensorADS7830Available();   // 2nd sensor
     std::string toString(PcbVersion version);
+
 
     unsigned char getPumpPWM();
     bool setPumpPWM(uint8_t pwm_val);

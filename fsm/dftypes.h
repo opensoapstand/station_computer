@@ -70,6 +70,8 @@
 #define IO_PIN_ENABLE_3point3V 389 // connector pin 28 for EN258 pcb
 #define IO_PIN_ENABLE_5V 338       // connector pin 12 for EN258 pcb
 
+#define power_cycle_attempt_AT_INVALID_PCB 10
+
 #define PIC_PROGRAMMER_PIN_VPP 337
 #define PIC_PROGRAMMER_PIN_PGC 412
 #define PIC_PROGRAMMER_PIN_PGD 413

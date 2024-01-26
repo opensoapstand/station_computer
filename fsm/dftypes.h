@@ -70,6 +70,8 @@
 #define IO_PIN_ENABLE_3point3V 389 // connector pin 28 for EN258 pcb
 #define IO_PIN_ENABLE_5V 338       // connector pin 12 for EN258 pcb
 
+#define power_cycle_attempt_AT_INVALID_PCB 10
+
 #define PIC_PROGRAMMER_PIN_VPP 337
 #define PIC_PROGRAMMER_PIN_PGC 412
 #define PIC_PROGRAMMER_PIN_PGD 413
@@ -82,7 +84,7 @@
 #define SLOW_START_INCREASE_PERIOD_MILLIS 2 // set to 0 for instant start
 #define SLOW_STOP_PERIOD_MILLIS 1           // set to 0 for instant stop
 
-#define DISPENSE_STATUS_UPDATE_DELTA_MILLIS 1000 // period of which controller can send status to ui and logging and terminal
+#define DISPENSE_STATUS_UPDATE_DELTA_MILLIS 2000 // period of which controller can send status to ui and logging and terminal
 
 #define SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS 3000
 // #define EMPTY_CONTAINER_DETECTION_FLOW_THRESHOLD_ML_PER_S 15 // reference: at 2l/min we have 33ml/s

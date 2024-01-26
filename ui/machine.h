@@ -265,7 +265,7 @@ public:
     int m_screen_wakeup_time24h;
     int m_buy_bottle_1;
     int m_buy_bottle_2;
-
+    QString m_freesample_end_url;
     int m_is_enabled;
     QString m_status_text;
     bool m_machine_database_table_loaded_successfully = false;
@@ -293,7 +293,8 @@ public:
     void addToTransactionLogging(QString text);
     QString getTransactionLogging();
     bool hasMixing();
-
+    void setFreeSampleEndURL(QString ending_url);
+    QString getFreeSampleEndURL();
 public slots:
 
 signals:

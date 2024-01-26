@@ -107,25 +107,22 @@ page_payment_tap_serial->animated_Label,{"x": 221, "y": 327, "width": 639, "heig
 page_payment_tap_tcp->pushButton_to_idle,{"x": 460, "y": 1760, "width": 161, "height": 141}
 page_payment_tap_tcp->animated_Label,{"x": 221, "y": 327, "width": 639, "height": 639}
 
-page_product_freeSample->label_discount_tag,{"x": 130, "y": 1175, "width": 185, "height": 34}
-page_product_freeSample->label_gif,{"x": 440, "y": 960, "width": 200, "height": 200}
-page_product_freeSample->label_help,{"x": 478, "y": 1773, "width": 125, "height": 125}
-page_product_freeSample->label_invoice_box,{"x": 94, "y": 890, "width": 891, "height": 760}
-page_product_freeSample->label_invoice_discount_amount,{"x": 709, "y": 1160, "width": 251, "height": 80}
-page_product_freeSample->label_invoice_discount_name,{"x": 120, "y": 1400, "width": 641, "height": 41}
-page_product_freeSample->label_invoice_name,{"x": 130, "y": 993, "width": 581, "height": 91}
-page_product_freeSample->label_invoice_price,{"x": 709, "y": 993, "width": 251, "height": 80}
-page_product_freeSample->label_invoice_price_total,{"x": 659, "y": 1340, "width": 301, "height": 44}
-page_product_freeSample->label_product_photo,{"x": 94, "y": 256, "width": 445, "height": 450}
-page_product_freeSample->label_selected_price,{"x": 668, "y": 830, "width": 317, "height": 55}
-page_product_freeSample->label_selected_volume,{"x": 538, "y": 256, "width": 445, "height": 450}
-page_product_freeSample->label_total,{"x": 130, "y": 1340, "width": 641, "height": 44}
-page_product_freeSample->lineEdit_promo_code,{"x": 94, "y": 775, "width": 891, "height": 46}
-page_product_freeSample->line_invoice,{"x": 137, "y": 1280, "width": 821, "height": 5}
-page_product_freeSample->promoKeyboard,{"x": 120, "y": 830, "width": 841, "height": 320}
-page_product_freeSample->pushButton_continue,{"x": 188, "y": 1541, "width": 360, "height": 92}
-page_product_freeSample->pushButton_continue_additional,{"x": 568, "y": 1541, "width": 360, "height": 92}
-page_product_freeSample->pushButton_previous_page,{"x": 70, "y": 1757, "width": 281, "height": 100}
-page_product_freeSample->pushButton_promo_input,{"x": 90, "y": 770, "width": 891, "height": 46}
-page_product_freeSample->pushButton_select_product_page,{"x": 70, "y": 40, "width": 401, "height": 41}
-page_product_freeSample->pushButton_to_help,{"x": 446, "y": 1727, "width": 211, "height": 191}
+page_help->html_help_text,{"x": 100, "y": 270, "width": 891, "height": 1191}
+page_help->html_text_label,{"x": 100, "y": 270, "width": 891, "height": 1231}
+page_help->keyboard_3,{"x": 20, "y": 1420, "width": 1051, "height": 441}
+page_help->pushButton_resetTimeout,{"x": 0, "y": -6, "width": 1125, "height": 1931}
+page_help->pushButton_to_feedback,{"x": 50, "y": 1800, "width": 221, "height": 71}
+page_help->pushButton_to_howTo,{"x": 430, "y": 1800, "width": 221, "height": 71}
+page_help->pushButton_to_idle,{"x": 70, "y": 40, "width": 401, "height": 41}
+page_help->pushButton_to_maintenance,{"x": 810, "y": 1800, "width": 221, "height": 71}
+page_help->pushButton_to_transactions,{"x": 610, "y": 40, "width": 401, "height": 41}
+
+page_end->label_client_logo,{"x": 370, "y": 1710, "width": 351, "height": 211}
+page_end->label_manufacturer_logo,{"x": 300, "y": 250, "width": 471, "height": 331}
+page_end->label_message,{"x": 110, "y": 590, "width": 841, "height": 420}
+page_end->label_message_2,{"x": 0, "y": 1020, "width": 1081, "height": 480}
+page_end->label_volume_dispensed,{"x": 240, "y": 1530, "width": 600, "height": 71}
+page_end->label_volume_dispensed_ml,{"x": 240, "y": 1620, "width": 600, "height": 71}
+page_end->pushButton_contact,{"x": 340, "y": 1380, "width": 400, "height": 101}
+page_end->pushButton_to_idle,{"x": 0, "y": 10, "width": 1080, "height": 1920}
+

@@ -130,14 +130,16 @@ public:
       void updateSlotState();
       void analyseSlotState();
 
-      // DF_ERROR initActivePNumberDispense(double volume);
-      DF_ERROR startActivePNumberDispense();
-      DF_ERROR stopActivePNumberDispense();
+      DF_ERROR initActivePNumberDispense();
+      DF_ERROR finishActivePNumberDispense();
+      void startActiveDispensing();
+      void stopActiveDispensing();
 
       bool setNextActiveProductAsPartOfSelectedProduct();
-      DF_ERROR startSelectedProductDispense(char size, double nPrice);
-      // DF_ERROR startSelectedProductDispense();
-      DF_ERROR stopSelectedProductDispense();
+
+      DF_ERROR initSelectedProductDispense(char size, double nPrice);
+      // DF_ERROR initSelectedProductDispense();
+      DF_ERROR finishSelectedProductDispense();
       string getSelectedProductDispenseStartTime();
       string getSelectedProductDispenseEndTime();
 

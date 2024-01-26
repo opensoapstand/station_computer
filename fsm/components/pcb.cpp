@@ -341,6 +341,10 @@ void pcb::pcb_refresh()
         debugOutput::sendMessage("ASSERT ERROR: PCB not detected. Replace pcb? i2c working correctly?", MSG_ERROR);
     }
 }
+
+bool pcb::isPcbValid(){
+    return get_pcb_version() != INVALID;
+}
 void pcb::setup()
 {
 

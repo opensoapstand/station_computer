@@ -65,7 +65,7 @@ DF_ERROR stateDispenseEnd::onAction()
     usleep(100000); // send message delay
     m_pMessaging->sendMessageOverIP(message, true); // send to UI
 
-    g_machine.m_productDispensers[m_slot_index].stopSelectedProductDispense();
+    g_machine.m_productDispensers[m_slot_index].finishSelectedProductDispense();
 
     // handle minimum dispensing
     bool is_valid_dispense = volume_dispensed >= MINIMUM_DISPENSE_VOLUME_ML;

@@ -527,33 +527,32 @@ bool dispenser::setNextActiveProductAsPartOfSelectedProduct()
 {
     // if last product is dispensed return true, (always true for non mixing products)
     // set next mixing product if mix,
-
-    stopActivePNumberDispense();
+    finishActivePNumberDispense();
 
     if (getSelectedProduct()->isMixingProduct())
     {
         m_mix_active_index--;
         if (m_mix_active_index < 0)
         {
-            stopSelectedProductDispense();
+            finishSelectedProductDispense();
             return true;
         }
         else
         {
             setActiveProduct(getSelectedProduct()->getMixPNumber(m_mix_active_index));
             debugOutput::sendMessage("Dispenser: Set next active product in mix. Position:  " + to_string(m_mix_active_index) + " Active Pnumber: " + to_string(getActivePNumber()), MSG_INFO);
-            startActivePNumberDispense();
+            initActivePNumberDispense();
             return false;
         }
     }
     else
     {
-        stopSelectedProductDispense();
+        finishSelectedProductDispense();
         return true;
     }
 }
 
-DF_ERROR dispenser::startSelectedProductDispense(char size, double nPrice)
+DF_ERROR dispenser::initSelectedProductDispense(char size, double nPrice)
 {
     debugOutput::sendMessage("Dispenser: Start Selected PNumber dispense at slot " + to_string(this->m_slot), MSG_INFO);
     using namespace std::chrono;
@@ -626,14 +625,14 @@ DF_ERROR dispenser::startSelectedProductDispense(char size, double nPrice)
 
     dispenseButtonTimingreset();
 
-    startActivePNumberDispense();
+    initActivePNumberDispense();
 
     time(&rawtime);
     timeinfo = localtime(&rawtime);
     strftime(m_nStartTime, 50, "%F %T", timeinfo);
 }
 
-DF_ERROR dispenser::stopSelectedProductDispense()
+DF_ERROR dispenser::finishSelectedProductDispense()
 {
     debugOutput::sendMessage("Dispenser: Stop selected PNumber dispense ", MSG_INFO);
     // Set End time
@@ -642,6 +641,7 @@ DF_ERROR dispenser::stopSelectedProductDispense()
     strftime(m_nEndTime, 50, "%F %T", timeinfo);
 
     m_pcb->setDispenseButtonLightsAllOff();
+    m_pcb->disableAllSolenoidsOfSlot(getSlot());
 }
 
 string dispenser::getSelectedProductDispenseStartTime()
@@ -654,12 +654,10 @@ string dispenser::getSelectedProductDispenseEndTime()
     return m_nEndTime;
 }
 
-DF_ERROR dispenser::startActivePNumberDispense()
+DF_ERROR dispenser::initActivePNumberDispense()
 {
     debugOutput::sendMessage("Dispenser: Start Active PNumber: " + to_string(getActivePNumber()) + " At slot " + to_string(this->m_slot), MSG_INFO);
-
     resetActiveProductVolumeDispensed();
-
     switch (m_pcb->get_pcb_version())
     {
 
@@ -707,13 +705,40 @@ DF_ERROR dispenser::startActivePNumberDispense()
     return e_ret = OK;
 }
 
-DF_ERROR dispenser::stopActivePNumberDispense()
+DF_ERROR dispenser::finishActivePNumberDispense()
 {
     debugOutput::sendMessage("Dispenser: Stop Active PNumber dispense " + to_string(getActivePNumber()), MSG_INFO);
-
+    stopActiveDispensing();
     setActiveProductSolenoid(false);
-
     m_pcb->flowSensorsDisableAll();
+}
+
+void dispenser::startActiveDispensing()
+{
+
+    debugOutput::sendMessage("Dispenser: Start active product dispensing.", MSG_INFO);
+    m_pcb->setPumpSpeedPercentage(0); // pump speed is inverted!
+    m_pcb->setPumpDirection(getSlot(), true);
+
+    m_pcb->startPump(getSlot());
+    m_pcb->setSpoutSolenoid(getSlot(), true);
+    //    case (machine::HardwareVersion::SS09):
+    //    {
+    //       debugOutput::sendMessage("start pumping SS09.", MSG_INFO);
+    //       g_machine.m_productDispensers[slot_index].pumpSlowStart(true);
+    //    }
+}
+
+void dispenser::stopActiveDispensing()
+{
+    debugOutput::sendMessage("Dispenser: stop active product dispensing.", MSG_INFO);
+    m_pcb->stopPump(getSlot());
+    m_pcb->setSpoutSolenoid(getSlot(), false);
+    //    case (machine::HardwareVersion::SS09):
+    //    {
+    //       g_machine.m_productDispensers[slot_index].pumpSlowStopBlocking();
+    //       rectractProductBlocking();
+    //    }
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -1257,7 +1282,7 @@ DF_ERROR dispenser::initGlobalFlowsensorIO(int pin)
     m_pFlowsensor->setPinAsInputElseOutput(true);
     m_pFlowsensor->registerProduct(getSelectedProduct());
 
-// enable global interrupt driven flowsensor ticks, the alternative is polling over i2c
+    // enable global interrupt driven flowsensor ticks, the alternative is polling over i2c
 
     m_pFlowsensor->startListener_flowsensor();
     e_ret = OK;

@@ -527,8 +527,10 @@ bool dispenser::setNextActiveProductAsPartOfSelectedProduct()
 {
     // if last product is dispensed return true, (always true for non mixing products)
     // set next mixing product if mix,
+    debugOutput::sendMessage("Dispenser: temp befooroeoroero staop:" , MSG_INFO);
 
     stopActivePNumberDispense();
+    debugOutput::sendMessage("Dispenser: after stopaeaefsaef." , MSG_INFO);
 
     if (getSelectedProduct()->isMixingProduct())
     {
@@ -642,6 +644,7 @@ DF_ERROR dispenser::stopSelectedProductDispense()
     strftime(m_nEndTime, 50, "%F %T", timeinfo);
 
     m_pcb->setDispenseButtonLightsAllOff();
+    m_pcb->disableAllSolenoidsOfSlot(getSlot());
 }
 
 string dispenser::getSelectedProductDispenseStartTime()
@@ -714,6 +717,7 @@ DF_ERROR dispenser::stopActivePNumberDispense()
     setActiveProductSolenoid(false);
 
     m_pcb->flowSensorsDisableAll();
+    
 }
 
 /////////////////////////////////////////////////////////////////////////

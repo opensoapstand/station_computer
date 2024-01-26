@@ -19,10 +19,10 @@
   <widget class="QLabel" name="label_init_message">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>1190</y>
-     <width>951</width>
-     <height>111</height>
+     <x>150</x>
+     <y>920</y>
+     <width>891</width>
+     <height>471</height>
     </rect>
    </property>
    <property name="font">
@@ -37,7 +37,7 @@
     <string>Initializing</string>
    </property>
    <property name="alignment">
-    <set>Qt::AlignCenter</set>
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
    </property>
   </widget>
   <widget class="QLabel" name="label_fail_message">
@@ -59,6 +59,32 @@
    </property>
    <property name="text">
     <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_continue">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>1410</y>
+     <width>251</width>
+     <height>121</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Continue anyways</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_reboot">
+   <property name="geometry">
+    <rect>
+     <x>540</x>
+     <y>1410</y>
+     <width>251</width>
+     <height>121</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Reboot</string>
    </property>
   </widget>
  </widget>

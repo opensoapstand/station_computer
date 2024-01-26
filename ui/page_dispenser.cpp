@@ -807,7 +807,7 @@ void page_dispenser::on_pushButton_abort_clicked()
     {
         msgBox_abort = new QMessageBox();
         msgBox_abort->setObjectName("msgBox_abort");
-        msgBox_abort->setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
+        msgBox_abort->setWindowFlags(Qt::FramelessWindowHint| Qt::Dialog); // do not show messagebox header with program name
         switch (paymentMethod)
         {
         case 0:
@@ -881,7 +881,7 @@ void page_dispenser::on_pushButton_problems_clicked()
     qDebug() << "Clicked on msgBox_problems  ";
     msgBox_problems = new QMessageBox();
     msgBox_problems->setObjectName("msgBox_problems");
-    msgBox_problems->setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
+    msgBox_problems->setWindowFlags(Qt::FramelessWindowHint| Qt::Dialog); // do not show messagebox header with program name
 
     QString client_id = p_page_idle->thisMachine->getClientId();
     if (client_id == "C-1") // good-filling

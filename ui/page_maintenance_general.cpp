@@ -233,8 +233,9 @@ void page_maintenance_general::on_pushButton_reboot_clicked()
         return;
     }
     qDebug() << "Maintenance Reboot button pressed.";
-    QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -r 0";
-    system(qPrintable(command));
+    // QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -r 0";
+    // system(qPrintable(command));
+    p_page_idle->thisMachine->reboot();
 }
 
 void page_maintenance_general::on_pushButton_shutdown_clicked()

@@ -61,6 +61,14 @@
    background-color: #a8a8a8;
    font-size: 20px;
 }
+.active_slot {
+   background-color: #00ff11;
+   font-size: 20px;
+}
+.inactive_slot {
+   background-color: #aeaaaa;
+   font-size: 20px;
+}
 .product_active {
    background-color: #00ff11;
  }

@@ -83,7 +83,7 @@ void DfUiServer::receiveTemperatureFromFsm(double temperature_1, double temperat
 // }
 
 
-void DfUiServer::initReadySlot()
+void DfUiServer::controllerReadySlot()
 {
     emit initReady();
 }
@@ -159,7 +159,7 @@ void DfUiServer::incomingConnection(qintptr socketDescriptor)
     // connect(messageHandlerThread, &DfUiCommThread::targetHitSignal, this, &DfUiServer::noFlowAbortSlot);
     // connect(messageHandlerThread, &DfUiCommThread::noFlowAbortSignal, this, &DfUiServer::targetHitSlot);
 
-    connect(messageHandlerThread, &DfUiCommThread::initReadySignal, this, &DfUiServer::initReadySlot);
+    connect(messageHandlerThread, &DfUiCommThread::initReadySignal, this, &DfUiServer::controllerReadySlot);
     connect(messageHandlerThread, &DfUiCommThread::printerStatusSignal, this, &DfUiServer::printerStatusSlot);
     // connect(messageHandlerThread, &DfUiCommThread::MMSignal, this, &DfUiServer::MMSlot);
     connect(messageHandlerThread, &DfUiCommThread::dispenseButtonPressedPosEdgeSignal, this, &DfUiServer::dispenseButtonPressedPosEdgeSlot);

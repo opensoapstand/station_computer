@@ -35,7 +35,8 @@ class product
 public:
         product();
         ~product();
-        void init(int pnumber, string size_unit, string paymentMethod);
+        // void init(int pnumber, string size_unit, string paymentMethod);
+        void init(int pnumber);
 
         int getPNumber();
         string getPNumberAsPString();
@@ -62,14 +63,14 @@ public:
         int getPWM();
         int getRetractionTimeMillis();
         double getPrice(char size);
-        string getDisplayUnits();
-        double convertVolumeMetricToDisplayUnits(double volume);
+        // string getDisplayUnits();
+        // double convertVolumeMetricToDisplayUnits(double volume);
         string getProductName();
         string getBasePLU(char size);
-        string getPaymentMethod();
+        // string getPaymentMethod();
+        string getFinalPLU(char size, double price, string paymentMethod);
 
         void customDispenseDiscountData(bool *isEnabled, double *discountVolume, double *discountPrice);
-        string getFinalPLU(char size, double price);
 
         void registerFlowSensorTickFromPcb();
         void registerFlowSensorTickFromInterrupt();
@@ -88,6 +89,7 @@ public:
         double getVolumeFromSize(char size);
         char getSizeCharFromTargetVolume(double volume);
         void setTargetVolumeFromSize(char size);
+        char getTargetVolumeAsChar();
         void setTargetVolume(double volume);
         double getTargetVolume();
         int sizeCharToSizeIndex(char size);
@@ -115,7 +117,7 @@ public:
         double m_nVolumeTarget_c_min;           // custom volume dispensing: min (zero volume can be dispensed, but we will still charge for min)
         double m_nVolumeTarget_custom_discount; // custom volume from which a discount is applied.
         double m_nVolumeTarget_c_max;           // custom volume dispensing: max
-
+        double m_nVolumeTarget_f;               // how much to dispense (free sample)
         double m_nVolumeTarget_t = 10000000; // test dispense (infinite)
 
 private:
@@ -138,7 +140,7 @@ private:
 
         string m_product_properties[100];
 
-        string m_display_unit;
+        // string m_display_unit;
         string m_mix_pnumbers_str;
 
         int m_mix_pnumbers[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
@@ -151,7 +153,7 @@ private:
         string m_nPLU_medium;
         string m_nPLU_large;
         string m_nPLU_custom;
-        string m_paymentMethod;
+        // string m_paymentMethod;
 
         double m_nVolumeDispensed;
 

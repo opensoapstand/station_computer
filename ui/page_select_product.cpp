@@ -17,7 +17,7 @@
 
 #include "page_select_product.h"
 #include "ui_page_select_product.h"
-
+#include "page_buybottle.h"
 #include "page_product.h"
 #include "page_product_mixing.h"
 #include "page_idle.h"
@@ -69,9 +69,10 @@ page_select_product::page_select_product(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference
  */
-void page_select_product::setPage(page_product *p_page_product, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp, statusbar *p_statusbar)
+void page_select_product::setPage(page_product *p_page_product, page_buyBottle *p_page_buyBottle, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp, statusbar *p_statusbar)
 {
     this->p_page_product = p_page_product;
+    this->p_page_buyBottle = p_page_buyBottle;
     this->p_page_idle = pageIdle;
     this->p_page_maintenance = pageMaintenance;
     this->p_page_help = pageHelp;
@@ -109,7 +110,7 @@ void page_select_product::showEvent(QShowEvent *event)
 
     displayProducts();
 
-    for (uint8_t slot_index = 0; slot_index < p_page_idle->thisMachine->getSlotCount(); slot_index++)
+    for (uint8_t slot_index = 0; slot_index < SELECT_PRODUCT_PAGE_SLOT_COUNT_MAX; slot_index++)
     // for (uint8_t option_index = 0; option_index < p_page_idle->thisMachine->getOptionCount(); option_index++)
     {
         labels_product_overlay_text[slot_index]->setStyleSheet(styleSheet);
@@ -150,11 +151,11 @@ void page_select_product::displayProducts()
     QString product_name;
     QString product_status_text;
 
-    for (uint8_t slot_index = 0; slot_index < p_page_idle->thisMachine->getSlotCount(); slot_index++)
+    for (uint8_t slot_index = 0; slot_index < SELECT_PRODUCT_PAGE_SLOT_COUNT_MAX; slot_index++)
     // for (uint8_t option_index = 0; option_index < p_page_idle->thisMachine->getOptionCount(); option_index++)
     {
 
-        int option_index = (DISPENSE_PRODUCTS_PER_BASE_LINE_MAX * slot_index);
+        int option_index = (DISPENSE_PRODUCTS_PER_BASE_LINE_MAX * slot_index); // option menu has more drinks, we need to take that into account
         qDebug() << "Page select. Set up option: " << option_index + 1;
         QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_SELECT_PRODUCT_CSS);
 
@@ -163,11 +164,9 @@ void page_select_product::displayProducts()
         p_page_idle->thisMachine->addPictureToLabel(labels_product_picture[slot_index], p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductPicturePath());
         product_type = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductType();
         product_name = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductName();
-
-        if (!p_page_idle->thisMachine->getIsOptionAvailable(option_index + 1))
+        if (!p_page_idle->thisMachine->getSlotByPosition(slot_index+1)->getIsSlotEnabled())
         {
             p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[slot_index], "label_product_overlay_unavailable", PAGE_SELECT_PRODUCT_CSS);
-
             labels_product_overlay_text[slot_index]->setStyleSheet(styleSheet);
             QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_SELECT_PRODUCT_CSS);
             labels_product_overlay_text[slot_index]->setProperty("class", "label_product_overlay_unavailable"); // apply class BEFORE setStyleSheet!!
@@ -179,9 +178,9 @@ void page_select_product::displayProducts()
             p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[slot_index], "label_product_overlay_available", PAGE_SELECT_PRODUCT_CSS);
         }
 
-        product_status_text = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getStatusText();
+        product_status_text = p_page_idle->thisMachine->getSlotByPosition(slot_index+1)->getStatusText();
 
-        qDebug() << "Product: " << product_type << "At Option: " << (option_index + 1) << ", enabled: " << p_page_idle->thisMachine->getIsOptionAvailable(option_index + 1) << " Status text: " << product_status_text;
+        qDebug() << "Product: " << product_type << "At Option: " << (option_index + 1) << ", enabled: " << p_page_idle->thisMachine->getSlotByPosition(slot_index+1)->getIsSlotEnabled() << " Status text: " << product_status_text;
 
         labels_product_name[slot_index]->setText(product_name);
 
@@ -258,11 +257,11 @@ void page_select_product::displayProducts()
         {
             labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
         }
-        else if (!p_page_idle->thisMachine->getIsOptionAvailable(option_index + 1))
+        else if (!p_page_idle->thisMachine->getSlotByPosition(slot_index+1)->getIsSlotEnabled())
         {
             labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
         }
-        else if (!(p_page_idle->thisMachine->isProductVolumeInContainer(p_page_idle->thisMachine->getProductFromMenuOption(slot_index + 1)->getPNumber())))
+        else if (!(p_page_idle->thisMachine->isProductVolumeInContainer(p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getPNumber())))
         {
 
             labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->empty"));
@@ -287,14 +286,22 @@ void page_select_product::displayProducts()
         {
             labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->default"));
         }
-
         labels_product_type[slot_index]->setText(type_text);
+
+        if(!p_page_idle->thisMachine->isSlotExisting(slot_index)){
+            pushButtons_product_select[slot_index]->hide();
+            labels_product_picture[slot_index]->hide();
+            labels_product_icon[slot_index]->hide();
+            labels_product_type[slot_index]->hide();
+            labels_product_name[slot_index]->hide();
+            labels_product_overlay_text[slot_index]->hide();
+        }
     }
 }
 
 void page_select_product::select_product(int option)
 {
-    if (p_page_idle->thisMachine->getIsOptionAvailable(option))
+    if (p_page_idle->thisMachine->getSlotFromOption(option)->getIsSlotEnabled())
     {
         p_page_idle->thisMachine->setSelectedProductByOption(option);
         p_page_idle->thisMachine->setSelectedSlotFromSelectedProduct();
@@ -310,19 +317,19 @@ void page_select_product::select_product(int option)
 // FIXME: This is terrible...no time to make array reference to hold button press functions
 void page_select_product::on_pushButton_selection1_clicked()
 {
-    select_product(1);
+    select_product(DISPENSE_PRODUCTS_PER_BASE_LINE_MAX *0 + 1 );
 }
 void page_select_product::on_pushButton_selection2_clicked()
 {
-    select_product(2);
+    select_product(DISPENSE_PRODUCTS_PER_BASE_LINE_MAX *1 + 1);
 }
 void page_select_product::on_pushButton_selection3_clicked()
 {
-    select_product(3);
+    select_product(DISPENSE_PRODUCTS_PER_BASE_LINE_MAX *2 + 1);
 }
 void page_select_product::on_pushButton_selection4_clicked()
 {
-    select_product(4);
+    select_product(DISPENSE_PRODUCTS_PER_BASE_LINE_MAX *3 + 1);
 }
 
 void page_select_product::onProductPageTimeoutTick()
@@ -360,7 +367,11 @@ void page_select_product::on_pushButton_to_idle_clicked()
 {
     qDebug() << "Back to Idle Page Button pressed";
     // p_page_idle->setDiscountPercentage(0.0);
-    hideCurrentPageAndShowProvided(p_page_idle);
+    if(p_page_idle->thisMachine->hasBuyBottleOption()){
+        hideCurrentPageAndShowProvided(p_page_buyBottle);
+    }else{
+        hideCurrentPageAndShowProvided(p_page_idle);
+    }
 }
 
 void page_select_product::on_pushButton_help_page_clicked()

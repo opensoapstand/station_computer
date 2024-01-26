@@ -34,7 +34,7 @@ line-height: 29px;</string>
     <rect>
      <x>215</x>
      <y>1740</y>
-     <width>650</width>
+     <width>600</width>
      <height>100</height>
     </rect>
    </property>
@@ -1505,6 +1505,25 @@ text-align: center;
     <string/>
    </property>
   </widget>
+  <widget class="QPushButton" name="pushButton_order_sample">
+   <property name="geometry">
+    <rect>
+     <x>851</x>
+     <y>1718</y>
+     <width>179</width>
+     <height>122</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Try Sample</string>
+   </property>
+  </widget>
+  <zorder>label_background_custom</zorder>
+  <zorder>pushButton_order_sample</zorder>
+  <zorder>pushButton_order_custom</zorder>
   <zorder>label_help</zorder>
   <zorder>pushButton_continue</zorder>
   <zorder>label_product_title</zorder>
@@ -1513,7 +1532,6 @@ text-align: center;
   <zorder>label_background_small</zorder>
   <zorder>label_background_medium</zorder>
   <zorder>label_background_large</zorder>
-  <zorder>label_background_custom</zorder>
   <zorder>label_product_ingredients</zorder>
   <zorder>label_select_quantity</zorder>
   <zorder>pushButton_back</zorder>
@@ -1524,13 +1542,11 @@ text-align: center;
   <zorder>pushButton_order_small</zorder>
   <zorder>label_price_medium</zorder>
   <zorder>label_size_medium</zorder>
-  <zorder>pushButton_order_medium</zorder>
   <zorder>label_price_large</zorder>
   <zorder>label_size_large</zorder>
   <zorder>pushButton_order_big</zorder>
   <zorder>label_price_custom</zorder>
   <zorder>label_size_custom</zorder>
-  <zorder>pushButton_order_custom</zorder>
   <zorder>label_additives_background</zorder>
   <zorder>label_additive_title_1</zorder>
   <zorder>label_additive_title_2</zorder>
@@ -1568,6 +1584,7 @@ text-align: center;
   <zorder>pushButton_additive_plus_4</zorder>
   <zorder>pushButton_additive_plus_5</zorder>
   <zorder>pushButton_recommended</zorder>
+  <zorder>pushButton_order_medium</zorder>
  </widget>
  <resources/>
  <connections/>

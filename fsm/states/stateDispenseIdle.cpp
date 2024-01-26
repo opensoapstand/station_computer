@@ -32,6 +32,7 @@ stateDispenseIdle::stateDispenseIdle(messageMediator *message)
 // DTOR
 stateDispenseIdle::~stateDispenseIdle()
 {
+    debugOutput::sendMessage("stateDispenseIdle: ~stateDispenseIdle", MSG_INFO);
 }
 
 // FIXME: See state dispense function header

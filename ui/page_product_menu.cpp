@@ -406,21 +406,23 @@ void page_product_menu::select_base_product_in_menu(int base_product_index)
     displayDispenseProductsMenu();
 }
 
-void page_product_menu::select_product(int option)
+void page_product_menu::select_submenu_option(int position)
 {
+
+
+    int option = m_selectedBaseProductIndex * DISPENSE_PRODUCTS_PER_BASE_LINE_MAX + position;
+
+
     if (p_page_idle->thisMachine->getIsOptionAvailable(option))
     {
         p_page_idle->thisMachine->setSelectedProductByOption(option);
+
+
         p_page_idle->thisMachine->setSelectedSlotFromSelectedProduct();
+        qDebug() << "Invalid choice. Option not available: " << option;
 
-        // hideCurrentPageAndShowProvided(p_page_product);
-        p_page_idle->thisMachine->getSelectedProduct()->setDefaultAdditivesRatioModifier(p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size() - 1);
-
-        if(p_page_idle->thisMachine->m_template == "default_AP2"){
-            hideCurrentPageAndShowProvided(p_page_product_mixing);
-        }else{
-            hideCurrentPageAndShowProvided(p_page_product);
-        }
+        p_page_idle->thisMachine->getSelectedProduct()->resetCustomMixRatioParameters();
+        p_page_idle->thisMachine->hasMixing() ? hideCurrentPageAndShowProvided(p_page_product_mixing) : hideCurrentPageAndShowProvided(p_page_product);
     }
     else
     {
@@ -481,33 +483,33 @@ void page_product_menu::on_pushButton_help_page_clicked()
 
 void page_product_menu::on_pushButton_dispense_product_1_clicked()
 {
-    select_product(1);
+    select_submenu_option(1);
 }
 
 void page_product_menu::on_pushButton_dispense_product_2_clicked()
 {
 
-    select_product(2);
+    select_submenu_option(2);
 }
 
 void page_product_menu::on_pushButton_dispense_product_3_clicked()
 {
 
-    select_product(3);
+    select_submenu_option(3);
 }
 
 void page_product_menu::on_pushButton_dispense_product_4_clicked()
 {
 
-    select_product(4);
+    select_submenu_option(4);
 }
 
 void page_product_menu::on_pushButton_dispense_product_5_clicked()
 {
-    select_product(5);
+    select_submenu_option(5);
 }
 
 void page_product_menu::on_pushButton_dispense_product_6_clicked()
 {
-    select_product(6);
+    select_submenu_option(6);
 }

@@ -19,13 +19,13 @@ public:
     QVector<int> getMixPNumbers();
     QString getMixPNumbersAsCsv();
     QString getMixRatiosAsCsv();
-    // QVector<int> getMixRatios();
+    QVector<double> getMixRatios();
 
-    void loadProductPropertiesFromProductsFile();
+    bool loadProductPropertiesFromProductsFile();
     void getProductProperties(QString *name, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui);
 
-    void loadProductPropertiesFromDb(); // productt
-    void loadProductProperties();       // productt
+    bool loadProductPropertiesFromDb(); // productt
+    bool loadProductProperties();       // productt
 
     QString convertPNumberToPNotation(int pnumber);
     int convertPStringToPInt(QString pnumberNotation);
@@ -75,6 +75,8 @@ public:
 
     QString getProductPicturePath();
 
+    double getPriceOfSelectedBottle();
+    double getVolumeOfSelectedBottle();
     double getVolumeOfSelectedSize(); // productt
     double getVolumeBySize(int size); // productt
 
@@ -112,10 +114,13 @@ public:
     QString getStatusText();
     void setStatusText(QString statusText);
 
-    void setDefaultAdditivesRatioModifier(int size);
+    bool isCustomMix();
+    void resetCustomMixRatioParameters();
     void adjustAdditivesRatioModifier(int index, double additiveModifier);
     QVector<double> getAdditivesRatioModifier();
     double getAdditivesRatioModifier(int index);
+    QVector<double> getCustomMixRatios();
+    void setCustomMixRatios();
 
 private:
     int m_PNumber;
@@ -123,7 +128,8 @@ private:
     bool m_isBaseProduct; // 100%, no additives.
     QVector<int> m_mixPNumbers;
     QVector<double> m_mixRatios;
-    QVector<double> m_additivesRatioModifier;
+    QVector<double> m_additivesCustomMixRatioModifiers;
+    QVector<double> m_customMixRatios;
 
     int m_selected_size;
     double DispensedVolumeMl;

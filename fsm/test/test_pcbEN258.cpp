@@ -3,7 +3,6 @@
 #include "../components/pcb.h"
 #include <chrono>
 
-
 void board_test()
 {
 
@@ -152,17 +151,47 @@ void test_button_lights(bool onElseOff)
     connected_pcb->setup();
     for (int slot = 1; slot <= 4; slot++)
     {
+        debugOutput::sendMessage(" ----------  Slot " + to_string(slot) + " ------------", MSG_INFO);
+        connected_pcb->displayMCP23017IORegisters(slot);
         debugOutput::sendMessage("Slot light " + to_string(slot) + " Setting:" + to_string(onElseOff), MSG_INFO);
         connected_pcb->setSingleDispenseButtonLight(slot, onElseOff);
+        connected_pcb->displayMCP23017IORegisters(slot);
     }
     connected_pcb->pcb_refresh();
+}
+
+void test_button_to_light()
+{
+    pcb *connected_pcb;
+    connected_pcb = new pcb();
+    bool button_values[4];
+    connected_pcb->setup();
+    while (true)
+    {
+        for (int slot = 1; slot <= 4; slot++)
+        {
+            debugOutput::sendMessage(" ----------  Slot " + to_string(slot) + " ------------", MSG_INFO);
+            debugOutput::sendMessage("Slot light " + to_string(slot) + " Setting:" + to_string(button_values[slot - 1]), MSG_INFO);
+            connected_pcb->displayMCP23017IORegisters(slot);
+        }
+        for (int16_t i = 0; i < 1000; i++)
+        {
+            usleep(2000);
+            connected_pcb->pcb_refresh();
+            for (int slot = 1; slot <= 4; slot++)
+            {
+                button_values[slot - 1] = connected_pcb->getDispenseButtonStateDebounced(slot);
+                connected_pcb->setSingleDispenseButtonLight(slot, button_values[slot - 1]);
+            }
+        }
+    }
 }
 
 int main(int argc, char *argv[])
 {
     // pwm_test();
     // board_test();
-    test_button_lights();
+    test_button_to_light();
     debugOutput::sendMessage(to_string(argc), MSG_INFO);
 
     // motor_test(argv[1], argv[2]);

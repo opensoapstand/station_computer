@@ -23,6 +23,7 @@ FORMS += \
     page_end.ui \
     page_maintenance.ui \
     page_productOverview.ui \
+    page_productFreeSample.ui \
     page_maintenance_dispenser.ui \
     page_init.ui \
     page_help.ui \
@@ -33,6 +34,9 @@ FORMS += \
     page_maintenance_general.ui \
     page_idle_products.ui \
     statusbar.ui \
+    page_buybottle.ui \
+    input_widget.ui \
+    page_how_to.ui
 
 HEADERS += \
     dfuicommthread.h \
@@ -49,6 +53,7 @@ HEADERS += \
     posm/lrcgenerator.h \
     posm/mcommunication.h \
     page_productOverview.h \
+    page_productFreeSample.h \
     posm/packetfromecr.h \
     posm/packetfromux410.h \
     posm/packetreadsort.h \
@@ -76,7 +81,10 @@ HEADERS += \
     machine.h \
     statusbar.h \
     keyboard.h \
-    pnumberproduct.h
+    pnumberproduct.h \
+    page_buybottle.h \
+    input_widget.h \
+    page_how_to.h
 
 SOURCES += \
     dfuicommthread.cpp \
@@ -92,6 +100,7 @@ SOURCES += \
     posm/lrcgenerator.cpp \
     posm/mcommunication.cpp \
     page_productOverview.cpp \
+    page_productFreeSample.cpp \
     posm/packetfromecr.cpp \
     posm/packetfromux410.cpp \
     posm/packetreadsort.cpp \
@@ -120,7 +129,10 @@ SOURCES += \
     machine.cpp \
     statusbar.cpp \
     keyboard.cpp \
-    pnumberproduct.cpp
+    pnumberproduct.cpp \
+    page_buybottle.cpp \
+    input_widget.cpp \
+    page_how_to.cpp
 
 RESOURCES += \
     src.qrc

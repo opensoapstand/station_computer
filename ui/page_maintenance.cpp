@@ -81,7 +81,6 @@ void page_maintenance::showEvent(QShowEvent *event)
     ui->label_qr_user_manual->setStyleSheet(styleSheet);
     ui->label_qr_manual_description->setProperty("class", "label_qr");
     ui->label_qr_manual_description->setStyleSheet(styleSheet);
-    qDebug() << "Setting QR label picture and style*/*/*/*///////////////////////******************////////////********";
     ui->label_machine_id->setProperty("class", "label_machine_ui");
     ui->label_machine_id->setStyleSheet(styleSheet);
 
@@ -104,7 +103,15 @@ void page_maintenance::showEvent(QShowEvent *event)
     QString title = QString("Soapstand UI v%1").arg(UI_VERSION);
     ui->label_ui_version->setText(title);
 
-    for (uint8_t slot_index = 0; slot_index < p_page_idle-> thisMachine->getSlotCount(); slot_index++)
+    uint8_t slot_count;
+    
+    // slot_count = p_page_idle->thisMachine->getSlotCount();
+
+    // if (slot_count > MAINTENANCE_PAGE_SLOT_COUNT_MAX){
+    //         slot_count = MAINTENANCE_PAGE_SLOT_COUNT_MAX;
+    // }
+
+    for (uint8_t slot_index = 0; slot_index < MAINTENANCE_PAGE_SLOT_COUNT_MAX; slot_index++)
     {
 
         p_page_idle->thisMachine->setTemplateTextToObject(labels_product_position[slot_index]);
@@ -130,7 +137,8 @@ void page_maintenance::showEvent(QShowEvent *event)
         labels_product_name[slot_index]->setText(p_page_idle->thisMachine->getSlotBaseProduct(slot_index+1)->getProductName());
         int product_slot_enabled = p_page_idle->thisMachine->getSlotBaseProduct(slot_index+1)->getIsProductEnabled();
 
-        QString product_status_text = p_page_idle->thisMachine->getSlotBaseProduct(slot_index+1)->getStatusText();
+        // QString product_status_text = p_page_idle->thisMachine->getSlotBaseProduct(slot_index+1)->getStatusText();
+        QString product_status_text = p_page_idle->thisMachine->getSlotByPosition(slot_index+1)->getStatusText();
         QString status_display_text = "";
 
         int pnumber = p_page_idle->thisMachine->getSlotBaseProduct(slot_index+1)->getPNumber();
@@ -167,6 +175,13 @@ void page_maintenance::showEvent(QShowEvent *event)
             status_display_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->default");
         }
         labels_product_status[slot_index]->setText(status_display_text);
+
+        if(!p_page_idle->thisMachine->isSlotExisting(slot_index)){
+            labels_product_name[slot_index]->hide();
+            labels_product_status[slot_index]->hide();
+            pushButtons_products[slot_index]->hide();
+            labels_product_position[slot_index]->hide();
+        }
     }
     qDebug() << "End maintenance load";
 }

@@ -48,6 +48,7 @@ do
             sudo systemctl stop controller_soapstand
             sudo systemctl start ui_soapstand.service
             sudo systemctl start controller_soapstand.service
+        
         ;;
         "Enable Autostart")
             sudo systemctl enable ui_soapstand.service
@@ -62,7 +63,7 @@ do
             echo "     - disable window transition animations."
             gsettings set org.gnome.desktop.interface enable-animations false
             echo "     - decrease reboot time."
-            user_question="Continue to decrease boot time? change: GRUB_TIMEOUT=1 add: GRUB_RECORDFAIL_TIMEOUT=\$GRUB_TIMEOUT, [y] to continu, other key to skip."
+            user_question="Continue to decrease boot time? Nano will open, change: GRUB_TIMEOUT=1 add: GRUB_RECORDFAIL_TIMEOUT=\$GRUB_TIMEOUT, [y] to continu, other key to skip."
             read -p "$user_question" -n 1 -r
             echo    # (optional) move to a new line
             if [[ $REPLY =~ ^[Yy]$ ]]

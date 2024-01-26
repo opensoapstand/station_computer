@@ -618,7 +618,7 @@
     <rect>
      <x>630</x>
      <y>830</y>
-     <width>191</width>
+     <width>231</width>
      <height>17</height>
     </rect>
    </property>
@@ -1816,12 +1816,12 @@
     <rect>
      <x>340</x>
      <y>1690</y>
-     <width>201</width>
+     <width>511</width>
      <height>17</height>
     </rect>
    </property>
    <property name="text">
-    <string>Available single products:</string>
+    <string>Available single products (pure products available in this dispenser):</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_7">
@@ -1829,12 +1829,77 @@
     <rect>
      <x>340</x>
      <y>1540</y>
-     <width>201</width>
+     <width>521</width>
      <height>17</height>
     </rect>
    </property>
    <property name="text">
-    <string>Available mix products:</string>
+    <string>Available dispense products (user selectable mixes or single products) :</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_activate_slot_1">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>90</y>
+     <width>71</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>to slot 1</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_activate_slot_2">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>90</y>
+     <width>71</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>to slot 2</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_activate_slot_3">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>90</y>
+     <width>71</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>to slot 3</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_activate_slot_4">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>90</y>
+     <width>71</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>to slot 4</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_activate_slot_5">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>170</y>
+     <width>71</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>to slot 5</string>
    </property>
   </widget>
  </widget>

@@ -153,6 +153,7 @@ void page_end::showEvent(QShowEvent *event)
     QString machine_logo_full_path = p_page_idle->thisMachine->getTemplatePathFromName(MACHINE_LOGO_PATH);
     p_page_idle->thisMachine->addPictureToLabel(ui->label_manufacturer_logo, machine_logo_full_path);
     ui->label_manufacturer_logo->setStyleSheet(styleSheet);
+    updateDispensedVolumeLabel();
 
     // p_page_idle->setDiscountPercentage(0.0);
 }
@@ -167,19 +168,20 @@ void page_end::fsmReceiveFinalDispensedVolume(double dispensed)
 {
     qDebug() << "Updated dispensed volume" << dispensed;
     p_page_idle->thisMachine->getSelectedProduct()->setVolumeDispensedMl(dispensed);
+
+    updateDispensedVolumeLabel();    
+}
+void page_end::updateDispensedVolumeLabel(){
     QString units = p_page_idle->thisMachine->getSizeUnit();
     QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl(), units, false, true);
-
     double price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize());
-
     if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize() == SIZE_CUSTOM_INDEX)
     {
     price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize()*p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl());
     }
     ui->label_volume_dispensed_ml->setText(dispensed_correct_units + " ( $" + QString::number(price, 'f', 2) + " )");
-    
-}
 
+}
 // void page_end::fsmReceiveFinalDispensedVolume(double dispensed)
 // {
 //     qDebug() << "Updated dispensed volume" << dispensed;

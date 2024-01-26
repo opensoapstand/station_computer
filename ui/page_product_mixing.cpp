@@ -101,7 +101,7 @@ page_product_mixing::page_product_mixing(QWidget *parent) : QWidget(parent),
     orderSizeBackgroundLabels[1] = ui->label_background_medium;
     orderSizeBackgroundLabels[2] = ui->label_background_large;
     orderSizeBackgroundLabels[3] = ui->label_background_custom;
-
+    ui->pushButton_order_sample->hide();
     selectIdleTimer = new QTimer(this);
     selectIdleTimer->setInterval(40);
     connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
@@ -112,7 +112,7 @@ page_product_mixing::page_product_mixing(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void page_product_mixing::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_payment_tap_serial *page_payment_tap_serial, page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product_overview *page_Overview, statusbar *p_statusbar, page_product_menu *page_product_menu)
+void page_product_mixing::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_payment_tap_serial *page_payment_tap_serial, page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product_overview *page_Overview, statusbar *p_statusbar, page_product_menu *page_product_menu,page_product_freeSample *page_freeSample)
 {
     this->p_page_product_menu = page_product_menu;
     this->p_page_select_product = pageSelect;
@@ -125,6 +125,7 @@ void page_product_mixing::setPage(page_select_product *pageSelect, page_dispense
     this->p_page_payment_tap_serial = page_payment_tap_serial;
     this->p_page_payment_tap_tcp = page_payment_tap_tcp;
     this->p_statusbar = p_statusbar;
+    this->p_page_product_freeSample = page_freeSample;
     this->p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_PRODUCT_MENU_BACKGROUND_PATH);
 }
 
@@ -152,6 +153,10 @@ void page_product_mixing::showEvent(QShowEvent *event)
 
     ui->label_product_title->setProperty("class", "title");
     ui->label_product_title->setStyleSheet(styleSheet);
+
+    // ui->pushButton_order_sample->setProperty("class","sampleBackgroundLabel");
+    // ui->pushButton_order_sample->setStyleSheet(styleSheet);
+
     ui->pushButton_back->setStyleSheet(styleSheet); // pushbutton
     // ui->label_product_description->setStyleSheet(styleSheet);
     ui->label_product_photo->setStyleSheet(styleSheet);
@@ -163,6 +168,7 @@ void page_product_mixing::showEvent(QShowEvent *event)
     ui->label_additives_background->setWordWrap(true);
     ui->label_help->setStyleSheet(styleSheet);
     ui->pushButton_continue->setStyleSheet(styleSheet);
+    ui->pushButton_order_sample->setStyleSheet(styleSheet);
     ui->pushButton_recommended->setStyleSheet(styleSheet);
     // ui->pushButton_previous_page->setStyleSheet(styleSheet);
     ui->pushButton_to_help->setProperty("class", "button_transparent");
@@ -180,12 +186,13 @@ void page_product_mixing::showEvent(QShowEvent *event)
         orderSizeBackgroundLabels[i]->setStyleSheet(styleSheet);
         orderSizeButtons[i]->setStyleSheet(styleSheet);
     }
+        
 
     if(p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size() > 0){
         ui->pushButton_recommended->show();
         ui->label_additives_background->setText("");
         ui->label_additives_background->hide();
-        for (int j = 0; j < 5; j++){
+        for (int j = 0; j < ADDITIVES_PER_SLOT_COUNT_MAX; j++){
             if(isAdditiveEnabled(j)){
                 additiveTitles[j]->setProperty("class", "additiveTitles");
                 additiveBackgroundRows[j]->setProperty("class", "additiveBackgroundRows");
@@ -230,7 +237,7 @@ void page_product_mixing::showEvent(QShowEvent *event)
         ui->pushButton_recommended->hide();
         ui->label_additives_background->show();
         p_page_idle->thisMachine->setTemplateTextToObject(ui->label_additives_background);
-        for (uint8_t j = 0; j < 5; j++){
+        for (uint8_t j = 0; j < ADDITIVES_PER_SLOT_COUNT_MAX; j++){
             additiveTitles[j]->hide();
             additiveBackgroundRows[j]->hide();
             additiveMinusButtonBackgrounds[j]->hide();
@@ -272,6 +279,7 @@ void page_product_mixing::reset_and_show_page_elements()
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_product_ingredients_title);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_continue);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_recommended);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_order_sample);
     // ui->label_product_description->setWordWrap(true);
     ui->label_product_ingredients->setWordWrap(true);
     ui->pushButton_continue->hide();
@@ -490,6 +498,7 @@ void page_product_mixing::reset_and_show_page_elements()
                     orderSizeLabelsPrice[i]->setText("$" + QString::number(price, 'f', 2) + "/" + "\n" + units);
                 }
             }
+            
             else
             {
                 orderSizeLabelsPrice[i]->setText("$" + QString::number(price, 'f', 2));
@@ -497,11 +506,13 @@ void page_product_mixing::reset_and_show_page_elements()
             }
             orderSizeButtons[i]->raise();
         }
+
         else
         {
             qDebug() << "Product size index NOT enabled: " << i;
             orderSizeButtons[i]->hide();
         }
+        
     }
     ui->label_price_custom->setAlignment(Qt::AlignCenter);
 
@@ -513,6 +524,12 @@ void page_product_mixing::reset_and_show_page_elements()
     else
     {
         ui->pushButton_continue->hide();
+    }
+    if(p_page_idle->thisMachine->getSelectedProduct()->getSizeEnabled(SIZE_SAMPLE_INDEX))
+    {
+        ui->pushButton_order_sample->show();
+        ui->pushButton_order_sample->raise();
+        
     }
 
     qDebug() << "-------------------------- END LOAD PRODUCTS ----------------";
@@ -589,6 +606,13 @@ void page_product_mixing::on_pushButton_order_big_clicked()
     hideCurrentPageAndShowProvided(p_page_overview);
 }
 
+void page_product_mixing::on_pushButton_order_sample_clicked()
+{
+    qDebug() << "Button sample clicked";
+    p_page_idle->thisMachine->getSelectedProduct()->setSelectedSize(SIZE_SAMPLE_INDEX);
+    hideCurrentPageAndShowProvided(p_page_product_freeSample);
+}
+
 size_t page_product_mixing::WriteCallback_coupon(char *contents, size_t size, size_t nmemb, void *userp)
 {
     ((std::string *)userp)->append((char *)contents, size * nmemb);
@@ -650,7 +674,7 @@ void page_product_mixing::additivePlusButtonsPressed(int index){
 }
 
 void page_product_mixing::on_pushButton_recommended_clicked(){
-    p_page_idle->thisMachine->getSelectedProduct()->setDefaultAdditivesRatioModifier(p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size() - 1);
+    p_page_idle->thisMachine->getSelectedProduct()->resetCustomMixRatioParameters();
     for (int j = 0; j < 5; j++){
         if(isAdditiveEnabled(j)){
             double additivePRatio = p_page_idle->thisMachine->getSelectedProduct()->getAdditivesRatioModifier(j);

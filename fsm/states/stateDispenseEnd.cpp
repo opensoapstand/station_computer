@@ -29,6 +29,7 @@ stateDispenseEnd::stateDispenseEnd(messageMediator *message)
 // DTOR
 stateDispenseEnd::~stateDispenseEnd()
 {
+    debugOutput::sendMessage("stateDispenseEnd: ~stateDispenseEnd", MSG_INFO);
 }
 
 // Overload for Debugger output
@@ -55,32 +56,34 @@ DF_ERROR stateDispenseEnd::onEntry()
 
 DF_ERROR stateDispenseEnd::onAction()
 {
-    debugOutput::sendMessage("onAction Dispense End...", MSG_STATE);
-
     DF_ERROR e_ret = OK;
+    debugOutput::sendMessage("onAction Dispense End...", MSG_STATE);
+    double price = getFinalPrice();
 
-    g_machine.m_productDispensers[m_slot_index].stopSelectedProductDispense();
+    double volume_dispensed = g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed();
+    std::string message = "finalVolumeDispensed|" + std::to_string(volume_dispensed) + "|";
+    usleep(100000); // send message delay
+    m_pMessaging->sendMessageOverIP(message, true); // send to UI
+
+    g_machine.m_productDispensers[m_slot_index].finishSelectedProductDispense();
 
     // handle minimum dispensing
-    bool is_valid_dispense = g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed() >= MINIMUM_DISPENSE_VOLUME_ML;
+    bool is_valid_dispense = volume_dispensed >= MINIMUM_DISPENSE_VOLUME_ML;
 
     if (!is_valid_dispense)
     {
         g_machine.m_productDispensers[m_slot_index].resetSelectedProductVolumeDispensed();
 
-        debugOutput::sendMessage("Not a valid dispense. Volume set to zero. " + std::to_string(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed()), MSG_STATE);
+        debugOutput::sendMessage("Not a valid dispense. Volume set to zero. " + std::to_string(volume_dispensed), MSG_STATE);
     }
 
     // send dispensed volume to ui (will be used to write to portal)
-    usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
 
     if (g_machine.m_productDispensers[m_slot_index].isSelectedProductVolumeTargetReached())
     {
         usleep(100000);                                      // send message delay (pause from previous message) desperate attempt to prevent crashes
         m_pMessaging->sendMessageOverIP("Target Hit", true); // send to UI
     }
-    // send dispensed volume to ui (will be used to write to portal)
-    usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
 
     // bool empty_stock_detected = false;
     // // handle empty container detection
@@ -92,34 +95,30 @@ DF_ERROR stateDispenseEnd::onAction()
     // adjust to nearest lower fixed volume if less dispensed than requested
     adjustSizeToDispensedVolume();
 
-    // crash test ok until here.
     // SIZE_TEST_CHAR is sent during Maintenance Mode dispenses - we do not want to record these in the transaction database, or print receipts...
     if (g_machine.m_productDispensers[m_slot_index].getSelectedSizeAsChar() == SIZE_TEST_CHAR)
     {
-        // debugOutput::sendMessage("Not a transaction: Test dispensing. (" + to_string(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed()) + "ml).", MSG_INFO);
+        debugOutput::sendMessage("Not a transaction: Test dispensing. (" + to_string(volume_dispensed) + "ml).", MSG_INFO);
         // dispenseEndUpdateDB(false); // update the db dispense statistics
     }
     else if (!is_valid_dispense)
     {
-        debugOutput::sendMessage("Not a transaction: No minimum quantity of product dispensed (" + to_string(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed()) + "ml). ", MSG_INFO);
-
-        // check for technical problems
+        debugOutput::sendMessage("Not a transaction: No minimum quantity of product dispensed (" + to_string(volume_dispensed) + "ml). ", MSG_INFO);
         dispenseEndUpdateDB(false); // update the db dispense statistics
     }
     else
     {
+        debugOutput::sendMessage("Normal transaction.", MSG_INFO);
         e_ret = handleTransactionPayment();
 
-        debugOutput::sendMessage("Normal transaction.", MSG_INFO);
         dispenseEndUpdateDB(true);
 
 #define ENABLE_TRANSACTION_TO_CLOUD
 #ifdef ENABLE_TRANSACTION_TO_CLOUD
 
         std::string paymentMethod = g_machine.getPaymentMethod();
-
-        double price = getFinalPrice();
-        if (paymentMethod == "qr" && price!= 0.0)
+        
+        if (paymentMethod == "qr" && price != 0.0)
         {
             // these transactions are dealt with in the UI
         }
@@ -135,16 +134,11 @@ DF_ERROR stateDispenseEnd::onAction()
 #endif
     }
 
-    double price = getFinalPrice();
     debugOutput::sendMessage("Post dispense final price: " + to_string(price), MSG_INFO);
-    double volume = g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed();
-    std::string message = "finalVolumeDispensed|" + std::to_string(volume) + "|";
-    m_pMessaging->sendMessageOverIP(message, true); // send to UI
+
 
     // send dispensed volume to ui (will be used to write to portal)
-    usleep(1000000); // send message delay (pause from previous message) desperate attempt to prevent crashes
     m_state_requested = STATE_IDLE;
-    usleep(100000);                                           // often the transaction end command is sent too quickly to the ui.
     m_pMessaging->sendMessageOverIP("Transaction End", true); // send to UI
 
     return e_ret;
@@ -247,7 +241,6 @@ DF_ERROR stateDispenseEnd::handleTransactionPayment()
     else if (paymentMethod == "tap")
     {
         // sleep(5);
-
         // debugOutput::sendMessage("Dispense OnEXIT", MSG_INFO);
         // debugOutput::sendMessage("------Cleaning Mode------", MSG_INFO);
         // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", MSG_INFO);
@@ -257,7 +250,7 @@ DF_ERROR stateDispenseEnd::handleTransactionPayment()
     }
     else if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13" || paymentMethod == "barcode_EAN-2" || paymentMethod == "plu")
     {
-        debugOutput::sendMessage("Printing receipt:", MSG_INFO);
+        debugOutput::sendMessage("Print receipt:", MSG_INFO);
         setup_and_print_receipt();
     }
     else
@@ -317,7 +310,8 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
     std::string machine_id = g_machine.getMachineId();
     // std::string pid = getProductID(m_slot);
     std::string pid = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->m_product_id_combined_with_location_for_backend;
-    std::string units = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getDisplayUnits();
+    // std::string units = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getDisplayUnits();
+    std::string units = g_machine.getSizeUnit();
     std::string readBuffer;
     std::string volume_remaining_units_converted_string;
     std::string coupon = m_pMessaging->getCouponCode();
@@ -333,11 +327,11 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
     }
     else
     {
-        double dv = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->convertVolumeMetricToDisplayUnits(dispensed_volume);
+        double dv = g_machine.convertVolumeMetricToDisplayUnits(dispensed_volume);
         dispensed_volume_units_converted = to_string(dv);
     }
 
-    volume_remaining_converted = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->convertVolumeMetricToDisplayUnits(volume_remaining);
+    volume_remaining_converted = g_machine.convertVolumeMetricToDisplayUnits(volume_remaining);
     volume_remaining_units_converted_string = to_string(volume_remaining_converted);
 
     std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&size_unit=" + units + "&price=" + price_string + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + end_time + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer&volume_remaining_ml=" + to_string(volume_remaining) + "&quantity_dispensed_ml=" + to_string(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed()) + "&volume_remaining=" + volume_remaining_units_converted_string + "&coupon=" + coupon + "&buttonDuration=" + button_press_duration + "&buttonTimes=" + dispense_button_count + "&pnumber=" + pnumberString;
@@ -626,7 +620,7 @@ double stateDispenseEnd::getFinalPrice()
     double price;
     // bool isCustomSizeEnabled = g_machine.m_productDispensers.getProduct()->getIsSizeEnabled(SIZE_CUSTOM_CHAR);
     // If custom volume is enabled, adjust the price to actual quantity dispensed
-    if (size == SIZE_CUSTOM_CHAR )
+    if (size == SIZE_CUSTOM_CHAR)
     {
 
         bool isDiscountEnabled;
@@ -648,8 +642,9 @@ double stateDispenseEnd::getFinalPrice()
         }
 
         price = price_per_ml * volume_dispensed;
-        if(size != SIZE_CUSTOM_CHAR){
-            price = std::min(price,m_pMessaging->getRequestedPrice());
+        if (size != SIZE_CUSTOM_CHAR)
+        {
+            price = std::min(price, m_pMessaging->getRequestedPrice());
         }
     }
     else if (size == SIZE_TEST_CHAR)
@@ -664,10 +659,9 @@ double stateDispenseEnd::getFinalPrice()
 }
 
 // This function prints the receipts by calling a system function (could be done better)
-DF_ERROR stateDispenseEnd::setup_and_print_receipt()
+void stateDispenseEnd::setup_and_print_receipt()
 {
-
-    // printerr.connectToPrinter();
+    
     char chars_cost[MAX_BUF];
     char chars_volume_formatted[MAX_BUF];
     char chars_price_per_ml_formatted[MAX_BUF];
@@ -677,7 +671,7 @@ DF_ERROR stateDispenseEnd::setup_and_print_receipt()
     std::string paymentMethod = g_machine.getPaymentMethod();
     std::string name_receipt = (g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getProductName());
 
-    std::string units = (g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getDisplayUnits());
+    std::string units =  g_machine.getSizeUnit();
     double price = getFinalPrice();
     double price_per_ml;
     debugOutput::sendMessage("Price final for receipt:" + to_string(price), MSG_INFO);
@@ -717,24 +711,26 @@ DF_ERROR stateDispenseEnd::setup_and_print_receipt()
     }
     else if (size == 't')
     {
+        debugOutput::sendMessage("No recreipts printed for test dispenses", MSG_INFO);
         volume_dispensed = g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed();
         // normal
         // price_per_ml = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getPrice(size);
         // with reduction for larger quantities
         price_per_ml = 0;
+        return; // no receipts for tests
     }
     else
     {
         debugOutput::sendMessage("invalid size provided" + size, MSG_INFO);
     }
-
-    std::string plu = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getFinalPLU(size, price);
+    
+    std::string plu = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getFinalPLU(size, price, g_machine.getPaymentMethod());
 
     // convert units
     if (units == "oz")
     {
         // volume_dispensed = ceil(volume_dispensed * ML_TO_OZ);
-        volume_dispensed = ceil(g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->convertVolumeMetricToDisplayUnits(volume_dispensed));
+        volume_dispensed = ceil(g_machine.convertVolumeMetricToDisplayUnits(volume_dispensed));
         price_per_ml = price_per_ml / ML_TO_OZ;
     }
 
@@ -798,11 +794,15 @@ DF_ERROR stateDispenseEnd::setup_and_print_receipt()
 
     strftime(now, 50, "%F %T", timeinfo);
 
-    machine tmp;
-    // receipt_cost = m_pMessaging->getRequestedPrice();
+    // machine tmp;
     string promoCode = m_pMessaging->getCouponCode();
     debugOutput::sendMessage("Price changed to " + receipt_cost, MSG_INFO);
-    tmp.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, now, units, paymentMethod, plu, promoCode, true);
+    g_machine.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, now, units, paymentMethod, plu, promoCode, true);
+    // for (int i = 0; i < 100; i++)
+    // {
+    //     debugOutput::sendMessage("End receipt print from end dispense.", MSG_INFO);
+    //     usleep(100000);
+    // }
 }
 
 // DF_ERROR stateDispenseEnd::print_text(string text)

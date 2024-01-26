@@ -72,3 +72,8 @@ page_payment_tap_tcp->animated_Label,{"x": 139, "y": 668, "width": 801, "height"
 page_dispenser->label_indicate_active_spout,{"x":460,"y":1700,"isVisibleAtLoad":true}
 
 statusbar->statusbar,{"width": 75, "height": 75}
+
+page_help->html_help_text,{"x": 128, "y": 181, "width": 825, "height": 1124}
+page_help->pushButton_to_feedback,{"x": 50, "y": 1740, "width": 287, "height": 100}
+page_help->pushButton_to_howTo,{"x": 397, "y": 1740, "width": 287, "height": 100}
+page_help->pushButton_to_maintenance,{"x": 743, "y": 1740, "width": 287, "height": 100}

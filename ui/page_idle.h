@@ -17,6 +17,7 @@
 #define IDLE_H
 
 #include "page_product_menu.h"
+#include "page_buybottle.h"
 #include "page_select_product.h"
 #include "page_idle_products.h"
 #include "dfuicommthread.h"
@@ -34,6 +35,7 @@
 
 class statusbar;
 class keyboard;
+class page_buyBottle;
 class page_maintenance;
 class page_select_product;
 class page_product_menu;
@@ -63,7 +65,7 @@ class page_idle : public QWidget
 public:
     void refreshTemperature();
     explicit page_idle(QWidget *parent = nullptr);
-    void setPage(page_select_product *p_page_select_product, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products, page_error_wifi *p_page_error_wifi, statusbar *p_statusbar, page_product_menu *p_page_product_menu, keyboard *p_keyboard);
+    void setPage(page_select_product *p_page_select_product, page_buyBottle *p_page_buyBottle, page_maintenance *pageMaintenance, page_maintenance_general *pageMaintenanceGeneral, page_idle_products *p_page_idle_products, page_error_wifi *p_page_error_wifi, statusbar *p_statusbar, page_product_menu *p_page_product_menu, keyboard *p_keyboard);
     ~page_idle();
     void showEvent(QShowEvent *event);
     void changeToIdleProductsIfSet();
@@ -89,9 +91,11 @@ public:
     QTimer *userRoleTimeOutTimer;
     int _userRoleTimeOutTimerSec;
     QTimer *rebootNightlyTimeOutTimer;
+    int _rebootNightlyTimeOutTimerSec;
     QTime *currentTime;
     QTimer *pingTapDeviceTimer;
-    int _rebootNightlyTimeOutTimerSec;
+    QTimer *receiptPrinterFeedBackTimer;
+    int _receiptPrinterFeedBackTimerSec;
     int _millisecondsUntilSetTime;
     int _delaytime_seconds;
 
@@ -110,11 +114,14 @@ private slots:
     void on_pushButton_test_clicked();
     void onUserRoleTimeOutTimerTick();
     void onRebootNightlyTimeOutTimerTick();
+    void onReceiptPrinterFeedBackTimerTick();
+
     void on_pushButton_reboot_nightly_clicked();
     void pingTapDevice();
     void rebootTapDevice();
 private:
     Ui::page_idle *ui;
+    page_buyBottle *p_page_buyBottle;
     page_select_product *p_pageSelectProduct;
     page_product_menu *p_page_product_menu;
     page_maintenance *p_page_maintenance;
@@ -125,7 +132,7 @@ private:
     keyboard *p_keyboard;
     QString idle_page_type;
 
-    bool tappingBlockedUntilPrinterReply;
+    bool m_tappingBlockedUntilPrinterReply;
 
     QVBoxLayout *statusbarLayout; 
     

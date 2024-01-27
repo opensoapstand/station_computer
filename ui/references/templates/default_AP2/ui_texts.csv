@@ -77,6 +77,10 @@ page_dispenser->label_press,press and hold the<br>button
 
 # page_end
 page_end->pushButton_contact,Feedback
+page_end->label_message->hasReceiptPrinter,Please take your receipt!
+page_end->label_message_2->hasReceiptPrinter2,By refilling you've helped keep a<br>plastic bottle out of our landfills.<br>Thank you!
+page_end->label_message->finish_transaction,Finishing Transaction
+page_end->label_volume_dispensed,Volume Dispensed:
 
 # page_help
 page_help->pushButton_to_idle,←BACK

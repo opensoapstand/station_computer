@@ -68,7 +68,7 @@ void page_end::showEvent(QShowEvent *event)
     ui->pushButton_to_idle->setStyleSheet(styleSheet);
     ui->label_message->setStyleSheet(styleSheet);
     ui->label_message_2->setStyleSheet(styleSheet);
-
+    ui->label_message_2->show();
     ui->label_volume_dispensed_ml->setProperty("class", "volumeDispensedStylesheet"); // set property goes first!!
     ui->label_volume_dispensed->setProperty("class", "volumeDispensedStylesheet");    // set property goes first!!
 
@@ -149,10 +149,15 @@ void page_end::showEvent(QShowEvent *event)
     // }
     _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
     thankYouEndTimer->start();
+    if(p_page_idle->thisMachine->hasMixing()){
+        ui->label_manufacturer_logo->hide();
+        p_page_idle->thisMachine->setTemplateTextToObject(ui->label_volume_dispensed);
+    }else{
+        QString machine_logo_full_path = p_page_idle->thisMachine->getTemplatePathFromName(MACHINE_LOGO_PATH);
+        p_page_idle->thisMachine->addPictureToLabel(ui->label_manufacturer_logo, machine_logo_full_path);
+        ui->label_manufacturer_logo->setStyleSheet(styleSheet);
+    }
 
-    QString machine_logo_full_path = p_page_idle->thisMachine->getTemplatePathFromName(MACHINE_LOGO_PATH);
-    p_page_idle->thisMachine->addPictureToLabel(ui->label_manufacturer_logo, machine_logo_full_path);
-    ui->label_manufacturer_logo->setStyleSheet(styleSheet);
     updateDispensedVolumeLabel();
 
     // p_page_idle->setDiscountPercentage(0.0);

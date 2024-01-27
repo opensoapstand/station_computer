@@ -342,7 +342,8 @@ void pcb::pcb_refresh()
     }
 }
 
-bool pcb::isPcbValid(){
+bool pcb::isPcbValid()
+{
     return get_pcb_version() != INVALID;
 }
 void pcb::setup()

@@ -106,10 +106,11 @@ DF_ERROR stateDispense::onAction()
       const char *statusStringChar = g_machine.m_productDispensers[slot_index].getSlotStateAsString();
       std::string statusString(statusStringChar);
 
-#define PRINT_STATUS
 
       std::string message = "dispenseupdate|" + std::to_string(volume) + "|" + std::to_string(flowrate) + "|" + statusString;
       m_pMessaging->sendMessageOverIP(message, true); // send to UI
+      
+#define PRINT_STATUS
 #ifdef PRINT_STATUS
 
       // update of the actual dispense
@@ -155,8 +156,12 @@ DF_ERROR stateDispense::onAction()
    if (g_machine.m_productDispensers[slot_index].isActiveProductVolumeTargetReached())
    {
 
-      debugOutput::sendMessage("Active product. Requested volume reached. Stop and next.   P-" + to_string(g_machine.m_productDispensers[slot_index].getActivePNumber()) + " / " + to_string(g_machine.m_productDispensers[slot_index].getActiveProductVolumeDispensed()) + "ml", MSG_INFO);
-      
+      debugOutput::sendMessage("Active product. Requested volume reached. Stop and next.   P-" +
+                                   to_string(g_machine.m_productDispensers[slot_index].getActivePNumber()) + ":  " +
+                                   to_string(g_machine.m_productDispensers[slot_index].getActiveProductVolumeDispensed()) + "/" +
+                                   to_string(g_machine.m_productDispensers[slot_index].getActiveProduct()->getTargetVolume()) + "ml",
+                               MSG_INFO);
+
       bool isAllPartsOfDispenseProductDispensed = g_machine.m_productDispensers[slot_index].setNextActiveProductAsPartOfSelectedProduct();
       if (isAllPartsOfDispenseProductDispensed)
       {
@@ -169,7 +174,7 @@ DF_ERROR stateDispense::onAction()
          if (g_machine.m_productDispensers[slot_index].getDispenseButtonValue())
          {
             debugOutput::sendMessage("Dispense button is pressed, so restart next phase automatically. ", MSG_INFO);
-           g_machine.m_productDispensers[slot_index]. startActiveDispensing();
+            g_machine.m_productDispensers[slot_index].startActiveDispensing();
          }
       }
    }

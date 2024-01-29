@@ -267,6 +267,7 @@ public:
     int m_buy_bottle_2;
     QString m_portal_base_url;
 
+    QString m_freesample_end_url;
     int m_is_enabled;
     QString m_status_text;
     bool m_machine_database_table_loaded_successfully = false;
@@ -296,6 +297,8 @@ public:
     bool hasMixing();
     QString getPortalBaseUrl();
 
+    void setFreeSampleEndURL(QString ending_url);
+    QString getFreeSampleEndURL();
 public slots:
 
 signals:

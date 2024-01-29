@@ -582,8 +582,6 @@ void page_dispenser::fsmSendStopDispensing()
 {
     qDebug() << "Send STOP dispensing to fsm";
     this->isDispensing = false;
-    QString endTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
-    p_page_idle->thisMachine->getSelectedSlot()->setDispenseEndTime(endTime);
 
     // QString command = QString::number(p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
     // command.append(p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar());

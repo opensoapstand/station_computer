@@ -149,14 +149,14 @@ QByteArray DfUiCommThread::readyRead()
     }
     else if (Data.contains("finalTransactionMessage|"))
     {
-
+        qDebug() << "Process received message : " << Data; // not every message gets a debug acknowledgement.
         QStringList dataObjectList = QString(Data).split('|');
         QString start_time = dataObjectList[2]; 
         QString end_time = dataObjectList[4];
         double button_press_duration = dataObjectList[6].toDouble();
         double button_press_count = dataObjectList[8].toDouble();
-
-        emit finalTransactionMessageSignal(start_time, end_time,button_press_duration, button_press_count);
+        double volume_dispensed = dataObjectList[10].toDouble();
+        emit finalTransactionMessageSignal(start_time, end_time,button_press_duration, button_press_count,volume_dispensed);
     }
     else
     {

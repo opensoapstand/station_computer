@@ -49,18 +49,22 @@ page_product_mixing->label_product_ingredients_title,Curated Ingredients
 page_product_mixing->pushButton_continue,Continue
 page_product_mixing->custom_volume,Custom Volume
 page_product_mixing->pushButton_recommended,Recommended
-page_product_mixing->pushButton_order_sample,Try a sample
+page_product_mixing->pushButton_order_sample,Try a \n sample
 
 # page_product_overview
 page_product_overview->label_page_title,Your Order
 page_product_overview->label_checkout_title,Checkout
 page_product_overview->label_invoice_size_title,Size: 
-page_product_overview->label_invoice_coupon_title,Promo Code / Coupon
+page_product_overview->label_invoice_coupon_title,Coupon Code
 page_product_overview->pushButton_select_product_page,←BACK
 page_product_overview->label_total,Total Amount
 page_product_overview->pushButton_continue->proceed_free,Proceed
 page_product_overview->pushButton_continue->proceed_pay,Proceed to Pay
 page_product_overview->pushButton_continue,Continue
+page_product_overview->lineEdit_promo_code->valid,Coupon Code Valid
+page_product_overview->lineEdit_promo_code->invalid,Coupon Code Invalid
+page_product_overview->lineEdit_promo_code->ineligible,Coupon Code Not Eligible At This Station
+page_product_overview->lineEdit_promo_code->invite,Tap here to enter Coupon Code
 page_product_overview->pushButton_continue->proceed_pay_tap,Pay with TAP
 page_product_overview->pushButton_continue->proceed_pay_qr,Pay with QR
 page_product_overview->pushButton_continue_additional->proceed_pay_qr,Pay with QR
@@ -75,8 +79,23 @@ page_dispenser->label_press,press and hold the<br>button
 page_end->pushButton_contact,Feedback
 
 # page_help
-page_help->pushButton_to_idle,←back
-page_help->pushButton_to_transactions,transactions→
+page_help->pushButton_to_idle,←BACK
+page_help->pushButton_to_transactions,TRANSACTIONS→
+page_help->pushButton_to_howTo,Instruction
+page_help->pushButton_to_maintenance,Settings
+page_help->pushButton_to_feedback,Contact us
+
+#page_how_to
+page_how_to->label_page_title,How to Use
+page_how_to->label_step01_heading,01. Pick
+page_how_to->label_step01_instruction,Pick your drink and customize to your liking.
+page_how_to->label_step02_heading,02. Pay
+page_how_to->label_step02_instruction,Pay with Tap or QR.
+page_how_to->label_step03_heading,03. Dispense
+page_how_to->label_step03_instruction,Bring bottle up to indicated nozzle, then press and hold to dispense.
+page_how_to->pushButton_to_feedback,Contact us 
+page_how_to->pushButton_to_help,←BACK
+page_how_to->pushButton_to_maintenance,Settings
 
 # page_sendFeedback
 page_sendFeedback->pushButton_previous_page,←BACK
@@ -111,12 +130,16 @@ page_email->keyboardTextEntry->invalid,Incorrect email address, please enter val
 page_email->pushButton_continue, Submit email for free dispense!
 
 # page_product_freeSample
-page_product_freeSample->label_page_title,Free Sample
-page_product_freeSample->label_checkout_title,Checkout
+page_product_freeSample->lineEdit_promo_code->valid,Coupon Code Valid
+page_product_freeSample->lineEdit_promo_code->invalid,Coupon Code Invalid
+page_product_freeSample->lineEdit_promo_code->ineligible,Coupon Code Not Eligible At This Station
+page_product_freeSample->lineEdit_promo_code->network_error,Network error, could not verify. Try again.
+page_product_freeSample->lineEdit_promo_code->invite,Tap here to enter Coupon Code
+page_product_freeSample->label_page_title,Scan QR
+page_product_freeSample->label_invoice_title,Free Sample
 page_product_freeSample->label_invoice_size_title,Size: 
-page_product_freeSample->label_invoice_coupon_title,Promo Code / Coupon
+page_product_freeSample->label_invoice_coupon_title,Coupon Code
 page_product_freeSample->pushButton_select_product_page,←BACK
-page_product_freeSample->label_total,Total Amount
 page_product_freeSample->pushButton_continue->proceed_free,Proceed
 page_product_freeSample->pushButton_continue->proceed_pay,Proceed to Pay
 page_product_freeSample->pushButton_continue,Continue
@@ -124,4 +147,8 @@ page_product_freeSample->pushButton_continue->proceed_pay_tap,Pay with TAP
 page_product_freeSample->pushButton_continue->proceed_pay_qr,Pay with QR
 page_product_freeSample->pushButton_continue_additional->proceed_pay_qr,Pay with QR
 page_product_freeSample->label_selected_volume->custom_volume,Custom Volume (maximum: %1)
-page_product_freeSample->label_steps,<ol><li><span class='tab'></span>Scan QR code with phone camera <br/>or enter <span style='color: red;'>aelen.com/freesample </span> in your browser</li>        <li><span class='tab'></span>Click to open the link that appears</li>        <li><span class='tab'></span>Enter your email to receive a promotional coupon</li>        <li><span class='tab'></span>Enter the received coupon below</li>        <li><span class='tab'></span>Refill your beverage!</li>        </ol>  
+page_product_freeSample->label_steps,<ol><li><span class='tab'></span>Scan QR to get your coupon.</li>        <li><span class='tab'></span>Enter the coupon code.</li>        <li><span class='tab'></span>Enjoy your Sip!</li></ol>  
+
+
+# input_widget
+input_widget->label_input_info,Enter password followed by the "Return" key to enter maintenance mode

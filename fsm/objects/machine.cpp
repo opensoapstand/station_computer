@@ -34,26 +34,35 @@ machine::machine()
 
 void machine::setup(product *pnumbers)
 {
-    control_pcb = new pcb();
-    m_pnumbers = pnumbers;
-    receipt_printer = new Adafruit_Thermal();
-    control_pcb->setup();
-    control_pcb->setPumpPWM(DEFAULT_PUMP_PWM);
-    // the 24V power has a master on/off switch
-    switch_24V = new FSModdyseyx86GPIO(IO_PIN_ENABLE_24V);
-    power24VEnabled = false;
-    switch_24V->setPinAsInputElseOutput(false); // set as output
-
-    // gpio_odyssey controlPower3point3V(IO_PIN_ENABLE_3point3V);
-    // controlPower3point3V.setPinAsInputElseOutput(false);
-    // controlPower3point3V.writePin(true);
-
     // 3.3V control power to the pcb.
     switch_3point3V = new FSModdyseyx86GPIO(IO_PIN_ENABLE_3point3V);
     signal3point3VEnabled = false;
     switch_3point3V->setPinAsInputElseOutput(false); // set as output
     pcb3point3VPowerSwitch(true);
-    // switch_3point3V->writePin(true);
+
+    // the 24V power has a master on/off switch
+    switch_24V = new FSModdyseyx86GPIO(IO_PIN_ENABLE_24V);
+    power24VEnabled = false;
+    switch_24V->setPinAsInputElseOutput(false); // set as output
+
+    control_pcb = new pcb();
+    control_pcb->setup();
+
+    int8_t power_cycle_attempt = power_cycle_attempt_AT_INVALID_PCB;
+    while (power_cycle_attempt > 0 && !control_pcb->isPcbValid())
+    {
+        debugOutput::sendMessage("Machine: Pcb version could not be determined. Probably an i2c bus fault or a faulty component. Power cycle pcb control voltage. Attempt: " + std::to_string(power_cycle_attempt) + "/" + std::to_string(power_cycle_attempt_AT_INVALID_PCB), MSG_INFO);
+        pcb3point3VPowerSwitch(false);
+        power_cycle_attempt--;
+        usleep(1000000 * (power_cycle_attempt_AT_INVALID_PCB - power_cycle_attempt));
+        control_pcb->setup(); // reattempt setup of pcb
+    }
+
+    m_pnumbers = pnumbers;
+
+    receipt_printer = new Adafruit_Thermal();
+
+    control_pcb->setPumpPWM(DEFAULT_PUMP_PWM);
 
     syncSoftwareVersionWithDb();
     initProductDispensers();

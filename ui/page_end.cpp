@@ -82,71 +82,11 @@ void page_end::showEvent(QShowEvent *event)
     ui->label_client_logo->hide();
 
     p_page_idle->thisMachine->addClientLogoToLabel(ui->label_client_logo);
-
-    ActivePaymentMethod paymentMethod = p_page_idle->thisMachine->getActivePaymentMethod();
-
-    ui->label_volume_dispensed_ml->setText("");
-    switch(paymentMethod){
-        case 0:
-        {
-            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "qr");
-            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "qr2");
-            is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
-            sendDispenseEndToCloud();
-        }
-        case 1:
-        case 2:{
-            //Tap Payment - Payment Method
-            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "qr");
-            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "qr2");
-            is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
-            break;
-        }
-        case 3:{
-            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "hasReceiptPrinter");
-            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "hasReceiptPrinter2");
-            is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
-            sendCompleteOrderToCloud(PAYMENT_RECEIPT_PRINTER);
-            break;
-        }
-        default:{
-            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "any_pay");
-            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "any_pay2");
-            is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
-            sendCompleteOrderToCloud(PAYMENT_RECEIPT_PRINTER);
-            break;
-        }
-    }
-    // if (p_page_idle->thisMachine->hasReceiptPrinter())
-    // {
-    //     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "hasReceiptPrinter");
-    //     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "hasReceiptPrinter2");
-    // }
-    // else if (paymentMethod == PAYMENT_QR || paymentMethod == PAYMENT_TAP_USA)
-    // {
-    //     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "qr");
-    //     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "qr2");
-    // }
-    // else
-    // {
-    //     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "any_pay");
-    //     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "any_pay2");
-    // }
-
-    is_in_state_thank_you = true;
-
-    is_controller_finished = false;
-    // is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
-    exitIsForceable = false;
-
-  
-    _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
-    thankYouEndTimer->start();
-
     QString machine_logo_full_path = p_page_idle->thisMachine->getTemplatePathFromName(MACHINE_LOGO_PATH);
     p_page_idle->thisMachine->addPictureToLabel(ui->label_manufacturer_logo, machine_logo_full_path);
     ui->label_manufacturer_logo->setStyleSheet(styleSheet);
-    updateDispensedVolumeLabel();
+
+    
 
     // p_page_idle->setDiscountPercentage(0.0);
 }
@@ -165,12 +105,14 @@ void page_end::fsmReceiveFinalDispensedVolume(double dispensed)
     updateDispensedVolumeLabel();    
 }
 
-void page_end::fsmReceiveFinalTransactionMessage(QString start_time, QString end_time, double button_press_duration, double button_press_count)
+void page_end::fsmReceiveFinalTransactionMessage(QString start_time, QString end_time, double button_press_duration, double button_press_count, double volume_dispensed)
 {
     p_page_idle->thisMachine->getSelectedSlot()->setDispenseStartTime(start_time);
     p_page_idle->thisMachine->getSelectedSlot()->setDispenseEndTime(end_time);
     p_page_idle->thisMachine->getSelectedSlot()->setButtonPressDuration(button_press_duration);
     p_page_idle->thisMachine->getSelectedSlot()->setButtonPressCount(button_press_count);
+    p_page_idle->thisMachine->getSelectedProduct()->setVolumeDispensedMl(volume_dispensed);
+    waitToFinishTransactionInFsm();
 }
 
 void page_end::updateDispensedVolumeLabel(){
@@ -271,7 +213,7 @@ void page_end::sendCompleteOrderToCloud(QString paymentMethod)
     QString contents = p_page_idle->thisMachine->getSelectedProduct()->getProductName();
     QString quantity_requested = p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(false, false);
     char drinkSize = p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar();
-    double originalPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();  
+    QString originalPrice = QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize());  
     QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl(), productUnits, false, false);
     QString volume_remaining = p_page_idle->thisMachine->getSelectedProduct()->getVolumeRemainingCorrectUnits(false);
     QString soapstand_product_serial = p_page_idle->thisMachine->getSelectedProduct()->getPNumberAsPString();
@@ -279,9 +221,8 @@ void page_end::sendCompleteOrderToCloud(QString paymentMethod)
     QString promoCode = this->p_page_idle->thisMachine->getCouponCode();  
     QString startTime = this->p_page_idle->thisMachine->getSelectedSlot()->getDispenseStartTime();
     QString endTime = this->p_page_idle->thisMachine->getSelectedSlot()->getDispenseEndTime();
-    double button_press_duration = this->p_page_idle->thisMachine->getSelectedSlot()->getButtonPressDuration();
-    double button_press_count = this->p_page_idle->thisMachine->getSelectedSlot()->getButtonPressCount();
-    qDebug() << "End Time" << endTime;
+    QString button_press_duration = QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getButtonPressDuration());
+    QString button_press_count = QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getButtonPressCount());
     // if (dispensed_correct_units == 0)
     // {
     //     p_page_idle->thisMachine->addToTransactionLogging("\n ERROR: No Volume dispensed");
@@ -418,4 +359,51 @@ void page_end::finishHandler()
 void page_end::on_pushButton_contact_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_sendFeedback);
+}
+
+void page_end::waitToFinishTransactionInFsm(){
+    ActivePaymentMethod paymentMethod = p_page_idle->thisMachine->getActivePaymentMethod();
+
+    ui->label_volume_dispensed_ml->setText("");
+    switch(paymentMethod){
+        case 0:
+        {
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "qr");
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "qr2");
+            is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
+            sendDispenseEndToCloud();
+        }
+        case 1:
+        case 2:{
+            //Tap Payment - Payment Method
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "qr");
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "qr2");
+            is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
+            break;
+        }
+        case 3:{
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "hasReceiptPrinter");
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "hasReceiptPrinter2");
+            is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
+            sendCompleteOrderToCloud(PAYMENT_RECEIPT_PRINTER);
+            break;
+        }
+        default:{
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "any_pay");
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "any_pay2");
+            is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
+            sendCompleteOrderToCloud(PAYMENT_RECEIPT_PRINTER);
+            break;
+        }
+    }
+
+    is_in_state_thank_you = true;
+
+    is_controller_finished = false;
+    exitIsForceable = false;
+  
+    _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
+    thankYouEndTimer->start();
+
+    updateDispensedVolumeLabel();
 }

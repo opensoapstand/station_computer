@@ -59,13 +59,13 @@ DF_ERROR stateDispenseEnd::onAction()
     DF_ERROR e_ret = OK;
     debugOutput::sendMessage("onAction Dispense End...", MSG_STATE);
     double price = getFinalPrice();
-
+    sendEndTransactionMessageToUI();
     double volume_dispensed = g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed();
-    std::string message = "finalVolumeDispensed|" + std::to_string(volume_dispensed) + "|";
-    usleep(100000); // send message delay
-    m_pMessaging->sendMessageOverIP(message, true); // send to UI
+    // std::string message = "finalVolumeDispensed|" + std::to_string(volume_dispensed) + "|";
+    // usleep(100000); // send message delay
+    // m_pMessaging->sendMessageOverIP(message, true); // send to UI
 
-    g_machine.m_productDispensers[m_slot_index].stopSelectedProductDispense();
+    g_machine.m_productDispensers[m_slot_index].finishSelectedProductDispense();
 
     // handle minimum dispensing
     bool is_valid_dispense = volume_dispensed >= MINIMUM_DISPENSE_VOLUME_ML;
@@ -135,7 +135,6 @@ DF_ERROR stateDispenseEnd::onAction()
     }
 
     debugOutput::sendMessage("Post dispense final price: " + to_string(price), MSG_INFO);
-    sendEndTransactionMessageToUI();
 
     // send dispensed volume to ui (will be used to write to portal)
     m_state_requested = STATE_IDLE;
@@ -818,9 +817,10 @@ void stateDispenseEnd:: sendEndTransactionMessageToUI(){
     std::string end_time = g_machine.m_productDispensers[m_slot_index].getSelectedProductDispenseEndTime();
     std::string button_press_duration = to_string(g_machine.m_productDispensers[m_slot_index].getButtonPressedTotalMillis());
     std::string button_press_count = to_string(g_machine.m_productDispensers[m_slot_index].getDispenseButtonPressesDuringDispensing());
+    std::string volume_dispensed =to_string(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed());
     
     std::string message = "finalTransactionMessage|start_time|" + start_time+"|end_time|" + end_time+"|button_press_duration|"+button_press_duration \
-                            + "|button_press_count|" + button_press_count;
+                            + "|button_press_count|" + button_press_count+ "|volume_dispensed|" + volume_dispensed;
     usleep(100000); // send message delay
     m_pMessaging->sendMessageOverIP(message, true); // send to UI
 }

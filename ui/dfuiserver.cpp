@@ -47,8 +47,8 @@ void DfUiServer::updateFinalVolumeDispensed(double dispensed)
     emit finalVolumeDispensed(dispensed);
 }
 
-void DfUiServer::sendFinalTransactionMessage(QString start_time, QString end_time, double button_press_duration, double button_press_count){
-    emit finalTransactionMessage(start_time,end_time,button_press_duration,button_press_count);
+void DfUiServer::sendFinalTransactionMessage(QString start_time, QString end_time, double button_press_duration, double button_press_count, double volume_dispensed){
+    emit finalTransactionMessage(start_time,end_time,button_press_duration,button_press_count, volume_dispensed);
 }
 
 void DfUiServer::dispenseStatusSlot(QString status)

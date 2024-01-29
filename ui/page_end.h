@@ -44,8 +44,9 @@ public:
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void finishHandler();
     void fsmReceiveFinalDispensedVolume(double dispensed);
-    void fsmReceiveFinalTransactionMessage(QString start_time, QString end_time, double button_press_duration, double button_press_count);
+    void fsmReceiveFinalTransactionMessage(QString start_time, QString end_time, double button_press_duration, double button_press_count, double volume_dispensed);
     void updateDispensedVolumeLabel();
+    void waitToFinishTransactionInFsm();
     bool is_controller_finished;
     bool is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER;
 

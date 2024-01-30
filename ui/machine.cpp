@@ -477,6 +477,7 @@ QString machine::getHardwareMajorVersion()
 
 bool machine::isSlotExisting(int slot)
 {
+    qDebug() << "ASfaeaefasefaiseifjiasiefj  slot exisint?   " << (slot<= getSlotCount());
     return slot <= getSlotCount();
 }
 
@@ -514,7 +515,7 @@ int machine::getSlotCount()
         else if (m_hardware_version.startsWith("SS2"))
         {
             slot_count = 3;
-            qDebug() << " ss2  slot count 3";
+            qDebug() << " ss2   slot count 3";
         }
         else
         {
@@ -526,7 +527,7 @@ int machine::getSlotCount()
     {
         slot_count = MAX_SLOT_COUNT;
     }
-
+ 
     return slot_count;
     // dispensers is the same as slots.
 

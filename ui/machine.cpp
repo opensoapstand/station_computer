@@ -477,7 +477,6 @@ QString machine::getHardwareMajorVersion()
 
 bool machine::isSlotExisting(int slot)
 {
-    qDebug() << "ASfaeaefasefaiseifjiasiefj  slot exisint?   " << (slot<= getSlotCount());
     return slot <= getSlotCount();
 }
 

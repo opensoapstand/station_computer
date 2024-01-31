@@ -294,6 +294,7 @@ int createOrUpdateConfigFile (std::string macKey,std::string macLabel,std::strin
 std::map<std::string, std::string> readConfigFile(){
     std::ifstream configFile("/home/df-admin/production/admin/tap_payment/config.txt");
     std::map<std::string, std::string> configMap;
+    qDebug() << "Reading config file";
     if (configFile.is_open()) {
         std::string line;
         while (std::getline(configFile, line)) {

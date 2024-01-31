@@ -278,7 +278,7 @@ int connectSocket()
 {
     int sockfd;
     struct sockaddr_in serv_addr;
-
+    qDebug() << "Connecting to server socket";
     // Create a socket
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0)

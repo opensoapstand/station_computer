@@ -283,9 +283,9 @@ void page_init::initiateTapPayment()
         break;
     }
     }
-
     m_tap_payment_ready = true;
 }
+
 void page_init::on_pushButton_continue_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_idle);

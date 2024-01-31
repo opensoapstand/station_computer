@@ -59,12 +59,12 @@ page_payment_tap_tcp::page_payment_tap_tcp(QWidget *parent) : QWidget(parent),
 
     ui->pushButton_payment_bypass->setEnabled(false);
     ui->label_title->hide();
-    // ui->order_total_amount->hide();
     statusbarLayout = new QVBoxLayout(this);
 }
 
 void page_payment_tap_tcp::initiate_tap_setup()
 {
+    enableIpForwarding();
     qDebug() << "InitializingTap payment";
     tap_payment = true;
     std::map<std::string, std::string> configMap = readConfigFile();
@@ -448,7 +448,6 @@ void page_payment_tap_tcp::on_pushButton_previous_page_clicked()
             if (cancelResp["RESULT"] == "OK")
             {
                 qDebug() << QString::fromUtf8(cancelResp["RESULT"].c_str());
-                // sleep(3);
                 // finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
                 qDebug() << "Session finished sent";
             }
@@ -478,4 +477,42 @@ void page_payment_tap_tcp::resetPaymentPage()
     // transactionLogging = "";
     response = true;
     qDebug() << "Cancelled";
+}
+
+void page_payment_tap_tcp::enableIpForwarding(){
+    const char* ETHERNET_PORT_ACTIVE = "enp3s0";
+
+    // Check if enp2s0 is active
+    if (system("ip link show enp2s0 | grep -q 'state UP'") == 0) {
+        ETHERNET_PORT_ACTIVE = "enp2s0";
+        qDebug() << "Please change the ethernet to other port";
+    }
+
+    // Check if enp3s0 is active
+    if (system("ip link show enp3s0 | grep -q 'state UP'") == 0) {
+        ETHERNET_PORT_ACTIVE = "enp3s0";
+    }
+
+    qDebug()<< "Active Ethernet Port" << ETHERNET_PORT_ACTIVE;
+
+    const QString sudoPassword = "D@nkF1ll$";
+
+    // Start the QProcess with the "sudo iptables -t nat -A POSTROUTING -o wlo2 -j MASQUERADE" command
+    QProcess iptablesProcess;
+    iptablesProcess.start("sudo", QStringList() << "iptables" << "-t" << "nat" << "-A" << "POSTROUTING" << "-o" << "wlo2" << "-j" << "MASQUERADE");
+    iptablesProcess.write(sudoPassword.toUtf8());
+    iptablesProcess.closeWriteChannel();
+
+    // Connect to the finished signal using a lambda function
+    QObject::connect(&iptablesProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), [&](int exitCode, QProcess::ExitStatus exitStatus){});
+    
+    // Start the QProcess with the "sudo sysctl -w net.ipv4.ip_forward=1" command
+    QProcess sysctlProcess;
+    sysctlProcess.start("sudo", QStringList() << "sysctl" << "-w" << "net.ipv4.ip_forward=1");
+    sysctlProcess.write(sudoPassword.toUtf8());
+    sysctlProcess.closeWriteChannel();
+
+    // Connect to the finished signal using a lambda function
+    QObject::connect(&sysctlProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), [&](int exitCode, QProcess::ExitStatus exitStatus){});
+    qDebug() << "IP forwarded setup completed for TAP USA";
 }

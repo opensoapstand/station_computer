@@ -4,7 +4,7 @@ ETHERNET_PORT_INACTIVE="enp3s0"
 if ip link show enp2s0|grep -q 'state UP';then
 	ETHERNET_PORT_ACTIVE="enp2s0";
 	ETHERNET_PORT_INACTIVE="enp3s0";
-	echo "In 2"
+	echo "Please change the ethernet to other port"
 fi
 if ip link show enp3s0|grep -q 'state UP';then
 	ETHERNET_PORT_ACTIVE="enp3s0";

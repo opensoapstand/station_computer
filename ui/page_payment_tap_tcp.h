@@ -22,6 +22,7 @@
 #include "page_error_wifi.h"
 #include "payment/commands.h"
 #include "payment/setup_Tap.h"
+#include <QProcess>
 
 #include "../library/qr/qrcodegen.hpp"
 #include <climits>
@@ -94,6 +95,7 @@ private slots:
     void check_packet_available();
     void check_card_tapped();
     void startPaymentProcess();
+    void enableIpForwarding();
 
     void idlePaymentTimeout();
 private:

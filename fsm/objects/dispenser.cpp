@@ -527,11 +527,14 @@ bool dispenser::setNextActiveProductAsPartOfSelectedProduct()
 {
     // if last product is dispensed return true, (always true for non mixing products)
     // set next mixing product if mix,
+
     finishActivePNumberDispense();
 
     if (getSelectedProduct()->isMixingProduct())
     {
         m_mix_active_index--;
+        debugOutput::sendMessage("jjjjjjjjjjjjjjkkkkkkkkkkkkkkkkkkk mix index: " + to_string(m_mix_active_index), MSG_INFO);
+
         if (m_mix_active_index < 0)
         {
             finishSelectedProductDispense();
@@ -541,6 +544,7 @@ bool dispenser::setNextActiveProductAsPartOfSelectedProduct()
         {
             setActiveProduct(getSelectedProduct()->getMixPNumber(m_mix_active_index));
             debugOutput::sendMessage("Dispenser: Set next active product in mix. Position:  " + to_string(m_mix_active_index) + " Active Pnumber: " + to_string(getActivePNumber()), MSG_INFO);
+            debugOutput::sendMessage("Dispenser: dispensed volume at start. Active Pnumber: " + to_string(getActiveProductVolumeDispensed()), MSG_INFO);
             initActivePNumberDispense();
             return false;
         }
@@ -612,7 +616,7 @@ DF_ERROR dispenser::initSelectedProductDispense(char size, double nPrice)
             debugOutput::sendMessage("Dispenser: Dispense Product: P-" + std::to_string(getSelectedPNumber()) + " (part " + std::to_string(getSelectedProduct()->getMixProductsCount() - mix_position) + "/" + std::to_string(getSelectedProduct()->getMixProductsCount()) + ") : P-" + std::to_string(mixPnumber) + " target volume: " + std::to_string(getProductTargetVolume(mixPnumber)) + "ml", MSG_INFO);
         }
 
-        m_mix_active_index = getSelectedProduct()->getMixProductsCount() - 1; // works with indexes, start from 0!!
+        m_mix_active_index = getSelectedProduct()->getMixProductsCount() - 1; // works with indexes (indexes start from 0)
         setActiveProduct(getSelectedProduct()->getMixPNumber(m_mix_active_index));
         debugOutput::sendMessage("Dispenser: Mix product at position: " + std::to_string(m_mix_active_index) + " . Pnumber: " + std::to_string(getActivePNumber()), MSG_INFO);
     }
@@ -708,6 +712,7 @@ DF_ERROR dispenser::initActivePNumberDispense()
 DF_ERROR dispenser::finishActivePNumberDispense()
 {
     debugOutput::sendMessage("Dispenser: Stop Active PNumber dispense " + to_string(getActivePNumber()), MSG_INFO);
+
     stopActiveDispensing();
     setActiveProductSolenoid(false);
     m_pcb->flowSensorsDisableAll();
@@ -766,11 +771,16 @@ void dispenser::registerFlowSensorTickFromPcb()
     // the actual dispensed produce gets always registered
     getActiveProduct()->registerFlowSensorTickFromPcb();
 
-    // if this is part of a mix, register the tick also for the mix volume
+    // #define MIX_PARTS_WITH_TICKS  // if mixes have their own calibration, it kindof makes sense, but better will be to just sum up the volumes of the parts
+
+// #ifdef MIX_PARTS_WITH_TICKS
     if (getActivePNumber() != getSelectedPNumber())
     {
-        getSelectedProduct()->registerFlowSensorTickFromPcb();
+        // if this is part of a mix, register the tick also for the mix volume
+        getSelectedProduct()->setVolumeDispensed(getActiveProduct()->getVolumePerTick(true) + getSelectedProduct()->getVolumeDispensed());
     }
+    
+// #endif
 }
 
 // double dispenser::getDispenserVolumeDispensed()
@@ -1518,7 +1528,9 @@ string dispenser::getDispenseUpdateString()
     {
         message +=
             " (part " + std::to_string(getSelectedProduct()->getMixProductsCount() - m_mix_active_index) + "/" + std::to_string(getSelectedProduct()->getMixProductsCount()) +
-            ") : P-" + std::to_string(getActivePNumber()) + " volume: " + std::to_string(getActiveProduct()->getVolumeDispensed()) + "/" + std::to_string(getProductTargetVolume(getActivePNumber())) + "ml";
+            ") : P-" + std::to_string(getActivePNumber()) + " volume: " + std::to_string(getActiveProduct()->getVolumeDispensed()) + "/" + std::to_string(getProductTargetVolume(getActivePNumber())) + "ml " + 
+            "P-" + std::to_string(getActivePNumber()) + " volume: "+ std::to_string(getSelectedProduct()->getVolumeDispensed()) + "/"  + std::to_string(getProductTargetVolume(getSelectedPNumber())) + "ml ";
+            ;
     }
     else
     {

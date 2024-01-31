@@ -209,15 +209,22 @@ double product::getThresholdFlow_max_allowed()
     }
 }
 
-double product::getVolumePerTick()
+double product::getVolumePerTick(bool accountForConcentrationMultiplier)
 {
-    return m_nVolumePerTick;
+    if (accountForConcentrationMultiplier)
+    {
+        return m_nVolumePerTick * m_concentration_multiplier;
+    }
+    else
+    {
+        return m_nVolumePerTick;
+    }
 }
 void product::registerFlowSensorTickFromPcb()
 {
     // tick from flowsensor interrupt will increase dispensed volume.
-    // debugOutput::sendMessage("product: Flow poll TICK from pcb." + getPNumberAsPString(), MSG_INFO);
-    m_nVolumeDispensed += getVolumePerTick() * m_concentration_multiplier;
+    m_nVolumeDispensed += getVolumePerTick(true);
+    // debugOutput::sendMessage("product: Flow poll TICK from pcb. " + getPNumberAsPString() + "dispensed: " + to_string(m_nVolumeDispensed), MSG_INFO);
 }
 
 void product::registerFlowSensorTickFromInterrupt()
@@ -225,7 +232,7 @@ void product::registerFlowSensorTickFromInterrupt()
     // tick from flowsensor interrupt will increase dispensed volume.
     // cout << "Registering Flow!!" << endl << "Vol disp: " << m_nVolumeDispensed << endl << "vol per tick: " << m_nVolumePerTick << endl;
     debugOutput::sendMessage("Product: Interrupt TICK from pcb." + getPNumberAsPString(), MSG_INFO);
-    m_nVolumeDispensed += getVolumePerTick() * m_concentration_multiplier;
+    m_nVolumeDispensed += getVolumePerTick(true);
 }
 
 double product::getVolumeFull()

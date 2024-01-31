@@ -74,7 +74,7 @@ public:
 
         void registerFlowSensorTickFromPcb();
         void registerFlowSensorTickFromInterrupt();
-        double getVolumePerTick();
+        double getVolumePerTick(bool accountForConcentrationMultiplier);
 
         double getVolumeDispensed();
         void setVolumeDispensed(double volume);

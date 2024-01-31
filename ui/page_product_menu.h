@@ -42,7 +42,7 @@ public:
     void setPage(page_product *p_page_product, page_product_mixing *p_page_product_mixing, page_idle_products *p_page_idle_products, page_idle *pageIdle, page_maintenance *pageMaintenance, page_help *pageHelp, statusbar *p_statusbar);
     ~page_product_menu();
 
-    void select_product(int slot);
+    void select_submenu_option(int position);
     void displayProducts();
 
     QLabel *labels_base_product_bg[4];

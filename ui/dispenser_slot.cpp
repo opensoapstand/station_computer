@@ -40,7 +40,7 @@ QVector<int> dispenser_slot::getAdditivePNumbers()
 }
 int dispenser_slot::getDispensePNumber(int position)
 {
-  if (position == 0)
+    if (position == 0)
     {
         qDebug() << "Dispense product Position cannot be 0 , must start from 1.";
         return DUMMY_PNUMBER;
@@ -130,14 +130,15 @@ QVector<int> dispenser_slot::getAllPNumbers()
     return QVector<int>::fromList(pnumbers.toList());
 }
 
-void dispenser_slot::loadSlotParametersFromDb()
+bool dispenser_slot::loadSlotParametersFromDb()
 {
-    m_db->getAllSlotProperties(getSlotId(),
-                               m_dispensePNumbers,
-                               m_basePNumber,
-                               m_additivePNumbers,
-                               m_is_enabled,
-                               m_status_text);
+    bool success = m_db->getAllSlotProperties(getSlotId(),
+                                                                           m_dispensePNumbers,
+                                                                           m_basePNumber,
+                                                                           m_additivePNumbers,
+                                                                           m_is_enabled,
+                                                                           m_status_text);
+    return success;
 }
 
 void dispenser_slot::setSlotEnabled(bool isEnabled, QString statusText)

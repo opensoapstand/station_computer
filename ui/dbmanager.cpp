@@ -250,7 +250,7 @@ bool DbManager::updateTableSlotsWithDouble(int slot, QString column, double valu
 
 bool DbManager::updateTableSlotsWithText(int slot, QString column, QString value)
 {
-    QString sql_text = QString("UPDATE slots SET %1='%2' WHERE slot=%3").arg(column, value, QString::number(slot));
+    QString sql_text = QString("UPDATE slots SET %1='%2' WHERE slot_id=%3").arg(column, value, QString::number(slot));
     return executeQuery(sql_text);
 }
 
@@ -259,7 +259,7 @@ bool DbManager::addPageClick(const QString &page)
     return true;
 }
 
-void DbManager::getAllSlotProperties(int slot,
+bool DbManager::getAllSlotProperties(int slot,
                                      QVector<int> &dispensePNumbers,
                                      int &basePNumber,
                                      QVector<int> &additivesPNumbers,
@@ -284,14 +284,16 @@ void DbManager::getAllSlotProperties(int slot,
             qDebug() << "Open db: Attempted to load all slot properties for slot: " << slot;
             qDebug() << "Did not execute sql. "
                      << qry.lastError() << " | " << qry.lastQuery();
-            // success = false;
+            return false;
         }
 
         QString additivesAsString;
         QString dispensePNumbersAsString;
         QString basePNumberAsString;
+        int row_count = 0;
         while (qry.next())
         {
+            row_count++;
             dispensePNumbersAsString = qry.value(0).toString();
             // *basePNumber = qry.value(1).toInt();
             basePNumberAsString = qry.value(1).toString();
@@ -300,6 +302,17 @@ void DbManager::getAllSlotProperties(int slot,
             status_text = qry.value(4).toString();
         }
         qry.finish();
+
+        if (row_count == 0)
+        {
+            qDebug() << "ERROR: No record in db table slots for slot " << QString::number(slot);
+            return false;
+        }
+        if (row_count > 1)
+        {
+            qDebug() << "ERROR: Multiple records(" << QString::number(row_count) << ") in db table slots for slot " << QString::number(slot);
+            return false;
+        }
 
         df_util::csvQStringToQVectorInt(additivesAsString, additivesPNumbers);
         df_util::csvQStringToQVectorInt(dispensePNumbersAsString, dispensePNumbers);
@@ -320,9 +333,10 @@ void DbManager::getAllSlotProperties(int slot,
         }
     }
     closeDb();
+    return true;
 }
 
-void DbManager::getAllProductProperties(int pnumber,
+bool DbManager::getAllProductProperties(int pnumber,
                                         QString *productId,
                                         QString *soapstand_product_serial,
                                         QVector<int> &mixPNumbers,
@@ -352,7 +366,8 @@ void DbManager::getAllProductProperties(int pnumber,
 {
     QString mix_pnumbers_str;
     QString mix_ratios_str;
-    // qDebug() << "Open db";
+    int row_count = 0;
+
     qDebug() << "Open db: load all product properties for pnumber: " << pnumber << "From: " << CONFIG_DB_PATH;
     {
         QSqlDatabase db = openDb(CONFIG_DB_PATH);
@@ -425,11 +440,13 @@ void DbManager::getAllProductProperties(int pnumber,
             qDebug() << "Open db: Attempted to load all product properties for pnumber: " << pnumber;
             qDebug() << "Did not execute sql. "
                      << qry.lastError() << " | " << qry.lastQuery();
-            return;
+            return false;
         }
-
+        
         while (qry.next())
         {
+            row_count++;
+
             *soapstand_product_serial = qry.value(0).toString();
             mix_pnumbers_str = qry.value(1).toString();
             mix_ratios_str = qry.value(2).toString();
@@ -458,7 +475,6 @@ void DbManager::getAllProductProperties(int pnumber,
             volumes[3] = qry.value(24).toDouble();
             // size custom min
             volumes[4] = qry.value(26).toDouble(); // size custom max.
-            
 
             prices[1] = qry.value(27).toDouble();
             prices[2] = qry.value(28).toDouble();
@@ -478,9 +494,8 @@ void DbManager::getAllProductProperties(int pnumber,
             *is_enabled_custom_discount = qry.value(45).toInt();
             *size_custom_discount = qry.value(46).toDouble();
             *price_custom_discount = qry.value(47).toDouble();
-            //Sample size assignment
+            // Sample size assignment
             isSizeEnabled[6] = qry.value(50).toInt();
-            qDebug() <<"Ashwani" <<isSizeEnabled[6];
             volumes[6] = qry.value(51).toDouble();
             prices[6] = qry.value(52).toDouble();
         }
@@ -489,11 +504,23 @@ void DbManager::getAllProductProperties(int pnumber,
     }
     closeDb();
 
+    if (row_count == 0)
+    {
+        qDebug() << "ERROR: No record in db table products for product " << QString::number(pnumber);
+        return false;
+    }
+    if (row_count > 1)
+    {
+        qDebug() << "ERROR: Multiple records (" << QString::number(row_count) << ")in db table products for product " << QString::number(pnumber);
+        return false;
+    }
+
     df_util::csvQStringToQVectorInt(mix_pnumbers_str, mixPNumbers);
     df_util::csvQStringToQVectorDouble(mix_ratios_str, mixRatios);
+    return true;
 }
 
-void DbManager::getAllMachineProperties(
+bool DbManager::getAllMachineProperties(
     QString *machine_id,
     QString *soapstand_customer_id,
     QString *ttttemplate,
@@ -528,8 +555,13 @@ void DbManager::getAllMachineProperties(
     int *is_enabled,
     QString *status_text,
     QString *payment,
-    QString *size_unit)
+    QString *size_unit,
+    int *screen_sleep_time24h,
+    int *screen_wakeup_time24h,
+    int *buy_bottle_1,
+    int *buy_bottle_2)
 {
+    bool success;
     qDebug() << " db... all machine properties from: " << CONFIG_DB_PATH;
     {
         QSqlDatabase db = openDb(CONFIG_DB_PATH);
@@ -567,22 +599,27 @@ void DbManager::getAllMachineProperties(
             "software_version_controller,"
             "is_enabled,"
             "status_text,"
-            "payment,"  // 29
-            "size_unit" // 30
+            "payment,"   // 29
+            "size_unit," // 30
+            "screen_sleep_time24h,"
+            "screen_wakeup_time24h,"
+            "buy_bottle_1,"
+            "buy_bottle_2"
             " FROM machine"
 
         );
-        bool success;
+
         success = qry.exec();
         if (!success)
         {
+            qDebug() << "Open db: Attempted to load machine properties";
             qDebug() << "Did not execute sql. "
                      << qry.lastError() << " | " << qry.lastQuery();
-            // success = false;
         }
-
+        int row_count = 0;
         while (qry.next())
         {
+            row_count++;
             *machine_id = qry.value(0).toString();
             *soapstand_customer_id = qry.value(1).toString();
             *ttttemplate = qry.value(2).toString();
@@ -614,10 +651,26 @@ void DbManager::getAllMachineProperties(
             *status_text = qry.value(28).toString();
             *payment = qry.value(29).toString();
             *size_unit = qry.value(30).toString();
+            *screen_sleep_time24h = qry.value(31).toInt();
+            *screen_wakeup_time24h = qry.value(32).toInt();
+            *buy_bottle_1 = qry.value(33).toInt();
+            *buy_bottle_2 = qry.value(34).toInt();
         }
         qry.finish();
+
+        if (row_count == 0)
+        {
+            qDebug() << "ERROR: No record in db table machine ";
+            return false;
+        }
+        if (row_count > 1)
+        {
+            qDebug() << "ERROR: Multiple records(" << QString::number(row_count) << ") in db table machine";
+            return false;
+        }
     }
     closeDb();
+    return success;
 }
 
 uint32_t DbManager::getNumberOfRows(QString table)

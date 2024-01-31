@@ -158,15 +158,15 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     previousDispenseStatus = "NO STATE";
 
-    if (p_page_idle->thisMachine->getSlotCount() == 1)
-    {
-        // single spout
+    // if (p_page_idle->thisMachine->getSlotCount() == 1)
+    // {
+    //     // single spout
+    //     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
+    // }
+    // else
+    // {
         p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
-    }
-    else
-    {
-        p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH);
-    }
+    // }
 
     // p_page_idle->thisMachine->addPictureToLabel(ui->label_indicate_active_spout, p_page_idle->thisMachine->getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_DOWN));
 
@@ -193,7 +193,8 @@ void page_dispenser::showEvent(QShowEvent *event)
             x = 880;
             break;
         }
-        ui->label_indicate_active_spout->move(x, ui->label_indicate_active_spout->y());
+        ui->label_indicate_active_spout->move(x, 1600);
+        // ui->label_indicate_active_spout->move(x, ui->label_indicate_active_spout->y());
     }
     else
     {
@@ -546,7 +547,9 @@ void page_dispenser::fsmSendStartDispensing()
     dispenseCommand.append(p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar());
     dispenseCommand.append(SEND_DISPENSE_START);
 
+    qDebug() << "base price: " << QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize());
     QString price = QString::number(p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize()));
+    qDebug() << "discounted price: " << price;
     QString promoCode = p_page_idle->thisMachine->getCouponCode();
 
     QString delimiter = QString("|");
@@ -554,6 +557,8 @@ void page_dispenser::fsmSendStartDispensing()
     QString order_command = preamble + delimiter + price + delimiter + promoCode + delimiter;
     qDebug() << "Send order details to FSM: " << order_command;
     p_page_idle->thisMachine->dfUtility->send_command_to_FSM(order_command, true);
+    QThread::msleep(50); // Sleep for 50 milliseconds
+    
     
 
     bool isCustomMix = p_page_idle->thisMachine->getSelectedProduct()->isCustomMix();
@@ -570,6 +575,7 @@ void page_dispenser::fsmSendStartDispensing()
         command = "dispensePNumber|" + dispenseCommand + "|" + QString::number(pNumberSelectedProduct) + "|"; // dispensePNumber|slot|dispensePNumber
     }
     p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
+    
     this->isDispensing = true;
     qDebug() << "Dispensing started.";
 }
@@ -584,6 +590,7 @@ void page_dispenser::fsmSendStopDispensing()
     // command.append(SEND_DISPENSE_STOP);
     QString command = "stopDispense";
     p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
+    
 }
 
 void page_dispenser::onArrowAnimationStepTimerTick()
@@ -748,9 +755,10 @@ void page_dispenser::fsmReceiveTargetVolumeReached()
     {
         qDebug() << "Target reached from controller.";
         this->isDispensing = false;
-        updateVolumeDisplayed(p_page_idle->thisMachine->getSelectedProduct()->getVolumeOfSelectedSize(), true); // make sure the fill bottle graphics are completed
+
+        // The idea is to show the target number, but Lode believes it should show the real number dispensed.
+        //updateVolumeDisplayed(p_page_idle->thisMachine->getSelectedProduct()->getVolumeOfSelectedSize(), true); // make sure the fill bottle graphics are completed
         p_page_idle->thisMachine->addToTransactionLogging("\n 8: Target Reached - True");
-        // transactionLogging += "\n 8: Target Reached - True";
         dispensing_end_admin();
     }
     else
@@ -799,7 +807,7 @@ void page_dispenser::on_pushButton_abort_clicked()
     {
         msgBox_abort = new QMessageBox();
         msgBox_abort->setObjectName("msgBox_abort");
-        msgBox_abort->setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
+        msgBox_abort->setWindowFlags(Qt::FramelessWindowHint| Qt::Dialog); // do not show messagebox header with program name
         switch (paymentMethod)
         {
         case 0:
@@ -873,7 +881,7 @@ void page_dispenser::on_pushButton_problems_clicked()
     qDebug() << "Clicked on msgBox_problems  ";
     msgBox_problems = new QMessageBox();
     msgBox_problems->setObjectName("msgBox_problems");
-    msgBox_problems->setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
+    msgBox_problems->setWindowFlags(Qt::FramelessWindowHint| Qt::Dialog); // do not show messagebox header with program name
 
     QString client_id = p_page_idle->thisMachine->getClientId();
     if (client_id == "C-1") // good-filling
@@ -957,6 +965,7 @@ void page_dispenser::on_pushButton_problems_clicked()
         // send repair command
         qDebug() << "Send repair command to fsm";
         p_page_idle->thisMachine->dfUtility->send_command_to_FSM(SEND_REPAIR_PCA, true);
+        
         break;
     }
     default:

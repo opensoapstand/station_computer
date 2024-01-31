@@ -167,7 +167,7 @@ void page_qr_payment::setupQrOrder()
         p_page_idle->thisMachine->addToTransactionLogging("\n 2: QR code - True");
         // transactionLogging += "\n 2: QR code - True";
         QPixmap map;
-        if(p_page_idle->thisMachine->m_template == "default_AP2"){
+        if(p_page_idle->thisMachine->hasMixing()){
             map = QPixmap(451, 451);
             map.fill(QColor("#895E25"));
         }else{
@@ -183,7 +183,7 @@ void page_qr_payment::setupQrOrder()
             qrdata = "https://soapstandportal.com/paymentAelen?oid=" + orderId;
         }
         // create qr code graphics
-        p_page_idle->thisMachine->m_template == "default_AP2" ? paintQR(painter, QSize(451, 451), qrdata, QColor("white")) : paintQR(painter, QSize(360, 360), qrdata, QColor("white"));
+        p_page_idle->thisMachine->hasMixing() ? paintQR(painter, QSize(451, 451), qrdata, QColor("white")) : paintQR(painter, QSize(360, 360), qrdata, QColor("white"));
         // paintQR(painter, QSize(360, 360), qrdata, QColor("white"));
         ui->label_qrCode->setPixmap(map);
         // _paymentTimeoutSec = QR_PAGE_TIMEOUT_SECONDS;
@@ -417,7 +417,7 @@ bool page_qr_payment::exitConfirm()
     // QMessageBox msgBox;
     msgBox = new QMessageBox();
 
-    msgBox->setWindowFlags(Qt::FramelessWindowHint);
+    msgBox->setWindowFlags(Qt::FramelessWindowHint| Qt::Dialog);
     QString searchString;
     if (state_payment == s_payment_processing || state_payment == s_payment_done)
     {
@@ -479,7 +479,7 @@ bool page_qr_payment::exitConfirm()
 //     qDebug() << "In exit confirm";
 //     QMessageBox msgBox;
 
-//     msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
+//     msgBox.setWindowFlags(Qt::FramelessWindowHint| Qt::Dialog); // do not show messagebox header with program name
 //     if (state_payment == s_payment_processing || state_payment == s_payment_done)
 //     {
 //         QString searchString = this->objectName() + "->msgBox_cancel->default";
@@ -523,7 +523,7 @@ bool page_qr_payment::exitConfirm()
 //     qDebug() << "In exit confirm";
 
 //     QMessageBox msgBox;
-//     msgBox.setWindowFlags(Qt::FramelessWindowHint);
+//     msgBox.setWindowFlags(Qt::FramelessWindowHint| Qt::Dialog);
 
 //     if (state_payment == s_payment_processing || state_payment == s_payment_done)
 //     {
@@ -588,12 +588,7 @@ void page_qr_payment::on_pushButton_previous_page_clicked()
     qDebug() << "In previous page button";
     if (exitConfirm())
     {
-        if(p_page_idle->thisMachine->m_template == "default_AP2"){
-            hideCurrentPageAndShowProvided(p_page_product_mixing);
-        }else{
-            hideCurrentPageAndShowProvided(p_page_product);
-        }
-
+        p_page_idle->thisMachine->hasMixing() ? hideCurrentPageAndShowProvided(p_page_product_mixing) : hideCurrentPageAndShowProvided(p_page_product);
     }
 }
 
@@ -680,7 +675,7 @@ void page_qr_payment::paintQR(QPainter &painter, const QSize sz, const QString &
             const int color = qr.getModule(x, y); // 0 for white, 1 for black
             if (0 != color)
             {
-                if (p_page_idle->thisMachine->m_template == "default_AP2"){
+                if (p_page_idle->thisMachine->hasMixing()){
                     QColor customColor("#FFF7ED");
                     painter.setBrush(customColor);
                 }

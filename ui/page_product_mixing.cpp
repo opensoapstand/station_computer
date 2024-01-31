@@ -153,8 +153,6 @@ void page_product_mixing::showEvent(QShowEvent *event)
 
     ui->label_product_title->setProperty("class", "title");
     ui->label_product_title->setStyleSheet(styleSheet);
-    ui->label_background_sample->setProperty("class","orderSizeBackgroundLabels");
-    ui->label_background_sample->setStyleSheet(styleSheet);
 
     // ui->pushButton_order_sample->setProperty("class","sampleBackgroundLabel");
     // ui->pushButton_order_sample->setStyleSheet(styleSheet);
@@ -194,7 +192,7 @@ void page_product_mixing::showEvent(QShowEvent *event)
         ui->pushButton_recommended->show();
         ui->label_additives_background->setText("");
         ui->label_additives_background->hide();
-        for (int j = 0; j < 5; j++){
+        for (int j = 0; j < ADDITIVES_PER_SLOT_COUNT_MAX; j++){
             if(isAdditiveEnabled(j)){
                 additiveTitles[j]->setProperty("class", "additiveTitles");
                 additiveBackgroundRows[j]->setProperty("class", "additiveBackgroundRows");
@@ -239,7 +237,7 @@ void page_product_mixing::showEvent(QShowEvent *event)
         ui->pushButton_recommended->hide();
         ui->label_additives_background->show();
         p_page_idle->thisMachine->setTemplateTextToObject(ui->label_additives_background);
-        for (uint8_t j = 0; j < 5; j++){
+        for (uint8_t j = 0; j < ADDITIVES_PER_SLOT_COUNT_MAX; j++){
             additiveTitles[j]->hide();
             additiveBackgroundRows[j]->hide();
             additiveMinusButtonBackgrounds[j]->hide();

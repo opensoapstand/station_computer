@@ -21,11 +21,11 @@ public:
     QString getMixRatiosAsCsv();
     QVector<double> getMixRatios();
 
-    void loadProductPropertiesFromProductsFile();
+    bool loadProductPropertiesFromProductsFile();
     void getProductProperties(QString *name, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui);
 
-    void loadProductPropertiesFromDb(); // productt
-    void loadProductProperties();       // productt
+    bool loadProductPropertiesFromDb(); // productt
+    bool loadProductProperties();       // productt
 
     QString convertPNumberToPNotation(int pnumber);
     int convertPStringToPInt(QString pnumberNotation);
@@ -75,6 +75,8 @@ public:
 
     QString getProductPicturePath();
 
+    double getPriceOfSelectedBottle();
+    double getVolumeOfSelectedBottle();
     double getVolumeOfSelectedSize(); // productt
     double getVolumeBySize(int size); // productt
 

@@ -129,11 +129,7 @@ void page_payment_tap_serial::on_pushButton_previous_page_clicked()
 
     if (exitConfirm())
     {
-        if(p_page_idle->thisMachine->m_template == "default_AP2"){
-            hideCurrentPageAndShowProvided(p_page_product_mixing,true);
-        }else{
-            hideCurrentPageAndShowProvided(p_page_product,true);
-        }
+        p_page_idle->thisMachine->hasMixing() ? hideCurrentPageAndShowProvided(p_page_product_mixing,true) : hideCurrentPageAndShowProvided(p_page_product,true);
     }
 }
 
@@ -207,7 +203,7 @@ bool page_payment_tap_serial::exitConfirm()
     {
         // ARE YOU SURE YOU WANT TO EXIT?
         QMessageBox msgBox;
-        msgBox.setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
+        msgBox.setWindowFlags(Qt::FramelessWindowHint| Qt::Dialog); // do not show messagebox header with program name
         p_page_idle->thisMachine->addCssClassToObject(&msgBox, "msgBoxbutton msgBox", PAGE_TAP_PAYMENT_CSS);
         QString searchString = this->objectName() + "->msgBox_cancel";
         p_page_idle->thisMachine->setTextToObject(&msgBox, p_page_idle->thisMachine->getTemplateText(searchString));

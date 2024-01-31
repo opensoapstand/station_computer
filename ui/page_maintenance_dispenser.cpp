@@ -49,6 +49,12 @@ page_maintenance_dispenser::page_maintenance_dispenser(QWidget *parent) : QWidge
     buttons_select_mix[3] = ui->pushButton_dispense_pnumber_4;
     buttons_select_mix[4] = ui->pushButton_dispense_pnumber_5;
     buttons_select_mix[5] = ui->pushButton_dispense_pnumber_6;
+
+    buttons_slot_shortcuts[0] = ui->pushButton_activate_slot_1;
+    buttons_slot_shortcuts[1] = ui->pushButton_activate_slot_2;
+    buttons_slot_shortcuts[2] = ui->pushButton_activate_slot_3;
+    buttons_slot_shortcuts[3] = ui->pushButton_activate_slot_4;
+    buttons_slot_shortcuts[4] = ui->pushButton_activate_slot_5;
 }
 
 // DTOR
@@ -82,12 +88,39 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     QWidget::showEvent(event);
 
     m_activePNumber = this->p_page_idle->thisMachine->getSelectedSlot()->getBasePNumber();
-    this->p_page_idle->thisMachine->setSelectedProduct(m_activePNumber);
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
 
     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
 
+    this->p_page_idle->thisMachine->setSelectedProduct(m_activePNumber);
+
+    // shortcuts to other slots
+    for (int slot_index = 0; slot_index < BASE_LINE_COUNT_MAX; slot_index++)
+    {
+        if (this->p_page_idle->thisMachine->isSlotExisting(slot_index + 1) && this->p_page_idle->thisMachine->isAllowedAsAdmin() // while transitioning, it's easy to tap the hidden page and get out of the UI this is a security risk.
+        )
+        {
+            QString button_text = this->p_page_idle->thisMachine->getTemplateTextByPage(this, "slot_shortcut");
+            buttons_slot_shortcuts[slot_index]->setText(button_text.arg(slot_index + 1));
+
+            buttons_slot_shortcuts[slot_index]->show();
+            if ((slot_index + 1) == p_page_idle->thisMachine->getSelectedSlot()->getSlotId())
+            {
+                buttons_slot_shortcuts[slot_index]->setProperty("class", "active_slot");
+                buttons_slot_shortcuts[slot_index]->setStyleSheet(styleSheet);
+            }
+            else
+            {
+                buttons_slot_shortcuts[slot_index]->setProperty("class", "inactive_slot");
+                buttons_slot_shortcuts[slot_index]->setStyleSheet(styleSheet);
+            }
+        }
+        else
+        {
+            buttons_slot_shortcuts[slot_index]->hide();
+        }
+    }
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_to_previous_page);
 
     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_pump_enabled_status, "pump_off");
@@ -465,38 +498,44 @@ void page_maintenance_dispenser::autoDispenseStart(int size)
     {
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_enable_pump, "disable_pump");
         p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_enable_pump, "pump_disable", PAGE_MAINTENANCE_DISPENSER_CSS);
-        qDebug() << "Autofill small quantity pressed.";
-        QString command = QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
+        qDebug() << "Autofill quantity pressed.";
+        QString dispenseCommand = QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
 
         switch (size)
         {
         case SIZE_SMALL_INDEX:
         {
-            command.append("s");
+            dispenseCommand.append("s");
         }
         break;
         case SIZE_MEDIUM_INDEX:
         {
-            command.append("m");
+            dispenseCommand.append("m");
         }
         break;
         case SIZE_LARGE_INDEX:
         {
-            command.append("l");
+            dispenseCommand.append("l");
         }
         break;
         default:
         {
             qDebug() << "ERROR: size type not specified. will chose small size.";
-            command.append("s");
+            dispenseCommand.append("s");
         }
         break;
         }
-        command.append(SEND_DISPENSE_AUTOFILL);
+        dispenseCommand.append(SEND_DISPENSE_AUTOFILL);
 
         reset_all_dispense_stats();
         dispenseTimer->start(100);
         update_volume_received_dispense_stats(0);
+
+        // p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
+
+        int pNumberSelectedProduct = this->p_page_idle->thisMachine->getSelectedProduct()->getPNumber();
+
+        QString command = "dispensePNumber|" + dispenseCommand + "|" + QString::number(pNumberSelectedProduct) + "|"; // dispensePNumber|slot|dispensePNumber
 
         p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
 
@@ -511,7 +550,7 @@ void page_maintenance_dispenser::dispense_test_start()
 {
     qDebug() << "Start dispense in maintenance mode. (FYI: if app crashes, it's probably about the update volume interrupts caused by the controller sending data.)";
     QString dispenseCommand = QString::number(p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
-    dispenseCommand.append("m");
+    dispenseCommand.append("t");
     // dispenseCommand.append("t");
     dispenseCommand.append(SEND_DISPENSE_START);
 
@@ -580,14 +619,13 @@ bool page_maintenance_dispenser::isDispenserPumpEnabledWarningBox()
     {
         qDebug() << "USER REQUESTED NON ALLOWED ACTION: Show Window saying this can't be done during 'pump enabled' --> ";
         QMessageBox msgBox;
-        msgBox.setWindowFlags(Qt::FramelessWindowHint);
+        msgBox.setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog); // Qt::Dialog makes it 'modal' which means  you HAVE to take action and you can't click next to it
         msgBox.setText("<p align=center>Not possible<br>while dispense pump<br>is enabled!</p>");
 
         p_page_idle->thisMachine->addCssClassToObject(&msgBox, "msgBoxbutton msgBox", PAGE_MAINTENANCE_DISPENSER_CSS);
         msgBox.setStandardButtons(QMessageBox::Ok);
         msgBox.exec();
     }
-
     return is_pump_enabled_for_dispense;
 }
 
@@ -614,7 +652,7 @@ void page_maintenance_dispenser::update_volume_received_dispense_stats(double di
 
     if (this->units_selected_product == "oz")
     {
-        ui->label_status_volume_dispensed->setText(QString::number(vol_dispensed / volume_per_tick_buffer) + "ticks x " + QString::number(df_util::convertMlToOz(volume_per_tick_buffer), 'f', 2) + "oz/tick = " + QString::number(vol_dispensed) + df_util::getConvertedStringVolumeFromMl(vol_dispensed, "oz", false, true));
+        ui->label_status_volume_dispensed->setText(QString::number(vol_dispensed / volume_per_tick_buffer) + "ticks x " + QString::number(df_util::convertMlToOz(volume_per_tick_buffer), 'f', 2) + "oz/tick = " + df_util::getConvertedStringVolumeFromMl(vol_dispensed, "oz", false, true));
     }
     else
     {
@@ -625,7 +663,16 @@ void page_maintenance_dispenser::update_volume_received_dispense_stats(double di
     if (vol_dispensed > 0)
     {
         QString vol_per_tick_for_1000ml = QString::number(1000 / (vol_dispensed / volume_per_tick_buffer), 'f', 2);
-        ui->label_calibration_result->setText(vol_per_tick_for_1000ml + "ml/tick"); // calibration constant if 1000ml were dispensed.
+
+        if (this->units_selected_product == "oz")
+        {
+            QString val = df_util::getConvertedStringVolumeFromMl(1000 / (vol_dispensed / volume_per_tick_buffer), "oz", false, false);
+            ui->label_calibration_result->setText(val + "oz/tick"); // calibration constant if 1000ml were dispensed.
+        }
+        else
+        {
+            ui->label_calibration_result->setText(vol_per_tick_for_1000ml + "ml/tick"); // calibration constant if 1000ml were dispensed.
+        }
     }
 }
 
@@ -714,7 +761,7 @@ void page_maintenance_dispenser::on_pushButton_restock_clicked()
 
         // ARE YOU SURE YOU WANT TO COMPLETE?
         QMessageBox msgBox;
-        msgBox.setWindowFlags(Qt::FramelessWindowHint);
+        msgBox.setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
         msgBox.setText("<p align=center>Are you sure you want to restock the product?</p>");
 
         p_page_idle->thisMachine->addCssClassToObject(&msgBox, "msgBoxbutton msgBox", PAGE_MAINTENANCE_DISPENSER_CSS);
@@ -771,7 +818,7 @@ void page_maintenance_dispenser::on_pushButton_set_status_clicked()
         if (isEnabled)
         {
             QMessageBox msgBox_set_availabilty;
-            msgBox_set_availabilty.setWindowFlags(Qt::FramelessWindowHint);
+            msgBox_set_availabilty.setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
 
             msgBox_set_availabilty.setText("<p align=center>Label product as 'coming soon' <br>(if no, it will be set as 'sold out')?</p>");
 
@@ -1330,4 +1377,48 @@ void page_maintenance_dispenser::on_pushButton_dispense_pnumber_5_clicked()
 void page_maintenance_dispenser::on_pushButton_dispense_pnumber_6_clicked()
 {
     setSelectedProduct(this->p_page_idle->thisMachine->getSelectedSlot()->getDispensePNumber(6));
+}
+
+void page_maintenance_dispenser::showSlotShortcut(int slot)
+{
+    if (!isDispenserPumpEnabledWarningBox())
+    {
+        qDebug() << "Select shortcut for slot : " << QString::number(slot);
+        dispense_test_end(true);
+        maintainProductPageEndTimer->stop();
+        statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
+        this->hide();
+        usleep(1000);
+        this->showFullScreen();
+    }
+}
+
+void page_maintenance_dispenser::on_pushButton_activate_slot_1_clicked()
+{
+    this->p_page_idle->thisMachine->setSelectedSlot(1);
+    showSlotShortcut(this->p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
+}
+
+void page_maintenance_dispenser::on_pushButton_activate_slot_2_clicked()
+{
+    this->p_page_idle->thisMachine->setSelectedSlot(2);
+    showSlotShortcut(this->p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
+}
+
+void page_maintenance_dispenser::on_pushButton_activate_slot_3_clicked()
+{
+    this->p_page_idle->thisMachine->setSelectedSlot(3);
+    showSlotShortcut(this->p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
+}
+
+void page_maintenance_dispenser::on_pushButton_activate_slot_4_clicked()
+{
+    this->p_page_idle->thisMachine->setSelectedSlot(4);
+    showSlotShortcut(this->p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
+}
+
+void page_maintenance_dispenser::on_pushButton_activate_slot_5_clicked()
+{
+    this->p_page_idle->thisMachine->setSelectedSlot(5);
+    showSlotShortcut(this->p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
 }

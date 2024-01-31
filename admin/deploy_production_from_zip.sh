@@ -6,6 +6,7 @@ echo "stop soapstand services"
 sudo systemctl stop ui_soapstand.service
 sudo systemctl stop controller_soapstand.service
 sudo systemctl stop check_connectivity.service
+sudo systemctl stop ssh_monitor.service
 
 echo "take backup of production folder"
 cd /home/df-admin/

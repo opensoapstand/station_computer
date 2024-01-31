@@ -1,0 +1,78 @@
+#label_page_title{
+    color: #211403;
+    text-align: center;
+    font-family: 'El Messiri';
+    font-size: 64px;
+    font-style: normal;
+    font-weight: 400;
+}
+
+.setpHeadings{
+    color: #211403;
+    font-family: 'El Messiri';
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 700;
+}
+
+.stepImages{
+    border-top-left-radius: 0px;
+    border-top-right-radius: 100px;
+    border-bottom-right-radius: 100px;
+    border-bottom-left-radius: 100px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-clip: content;
+    color: transparent;
+}
+
+.setpInstruction{
+    color: #211403;
+    font-family: 'Lato';
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 400;
+    qproperty-alignment: AlignTop;
+}
+
+#pushButton_to_help{
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    color: #001810;
+    text-align: left;
+    qproperty-alignment: AlignCenter;
+    border: none;
+}
+
+.featureButtons{
+    color: #895E25;
+    text-align: center;
+    font-family: 'Lato';
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 400;
+    border-radius: 25px;
+    border: 5px solid #895E25;
+    background: #FEFCFA;
+}
+
+.buttonBGTransparent{
+    background-color: transparent;
+    border: 0px;
+}
+
+#label_step01_image{
+    background-image: url(%IMAGE_PATH1%);
+}
+
+#label_step02_image{
+    background-image: url(%IMAGE_PATH2%);
+}
+
+#label_step03_image{
+    background-image: url(%IMAGE_PATH3%);
+}

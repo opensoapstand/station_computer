@@ -297,6 +297,488 @@ text-align: center;</string>
     <bool>true</bool>
    </property>
   </widget>
+  <widget class="QLabel" name="label_invoice_name">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>993</y>
+     <width>581</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">position: absolute;
+height: 29px;
+left: 17.31%;
+right: 43.8%;
+top: calc(50% - 29px/2 + 389.5px);
+
+font-family: Montserrat;
+font-style: normal;
+font-weight: normal;
+font-size: 24px;
+line-height: 29px;
+
+color: #58595B;
+
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_invoice_discount_amount">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>709</x>
+     <y>1160</y>
+     <width>251</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(/home/df-admin/production/references/background.png);
+font-style: normal;
+font-weight: normal;
+font-size: 24px;
+line-height: 29px;
+
+color: #7F8080;</string>
+   </property>
+   <property name="text">
+    <string>$ 0.00</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_invoice_discount_name">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>1400</y>
+     <width>641</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">position: absolute;
+height: 29px;
+left: 17.31%;
+right: 43.8%;
+top: calc(50% - 29px/2 + 389.5px);
+
+font-family: Montserrat;
+font-style: normal;
+font-weight: normal;
+font-size: 24px;
+line-height: 29px;
+
+color: #58595B;
+
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_product_photo">
+   <property name="geometry">
+    <rect>
+     <x>94</x>
+     <y>256</y>
+     <width>445</width>
+     <height>450</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_discount_tag">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>1175</y>
+     <width>185</width>
+     <height>34</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_select_product_page">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>40</y>
+     <width>401</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_invoice_box">
+   <property name="geometry">
+    <rect>
+     <x>94</x>
+     <y>890</y>
+     <width>891</width>
+     <height>760</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Montserrat</family>
+     <pointsize>-1</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: #FFFFFF;
+font-family: Montserrat;
+font-style: bold;
+font-weight:bold;
+font-size: 36px;
+line-height: 24px;
+text-align: center;</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_gif">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>960</y>
+     <width>200</width>
+     <height>200</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_total">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>1340</y>
+     <width>641</width>
+     <height>44</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_help">
+   <property name="geometry">
+    <rect>
+     <x>478</x>
+     <y>1773</y>
+     <width>125</width>
+     <height>125</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="Line" name="line_invoice">
+   <property name="geometry">
+    <rect>
+     <x>137</x>
+     <y>1280</y>
+     <width>821</width>
+     <height>5</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Plain</enum>
+   </property>
+   <property name="lineWidth">
+    <number>1</number>
+   </property>
+   <property name="midLineWidth">
+    <number>3</number>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_continue">
+   <property name="geometry">
+    <rect>
+     <x>188</x>
+     <y>1541</y>
+     <width>360</width>
+     <height>92</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Montserrat</family>
+     <pointsize>-1</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="accessibleName">
+    <string>paymentMethodDefault</string>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_continue</string>
+   </attribute>
+  </widget>
+  <widget class="QLabel" name="label_page_title">
+   <property name="geometry">
+    <rect>
+     <x>398</x>
+     <y>200</y>
+     <width>305</width>
+     <height>100</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_checkout_title">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>870</y>
+     <width>126</width>
+     <height>47</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_invoice_size_title">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>1129</y>
+     <width>66</width>
+     <height>45</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">position: absolute;
+height: 29px;
+left: 17.31%;
+right: 43.8%;
+top: calc(50% - 29px/2 + 389.5px);
+
+font-family: Montserrat;
+font-style: normal;
+font-weight: normal;
+font-size: 24px;
+line-height: 29px;
+
+color: #58595B;
+
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_invoice_coupon_title">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>1233</y>
+     <width>300</width>
+     <height>36</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_coupon_icon">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>1307</y>
+     <width>45</width>
+     <height>45</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_invoice_additives_overview">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>1073</y>
+     <width>920</width>
+     <height>45</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_invoice_bottle">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>1258</y>
+     <width>500</width>
+     <height>34</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_invoice_bottle_price">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>709</x>
+     <y>1243</y>
+     <width>251</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string/>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(/home/df-admin/production/references/background.png);
+font-style: normal;
+font-weight: normal;
+font-size: 24px;
+line-height: 29px;
+
+color: #7F8080;</string>
+   </property>
+   <property name="text">
+    <string>$ 0.00</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+   </property>
+  </widget>
   <widget class="QWidget" name="promoKeyboard" native="true">
    <property name="enabled">
     <bool>true</bool>
@@ -1943,6 +2425,7 @@ outline: none;
      <string>TextLabel</string>
     </property>
    </widget>
+   <zorder>label_keyboard_background</zorder>
    <zorder>num0</zorder>
    <zorder>num2</zorder>
    <zorder>done</zorder>
@@ -1981,432 +2464,7 @@ outline: none;
    <zorder>l</zorder>
    <zorder>w</zorder>
    <zorder>num1</zorder>
-   <zorder>label_keyboard_background</zorder>
   </widget>
-  <widget class="QLabel" name="label_invoice_name">
-   <property name="geometry">
-    <rect>
-     <x>130</x>
-     <y>993</y>
-     <width>581</width>
-     <height>91</height>
-    </rect>
-   </property>
-   <property name="accessibleName">
-    <string/>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">position: absolute;
-height: 29px;
-left: 17.31%;
-right: 43.8%;
-top: calc(50% - 29px/2 + 389.5px);
-
-font-family: Montserrat;
-font-style: normal;
-font-weight: normal;
-font-size: 24px;
-line-height: 29px;
-
-color: #58595B;
-
-</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_invoice_discount_amount">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>709</x>
-     <y>1160</y>
-     <width>251</width>
-     <height>80</height>
-    </rect>
-   </property>
-   <property name="accessibleName">
-    <string/>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font-family: Montserrat;
-background-image: url(/home/df-admin/production/references/background.png);
-font-style: normal;
-font-weight: normal;
-font-size: 24px;
-line-height: 29px;
-
-color: #7F8080;</string>
-   </property>
-   <property name="text">
-    <string>$ 0.00</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_invoice_discount_name">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>130</x>
-     <y>1400</y>
-     <width>641</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="accessibleName">
-    <string/>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">position: absolute;
-height: 29px;
-left: 17.31%;
-right: 43.8%;
-top: calc(50% - 29px/2 + 389.5px);
-
-font-family: Montserrat;
-font-style: normal;
-font-weight: normal;
-font-size: 24px;
-line-height: 29px;
-
-color: #58595B;
-
-</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_product_photo">
-   <property name="geometry">
-    <rect>
-     <x>94</x>
-     <y>256</y>
-     <width>445</width>
-     <height>450</height>
-    </rect>
-   </property>
-   <property name="accessibleName">
-    <string/>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_discount_tag">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>130</x>
-     <y>1175</y>
-     <width>185</width>
-     <height>34</height>
-    </rect>
-   </property>
-   <property name="accessibleName">
-    <string/>
-   </property>
-   <property name="layoutDirection">
-    <enum>Qt::LeftToRight</enum>
-   </property>
-   <property name="styleSheet">
-    <string notr="true"/>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_select_product_page">
-   <property name="geometry">
-    <rect>
-     <x>70</x>
-     <y>40</y>
-     <width>401</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="accessibleName">
-    <string/>
-   </property>
-   <property name="text">
-    <string>PushButton</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_invoice_box">
-   <property name="geometry">
-    <rect>
-     <x>94</x>
-     <y>890</y>
-     <width>891</width>
-     <height>760</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Montserrat</family>
-     <pointsize>-1</pointsize>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="accessibleName">
-    <string/>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">color: #FFFFFF;
-font-family: Montserrat;
-font-style: bold;
-font-weight:bold;
-font-size: 36px;
-line-height: 24px;
-text-align: center;</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_gif">
-   <property name="geometry">
-    <rect>
-     <x>440</x>
-     <y>960</y>
-     <width>200</width>
-     <height>200</height>
-    </rect>
-   </property>
-   <property name="accessibleName">
-    <string/>
-   </property>
-   <property name="autoFillBackground">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_total">
-   <property name="geometry">
-    <rect>
-     <x>130</x>
-     <y>1340</y>
-     <width>641</width>
-     <height>44</height>
-    </rect>
-   </property>
-   <property name="accessibleName">
-    <string/>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_help">
-   <property name="geometry">
-    <rect>
-     <x>478</x>
-     <y>1773</y>
-     <width>125</width>
-     <height>125</height>
-    </rect>
-   </property>
-   <property name="accessibleName">
-    <string/>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="Line" name="line_invoice">
-   <property name="geometry">
-    <rect>
-     <x>137</x>
-     <y>1280</y>
-     <width>821</width>
-     <height>5</height>
-    </rect>
-   </property>
-   <property name="accessibleName">
-    <string/>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Plain</enum>
-   </property>
-   <property name="lineWidth">
-    <number>1</number>
-   </property>
-   <property name="midLineWidth">
-    <number>3</number>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_continue">
-   <property name="geometry">
-    <rect>
-     <x>188</x>
-     <y>1541</y>
-     <width>360</width>
-     <height>92</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Montserrat</family>
-     <pointsize>-1</pointsize>
-     <weight>50</weight>
-     <bold>false</bold>
-    </font>
-   </property>
-   <property name="accessibleName">
-    <string>paymentMethodDefault</string>
-   </property>
-   <property name="autoFillBackground">
-    <bool>false</bool>
-   </property>
-   <property name="styleSheet">
-    <string notr="true"/>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <attribute name="buttonGroup">
-    <string notr="true">buttonGroup_continue</string>
-   </attribute>
-  </widget>
-  <widget class="QLabel" name="label_page_title">
-   <property name="geometry">
-    <rect>
-     <x>398</x>
-     <y>200</y>
-     <width>305</width>
-     <height>100</height>
-    </rect>
-   </property>
-   <property name="accessibleName">
-    <string/>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_checkout_title">
-   <property name="geometry">
-    <rect>
-     <x>50</x>
-     <y>870</y>
-     <width>126</width>
-     <height>47</height>
-    </rect>
-   </property>
-   <property name="accessibleName">
-    <string/>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_invoice_size_title">
-   <property name="geometry">
-    <rect>
-     <x>80</x>
-     <y>1129</y>
-     <width>66</width>
-     <height>45</height>
-    </rect>
-   </property>
-   <property name="accessibleName">
-    <string/>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">position: absolute;
-height: 29px;
-left: 17.31%;
-right: 43.8%;
-top: calc(50% - 29px/2 + 389.5px);
-
-font-family: Montserrat;
-font-style: normal;
-font-weight: normal;
-font-size: 24px;
-line-height: 29px;
-
-color: #58595B;
-
-</string>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_invoice_coupon_title">
-   <property name="geometry">
-    <rect>
-     <x>80</x>
-     <y>1233</y>
-     <width>300</width>
-     <height>36</height>
-    </rect>
-   </property>
-   <property name="accessibleName">
-    <string/>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_coupon_icon">
-   <property name="geometry">
-    <rect>
-     <x>80</x>
-     <y>1307</y>
-     <width>45</width>
-     <height>45</height>
-    </rect>
-   </property>
-   <property name="accessibleName">
-    <string/>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_invoice_additives_overview">
-   <property name="geometry">
-    <rect>
-     <x>80</x>
-     <y>1073</y>
-     <width>920</width>
-     <height>45</height>
-    </rect>
-   </property>
-   <property name="accessibleName">
-    <string/>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <zorder>pushButton_continue</zorder>
-  <zorder>pushButton_continue_additional</zorder>
   <zorder>label_help</zorder>
   <zorder>label_invoice_box</zorder>
   <zorder>label_invoice_price</zorder>
@@ -2432,12 +2490,16 @@ color: #58595B;
   <zorder>label_coupon_icon</zorder>
   <zorder>label_invoice_additives_overview</zorder>
   <zorder>line_invoice</zorder>
+  <zorder>label_invoice_bottle_price</zorder>
+  <zorder>label_invoice_bottle</zorder>
+  <zorder>pushButton_continue</zorder>
+  <zorder>pushButton_continue_additional</zorder>
   <zorder>promoKeyboard</zorder>
  </widget>
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_continue"/>
   <buttongroup name="buttonGroup"/>
+  <buttongroup name="buttonGroup_continue"/>
  </buttongroups>
 </ui>

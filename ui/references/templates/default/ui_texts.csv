@@ -15,8 +15,10 @@
 
 #################### page_init
 page_init->label_init_message,Wait for controller signal.
-page_init->label_fail_message->tap_payment,Waiting for payment...
-page_init->label_fail_message,Timeout. No Response from controller. Will start standalone mode. If controller becomes active, commands will be executed. If not, no commands will be executed.
+# page_init->label_fail_message->tap_payment,Waiting for payment...
+# page_init->label_fail_message,Timeout. No Response from controller. Will start standalone mode. If controller becomes active, commands will be executed. If not, no commands will be executed.
+page_init->pushButton_continue,Continue\nanyways
+page_init->pushButton_reboot,Reboot
 
 #################### page_idle
 page_idle->label_welcome_message->testargument,Refill %1 here!<br>Tap screen to start
@@ -29,8 +31,16 @@ page_idle->label_reboot_nightly_title,NIGHTLY REBOOT
 page_idle->label_reboot_nightly_text,System will be rebooted in<br>%1 second(s)
 page_idle->pushButton_reboot_nightly,Cancel
 page_idle->label_reboot_nightly_text->count_down,System will be rebooted in<br>%1 second(s)
-#################### page_idle_products
 
+#################### page_buyBottle
+page_buyBottle->pushButton_to_idle,<- back
+page_buyBottle->label_buyBottle_title,Do you need a bottle?
+page_buyBottle->label_button_no_text_L,No
+page_buyBottle->label_button_no_text_S,I have one
+page_buyBottle->label_button_yes_text_S_1,I'll buy one
+page_buyBottle->label_button_yes_text_S_2,I'll buy one
+
+#################### page_idle_products
 #tap here to refill your soap
 page_idle_products->label_title,Quick and easy soap refill,<br>just a tap away.
 page_idle_products->label_printer_status->assistance_printer_offline,Assistance needed<br>Receipt Printer offline.
@@ -69,7 +79,7 @@ page_product_overview->lineEdit_promo_code->valid,Promo Code Valid
 page_product_overview->lineEdit_promo_code->invalid,Promo Code Invalid
 page_product_overview->lineEdit_promo_code->ineligible,Promo Code Not Eligible At This Station
 page_product_overview->lineEdit_promo_code->network_error,Network error, could not verify. Try again.
-page_product_overview->lineEdit_promo_code->invite,Tap here to Enter Promo Code / Coupon
+page_product_overview->lineEdit_promo_code->invite,Tap here to enter Promo Code / Coupon
 page_product_overview->label_selected_volume->custom_volume,Custom Volume<br>(maximum: %1)
 page_product_overview->pushButton_continue->proceed_free,Proceed
 page_product_overview->pushButton_continue->proceed_pay,Continue
@@ -105,9 +115,9 @@ page_end->label_message_2->any_pay2,By refilling you've helped keep a<br>plastic
 page_end->label_message->finish_transaction,Finishing<br>transaction
 
 #################### page_help
-page_help->pushButton_to_transactions,Transaction History ->
-page_help->pushButton_to_maintenance,Settings
-page_help->pushButton_to_feedback,Contact Us
+page_help->pushButton_to_transactions,transaction history ->
+page_help->pushButton_to_maintenance,settings
+page_help->pushButton_to_feedback,contact us
 page_help->pushButton_to_idle,<- back
 page_help->label_keyboardInfo,Provide maintainer or administrator password, followed by "Done". 
 
@@ -120,11 +130,11 @@ page_transactions->label_title,Most Recent Transactions
 page_sendFeedback->pushButton_previous_page,<- back
 page_sendFeedback->label_select_problem,Please provide feedback
 page_sendFeedback->label_still_cant_find,
-page_sendFeedback->label_email,Email us at: hello@aelen.com
-page_sendFeedback->checkBox_1_Label,I love this, keep me in the loop.
+page_sendFeedback->label_contact_info,Contact us at: (+1)604-283-5311<br>Email us at: hello@aelen.com
+page_sendFeedback->checkBox_1_Label,I love this, keep me in the loop
 page_sendFeedback->checkBox_2_Label,User interface problem
 page_sendFeedback->checkBox_3_Label,Soap dispensing problem
-page_sendFeedback->checkBox_4_Label,Soap dispensing problem
+page_sendFeedback->checkBox_4_Label,Payment Problem
 page_sendFeedback->checkBox_5_Label,Other
 page_sendFeedback->label_enter_feedback,Please enter details or comments below.<br>Provide email for feedback.
 page_sendFeedback->label_thanks_for_feedback,Thank you for <br> your feedback
@@ -182,23 +192,24 @@ page_maintenance->status_text->not_enabled,Not enabled
 page_maintenance->status_text->assistance,Assistance Needed
 page_maintenance->status_text->coming_soon,Coming soon
 page_maintenance->status_text->sold_out,Sold Out
-page_maintenance->status_text->default,No<br>Status
+page_maintenance->status_text->default,No status
 page_maintenance->label_title_maintenance_mode,Maintenance mode
 page_maintenance->pushButton_to_previous_page,<- back
 page_maintenance->pushButton_general_settings,general settings->
-page_maintenance->label_product_1_position,P1
-page_maintenance->label_product_2_position,P2
-page_maintenance->label_product_3_position,P3
-page_maintenance->label_product_4_position,P4
+page_maintenance->label_product_1_position,Dispenser 1
+page_maintenance->label_product_2_position,Dispenser 2
+page_maintenance->label_product_3_position,Dispenser 3
+page_maintenance->label_product_4_position,Dispenser 4
 page_maintenance->label_role->user,Logged in as User. Use the machine as a customer.
-page_maintenance->label_role->maintainer,Logged in as Maintainer. Swap out products and perform basic maintenance and tests.
-page_maintenance->label_role->admin,Logged in as Administrator. Full rights.
+page_maintenance->label_role->maintainer,Logged in as Maintainer: <br/>Swap out products and perform <br/> basic maintenance and tests.
+page_maintenance->label_role->admin,Logged in as Administrator: Full rights.
 page_maintenance->label_role->Unknown,Logged in as: Unknown status. 
 page_maintenance->label_qr_manual_description,Scan for user manual 
 
 
 
 #################### page_maintenance_dispenser
+page_maintenance_dispenser->slot_shortcut,slot %1
 page_maintenance_dispenser->pushButton_to_previous_page,<- back
 page_maintenance_dispenser->label_calibration_instructions,Flowsensor calibration instructions:<br>1.Enable the pump<br>2.Take a measuring cup and dispense until the 1liter mark<br>3.Check the calibration value<br>4.Update the calibration value if different
 page_maintenance_dispenser->pushButton_set_restock_volume,Define restock volume
@@ -255,28 +266,7 @@ page_maintenance_general->pushButton_printer_test_print,Test Print
 page_maintenance_general->pushButton_minimize,Minimize Soapstand App
 page_maintenance_general->pushButton_restart_electronics,Restart Soapstand App (ui+fsm)
 page_maintenance_general->pushButton_restart_UI,Restart UI only
-page_maintenance_general->pushButton_reboot,Restart Computer
-page_maintenance_general->pushButton_shutdown,Shut down\n(unplugging power is ok too)
-page_maintenance_general->pushButton_reboot,Minimize Soapstand App
+page_maintenance_general->pushButton_shutdown,Shut Down
+page_maintenance_general->pushButton_reboot,Restart Station
 page_maintenance_general->label_feedback,Feedback
 page_maintenance_general->label_status_feedback,Command Feedback
-
-#################### page_product_freeSample
-page_product_freeSample->pushButton_select_product_page,<- back
-page_product_freeSample->label_discount_tag,Discount
-page_product_freeSample->pushButton_continue,Continue
-page_product_freeSample->pushButton_continue->proceed_pay_tap,Pay with TAP
-page_product_freeSample->pushButton_continue->proceed_pay_qr,Pay with QR
-page_product_freeSample->pushButton_continue_additional->proceed_pay_qr,Pay with QR
-page_product_freeSample->label_pay,efijaiefj
-page_product_freeSample->label_total->non_custom_volume,Total
-page_product_freeSample->label_total->custom_volume,Price for maximum %1
-page_product_freeSample->lineEdit_promo_code->valid,Promo Code Valid
-page_product_freeSample->lineEdit_promo_code->invalid,Promo Code Invalid
-page_product_freeSample->lineEdit_promo_code->ineligible,Promo Code Not Eligible At This Station
-page_product_freeSample->lineEdit_promo_code->network_error,Network error, could not verify. Try again.
-page_product_freeSample->lineEdit_promo_code->invite,Tap here to Enter Promo Code / Coupon
-page_product_freeSample->label_selected_volume->custom_volume,Custom Volume<br>(maximum: %1)
-page_product_freeSample->pushButton_continue->proceed_free,Proceed
-page_product_freeSample->pushButton_continue->proceed_pay,Continue
-page_product_freeSample->label_total,Total Amount

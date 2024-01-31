@@ -77,7 +77,7 @@ public:
       void setBasePNumberAsSingleDispenseSelectedProduct();
       product *getSelectedProduct();
       bool setSelectedProduct(int pnumber);
-      void setSelectedSizeAsChar(char size);
+      // void setSelectedSizeAsChar(char size);
       char getSelectedSizeAsChar();
       double getSelectedSizeAsVolume();
 
@@ -102,10 +102,11 @@ public:
       // DF_ERROR initButtonsShutdownAndMaintenance();
       DF_ERROR setSlot(int slot);
       int getSlot();
-
+#ifdef INTERRUPT_DRIVE_FLOW_SENSOR_TICKS
       DF_ERROR initGlobalFlowsensorIO(int pinint);
-
+#endif
       void setPumpReversalEnabled(bool isEnabled);
+      void setEmptyContainerDetectionEnabled(bool isEnabled);
       void setPumpSlowStartStopEnabled(bool isEnabled);
       unsigned short getPumpSpeed();
       DF_ERROR setPumpDirectionForward();
@@ -125,17 +126,20 @@ public:
       Dispense_behaviour getDispenseStatus();
       Slot_state getSlotState();
       void setSlotState(Slot_state state);
+      void setSlotStateToEmpty();
       void updateSlotState();
       void analyseSlotState();
 
-      // DF_ERROR initActivePNumberDispense(double volume);
-      DF_ERROR startActivePNumberDispense();
-      DF_ERROR stopActivePNumberDispense();
+      DF_ERROR initActivePNumberDispense();
+      DF_ERROR finishActivePNumberDispense();
+      void startActiveDispensing();
+      void stopActiveDispensing();
 
       bool setNextActiveProductAsPartOfSelectedProduct();
-      DF_ERROR startSelectedProductDispense(char size, double nPrice);
-      // DF_ERROR startSelectedProductDispense();
-      DF_ERROR stopSelectedProductDispense();
+
+      DF_ERROR initSelectedProductDispense(char size, double nPrice);
+      // DF_ERROR initSelectedProductDispense();
+      DF_ERROR finishSelectedProductDispense();
       string getSelectedProductDispenseStartTime();
       string getSelectedProductDispenseEndTime();
 
@@ -203,6 +207,7 @@ public:
 private:
       int m_slot;
 
+      bool m_isEmptyContainerDetectionEnabled = false;
       bool m_isPumpReversalEnabled = false;
       bool m_isPumpSlowStartStopEnabled = false;
       bool isPumpSoftStarting;

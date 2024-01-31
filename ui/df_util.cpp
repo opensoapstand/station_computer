@@ -205,6 +205,7 @@ QString df_util::getConvertedStringVolumeFromMl(double volumeMilliLiter, QString
     }
 
     // qDebug() << "vol: " << volume_as_string << " .. units: " << units << " vol metric: " << volumeMilliLiter << "vol oz: " << volume_oz;
+    qWarning() << "volume stringggggg" << volume_as_string;
     return volume_as_string;
 }
 
@@ -222,6 +223,8 @@ void df_util::send_command_to_FSM(QString command, bool isLoggingMessage)
     // this->send_msg = msg;
     send_to_FSM(command, isLoggingMessage);
     m_IsSendingFSM = false;
+    // 
+    QThread::msleep(50); // Sleep for 50 milliseconds
 }
 
 void df_util::executeVirtualClick(int x, int y)
@@ -291,7 +294,7 @@ void df_util::send_to_FSM(QString command, bool isLoggingMessage)
     }
     else
     {
-        qDebug() << "ERROR: Failed Connection (Port ok? or Restarting the computer has worked to solve the issue in the past)" << endl;
+        qDebug() << "ERROR: Failed Connection to controller (Port ok? or Restarting the computer has worked to solve the issue in the past)" << endl;
     }
     QString send_msg = command;
     send_msg.append(";");

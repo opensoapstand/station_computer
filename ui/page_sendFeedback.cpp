@@ -95,7 +95,7 @@ void page_sendFeedback::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_previous_page);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_select_problem);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_still_cant_find);
-    p_page_idle->thisMachine->setTemplateTextToObject(ui->label_email);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->label_contact_info);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->checkBox_1_Label);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->checkBox_2_Label);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->checkBox_3_Label);
@@ -127,8 +127,8 @@ void page_sendFeedback::showEvent(QShowEvent *event)
     ui->label_problem_options->setStyleSheet(styleSheet);
     ui->pushButton_to_idle->setStyleSheet(styleSheet);
     ui->label_still_cant_find->setStyleSheet(styleSheet);
-    ui->label_email->setProperty("class", "labelMailFeedback");
-    ui->label_email->setStyleSheet(styleSheet);
+    ui->label_contact_info->setProperty("class", "labelMailFeedback");
+    ui->label_contact_info->setStyleSheet(styleSheet);
     ui->label_thanks_for_feedback->setProperty("class", "labelThankyouFeedback");
     ui->label_thanks_for_feedback->setStyleSheet(styleSheet);
     ui->checkBox_1_Label->setProperty("class", "checkBoxLabelStyling");

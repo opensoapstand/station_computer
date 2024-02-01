@@ -140,6 +140,8 @@ using namespace std;
 #define PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_RIGHT    "arrow_right_white_big.png"
 #define PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_DOWN "arrow_down_white_big.png"
 #define PAGE_DISPENSE_BACKGROUND_PATH "background_dispense.png"
+#define PAGE_DISPENSE_VOLUME_ICON "label_volume_icon.png"
+#define PAGE_DISPENSE_PRODUCT_ICON "label_product_icon.png"
 #define PAGE_QR_PAY_BACKGROUND_PATH "background_qr.png"
 #define PAGE_MAINTENANCE_BACKGROUND_PATH "background_maintenance.png"
 #define ERROR_MESSAGE_PATH "error_message.png"

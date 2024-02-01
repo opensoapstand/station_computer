@@ -72,8 +72,8 @@ page_product_overview->label_selected_volume->custom_volume,Custom Volume (maxim
 
 # page_dispenser
 page_dispenser->label_to_refill,To Refill
-page_dispenser->label_instructions_container,bring container to nozzle
-page_dispenser->label_press,press and hold the<br>button
+page_dispenser->label_instructions_container,01. The selected spout is indicated with a light<br><br>02. Hold your bottle into the spout<br><br>03. Keep button pressed to dispense
+page_dispenser->label_volume_dispensed,Volume Dispensed
 
 # page_end
 page_end->pushButton_contact,Feedback

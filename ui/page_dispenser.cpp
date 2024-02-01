@@ -153,8 +153,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     this->isDispensing = false;
     askForFeedbackAtEnd = false;
 
-    ui->label_moving_bottle_fill_effect->move(380, 889);
-    ui->pushButton_problems->move(120, 40);
+
 
     previousDispenseStatus = "NO STATE";
 
@@ -220,6 +219,27 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     ui->label_dispense_message->hide();
     ui->pushButton_problems->show();
+
+    if(p_page_idle->thisMachine->hasMixing()){
+        ui->label_moving_bottle_fill_effect->move(380, 889);
+
+        // not needed
+        ui->label_press->hide();
+        ui->label_product_summary_background->setStyleSheet(styleSheet);
+        ui->label_product_name->setStyleSheet(styleSheet);
+        ui->label_product_selected->setStyleSheet(styleSheet);
+
+        p_page_idle->thisMachine->addPictureToLabel(ui->label_product_icon, p_page_idle->thisMachine->getTemplatePathFromName(PAGE_DISPENSE_PRODUCT_ICON));
+        p_page_idle->thisMachine->addPictureToLabel(ui->label_volume_icon, p_page_idle->thisMachine->getTemplatePathFromName(PAGE_DISPENSE_VOLUME_ICON));
+    }else{
+        ui->label_moving_bottle_fill_effect->move(380, 889);
+        ui->pushButton_problems->move(120, 40);
+        ui->label_product_summary_background->hide();
+        ui->label_product_icon->hide();
+        ui->label_product_name->hide();
+        ui->label_product_selected->hide();
+        ui->label_volume_icon->hide();
+    }
 
     dispenseIdleTimer->start(1000);
     arrowAnimationStepTimer->start();

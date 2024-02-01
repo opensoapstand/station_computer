@@ -69,7 +69,22 @@ page_payment_tap_serial->animated_Label,{"x": 139, "y": 668, "width": 801, "heig
 page_payment_tap_tcp->pushButton_to_idle,{"x": 980, "y": 50, "width": 50, "height": 50}
 page_payment_tap_tcp->animated_Label,{"x": 139, "y": 668, "width": 801, "height": 365}
 
-page_dispenser->label_indicate_active_spout,{"x":460,"y":1700,"isVisibleAtLoad":true}
+page_dispenser->label_background_during_dispense_animation,{"x": 0, "y": 0, "width": 1080, "height": 1920}
+page_dispenser->label_dispense_flowrate,{"x": 650, "y": 280, "width": 411, "height": 51}
+page_dispenser->label_dispense_message,{"x": 0, "y": 1710, "width": 1051, "height": 191}
+page_dispenser->label_dispense_status,{"x": 660, "y": 410, "width": 391, "height": 51}
+page_dispenser->label_finishTransactionMessage,{"x": 240, "y": 600, "width": 600, "height": 300}
+page_dispenser->label_indicate_active_spout,{"x":900,"y":350,"isVisibleAtLoad":true}
+page_dispenser->label_instructions_container,{"x": 50, "y": 350, "width": 689, "height": 252}
+page_dispenser->label_logo,{"x": 600, "y": 180, "width": 151, "height": 131}
+page_dispenser->label_moving_bottle_fill_effect,{"x": 0, "y": 400, "width": 304, "height": 671}
+page_dispenser->label_press,{"x": 50, "y": 350, "width": 689, "height": 252}
+page_dispenser->label_to_refill,{"x": 431, "y": 200, "width": 219, "height": 100}
+page_dispenser->label_volume_dispensed,{"x": 115, "y": 1481, "width": 385, "height": 45}
+page_dispenser->label_volume_dispensed_ml,{"x": 115, "y": 1526, "width": 385, "height": 45}
+page_dispenser->pushButton_abort,{"x": 711, "y": 1544, "width": 322, "height": 100}
+page_dispenser->pushButton_debug_Button,{"x": 1000, "y": 240, "width": 81, "height": 71}
+page_dispenser->pushButton_problems,{"x": 711, "y": 1394, "width": 322, "height": 100}
 
 statusbar->statusbar,{"width": 75, "height": 75}
 

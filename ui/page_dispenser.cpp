@@ -192,8 +192,12 @@ void page_dispenser::showEvent(QShowEvent *event)
             x = 880;
             break;
         }
-        ui->label_indicate_active_spout->move(x, 1600);
-        // ui->label_indicate_active_spout->move(x, ui->label_indicate_active_spout->y());
+        if(p_page_idle->thisMachine->hasMixing()){
+            ui->label_indicate_active_spout->move(x, 1700);
+        }else{
+            ui->label_indicate_active_spout->move(x, 1600);
+            // ui->label_indicate_active_spout->move(x, ui->label_indicate_active_spout->y());
+        }
     }
     else
     {
@@ -221,8 +225,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     ui->pushButton_problems->show();
 
     if(p_page_idle->thisMachine->hasMixing()){
-        ui->label_moving_bottle_fill_effect->move(380, 889);
-
+        ui->label_moving_bottle_fill_effect->move(296, 663);
         // not needed
         ui->label_press->hide();
         ui->label_product_summary_background->setStyleSheet(styleSheet);
@@ -231,6 +234,45 @@ void page_dispenser::showEvent(QShowEvent *event)
 
         p_page_idle->thisMachine->addPictureToLabel(ui->label_product_icon, p_page_idle->thisMachine->getTemplatePathFromName(PAGE_DISPENSE_PRODUCT_ICON));
         p_page_idle->thisMachine->addPictureToLabel(ui->label_volume_icon, p_page_idle->thisMachine->getTemplatePathFromName(PAGE_DISPENSE_VOLUME_ICON));
+
+        ui->label_product_name->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductName());
+        QString selected_volume = p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize(), true, true);
+        double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
+        double selectedPriceCorrected;
+        if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize() == SIZE_CUSTOM_INDEX){
+            double discountFraction = p_page_idle->thisMachine->getDiscountPercentageFraction();
+            QString units = p_page_idle->thisMachine->getSizeUnit();
+            if (units == "ml")
+            {
+                units = "100ml";
+                selectedPrice = selectedPrice * 100;
+            }
+            else if (units == "g")
+            {
+                if (p_page_idle->thisMachine->getSelectedProduct()->getVolumeBySize(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
+                {
+                    units = "100g";
+                    selectedPrice = selectedPrice * 100;
+                }
+                else
+                {
+                    units = "kg";
+                    selectedPrice = selectedPrice * 1000;
+                }
+            }
+            else if (units == "oz")
+            {
+                units = "oz";
+                selectedPrice = selectedPrice * OZ_TO_ML;
+            }
+            selectedPriceCorrected = selectedPrice * (1 - discountFraction);
+            QString base = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_selected, "custom_volume");
+            ui->label_product_selected->setText(base.arg(selected_volume)+ "<br>$" + QString::number(selectedPriceCorrected, 'f', 2) + "/" + units);
+        }else{
+            selectedPriceCorrected = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
+            ui->label_product_selected->setText(selected_volume + " ($" + QString::number(selectedPriceCorrected, 'f', 2) + ")");
+        }
+
     }else{
         ui->label_moving_bottle_fill_effect->move(380, 889);
         ui->pushButton_problems->move(120, 40);
@@ -742,10 +784,22 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
             percentage = 100;
         }
 
-        this->ui->label_moving_bottle_fill_effect->move(380, 900 - 3 * percentage);
         // ui->pushButton_problems->move(120, 450);
         // transition from instructions to dispensing at first receival of volume.
         ui->label_background_during_dispense_animation->show();
+        if(p_page_idle->thisMachine->hasMixing()){
+            this->ui->label_moving_bottle_fill_effect->move(296, 663 - 4.93 * percentage);
+            ui->label_product_summary_background->raise();
+            ui->label_product_name->raise();
+            ui->label_product_selected->raise();
+            ui->label_product_icon->raise();
+            ui->label_volume_dispensed->raise();
+            ui->label_volume_dispensed_ml->raise();
+            ui->label_volume_icon->raise();
+        }else{
+            this->ui->label_moving_bottle_fill_effect->move(380, 900 - 3 * percentage);
+        }
+
         ui->label_press->hide();
         ui->label_to_refill->hide();
         ui->label_instructions_container->hide();
@@ -815,7 +869,7 @@ void page_dispenser::on_cancelButton_clicked()
 void page_dispenser::on_pushButton_debug_Button_clicked()
 {
     qDebug() << "WARNING: ========= Debug button pressed. Fake dispensing of 100ml ==============";
-    updateVolumeDisplayed(300.0, false); // make sure the fill bottle graphics are completed
+    updateVolumeDisplayed(750.0, false); // make sure the fill bottle graphics are completed
 }
 
 void page_dispenser::on_pushButton_abort_clicked()

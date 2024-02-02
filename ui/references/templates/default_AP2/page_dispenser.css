@@ -88,31 +88,27 @@
 }
 
 #pushButton_problems.normal {
-   font-family: 'EuropaNuova-Regular';
-   font-style: normal;
-   font-weight: 400;
-   background-color: #5E826A;
-   font-size: 42px;
+   background: #FFF;
+   border: 5px solid #895E25;
+   border-radius: 25px;
+   color: #895E25;
    text-align: center;
-   line-height: auto;
-   /* qproperty-alignment: AlignCenter; */
-   border-radius: 20px;
-   color: white;
-   border: 5px double white;
+   qproperty-alignment: AlignCenter;
+   font-family: 'Lato';
+   font-size: 48px;
+   font-weight: 400;
 }
 
 #pushButton_problems.alert {
-   font-family: 'EuropaNuova-Regular';
-   font-style: normal;
-   font-weight: 400;
-   background-color: #b87b0b;
-   font-size: 42px;
+   background: #895E25;
+   border: 5px solid #895E25;
+   border-radius: 25px;
+   color: #FFF;
    text-align: center;
-   line-height: auto;
-   /* qproperty-alignment: AlignCenter; */
-   border-radius: 20px;
-   color: white;
-   border: 5px double white;
+   qproperty-alignment: AlignCenter;
+   font-family: 'Lato';
+   font-size: 48px;
+   font-weight: 400;
 }
 
 #pushButton_debug_Button {
@@ -123,18 +119,15 @@
 }
 
 #pushButton_abort {
-   font-family: 'EuropaNuova-ExtraBold';
-   font-style: normal;
-   font-weight: 400;
-   background-color: transparent;
-   font-size: 45px;
-   text-align: center;
-   line-height: auto;
-   /* qproperty-alignment: AlignCenter; */
+   background: #FFF;
+   border: 5px solid #895E25;
    border-radius: 25px;
-   color: white;
-   border: 5px solid white;
-
+   color: #895E25;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   font-family: 'Lato';
+   font-size: 48px;
+   font-weight: 400;
 }
 
 QPushButton {

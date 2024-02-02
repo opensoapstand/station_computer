@@ -170,6 +170,7 @@ void page_payment_tap_serial::showEvent(QShowEvent *event)
     while (!paymentConnected)
     {
         paymentConnected = com.page_init();
+        sleep(1);
     }
     pktResponded = com.readForAck();
 

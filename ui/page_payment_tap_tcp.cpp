@@ -498,21 +498,29 @@ void page_payment_tap_tcp::enableIpForwarding(){
     const QString sudoPassword = "D@nkF1ll$";
 
     // Start the QProcess with the "sudo iptables -t nat -A POSTROUTING -o wlo2 -j MASQUERADE" command
-    QProcess iptablesProcess;
-    iptablesProcess.start("sudo", QStringList() << "iptables" << "-t" << "nat" << "-A" << "POSTROUTING" << "-o" << "wlo2" << "-j" << "MASQUERADE");
-    iptablesProcess.write(sudoPassword.toUtf8());
-    iptablesProcess.closeWriteChannel();
+    auto startProcess = [&](const QString &program, const QStringList &arguments) {
+        QProcess *process = new QProcess();
+        process->start(program, arguments);
+        process->write(sudoPassword.toUtf8());
+        process->closeWriteChannel();
+        QObject::connect(process, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+                         [=](int exitCode, QProcess::ExitStatus exitStatus) {
+            if (exitStatus == QProcess::NormalExit && exitCode == 0) {
+                qDebug() << program << "process finished successfully";
+                process->deleteLater();
+            } else {
+                qDebug() << "Error:" << program << "process failed";
+            }
+        });
+    };
 
-    // Connect to the finished signal using a lambda function
-    QObject::connect(&iptablesProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), [&](int exitCode, QProcess::ExitStatus exitStatus){});
-    
-    // Start the QProcess with the "sudo sysctl -w net.ipv4.ip_forward=1" command
-    QProcess sysctlProcess;
-    sysctlProcess.start("sudo", QStringList() << "sysctl" << "-w" << "net.ipv4.ip_forward=1");
-    sysctlProcess.write(sudoPassword.toUtf8());
-    sysctlProcess.closeWriteChannel();
+    // Start the iptables process
+    startProcess("sudo", QStringList() << "iptables" << "-t" << "nat" << "-A" << "POSTROUTING" << "-o" << "wlo2" << "-j" << "MASQUERADE");
+    // Start the sysctl process
+    startProcess("sudo", QStringList() << "sysctl" << "-w" << "net.ipv4.ip_forward=1");
+    startProcess("sudo", QStringList() << "ifconfig" << ETHERNET_PORT_ACTIVE << "192.168.1.2");
+    startProcess("sudo", QStringList() << "iptables" << "-I" << "FORWARD" << "-o" << ETHERNET_PORT_ACTIVE << "-s" << "192.168.0.0/16" << "-j" << "ACCEPT");
+    startProcess("sudo", QStringList() << "iptables" << "-I" << "INPUT" <<"-s" << "192.168.0.0/16" << "-j" << "ACCEPT");
+    qDebug() << "Enabled IP forwarding";
 
-    // Connect to the finished signal using a lambda function
-    QObject::connect(&sysctlProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), [&](int exitCode, QProcess::ExitStatus exitStatus){});
-    qDebug() << "IP forwarded setup completed for TAP USA";
 }

@@ -482,45 +482,31 @@ void page_payment_tap_tcp::resetPaymentPage()
 void page_payment_tap_tcp::enableIpForwarding(){
     const char* ETHERNET_PORT_ACTIVE = "enp3s0";
 
-    // Check if enp2s0 is active
-    if (system("ip link show enp2s0 | grep -q 'state UP'") == 0) {
-        ETHERNET_PORT_ACTIVE = "enp2s0";
-        qDebug() << "Please change the ethernet to other port";
-    }
+    QString scriptPath = "/home/df-admin/production/admin/tap_payment/enableIPForward.sh";
 
-    // Check if enp3s0 is active
-    if (system("ip link show enp3s0 | grep -q 'state UP'") == 0) {
-        ETHERNET_PORT_ACTIVE = "enp3s0";
-    }
+   // Define your sudo password
+    QString sudoPassword = "D@nkF1ll$";
 
-    qDebug()<< "Active Ethernet Port" << ETHERNET_PORT_ACTIVE;
+    // Create a QProcess instance
+    QProcess *process = new QProcess();
 
-    const QString sudoPassword = "D@nkF1ll$";
+    // Start the shell script using QProcess with sudo and provide the password via stdin
+    process->start("sudo", QStringList() << "-S" << "sh" << scriptPath);
 
-    // Start the QProcess with the "sudo iptables -t nat -A POSTROUTING -o wlo2 -j MASQUERADE" command
-    auto startProcess = [&](const QString &program, const QStringList &arguments) {
-        QProcess *process = new QProcess();
-        process->start(program, arguments);
-        process->write(sudoPassword.toUtf8());
-        process->closeWriteChannel();
-        QObject::connect(process, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
-                         [=](int exitCode, QProcess::ExitStatus exitStatus) {
-            if (exitStatus == QProcess::NormalExit && exitCode == 0) {
-                qDebug() << program << "process finished successfully";
-                process->deleteLater();
-            } else {
-                qDebug() << "Error:" << program << "process failed";
-            }
-        });
-    };
+    // Write the sudo password to the process's standard input
+    process->write((sudoPassword + "\n").toUtf8());
+    process->closeWriteChannel();
 
-    // Start the iptables process
-    startProcess("sudo", QStringList() << "iptables" << "-t" << "nat" << "-A" << "POSTROUTING" << "-o" << "wlo2" << "-j" << "MASQUERADE");
-    // Start the sysctl process
-    startProcess("sudo", QStringList() << "sysctl" << "-w" << "net.ipv4.ip_forward=1");
-    startProcess("sudo", QStringList() << "ifconfig" << ETHERNET_PORT_ACTIVE << "192.168.1.2");
-    startProcess("sudo", QStringList() << "iptables" << "-I" << "FORWARD" << "-o" << ETHERNET_PORT_ACTIVE << "-s" << "192.168.0.0/16" << "-j" << "ACCEPT");
-    startProcess("sudo", QStringList() << "iptables" << "-I" << "INPUT" <<"-s" << "192.168.0.0/16" << "-j" << "ACCEPT");
+    // Connect the finished signal to handle process completion
+    QObject::connect(process, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+                     [&](int exitCode, QProcess::ExitStatus exitStatus) {
+        if (exitStatus == QProcess::NormalExit && exitCode == 0) {
+            qDebug() << "Script executed successfully";
+        } else {
+            qDebug() << "Error: Script execution failed with exit code:" << exitCode;
+        }
+        process->deleteLater(); 
+    });
     qDebug() << "Enabled IP forwarding";
 
 }

@@ -91,6 +91,9 @@ page_help->pushButton_to_howTo,Instruction
 page_help->pushButton_to_maintenance,Settings
 page_help->pushButton_to_feedback,Contact us
 
+#page_transactions
+page_transactions->pushButton_back,←BACK
+
 #page_how_to
 page_how_to->label_page_title,How to Use
 page_how_to->label_step01_heading,01. Pick

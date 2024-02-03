@@ -52,6 +52,7 @@ page_email->label_help,{"x": 940, "y": 35, "width": 75, "height": 75}
 page_email->pushButton_to_help,{"x": 940, "y": 35, "width": 75, "height": 75}
 
 page_sendFeedback->label_help,{"x": 940, "y": 35, "width": 75, "height": 75}
+page_sendFeedback->pushButton_to_idle,{"x": 940, "y": 35, "width": 75, "height": 75}
 page_sendFeedback->pushButton_help_page,{"x": 940, "y": 35, "width": 75, "height": 75}
 
 page_qr_payment->label_title,{"x": 265, "y": 200, "width": 548, "height": 100}
@@ -80,6 +81,11 @@ page_dispenser->label_logo,{"x": 600, "y": 180, "width": 151, "height": 131}
 page_dispenser->label_moving_bottle_fill_effect,{"x": 296, "y": 663, "width": 502, "height": 1037}
 page_dispenser->label_press,{"x": 50, "y": 350, "width": 689, "height": 252}
 page_dispenser->label_to_refill,{"x": 431, "y": 200, "width": 219, "height": 100}
+page_dispenser->label_product_summary_background,{"x": 50, "y": 1336, "width": 447, "height": 298}
+page_dispenser->label_product_name,{"x": 115, "y": 1366, "width": 365, "height": 45}
+page_dispenser->label_product_selected,{"x": 115, "y": 1415, "width": 365, "height": 90}
+page_dispenser->label_product_icon,{"x": 75, "y": 1375, "width": 30, "height": 30}
+page_dispenser->label_volume_icon,{"x": 75, "y": 1529, "width": 30, "height": 30}
 page_dispenser->label_volume_dispensed,{"x": 115, "y": 1520, "width": 365, "height": 45}
 page_dispenser->label_volume_dispensed_ml,{"x": 115, "y": 1565, "width": 365, "height": 45}
 page_dispenser->pushButton_abort,{"x": 711, "y": 1544, "width": 322, "height": 100}
@@ -99,3 +105,5 @@ page_end->label_volume_dispensed,{"x": 311, "y": 1197, "width": 458, "height": 5
 page_end->label_volume_dispensed_ml,{"x": 311, "y": 1247, "width": 458, "height": 85}
 page_end->pushButton_contact,{"x": 304, "y": 1452, "width": 472, "height": 100}
 page_end->pushButton_to_idle,{"x": 0, "y": 10, "width": 1080, "height": 1920}
+
+page_transactions->label_title,{"x": 0, "y": 200, "width": 1080, "height": 86}

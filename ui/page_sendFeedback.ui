@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1125</width>
+    <width>1080</width>
     <height>1920</height>
    </rect>
   </property>
@@ -1701,9 +1701,9 @@ font: 11pt &quot;Montserrat&quot;;</string>
   <widget class="QLabel" name="label_thanks_for_feedback">
    <property name="geometry">
     <rect>
-     <x>-30</x>
+     <x>0</x>
      <y>570</y>
-     <width>1121</width>
+     <width>1080</width>
      <height>481</height>
     </rect>
    </property>
@@ -1773,13 +1773,13 @@ font: 11pt &quot;Montserrat&quot;;</string>
   <zorder>label_contact_info</zorder>
   <zorder>pushButton_previous_page</zorder>
   <zorder>label_enter_feedback</zorder>
-  <zorder>pushButton_start_input</zorder>
   <zorder>label_thanks_for_feedback</zorder>
   <zorder>label_help</zorder>
   <zorder>feedbackText</zorder>
   <zorder>textEdit_custom_message</zorder>
   <zorder>feedbackKeyboard</zorder>
   <zorder>pushButton_help_page</zorder>
+  <zorder>pushButton_start_input</zorder>
  </widget>
  <resources/>
  <connections/>

@@ -131,6 +131,7 @@ using namespace std;
 #define PAGE_END_BACKGROUND_PATH                        "background_end.png"
 #define PAGE_TRANSACTIONS_BACKGROUND_PATH               "background_transactions.png"
 
+#define PAGE_SEND_FEEDBACK_BACKGROUND_PATH              "background_sendFeedback.png"
 #define PAGE_PRODUCT_MENU_BACKGROUND_PATH               "background_product_menu.png"
 #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH             "background_product_select.png"
 #define PAGE_PRODUCT_BACKGROUND_PATH                    "background_product_quantity.png"
@@ -151,7 +152,6 @@ using namespace std;
 #define PAGE_TAP_PAY "tapNow.png"
 #define PAGE_AUTHORIZE_NOW "authorizeNow.png"
 #define PAGE_TAP_GENERIC "genericTap.png"
-#define PAGE_SEND_FEEDBACK_PATH "background_sendfeedback.png"
 #define PAGE_INIT_BACKGROUND_IMAGE_PATH "background_init.png"
 #define IMAGE_BUTTON_HELP "help_icon.png"
 #define THANK_YOU_FOR_YOUR_FEEDBACK "background_feedbacksent.png"

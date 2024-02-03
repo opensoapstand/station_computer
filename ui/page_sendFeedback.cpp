@@ -39,7 +39,6 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
 
     ui->label_enter_feedback->show();
     ui->feedbackText->hide();
-    ui->pushButton_start_input->raise();
 
     selectIdleTimer = new QTimer(this);
     selectIdleTimer->setInterval(1000);
@@ -105,8 +104,12 @@ void page_sendFeedback::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_thanks_for_feedback);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_send);
 
-    p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_SEND_FEEDBACK_PATH);
-    p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
+    if(p_page_idle->thisMachine->hasMixing()){
+        p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_SEND_FEEDBACK_BACKGROUND_PATH);
+    }else{
+        // same background image as page_select_product
+        p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
+    }
 
     QString full_path = p_page_idle->thisMachine->getTemplatePathFromName(IMAGE_BUTTON_HELP);
     p_page_idle->thisMachine->addPictureToLabel(ui->label_help, full_path);
@@ -180,9 +183,6 @@ void page_sendFeedback::reset_and_show_page_elements()
     ui->textEdit_custom_message->setPlaceholderText(TEXTBOX_INVITE_TEXT);
 
     ui->feedbackKeyboard->hide();
-
-    ui->pushButton_start_input->raise();
-    ui->pushButton_start_input->show();
 
     ui->label_thanks_for_feedback->hide();
     ui->label_thank_you_image->hide();
@@ -319,8 +319,6 @@ void page_sendFeedback::keyboardButtonPressed(int buttonID)
     {
         ui->feedbackKeyboard->hide();
         ui->textEdit_custom_message->setText("");
-        ui->pushButton_start_input->raise();
-        ui->pushButton_start_input->show();
     }
     else if (buttonText == "CAPS")
     {
@@ -365,8 +363,6 @@ void page_sendFeedback::keyboardButtonPressed(int buttonID)
         qDebug() << "Keyboard: Done Clicked";
         QString textEntry = ui->textEdit_custom_message->toPlainText();
         ui->feedbackKeyboard->hide();
-        ui->pushButton_start_input->raise();
-        ui->pushButton_start_input->show();
     }
     else if (buttonText == "Space")
     {
@@ -400,8 +396,6 @@ void page_sendFeedback::on_pushButton_start_input_clicked()
     qDebug() << "Feedback button clicked, will show keyboard";
 
     ui->feedbackKeyboard->show();
-    ui->pushButton_start_input->lower();
-    ui->pushButton_start_input->hide();
 
     // starts with welcome message
     if (ui->textEdit_custom_message->toPlainText() == TEXTBOX_INVITE_TEXT)

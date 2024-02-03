@@ -217,7 +217,7 @@ int main(int argc, char *argv[])
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_TAP_PAY_FAIL));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_AUTHORIZE_NOW));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_TAP_GENERIC));
-    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_SEND_FEEDBACK_PATH));
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_SEND_FEEDBACK_BACKGROUND_PATH));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_INIT_BACKGROUND_IMAGE_PATH));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(IMAGE_BUTTON_HELP));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(THANK_YOU_FOR_YOUR_FEEDBACK));

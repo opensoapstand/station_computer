@@ -787,8 +787,18 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
         // ui->pushButton_problems->move(120, 450);
         // transition from instructions to dispensing at first receival of volume.
         ui->label_background_during_dispense_animation->show();
-        if(p_page_idle->thisMachine->hasMixing()){
+        if(p_page_idle->thisMachine->hasMixing() && ui->label_background_during_dispense_animation->isVisible()){
             this->ui->label_moving_bottle_fill_effect->move(296, 663 - 4.93 * percentage);
+            ui->label_product_summary_background->move(316, 1280);
+            ui->label_product_name->move(377, 1307);
+            ui->label_product_selected->move(377, 1356);
+            ui->label_product_icon->move(337, 1316);
+            ui->label_volume_dispensed->move(377, 1461);
+            ui->label_volume_dispensed_ml->move(377, 1506);
+            ui->label_volume_icon->move(337, 1470);
+            ui->pushButton_abort->move(193, 1720);
+            ui->pushButton_problems->move(565, 1720);
+
             ui->label_product_summary_background->raise();
             ui->label_product_name->raise();
             ui->label_product_selected->raise();

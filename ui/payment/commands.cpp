@@ -13,15 +13,18 @@ std::map<std::string, std::string> registerDevice(int socket){
                         <ENTRY_CODE>9121</ENTRY_CODE>\
                         <KEY>"+public_key+"</KEY> \
                     </TRANSACTION>";
-    std::cout << registerCommand;
+    std::cout << registerCommand; 
+    qDebug() << QString::fromUtf8(registerCommand.c_str());
+    qDebug() << "Socket id" << socket;
     std::map<std::string, std::string> dataReceived = sendAndReceivePacket(registerCommand, socket, true);
     if(dataReceived["MAC_KEY"]!=""){
+        qDebug() << "Mac Key received after registration";
         createOrUpdateConfigFile(dataReceived["MAC_KEY"], dataReceived["MAC_LABEL"], "0");
         close(socket);
     }
     else{
-        std::cout << "Registration failed";
-        rebootDevice(connectSecondarySocket());
+        qDebug() << "Registration failed";
+        // rebootDevice(connectSecondarySocket());
     }
     
     return dataReceived;
@@ -270,6 +273,7 @@ std::map<std::string, std::string> testMac(int socket, std::string MAC_KEY, std:
 int createOrUpdateConfigFile (std::string macKey,std::string macLabel,std::string invoiceNumber){
     std::ofstream configFile("/home/df-admin/production/admin/tap_payment/config.txt");
     std::ofstream configHistoryFile("/home/df-admin/production/admin/tap_payment/configHistory.txt", std::ios::app);
+    qDebug() << "Creating or updating config file";
     if (configFile.is_open()) {
         chmod("config.txt", S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH);
         configFile << "MAC_KEY=" + macKey +"\n";

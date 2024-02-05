@@ -267,7 +267,7 @@ std::map<std::string, std::string> sendAndReceivePacket(std::string command, int
     if (logging)
     {
         std::cout << xml_string << std::endl;
-    qDebug() << QString::fromUtf8(xml_string.c_str());
+        qDebug() << QString::fromUtf8(xml_string.c_str());
     }
     std::map<std::string, std::string> xmlObject = readXmlPacket(xml_string);
     memset(bufferReceived, 0, sizeof(bufferReceived));

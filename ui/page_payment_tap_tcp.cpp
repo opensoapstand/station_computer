@@ -64,13 +64,14 @@ page_payment_tap_tcp::page_payment_tap_tcp(QWidget *parent) : QWidget(parent),
 
 void page_payment_tap_tcp::initiate_tap_setup()
 {
-    enableIpForwarding();
+    // enableIpForwarding();
     qDebug() << "InitializingTap payment";
     tap_payment = true;
     std::map<std::string, std::string> configMap = readConfigFile();
     std::map<std::string, std::string> deviceStatus = checkDeviceStatus(connectSecondarySocket());
     if (deviceStatus["MACLABEL_IN_SESSION"] != "")
-    {
+    {   
+        qDebug() << "Finishing session";
         // finishSession(connectSocket(), configMap["MAC_KEY"], configMap["MAC_LABEL"]);
     }
     cancelTransaction(connectSecondarySocket());

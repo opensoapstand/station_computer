@@ -9,7 +9,7 @@
 
 
 // TODO: Refactor to fit with dfuicommthread
-#define UI_VERSION "3.1"
+#define UI_VERSION "3.2"
 
 #define OPTION_SLOT_INVALID 0
 #define SELECT_PRODUCT_PAGE_SLOT_COUNT_MAX 4
@@ -63,7 +63,6 @@
 #define VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G 2999.0
 
 using namespace std;
-
 
 #define PAGE_INIT_READY_TIMEOUT_SECONDS 10
 #define PAGE_INIT_REBOOT_TIMEOUT_SECONDS 3600

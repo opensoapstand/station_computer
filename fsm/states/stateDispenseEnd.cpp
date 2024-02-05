@@ -321,7 +321,7 @@ bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
     double volume_remaining_converted;
     std::string dispensed_volume_units_converted;
     double dispensed_volume = ceil(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed());
-    if (dispensed_volume <= g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getVolumePerTick())
+    if (dispensed_volume <= g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getVolumePerTick(false))
     {
         dispensed_volume_units_converted = "0";
     }
@@ -540,7 +540,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     double updated_volume_dispensed_since_restock;
     double updated_volume_dispensed_total_ever;
 
-    if (dispensed_volume <= g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getVolumePerTick())
+    if (dispensed_volume <= g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getVolumePerTick(false))
     {
         dispensed_volume = 0;
     }

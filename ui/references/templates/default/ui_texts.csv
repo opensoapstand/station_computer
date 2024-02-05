@@ -36,9 +36,9 @@ page_idle->label_reboot_nightly_text->count_down,System will be rebooted in<br>%
 page_buyBottle->pushButton_to_idle,<- back
 page_buyBottle->label_buyBottle_title,Do you need a bottle?
 page_buyBottle->label_button_no_text_L,No
-page_buyBottle->label_button_no_text_S,I have one
-page_buyBottle->label_button_yes_text_S_1,I'll buy one
-page_buyBottle->label_button_yes_text_S_2,I'll buy one
+page_buyBottle->label_button_no_text_S,I brought one
+page_buyBottle->label_button_yes_text_S_1,I'll take one
+page_buyBottle->label_button_yes_text_S_2,I'll take one
 
 #################### page_idle_products
 #tap here to refill your soap

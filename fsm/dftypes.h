@@ -18,7 +18,7 @@
 #include <sqlite3.h>
 #include <stdint.h>
 
-#define CONTROLLER_VERSION "3.1"
+#define CONTROLLER_VERSION "3.2"
 
 #define PRODUCT_DETAILS_TSV_PATH "/home/df-admin/production/references/products/product_details.tsv" // https://docs.google.com/spreadsheets/d/17WR2gRyPIDIlGKBy1YKFAqN-Hyw_3VOJ6JCmfcAtjVk/edit#gid=169583479 download as .tsv file
 #define CSV_PRODUCT_COL_ID 0
@@ -84,7 +84,7 @@
 #define SLOW_START_INCREASE_PERIOD_MILLIS 2 // set to 0 for instant start
 #define SLOW_STOP_PERIOD_MILLIS 1           // set to 0 for instant stop
 
-#define DISPENSE_STATUS_UPDATE_DELTA_MILLIS 2000 // period of which controller can send status to ui and logging and terminal
+#define DISPENSE_STATUS_UPDATE_DELTA_MILLIS 1000 // period of which controller can send status to ui and logging and terminal
 
 #define SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS 3000
 // #define EMPTY_CONTAINER_DETECTION_FLOW_THRESHOLD_ML_PER_S 15 // reference: at 2l/min we have 33ml/s

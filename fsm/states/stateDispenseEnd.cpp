@@ -307,7 +307,6 @@ size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
 //     std::string product = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->m_name;
 //     // std::string machine_id = getMachineID();
 //     std::string machine_id = g_machine.getMachineId();
-//     // std::string portal_base_url = g_machine.getPortalBaseUrl();
 //     // std::string pid = getProductID(m_slot);
 //     std::string pid = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->m_product_id_combined_with_location_for_backend;
 //     // std::string units = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getDisplayUnits();
@@ -321,7 +320,7 @@ size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
 //     double volume_remaining_converted;
 //     std::string dispensed_volume_units_converted;
 //     double dispensed_volume = ceil(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed());
-//     if (dispensed_volume <= g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getVolumePerTick())
+//     if (dispensed_volume <= g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getVolumePerTick(false))
 //     {
 //         dispensed_volume_units_converted = "0";
 //     }
@@ -540,7 +539,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     double updated_volume_dispensed_since_restock;
     double updated_volume_dispensed_total_ever;
 
-    if (dispensed_volume <= g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getVolumePerTick())
+    if (dispensed_volume <= g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getVolumePerTick(false))
     {
         dispensed_volume = 0;
     }

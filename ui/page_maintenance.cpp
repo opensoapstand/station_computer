@@ -176,7 +176,7 @@ void page_maintenance::showEvent(QShowEvent *event)
         }
         labels_product_status[slot_index]->setText(status_display_text);
 
-        if(!p_page_idle->thisMachine->isSlotExisting(slot_index)){
+        if(!p_page_idle->thisMachine->isSlotExisting(slot_index +1)){
             labels_product_name[slot_index]->hide();
             labels_product_status[slot_index]->hide();
             pushButtons_products[slot_index]->hide();

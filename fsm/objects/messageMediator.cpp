@@ -578,11 +578,11 @@ DF_ERROR messageMediator::parseCommandString()
       std::size_t found3 = sCommand.find(delimiter, found2 + 1);
       std::size_t found4 = sCommand.find(delimiter, found3 + 1);
 
-      debugOutput::sendMessage(to_string(found0), MSG_INFO);
-      debugOutput::sendMessage(to_string(found1), MSG_INFO);
-      debugOutput::sendMessage(to_string(found2), MSG_INFO);
-      debugOutput::sendMessage(to_string(found3), MSG_INFO);
-      debugOutput::sendMessage(to_string(found4), MSG_INFO);
+      // debugOutput::sendMessage(to_string(found0), MSG_INFO);
+      // debugOutput::sendMessage(to_string(found1), MSG_INFO);
+      // debugOutput::sendMessage(to_string(found2), MSG_INFO);
+      // debugOutput::sendMessage(to_string(found3), MSG_INFO);
+      // debugOutput::sendMessage(to_string(found4), MSG_INFO);
 
       std::string dispenseCommand = sCommand.substr(found0 + 1, found1 - found0 - 1);
       debugOutput::sendMessage("Dispense command: " + dispenseCommand, MSG_INFO);
@@ -616,9 +616,9 @@ DF_ERROR messageMediator::parseCommandString()
       std::size_t found1 = sCommand.find(delimiter, found0 + 1);
       std::size_t found2 = sCommand.find(delimiter, found1 + 1);
 
-      debugOutput::sendMessage(to_string(found0), MSG_INFO);
-      debugOutput::sendMessage(to_string(found1), MSG_INFO);
-      debugOutput::sendMessage(to_string(found2), MSG_INFO);
+      // debugOutput::sendMessage(to_string(found0), MSG_INFO);
+      // debugOutput::sendMessage(to_string(found1), MSG_INFO);
+      // debugOutput::sendMessage(to_string(found2), MSG_INFO);
 
       std::string dispenseCommand = sCommand.substr(found0 + 1, found1 - found0 - 1);
       debugOutput::sendMessage("Dispense command: " + dispenseCommand, MSG_INFO);

@@ -176,15 +176,18 @@ void page_product_overview::showEvent(QShowEvent *event)
         ui->label_invoice_bottle_price->show();
 
         QString productName = p_page_idle->thisMachine->getSelectedBottle()->getProductName();
-        QString volume;
-        QString unit = p_page_idle->thisMachine->getSizeUnit();
-        if(unit == "oz"){
-            volume = p_page_idle->thisMachine->getSelectedBottle()->getSizeAsVolumeWithCorrectUnits(1, true, true);
-        }else{
-            volume = QString::number(p_page_idle->thisMachine->getSelectedBottle()->getVolumeOfSelectedBottle()) + unit;
-        }
-        ui->label_invoice_bottle->setText(productName + " " + volume);
-        
+        ////////////// for displaying multiple bottle product with bottle size /////////////////////////
+        // QString volume;
+        // QString unit = p_page_idle->thisMachine->getSizeUnit();
+        // if(unit == "oz"){
+        //     volume = p_page_idle->thisMachine->getSelectedBottle()->getSizeAsVolumeWithCorrectUnits(1, true, true);
+        // }else{
+        //     volume = QString::number(p_page_idle->thisMachine->getSelectedBottle()->getVolumeOfSelectedBottle()) + unit;
+        // }
+        // ui->label_invoice_bottle->setText(productName + " " + volume);
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        // only display selected bottle name and not the bottle size
+        ui->label_invoice_bottle->setText(productName);
         ui->label_invoice_bottle_price->setText("$" + QString::number(p_page_idle->thisMachine->getSelectedBottle()->getPriceOfSelectedBottle(), 'f', 2));
     }
 

@@ -7,8 +7,6 @@
 #include <bitset>
 #include <string>
 #include <iomanip>
-#warning "====================================lfdlidflidjflode"
-#warning LINUX_VERSION_CODE
 
 #define IO_PIN_ENABLE_3point3V_BEFORE_SYSFS_DEPRECATED 389 // connector pin 28 for EN258 pcb
 #define IO_PIN_ENABLE_5V_BEFORE_SYSFS_DEPRECATED 338       // connector pin 12 for EN258 pcb

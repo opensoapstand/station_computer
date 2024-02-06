@@ -1752,7 +1752,7 @@ void dispenser::updateDispenseStatus()
 }
 
 void dispenser::setMixProductsDispenseInfo(std::string pNumber, double volumeDispensed){
-    m_dispenseInfoMixProducts.insert({pNumber,volumeDispensed});
+    m_dispenseInfoMixProducts.insert({"P-" + pNumber,volumeDispensed});
 }
 
 std::map<std::string, double> dispenser::getMixProductsDispenseInfo(){
@@ -1761,4 +1761,8 @@ std::map<std::string, double> dispenser::getMixProductsDispenseInfo(){
     }
     
     return m_dispenseInfoMixProducts;
+}
+
+void dispenser::resetMixProductsDispenseInfo(){
+    m_dispenseInfoMixProducts = {};
 }

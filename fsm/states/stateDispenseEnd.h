@@ -72,7 +72,7 @@ private:
     
     // std::string getMachineID();
     std::string getProductID(int slot);
-
+    std::string mapToString(const std::map<std::string, double>& dictionary);
     double getFinalPrice();
 
     DF_ERROR handleTransactionPayment();

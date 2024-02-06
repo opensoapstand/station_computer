@@ -106,6 +106,7 @@ public:
 
       void setMixProductsDispenseInfo(std::string pNumber, double volumeDispensed);
       std::map<std::string, double> getMixProductsDispenseInfo();
+      void resetMixProductsDispenseInfo();
 
 #ifdef INTERRUPT_DRIVE_FLOW_SENSOR_TICKS
       DF_ERROR initGlobalFlowsensorIO(int pinint);

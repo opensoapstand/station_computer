@@ -156,7 +156,8 @@ QByteArray DfUiCommThread::readyRead()
         double button_press_duration = dataObjectList[6].toDouble();
         double button_press_count = dataObjectList[8].toDouble();
         double volume_dispensed = dataObjectList[10].toDouble();
-        emit finalTransactionMessageSignal(start_time, end_time,button_press_duration, button_press_count,volume_dispensed);
+        QString volumeDispensedMixProduct = dataObjectList[12];
+        emit finalTransactionMessageSignal(start_time, end_time,button_press_duration, button_press_count,volume_dispensed,volumeDispensedMixProduct);
     }
     else
     {
@@ -172,3 +173,4 @@ void DfUiCommThread::disconnected()
     socket->deleteLater();
     exit(0);
 }
+

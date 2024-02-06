@@ -812,15 +812,28 @@ void stateDispenseEnd::setup_and_print_receipt()
 // }
 
 void stateDispenseEnd:: sendEndTransactionMessageToUI(){
-    g_machine.m_productDispensers[m_slot_index].getMixProductsDispenseInfo();
     std::string start_time = g_machine.m_productDispensers[m_slot_index].getSelectedProductDispenseStartTime();
     std::string end_time = g_machine.m_productDispensers[m_slot_index].getSelectedProductDispenseEndTime();
     std::string button_press_duration = to_string(g_machine.m_productDispensers[m_slot_index].getButtonPressedTotalMillis());
     std::string button_press_count = to_string(g_machine.m_productDispensers[m_slot_index].getDispenseButtonPressesDuringDispensing());
     std::string volume_dispensed =to_string(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed());
-    
+    std::string pNumber_dispense_info_string = mapToString(g_machine.m_productDispensers[m_slot_index].getMixProductsDispenseInfo());
+
+    g_machine.m_productDispensers[m_slot_index].resetMixProductsDispenseInfo();
     std::string message = "finalTransactionMessage|start_time|" + start_time+"|end_time|" + end_time+"|button_press_duration|"+button_press_duration \
-                            + "|button_press_count|" + button_press_count+ "|volume_dispensed|" + volume_dispensed;
+                            + "|button_press_count|" + button_press_count+ "|volume_dispensed|" + volume_dispensed+"|pNumber_dispense_info|" + pNumber_dispense_info_string;
     usleep(100000); // send message delay
     m_pMessaging->sendMessageOverIP(message, true); // send to UI
+}
+
+std::string stateDispenseEnd::mapToString(const std::map<std::string, double>& dictionary) {
+    std::stringstream ss;
+    for (const auto& entry : dictionary) {
+        ss << entry.first << ":" << to_string(entry.second) << ",";
+    }
+    std::string result = ss.str();
+    if (!result.empty()) {
+        result.pop_back();
+    }
+    return result;
 }

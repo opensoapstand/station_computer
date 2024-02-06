@@ -137,7 +137,9 @@ DF_ERROR stateDispense::onAction()
       debugOutput::sendMessage("Stop dispensing (stop command received)", MSG_INFO);
       m_state_requested = STATE_DISPENSE_END;
       g_machine.m_productDispensers[slot_index].finishActivePNumberDispense();
-
+      std::string activePNumber = to_string(g_machine.m_productDispensers[slot_index].getActivePNumber());
+      double activeProductVolumeDispensed = g_machine.m_productDispensers[slot_index].getActiveProductVolumeDispensed();
+      g_machine.m_productDispensers[slot_index].setMixProductsDispenseInfo(activePNumber, activeProductVolumeDispensed);
       return e_ret = OK;
    }
 

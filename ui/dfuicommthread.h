@@ -26,7 +26,7 @@ signals:
     void noFlowAbortSignal(void);
     void updateVolumeSignal(double dispensed);
     void updateFinalVolumeDispensedSignal(double dispensed);
-    void finalTransactionMessageSignal(QString start_time, QString end_time, double button_press_duration, double button_press_count, double volume_dispensed);
+    void finalTransactionMessageSignal(QString start_time, QString end_time, double button_press_duration, double button_press_count, double volume_dispensed, QString volumeDispensedMixProduct);
     void dispenseRateSignal(double flowrate);
     void dispenseStatusSignal(QString status);
     void printerStatusSignal(bool isOnline, bool hasPaper);

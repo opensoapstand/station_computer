@@ -105,13 +105,14 @@ void page_end::fsmReceiveFinalDispensedVolume(double dispensed)
     updateDispensedVolumeLabel();    
 }
 
-void page_end::fsmReceiveFinalTransactionMessage(QString start_time, QString end_time, double button_press_duration, double button_press_count, double volume_dispensed)
+void page_end::fsmReceiveFinalTransactionMessage(QString start_time, QString end_time, double button_press_duration, double button_press_count, double volume_dispensed,QString volumeDispensedMixProduct)
 {
     p_page_idle->thisMachine->getSelectedSlot()->setDispenseStartTime(start_time);
     p_page_idle->thisMachine->getSelectedSlot()->setDispenseEndTime(end_time);
     p_page_idle->thisMachine->getSelectedSlot()->setButtonPressDuration(button_press_duration);
     p_page_idle->thisMachine->getSelectedSlot()->setButtonPressCount(button_press_count);
     p_page_idle->thisMachine->getSelectedProduct()->setVolumeDispensedMl(volume_dispensed);
+    p_page_idle->thisMachine->getSelectedProduct()->setVolumeDispensedMixedProduct(volumeDispensedMixProduct);    
     waitToFinishTransactionInFsm();
 }
 
@@ -154,7 +155,8 @@ void page_end::sendDispenseEndToCloud()
     QString soapstand_product_serial = p_page_idle->thisMachine->getSelectedProduct()->getPNumberAsPString();
     QString portal_base_url = this->p_page_idle->thisMachine->getPortalBaseUrl();
     QString promoCode = this->p_page_idle->thisMachine->getCouponCode();
-    qDebug() << "Send data at finish of order : " << order_id << ". Total dispensed: " << dispensed_correct_units << "corrected units send to soapstandportal: " << dispensed_correct_units;
+    QString volume_dispensed_mix_product = this->p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMixedProduct();
+    qDebug() << "Send data at finish of order : " << order_id << ". Total dispensed: " << dispensed_correct_units << "corrected units send to soapstandportal: " << dispensed_correct_units+ "&mixProductInfo=" + volume_dispensed_mix_product;
     if (dispensed_correct_units == 0)
     {
         p_page_idle->thisMachine->addToTransactionLogging("\n ERROR: No Volume dispensed");
@@ -223,6 +225,7 @@ void page_end::sendCompleteOrderToCloud(QString paymentMethod)
     QString endTime = this->p_page_idle->thisMachine->getSelectedSlot()->getDispenseEndTime();
     QString button_press_duration = QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getButtonPressDuration());
     QString button_press_count = QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getButtonPressCount());
+    QString volume_dispensed_mix_product = this->p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMixedProduct();
     // if (dispensed_correct_units == 0)
     // {
     //     p_page_idle->thisMachine->addToTransactionLogging("\n ERROR: No Volume dispensed");
@@ -233,7 +236,7 @@ void page_end::sendCompleteOrderToCloud(QString paymentMethod)
                  "&end_time=" + endTime + "&MachineSerialNumber=" + MachineSerialNumber + "&paymentMethod="+paymentMethod+"&volume_remaining_ml=" + 
                  volume_remaining + "&quantity_dispensed_ml=" + dispensed_correct_units +
                  "&volume_remaining=" + volume_remaining + "&coupon=" + promoCode +"&buttonDuration=" + button_press_duration + 
-                 "&buttonTimes=" + button_press_count + "&pnumber=" + soapstand_product_serial;
+                 "&buttonTimes=" + button_press_count + "&pnumber=" + soapstand_product_serial + "&mixProductInfo=" + volume_dispensed_mix_product;
                  
     qDebug() << "Curl params" << curl_param << endl;
     curl_param_array = curl_param.toLocal8Bit();

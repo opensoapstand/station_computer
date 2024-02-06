@@ -812,6 +812,7 @@ void stateDispenseEnd::setup_and_print_receipt()
 // }
 
 void stateDispenseEnd:: sendEndTransactionMessageToUI(){
+    g_machine.m_productDispensers[m_slot_index].getMixProductsDispenseInfo();
     std::string start_time = g_machine.m_productDispensers[m_slot_index].getSelectedProductDispenseStartTime();
     std::string end_time = g_machine.m_productDispensers[m_slot_index].getSelectedProductDispenseEndTime();
     std::string button_press_duration = to_string(g_machine.m_productDispensers[m_slot_index].getButtonPressedTotalMillis());

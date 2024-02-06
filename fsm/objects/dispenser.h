@@ -22,6 +22,7 @@
 // #include "machine.h"
 #include "product.h"
 #include <sqlite3.h>
+#include <map>
 
 // #include <stdint.h>
 // Total Number of Devices
@@ -102,6 +103,10 @@ public:
       // DF_ERROR initButtonsShutdownAndMaintenance();
       DF_ERROR setSlot(int slot);
       int getSlot();
+
+      void setMixProductsDispenseInfo(std::string pNumber, double volumeDispensed);
+      std::map<std::string, double> getMixProductsDispenseInfo();
+
 #ifdef INTERRUPT_DRIVE_FLOW_SENSOR_TICKS
       DF_ERROR initGlobalFlowsensorIO(int pinint);
 #endif
@@ -271,6 +276,8 @@ private:
       int rc;
 
       gpio *m_pFlowsensor;
+      std::map<std::string, double> m_dispenseInfoMixProducts = {};
+
 
       // gpio *m_pButtonPowerOff[1];
       // gpio *m_pButtonDisplayMaintenanceMode[1];

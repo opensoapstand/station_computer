@@ -28,6 +28,7 @@
 
 using json = nlohmann::json;
 #define TEXTBOX_INVITE_TEXT "Touch this field to input a text message"
+#define TEXTBOX_EMAIL_TEXT "Touch this field to input your email"
 // CTOR
 page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
                                                         ui(new Ui::page_sendFeedback)
@@ -52,7 +53,6 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
     ui->checkBox_3->setIconSize(size);
     ui->checkBox_4->setIconSize(size);
     ui->checkBox_5->setIconSize(size);
-
     statusbarLayout = new QVBoxLayout(this);
 }
 
@@ -104,13 +104,6 @@ void page_sendFeedback::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_thanks_for_feedback);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_send);
 
-    if(p_page_idle->thisMachine->hasMixing()){
-        p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_SEND_FEEDBACK_BACKGROUND_PATH);
-    }else{
-        // same background image as page_select_product
-        p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
-    }
-
     QString full_path = p_page_idle->thisMachine->getTemplatePathFromName(IMAGE_BUTTON_HELP);
     p_page_idle->thisMachine->addPictureToLabel(ui->label_help, full_path);
 
@@ -118,7 +111,33 @@ void page_sendFeedback::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->addPictureToLabel(ui->label_thank_you_image, full_path);
     
     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_FEEDBACK_CSS);
+    if(p_page_idle->thisMachine->hasMixing()){
+        p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_SEND_FEEDBACK_BACKGROUND_PATH);
+        p_page_idle->thisMachine->setTemplateTextToObject(ui->label_feedback_title);
+        p_page_idle->thisMachine->setTemplateTextToObject(ui->label_enter_email);
+        ui->textEdit_enter_email->setPlaceholderText(TEXTBOX_EMAIL_TEXT);
+        QString checkbox_unchecked_path = p_page_idle->thisMachine->getTemplatePathFromName(CHECKBOX_UNCHECKED_PATH);
+        QString checkbox_checked_path = p_page_idle->thisMachine->getTemplatePathFromName(CHECKBOX_CHECKED_PATH);
+        styleSheet = styleSheet.arg(checkbox_checked_path).arg(checkbox_unchecked_path);
+        ui->checkBox_1->setStyleSheet(styleSheet);
+        ui->checkBox_2->setStyleSheet(styleSheet);
+        ui->checkBox_3->setStyleSheet(styleSheet);
+        ui->checkBox_4->setStyleSheet(styleSheet);
+        ui->checkBox_5->setStyleSheet(styleSheet);
+        ui->label_enter_email->setStyleSheet(styleSheet);
+        ui->textEdit_enter_email->setStyleSheet(styleSheet);
+        ui->pushButton_enter_email->setProperty("class", "buttonTransparent");
+        ui->pushButton_enter_email->setStyleSheet(styleSheet);
+    }else{
+        // same background image as page_select_product
+        p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
+        ui->label_feedback_title->hide();
+        ui->label_enter_email->hide();
+        ui->textEdit_enter_email->hide();
+        ui->pushButton_enter_email->hide();
+    }
 
+    ui->label_feedback_title->setStyleSheet(styleSheet);
     ui->pushButton_send->setStyleSheet(styleSheet);
     ui->pushButton_start_input->setProperty("class", "buttonTransparent");
     ui->pushButton_start_input->setStyleSheet(styleSheet);

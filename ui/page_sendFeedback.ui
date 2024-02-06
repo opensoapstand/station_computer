@@ -1753,8 +1753,56 @@ font: 11pt &quot;Montserrat&quot;;</string>
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="label_feedback_title">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>400</y>
+     <width>765</width>
+     <height>47</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_enter_email">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>942</y>
+     <width>780</width>
+     <height>47</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="textEdit_enter_email">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>1014</y>
+     <width>780</width>
+     <height>95</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_enter_email">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>1014</y>
+     <width>780</width>
+     <height>95</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
   <zorder>label_thank_you_image</zorder>
-  <zorder>pushButton_send</zorder>
   <zorder>label_problem_options</zorder>
   <zorder>pushButton_to_idle</zorder>
   <zorder>label_select_problem</zorder>
@@ -1777,9 +1825,14 @@ font: 11pt &quot;Montserrat&quot;;</string>
   <zorder>label_help</zorder>
   <zorder>feedbackText</zorder>
   <zorder>textEdit_custom_message</zorder>
-  <zorder>feedbackKeyboard</zorder>
   <zorder>pushButton_help_page</zorder>
   <zorder>pushButton_start_input</zorder>
+  <zorder>label_feedback_title</zorder>
+  <zorder>pushButton_send</zorder>
+  <zorder>feedbackKeyboard</zorder>
+  <zorder>label_enter_email</zorder>
+  <zorder>textEdit_enter_email</zorder>
+  <zorder>pushButton_enter_email</zorder>
  </widget>
  <resources/>
  <connections/>

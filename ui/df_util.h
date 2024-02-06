@@ -132,6 +132,8 @@ using namespace std;
 #define PAGE_TRANSACTIONS_BACKGROUND_PATH               "background_transactions.png"
 
 #define PAGE_SEND_FEEDBACK_BACKGROUND_PATH              "background_sendFeedback.png"
+#define CHECKBOX_UNCHECKED_PATH                         "checkbox_unchecked.png"
+#define CHECKBOX_CHECKED_PATH                           "checkbox_checked.png"
 #define PAGE_PRODUCT_MENU_BACKGROUND_PATH               "background_product_menu.png"
 #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH             "background_product_select.png"
 #define PAGE_PRODUCT_BACKGROUND_PATH                    "background_product_quantity.png"

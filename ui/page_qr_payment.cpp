@@ -263,8 +263,7 @@ bool page_qr_payment::createOrderIdAndSendToBackend()
     {
         shouldShowQR = true;
     }
-    // curl_easy_cleanup(curl1);
-    // readBuffer = "";
+
     feedback = "";
 
     _pageTimeoutCounterSecondsLeft = QR_PAGE_TIMEOUT_SECONDS;
@@ -281,7 +280,6 @@ void page_qr_payment::isQrProcessedCheckOnline()
 
     if (res != CURLE_OK)
     {
-        // string test = std::string(curl_easy_strerror(res));
         qDebug() << "ERROR: cURL fail at page_qr_payment. Error code: " + QString::number(res);
     }
     else
@@ -292,7 +290,6 @@ void page_qr_payment::isQrProcessedCheckOnline()
         if (readBuffer == "true")
         {
             p_page_idle->thisMachine->addToTransactionLogging("\n 4: Order Paid - True");
-            // transactionLogging += "\n 4: Order Paid - True";
             qDebug() << "QR processed. It's time to dispense.";
             proceed_to_dispense();
             state_payment = s_payment_done;
@@ -309,7 +306,6 @@ void page_qr_payment::isQrProcessedCheckOnline()
             if (!p_page_idle->thisMachine->getTransactionLogging().contains("\n 3: QR Scanned - True"))
             {
                 p_page_idle->thisMachine->addToTransactionLogging("\n 3: QR Scanned - True");
-                // transactionLogging += "\n 3: QR Scanned - True";
             }
             qDebug() << "Wait for QR processed. User must have finished transaction to continue.";
             // user scanned qr code and is processing transaction. Delete qr code and make it harder for user to leave page.
@@ -334,7 +330,6 @@ void page_qr_payment::isQrProcessedCheckOnline()
             qDebug() << "ASSERT ERROR: Unknown message from Server";
         }
     }
-    // curl_easy_cleanup(curl);
     readBuffer = "";
 }
 

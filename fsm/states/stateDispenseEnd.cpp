@@ -599,7 +599,13 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     // update product table
     std::string sql2;
     for (const auto& entry : mixProductDispenseObject) {
-        std::string sql2 = "UPDATE products SET volume_remaining=" + std::to_string(entry.second[1]) + " WHERE soapstand_product_serial='" + entry.first + "';";
+        volume_dispensed_total_ever = ceil(g_machine.m_productDispensers[m_slot_index].getProductFromPNumber(std::stoi(entry.first))->getProductVolumeDispensedTotalEver());
+        volume_dispensed_since_restock = ceil(g_machine.m_productDispensers[m_slot_index].getProductFromPNumber(std::stoi(entry.first))->getProductVolumeDispensedSinceLastRestock());
+        updated_volume_dispensed_total_ever_str = to_string(volume_dispensed_total_ever + entry.second[0]);
+        updated_volume_dispensed_since_restock_str = to_string(volume_dispensed_since_restock + entry.second[0]);
+
+        sql2 = ("UPDATE products SET volume_dispensed_total=" + updated_volume_dispensed_total_ever_str + ", volume_remaining=" + std::to_string(entry.second[1]) + ", volume_dispensed_since_restock=" + updated_volume_dispensed_since_restock_str + " WHERE soapstand_product_serial='" + entry.first + "';");
+        // sql2 = "UPDATE products SET volume_remaining=" + std::to_string(entry.second[1]) + " WHERE soapstand_product_serial='" + entry.first + "';";
         databaseUpdateSql(sql2, CONFIG_DB_PATH);
     }
 

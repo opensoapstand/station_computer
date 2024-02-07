@@ -101,7 +101,7 @@ page_product_mixing::page_product_mixing(QWidget *parent) : QWidget(parent),
     orderSizeBackgroundLabels[1] = ui->label_background_medium;
     orderSizeBackgroundLabels[2] = ui->label_background_large;
     orderSizeBackgroundLabels[3] = ui->label_background_custom;
-
+    ui->pushButton_order_sample->hide();
     selectIdleTimer = new QTimer(this);
     selectIdleTimer->setInterval(40);
     connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
@@ -153,8 +153,9 @@ void page_product_mixing::showEvent(QShowEvent *event)
 
     ui->label_product_title->setProperty("class", "title");
     ui->label_product_title->setStyleSheet(styleSheet);
-    ui->label_background_sample->setProperty("class","orderSizeBackgroundLabels");
-    ui->label_background_sample->setStyleSheet(styleSheet);
+
+    // ui->pushButton_order_sample->setProperty("class","sampleBackgroundLabel");
+    // ui->pushButton_order_sample->setStyleSheet(styleSheet);
 
     ui->pushButton_back->setStyleSheet(styleSheet); // pushbutton
     // ui->label_product_description->setStyleSheet(styleSheet);
@@ -191,7 +192,7 @@ void page_product_mixing::showEvent(QShowEvent *event)
         ui->pushButton_recommended->show();
         ui->label_additives_background->setText("");
         ui->label_additives_background->hide();
-        for (int j = 0; j < 5; j++){
+        for (int j = 0; j < ADDITIVES_PER_SLOT_COUNT_MAX; j++){
             if(isAdditiveEnabled(j)){
                 additiveTitles[j]->setProperty("class", "additiveTitles");
                 additiveBackgroundRows[j]->setProperty("class", "additiveBackgroundRows");
@@ -236,7 +237,7 @@ void page_product_mixing::showEvent(QShowEvent *event)
         ui->pushButton_recommended->hide();
         ui->label_additives_background->show();
         p_page_idle->thisMachine->setTemplateTextToObject(ui->label_additives_background);
-        for (uint8_t j = 0; j < 5; j++){
+        for (uint8_t j = 0; j < ADDITIVES_PER_SLOT_COUNT_MAX; j++){
             additiveTitles[j]->hide();
             additiveBackgroundRows[j]->hide();
             additiveMinusButtonBackgrounds[j]->hide();
@@ -278,6 +279,7 @@ void page_product_mixing::reset_and_show_page_elements()
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_product_ingredients_title);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_continue);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_recommended);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_order_sample);
     // ui->label_product_description->setWordWrap(true);
     ui->label_product_ingredients->setWordWrap(true);
     ui->pushButton_continue->hide();
@@ -523,14 +525,11 @@ void page_product_mixing::reset_and_show_page_elements()
     {
         ui->pushButton_continue->hide();
     }
-    if(true)
+    if(p_page_idle->thisMachine->getSelectedProduct()->getSizeEnabled(SIZE_SAMPLE_INDEX))
     {
-        qDebug() << "Sample size";
-
-        qDebug() << p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(SIZE_SAMPLE_INDEX, true, true);
-        ui->label_background_sample->show();     
-        p_page_idle->thisMachine->addCssClassToObject(ui->label_background_sample, "sampleBackgroundLabel", PAGE_PRODUCT_MIXING_CSS);
+        ui->pushButton_order_sample->show();
         ui->pushButton_order_sample->raise();
+        
     }
 
     qDebug() << "-------------------------- END LOAD PRODUCTS ----------------";
@@ -611,7 +610,6 @@ void page_product_mixing::on_pushButton_order_sample_clicked()
 {
     qDebug() << "Button sample clicked";
     p_page_idle->thisMachine->getSelectedProduct()->setSelectedSize(SIZE_SAMPLE_INDEX);
-    qDebug() << p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize();
     hideCurrentPageAndShowProvided(p_page_product_freeSample);
 }
 
@@ -676,7 +674,7 @@ void page_product_mixing::additivePlusButtonsPressed(int index){
 }
 
 void page_product_mixing::on_pushButton_recommended_clicked(){
-    p_page_idle->thisMachine->getSelectedProduct()->setDefaultAdditivesRatioModifier(p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size() - 1);
+    p_page_idle->thisMachine->getSelectedProduct()->resetCustomMixRatioParameters();
     for (int j = 0; j < 5; j++){
         if(isAdditiveEnabled(j)){
             double additivePRatio = p_page_idle->thisMachine->getSelectedProduct()->getAdditivesRatioModifier(j);

@@ -14,6 +14,7 @@
 //***************************************
 
 #include "df_util.h"
+#include "page_buybottle.h"
 #include "page_transactions.h"
 #include "page_help.h"
 #include "page_init.h"
@@ -32,6 +33,7 @@
 #include "page_productFreeSample.h"
 #include "statusbar.h"
 #include "keyboard.h"
+#include "input_widget.h"
 #include "page_email.h"
 
 #include "page_end.h"
@@ -157,10 +159,14 @@ int main(int argc, char *argv[])
     page_error_wifi *p_page_wifi_error = new page_error_wifi();
     qDebug() << "Constructor page_end";
     page_end *p_page_end = new page_end();
+    qDebug() << "Constructor page_how_to";
+    page_how_to *p_page_howTo = new page_how_to();
     qDebug() << "Constructor statusbar";
     statusbar *p_statusbar = new statusbar();
     qDebug() << "Constructor keyboard";
     keyboard *p_keyboard = new keyboard();
+    qDebug() << "Constructor input widget";
+    input_widget *p_input_widget = new input_widget();
     qDebug() << "Constructor page_product_overview";
     page_product_overview *p_page_product_overview = new page_product_overview();
     qDebug() << "Constructor page_product_free_sample";
@@ -175,6 +181,8 @@ int main(int argc, char *argv[])
     page_maintenance_general *p_page_maintenance_general = new page_maintenance_general();
     qDebug() << "Constructor page_email";
     page_email *p_page_email = new page_email();
+    qDebug() << "Constructor page_buyBottle.";
+    page_buyBottle *p_page_buyBottle = new page_buyBottle();
     qDebug() << "All Pages created.";
 
     DbManager db_config;
@@ -199,7 +207,7 @@ int main(int argc, char *argv[])
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_PRODUCT_BACKGROUND_PATH));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_ORDER_OVERVIEW_PATH));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH));
-    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH));
+    // df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_DISPENSE_BACKGROUND_PATH));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_QR_PAY_BACKGROUND_PATH));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_MAINTENANCE_BACKGROUND_PATH));
@@ -209,7 +217,7 @@ int main(int argc, char *argv[])
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_TAP_PAY_FAIL));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_AUTHORIZE_NOW));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_TAP_GENERIC));
-    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_SEND_FEEDBACK_PATH));
+    df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_SEND_FEEDBACK_BACKGROUND_PATH));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_INIT_BACKGROUND_IMAGE_PATH));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(IMAGE_BUTTON_HELP));
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(THANK_YOU_FOR_YOUR_FEEDBACK));
@@ -232,28 +240,30 @@ int main(int argc, char *argv[])
     df_util::warnIfPathDoesNotExist(p_page_idle->thisMachine->getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_DOWN));
 
     // Page pathing references to function calls.
-    p_page_help->setPage(p_page_select_product, p_page_product, p_page_idle, p_page_payment_qr, p_page_transactions, p_page_maintenance, p_page_sendFeedback, p_statusbar);
+    p_page_help->setPage(p_page_select_product, p_page_product, p_page_idle, p_page_payment_qr, p_page_transactions, p_page_maintenance, p_page_sendFeedback, p_page_howTo, p_statusbar, p_keyboard, p_input_widget);
+    p_page_howTo->setPage(p_page_help, p_page_idle, p_page_transactions, p_page_maintenance, p_page_sendFeedback, p_statusbar, p_keyboard, p_input_widget);
     p_page_transactions->setPage(p_page_idle, p_statusbar);
     initPage->setPage(p_page_idle);
     p_page_maintenance_dispenser->setPage(p_page_maintenance, p_page_idle, p_page_idle_products, p_statusbar);
 
     p_page_maintenance_general->setPage(p_page_maintenance, p_page_idle, p_page_idle_products, p_statusbar);
     p_page_maintenance->setPage(p_page_idle, p_page_maintenance_dispenser, p_page_maintenance_general, p_page_select_product, p_page_product, p_statusbar);
-    p_page_idle->setPage(p_page_select_product, p_page_maintenance, p_page_maintenance_general, p_page_idle_products, p_page_wifi_error, p_statusbar, p_page_product_menu, p_keyboard);
+    p_page_idle->setPage(p_page_select_product, p_page_buyBottle, p_page_maintenance, p_page_maintenance_general, p_page_idle_products, p_page_wifi_error, p_statusbar, p_page_product_menu, p_keyboard);
     p_page_idle_products->setPage(p_page_idle, p_page_select_product);
+    p_page_buyBottle->setPage(p_page_idle, p_page_select_product, p_page_help, p_statusbar);
     p_page_product_menu->setPage(p_page_product, p_page_product_mixing, p_page_idle_products, p_page_idle, p_page_maintenance, p_page_help, p_statusbar);
-    p_page_select_product->setPage(p_page_product, p_page_idle_products, p_page_idle, p_page_maintenance, p_page_help, p_statusbar);
+    p_page_select_product->setPage(p_page_product, p_page_buyBottle, p_page_idle_products, p_page_idle, p_page_maintenance, p_page_help, p_statusbar);
     p_page_product->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_help, p_page_product_overview, p_statusbar,p_page_product_menu);
     p_page_product_mixing->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_help, p_page_product_overview, p_statusbar,p_page_product_menu,p_page_product_freeSample);
     p_page_payment_qr->setPage(p_page_product, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help, p_statusbar, p_page_product_mixing);
     p_page_payment_tap_tcp->setPage(p_page_product, p_page_product_mixing, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help, p_statusbar);
     p_page_payment_tap_serial->setPage(p_page_product, p_page_product_mixing, p_page_wifi_error, p_page_dispense, p_page_idle, p_page_help, p_statusbar);
     p_page_email->setPage(p_page_dispense, p_page_idle, p_page_help, p_page_product_overview, p_statusbar);
-
+    p_input_widget->setPage(p_page_idle);
 
     p_page_dispense->setPage(p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_end, p_page_idle, p_page_sendFeedback, p_statusbar);
     p_page_product_overview->setPage(p_page_select_product, p_page_product_mixing, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_help, p_page_product, p_page_email, p_statusbar, p_keyboard);
-    p_page_sendFeedback->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_help, p_page_product, p_page_end, p_statusbar);
+    p_page_sendFeedback->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr, p_page_help, p_page_product, p_page_end, p_statusbar, p_keyboard);
     p_page_end->setPage(p_page_dispense, p_page_idle, p_page_payment_qr, p_page_sendFeedback, p_statusbar);
     p_statusbar->setPage(p_page_idle);
     p_keyboard->setPage(p_page_idle, p_page_product_overview);
@@ -285,7 +295,7 @@ int main(int argc, char *argv[])
     QObject::connect(&dfUiServer, &DfUiServer::targetHit, p_page_maintenance_dispenser, &page_maintenance_dispenser::fsmReceiveTargetVolumeReached);
     QObject::connect(&dfUiServer, &DfUiServer::noFlowAbort, p_page_maintenance_dispenser, &page_maintenance_dispenser::fsmReceiveNoFlowAbort);
     QObject::connect(&dfUiServer, &DfUiServer::temperatureSignal, p_page_maintenance_dispenser, &page_maintenance_dispenser::fsmReceiveTemperature);
-    QObject::connect(&dfUiServer, &DfUiServer::initReady, initPage, &page_init::initReadySlot);
+    QObject::connect(&dfUiServer, &DfUiServer::initReady, initPage, &page_init::controllerReadySlot);
 
     return mainApp.exec();
 }

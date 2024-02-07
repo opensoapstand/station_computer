@@ -153,20 +153,19 @@ void page_dispenser::showEvent(QShowEvent *event)
     this->isDispensing = false;
     askForFeedbackAtEnd = false;
 
-    ui->label_moving_bottle_fill_effect->move(380, 889);
-    ui->pushButton_problems->move(120, 40);
+
 
     previousDispenseStatus = "NO STATE";
 
-    if (p_page_idle->thisMachine->getSlotCount() == 1)
-    {
-        // single spout
+    // if (p_page_idle->thisMachine->getSlotCount() == 1)
+    // {
+    //     // single spout
+    //     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
+    // }
+    // else
+    // {
         p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
-    }
-    else
-    {
-        p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH);
-    }
+    // }
 
     // p_page_idle->thisMachine->addPictureToLabel(ui->label_indicate_active_spout, p_page_idle->thisMachine->getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_DOWN));
 
@@ -193,7 +192,12 @@ void page_dispenser::showEvent(QShowEvent *event)
             x = 880;
             break;
         }
-        ui->label_indicate_active_spout->move(x, ui->label_indicate_active_spout->y());
+        if(p_page_idle->thisMachine->hasMixing()){
+            ui->label_indicate_active_spout->move(x, 1700);
+        }else{
+            ui->label_indicate_active_spout->move(x, 1600);
+            // ui->label_indicate_active_spout->move(x, ui->label_indicate_active_spout->y());
+        }
     }
     else
     {
@@ -219,6 +223,65 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     ui->label_dispense_message->hide();
     ui->pushButton_problems->show();
+
+    if(p_page_idle->thisMachine->hasMixing()){
+        ui->label_moving_bottle_fill_effect->move(296, 663);
+        // not needed
+        ui->label_press->hide();
+        ui->label_product_summary_background->setStyleSheet(styleSheet);
+        ui->label_product_name->setStyleSheet(styleSheet);
+        ui->label_product_selected->setStyleSheet(styleSheet);
+
+        p_page_idle->thisMachine->addPictureToLabel(ui->label_product_icon, p_page_idle->thisMachine->getTemplatePathFromName(PAGE_DISPENSE_PRODUCT_ICON));
+        p_page_idle->thisMachine->addPictureToLabel(ui->label_volume_icon, p_page_idle->thisMachine->getTemplatePathFromName(PAGE_DISPENSE_VOLUME_ICON));
+
+        ui->label_product_name->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductName());
+        QString selected_volume = p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize(), true, true);
+        double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
+        double selectedPriceCorrected;
+        if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize() == SIZE_CUSTOM_INDEX){
+            double discountFraction = p_page_idle->thisMachine->getDiscountPercentageFraction();
+            QString units = p_page_idle->thisMachine->getSizeUnit();
+            if (units == "ml")
+            {
+                units = "100ml";
+                selectedPrice = selectedPrice * 100;
+            }
+            else if (units == "g")
+            {
+                if (p_page_idle->thisMachine->getSelectedProduct()->getVolumeBySize(SIZE_CUSTOM_INDEX) == VOLUME_TO_TREAT_CUSTOM_DISPENSE_AS_PER_100G)
+                {
+                    units = "100g";
+                    selectedPrice = selectedPrice * 100;
+                }
+                else
+                {
+                    units = "kg";
+                    selectedPrice = selectedPrice * 1000;
+                }
+            }
+            else if (units == "oz")
+            {
+                units = "oz";
+                selectedPrice = selectedPrice * OZ_TO_ML;
+            }
+            selectedPriceCorrected = selectedPrice * (1 - discountFraction);
+            QString base = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_selected, "custom_volume");
+            ui->label_product_selected->setText(base.arg(selected_volume)+ "<br>$" + QString::number(selectedPriceCorrected, 'f', 2) + "/" + units);
+        }else{
+            selectedPriceCorrected = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
+            ui->label_product_selected->setText(selected_volume + " ($" + QString::number(selectedPriceCorrected, 'f', 2) + ")");
+        }
+
+    }else{
+        ui->label_moving_bottle_fill_effect->move(380, 889);
+        ui->pushButton_problems->move(120, 40);
+        ui->label_product_summary_background->hide();
+        ui->label_product_icon->hide();
+        ui->label_product_name->hide();
+        ui->label_product_selected->hide();
+        ui->label_volume_icon->hide();
+    }
 
     dispenseIdleTimer->start(1000);
     arrowAnimationStepTimer->start();
@@ -335,14 +398,19 @@ void page_dispenser::dispensing_end_admin()
     {
         this->cancelPayment = true;
     }
-    if(isFreeEmailOrder){
+    if (isFreeEmailOrder)
+    {
         qDebug() << "Free email order";
     }
-    else{
-    switch(paymentMethod){
-        //If payment method is Tap canada
-        case 1:{
-            if(this->cancelPayment){
+    else
+    {
+        switch (paymentMethod)
+        {
+        // If payment method is Tap canada
+        case 1:
+        {
+            if (this->cancelPayment)
+            {
                 ui->label_indicate_active_spout->hide();
                 ui->label_to_refill->hide();
                 p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_finishTransactionMessage, "no_pay");
@@ -361,8 +429,9 @@ void page_dispenser::dispensing_end_admin()
                 tapPaymentObject["status"] = "Voided";
                 p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
             }
-            else{
-                //Successful transaction. Capturing payment
+            else
+            {
+                // Successful transaction. Capturing payment
                 QString base_text = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_finishTransactionMessage, "display_price");
                 ui->label_finishTransactionMessage->setText(base_text.arg(QString::number(current_price, 'f', 2))); // will replace %1 character in string by the provide text
                 p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
@@ -371,10 +440,12 @@ void page_dispenser::dispensing_end_admin()
             }
             break;
         }
-        case 2:{
-            //If active payment method is Tap USA
-            if(this->cancelPayment){
-                //Reversing the payment back to the Tapped card
+        case 2:
+        {
+            // If active payment method is Tap USA
+            if (this->cancelPayment)
+            {
+                // Reversing the payment back to the Tapped card
                 ui->label_indicate_active_spout->hide();
                 ui->label_to_refill->hide();
                 p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_finishTransactionMessage, "no_pay");
@@ -399,7 +470,8 @@ void page_dispenser::dispensing_end_admin()
                 p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
                 finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
             }
-            else{
+            else
+            {
                 QString base_text = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_finishTransactionMessage, "display_price");
                 ui->label_finishTransactionMessage->setText(base_text.arg(QString::number(current_price, 'f', 2))); // will replace %1 character in string by the provide text
                 p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
@@ -423,11 +495,11 @@ void page_dispenser::dispensing_end_admin()
             }
             break;
         }
-        default:{
+        default:
+        {
             break;
         }
-
-    }
+        }
     }
     // else if (this->cancelPayment && (paymentMethod == PAYMENT_TAP_USA || paymentMethod == PAYMENT_TAP_CANADA))
     // {
@@ -531,27 +603,41 @@ void page_dispenser::force_finish_dispensing()
     dispensing_end_admin();
 }
 
-QString page_dispenser::getStartDispensingCommand()
-{
-    // build up command that will be sent to fsm
-    QString command = QString::number(p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
-    command.append(p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar());
-    command.append(SEND_DISPENSE_START);
-    return command;
-}
-
 void page_dispenser::fsmSendStartDispensing()
 {
-    QString dispenseCommand = getStartDispensingCommand();
-    QString priceCommand = QString::number(p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize()));
-    QString promoCommand = p_page_idle->thisMachine->getCouponCode();
+    QString dispenseCommand = QString::number(p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
+    dispenseCommand.append(p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar());
+    dispenseCommand.append(SEND_DISPENSE_START);
+
+    qDebug() << "base price: " << QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize());
+    QString price = QString::number(p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize()));
+    qDebug() << "discounted price: " << price;
+    QString promoCode = p_page_idle->thisMachine->getCouponCode();
 
     QString delimiter = QString("|");
-    QString preamble = "Order";
-    QString command = preamble + delimiter + dispenseCommand + delimiter + priceCommand + delimiter + promoCommand + delimiter;
+    QString preamble = "orderDetails";
+    QString order_command = preamble + delimiter + price + delimiter + promoCode + delimiter;
+    qDebug() << "Send order details to FSM: " << order_command;
+    p_page_idle->thisMachine->dfUtility->send_command_to_FSM(order_command, true);
+    QThread::msleep(50); // Sleep for 50 milliseconds
+    
+    
 
-    qDebug() << "Send start command to FSM: " << command;
+    bool isCustomMix = p_page_idle->thisMachine->getSelectedProduct()->isCustomMix();
+    int pNumberSelectedProduct = p_page_idle->thisMachine->getSelectedProduct()->getPNumber();
+    QString command;
+    if (isCustomMix)
+    {
+        QString pNumbersAsCsvString = this->p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbersAsCsv();
+        QString pNumberRatiosAsCsvString = this->p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosAsCsv();
+        command = "dispenseCustomMix|" + dispenseCommand + "|" + QString::number(pNumberSelectedProduct) + "|" + pNumbersAsCsvString + "|" + pNumberRatiosAsCsvString + "|"; // dipenseMix|slot|dispensePNumber|pnumberscsv|ratioscsv
+    }
+    else
+    {
+        command = "dispensePNumber|" + dispenseCommand + "|" + QString::number(pNumberSelectedProduct) + "|"; // dispensePNumber|slot|dispensePNumber
+    }
     p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
+    
     this->isDispensing = true;
     qDebug() << "Dispensing started.";
 }
@@ -561,10 +647,12 @@ void page_dispenser::fsmSendStopDispensing()
     qDebug() << "Send STOP dispensing to fsm";
     this->isDispensing = false;
 
-    QString command = QString::number(p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
-    command.append(p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar());
-    command.append(SEND_DISPENSE_STOP);
+    // QString command = QString::number(p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
+    // command.append(p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar());
+    // command.append(SEND_DISPENSE_STOP);
+    QString command = "stopDispense";
     p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
+    
 }
 
 void page_dispenser::onArrowAnimationStepTimerTick()
@@ -696,10 +784,32 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
             percentage = 100;
         }
 
-        this->ui->label_moving_bottle_fill_effect->move(380, 900 - 3 * percentage);
         // ui->pushButton_problems->move(120, 450);
         // transition from instructions to dispensing at first receival of volume.
         ui->label_background_during_dispense_animation->show();
+        if(p_page_idle->thisMachine->hasMixing() && ui->label_background_during_dispense_animation->isVisible()){
+            this->ui->label_moving_bottle_fill_effect->move(296, 663 - 4.93 * percentage);
+            ui->label_product_summary_background->move(316, 1280);
+            ui->label_product_name->move(377, 1307);
+            ui->label_product_selected->move(377, 1356);
+            ui->label_product_icon->move(337, 1316);
+            ui->label_volume_dispensed->move(377, 1461);
+            ui->label_volume_dispensed_ml->move(377, 1506);
+            ui->label_volume_icon->move(337, 1470);
+            ui->pushButton_abort->move(193, 1720);
+            ui->pushButton_problems->move(565, 1720);
+
+            ui->label_product_summary_background->raise();
+            ui->label_product_name->raise();
+            ui->label_product_selected->raise();
+            ui->label_product_icon->raise();
+            ui->label_volume_dispensed->raise();
+            ui->label_volume_dispensed_ml->raise();
+            ui->label_volume_icon->raise();
+        }else{
+            this->ui->label_moving_bottle_fill_effect->move(380, 900 - 3 * percentage);
+        }
+
         ui->label_press->hide();
         ui->label_to_refill->hide();
         ui->label_instructions_container->hide();
@@ -729,9 +839,10 @@ void page_dispenser::fsmReceiveTargetVolumeReached()
     {
         qDebug() << "Target reached from controller.";
         this->isDispensing = false;
-        updateVolumeDisplayed(p_page_idle->thisMachine->getSelectedProduct()->getVolumeOfSelectedSize(), true); // make sure the fill bottle graphics are completed
+
+        // The idea is to show the target number, but Lode believes it should show the real number dispensed.
+        //updateVolumeDisplayed(p_page_idle->thisMachine->getSelectedProduct()->getVolumeOfSelectedSize(), true); // make sure the fill bottle graphics are completed
         p_page_idle->thisMachine->addToTransactionLogging("\n 8: Target Reached - True");
-        // transactionLogging += "\n 8: Target Reached - True";
         dispensing_end_admin();
     }
     else
@@ -768,7 +879,7 @@ void page_dispenser::on_cancelButton_clicked()
 void page_dispenser::on_pushButton_debug_Button_clicked()
 {
     qDebug() << "WARNING: ========= Debug button pressed. Fake dispensing of 100ml ==============";
-    updateVolumeDisplayed(300.0, false); // make sure the fill bottle graphics are completed
+    updateVolumeDisplayed(750.0, false); // make sure the fill bottle graphics are completed
 }
 
 void page_dispenser::on_pushButton_abort_clicked()
@@ -780,20 +891,23 @@ void page_dispenser::on_pushButton_abort_clicked()
     {
         msgBox_abort = new QMessageBox();
         msgBox_abort->setObjectName("msgBox_abort");
-        msgBox_abort->setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
-        switch(paymentMethod){
-            case 0:
-            case 1:
-            case 2:{
-                QString searchString = this->objectName() + "->" + msgBox_abort->objectName() + "->" + "qr_tap";
-                p_page_idle->thisMachine->setTextToObject(msgBox_abort, p_page_idle->thisMachine->getTemplateText(searchString));
-                break;
-            }
-            default:{
-                QString searchString = this->objectName() + "->" + msgBox_abort->objectName() + "->" + "default";
-                p_page_idle->thisMachine->setTextToObject(msgBox_abort, p_page_idle->thisMachine->getTemplateText(searchString));
-                break;
-            }
+        msgBox_abort->setWindowFlags(Qt::FramelessWindowHint| Qt::Dialog); // do not show messagebox header with program name
+        switch (paymentMethod)
+        {
+        case 0:
+        case 1:
+        case 2:
+        {
+            QString searchString = this->objectName() + "->" + msgBox_abort->objectName() + "->" + "qr_tap";
+            p_page_idle->thisMachine->setTextToObject(msgBox_abort, p_page_idle->thisMachine->getTemplateText(searchString));
+            break;
+        }
+        default:
+        {
+            QString searchString = this->objectName() + "->" + msgBox_abort->objectName() + "->" + "default";
+            p_page_idle->thisMachine->setTextToObject(msgBox_abort, p_page_idle->thisMachine->getTemplateText(searchString));
+            break;
+        }
         }
         // if (paymentMethod == PAYMENT_QR || paymentMethod == PAYMENT_TAP_USA || paymentMethod == PAYMENT_TAP_CANADA)
         // {
@@ -821,8 +935,7 @@ void page_dispenser::on_pushButton_abort_clicked()
                     msgBox_abort->deleteLater();
                     msgBox_abort = nullptr;
                 }
-                qDebug() << "msgBox_abort timed out. "; 
-                });
+                qDebug() << "msgBox_abort timed out. "; });
         timeoutTimer->start(MESSAGE_BOX_TIMEOUT_DEFAULT_MILLIS); // Set the timeout duration in milliseconds (5000 = 5 seconds)
 
         int ret = msgBox_abort->exec();
@@ -852,7 +965,7 @@ void page_dispenser::on_pushButton_problems_clicked()
     qDebug() << "Clicked on msgBox_problems  ";
     msgBox_problems = new QMessageBox();
     msgBox_problems->setObjectName("msgBox_problems");
-    msgBox_problems->setWindowFlags(Qt::FramelessWindowHint); // do not show messagebox header with program name
+    msgBox_problems->setWindowFlags(Qt::FramelessWindowHint| Qt::Dialog); // do not show messagebox header with program name
 
     QString client_id = p_page_idle->thisMachine->getClientId();
     if (client_id == "C-1") // good-filling
@@ -860,21 +973,23 @@ void page_dispenser::on_pushButton_problems_clicked()
         QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "shopify";
         p_page_idle->thisMachine->setTextToObject(msgBox_problems, p_page_idle->thisMachine->getTemplateText(searchString));
     }
-    switch(paymentMethod)
+    switch (paymentMethod)
     {
-        case 0:
-        case 1:
-        case 2:{
-            QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "qr_tap";
-            p_page_idle->thisMachine->setTextToObject(msgBox_problems, p_page_idle->thisMachine->getTemplateText(searchString));
-            break;
-        }
-        default:{
-            QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "default";
-            p_page_idle->thisMachine->setTextToObject(msgBox_problems, p_page_idle->thisMachine->getTemplateText(searchString));
-            break;
-        }
-        }
+    case 0:
+    case 1:
+    case 2:
+    {
+        QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "qr_tap";
+        p_page_idle->thisMachine->setTextToObject(msgBox_problems, p_page_idle->thisMachine->getTemplateText(searchString));
+        break;
+    }
+    default:
+    {
+        QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "default";
+        p_page_idle->thisMachine->setTextToObject(msgBox_problems, p_page_idle->thisMachine->getTemplateText(searchString));
+        break;
+    }
+    }
     // else if (paymentMethod == "qr" || paymentMethod == PAYMENT_TAP_USA || paymentMethod == PAYMENT_TAP_CANADA)
     // {
     //     QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "qr_tap";
@@ -934,6 +1049,7 @@ void page_dispenser::on_pushButton_problems_clicked()
         // send repair command
         qDebug() << "Send repair command to fsm";
         p_page_idle->thisMachine->dfUtility->send_command_to_FSM(SEND_REPAIR_PCA, true);
+        
         break;
     }
     default:

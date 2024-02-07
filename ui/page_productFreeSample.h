@@ -72,6 +72,7 @@ public:
 
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
+    QString additivies_overview(QString product_additives_overview);
 
     void cancelTimers();
     void apply_promo_code(QString promocode);
@@ -82,7 +83,6 @@ signals:
 
 private slots:
     // **** Navigation ****
-    void on_pushButton_previous_page_clicked();
     void on_pushButton_continue();
 
     void on_lineEdit_promo_codeInput_clicked();
@@ -91,7 +91,7 @@ private slots:
     void on_pushButton_to_help_clicked();
 
     void onSelectTimeoutTick();
-    void keyboardButtonPressed(int);
+    // void keyboardButtonPressed(int);
 
 private:
 
@@ -100,6 +100,7 @@ private:
     int product_sizes[4] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX};
     bool stopSelectTimers();
     void reset_and_show_page_elements();
+    void enterButtonPressed();
     void selectOnTick();
     void paintSampleQR(QPainter &painter, const QSize sz, const QString &data, QColor fg);
     void setup_qr_code();
@@ -123,7 +124,6 @@ private:
     QShowEvent *dispenseEvent;
     QShowEvent *wifiErrorEvent;
     QVBoxLayout *statusbarLayout;
-    QVBoxLayout *keyboardLayout;
 };
 
 #endif // PAYSELECT_H

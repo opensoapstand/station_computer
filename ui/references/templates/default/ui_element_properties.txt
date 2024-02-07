@@ -21,7 +21,22 @@
 # page_select_product->label_product_1_type,{"x":53, "y":814, "width":450, "height":46,"isVisibleAtLoad":true}
 # page_select_product->label_product_2_type,{"x":562, "y":814, "width":450, "height":46,"isVisibleAtLoad":false}
 
+page_dispenser->label_background_during_dispense_animation,{"x": 0, "y": 0, "width": 1080, "height": 1920}
+page_dispenser->label_dispense_flowrate,{"x": 650, "y": 280, "width": 411, "height": 51}
+page_dispenser->label_dispense_message,{"x": 0, "y": 1710, "width": 1051, "height": 191}
+page_dispenser->label_dispense_status,{"x": 660, "y": 410, "width": 391, "height": 51}
+page_dispenser->label_finishTransactionMessage,{"x": 240, "y": 600, "width": 600, "height": 300}
 page_dispenser->label_indicate_active_spout,{"x":900,"y":350,"isVisibleAtLoad":true}
+page_dispenser->label_instructions_container,{"x": 0, "y": 280, "width": 1080, "height": 91}
+page_dispenser->label_logo,{"x": 600, "y": 180, "width": 151, "height": 131}
+page_dispenser->label_moving_bottle_fill_effect,{"x": 0, "y": 400, "width": 304, "height": 671}
+page_dispenser->label_press,{"x": 0, "y": 1180, "width": 1080, "height": 161}
+page_dispenser->label_to_refill,{"x": 0, "y": 140, "width": 1080, "height": 151}
+page_dispenser->label_volume_dispensed,{"x": 240, "y": 1530, "width": 600, "height": 71}
+page_dispenser->label_volume_dispensed_ml,{"x": 240, "y": 1620, "width": 600, "height": 71}
+page_dispenser->pushButton_abort,{"x": 340, "y": 1380, "width": 400, "height": 101}
+page_dispenser->pushButton_debug_Button,{"x": 1000, "y": 240, "width": 81, "height": 71}
+page_dispenser->pushButton_problems,{"x": 120, "y": 40, "width": 840, "height": 71}
 
 page_select_product->label_help,{"x": 478, "y": 1773, "width": 125, "height": 125}
 page_select_product->pushButton_help_page,{"x": 460, "y": 1760, "width": 161, "height": 141}
@@ -51,7 +66,6 @@ page_product_overview->pushButton_previous_page,{"x": 70, "y": 1757, "width": 28
 page_product_overview->pushButton_promo_input,{"x": 90, "y": 770, "width": 891, "height": 46}
 page_product_overview->pushButton_select_product_page,{"x": 70, "y": 40, "width": 401, "height": 41}
 page_product_overview->pushButton_to_help,{"x": 446, "y": 1727, "width": 211, "height": 191}
-page_product_overview->promoKeyboard,{"x": 120, "y": 830, "width": 841, "height": 320}
 
 page_product_overview->a,{"x": 53, "y": 161, "width": 62, "height": 62}
 page_product_overview->b,{"x": 403, "y": 234, "width": 62, "height": 62}
@@ -108,26 +122,50 @@ page_payment_tap_serial->animated_Label,{"x": 221, "y": 327, "width": 639, "heig
 page_payment_tap_tcp->pushButton_to_idle,{"x": 460, "y": 1760, "width": 161, "height": 141}
 page_payment_tap_tcp->animated_Label,{"x": 221, "y": 327, "width": 639, "height": 639}
 
-page_product_freeSample->label_discount_tag,{"x": 130, "y": 1175, "width": 185, "height": 34}
-page_product_freeSample->label_gif,{"x": 440, "y": 960, "width": 200, "height": 200}
-page_product_freeSample->label_help,{"x": 478, "y": 1773, "width": 125, "height": 125}
-page_product_freeSample->label_invoice_box,{"x": 94, "y": 890, "width": 891, "height": 760}
-page_product_freeSample->label_invoice_discount_amount,{"x": 709, "y": 1160, "width": 251, "height": 80}
-page_product_freeSample->label_invoice_discount_name,{"x": 120, "y": 1400, "width": 641, "height": 41}
-page_product_freeSample->label_invoice_name,{"x": 130, "y": 993, "width": 581, "height": 91}
-page_product_freeSample->label_invoice_price,{"x": 709, "y": 993, "width": 251, "height": 80}
-page_product_freeSample->label_invoice_price_total,{"x": 659, "y": 1340, "width": 301, "height": 44}
-page_product_freeSample->label_product_photo,{"x": 94, "y": 256, "width": 445, "height": 450}
-page_product_freeSample->label_selected_price,{"x": 668, "y": 830, "width": 317, "height": 55}
-page_product_freeSample->label_selected_volume,{"x": 538, "y": 256, "width": 445, "height": 450}
-page_product_freeSample->label_total,{"x": 130, "y": 1340, "width": 641, "height": 44}
-page_product_freeSample->lineEdit_promo_code,{"x": 94, "y": 775, "width": 891, "height": 46}
-page_product_freeSample->line_invoice,{"x": 137, "y": 1280, "width": 821, "height": 5}
-page_product_freeSample->promoKeyboard,{"x": 120, "y": 830, "width": 841, "height": 320}
-page_product_freeSample->pushButton_continue,{"x": 188, "y": 1541, "width": 360, "height": 92}
-page_product_freeSample->pushButton_continue_additional,{"x": 568, "y": 1541, "width": 360, "height": 92}
-page_product_freeSample->pushButton_previous_page,{"x": 70, "y": 1757, "width": 281, "height": 100}
-page_product_freeSample->pushButton_promo_input,{"x": 90, "y": 770, "width": 891, "height": 46}
-page_product_freeSample->pushButton_select_product_page,{"x": 70, "y": 40, "width": 401, "height": 41}
-page_product_freeSample->pushButton_to_help,{"x": 446, "y": 1727, "width": 211, "height": 191}
-page_product_freeSample->promoKeyboard,{"x": 120, "y": 830, "width": 841, "height": 320}
+page_help->html_help_text,{"x": 100, "y": 270, "width": 891, "height": 1191}
+page_help->html_text_label,{"x": 100, "y": 270, "width": 891, "height": 1231}
+page_help->keyboard_3,{"x": 20, "y": 1420, "width": 1051, "height": 441}
+page_help->pushButton_resetTimeout,{"x": 0, "y": -6, "width": 1125, "height": 1931}
+page_help->pushButton_to_feedback,{"x": 50, "y": 1800, "width": 221, "height": 71}
+page_help->pushButton_to_howTo,{"x": 430, "y": 1800, "width": 221, "height": 71}
+page_help->pushButton_to_idle,{"x": 70, "y": 40, "width": 401, "height": 41}
+page_help->pushButton_to_maintenance,{"x": 810, "y": 1800, "width": 221, "height": 71}
+page_help->pushButton_to_transactions,{"x": 610, "y": 40, "width": 401, "height": 41}
+
+page_sendFeedback->checkBox_1,{"x": 200, "y": 550, "width": 64, "height": 64}
+page_sendFeedback->checkBox_1_Label,{"x": 274, "y": 550, "width": 576, "height": 78}
+page_sendFeedback->checkBox_2,{"x": 200, "y": 650, "width": 64, "height": 64}
+page_sendFeedback->checkBox_2_Label,{"x": 274, "y": 650, "width": 576, "height": 78}
+page_sendFeedback->checkBox_3,{"x": 200, "y": 750, "width": 64, "height": 64}
+page_sendFeedback->checkBox_3_Label,{"x": 274, "y": 750, "width": 576, "height": 78}
+page_sendFeedback->checkBox_4,{"x": 200, "y": 850, "width": 64, "height": 64}
+page_sendFeedback->checkBox_4_Label,{"x": 274, "y": 850, "width": 576, "height": 78}
+page_sendFeedback->checkBox_5,{"x": 200, "y": 950, "width": 64, "height": 64}
+page_sendFeedback->checkBox_5_Label,{"x": 274, "y": 950, "width": 576, "height": 78}
+page_sendFeedback->feedbackKeyboard,{"x": 10, "y": 1380, "width": 1051, "height": 441}
+page_sendFeedback->feedbackText,{"x": 210, "y": 120, "width": 651, "height": 251}
+page_sendFeedback->label_contact_info,{"x": 20, "y": 1540, "width": 1041, "height": 114}
+page_sendFeedback->label_enter_feedback,{"x": 200, "y": 1040, "width": 640, "height": 61}
+page_sendFeedback->label_help,{"x": 470, "y": 1780, "width": 131, "height": 121}
+page_sendFeedback->label_problem_options,{"x": 142, "y": 456, "width": 780, "height": 924}
+page_sendFeedback->label_select_problem,{"x": 0, "y": 220, "width": 1080, "height": 242}
+page_sendFeedback->label_still_cant_find,{"x": 210, "y": 1530, "width": 627, "height": 75}
+page_sendFeedback->label_still_cant_find_it,{"x": 290, "y": 1599, "width": 627, "height": 75}
+page_sendFeedback->label_thank_you_image,{"x": 0, "y": 0, "width": 1080, "height": 1920}
+page_sendFeedback->label_thanks_for_feedback,{"x": 0, "y": 570, "width": 1080, "height": 481}
+page_sendFeedback->pushButton_help_page,{"x": 460, "y": 1820, "width": 151, "height": 91}
+page_sendFeedback->pushButton_previous_page,{"x": 70, "y": 40, "width": 401, "height": 41}
+page_sendFeedback->pushButton_send,{"x": 290, "y": 1390, "width": 438, "height": 95}
+page_sendFeedback->pushButton_start_input,{"x": 200, "y": 1110, "width": 651, "height": 250}
+page_sendFeedback->pushButton_to_idle,{"x": 472, "y": 1777, "width": 125, "height": 125}
+page_sendFeedback->textEdit_custom_message,{"x": 200, "y": 1110, "width": 651, "height": 251}
+
+page_end->label_client_logo,{"x": 370, "y": 1710, "width": 351, "height": 211}
+page_end->label_manufacturer_logo,{"x": 300, "y": 250, "width": 471, "height": 331}
+page_end->label_message,{"x": 110, "y": 590, "width": 841, "height": 420}
+page_end->label_message_2,{"x": 0, "y": 1020, "width": 1081, "height": 480}
+page_end->label_volume_dispensed,{"x": 240, "y": 1530, "width": 600, "height": 71}
+page_end->label_volume_dispensed_ml,{"x": 240, "y": 1620, "width": 600, "height": 71}
+page_end->pushButton_contact,{"x": 340, "y": 1380, "width": 400, "height": 101}
+page_end->pushButton_to_idle,{"x": 0, "y": 10, "width": 1080, "height": 1920}
+

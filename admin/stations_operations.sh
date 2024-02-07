@@ -8,7 +8,7 @@
 
 # -----------------------------------
 # DO NOT ADD SPACES TO THE ELEMENTS, it causes a mess when looping over it (treats space as array delimiter in some cases).#
-station_descriptions=("SS-DEV-LODE" "SS-DEV-ASH" "SS-DEV-SHOP" "AP-1_312Main" "AP-2_UBC_Nest" "UBC" "Ruddy" "Re-Up" "SS-0000009" "Pomme" "Petros11" "Petros12" "Petros13" "Petros14" "SS-0000015" "SS-0000016" "SS-0000017" "Choices" "Stongs" "FamousFoods" "SS-0000021" "Nada" "Petros23" "Petros24" "Petros25" "Petros26" "Petros27" "Petros28" "Petros29" "Petros30" "Petros31" "Petros32" "Petros33" "Petros34" "Petros35" "Petros36" "Petros37" "Petros38" "SS-0000039" "SS-0000040" "SS-0000041" "SS-0000042" "SS-0000043" "SS-0000044" "SS-0000045" "SS-0000046" "SS-0000047" "SS-0000048" "SS-0000049" "SS-0000050" "SS-0000051" "SS-0000052" "SS-0000053" "SS-0000054" "SS-0000055" "SS-0000056" "SS-0000057" "SS-0000058" "SS-0000059" "SS-0000060" "SS-0000061" "SS-0000062" "SS-0000063" "SS-0000064" "SS-0000065" "SS-0000066" "SS-0000067" "SS-0000068" "SS-0000069" "SS-0000070" "SS-0000071" "SS-0000072" "SS-0000073");
+station_descriptions=("SS-DEV-LODE" "SS-DEV-ASH" "SS-DEV-SHOP" "AP-1_312Main" "AP-2_UBC_Nest" "UBC" "Ruddy" "Re-Up" "SS-0000009" "Pomme" "GoodFill_Kensington" "GoodFill_12" "GoodFill_13" "GoodFill_14" "SS-0000015" "SS-0000016" "SS-0000017" "Choices" "Stongs" "FamousFoods" "SS-0000021" "Nada" "GoodFill_23" "GoodFill_24" "GoodFill_25" "GoodFill_26" "GoodFill_27" "GoodFill_Chroma" "GoodFill_Benjamin" "GoodFill_30" "GoodFill_SouthWinds" "GoodFill_32" "GoodFill_Sudbury" "GoodFill_HoodPark" "GoodFill_TheGreen1" "GoodFill_TheGreen2" "GoodFill_7Seventy" "GoodFill_SouthWinds" "SS-0000039" "SS-0000040" "SS-0000041" "SS-0000042" "SS-0000043" "SS-0000044" "GoodFill_E3" "GoodFill_Watertown" "SS-0000047" "GoodFill_Bower" "SS-0000049" "SS-0000050" "GoodFill_Greenway" "SS-0000052" "SS-0000053" "SS-0000054" "SS-0000055" "SS-0000056" "SS-0000057" "SS-0000058" "SS-0000059" "SS-0000060" "SS-0000061" "SS-0000062" "SS-0000063" "SS-0000064" "SS-0000065" "SS-0000066" "SS-0000067" "SS-0000068" "SS-0000069" "SS-0000070" "SS-0000071" "SS-0000072" "SS-0000073");
 station_ids=("SS-DEV-LODE" "SS-DEV-ASH" "SS-DEV-SHOP" "AP-1" "AP-2" "SS-0000006" "SS-0000007" "SS-0000008" "SS-0000009" "SS-0000010" "SS-0000011" "SS-0000012" "SS-0000013" "SS-0000014" "SS-0000015" "SS-0000016" "SS-0000017" "SS-0000018" "SS-0000019" "SS-0000020" "SS-0000021" "SS-0000022" "SS-0000023" "SS-0000024" "SS-0000025" "SS-0000026" "SS-0000027" "SS-0000028" "SS-0000029" "SS-0000030" "SS-0000031" "SS-0000032" "SS-0000033" "SS-0000034" "SS-0000035" "SS-0000036" "SS-0000037" "SS-0000038" "SS-0000039" "SS-0000040" "SS-0000041" "SS-0000042" "SS-0000043" "SS-0000044" "SS-0000045" "SS-0000046" "SS-0000047" "SS-0000048" "SS-0000049" "SS-0000050" "SS-0000051" "SS-0000052" "SS-0000053" "SS-0000054" "SS-0000055" "SS-0000056" "SS-0000057" "SS-0000058" "SS-0000059" "SS-0000060" "SS-0000061" "SS-0000062" "SS-0000063" "SS-0000064" "SS-0000065" "SS-0000066" "SS-0000067" "SS-0000068" "SS-0000069" "SS-0000070" "SS-0000071" "SS-0000072" "SS-0000073" );
 station_ports=("44444" "43081" "44001" "46001" "46002" "43006" "43007" "43008" "43009" "43010" "43011" "43012" "43013" "43014" "43015" "43016" "43017" "43018" "43019" "43020" "43021" "43022" "43023" "43024" "43025" "43026" "43027" "43028" "43029" "43030" "43031" "43032" "43033" "43034" "43035" "43036" "43037" "43038" "43039" "43040" "43041" "43042" "43043" "43044" "43045" "43046" "43047" "43048" "43049" "43050" "43051" "43052" "43053" "43054" "43055" "43056" "43057" "43058" "43059" "43060" "43061" "43062" "43063" "43064" "43065" "43066" "43067" "43068" "43069" "43070" "43071" "43072" "43073");
 # -----------------------------------
@@ -430,6 +430,64 @@ transfer_production_db_old(){
     "${cmd0[@]}"
     echo "Transfer db from aws to station..."
     "${cmd1[@]}"
+    echo "done"
+}
+
+
+
+transfer_folder(){
+
+    echo "Source Station: "
+    get_station_port
+    source_port=$global_port
+    echo "Destination Station: "
+    get_station_port
+    destination_port=$global_port
+
+
+    logging_zip_name=transfer_$source_port.zip  # check for where used, not as a variable. Because... it's hard.
+    
+    cmd0=( rm /home/ubuntu/Stations/transfer.zip )
+    # zip it up
+
+    # all files: 
+    # cmd1=( sudo ssh -t df-admin@localhost -p $source_port 'cd /home/df-admin/production; zip -r logging.zip logging; mv logging.zip ..' )
+
+    # only files within timestamp
+    # cmd1=(sudo ssh -t df-admin@localhost -p $source_port 'cd /home/df-admin/production/logging; find . -type f -mtime -7 -exec zip -r logging.zip {} +; mv /home/df-admin/production/logging/logging.zip /home/df-admin/logging.zip')
+    
+
+        # Zip all files
+    cmd1=( sudo ssh -t df-admin@localhost -p $source_port 'rm /home/df-admin/transfer.zip; cd /home/df-admin/transfer; zip -r ../transfer.zip *' )
+
+
+    # transfer zip from source station to aws 
+    cmd2=( scp -r -P $source_port "df-admin@localhost:/home/df-admin/transfer.zip" "/home/ubuntu/Stations/" )
+    # transfer zip from aws to destination station
+
+    cmd3=( scp -r -P $destination_port "/home/ubuntu/Stations/transfer.zip" df-admin@localhost:/home/df-admin/$logging_zip_name )
+
+    printf -v cmd0_str '%q ' "${cmd0[@]}"
+    printf -v cmd1_str '%q ' "${cmd1[@]}"
+    printf -v cmd2_str '%q ' "${cmd2[@]}"
+    printf -v cmd3_str '%q ' "${cmd3[@]}"
+
+    # confirm_execute "$cmd_str"
+    echo "Lined up commands: "
+    echo "$cmd0_str"
+    echo "$cmd1_str"
+    echo "$cmd2_str"
+    echo "$cmd3_str"
+    
+    continu_or_exit
+    echo "Delete previous transfer artefacts"
+    "${cmd0[@]}"
+    echo "Zip transfer folder..."
+    "${cmd1[@]}"
+    echo "Transfer zip file to aws..."
+    "${cmd2[@]}"
+    echo "Transfer folder from aws to station..."
+    "${cmd3[@]}"
     echo "done"
 }
 
@@ -891,7 +949,7 @@ deploy_with_ash () {
 }
 
 PS3="Choose option(digit + enter) :"
-options=("Quit" "Stations status" "Station log in" "Production Folder Copy and Deploy: Static files" "Production Folder Copy: Static files" "Production Folder Copy: Logging Folder (Last Seven Days)" "Production Folder Copy: Logging Folder (All)" "Production Folder Copy: Databases" "Production Folder Copy: Configuration database" "Production Folder Copy: Usage database" "Production Folder Copy: Database OLD" )
+options=("Quit" "Stations status" "Station log in" "Production Folder Copy and Deploy: Static files" "Production Folder Copy: Static files" "Production Folder Copy: Logging Folder (Last Seven Days)" "Production Folder Copy: Logging Folder (All)" "Production Folder Copy: Databases" "Production Folder Copy: Configuration database" "Production Folder Copy: Usage database" "Production Folder Copy: Database OLD" "Transfer general: home/transfer" )
 # options=("Quit" "Stations status" "Show Station Descriptions" "Station log in" "Station/production/x to Station/production/x" "Station/production/x to Station/home/x" "Station/home/x to Station/production/x" "Station/home/x to Station/home/x" "AWS to Station/home/x" "Station to AWS DB" "AWS to Station DB" "Station to Lode DB" "Lode to Station DB" "Station to Ash DB" "Ash to Station DB" "Manualport/production/x to Manualport/home/x" "Station mkdir" "Station log in [port]" "Static Production Copy: Station to Station" "Static Production Copy: Station to [port]" "Static Production Copy: [port] to Station" "Static Production Copy: [port] to [port]" "DB Production copy: Station to Station" "DB Production copy: Station to [port]" "DB Production copy: [port] to Station" "DB Production copy: [port] to [port]" "Logs Production Copy: Station to Station" "Logs Production Copy: Station to [port]" "Logs Production Copy: [port] to Station" "Logs Production Copy: [port] to [port]")
 
 select opt in "${options[@]}"
@@ -960,6 +1018,9 @@ do
 
         "Production Folder Copy: Logging Folder (All)")
             transfer_production_logging  
+            ;;
+        "Transfer general: home/transfer")
+            transfer_folder  
             ;;
       
         "Manualport/production/x to Manualport/home/x")

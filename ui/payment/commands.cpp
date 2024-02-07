@@ -7,6 +7,7 @@
 
 std::map<std::string, std::string> registerDevice(int socket){
     std::string public_key = read_public_key();
+    std::cout << "Registering tap device";
     std::string registerCommand = "<TRANSACTION> <FUNCTION_TYPE>SECURITY</FUNCTION_TYPE> \
                         <COMMAND>REGISTER</COMMAND>\
                         <ENTRY_CODE>9121</ENTRY_CODE>\

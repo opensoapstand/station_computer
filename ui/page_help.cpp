@@ -12,6 +12,7 @@
 //***************************************
 
 #include "page_help.h"
+#include "input_widget.h"
 #include "ui_page_help.h"
 #include "df_util.h"
 #include "page_select_product.h"
@@ -40,7 +41,7 @@ page_help::~page_help()
 {
     delete ui;
 }
-void page_help::setPage(page_select_product *pageSelect, page_product *page_product, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_transactions *pageTransactions, page_maintenance *pageMaintenance, page_sendFeedback *pageFeedback, statusbar *p_statusbar)
+void page_help::setPage(page_select_product *pageSelect, page_product *page_product, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_transactions *pageTransactions, page_maintenance *pageMaintenance, page_sendFeedback *pageFeedback, page_how_to *page_howTo, statusbar *p_statusbar, keyboard *keyboard, input_widget *input_widget)
 {
     this->p_page_idle = pageIdle;
     this->p_page_feedback = pageFeedback;
@@ -49,7 +50,10 @@ void page_help::setPage(page_select_product *pageSelect, page_product *page_prod
     this->p_page_select_product = pageSelect;
     this->p_page_transactions = pageTransactions;
     this->p_page_maintenance = pageMaintenance;
+    this->p_page_howTo = page_howTo;
     this->p_statusbar = p_statusbar;
+    this->p_keyboard = keyboard;
+    this->p_input_widget = input_widget;
 }
 
 void page_help::showEvent(QShowEvent *event)
@@ -57,9 +61,6 @@ void page_help::showEvent(QShowEvent *event)
 
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
-
-    statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
-    statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
 
@@ -73,11 +74,14 @@ void page_help::showEvent(QShowEvent *event)
     ui->pushButton_resetTimeout->setStyleSheet(styleSheet);
     ui->pushButton_to_maintenance->setStyleSheet(styleSheet);
     ui->pushButton_to_feedback->setStyleSheet(styleSheet);
+    ui->pushButton_to_howTo->setStyleSheet(styleSheet);
+    ui->html_help_text->setStyleSheet(styleSheet);
 
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_to_transactions);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_to_maintenance);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_to_feedback);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_to_idle);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_to_howTo);
     ui->label_keyboardInfo->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "label_keyboardInfo")); // p_page_idle->thisMachine->setTemplateTextToObject(ui->label_keyboardInfo); // does not work because the parent is the keyboard, not the page.
 
     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_HELP_BACKGROUND_PATH);
@@ -110,22 +114,69 @@ void page_help::showEvent(QShowEvent *event)
 
     helpIdleTimer->start(1000);
     _helpIdleTimeoutSec = 60;
-    ui->keyboard_3->hide();
-    ui->keyboardTextEntry->setText("");
+
+    if(p_page_idle->thisMachine->hasMixing()){
+        p_keyboard->needCAPS(true);
+        p_keyboard->initializeKeyboard(false, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
+        p_input_widget->toggleInputWidget(false);
+        statusbarLayout->removeWidget(p_keyboard);    
+        statusbarLayout->removeWidget(p_input_widget);  
+
+        ui->keyboard_3->hide();
+
+        // when declaring custom widget, please remember to goto QT Creator and set the max size and min size for the parent cutsom widget 
+        // (otherwise will have extra white space when delcare custom widget)
+        // navigate to custom widget, right click on the parent widget, hover over Size Constraints, and select set Minimum Size and Maximum Size
+        p_input_widget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+        p_input_widget->setContentsMargins(0, 0, 0, 0); // int left, int top, int right, int bottom);
+
+        p_keyboard->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+        p_keyboard->setContentsMargins(0, 0, 0, 0);
+        p_keyboard->findChild<QWidget *>("keyboard_3")->setGeometry(21, -25, 1040, 495); // int x, int y, int width, int height;
+
+        p_statusbar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+        p_statusbar->setContentsMargins(0, 0, 0, 0); 
+
+        statusbarLayout->setSpacing(0);
+        statusbarLayout->setContentsMargins(0, 0, 0, 0);
+        statusbarLayout->addWidget(p_input_widget);  
+        statusbarLayout->addWidget(p_keyboard);   
+        statusbarLayout->addWidget(p_statusbar);   
+
+        statusbarLayout->setAlignment(Qt::AlignBottom | Qt::AlignVCenter);
+
+    }else{
+        ui->pushButton_to_howTo->hide();
+        ui->keyboard_3->hide();
+        ui->keyboardTextEntry->setText("");
+        statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
+        statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
+    }
 }
 
 void page_help::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     helpIdleTimer->stop();
-    ui->keyboard_3->hide();
+    if(p_page_idle->thisMachine->hasMixing()){
+        statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
+        p_keyboard->keyboardButtonDefaultAllInCAPS();
+    }else{
+        ui->keyboard_3->hide();
+        statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
+    }
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
-    statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
 
 }
 
 void page_help::on_pushButton_to_idle_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_idle);
+    p_keyboard->keyboardButtonDefaultAllInCAPS();
+}
+
+void page_help::on_pushButton_to_howTo_clicked(){
+    hideCurrentPageAndShowProvided(p_page_howTo);
+    p_keyboard->keyboardButtonDefaultAllInCAPS();
 }
 
 void page_help::onHelpTimeoutTick()
@@ -162,9 +213,61 @@ void page_help::on_pushButton_to_maintenance_clicked()
     else
     {
         // provide keyboard if not yet logged in. 
-        ui->keyboard_3->show();
+        if(p_page_idle->thisMachine->hasMixing()){
+            p_keyboard->registerCallBack(std::bind(&page_help::doneButtonPressed, this));
+            p_keyboard->initializeKeyboard(true, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
+            p_input_widget->toggleInputWidget(true);
+        }else{
+            ui->keyboard_3->show();
+        }
     }
 }
+
+void page_help::doneButtonPressed(){
+    QString textEntry = p_input_widget->findChild<QLineEdit *>("lineEdit_input")->text();
+
+    // if role was already set, do not check pwd.
+    if (!p_page_idle->thisMachine->isAllowedAsMaintainer())
+    {
+        p_page_idle->thisMachine->processRolePassword(textEntry);
+
+        if (p_page_idle->thisMachine->isAllowedAsMaintainer())
+        {
+            hideCurrentPageAndShowProvided(p_page_maintenance);
+            p_keyboard->initializeKeyboard(false, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
+        }
+        else
+        {
+            p_input_widget->findChild<QLineEdit *>("lineEdit_input")->setText("");
+            p_keyboard->initializeKeyboard(true, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
+        }
+    }
+    p_keyboard->keyboardButtonDefaultAllInCAPS();
+    if (p_page_idle->thisMachine->isAllowedAsMaintainer())
+    {
+        hideCurrentPageAndShowProvided(p_page_maintenance);
+    }
+    // int compareResult_user = QString::compare(textEntry, p_page_idle->thisMachine->getMaintenanceAdminPassword(false), Qt::CaseInsensitive);
+    // int compareResult_admin = QString::compare(textEntry, p_page_idle->thisMachine->getMaintenanceAdminPassword(true), Qt::CaseInsensitive);
+
+    // if (compareResult_user == 0)
+    // {
+    //     usleep(100000);
+    //     qDebug() << "Maintenance user password correct.";
+    //     hideCurrentPageAndShowProvided(p_page_maintenance);
+    // }
+    // else if (compareResult_user == 0){
+    //     qDebug() << "Maintenance admin password correct.";
+    //     hideCurrentPageAndShowProvided(p_page_maintenance);
+
+    // }
+    // else
+    // {
+    //     qDebug() << "Maintenance use password wrong . Check db in database or contact soapstand.";
+    //     ui->keyboardTextEntry->setText("");
+    // }
+}
+
 
 void page_help::keyboardButtonPressed(int buttonID)
 {
@@ -276,3 +379,4 @@ void page_help::on_pushButton_to_feedback_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_feedback);
 }
+

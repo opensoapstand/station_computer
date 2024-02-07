@@ -7,13 +7,13 @@
 
 #include <QVector>
 
-// TODO: Refactor to fit with dfuicommthread
-// #define START_FSM_FROM_UI //enabled by default (start controller from ui)
 
-#define UI_VERSION "3.0"
+// TODO: Refactor to fit with dfuicommthread
+#define UI_VERSION "3.2"
 
 #define OPTION_SLOT_INVALID 0
-#define MAX_SLOT_COUNT 20 // number of slots
+#define SELECT_PRODUCT_PAGE_SLOT_COUNT_MAX 4
+#define MAINTENANCE_PAGE_SLOT_COUNT_MAX 4
 
 #define SIZES_COUNT 7
 #define MINIMUM_DISPENSE_VOLUME_ML 10.0
@@ -28,6 +28,7 @@
 
 #define ADDITIVES_PER_SLOT_COUNT_MAX 5
 #define BASE_LINE_COUNT_MAX 5 // maximum amount of base lines
+#define MAX_SLOT_COUNT BASE_LINE_COUNT_MAX // number of slots
 #define DISPENSE_PRODUCTS_PER_BASE_LINE_MAX 6   // drinks per base line  (not dynamic, redo ui elements in qt creator when changing... )
 #define MENU_PRODUCT_SELECTION_OPTIONS_MAX BASE_LINE_COUNT_MAX * DISPENSE_PRODUCTS_PER_BASE_LINE_MAX // the offered selection of product to the user
 #define DUMMY_PNUMBER 1
@@ -37,6 +38,7 @@
 #define CONFIG_DB_PATH "/home/df-admin/production/db/configuration.db"
 #define USAGE_DB_PATH "/home/df-admin/production/db/usage.db"
 
+// #define INTERRUPT_DRIVE_FLOW_SENSOR_TICKS  // enable for global interrupt per flow sensor tick. This is the old style. New style is polling of the pin state over i2c.
 #define PRODUCT_DETAILS_TSV_PATH "/home/df-admin/production/references/products/product_details.tsv" // https://docs.google.com/spreadsheets/d/17WR2gRyPIDIlGKBy1YKFAqN-Hyw_3VOJ6JCmfcAtjVk/edit#gid=169583479 download as .tsv file
 #define UI_TEXTS_CSV_NAME "ui_texts.csv"
 #define UI_ELEMENT_PROPERTIES_NAME "ui_element_properties.txt"
@@ -62,14 +64,19 @@
 
 using namespace std;
 
+#define PAGE_INIT_READY_TIMEOUT_SECONDS 10
+#define PAGE_INIT_REBOOT_TIMEOUT_SECONDS 3600
+#define PAGE_IDLE_DELAY_BEFORE_ENTERING_IDLE_PRODUCTS 15
 #define PAGE_IDLE_DELAY_BEFORE_ENTERING_IDLE_PRODUCTS 15
 #define STATUS_BAR_REFRESH_PERIOD_SECONDS 3
 #define PAGE_IDLE_POLL_TEMPERATURE_PERIOD_SECONDS 60 // 60
 #define PAGE_IDLE_TEST_FOR_FROZEN_SCREEN_PERIOD_SECONDS 60
 #define PAGE_IDLE_USER_ROLE_TIMEOUT_SECONDS 5
+#define PAGE_BOTTLE_PAGE_TIMEOUT_SECONDS 18
 #define PAGE_IDLE_PRODUCTS_MAIN_PAGE_DISPLAY_TIME_SECONDS 6
 #define PAGE_IDLE_PRODUCTS_STEP_DISPLAY_TIME_SECONDS 1
 #define PAGE_IDLE_REBOOT_NIGHTLY_TIMEOUT_SECONDS 1
+#define PAGE_IDLE_RECEIPT_PRINTER_TIMEOUT_SECONDS 3
 #define PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN 300
 
 #define QR_PAGE_TIMEOUT_SECONDS  420
@@ -92,10 +99,14 @@ using namespace std;
 #define PRODUCT_PICTURES_ROOT_PATH                      "/home/df-admin/production/references/products/%1.png"
 #define CLIENT_LOGO_PATH                                "/home/df-admin/production/references/logos/%1_logo_white.png"
 #define PAGE_HELP_CSS                                   "page_help.css"
+#define PAGE_HOWTO_CSS                                  "page_how_to.css"
 #define PAGE_FEEDBACK_CSS                               "page_sendFeedback.css"
 #define STATUSBAR_CSS                                   "statusbar.css"
-#define KEYBOARD_CSS                                   "keyboard.css"
+#define INPUT_WIDGET_CSS                                "input_widget.css"
+#define KEYBOARD_CSS                                    "keyboard.css"
+#define PAGE_INIT_CSS                                   "page_init.css"
 #define PAGE_IDLE_CSS                                   "page_idle.css"
+#define PAGE_BUY_BOTTLE_CSS                             "page_buyBottle.css"
 #define PAGE_PRODUCT_MENU_CSS                           "page_product_menu.css"
 #define PAGE_SELECT_PRODUCT_CSS                         "page_select_product.css"
 #define PAGE_PRODUCT_CSS                                "page_product.css"
@@ -115,19 +126,25 @@ using namespace std;
 #define PAGE_EMAIL_CSS                                  "page_email.css"
 
 #define PAGE_IDLE_BACKGROUND_PATH                       "background_idle.png"
+#define PAGE_BUY_BOTTLE_BACKGROUND_PATH                 "background_buy_bottle.png"
 #define PAGE_IDLE_PRODUCTS_BACKGROUND_PATH              "background_idle_products.png"
 #define PAGE_END_BACKGROUND_PATH                        "background_end.png"
 #define PAGE_TRANSACTIONS_BACKGROUND_PATH               "background_transactions.png"
 
+#define PAGE_SEND_FEEDBACK_BACKGROUND_PATH              "background_sendFeedback.png"
+#define CHECKBOX_UNCHECKED_PATH                         "checkbox_unchecked.png"
+#define CHECKBOX_CHECKED_PATH                           "checkbox_checked.png"
 #define PAGE_PRODUCT_MENU_BACKGROUND_PATH               "background_product_menu.png"
 #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH             "background_product_select.png"
 #define PAGE_PRODUCT_BACKGROUND_PATH                    "background_product_quantity.png"
 #define PAGE_ORDER_OVERVIEW_PATH                        "background_order_overview.png"
 #define PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH      "background_dispense_instructions.png"
-#define PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH   "background_dispense_instructions_multispout.png"
+// #define PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH   "background_dispense_instructions_multispout.png"
 #define PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_RIGHT    "arrow_right_white_big.png"
 #define PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_DOWN "arrow_down_white_big.png"
 #define PAGE_DISPENSE_BACKGROUND_PATH "background_dispense.png"
+#define PAGE_DISPENSE_VOLUME_ICON "label_volume_icon.png"
+#define PAGE_DISPENSE_PRODUCT_ICON "label_product_icon.png"
 #define PAGE_QR_PAY_BACKGROUND_PATH "background_qr.png"
 #define PAGE_MAINTENANCE_BACKGROUND_PATH "background_maintenance.png"
 #define ERROR_MESSAGE_PATH "error_message.png"
@@ -137,13 +154,16 @@ using namespace std;
 #define PAGE_TAP_PAY "tapNow.png"
 #define PAGE_AUTHORIZE_NOW "authorizeNow.png"
 #define PAGE_TAP_GENERIC "genericTap.png"
-#define PAGE_SEND_FEEDBACK_PATH "background_sendfeedback.png"
 #define PAGE_INIT_BACKGROUND_IMAGE_PATH "background_init.png"
 #define IMAGE_BUTTON_HELP "help_icon.png"
 #define THANK_YOU_FOR_YOUR_FEEDBACK "background_feedbacksent.png"
 #define PAGE_ERROR_BACKGROUND_PATH "background_error_wifi.png"
 #define KEYBOARD_IMAGE_PATH "soapstand-keyboard.png"
-#define UNIVERSAL_KEYBOARD_IMAGE_PATH "universal_keyboard.png"
+#define UNIVERSAL_LINE_EDIT_KEYBOARD_WITH_CAPS_UPPERCASE_IMAGE_PATH "universal_lineEdit_with_caps_uppercase_keyboard.png"
+#define UNIVERSAL_LINE_EDIT_KEYBOARD_WITH_CAPS_LOWERCASE_IMAGE_PATH "universal_lineEdit_with_caps_lowercase_keyboard.png"
+#define UNIVERSAL_LINE_EDIT_KEYBOARD_WITHOUT_CAPS_IMAGE_PATH "universal_lineEdit_without_caps_keyboard.png"
+#define UNIVERSAL_TEXT_EDIT_KEYBOARD_UPPERCASE_IMAGE_PATH "universal_textEdit_uppercase_keyboard.png"
+#define UNIVERSAL_TEXT_EDIT_KEYBOARD_LOWERCASE_IMAGE_PATH "universal_textEdit_lowercase_keyboard.png"
 #define COUPON_ICON_UNAVAILABLE_PATH "coupon_unavailable.png"
 #define COUPON_ICON_AVAILABLE_PATH "coupon_available.png"
 #define MACHINE_LOGO_PATH "machine_logo.png"
@@ -164,8 +184,12 @@ using namespace std;
 
 #define PAGE_HELP_BACKGROUND_GENERIC_WHITE "background_generic_white_empty.png"
 #define PAGE_HELP_BACKGROUND_PATH "background_help.png"
+#define PAGE_HOWTO_BACKGROUND_PATH "background_how_to.png"
+#define PAGE_HOWTO_STEP1 "page_howTo_step1.png"
+#define PAGE_HOWTO_STEP2 "page_howTo_step2.png"
+#define PAGE_HOWTO_STEP3 "page_howTo_step3.png"
 #define SEND_DISPENSE_START "d"
-#define SEND_DISPENSE_STOP "f"
+// #define SEND_DISPENSE_STOP "f"
 #define SEND_REPAIR_PCA "pcabugfix"
 #define SEND_DISPENSE_AUTOFILL "a"
 

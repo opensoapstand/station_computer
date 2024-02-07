@@ -27,6 +27,7 @@
 #include <curl/curl.h>
 
 class statusbar;
+class keyboard;
 class page_select_product;
 class page_qr_payment;
 class page_idle;
@@ -51,12 +52,14 @@ public:
     QLabel *orderSizeBackgroundLabels[4];
 
     explicit page_sendFeedback(QWidget *parent = nullptr);
-    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, page_product *page_product, page_end *page_end, statusbar *p_statusbar);
+    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, page_product *page_product, page_end *page_end, statusbar *p_statusbar, keyboard * keyboard);
     ~page_sendFeedback();
 
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
+    void returnButtonPressed();
+    void cancelButtonPressed();
     // void paintEvent(QPaintEvent *event);
 
 signals:
@@ -92,6 +95,7 @@ private:
     page_help *p_page_help;
     page_product *p_page_product;
     statusbar *p_statusbar;
+    keyboard *p_keyboard;
 
     QTimer *selectIdleTimer;
     int _selectIdleTimeoutSec;

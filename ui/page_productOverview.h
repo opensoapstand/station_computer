@@ -72,7 +72,8 @@ public:
     void cancelTimers();
     QString additivies_overview(QString product_additives_overview);
     void apply_promo_code(QString promocode);
-    void check_to_page_email();
+    // ready to be killed off
+    // void check_to_page_email();
     bool m_readyToSendCoupon; 
     void reset_and_show_page_elements();
     void enterButtonPressed();
@@ -90,7 +91,7 @@ private slots:
     void updatePriceLabel();
     void on_pushButton_to_help_clicked();
     void onSelectTimeoutTick();
-    // void keyboardButtonPressed(int);
+    void keyboardButtonPressed(int);
 
 private:
 
@@ -123,7 +124,6 @@ private:
     QShowEvent *dispenseEvent;
     QShowEvent *wifiErrorEvent;
     QVBoxLayout *statusbarLayout;
-    QVBoxLayout *keyboardLayout;
 };
 
 #endif // PAYSELECT_H

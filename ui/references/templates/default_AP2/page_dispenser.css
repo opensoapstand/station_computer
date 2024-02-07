@@ -1,5 +1,26 @@
+#label_to_refill {
+   color: #211403;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   font-family: 'El Messiri';
+   font-size: 64px;
+   font-style: normal;
+   font-weight: 400;
+}
+
+#label_instructions_container {
+   color: #895E25;
+   font-family: 'El Messiri';
+   font-size: 30px;
+   font-style: normal;
+   font-weight: 700;
+   padding: 30px;
+   background: rgba(255, 255, 255, 0.30);
+   border-radius: 25px;
+}
+
 #label_finishTransactionMessage {
-   font-family: 'EuropaNuova-Regular';
+   font-family: 'El Messiri';
    font-style: normal;
    font-weight: 400;
    font-size: 52px;
@@ -7,68 +28,49 @@
    line-height: auto;
    qproperty-alignment: AlignCenter;
    border-radius: 20px;
-   color: #5E826A;
+   color: #895E25;
    border: none;
+}
+
+#label_product_summary_background{
+   background: #fffefd;
+   border-radius: 25px;
+   color: transparent;
+}
+
+#label_volume_dispensed{
+   font-weight: 700;
 }
 
 .label_volume_dispensed_ml {
-   font-family: 'EuropaNuova-Regular';
-   font-style: normal;
-   font-weight: 400;
+   text-align: left;
+   qproperty-alignment: AlignLeft;
+   color: #211403;
+   font-family: 'Lato';
    font-size: 30px;
-   text-align: center;
-   line-height: auto;
-   qproperty-alignment: AlignCenter;
-   border-radius: 20px;
-   color: #5E826A;
-   /* color: white; */
-   border: none;
-
-}
-
-#label_to_refill {
-   font-family: 'EuropaNuova-ExtraBold';
    font-style: normal;
    font-weight: 400;
-   font-size: 78px;
-   background-color: transparent;
-   border: 0px;
-   line-height: 52px;
-   color: #FFFFFF;
-   text-align: center;
-   qproperty-alignment: AlignCenter;
-   border: none;
-
 }
 
-#label_instructions_container {
-   font-family: 'EuropaNuova-Regular';
+#label_product_name{
+   font-weight: 700;
+   text-align: left;
+   qproperty-alignment: AlignLeft;
+   color: #211403;
+   font-family: 'Lato';
+   font-size: 30px;
+   font-style: normal;
+}
+
+#label_product_selected{
+   text-align: left;
+   qproperty-alignment: AlignLeft;
+   color: #211403;
+   font-family: 'Lato';
+   font-size: 30px;
    font-style: normal;
    font-weight: 400;
-   font-size: 55px;
-   background-color: transparent;
-   border: 0px;
-   line-height: 52px;
-   color: #FFFFFF;
-   text-align: center;
-   qproperty-alignment: AlignCenter;
-   border: none;
 }
-
-#label_press {
-   font-family: 'EuropaNuova-Regular';
-   font-style: normal;
-   font-weight: 400;
-   font-size: 55px;
-   background-color: transparent;
-   border: 0px;
-   line-height: 52px;
-   color: #FFFFFF;
-   text-align: center;
-   qproperty-alignment: AlignCenter;
-   border: none;
-}
-
 
 #label_dispense_message {
    font-family: 'Brevia';
@@ -86,53 +88,46 @@
 }
 
 #pushButton_problems.normal {
-   font-family: 'EuropaNuova-Regular';
-   font-style: normal;
-   font-weight: 400;
-   background-color: #5E826A;
-   font-size: 42px;
+   background: #FFF;
+   border: 5px solid #895E25;
+   border-radius: 25px;
+   color: #895E25;
    text-align: center;
-   line-height: auto;
-   /* qproperty-alignment: AlignCenter; */
-   border-radius: 20px;
-   color: white;
-   border: 5px double white;
+   qproperty-alignment: AlignCenter;
+   font-family: 'Lato';
+   font-size: 48px;
+   font-weight: 400;
 }
 
 #pushButton_problems.alert {
-   font-family: 'EuropaNuova-Regular';
-   font-style: normal;
-   font-weight: 400;
-   background-color: #b87b0b;
-   font-size: 42px;
+   background: #895E25;
+   border: 5px solid #895E25;
+   border-radius: 25px;
+   color: #FFF;
    text-align: center;
-   line-height: auto;
-   /* qproperty-alignment: AlignCenter; */
-   border-radius: 20px;
-   color: white;
-   border: 5px double white;
+   qproperty-alignment: AlignCenter;
+   font-family: 'Lato';
+   font-size: 48px;
+   font-weight: 400;
 }
 
 #pushButton_debug_Button {
    color: #5E8580;
-   background-color: transparent;
+   /* background-color: transparent; */
    border: 5px;
    border-color: #5E8580;
 }
 
 #pushButton_abort {
-   font-family: 'EuropaNuova-ExtraBold';
-   font-style: normal;
-   font-weight: 400;
-   background-color: transparent;
-   font-size: 45px;
-   text-align: center;
-   line-height: auto;
-   /* qproperty-alignment: AlignCenter; */
+   background: #FFF;
+   border: 5px solid #895E25;
    border-radius: 25px;
-   color: white;
-   border: 5px solid white;
-
+   color: #895E25;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   font-family: 'Lato';
+   font-size: 48px;
+   font-weight: 400;
 }
 
 QPushButton {

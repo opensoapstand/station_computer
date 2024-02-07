@@ -116,7 +116,7 @@ page_sendFeedback->checkBox_3_Label,Drink dispensing problem
 page_sendFeedback->checkBox_4_Label,Payment problem
 page_sendFeedback->checkBox_5_Label,Other
 page_sendFeedback->label_enter_email,Please update me via this email:
-page_sendFeedback->label_enter_feedback,Please enter details or comments below to send us a<br>feedback.
+page_sendFeedback->label_enter_feedback,Please enter details or comments below
 page_sendFeedback->label_thanks_for_feedback,Thank you for <br> your feedback
 page_sendFeedback->pushButton_send,Send
 page_sendFeedback->label_contact_info,Contact Information<br>Phone: (+1) 604-283-5311<br>Email: hello@aelen.com

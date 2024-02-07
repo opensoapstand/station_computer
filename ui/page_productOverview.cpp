@@ -51,7 +51,7 @@ page_product_overview::page_product_overview(QWidget *parent) : QWidget(parent),
     connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
 
     connect(ui->pushButton_promo_input, SIGNAL(clicked()), this, SLOT(on_lineEdit_promo_codeInput_clicked()));
-   connect(ui->buttonGroup, SIGNAL(buttonPressed(int)), this, SLOT(keyboardButtonPressed(int)));
+    connect(ui->buttonGroup, SIGNAL(buttonPressed(int)), this, SLOT(keyboardButtonPressed(int)));
     connect(ui->buttonGroup_continue, SIGNAL(buttonPressed(int)), this, SLOT(on_pushButton_continue(int)));
 
     ui->label_gif->hide();
@@ -113,6 +113,12 @@ void page_product_overview::showEvent(QShowEvent *event)
         qDebug() << QString::number(i) + " : " + QString::number(customRatios[i]);
     }
 
+    p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+    // p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(ui->promoKeyboard);
+    QString coupon_icon_path = p_page_idle->thisMachine->getTemplatePathFromName(COUPON_ICON_UNAVAILABLE_PATH);
+    p_page_idle->thisMachine->addPictureToLabel(ui->label_coupon_icon, coupon_icon_path);
+    QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_PRODUCT_OVERVIEW_CSS);
+    
     if (p_page_idle->thisMachine->hasMixing())
     {
         p_keyboard->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
@@ -130,16 +136,14 @@ void page_product_overview::showEvent(QShowEvent *event)
         statusbarLayout->addWidget(p_statusbar);   
 
         statusbarLayout->setAlignment(Qt::AlignBottom | Qt::AlignVCenter);
+        QString picturePath = p_page_idle->thisMachine->getSelectedProduct()->getProductPicturePath();
+        styleSheet.replace("%IMAGE_PATH%", picturePath);
+        p_keyboard->registerCallBack(std::bind(&page_product_overview::enterButtonPressed, this));
     }else{
         statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
         statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
     }
 
-    p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
-    // p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(ui->promoKeyboard);
-    QString coupon_icon_path = p_page_idle->thisMachine->getTemplatePathFromName(COUPON_ICON_UNAVAILABLE_PATH);
-    p_page_idle->thisMachine->addPictureToLabel(ui->label_coupon_icon, coupon_icon_path);
-    QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_PRODUCT_OVERVIEW_CSS);
     ui->label_page_title->setStyleSheet(styleSheet);
     ui->label_checkout_title->setStyleSheet(styleSheet);
     ui->pushButton_promo_input->setStyleSheet(styleSheet);
@@ -198,13 +202,6 @@ void page_product_overview::showEvent(QShowEvent *event)
     ui->label_gif->setStyleSheet(styleSheet);
     ui->line_invoice->setStyleSheet(styleSheet);
     ui->pushButton_select_product_page->setStyleSheet(styleSheet);
-
-    if (p_page_idle->thisMachine->hasMixing())
-    {
-        QString picturePath = p_page_idle->thisMachine->getSelectedProduct()->getProductPicturePath();
-        styleSheet.replace("%IMAGE_PATH%", picturePath);
-
-    }
     ui->label_product_photo->setStyleSheet(styleSheet);
     /* Hacky transparent button */
     ui->pushButton_previous_page->setProperty("class", "buttonBGTransparent");

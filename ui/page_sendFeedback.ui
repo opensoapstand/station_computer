@@ -1770,7 +1770,7 @@ font: 11pt &quot;Montserrat&quot;;</string>
    <property name="geometry">
     <rect>
      <x>150</x>
-     <y>942</y>
+     <y>922</y>
      <width>780</width>
      <height>47</height>
     </rect>
@@ -1783,7 +1783,7 @@ font: 11pt &quot;Montserrat&quot;;</string>
    <property name="geometry">
     <rect>
      <x>150</x>
-     <y>1014</y>
+     <y>994</y>
      <width>780</width>
      <height>95</height>
     </rect>
@@ -1793,7 +1793,7 @@ font: 11pt &quot;Montserrat&quot;;</string>
    <property name="geometry">
     <rect>
      <x>150</x>
-     <y>1014</y>
+     <y>994</y>
      <width>780</width>
      <height>95</height>
     </rect>

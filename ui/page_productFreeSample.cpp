@@ -101,6 +101,7 @@ void page_product_freeSample::showEvent(QShowEvent *event)
     statusbarLayout->addWidget(p_statusbar);   
 
     statusbarLayout->setAlignment(Qt::AlignBottom | Qt::AlignVCenter);
+    p_keyboard->registerCallBack(std::bind(&page_product_freeSample::enterButtonPressed, this));
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
 

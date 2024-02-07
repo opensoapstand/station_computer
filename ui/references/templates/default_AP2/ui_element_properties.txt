@@ -53,22 +53,21 @@ page_email->pushButton_to_help,{"x": 940, "y": 35, "width": 75, "height": 75}
 
 page_sendFeedback->pushButton_previous_page,{"x": 70, "y": 40, "width": 401, "height": 41}
 page_sendFeedback->label_select_problem,{"x": 140, "y": 200, "width": 800, "height": 100}
-page_sendFeedback->label_problem_options,{"x": 100, "y": 350, "width": 880, "height": 1176}
-page_sendFeedback->checkBox_1,{"x": 143, "y": 464, "width": 75, "height": 75}
-page_sendFeedback->checkBox_2,{"x": 143, "y": 554, "width": 75, "height": 75}
-page_sendFeedback->checkBox_3,{"x": 143, "y": 645, "width": 75, "height": 75}
-page_sendFeedback->checkBox_4,{"x": 143, "y": 734, "width": 75, "height": 75}
-page_sendFeedback->checkBox_5,{"x": 143, "y": 824, "width": 75, "height": 75}
+page_sendFeedback->label_problem_options,{"x": 100, "y": 350, "width": 880, "height": 1123}
+page_sendFeedback->checkBox_1,{"x": 142, "y": 465, "width": 75, "height": 75}
+page_sendFeedback->checkBox_2,{"x": 142, "y": 550, "width": 75, "height": 75}
+page_sendFeedback->checkBox_3,{"x": 142, "y": 634, "width": 75, "height": 75}
+page_sendFeedback->checkBox_4,{"x": 142, "y": 720, "width": 75, "height": 75}
+page_sendFeedback->checkBox_5,{"x": 142, "y": 805, "width": 75, "height": 75}
 page_sendFeedback->checkBox_1_Label,{"x": 232, "y": 480, "width": 698, "height": 45}
-page_sendFeedback->checkBox_2_Label,{"x": 232, "y": 570, "width": 698, "height": 45}
-page_sendFeedback->checkBox_3_Label,{"x": 232, "y": 660, "width": 698, "height": 45}
-page_sendFeedback->checkBox_4_Label,{"x": 232, "y": 750, "width": 698, "height": 45}
-page_sendFeedback->checkBox_5_Label,{"x": 232, "y": 840, "width": 698, "height": 45}
-
-page_sendFeedback->label_enter_feedback,{"x": 150, "y": 1159, "width": 780, "height": 94}
-page_sendFeedback->pushButton_start_input,{"x": 150, "y": 1278, "width": 780, "height": 198}
-page_sendFeedback->textEdit_custom_message,{"x": 150, "y": 1278, "width": 780, "height": 198}
-page_sendFeedback->pushButton_send,{"x": 304, "y": 1576, "width": 472, "height": 100}
+page_sendFeedback->checkBox_2_Label,{"x": 232, "y": 565, "width": 698, "height": 45}
+page_sendFeedback->checkBox_3_Label,{"x": 232, "y": 649, "width": 698, "height": 45}
+page_sendFeedback->checkBox_4_Label,{"x": 232, "y": 735, "width": 698, "height": 45}
+page_sendFeedback->checkBox_5_Label,{"x": 232, "y": 820, "width": 698, "height": 45}
+page_sendFeedback->label_enter_feedback,{"x": 150, "y": 1129, "width": 780, "height": 47}
+page_sendFeedback->pushButton_start_input,{"x": 150, "y": 1201, "width": 780, "height": 198}
+page_sendFeedback->textEdit_custom_message,{"x": 150, "y": 1201, "width": 780, "height": 198}
+page_sendFeedback->pushButton_send,{"x": 304, "y": 1550, "width": 472, "height": 100}
 page_sendFeedback->label_contact_info,{"x": 165, "y": 1726, "width": 750, "height": 135}
 page_sendFeedback->label_help,{"x": 980, "y": 40, "width": 50, "height": 50}
 page_sendFeedback->pushButton_to_idle,{"x": 980, "y": 30, "width": 75, "height": 75}

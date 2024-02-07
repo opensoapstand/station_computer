@@ -40,6 +40,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
 
     ui->label_enter_feedback->show();
     ui->feedbackText->hide();
+    ui->pushButton_start_input->raise();
 
     selectIdleTimer = new QTimer(this);
     selectIdleTimer->setInterval(1000);
@@ -222,6 +223,8 @@ void page_sendFeedback::reset_and_show_page_elements()
     ui->textEdit_custom_message->setPlaceholderText(TEXTBOX_INVITE_TEXT);
 
     ui->feedbackKeyboard->hide();
+    ui->pushButton_start_input->raise();
+    ui->pushButton_start_input->show();
 
     ui->label_thanks_for_feedback->hide();
     ui->label_thank_you_image->hide();
@@ -353,6 +356,8 @@ void page_sendFeedback::on_pushButton_send_clicked()
 void page_sendFeedback::cancelButtonPressed()
 {
     qDebug() << "Keyboard: Cancel Clicked";
+    ui->pushButton_start_input->raise();
+    ui->pushButton_start_input->show();
     ui->textEdit_custom_message->setText("");
     p_keyboard->initializeKeyboard(false, ui->textEdit_custom_message);
     p_keyboard->keyboardButtonDefaultAllInCAPS();
@@ -361,6 +366,8 @@ void page_sendFeedback::cancelButtonPressed()
 void page_sendFeedback::returnButtonPressed()
 {
     qDebug() << "Keyboard: Done Clicked";
+    ui->pushButton_start_input->raise();
+    ui->pushButton_start_input->show();
     QString textEntry = ui->textEdit_custom_message->toPlainText();
     p_keyboard->initializeKeyboard(false, ui->textEdit_custom_message);
     p_keyboard->keyboardButtonDefaultAllInCAPS();
@@ -377,6 +384,8 @@ void page_sendFeedback::keyboardButtonPressed(int buttonID)
     {
         ui->feedbackKeyboard->hide();
         ui->textEdit_custom_message->setText("");
+        ui->pushButton_start_input->raise();
+        ui->pushButton_start_input->show();
     }
     else if (buttonText == "CAPS")
     {
@@ -421,6 +430,8 @@ void page_sendFeedback::keyboardButtonPressed(int buttonID)
         qDebug() << "Keyboard: Done Clicked";
         QString textEntry = ui->textEdit_custom_message->toPlainText();
         ui->feedbackKeyboard->hide();
+        ui->pushButton_start_input->raise();
+        ui->pushButton_start_input->show();
     }
     else if (buttonText == "Space")
     {
@@ -463,6 +474,8 @@ void page_sendFeedback::on_pushButton_start_input_clicked()
         ui->feedbackKeyboard->show();
     }
     // starts with welcome message
+    ui->pushButton_start_input->lower();
+    ui->pushButton_start_input->hide();
     if (ui->textEdit_custom_message->toPlainText() == TEXTBOX_INVITE_TEXT)
     {
         ui->textEdit_custom_message->clear(); // clears init text

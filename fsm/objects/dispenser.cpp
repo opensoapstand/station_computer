@@ -1752,14 +1752,10 @@ void dispenser::updateDispenseStatus()
 }
 
 void dispenser::setMixProductsDispenseInfo(std::string pNumber, double volumeDispensed, double volume_remaining){
-    m_dispenseInfoMixProducts.insert({"P-" + pNumber,{volumeDispensed,volume_remaining}});
+    m_dispenseInfoMixProducts.insert({pNumber,{volumeDispensed,volume_remaining}});
 }
 
 std::map<std::string, std::vector<double>> dispenser::getMixProductsDispenseInfo(){
-    for (const auto& entry : m_dispenseInfoMixProducts) {
-        std::cout << "Product: P-" << entry.first << ", Dispensed volume: " << entry.second[0] << ", Volume remaining: " << entry.second[1] << std::endl;
-    }
-    
     return m_dispenseInfoMixProducts;
 }
 

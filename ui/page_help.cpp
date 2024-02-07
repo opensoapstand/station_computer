@@ -116,6 +116,7 @@ void page_help::showEvent(QShowEvent *event)
     _helpIdleTimeoutSec = 60;
 
     if(p_page_idle->thisMachine->hasMixing()){
+        p_keyboard->needCAPS(true);
         p_keyboard->initializeKeyboard(false, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
         p_input_widget->toggleInputWidget(false);
         statusbarLayout->removeWidget(p_keyboard);    
@@ -158,7 +159,7 @@ void page_help::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     helpIdleTimer->stop();
     if(p_page_idle->thisMachine->hasMixing()){
         statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
-
+        p_keyboard->keyboardButtonDefaultAllInCAPS();
     }else{
         ui->keyboard_3->hide();
         statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
@@ -170,10 +171,12 @@ void page_help::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 void page_help::on_pushButton_to_idle_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_idle);
+    p_keyboard->keyboardButtonDefaultAllInCAPS();
 }
 
 void page_help::on_pushButton_to_howTo_clicked(){
     hideCurrentPageAndShowProvided(p_page_howTo);
+    p_keyboard->keyboardButtonDefaultAllInCAPS();
 }
 
 void page_help::onHelpTimeoutTick()
@@ -239,7 +242,7 @@ void page_help::doneButtonPressed(){
             p_keyboard->initializeKeyboard(true, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
         }
     }
-
+    p_keyboard->keyboardButtonDefaultAllInCAPS();
     if (p_page_idle->thisMachine->isAllowedAsMaintainer())
     {
         hideCurrentPageAndShowProvided(p_page_maintenance);

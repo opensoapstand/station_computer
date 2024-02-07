@@ -258,21 +258,91 @@
     <string>active spout</string>
    </property>
   </widget>
+  <widget class="QLabel" name="label_product_summary_background">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>1336</y>
+     <width>447</width>
+     <height>298</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_product_icon">
+   <property name="geometry">
+    <rect>
+     <x>75</x>
+     <y>1375</y>
+     <width>30</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_product_name">
+   <property name="geometry">
+    <rect>
+     <x>115</x>
+     <y>1366</y>
+     <width>365</width>
+     <height>45</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_product_selected">
+   <property name="geometry">
+    <rect>
+     <x>115</x>
+     <y>1415</y>
+     <width>365</width>
+     <height>90</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_volume_icon">
+   <property name="geometry">
+    <rect>
+     <x>75</x>
+     <y>1529</y>
+     <width>30</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <zorder>label_product_summary_background</zorder>
   <zorder>pushButton_abort</zorder>
   <zorder>label_moving_bottle_fill_effect</zorder>
   <zorder>label_background_during_dispense_animation</zorder>
-  <zorder>label_volume_dispensed</zorder>
-  <zorder>label_volume_dispensed_ml</zorder>
   <zorder>label_to_refill</zorder>
   <zorder>label_instructions_container</zorder>
   <zorder>label_press</zorder>
-  <zorder>pushButton_debug_Button</zorder>
   <zorder>label_finishTransactionMessage</zorder>
   <zorder>label_dispense_status</zorder>
   <zorder>label_dispense_flowrate</zorder>
   <zorder>pushButton_problems</zorder>
-  <zorder>label_dispense_message</zorder>
   <zorder>label_logo</zorder>
+  <zorder>label_product_icon</zorder>
+  <zorder>label_product_name</zorder>
+  <zorder>label_product_selected</zorder>
+  <zorder>label_volume_icon</zorder>
+  <zorder>pushButton_debug_Button</zorder>
+  <zorder>label_volume_dispensed</zorder>
+  <zorder>label_volume_dispensed_ml</zorder>
+  <zorder>label_dispense_message</zorder>
   <zorder>label_indicate_active_spout</zorder>
  </widget>
  <resources/>

@@ -68,7 +68,7 @@ void page_end::showEvent(QShowEvent *event)
     ui->pushButton_to_idle->setStyleSheet(styleSheet);
     ui->label_message->setStyleSheet(styleSheet);
     ui->label_message_2->setStyleSheet(styleSheet);
-
+    ui->label_message_2->show();
     ui->label_volume_dispensed_ml->setProperty("class", "volumeDispensedStylesheet"); // set property goes first!!
     ui->label_volume_dispensed->setProperty("class", "volumeDispensedStylesheet");    // set property goes first!!
 

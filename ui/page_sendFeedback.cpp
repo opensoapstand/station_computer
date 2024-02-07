@@ -28,6 +28,7 @@
 
 using json = nlohmann::json;
 #define TEXTBOX_INVITE_TEXT "Touch this field to input a text message"
+#define TEXTBOX_EMAIL_TEXT "Touch this field to input your email"
 // CTOR
 page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
                                                         ui(new Ui::page_sendFeedback)
@@ -53,14 +54,13 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
     ui->checkBox_3->setIconSize(size);
     ui->checkBox_4->setIconSize(size);
     ui->checkBox_5->setIconSize(size);
-
     statusbarLayout = new QVBoxLayout(this);
 }
 
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, page_product *page_product, page_end *page_end, statusbar *p_statusbar)
+void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, page_product *page_product, page_end *page_end, statusbar *p_statusbar,keyboard *keyboard)
 {
 
     this->p_page_select_product = pageSelect;
@@ -71,7 +71,7 @@ void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser 
     this->p_page_wifi_error = pageWifiError;
     this->p_page_product = page_product;
     this->p_statusbar = p_statusbar;
-
+    this->p_keyboard = keyboard;
 }
 
 // DTOR
@@ -86,10 +86,8 @@ void page_sendFeedback::showEvent(QShowEvent *event)
 {
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
-
-    statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
-    statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
-
+    p_keyboard->initializeKeyboard(false, ui->textEdit_custom_message);
+    statusbarLayout->removeWidget(p_keyboard);
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
     
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_previous_page);
@@ -105,9 +103,6 @@ void page_sendFeedback::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_thanks_for_feedback);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_send);
 
-    p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_SEND_FEEDBACK_PATH);
-    p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
-
     QString full_path = p_page_idle->thisMachine->getTemplatePathFromName(IMAGE_BUTTON_HELP);
     p_page_idle->thisMachine->addPictureToLabel(ui->label_help, full_path);
 
@@ -115,7 +110,33 @@ void page_sendFeedback::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->addPictureToLabel(ui->label_thank_you_image, full_path);
     
     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_FEEDBACK_CSS);
+    if(p_page_idle->thisMachine->hasMixing()){
+        p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_SEND_FEEDBACK_BACKGROUND_PATH);
+        p_page_idle->thisMachine->setTemplateTextToObject(ui->label_feedback_title);
+        p_page_idle->thisMachine->setTemplateTextToObject(ui->label_enter_email);
+        ui->textEdit_enter_email->setPlaceholderText(TEXTBOX_EMAIL_TEXT);
+        QString checkbox_unchecked_path = p_page_idle->thisMachine->getTemplatePathFromName(CHECKBOX_UNCHECKED_PATH);
+        QString checkbox_checked_path = p_page_idle->thisMachine->getTemplatePathFromName(CHECKBOX_CHECKED_PATH);
+        styleSheet = styleSheet.arg(checkbox_checked_path).arg(checkbox_unchecked_path);
+        ui->checkBox_1->setStyleSheet(styleSheet);
+        ui->checkBox_2->setStyleSheet(styleSheet);
+        ui->checkBox_3->setStyleSheet(styleSheet);
+        ui->checkBox_4->setStyleSheet(styleSheet);
+        ui->checkBox_5->setStyleSheet(styleSheet);
+        ui->label_enter_email->setStyleSheet(styleSheet);
+        ui->textEdit_enter_email->setStyleSheet(styleSheet);
+        ui->pushButton_enter_email->setProperty("class", "buttonTransparent");
+        ui->pushButton_enter_email->setStyleSheet(styleSheet);
+    }else{
+        // same background image as page_select_product
+        p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
+        ui->label_feedback_title->hide();
+        ui->label_enter_email->hide();
+        ui->textEdit_enter_email->hide();
+        ui->pushButton_enter_email->hide();
+    }
 
+    ui->label_feedback_title->setStyleSheet(styleSheet);
     ui->pushButton_send->setStyleSheet(styleSheet);
     ui->pushButton_start_input->setProperty("class", "buttonTransparent");
     ui->pushButton_start_input->setStyleSheet(styleSheet);
@@ -144,6 +165,28 @@ void page_sendFeedback::showEvent(QShowEvent *event)
     ui->pushButton_help_page->setStyleSheet(styleSheet);
     ui->label_enter_feedback->setStyleSheet(styleSheet);
     ui->textEdit_custom_message->setStyleSheet(styleSheet);
+
+    if (p_page_idle->thisMachine->hasMixing())
+    {
+        p_keyboard->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+        p_keyboard->setContentsMargins(0, 0, 0, 0);
+        p_keyboard->findChild<QWidget *>("keyboard_3")->setGeometry(21, 0, 1040, 495);
+
+        p_statusbar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+        p_statusbar->setContentsMargins(0, 0, 0, 0); 
+
+        statusbarLayout->setSpacing(0);
+        statusbarLayout->setContentsMargins(0, 0, 0, 0);
+
+        statusbarLayout->addWidget(p_keyboard);   
+        statusbarLayout->addSpacing(15);
+        statusbarLayout->addWidget(p_statusbar);   
+
+        statusbarLayout->setAlignment(Qt::AlignBottom | Qt::AlignVCenter);
+    }else{
+        statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
+        statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
+    }
 
     reset_and_show_page_elements();
 
@@ -180,7 +223,6 @@ void page_sendFeedback::reset_and_show_page_elements()
     ui->textEdit_custom_message->setPlaceholderText(TEXTBOX_INVITE_TEXT);
 
     ui->feedbackKeyboard->hide();
-
     ui->pushButton_start_input->raise();
     ui->pushButton_start_input->show();
 
@@ -215,6 +257,8 @@ void page_sendFeedback::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     }
     statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
+    // ensure all buttons are set back to CAPS
+    p_keyboard->keyboardButtonDefaultAllInCAPS();
 }
 
 void page_sendFeedback::mainPage()
@@ -294,6 +338,27 @@ void page_sendFeedback::on_pushButton_send_clicked()
         // this will trigger the reversal to idle page (start only after curl command completed)
         _selectIdleTimeoutSec = 2;
     }
+    p_keyboard->keyboardButtonDefaultAllInCAPS();
+}
+
+void page_sendFeedback::cancelButtonPressed()
+{
+    qDebug() << "Keyboard: Cancel Clicked";
+    ui->pushButton_start_input->raise();
+    ui->pushButton_start_input->show();
+    ui->textEdit_custom_message->setText("");
+    p_keyboard->initializeKeyboard(false, ui->textEdit_custom_message);
+    p_keyboard->keyboardButtonDefaultAllInCAPS();
+}
+
+void page_sendFeedback::returnButtonPressed()
+{
+    qDebug() << "Keyboard: Done Clicked";
+    ui->pushButton_start_input->raise();
+    ui->pushButton_start_input->show();
+    QString textEntry = ui->textEdit_custom_message->toPlainText();
+    p_keyboard->initializeKeyboard(false, ui->textEdit_custom_message);
+    p_keyboard->keyboardButtonDefaultAllInCAPS();
 }
 
 void page_sendFeedback::keyboardButtonPressed(int buttonID)
@@ -386,12 +451,19 @@ void page_sendFeedback::on_feedback_Text_Input_clicked()
 void page_sendFeedback::on_pushButton_start_input_clicked()
 {
     qDebug() << "Feedback button clicked, will show keyboard";
-
-    ui->feedbackKeyboard->show();
+    if(p_page_idle->thisMachine->hasMixing()){
+        ui->feedbackKeyboard->hide();
+        p_keyboard->registerCallBack(std::bind(&page_sendFeedback::returnButtonPressed, this));
+        p_keyboard->registerCancelCallBack(std::bind(&page_sendFeedback::cancelButtonPressed, this));
+        p_keyboard->initializeKeyboard(true, ui->textEdit_custom_message);
+        p_keyboard->needCAPS(true);
+        p_keyboard->setTimeoutSec(&_selectIdleTimeoutSec, true);
+    }else{
+        ui->feedbackKeyboard->show();
+    }
+    // starts with welcome message
     ui->pushButton_start_input->lower();
     ui->pushButton_start_input->hide();
-
-    // starts with welcome message
     if (ui->textEdit_custom_message->toPlainText() == TEXTBOX_INVITE_TEXT)
     {
         ui->textEdit_custom_message->clear(); // clears init text

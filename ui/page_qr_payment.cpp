@@ -155,6 +155,12 @@ void page_qr_payment::showEvent(QShowEvent *event)
     ui->pushButton_previous_page->raise();
     ui->label_gif->hide();
 
+    if(p_page_idle->thisMachine->hasMixing()){
+        ui->label_qr_background->show();
+    }else{
+        ui->label_qr_background->hide();
+    }
+
     setupQrOrder();
 }
 

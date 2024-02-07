@@ -83,6 +83,7 @@ void page_product_freeSample::showEvent(QShowEvent *event)
 {
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
+    p_keyboard->needCAPS(false);
     p_keyboard->initializeKeyboard(false, ui->lineEdit_promo_code);
     statusbarLayout->removeWidget(p_keyboard);
 
@@ -100,6 +101,7 @@ void page_product_freeSample::showEvent(QShowEvent *event)
     statusbarLayout->addWidget(p_statusbar);   
 
     statusbarLayout->setAlignment(Qt::AlignBottom | Qt::AlignVCenter);
+    p_keyboard->registerCallBack(std::bind(&page_product_freeSample::enterButtonPressed, this));
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
 

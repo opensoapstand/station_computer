@@ -100,6 +100,7 @@ void page_product_overview::showEvent(QShowEvent *event)
 {
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
+    p_keyboard->needCAPS(false);
     p_keyboard->initializeKeyboard(false, ui->lineEdit_promo_code);
     statusbarLayout->removeWidget(p_keyboard);
 
@@ -202,6 +203,7 @@ void page_product_overview::showEvent(QShowEvent *event)
     {
         QString picturePath = p_page_idle->thisMachine->getSelectedProduct()->getProductPicturePath();
         styleSheet.replace("%IMAGE_PATH%", picturePath);
+
     }
     ui->label_product_photo->setStyleSheet(styleSheet);
     /* Hacky transparent button */

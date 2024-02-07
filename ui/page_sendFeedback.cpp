@@ -59,7 +59,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, page_product *page_product, page_end *page_end, statusbar *p_statusbar)
+void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, page_product *page_product, page_end *page_end, statusbar *p_statusbar,keyboard *keyboard)
 {
 
     this->p_page_select_product = pageSelect;
@@ -70,7 +70,7 @@ void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser 
     this->p_page_wifi_error = pageWifiError;
     this->p_page_product = page_product;
     this->p_statusbar = p_statusbar;
-
+    this->p_keyboard = keyboard;
 }
 
 // DTOR
@@ -85,10 +85,8 @@ void page_sendFeedback::showEvent(QShowEvent *event)
 {
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
-
-    statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
-    statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
-
+    p_keyboard->initializeKeyboard(false, ui->textEdit_custom_message);
+    statusbarLayout->removeWidget(p_keyboard);
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
     
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_previous_page);
@@ -167,6 +165,28 @@ void page_sendFeedback::showEvent(QShowEvent *event)
     ui->label_enter_feedback->setStyleSheet(styleSheet);
     ui->textEdit_custom_message->setStyleSheet(styleSheet);
 
+    if (p_page_idle->thisMachine->hasMixing())
+    {
+        p_keyboard->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+        p_keyboard->setContentsMargins(0, 0, 0, 0);
+        p_keyboard->findChild<QWidget *>("keyboard_3")->setGeometry(21, 0, 1040, 495);
+
+        p_statusbar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+        p_statusbar->setContentsMargins(0, 0, 0, 0); 
+
+        statusbarLayout->setSpacing(0);
+        statusbarLayout->setContentsMargins(0, 0, 0, 0);
+
+        statusbarLayout->addWidget(p_keyboard);   
+        statusbarLayout->addSpacing(15);
+        statusbarLayout->addWidget(p_statusbar);   
+
+        statusbarLayout->setAlignment(Qt::AlignBottom | Qt::AlignVCenter);
+    }else{
+        statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
+        statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
+    }
+
     reset_and_show_page_elements();
 
     _selectIdleTimeoutSec = 60;
@@ -234,6 +254,8 @@ void page_sendFeedback::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     }
     statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
+    // ensure all buttons are set back to CAPS
+    p_keyboard->keyboardButtonDefaultAllInCAPS();
 }
 
 void page_sendFeedback::mainPage()
@@ -325,6 +347,23 @@ void page_sendFeedback::on_pushButton_send_clicked()
         // this will trigger the reversal to idle page (start only after curl command completed)
         _selectIdleTimeoutSec = 2;
     }
+    p_keyboard->keyboardButtonDefaultAllInCAPS();
+}
+
+void page_sendFeedback::cancelButtonPressed()
+{
+    qDebug() << "Keyboard: Cancel Clicked";
+    ui->textEdit_custom_message->setText("");
+    p_keyboard->initializeKeyboard(false, ui->textEdit_custom_message);
+    p_keyboard->keyboardButtonDefaultAllInCAPS();
+}
+
+void page_sendFeedback::returnButtonPressed()
+{
+    qDebug() << "Keyboard: Done Clicked";
+    QString textEntry = ui->textEdit_custom_message->toPlainText();
+    p_keyboard->initializeKeyboard(false, ui->textEdit_custom_message);
+    p_keyboard->keyboardButtonDefaultAllInCAPS();
 }
 
 void page_sendFeedback::keyboardButtonPressed(int buttonID)
@@ -413,9 +452,16 @@ void page_sendFeedback::on_feedback_Text_Input_clicked()
 void page_sendFeedback::on_pushButton_start_input_clicked()
 {
     qDebug() << "Feedback button clicked, will show keyboard";
-
-    ui->feedbackKeyboard->show();
-
+    if(p_page_idle->thisMachine->hasMixing()){
+        ui->feedbackKeyboard->hide();
+        p_keyboard->registerCallBack(std::bind(&page_sendFeedback::returnButtonPressed, this));
+        p_keyboard->registerCancelCallBack(std::bind(&page_sendFeedback::cancelButtonPressed, this));
+        p_keyboard->initializeKeyboard(true, ui->textEdit_custom_message);
+        p_keyboard->needCAPS(true);
+        p_keyboard->setTimeoutSec(&_selectIdleTimeoutSec, true);
+    }else{
+        ui->feedbackKeyboard->show();
+    }
     // starts with welcome message
     if (ui->textEdit_custom_message->toPlainText() == TEXTBOX_INVITE_TEXT)
     {

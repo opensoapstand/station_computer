@@ -23,7 +23,7 @@
 #include "product.h"
 #include <sqlite3.h>
 #include <map>
-
+#include <vector>
 // #include <stdint.h>
 // Total Number of Devices
 #define NUM_SOLENOID 3 // 12v for drink,water, and air
@@ -104,8 +104,8 @@ public:
       DF_ERROR setSlot(int slot);
       int getSlot();
 
-      void setMixProductsDispenseInfo(std::string pNumber, double volumeDispensed);
-      std::map<std::string, double> getMixProductsDispenseInfo();
+      void setMixProductsDispenseInfo(std::string pNumber, double volumeDispensed, double volume_remaining);
+      std::map<std::string, std::vector<double>> getMixProductsDispenseInfo();
       void resetMixProductsDispenseInfo();
 
 #ifdef INTERRUPT_DRIVE_FLOW_SENSOR_TICKS
@@ -277,7 +277,7 @@ private:
       int rc;
 
       gpio *m_pFlowsensor;
-      std::map<std::string, double> m_dispenseInfoMixProducts = {};
+      std::map<std::string, std::vector<double>> m_dispenseInfoMixProducts;
 
 
       // gpio *m_pButtonPowerOff[1];

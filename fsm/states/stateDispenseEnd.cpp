@@ -826,10 +826,12 @@ void stateDispenseEnd:: sendEndTransactionMessageToUI(){
     m_pMessaging->sendMessageOverIP(message, true); // send to UI
 }
 
-std::string stateDispenseEnd::mapToString(const std::map<std::string, double>& dictionary) {
+std::string stateDispenseEnd::mapToString(const std::map<std::string, std::vector<double>>& dictionary) {
     std::stringstream ss;
     for (const auto& entry : dictionary) {
-        ss << entry.first << ":" << to_string(entry.second) << ",";
+        
+        std::cout << "Product: P-" << entry.first << ", Dispensed volume: " << entry.second[0] << ", Volume remaining: " << entry.second[1] << std::endl;
+        ss << entry.first << ":[" << to_string(entry.second[0]) << ","<<to_string(entry.second[1]) <<"]" << ",";
     }
     std::string result = ss.str();
     if (!result.empty()) {

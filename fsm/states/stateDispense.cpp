@@ -139,7 +139,9 @@ DF_ERROR stateDispense::onAction()
       g_machine.m_productDispensers[slot_index].finishActivePNumberDispense();
       std::string activePNumber = to_string(g_machine.m_productDispensers[slot_index].getActivePNumber());
       double activeProductVolumeDispensed = g_machine.m_productDispensers[slot_index].getActiveProductVolumeDispensed();
-      g_machine.m_productDispensers[slot_index].setMixProductsDispenseInfo(activePNumber, activeProductVolumeDispensed);
+      double volume_remaining =g_machine.m_productDispensers[slot_index].getActiveProduct()->getVolumeRemaining() - activeProductVolumeDispensed;
+      g_machine.m_productDispensers[slot_index].setMixProductsDispenseInfo(activePNumber, activeProductVolumeDispensed, volume_remaining);
+
       return e_ret = OK;
    }
 
@@ -166,7 +168,8 @@ DF_ERROR stateDispense::onAction()
 
       std::string activePNumber = to_string(g_machine.m_productDispensers[slot_index].getActivePNumber());
       double activeProductVolumeDispensed = g_machine.m_productDispensers[slot_index].getActiveProductVolumeDispensed();
-      g_machine.m_productDispensers[slot_index].setMixProductsDispenseInfo(activePNumber, activeProductVolumeDispensed);
+      double volume_remaining =g_machine.m_productDispensers[slot_index].getActiveProduct()->getVolumeRemaining() - activeProductVolumeDispensed;
+      g_machine.m_productDispensers[slot_index].setMixProductsDispenseInfo(activePNumber, activeProductVolumeDispensed, volume_remaining);
 
 
       bool isAllPartsOfDispenseProductDispensed = g_machine.m_productDispensers[slot_index].setNextActiveProductAsPartOfSelectedProduct();

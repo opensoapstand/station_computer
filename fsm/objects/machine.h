@@ -89,7 +89,6 @@ public:
     void loadGeneralProperties(bool loadDispenserParameters);
     void loadMachineParametersFromDb();
     string getMachineId();
-    // string getPortalBaseUrl();
     string getSizeUnit();
     string getPaymentMethod();
 

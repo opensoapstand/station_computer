@@ -75,18 +75,16 @@ private:
     // int _rinseTimerTimeoutSec;
     // bool rinse;
 
-    CURL *curl;
     CURLcode res;
     std::string readBuffer;
-    QByteArray curl_param_array;
-    char *curl_data;
-
+    long http_code;
+    
     time_t rawtime;
     struct tm *timeinfo;
 
     void sendDispenseEndToCloud();
     void sendCompleteOrderToCloud(QString paymentMethod);
-    void transactionToFile(char *curl_params);
+    void transactionToFile(QString curl_params);
 
 
     bool exitIsForceable; // avoid being stuck if internet fails.

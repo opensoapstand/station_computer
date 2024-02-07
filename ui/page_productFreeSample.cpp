@@ -363,7 +363,6 @@ void page_product_freeSample::apply_promo_code(QString promocode)
     long http_code = 0;
     QString machine_id = p_page_idle->thisMachine->getMachineId();
     QString product_serial = p_page_idle->thisMachine->getSelectedProduct()->getPNumberAsPString();
-    QString portal_base_url = this->p_page_idle->thisMachine->getPortalBaseUrl();
 
     // csuccess
     p_page_idle->thisMachine->setCouponState(enabled_invalid_input);
@@ -372,65 +371,56 @@ void page_product_freeSample::apply_promo_code(QString promocode)
     {
         ui->label_gif->show();
         readBuffer.clear();
-        curl = curl_easy_init();
+       
+        QString api_url = "api/coupon/find/" + promocode + "/" + machine_id + "/" + product_serial;
+        std::tie(res,readBuffer, http_code) =  p_page_idle->thisMachine->sendRequestToPortal(api_url, "GET", "", "PAGE_FREE_SAMPLE");
+
+        if (res != CURLE_OK)
         {
-            if (!curl)
-            {
-                qDebug() << "page_product_freeSample: apply promo cURL failed init";
-                p_page_idle->thisMachine->setCouponState(network_error);
-                return;
-            }
-            curl_easy_setopt(curl, CURLOPT_URL, (portal_base_url+"api/coupon/find/" + promocode + "/" + machine_id + "/" + product_serial).toUtf8().constData());
-            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback_coupon2);
-            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-            res = curl_easy_perform(curl);
-            curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
-            if (res != CURLE_OK)
-            {
-                qDebug() << "Backend coupon response: curl backend problem. error code: " << res;
-                p_page_idle->thisMachine->setCouponState(network_error);
-            }
-            else
-            {
-                int new_percent;
-                QString myQString = QString::fromStdString(readBuffer);
-                p_page_idle->thisMachine->setCouponConditions(myQString);
-                ui->label_gif->hide();
-                qDebug() << myQString;
+            qDebug() << "Backend coupon response: curl backend problem. error code: " << res;
+            p_page_idle->thisMachine->setCouponState(network_error);
+        }
+        else
+        {
+            int new_percent;
+            QString myQString = QString::fromStdString(readBuffer);
+            p_page_idle->thisMachine->setCouponConditions(myQString);
+            ui->label_gif->hide();
+            qDebug() << myQString;
 
-                if (http_code == 200)
+            if (http_code == 200)
+            {
+                json coupon_obj = json::parse(readBuffer);
+                //For free samples, the coupons are created with 0% discount as the price is already 0. 
+                // With 0 price, customer need to have a valid coupon code to restrict the system abuse
+                if (coupon_obj["active"] && coupon_obj["discount_amount"]==0)
                 {
-                    json coupon_obj = json::parse(readBuffer);
-                    //For free samples, the coupons are created with 0% discount as the price is already 0. 
-                    // With 0 price, customer need to have a valid coupon code to restrict the system abuse
-                    if (coupon_obj["active"] && coupon_obj["discount_amount"]==0)
-                    {
-                        qDebug() << "Backend coupon response: Valid. Discount percentage: " << new_percent;
-                        new_percent = coupon_obj["discount_amount"];
+                    qDebug() << "Backend coupon response: Valid. Discount percentage: " << new_percent;
+                    new_percent = coupon_obj["discount_amount"];
 
-                        p_page_idle->thisMachine->setCouponCode(promocode);
-                        p_page_idle->thisMachine->setDiscountPercentageFraction((new_percent * 1.0) / 100);
-                        p_page_idle->thisMachine->setCouponState(enabled_valid_active);
-                    }
-                    else
-                    {
-                        qDebug() << "Backend coupon response: Invalid ";
-                        p_page_idle->thisMachine->setCouponState(enabled_invalid_input);
-                    }
+                    p_page_idle->thisMachine->setCouponCode(promocode);
+                    p_page_idle->thisMachine->setDiscountPercentageFraction((new_percent * 1.0) / 100);
+                    p_page_idle->thisMachine->setCouponState(enabled_valid_active);
                 }
                 else
                 {
-                    qDebug() << "Backend coupon response: http 200 response ";
-                    if (myQString == "Not Eligible")
-                    {
-                        p_page_idle->thisMachine->setCouponState(enabled_not_eligible);
-                    }
-                    else
-                    {
-                        p_page_idle->thisMachine->setCouponState(enabled_invalid_input);
-                    }
+                    qDebug() << "Backend coupon response: Invalid ";
+                    p_page_idle->thisMachine->setCouponState(enabled_invalid_input);
                 }
             }
+            else
+            {
+                qDebug() << "Backend coupon response: http 200 response ";
+                if (myQString == "Not Eligible")
+                {
+                    p_page_idle->thisMachine->setCouponState(enabled_not_eligible);
+                }
+                else
+                {
+                    p_page_idle->thisMachine->setCouponState(enabled_invalid_input);
+                }
+            }
+            
         }
     }
     else

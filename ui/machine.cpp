@@ -1699,3 +1699,42 @@ void machine::setFreeSampleEndURL(QString ending_url){
 QString machine::getFreeSampleEndURL(){
     return m_freesample_end_url;
 }
+
+size_t WriteCallback2(char *contents, size_t size, size_t nmemb, void *userp)
+{
+    ((std::string *)userp)->append((char *)contents, size * nmemb);
+    return size * nmemb;
+}
+
+std::tuple<CURLcode, std::string, long> machine::sendRequestToPortal(QString api_url, QString request_type, QString curl_params, QString page_name){
+
+    api_url = m_portal_base_url + api_url;
+    
+    curl_param_array = curl_params.toLocal8Bit();
+    curl_data = curl_param_array.data();
+
+    curl = curl_easy_init();
+    if (!curl)
+    {
+        QString failedTransactionParams = "PAGE: " + page_name + "; API_URL= " + api_url + " ; CURL_PARAMS= " + curl_params + "\n";
+        qDebug() << "CURL failed to init. parameters:" + failedTransactionParams;
+        // Write transaction to file
+        dfUtility->write_to_file(TRANSACTION_DISPENSE_END_OFFINE_PATH, failedTransactionParams);
+        return {res, "Curl failed", 404};
+    }
+    curl_easy_setopt(curl, CURLOPT_URL, api_url.toUtf8().constData());
+    if(request_type=="POST"){
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
+    }
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback2);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+    curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
+    res = curl_easy_perform(curl);
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+    
+    std::tuple<CURLcode, std::string, long> returnObject = {res,readBuffer, http_code};
+
+    curl_easy_cleanup(curl);
+    readBuffer = "";
+    return returnObject;
+}

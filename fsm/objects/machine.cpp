@@ -213,10 +213,6 @@ string machine::getMachineId()
     return m_machine_id;
 }
 
-// string machine::getPortalBaseUrl(){
-//     return m_portal_base_url;
-// }
-
 // void machine::loadButtonPropertiesFromDb()
 // {
 //     rc = sqlite3_open(CONFIG_DB_PATH, &db);

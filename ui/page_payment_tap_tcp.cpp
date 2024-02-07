@@ -64,7 +64,6 @@ page_payment_tap_tcp::page_payment_tap_tcp(QWidget *parent) : QWidget(parent),
 
 void page_payment_tap_tcp::initiate_tap_setup()
 {
-    // enableIpForwarding();
     qDebug() << "InitializingTap payment";
     tap_payment = true;
     std::map<std::string, std::string> configMap = readConfigFile();
@@ -478,36 +477,4 @@ void page_payment_tap_tcp::resetPaymentPage()
     // transactionLogging = "";
     response = true;
     qDebug() << "Cancelled";
-}
-
-void page_payment_tap_tcp::enableIpForwarding(){
-    const char* ETHERNET_PORT_ACTIVE = "enp3s0";
-
-    QString scriptPath = "/home/df-admin/production/admin/tap_payment/enableIPForward.sh";
-
-   // Define your sudo password
-    QString sudoPassword = "D@nkF1ll$";
-
-    // Create a QProcess instance
-    QProcess *process = new QProcess();
-
-    // Start the shell script using QProcess with sudo and provide the password via stdin
-    process->start("sudo", QStringList() << "-S" << "sh" << scriptPath);
-
-    // Write the sudo password to the process's standard input
-    process->write((sudoPassword + "\n").toUtf8());
-    process->closeWriteChannel();
-
-    // Connect the finished signal to handle process completion
-    QObject::connect(process, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
-                     [&](int exitCode, QProcess::ExitStatus exitStatus) {
-        if (exitStatus == QProcess::NormalExit && exitCode == 0) {
-            qDebug() << "Script executed successfully";
-        } else {
-            qDebug() << "Error: Script execution failed with exit code:" << exitCode;
-        }
-        process->deleteLater(); 
-    });
-    qDebug() << "Enabled IP forwarding";
-
 }

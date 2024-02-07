@@ -610,7 +610,6 @@ void page_product_overview::apply_promo_code(QString promocode)
     long http_code = 0;
     QString machine_id = p_page_idle->thisMachine->getMachineId();
     QString product_serial = p_page_idle->thisMachine->getSelectedProduct()->getPNumberAsPString();
-    QString portal_base_url = p_page_idle->thisMachine->getPortalBaseUrl();
     // csuccess
     p_page_idle->thisMachine->setCouponState(enabled_invalid_input);
 
@@ -618,63 +617,52 @@ void page_product_overview::apply_promo_code(QString promocode)
     {
         ui->label_gif->show();
         readBuffer.clear();
-        curl = curl_easy_init();
+ 
+        QString api_url = "api/coupon/find/" + promocode + "/" + machine_id + "/" + product_serial;
+        std::tie(res,readBuffer, http_code) =  p_page_idle->thisMachine->sendRequestToPortal(api_url, "GET", "", "PAGE_PRODUCT_OVERVIEW");
+        if (res != CURLE_OK)
         {
-            if (!curl)
-            {
-                qDebug() << "page_product_overview: apply promo cURL failed init";
-                p_page_idle->thisMachine->setCouponState(network_error);
-                return;
-            }
-            curl_easy_setopt(curl, CURLOPT_URL, (portal_base_url+"api/coupon/find/" + promocode + "/" + machine_id + "/" + product_serial).toUtf8().constData());
-            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback_coupon1);
-            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-            res = curl_easy_perform(curl);
-            curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
-            if (res != CURLE_OK)
-            {
-                qDebug() << "Backend coupon response: curl backend problem. error code: " << res;
-                p_page_idle->thisMachine->setCouponState(network_error);
-            }
-            else
-            {
-                int new_percent;
-                QString myQString = QString::fromStdString(readBuffer);
-                p_page_idle->thisMachine->setCouponConditions(myQString);
-                ui->label_gif->hide();
-                qDebug() << myQString;
+            qDebug() << "Backend coupon response: curl backend problem. error code: " << res;
+            p_page_idle->thisMachine->setCouponState(network_error);
+        }
+        else
+        {
+            int new_percent;
+            QString myQString = QString::fromStdString(readBuffer);
+            p_page_idle->thisMachine->setCouponConditions(myQString);
+            ui->label_gif->hide();
+            qDebug() << myQString;
 
-                if (http_code == 200)
+            if (http_code == 200)
+            {
+                json coupon_obj = json::parse(readBuffer);
+                if (coupon_obj["active"] && coupon_obj["discount_amount"] != 0)
                 {
-                    json coupon_obj = json::parse(readBuffer);
-                    if (coupon_obj["active"] && coupon_obj["discount_amount"] != 0)
-                    {
-                        qDebug() << "Backend coupon response: Valid. Discount percentage: " << new_percent;
-                        new_percent = coupon_obj["discount_amount"];
+                    qDebug() << "Backend coupon response: Valid. Discount percentage: " << new_percent;
+                    new_percent = coupon_obj["discount_amount"];
 
-                        p_page_idle->thisMachine->setCouponCode(promocode);
-                        p_page_idle->thisMachine->setDiscountPercentageFraction((new_percent * 1.0) / 100);
-                        p_page_idle->thisMachine->setCouponState(enabled_valid_active);
-                    }
-                    else
-                    {
-                        qDebug() << "Backend coupon response: Invalid ";
-                        p_page_idle->thisMachine->setCouponState(enabled_invalid_input);
-                    }
+                    p_page_idle->thisMachine->setCouponCode(promocode);
+                    p_page_idle->thisMachine->setDiscountPercentageFraction((new_percent * 1.0) / 100);
+                    p_page_idle->thisMachine->setCouponState(enabled_valid_active);
                 }
                 else
                 {
-                    qDebug() << "Backend coupon response: http 200 response ";
-                    if (myQString == "Not Eligible")
-                    {
-                        p_page_idle->thisMachine->setCouponState(enabled_not_eligible);
-                    }
-                    else
-                    {
-                        p_page_idle->thisMachine->setCouponState(enabled_invalid_input);
-                    }
+                    qDebug() << "Backend coupon response: Invalid ";
+                    p_page_idle->thisMachine->setCouponState(enabled_invalid_input);
                 }
             }
+            else
+            {
+                qDebug() << "Backend coupon response: http 200 response ";
+                if (myQString == "Not Eligible")
+                {
+                    p_page_idle->thisMachine->setCouponState(enabled_not_eligible);
+                }
+                else
+                {
+                    p_page_idle->thisMachine->setCouponState(enabled_invalid_input);
+                }
+            } 
         }
     }
     else
@@ -760,7 +748,6 @@ void page_product_overview::on_pushButton_continue(int buttonID)
     ui->pushButton_previous_page->setEnabled(false);
     QAbstractButton *buttonpressed = ui->buttonGroup_continue->button(buttonID);
     int activePaymentMethod = buttonpressed->property("activePaymentMethod").toInt();
-    QString portal_base_url = p_page_idle->thisMachine->getPortalBaseUrl();
     // QString paymentMethod = p_page_idle->thisMachine->getPaymentMethod();
     // if(buttonName=="paymentMethodAdditional"){
     //     paymentMethod = PAYMENT_QR;
@@ -783,20 +770,8 @@ void page_product_overview::on_pushButton_continue(int buttonID)
     case 0:
     {
         p_page_idle->thisMachine->setActivePaymentMethod(ActivePaymentMethod::qr);
-        CURL *curl;
-        CURLcode res;
-        curl = curl_easy_init();
 
-        if (!curl)
-        {
-            qDebug() << "page_product_overview: cURL failed init";
-            return;
-        }
-
-        curl_easy_setopt(curl, CURLOPT_URL, (portal_base_url+"api/machine_data/ping").toUtf8().constData());
-        curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
-
-        res = curl_easy_perform(curl);
+        std::tie(res,readBuffer, http_code) =  p_page_idle->thisMachine->sendRequestToPortal(PORTAL_PING, "GET", "", "PAGE_PRODUCT_OVERVIEW");
         if (res != CURLE_OK)
         {
             qDebug() << "ERROR: Failed to reach soapstandportal. error code: " + QString::number(res);
@@ -810,8 +785,7 @@ void page_product_overview::on_pushButton_continue(int buttonID)
             ui->label_invoice_price->text();
             hideCurrentPageAndShowProvided(p_page_payment_qr);
         }
-        curl_easy_cleanup(curl);
-        readBuffer = "";
+
         break;
     }
     case 1:
@@ -833,55 +807,7 @@ void page_product_overview::on_pushButton_continue(int buttonID)
         break;
     }
     }
-    // else if (paymentMethod == PAYMENT_QR)
-    // {
-    //     CURL *curl;
-    //     CURLcode res;
-    //     curl = curl_easy_init();
-
-    //     if (!curl)
-    //     {
-    //         qDebug() << "page_product_overview: cURL failed init";
-    //         return;
-    //     }
-
-    //     curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/ping");
-    //     curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
-
-    //     res = curl_easy_perform(curl);
-    //     if (res != CURLE_OK)
-    //     {
-    //         qDebug() << "ERROR: Failed to reach soapstandportal. error code: " + QString::number(res);
-    //         hideCurrentPageAndShowProvided(p_page_wifi_error);
-    //     }
-    //     else
-    //     {
-    //         QString feedback = QString::fromUtf8(readBuffer.c_str());
-    //         qDebug() << "Server feedback readbuffer: " << feedback;
-
-    //         ui->label_invoice_price->text();
-    //         hideCurrentPageAndShowProvided(p_page_payment_qr);
-    //     }
-    //     curl_easy_cleanup(curl);
-    //     readBuffer = "";
-    // }
-    // else if (paymentMethod == PAYMENT_TAP_USA)
-    // {
-    //     hideCurrentPageAndShowProvided(p_page_payment_tap_tcp);
-    // }
-    // else if (paymentMethod == PAYMENT_TAP_CANADA)
-    // {
-    //     hideCurrentPageAndShowProvided(p_page_payment_tap_serial);
-    // }
-    // else if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
-    // {
-    //     hideCurrentPageAndShowProvided(p_page_dispense);
-    // }
-    // else
-    // {
-    //     qDebug() << "WARNING: No payment method detected.";
-    //     hideCurrentPageAndShowProvided(p_page_dispense);
-    // }
+    
 }
 
 void page_product_overview::return_to_selectProductPage()
@@ -894,20 +820,6 @@ void page_product_overview::on_pushButton_select_product_page_clicked()
     this->return_to_selectProductPage();
 }
 
-// void page_product_overview::check_to_page_email()
-// {
-//     double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
-//     double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
-//     if (finalPrice == 0.0 || selectedPrice == 0.0)
-//     {
-//         ui->pushButton_continue_additional->lower();
-//         ui->pushButton_continue->setFixedSize(QSize(740, 100));
-//         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_free");
-//     }
-//     // else{
-//     // p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay");
-//     // }
-// }
 
 QString page_product_overview::additivies_overview(QString product_additives_overview)
 {

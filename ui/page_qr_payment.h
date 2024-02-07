@@ -113,15 +113,10 @@ private:
 
     QString orderId="";
 
-    CURL *curl;
     CURLcode res;
-    QByteArray curl_param_array;
-   
-    CURLcode res1;
-    CURL *curl1;
-    QByteArray curl_order_parameters;
-    QVBoxLayout *statusbarLayout;
     std::string readBuffer;
+    long http_code;
+    QVBoxLayout *statusbarLayout;
 
     void isQrProcessedCheckOnline();
     void setupQrOrder();

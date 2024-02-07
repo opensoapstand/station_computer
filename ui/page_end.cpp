@@ -86,22 +86,14 @@ void page_end::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->addPictureToLabel(ui->label_manufacturer_logo, machine_logo_full_path);
     ui->label_manufacturer_logo->setStyleSheet(styleSheet);
 
-    
-
     // p_page_idle->setDiscountPercentage(0.0);
 }
 
-size_t WriteCallback2(char *contents, size_t size, size_t nmemb, void *userp)
-{
-    ((std::string *)userp)->append((char *)contents, size * nmemb);
-    return size * nmemb;
-}
 
 void page_end::fsmReceiveFinalDispensedVolume(double dispensed)
 {
     qDebug() << "Updated dispensed volume" << dispensed;
     p_page_idle->thisMachine->getSelectedProduct()->setVolumeDispensedMl(dispensed);
-
     updateDispensedVolumeLabel();    
 }
 
@@ -127,22 +119,7 @@ void page_end::updateDispensedVolumeLabel(){
     ui->label_volume_dispensed_ml->setText(dispensed_correct_units + " ( $" + QString::number(price, 'f', 2) + " )");
 
 }
-// void page_end::fsmReceiveFinalDispensedVolume(double dispensed)
-// {
-//     qDebug() << "Updated dispensed volume" << dispensed;
-//     p_page_idle->thisMachine->selectedProduct->setVolumeDispensedMl(dispensed);
-//     QString units = p_page_idle->thisMachine->selectedProduct->getSizeUnit();
-//     QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl(), units, false, true);
 
-//     double price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->selectedProduct->getBasePrice());
-
-//     if (p_page_idle->thisMachine->selectedProduct->getSize() == SIZE_CUSTOM_INDEX)
-//     {
-//         price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->selectedProduct->getBasePrice() * p_page_idle->thisMachine->selectedProduct->getVolumeDispensedMl());
-//     }
-//     ui->label_volume_dispensed_ml->setText(dispensed_correct_units + " ( $" + QString::number(price, 'f', 2) + " )");
-//      qDebug() << "End of fsm received dispensed volume";
-// }
 
 void page_end::sendDispenseEndToCloud()
 {
@@ -153,41 +130,22 @@ void page_end::sendDispenseEndToCloud()
     QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl(), units, false, false);
     QString volume_remaining = p_page_idle->thisMachine->getSelectedProduct()->getVolumeRemainingCorrectUnits(false);
     QString soapstand_product_serial = p_page_idle->thisMachine->getSelectedProduct()->getPNumberAsPString();
-    QString portal_base_url = this->p_page_idle->thisMachine->getPortalBaseUrl();
     QString promoCode = this->p_page_idle->thisMachine->getCouponCode();
     QString volume_dispensed_mix_product = this->p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMixedProduct();
     qDebug() << "Send data at finish of order : " << order_id << ". Total dispensed: " << dispensed_correct_units << "corrected units send to soapstandportal: " << dispensed_correct_units+ "&mixProductInfo=" + volume_dispensed_mix_product;
     if (dispensed_correct_units == 0)
     {
         p_page_idle->thisMachine->addToTransactionLogging("\n ERROR: No Volume dispensed");
-        // transactionLogging += "\n ERROR: No Volume dispensed";
     }
-    QString curl_param = "oid=" + order_id + "&dispensed_amount=" + dispensed_correct_units + "&coupon=" + promoCode + "&logging=" + p_page_idle->thisMachine->getTransactionLogging() + "&volume_remaining_ml=" + volume_remaining + "&soapstand_product_serial=" + soapstand_product_serial;
-    qDebug() << "Curl params" << curl_param << endl;
-    curl_param_array = curl_param.toLocal8Bit();
-    curl_data = curl_param_array.data();
+    QString curl_params = "oid=" + order_id + "&dispensed_amount=" + dispensed_correct_units + "&coupon=" + promoCode + "&logging=" + p_page_idle->thisMachine->getTransactionLogging() + "&volume_remaining_ml=" + volume_remaining + "&soapstand_product_serial=" + soapstand_product_serial;
 
-    curl = curl_easy_init();
-    if (!curl)
-    {
-        qDebug() << "page_end: cURL failed to init. parameters:" + curl_param;
-        transactionToFile(curl_data);
-        is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
-        return;
-    }
-
-    curl_easy_setopt(curl, CURLOPT_URL, (portal_base_url+"api/machine_data/updateOrder").toUtf8().constData());
-    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback2);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-    curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
-    res = curl_easy_perform(curl);
+    std::tie(res,readBuffer, http_code) = p_page_idle->thisMachine->sendRequestToPortal(PORTAL_UPDATE_ALREADY_CREATED_ORDER, "POST", curl_params, "PAGE_END");
 
     if (res != CURLE_OK)
     {
         qDebug() << "ERROR: Transaction NOT sent to cloud. cURL fail. Error code: " + QString::number(res);
 
-        transactionToFile(curl_data);
+        transactionToFile(curl_params);
         is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
     }
     else
@@ -202,8 +160,6 @@ void page_end::sendDispenseEndToCloud()
             is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
         }
     }
-    curl_easy_cleanup(curl);
-    readBuffer = "";
 }
 
 //Push the complete order information to cloud
@@ -219,49 +175,33 @@ void page_end::sendCompleteOrderToCloud(QString paymentMethod)
     QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl(), productUnits, false, false);
     QString volume_remaining = p_page_idle->thisMachine->getSelectedProduct()->getVolumeRemainingCorrectUnits(false);
     QString soapstand_product_serial = p_page_idle->thisMachine->getSelectedProduct()->getPNumberAsPString();
-    QString portal_base_url = this->p_page_idle->thisMachine->getPortalBaseUrl();
     QString promoCode = this->p_page_idle->thisMachine->getCouponCode();  
     QString startTime = this->p_page_idle->thisMachine->getSelectedSlot()->getDispenseStartTime();
     QString endTime = this->p_page_idle->thisMachine->getSelectedSlot()->getDispenseEndTime();
     QString button_press_duration = QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getButtonPressDuration());
     QString button_press_count = QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getButtonPressCount());
     QString volume_dispensed_mix_product = this->p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMixedProduct();
-    // if (dispensed_correct_units == 0)
-    // {
-    //     p_page_idle->thisMachine->addToTransactionLogging("\n ERROR: No Volume dispensed");
-    //     // transactionLogging += "\n ERROR: No Volume dispensed";
-    // }
-    QString curl_param = "contents=" + contents + "&quantity_requested=" + quantity_requested + "&quantity_dispensed=" + dispensed_correct_units + \
+    if (dispensed_correct_units == 0)
+        {
+            p_page_idle->thisMachine->addToTransactionLogging("\n ERROR: No Volume dispensed");
+        }
+    QString curl_params = "contents=" + contents + "&quantity_requested=" + quantity_requested + "&quantity_dispensed=" + dispensed_correct_units + \
                  "&size_unit=" + productUnits + "&price=" + originalPrice + "&productId=" + productId + "&start_time=" + startTime + 
                  "&end_time=" + endTime + "&MachineSerialNumber=" + MachineSerialNumber + "&paymentMethod="+paymentMethod+"&volume_remaining_ml=" + 
                  volume_remaining + "&quantity_dispensed_ml=" + dispensed_correct_units +
                  "&volume_remaining=" + volume_remaining + "&coupon=" + promoCode +"&buttonDuration=" + button_press_duration + 
                  "&buttonTimes=" + button_press_count + "&pnumber=" + soapstand_product_serial + "&mixProductInfo=" + volume_dispensed_mix_product;
                  
-    qDebug() << "Curl params" << curl_param << endl;
-    curl_param_array = curl_param.toLocal8Bit();
-    curl_data = curl_param_array.data();
+    std::tie(res,readBuffer, http_code) = p_page_idle->thisMachine->sendRequestToPortal(PORTAL_SEND_NEW_COMPLETE_ORDER, "POST", curl_params, "PAGE_END");
 
-    curl = curl_easy_init();
-    if (!curl)
-    {
-        qDebug() << "page_end: cURL failed to init. parameters:" + curl_param;
-        transactionToFile(curl_data);
-        is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
-        return;
-    }
-    curl_easy_setopt(curl, CURLOPT_URL, (portal_base_url+"api/machine_data/pushPrinterOrder").toUtf8().constData());
-    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback2);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-    curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
-    res = curl_easy_perform(curl);
+    // res = returnObject.first;
+    // readBuffer = returnObject.second;
 
     if (res != CURLE_OK)
     {
         qDebug() << "ERROR: Transaction NOT sent to cloud. cURL fail. Error code: " + QString::number(res);
 
-        transactionToFile(curl_data);
+        transactionToFile(curl_params);
         is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
     }
     else
@@ -276,10 +216,7 @@ void page_end::sendCompleteOrderToCloud(QString paymentMethod)
             is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
         }
     }
-    curl_easy_cleanup(curl);
-    readBuffer = "";
 }
-
 
 
 void page_end::controllerFinishedTransaction()
@@ -298,10 +235,9 @@ void page_end::controllerFinishedTransaction()
 
 
 
-void page_end::transactionToFile(char *curl_params)
+void page_end::transactionToFile(QString curl_params)
 {
-    QString data_out = curl_params;
-    p_page_idle->thisMachine->dfUtility->write_to_file(TRANSACTION_DISPENSE_END_OFFINE_PATH, data_out);
+    p_page_idle->thisMachine->dfUtility->write_to_file(TRANSACTION_DISPENSE_END_OFFINE_PATH, curl_params);
 }
 
 void page_end::onThankyouTimeoutTick()

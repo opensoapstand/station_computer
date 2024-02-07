@@ -581,6 +581,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     std::string slot_state_str = g_machine.m_productDispensers[m_slot_index].getSlotStateAsString();
     // std::string product_id = getProductID(slot);
     std::string product_id = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->m_product_id_combined_with_location_for_backend;
+     //Get mix product object to be used for updating local station database
     std::map<std::string, std::vector<double>> mixProductDispenseObject= g_machine.m_productDispensers[m_slot_index].getMixProductsDispenseInfo();
 
     // FIXME: DB needs fully qualified link to find...obscure with XML loading.
@@ -596,16 +597,16 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
         databaseUpdateSql(sql1, USAGE_DB_PATH);
     }
 
-    // update product table
+    // update product table with p Number
     std::string sql2;
+    // Iterate over the mix product dispense object to get individual values for each product
     for (const auto& entry : mixProductDispenseObject) {
+
         volume_dispensed_total_ever = ceil(g_machine.m_productDispensers[m_slot_index].getProductFromPNumber(std::stoi(entry.first))->getProductVolumeDispensedTotalEver());
         volume_dispensed_since_restock = ceil(g_machine.m_productDispensers[m_slot_index].getProductFromPNumber(std::stoi(entry.first))->getProductVolumeDispensedSinceLastRestock());
         updated_volume_dispensed_total_ever_str = to_string(volume_dispensed_total_ever + entry.second[0]);
         updated_volume_dispensed_since_restock_str = to_string(volume_dispensed_since_restock + entry.second[0]);
-
         sql2 = ("UPDATE products SET volume_dispensed_total=" + updated_volume_dispensed_total_ever_str + ", volume_remaining=" + std::to_string(entry.second[1]) + ", volume_dispensed_since_restock=" + updated_volume_dispensed_since_restock_str + " WHERE soapstand_product_serial='" + entry.first + "';");
-        // sql2 = "UPDATE products SET volume_remaining=" + std::to_string(entry.second[1]) + " WHERE soapstand_product_serial='" + entry.first + "';";
         databaseUpdateSql(sql2, CONFIG_DB_PATH);
     }
 
@@ -828,6 +829,7 @@ void stateDispenseEnd:: sendEndTransactionMessageToUI(){
     std::string button_press_duration = to_string(g_machine.m_productDispensers[m_slot_index].getButtonPressedTotalMillis());
     std::string button_press_count = to_string(g_machine.m_productDispensers[m_slot_index].getDispenseButtonPressesDuringDispensing());
     std::string volume_dispensed =to_string(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed());
+    //Get mix product object as a string to pass to UI
     std::string pNumber_dispense_info_string = mapToString(g_machine.m_productDispensers[m_slot_index].getMixProductsDispenseInfo());
 
     std::string message = "finalTransactionMessage|start_time|" + start_time+"|end_time|" + end_time+"|button_press_duration|"+button_press_duration \

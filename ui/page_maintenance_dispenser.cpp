@@ -1168,41 +1168,17 @@ void page_maintenance_dispenser::on_pushButton_set_restock_volume_clicked()
 // ****************** BACKEND CLOUD ACTIONS ***********************
 // ****************************************************************
 
-size_t WriteCallback3(char *contents, size_t size, size_t nmemb, void *userp)
-{
-    ((std::string *)userp)->append((char *)contents, size * nmemb);
-    return size * nmemb;
-}
 
 void page_maintenance_dispenser::sendRestockToCloud()
 {
-    QString curl_param = "pid=" + p_page_idle->thisMachine->getSelectedProduct()->getAwsProductId() + "&volume_full=" + p_page_idle->thisMachine->getSelectedProduct()->getFullVolumeCorrectUnits(false);
-
-    curl_param_array = curl_param.toLocal8Bit();
-    curl_data = curl_param_array.data();
-    QString portal_base_url = this->p_page_idle->thisMachine->getPortalBaseUrl();
-
-    curl = curl_easy_init();
-    if (!curl)
-    {
-        qDebug() << "cURL failed to page_init at thank you end";
-        restockTransactionToFile(curl_data);
-        return;
-    }
-
-    curl_easy_setopt(curl, CURLOPT_URL, (portal_base_url+"api/machine_data/resetStock").toUtf8().constData());
-    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback3);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-    curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
-
-    res = curl_easy_perform(curl);
-
+    QString curl_params = "pid=" + p_page_idle->thisMachine->getSelectedProduct()->getAwsProductId() + "&volume_full=" + p_page_idle->thisMachine->getSelectedProduct()->getFullVolumeCorrectUnits(false);
+    
+    std::tie(res,readBuffer, http_code) = p_page_idle->thisMachine->sendRequestToPortal(PORTAL_RESET_STOCK, "POST", curl_params, "PAGE_MAINTENANCE_DISPENSER");
     // error code 6 (cannot resolve host) showed up when not connected to wifi. Make distinct!
     if (res != CURLE_OK)
     {
         qDebug() << "pagemaintenancedispenser. cURL fail. (6=could not resolve host (no internet)) Error code: " + QString::number(res);
-        restockTransactionToFile(curl_data);
+        restockTransactionToFile(curl_params);
     }
     else
     {
@@ -1216,22 +1192,14 @@ void page_maintenance_dispenser::sendRestockToCloud()
             // return data
         }
     }
-    curl_easy_cleanup(curl);
-    readBuffer = "";
 }
 
-void page_maintenance_dispenser::restockTransactionToFile(char *curl_params)
+void page_maintenance_dispenser::restockTransactionToFile(QString curl_params)
 {
     qDebug() << "Write Restock transaction to file ";
-    QString data_out = curl_params;
-    p_page_idle->thisMachine->dfUtility->write_to_file(TRANSACTIONS_RESTOCK_OFFINE_PATH, data_out);
+    p_page_idle->thisMachine->dfUtility->write_to_file(TRANSACTIONS_RESTOCK_OFFINE_PATH, curl_params);
 }
 
-size_t WriteCallback4(char *contents, size_t size, size_t nmemb, void *userp)
-{
-    ((std::string *)userp)->append((char *)contents, size * nmemb);
-    return size * nmemb;
-}
 
 void page_maintenance_dispenser::update_changes_to_portal()
 {
@@ -1244,30 +1212,14 @@ void page_maintenance_dispenser::update_changes_to_portal()
                           "&size_small=" + p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(SIZE_SMALL_INDEX, false, false) +
                           "&size_medium=" + p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(SIZE_MEDIUM_INDEX, false, false) +
                           "&size_large=" + p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(SIZE_LARGE_INDEX, false, false);
-    curl_param_array2 = curl_params.toLocal8Bit();
-
-    curl2 = curl_easy_init();
-    if (!curl2)
-    {
-        qDebug() << "cURL failed to page_init at thank you end";
-        return;
-    }
-    QString portal_base_url = this->p_page_idle->thisMachine->getPortalBaseUrl();
-
-    curl_easy_setopt(curl2, CURLOPT_URL, (portal_base_url+"api/product/update_product_from_station").toUtf8().constData());
-    curl_easy_setopt(curl2, CURLOPT_POSTFIELDS, curl_param_array2.data());
-    curl_easy_setopt(curl2, CURLOPT_WRITEFUNCTION, WriteCallback4);
-    curl_easy_setopt(curl2, CURLOPT_WRITEDATA, &readBuffer);
-    curl_easy_setopt(curl2, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
-    qDebug() << "Successful request generated";
-
-    res2 = curl_easy_perform(curl2);
+    
+    std::tie(res,readBuffer, http_code) = p_page_idle->thisMachine->sendRequestToPortal(PORTAL_UPDATE_PRODUCT_FROM_STATION, "POST", curl_params,"PAGE_MAINTENANCE_DISPENSER");
 
     // error code 6 (cannot resolve host) showed up when not connected to wifi. Make distinct!
-    if (res2 != CURLE_OK)
+    if (res != CURLE_OK)
     {
         qDebug() << "pagemaintenancedispenser. cURL fail. (6=could not resolve host (no internet)) Error code: " + QString::number(res);
-        // restockTransactionToFile(curl_data);
+        restockTransactionToFile(curl_params);
     }
     else
     {
@@ -1282,8 +1234,6 @@ void page_maintenance_dispenser::update_changes_to_portal()
             // return data
         }
     }
-    curl_easy_cleanup(curl2);
-    readBuffer = "";
 }
 
 void page_maintenance_dispenser::on_checkBox_enable_small_clicked()

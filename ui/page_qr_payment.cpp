@@ -227,7 +227,6 @@ bool page_qr_payment::createOrderIdAndSendToBackend()
     QString quantity_requested = p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(false, false);
     char drinkSize = p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar();
     double originalPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
-    QString portal_base_url = p_page_idle->thisMachine->getPortalBaseUrl();
     // if (drinkSize == 'c')
     // {
     //     originalPrice = p_page_idle->thisMachine->getSelectedProduct()->getPriceCustom();
@@ -241,75 +240,43 @@ bool page_qr_payment::createOrderIdAndSendToBackend()
     orderId = orderId.remove("}");
 
     // send order details to backend
-    QString curl_order_parameters_string = "orderId=" + orderId + "&size=" + drinkSize + "&MachineSerialNumber=" + MachineSerialNumber +
+    QString curl_params = "orderId=" + orderId + "&size=" + drinkSize + "&MachineSerialNumber=" + MachineSerialNumber +
                                            "&contents=" + contents + "&price=" + price + "&productId=" + productId + "&quantity_requested=" + quantity_requested + "&size_unit=" + productUnits + "&logging=" + p_page_idle->thisMachine->getTransactionLogging();
-    curl_order_parameters = curl_order_parameters_string.toLocal8Bit();
-
-    curl1 = curl_easy_init();
-
-    if (!curl1)
-    {
-        qDebug() << "pagepayement cURL Failed to init : " + curl_order_parameters_string + "to: " +portal_base_url +  "api/machine_data/createOrderInDb";
-        return shouldShowQR;
-    }
-
-    curl_easy_setopt(curl1, CURLOPT_URL, (portal_base_url+"api/machine_data/createOrderInDb").toUtf8().constData());
-    curl_easy_setopt(curl1, CURLOPT_POSTFIELDS, curl_order_parameters.data());
-    curl_easy_setopt(curl1, CURLOPT_WRITEFUNCTION, WriteCallback);
-    curl_easy_setopt(curl1, CURLOPT_WRITEDATA, &readBuffer);
-    curl_easy_setopt(curl1, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
 
     int createOrderInDbAttempts = 0;
     QString feedback;
     do
     {
-        res1 = curl_easy_perform(curl1);
+        std::tie(res,readBuffer, http_code) = p_page_idle->thisMachine->sendRequestToPortal(PORTAL_CREATE_ORDER, "POST", curl_params, "PAGE_QR_PAYMENT");
         feedback = QString::fromUtf8(readBuffer.c_str());
         createOrderInDbAttempts += 1;
     } while (feedback != "true" && createOrderInDbAttempts <= 3);
     if (feedback != "true")
     {
-        qDebug() << "ERROR: Problem at create order in the cloud request. error code: " + QString::number(res1);
+        qDebug() << "ERROR: Problem at create order in the cloud request. error code: " + QString::number(res);
     }
     else
     {
-        qDebug() << "create order in the cloud request sent to soapstandportal (" + curl_order_parameters_string + "). Server feedback: " << feedback;
+        qDebug() << "create order in the cloud request sent to soapstandportal (" + curl_params + "). Server feedback: " << feedback;
     }
     if (feedback == "true")
     {
         shouldShowQR = true;
     }
-    curl_easy_cleanup(curl1);
-    readBuffer = "";
+    // curl_easy_cleanup(curl1);
+    // readBuffer = "";
     feedback = "";
 
     _pageTimeoutCounterSecondsLeft = QR_PAGE_TIMEOUT_SECONDS;
     _qrProcessedPeriodicalCheckSec = QR_PROCESSED_PERIODICAL_CHECK_SECONDS;
-    // qrPeriodicalCheckTimer->start(1000);
     return shouldShowQR;
 }
 
 void page_qr_payment::isQrProcessedCheckOnline()
 {
 
-    curl = curl_easy_init();
-    if (!curl)
-    {
-        qDebug() << "cURL failed to page_init";
-        return;
-    }
-
-    QString curl_param = "oid=" + orderId;
-    curl_param_array = curl_param.toLocal8Bit();
-
-    curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/check_order_status");
-
-    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-    curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
-
-    res = curl_easy_perform(curl);
+    QString curl_params = "oid=" + orderId;
+    std::tie(res,readBuffer, http_code) = p_page_idle->thisMachine->sendRequestToPortal(PORTAL_CHECK_ORDER_STATUS, "POST", curl_params, "PAGE_QR_PAYMENT");
     qDebug() << "Send check qr status for order " << orderId;
 
     if (res != CURLE_OK)
@@ -367,7 +334,7 @@ void page_qr_payment::isQrProcessedCheckOnline()
             qDebug() << "ASSERT ERROR: Unknown message from Server";
         }
     }
-    curl_easy_cleanup(curl);
+    // curl_easy_cleanup(curl);
     readBuffer = "";
 }
 

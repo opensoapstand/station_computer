@@ -43,6 +43,7 @@ page_product_overview->label_total,{"x": 80, "y": 1509, "width": 500, "height": 
 page_product_overview->label_invoice_price_total,{"x": 750, "y": 1509, "width": 250, "height": 36}
 page_product_overview->label_selected_volume,{"x": 152, "y": 1129, "width": 470, "height": 45}
 page_product_overview->lineEdit_promo_code,{"x": 145, "y": 1294, "width": 791, "height": 70}
+page_product_overview->label_gif,{"x": 377, "y": 779, "width": 325, "height": 325}
 page_product_overview->pushButton_promo_input,{"x": 145, "y": 1294, "width": 791, "height": 70}
 page_product_overview->pushButton_continue,{"x": 188, "y": 1740, "width": 360, "height": 100}
 page_product_overview->pushButton_continue_additional,{"x": 568, "y": 1740, "width": 360, "height": 100}

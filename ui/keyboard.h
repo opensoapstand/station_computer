@@ -31,8 +31,8 @@ public:
     std::function<void()> callbackFunction;
     void registerCancelCallBack(const std::function<void()>& func);
     std::function<void()> cancelCallbackFunction;
-    void initializeKeyboard(bool isVisible, QLineEdit *widget);
-    void initializeKeyboard(bool isVisible, QTextEdit *widget);
+    void setKeyboardVisibility(bool isVisible, QLineEdit *widget);
+    void setKeyboardVisibility(bool isVisible, QTextEdit *widget);
     // checking if the keyboard needs CAPS button
     void needCAPS(bool capsYorN);
     void setTimeoutSec(int* seconds, bool timeoutYorN);

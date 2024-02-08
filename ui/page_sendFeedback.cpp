@@ -86,7 +86,8 @@ void page_sendFeedback::showEvent(QShowEvent *event)
 {
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
-    p_keyboard->initializeKeyboard(false, ui->textEdit_custom_message);
+    p_keyboard->needCAPS(false);
+    p_keyboard->setKeyboardVisibility(false, ui->textEdit_custom_message);
     statusbarLayout->removeWidget(p_keyboard);
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
     
@@ -114,7 +115,6 @@ void page_sendFeedback::showEvent(QShowEvent *event)
         p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_SEND_FEEDBACK_BACKGROUND_PATH);
         p_page_idle->thisMachine->setTemplateTextToObject(ui->label_feedback_title);
         p_page_idle->thisMachine->setTemplateTextToObject(ui->label_enter_email);
-        ui->textEdit_enter_email->setPlaceholderText(TEXTBOX_EMAIL_TEXT);
         QString checkbox_unchecked_path = p_page_idle->thisMachine->getTemplatePathFromName(CHECKBOX_UNCHECKED_PATH);
         QString checkbox_checked_path = p_page_idle->thisMachine->getTemplatePathFromName(CHECKBOX_CHECKED_PATH);
         styleSheet = styleSheet.arg(checkbox_checked_path).arg(checkbox_unchecked_path);
@@ -124,7 +124,7 @@ void page_sendFeedback::showEvent(QShowEvent *event)
         ui->checkBox_4->setStyleSheet(styleSheet);
         ui->checkBox_5->setStyleSheet(styleSheet);
         ui->label_enter_email->setStyleSheet(styleSheet);
-        ui->textEdit_enter_email->setStyleSheet(styleSheet);
+        ui->lineEdit_enter_email->setStyleSheet(styleSheet);
         ui->pushButton_enter_email->setProperty("class", "buttonTransparent");
         ui->pushButton_enter_email->setStyleSheet(styleSheet);
     }else{
@@ -132,7 +132,7 @@ void page_sendFeedback::showEvent(QShowEvent *event)
         p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
         ui->label_feedback_title->hide();
         ui->label_enter_email->hide();
-        ui->textEdit_enter_email->hide();
+        ui->lineEdit_enter_email->hide();
         ui->pushButton_enter_email->hide();
     }
 
@@ -215,13 +215,15 @@ void page_sendFeedback::onSelectTimeoutTick()
 
 void page_sendFeedback::reset_and_show_page_elements()
 {
-
+    ui->lineEdit_enter_email->clear();
+    ui->lineEdit_enter_email->show();
     ui->textEdit_custom_message->clear();
     ui->textEdit_custom_message->show();
     ui->textEdit_custom_message->setFocus(); // give focus to the textEdit_custom_message widget
+    qDebug() << "Setting email text to:" << TEXTBOX_EMAIL_TEXT;
+    ui->lineEdit_enter_email->setPlaceholderText(TEXTBOX_EMAIL_TEXT);
     qDebug() << "Setting feedback text to:" << TEXTBOX_INVITE_TEXT;
     ui->textEdit_custom_message->setPlaceholderText(TEXTBOX_INVITE_TEXT);
-
     ui->feedbackKeyboard->hide();
     ui->pushButton_start_input->raise();
     ui->pushButton_start_input->show();
@@ -353,23 +355,33 @@ void page_sendFeedback::on_pushButton_send_clicked()
     p_keyboard->keyboardButtonDefaultAllInCAPS();
 }
 
-void page_sendFeedback::cancelButtonPressed()
+// for email input field, when return button pressed
+void page_sendFeedback::lineEditReturnButtonPressed()
 {
-    qDebug() << "Keyboard: Cancel Clicked";
+    qDebug() << "Line Edit Keyboard: Done Clicked";
+    ui->pushButton_enter_email->raise();
+    ui->pushButton_enter_email->show();
+    QString textEntry = ui->lineEdit_enter_email->text();
+    p_keyboard->setKeyboardVisibility(false, ui->lineEdit_enter_email);
+}
+
+void page_sendFeedback::textEditCancelButtonPressed()
+{
+    qDebug() << "Text Edit Keyboard: Cancel Clicked";
     ui->pushButton_start_input->raise();
     ui->pushButton_start_input->show();
     ui->textEdit_custom_message->setText("");
-    p_keyboard->initializeKeyboard(false, ui->textEdit_custom_message);
+    p_keyboard->setKeyboardVisibility(false, ui->textEdit_custom_message);
     p_keyboard->keyboardButtonDefaultAllInCAPS();
 }
 
-void page_sendFeedback::returnButtonPressed()
+void page_sendFeedback::textEditReturnButtonPressed()
 {
-    qDebug() << "Keyboard: Done Clicked";
+    qDebug() << "Text Edit Keyboard: Done Clicked";
     ui->pushButton_start_input->raise();
     ui->pushButton_start_input->show();
     QString textEntry = ui->textEdit_custom_message->toPlainText();
-    p_keyboard->initializeKeyboard(false, ui->textEdit_custom_message);
+    p_keyboard->setKeyboardVisibility(false, ui->textEdit_custom_message);
     p_keyboard->keyboardButtonDefaultAllInCAPS();
 }
 
@@ -462,12 +474,12 @@ void page_sendFeedback::on_feedback_Text_Input_clicked()
 
 void page_sendFeedback::on_pushButton_start_input_clicked()
 {
-    qDebug() << "Feedback button clicked, will show keyboard";
+    qDebug() << "Feedback input field clicked, will show keyboard for QTextEdit";
     if(p_page_idle->thisMachine->hasMixing()){
         ui->feedbackKeyboard->hide();
-        p_keyboard->registerCallBack(std::bind(&page_sendFeedback::returnButtonPressed, this));
-        p_keyboard->registerCancelCallBack(std::bind(&page_sendFeedback::cancelButtonPressed, this));
-        p_keyboard->initializeKeyboard(true, ui->textEdit_custom_message);
+        p_keyboard->registerCallBack(std::bind(&page_sendFeedback::textEditReturnButtonPressed, this));
+        p_keyboard->registerCancelCallBack(std::bind(&page_sendFeedback::textEditCancelButtonPressed, this));
+        p_keyboard->setKeyboardVisibility(true, ui->textEdit_custom_message);
         p_keyboard->needCAPS(true);
         p_keyboard->setTimeoutSec(&_selectIdleTimeoutSec, true);
     }else{
@@ -479,6 +491,18 @@ void page_sendFeedback::on_pushButton_start_input_clicked()
     if (ui->textEdit_custom_message->toPlainText() == TEXTBOX_INVITE_TEXT)
     {
         ui->textEdit_custom_message->clear(); // clears init text
+    }
+}
+
+void page_sendFeedback::on_pushButton_enter_email_clicked(){
+    qDebug() << "Email input field clicked, will show keyboard for QLineEdit";
+    p_keyboard->registerCallBack(std::bind(&page_sendFeedback::lineEditReturnButtonPressed, this));
+    p_keyboard->setKeyboardVisibility(true, ui->lineEdit_enter_email);
+    p_keyboard->needCAPS(false);
+    p_keyboard->setTimeoutSec(&_selectIdleTimeoutSec, true);
+    if (ui->lineEdit_enter_email->text() == TEXTBOX_EMAIL_TEXT)
+    {
+        ui->lineEdit_enter_email->clear();
     }
 }
 

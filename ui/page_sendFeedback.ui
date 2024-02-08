@@ -1779,16 +1779,6 @@ font: 11pt &quot;Montserrat&quot;;</string>
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QTextEdit" name="textEdit_enter_email">
-   <property name="geometry">
-    <rect>
-     <x>150</x>
-     <y>994</y>
-     <width>780</width>
-     <height>95</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QPushButton" name="pushButton_enter_email">
    <property name="geometry">
     <rect>
@@ -1800,6 +1790,37 @@ font: 11pt &quot;Montserrat&quot;;</string>
    </property>
    <property name="text">
     <string/>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit_enter_email">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>994</y>
+     <width>780</width>
+     <height>95</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>391</width>
+     <height>35</height>
+    </size>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="frame">
+    <bool>false</bool>
    </property>
   </widget>
   <zorder>label_thank_you_image</zorder>
@@ -1831,7 +1852,7 @@ font: 11pt &quot;Montserrat&quot;;</string>
   <zorder>pushButton_send</zorder>
   <zorder>feedbackKeyboard</zorder>
   <zorder>label_enter_email</zorder>
-  <zorder>textEdit_enter_email</zorder>
+  <zorder>lineEdit_enter_email</zorder>
   <zorder>pushButton_enter_email</zorder>
  </widget>
  <resources/>

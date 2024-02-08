@@ -58,8 +58,9 @@ public:
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
-    void returnButtonPressed();
-    void cancelButtonPressed();
+    void lineEditReturnButtonPressed();
+    void textEditReturnButtonPressed();
+    void textEditCancelButtonPressed();
     // void paintEvent(QPaintEvent *event);
 
 signals:
@@ -71,9 +72,9 @@ private slots:
     void onSelectTimeoutTick();
 
     void on_pushButton_send_clicked();
-
     void on_pushButton_previous_page_clicked();
     void on_pushButton_start_input_clicked();
+    void on_pushButton_enter_email_clicked();
     void on_feedback_Text_Input_clicked();
     void keyboardButtonPressed(int);
 

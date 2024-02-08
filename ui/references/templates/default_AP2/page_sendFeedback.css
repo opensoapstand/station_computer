@@ -63,7 +63,7 @@ QCheckBox{
    text-align: left;
 }
 
-#textEdit_custom_message, #textEdit_enter_email{
+#textEdit_custom_message, #lineEdit_enter_email{
    font-family: 'Lato';
    font-style: normal;
    font-weight: 400;

@@ -26,7 +26,7 @@ keyboard::~keyboard()
 }
 
 // for QLineEdit
-void keyboard::initializeKeyboard(bool isVisible, QLineEdit *widget)
+void keyboard::setKeyboardVisibility(bool isVisible, QLineEdit *widget)
 {
     is_keyboard_visible = isVisible;
     widgetForLineEdit = widget;
@@ -36,7 +36,7 @@ void keyboard::initializeKeyboard(bool isVisible, QLineEdit *widget)
 }
 
 // for QTextEdit
-void keyboard::initializeKeyboard(bool isVisible, QTextEdit *widget)
+void keyboard::setKeyboardVisibility(bool isVisible, QTextEdit *widget)
 {
     is_keyboard_visible = isVisible;
     widgetForTextEdit = widget;
@@ -45,6 +45,7 @@ void keyboard::initializeKeyboard(bool isVisible, QTextEdit *widget)
     refresh();
 }
 
+// keyboard widget for maintenance keyboard and sendFeedback keyboard will need CAPS button
 void keyboard::needCAPS(bool capsYorN){
     needCAPSbutton = capsYorN;
 }
@@ -65,6 +66,7 @@ void keyboard::registerCancelCallBack(const std::function<void()>& func) {
     cancelCallbackFunction = func;
 }
 
+// reset all keyboard buttons to CAPS
 void keyboard::keyboardButtonDefaultAllInCAPS(){
     foreach (QAbstractButton *button, ui->buttonGroup->buttons())
     {
@@ -203,6 +205,7 @@ void keyboard::keyboardButtonPressed(int buttonID)
     }
     else
     {
+        qDebug() << "STATE" << p_page_idle->thisMachine->getCouponState();
         if(lineEdit){
             widgetForLineEdit->setText(widgetForLineEdit->text() + buttonText);
         }else{

@@ -559,7 +559,7 @@ void page_product_overview::updatePriceLabel()
         // It's intended behaviour so user doesnt have to retype the promo-code
         // promo codes get reset when going to idle page.
         double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
-        qDebug() << "Selcted price" << selectedPrice;
+        qDebug() << "Selected price" << selectedPrice;
         double selectedPriceCorrected;
         double selectedBottlePrice;
         double discountAmount;
@@ -572,13 +572,13 @@ void page_product_overview::updatePriceLabel()
             {
                 selectedBottlePrice = p_page_idle->thisMachine->getSelectedBottle()->getPriceOfSelectedBottle();
                 selectedPriceCorrected = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice) + selectedBottlePrice;
-                qDebug() << "Selcted price corrected" << selectedPriceCorrected;
+                qDebug() << "Price (bottle selected): " << selectedPriceCorrected;
                 discountAmount = selectedPrice - (selectedPriceCorrected - selectedBottlePrice);
             }
             else
             {
                 selectedPriceCorrected = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
-                qDebug() << "Selcted price corrected" << selectedPriceCorrected;
+                qDebug() << "Price (no bottle selected): " << selectedPriceCorrected;
                 discountAmount = selectedPrice - selectedPriceCorrected;
                 // do hide labels for bottle
             }
@@ -586,7 +586,7 @@ void page_product_overview::updatePriceLabel()
         else
         {
             selectedPriceCorrected = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
-            qDebug() << "Selcted price corrected" << selectedPriceCorrected;
+            qDebug() << "Price selected: " << selectedPriceCorrected;
             discountAmount = selectedPrice - selectedPriceCorrected;
         }
 

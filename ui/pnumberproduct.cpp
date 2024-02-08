@@ -504,7 +504,7 @@ QString pnumberproduct::getSizeAsVolumeWithCorrectUnits(int size, bool roundValu
 
     v = getVolumeBySize(size);
     units = getSizeUnit();
-    qDebug() << "unitsssssss" << units;
+    // qDebug() << "unitsssssss" << units;
     volume_as_string = df_util::getConvertedStringVolumeFromMl(v, units, roundValue, addUnits);
     return volume_as_string;
 }

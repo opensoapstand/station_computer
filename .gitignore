@@ -12,6 +12,10 @@ fsm/makefile.save
 
 fsm/build
 fsm/controller
+fsm/controller_22.04
+fsm/controller_18.04
+fsm/controller_24.04
+
 sqlite/build
 *.db-journal
 

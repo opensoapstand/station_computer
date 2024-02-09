@@ -72,22 +72,25 @@ std::vector<uint8_t> packetFromECR::getPacket()
 
 std::ostream &operator <<(std::ostream &out, const packetFromECR &pkt)
 {
-    out << "Packet to Send: ";
-    out << std::hex << int(pkt.currentPacket.STX) << " ";
-    out << std::hex << int(pkt.currentPacket.dataLen[0]) << " ";
-    out << std::hex << int(pkt.currentPacket.dataLen[1]) << " ";
-    out << std::hex << int(pkt.currentPacket.parentID) << " ";
-    out << std::hex << int(pkt.currentPacket.classID) << " ";
-    out << std::hex << int(pkt.currentPacket.APIID[0]) << " ";
-    out << std::hex << int(pkt.currentPacket.APIID[1]) << " ";
+    // TODO: SHOULD NOT BE COMMENTED OUT!!!!!
+    qDebug()<< "ASSERT ERROR: code should be uncommented! ***********************************"
 
-    for (uint i = 0; i < pkt.currentPacket.data.size(); i++)
-        out << std::hex << int(pkt.currentPacket.data[i]) << " ";
+    // out << "Packet to Send: ";
+    // out << std::hex << int(pkt.currentPacket.STX) << " ";
+    // out << std::hex << int(pkt.currentPacket.dataLen[0]) << " ";
+    // out << std::hex << int(pkt.currentPacket.dataLen[1]) << " ";
+    // out << std::hex << int(pkt.currentPacket.parentID) << " ";
+    // out << std::hex << int(pkt.currentPacket.classID) << " ";
+    // out << std::hex << int(pkt.currentPacket.APIID[0]) << " ";
+    // out << std::hex << int(pkt.currentPacket.APIID[1]) << " ";
 
-    out << std::hex << int(pkt.currentPacket.ETX) << " ";
-    out << std::hex << int(pkt.currentPacket.LRC) << std::endl;
+    // for (uint i = 0; i < pkt.currentPacket.data.size(); i++)
+    //     out << std::hex << int(pkt.currentPacket.data[i]) << " ";
 
-    return out;
+    // out << std::hex << int(pkt.currentPacket.ETX) << " ";
+    // out << std::hex << int(pkt.currentPacket.LRC) << std::endl;
+
+    // return out;
 }
 
 uint16_t packetFromECR::convertFrom8To16(uint8_t firstByte, uint8_t secondByte)

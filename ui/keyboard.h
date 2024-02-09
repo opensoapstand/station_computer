@@ -33,11 +33,12 @@ public:
     std::function<void()> cancelCallbackFunction;
     void setKeyboardVisibility(bool isVisible, QLineEdit *widget);
     void setKeyboardVisibility(bool isVisible, QTextEdit *widget);
+    void resetKeyboard();
     // checking if the keyboard needs CAPS button
     void needCAPS(bool capsYorN);
     void setTimeoutSec(int* seconds, bool timeoutYorN);
     void adjustTimeoutSec(int seconds);
-    void keyboardButtonDefaultAllInCAPS();
+    // void keyboardButtonDefaultAllInCAPS();
 private slots:
     void keyboardButtonPressed(int buttonID);
     void onRefreshTimerTick();

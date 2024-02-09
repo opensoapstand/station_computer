@@ -73,6 +73,7 @@ page_sendFeedback->label_contact_info,{"x": 165, "y": 1726, "width": 750, "heigh
 page_sendFeedback->label_help,{"x": 980, "y": 40, "width": 50, "height": 50}
 page_sendFeedback->pushButton_to_idle,{"x": 980, "y": 30, "width": 75, "height": 75}
 page_sendFeedback->pushButton_help_page,{"x": 980, "y": 30, "width": 75, "height": 75}
+page_sendFeedback->label_thanks_for_feedback,{"x": 185, "y": 1118, "width": 750, "height": 100}
 
 page_qr_payment->label_title,{"x": 265, "y": 200, "width": 548, "height": 100}
 page_qr_payment->label_qrCode,{"x": 314, "y": 424, "width": 451, "height": 451}

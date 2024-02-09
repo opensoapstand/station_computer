@@ -101,8 +101,7 @@ void page_product_overview::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
     // need CAPS button for keyboard widget T or F
-    p_keyboard->needCAPS(false);
-    p_keyboard->setKeyboardVisibility(false, ui->lineEdit_promo_code);
+    p_keyboard->resetKeyboard();
     statusbarLayout->removeWidget(p_keyboard);
 
     qDebug() << "is Custom mix? : " << p_page_idle->thisMachine->getSelectedProduct()->isCustomMix();
@@ -697,7 +696,7 @@ void page_product_overview::enterButtonPressed()
         p_page_idle->thisMachine->setCouponState(enabled_processing_input);
         reset_and_show_page_elements();
         apply_promo_code(ui->lineEdit_promo_code->text());
-        p_keyboard->setKeyboardVisibility(false, ui->lineEdit_promo_code);
+        p_keyboard->resetKeyboard();
     }
     else
     {

@@ -1823,6 +1823,19 @@ font: 11pt &quot;Montserrat&quot;;</string>
     <bool>false</bool>
    </property>
   </widget>
+  <widget class="QLabel" name="label_thanks_for_feedback_2">
+   <property name="geometry">
+    <rect>
+     <x>323</x>
+     <y>1228</y>
+     <width>435</width>
+     <height>35</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
   <zorder>label_thank_you_image</zorder>
   <zorder>label_problem_options</zorder>
   <zorder>pushButton_to_idle</zorder>
@@ -1854,6 +1867,7 @@ font: 11pt &quot;Montserrat&quot;;</string>
   <zorder>label_enter_email</zorder>
   <zorder>lineEdit_enter_email</zorder>
   <zorder>pushButton_enter_email</zorder>
+  <zorder>label_thanks_for_feedback_2</zorder>
  </widget>
  <resources/>
  <connections/>

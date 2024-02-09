@@ -77,7 +77,7 @@ private slots:
     void on_pushButton_enter_email_clicked();
     void on_feedback_Text_Input_clicked();
     void keyboardButtonPressed(int);
-
+    bool emailValid(QString email);
     void on_pushButton_help_page_clicked();
 
 private:

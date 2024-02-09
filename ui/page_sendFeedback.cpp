@@ -25,10 +25,14 @@
 #include "page_idle.h"
 #include <curl/curl.h>
 #include <json.hpp>
+#include <regex>
 
 using json = nlohmann::json;
 #define TEXTBOX_INVITE_TEXT "Touch this field to input a text message"
+#define TEXTBOX_INVITE_TEXT_ALERT "Please enter a message or select an option above before submitting the feedback"
 #define TEXTBOX_EMAIL_TEXT "Touch this field to input your email"
+#define TEXTBOX_EMAIL_TEXT_ALERT "Please enter email before submitting the feedback"
+#define TEXTBOX_EMAIL_TEXT_INVALID "Entered email is not valid, please try again"
 // CTOR
 page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
                                                         ui(new Ui::page_sendFeedback)
@@ -86,8 +90,7 @@ void page_sendFeedback::showEvent(QShowEvent *event)
 {
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
-    p_keyboard->needCAPS(false);
-    p_keyboard->setKeyboardVisibility(false, ui->textEdit_custom_message);
+    p_keyboard->resetKeyboard();
     statusbarLayout->removeWidget(p_keyboard);
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
     
@@ -115,6 +118,7 @@ void page_sendFeedback::showEvent(QShowEvent *event)
         p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_SEND_FEEDBACK_BACKGROUND_PATH);
         p_page_idle->thisMachine->setTemplateTextToObject(ui->label_feedback_title);
         p_page_idle->thisMachine->setTemplateTextToObject(ui->label_enter_email);
+        p_page_idle->thisMachine->setTemplateTextToObject(ui->label_thanks_for_feedback_2);
         QString checkbox_unchecked_path = p_page_idle->thisMachine->getTemplatePathFromName(CHECKBOX_UNCHECKED_PATH);
         QString checkbox_checked_path = p_page_idle->thisMachine->getTemplatePathFromName(CHECKBOX_CHECKED_PATH);
         styleSheet = styleSheet.arg(checkbox_checked_path).arg(checkbox_unchecked_path);
@@ -124,9 +128,12 @@ void page_sendFeedback::showEvent(QShowEvent *event)
         ui->checkBox_4->setStyleSheet(styleSheet);
         ui->checkBox_5->setStyleSheet(styleSheet);
         ui->label_enter_email->setStyleSheet(styleSheet);
+        ui->lineEdit_enter_email->setProperty("class", "lineEdit_enter_email");
         ui->lineEdit_enter_email->setStyleSheet(styleSheet);
         ui->pushButton_enter_email->setProperty("class", "buttonTransparent");
         ui->pushButton_enter_email->setStyleSheet(styleSheet);
+        ui->textEdit_custom_message->setProperty("class", "textEdit_custom_message");
+        ui->label_thanks_for_feedback_2->setStyleSheet(styleSheet);
     }else{
         // same background image as page_select_product
         p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_SELECT_PRODUCT_BACKGROUND_PATH);
@@ -134,6 +141,7 @@ void page_sendFeedback::showEvent(QShowEvent *event)
         ui->label_enter_email->hide();
         ui->lineEdit_enter_email->hide();
         ui->pushButton_enter_email->hide();
+        ui->label_thanks_for_feedback_2->hide();
     }
 
     ui->label_feedback_title->setStyleSheet(styleSheet);
@@ -219,7 +227,6 @@ void page_sendFeedback::reset_and_show_page_elements()
     ui->lineEdit_enter_email->show();
     ui->textEdit_custom_message->clear();
     ui->textEdit_custom_message->show();
-    ui->textEdit_custom_message->setFocus(); // give focus to the textEdit_custom_message widget
     qDebug() << "Setting email text to:" << TEXTBOX_EMAIL_TEXT;
     ui->lineEdit_enter_email->setPlaceholderText(TEXTBOX_EMAIL_TEXT);
     qDebug() << "Setting feedback text to:" << TEXTBOX_INVITE_TEXT;
@@ -229,6 +236,7 @@ void page_sendFeedback::reset_and_show_page_elements()
     ui->pushButton_start_input->show();
 
     ui->label_thanks_for_feedback->hide();
+    ui->label_thanks_for_feedback_2->hide();
     ui->label_thank_you_image->hide();
 
     ui->checkBox_1->setCheckState(Qt::Unchecked);
@@ -260,7 +268,7 @@ void page_sendFeedback::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
     // ensure all buttons are set back to CAPS
-    p_keyboard->keyboardButtonDefaultAllInCAPS();
+    p_keyboard->resetKeyboard();
 }
 
 void page_sendFeedback::mainPage()
@@ -308,51 +316,72 @@ void page_sendFeedback::on_pushButton_send_clicked()
     }
     qDebug() << problemList;
     QString problems = problemList.join(",");
-
-    if (problems.length() != 0 || (!(ui->textEdit_custom_message->toPlainText().isEmpty()) && (ui->textEdit_custom_message->toPlainText() != TEXTBOX_INVITE_TEXT)))
-    {
-        qDebug() << "Will send feedback to backend";
-
-        // instant reaction by hiding the page into "thank you"
-        ui->label_thank_you_image->show();
-        ui->label_thank_you_image->raise();
-        ui->label_thank_you_image->repaint(); // instant showing instead of waiting for function to be finished.
-
-        ui->label_thanks_for_feedback->show();
-        ui->label_thanks_for_feedback->raise();
-        ui->label_thanks_for_feedback->repaint(); // instant showing instead of waiting for function to be finished.
-
-        // send to backend
-        QString MachineSerialNumber = p_page_idle->thisMachine->getMachineId();
-        QString customFeedback = ui->textEdit_custom_message->toPlainText();
-        QString curl_param = "problems=" + problems + " ," + customFeedback + "&MachineSerialNumber=" + MachineSerialNumber;
-        qDebug() << "Curl params" << curl_param;
-        curl_param_array = curl_param.toLocal8Bit();
-        qDebug() << curl_param_array;
-        curl = curl_easy_init();
-        if (!curl)
+    if(ui->lineEdit_enter_email->text().isEmpty()){
+        p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_enter_email, "lineEdit_enter_email_alert", PAGE_FEEDBACK_CSS);
+        ui->lineEdit_enter_email->setPlaceholderText(TEXTBOX_EMAIL_TEXT_ALERT);
+    }else{
+        if ((problems.length() != 0 || (!(ui->textEdit_custom_message->toPlainText().isEmpty()) && (ui->textEdit_custom_message->toPlainText() != TEXTBOX_INVITE_TEXT)))
+            && emailValid(ui->lineEdit_enter_email->text()))
         {
-            qDebug() << "page_end: cURL failed to init. parameters:" + curl_param;
+            qDebug() << "Will send feedback to backend";
 
-            return;
+            // instant reaction by hiding the page into "thank you"
+            ui->label_thank_you_image->show();
+            ui->label_thank_you_image->raise();
+            ui->label_thank_you_image->repaint(); // instant showing instead of waiting for function to be finished.
+
+            ui->label_thanks_for_feedback->show();
+            ui->label_thanks_for_feedback->raise();
+            ui->label_thanks_for_feedback->repaint(); // instant showing instead of waiting for function to be finished.
+
+            ui->label_thanks_for_feedback_2->show();
+            ui->label_thanks_for_feedback_2->raise();
+            ui->label_thanks_for_feedback_2->repaint(); // instant showing instead of waiting for function to be finished.
+
+            // send to backend
+            QString MachineSerialNumber = p_page_idle->thisMachine->getMachineId();
+            QString customFeedback = ui->textEdit_custom_message->toPlainText();
+            QString customerEmail = ui->lineEdit_enter_email->text();
+            QString curl_param = "customer_email= "+ customerEmail+ " ,"+"&problems= " + problems + " ," + customFeedback + "&MachineSerialNumber=" + MachineSerialNumber;
+            qDebug() << "Curl params" << curl_param;
+            curl_param_array = curl_param.toLocal8Bit();
+            qDebug() << curl_param_array;
+            curl = curl_easy_init();
+            if (!curl)
+            {
+                qDebug() << "page_end: cURL failed to init. parameters:" + curl_param;
+
+                return;
+            }
+
+            curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/alert/sendFeedbackEmail");
+            curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
+            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallbackFeedback);
+            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+            curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
+            res = curl_easy_perform(curl);
+
+            if (res != CURLE_OK)
+            {
+                qDebug() << "ERROR: Transaction NOT sent to cloud. cURL fail. Error code: " + QString::number(res);
+            }
+
+            // this will trigger the reversal to idle page (start only after curl command completed)
+            _selectIdleTimeoutSec = 2;
+        }else{
+            if(!emailValid(ui->lineEdit_enter_email->text())){
+                qDebug() << "User entered invalid email";
+                p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_enter_email, "lineEdit_enter_email_alert", PAGE_FEEDBACK_CSS);
+                ui->lineEdit_enter_email->clear();
+                ui->lineEdit_enter_email->setPlaceholderText(TEXTBOX_EMAIL_TEXT_INVALID);
+            }
+            qDebug() << "User needs to select an option or enter text message";
+            p_page_idle->thisMachine->addCssClassToObject(ui->textEdit_custom_message, "textEdit_custom_message_alert", PAGE_FEEDBACK_CSS);
+            ui->textEdit_custom_message->setPlaceholderText(TEXTBOX_INVITE_TEXT_ALERT);
         }
-
-        curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/alert/sendFeedbackEmail");
-        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallbackFeedback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-        curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
-        res = curl_easy_perform(curl);
-
-        if (res != CURLE_OK)
-        {
-            qDebug() << "ERROR: Transaction NOT sent to cloud. cURL fail. Error code: " + QString::number(res);
-        }
-
-        // this will trigger the reversal to idle page (start only after curl command completed)
-        _selectIdleTimeoutSec = 2;
     }
-    p_keyboard->keyboardButtonDefaultAllInCAPS();
+
+    p_keyboard->resetKeyboard();
 }
 
 // for email input field, when return button pressed
@@ -361,8 +390,7 @@ void page_sendFeedback::lineEditReturnButtonPressed()
     qDebug() << "Line Edit Keyboard: Done Clicked";
     ui->pushButton_enter_email->raise();
     ui->pushButton_enter_email->show();
-    QString textEntry = ui->lineEdit_enter_email->text();
-    p_keyboard->setKeyboardVisibility(false, ui->lineEdit_enter_email);
+    p_keyboard->resetKeyboard();
 }
 
 void page_sendFeedback::textEditCancelButtonPressed()
@@ -371,8 +399,7 @@ void page_sendFeedback::textEditCancelButtonPressed()
     ui->pushButton_start_input->raise();
     ui->pushButton_start_input->show();
     ui->textEdit_custom_message->setText("");
-    p_keyboard->setKeyboardVisibility(false, ui->textEdit_custom_message);
-    p_keyboard->keyboardButtonDefaultAllInCAPS();
+    p_keyboard->resetKeyboard();
 }
 
 void page_sendFeedback::textEditReturnButtonPressed()
@@ -380,9 +407,7 @@ void page_sendFeedback::textEditReturnButtonPressed()
     qDebug() << "Text Edit Keyboard: Done Clicked";
     ui->pushButton_start_input->raise();
     ui->pushButton_start_input->show();
-    QString textEntry = ui->textEdit_custom_message->toPlainText();
-    p_keyboard->setKeyboardVisibility(false, ui->textEdit_custom_message);
-    p_keyboard->keyboardButtonDefaultAllInCAPS();
+    p_keyboard->resetKeyboard();
 }
 
 void page_sendFeedback::keyboardButtonPressed(int buttonID)
@@ -475,17 +500,19 @@ void page_sendFeedback::on_feedback_Text_Input_clicked()
 void page_sendFeedback::on_pushButton_start_input_clicked()
 {
     qDebug() << "Feedback input field clicked, will show keyboard for QTextEdit";
+    ui->textEdit_custom_message->setFocus(); // give focus to the textEdit_custom_message widget
     if(p_page_idle->thisMachine->hasMixing()){
+        ui->textEdit_custom_message->setProperty("class", "textEdit_custom_message");
         ui->feedbackKeyboard->hide();
-        p_keyboard->registerCallBack(std::bind(&page_sendFeedback::textEditReturnButtonPressed, this));
-        p_keyboard->registerCancelCallBack(std::bind(&page_sendFeedback::textEditCancelButtonPressed, this));
+        p_keyboard->resetKeyboard();
         p_keyboard->setKeyboardVisibility(true, ui->textEdit_custom_message);
         p_keyboard->needCAPS(true);
         p_keyboard->setTimeoutSec(&_selectIdleTimeoutSec, true);
+        p_keyboard->registerCallBack(std::bind(&page_sendFeedback::textEditReturnButtonPressed, this));
+        p_keyboard->registerCancelCallBack(std::bind(&page_sendFeedback::textEditCancelButtonPressed, this));
     }else{
         ui->feedbackKeyboard->show();
     }
-    // starts with welcome message
     ui->pushButton_start_input->lower();
     ui->pushButton_start_input->hide();
     if (ui->textEdit_custom_message->toPlainText() == TEXTBOX_INVITE_TEXT)
@@ -496,10 +523,15 @@ void page_sendFeedback::on_pushButton_start_input_clicked()
 
 void page_sendFeedback::on_pushButton_enter_email_clicked(){
     qDebug() << "Email input field clicked, will show keyboard for QLineEdit";
-    p_keyboard->registerCallBack(std::bind(&page_sendFeedback::lineEditReturnButtonPressed, this));
+    ui->lineEdit_enter_email->setFocus(); // give focus to the lineEdit_enter_email widget
+    p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_enter_email, "lineEdit_enter_email", PAGE_FEEDBACK_CSS);
+    ui->pushButton_start_input->raise();
+    ui->pushButton_start_input->show();
+    p_keyboard->resetKeyboard();
+    p_keyboard->needCAPS(true);
     p_keyboard->setKeyboardVisibility(true, ui->lineEdit_enter_email);
-    p_keyboard->needCAPS(false);
     p_keyboard->setTimeoutSec(&_selectIdleTimeoutSec, true);
+    p_keyboard->registerCallBack(std::bind(&page_sendFeedback::lineEditReturnButtonPressed, this));
     if (ui->lineEdit_enter_email->text() == TEXTBOX_EMAIL_TEXT)
     {
         ui->lineEdit_enter_email->clear();
@@ -509,4 +541,11 @@ void page_sendFeedback::on_pushButton_enter_email_clicked(){
 void page_sendFeedback::on_pushButton_help_page_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_help);
+}
+
+bool page_sendFeedback::emailValid(QString email)
+{
+    std::string emailString = email.toStdString();
+    const std::regex pattern("(\\w+)(\\.|_)?(\\w*)@(\\w+)(\\.(\\w+))+");
+    return std::regex_match(emailString, pattern);
 }

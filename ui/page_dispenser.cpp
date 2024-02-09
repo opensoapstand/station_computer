@@ -272,7 +272,10 @@ void page_dispenser::showEvent(QShowEvent *event)
             selectedPriceCorrected = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
             ui->label_product_selected->setText(selected_volume + " ($" + QString::number(selectedPriceCorrected, 'f', 2) + ")");
         }
-
+        ui->label_dispense_message_background->setStyleSheet(styleSheet);
+        p_page_idle->thisMachine->addPictureToLabel(ui->label_dispense_message_icon, p_page_idle->thisMachine->getTemplatePathFromName(PAGE_DISPENSE_ALERT_ICON));
+        ui->label_dispense_message_background->hide();
+        ui->label_dispense_message_icon->hide();
     }else{
         ui->label_moving_bottle_fill_effect->move(380, 889);
         ui->pushButton_problems->move(120, 40);
@@ -281,6 +284,8 @@ void page_dispenser::showEvent(QShowEvent *event)
         ui->label_product_name->hide();
         ui->label_product_selected->hide();
         ui->label_volume_icon->hide();
+        ui->label_dispense_message_background->hide();
+        ui->label_dispense_message_icon->hide();
     }
 
     dispenseIdleTimer->start(1000);
@@ -729,19 +734,34 @@ void page_dispenser::fsmReceiveDispenserStatus(QString status)
             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "priming");
             p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
             ui->label_dispense_message->show();
+            if(p_page_idle->thisMachine->hasMixing()){
+                ui->label_dispense_message_background->show();
+                ui->label_dispense_message_icon->show();
+                ui->label_dispense_message->raise();
+            }
         }
         else if (dispenseStatus == "SLOT_STATE_PROBLEM_EMPTY")
         {
-            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "out_of_stock");
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "priming");
             p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
             p_page_idle->thisMachine->getSelectedSlot()->setSlotEnabled(false);
             ui->label_dispense_message->show();
+            if(p_page_idle->thisMachine->hasMixing()){
+                ui->label_dispense_message_background->show();
+                ui->label_dispense_message_icon->show();
+                ui->label_dispense_message->raise();
+            }
         }
         else if (dispenseStatus == "SLOT_STATE_PROBLEM_NEEDS_ATTENTION")
         {
             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "needs_attention");
             p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
             ui->label_dispense_message->show();
+            if(p_page_idle->thisMachine->hasMixing()){
+                ui->label_dispense_message_background->show();
+                ui->label_dispense_message_icon->show();
+                ui->label_dispense_message->raise();
+            }
         }
         else if (dispenseStatus == "SLOT_STATE_AVAILABLE")
         {
@@ -749,6 +769,10 @@ void page_dispenser::fsmReceiveDispenserStatus(QString status)
             // normal status
             // ui->pushButton_problems->hide();
             ui->label_dispense_message->hide();
+            if(p_page_idle->thisMachine->hasMixing()){
+                ui->label_dispense_message_background->hide();
+                ui->label_dispense_message_icon->hide();
+            }
             p_page_idle->thisMachine->getSelectedSlot()->setSlotEnabled(true);
         }
         else
@@ -789,15 +813,18 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
         ui->label_background_during_dispense_animation->show();
         if(p_page_idle->thisMachine->hasMixing() && ui->label_background_during_dispense_animation->isVisible()){
             this->ui->label_moving_bottle_fill_effect->move(296, 663 - 4.93 * percentage);
-            ui->label_product_summary_background->move(316, 1280);
-            ui->label_product_name->move(377, 1307);
-            ui->label_product_selected->move(377, 1356);
-            ui->label_product_icon->move(337, 1316);
-            ui->label_volume_dispensed->move(377, 1461);
-            ui->label_volume_dispensed_ml->move(377, 1506);
-            ui->label_volume_icon->move(337, 1470);
+            ui->label_product_summary_background->move(316, 1245);
+            ui->label_product_name->move(377, 1275);
+            ui->label_product_selected->move(377, 1324);
+            ui->label_product_icon->move(337, 1284);
+            ui->label_volume_dispensed->move(377, 1429);
+            ui->label_volume_dispensed_ml->move(377, 1474);
+            ui->label_volume_icon->move(337, 1438);
             ui->pushButton_abort->move(193, 1720);
             ui->pushButton_problems->move(565, 1720);
+            ui->label_dispense_message_background->move(316, 1539);
+            ui->label_dispense_message_icon->move(342, 1584);
+            ui->label_dispense_message->move(415, 1562);
 
             ui->label_product_summary_background->raise();
             ui->label_product_name->raise();
@@ -806,6 +833,9 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
             ui->label_volume_dispensed->raise();
             ui->label_volume_dispensed_ml->raise();
             ui->label_volume_icon->raise();
+            ui->label_dispense_message_background->raise();
+            ui->label_dispense_message_icon->raise();
+            ui->label_dispense_message->raise();
         }else{
             this->ui->label_moving_bottle_fill_effect->move(380, 900 - 3 * percentage);
         }

@@ -92,7 +92,6 @@ page_payment_tap_tcp->animated_Label,{"x": 139, "y": 668, "width": 801, "height"
 
 page_dispenser->label_background_during_dispense_animation,{"x": 0, "y": 0, "width": 1080, "height": 1920}
 page_dispenser->label_dispense_flowrate,{"x": 650, "y": 280, "width": 411, "height": 51}
-page_dispenser->label_dispense_message,{"x": 0, "y": 1710, "width": 1051, "height": 191}
 page_dispenser->label_dispense_status,{"x": 660, "y": 410, "width": 391, "height": 51}
 page_dispenser->label_finishTransactionMessage,{"x": 240, "y": 600, "width": 600, "height": 300}
 page_dispenser->label_indicate_active_spout,{"x":900,"y":350,"isVisibleAtLoad":true}
@@ -101,7 +100,7 @@ page_dispenser->label_logo,{"x": 600, "y": 180, "width": 151, "height": 131}
 page_dispenser->label_moving_bottle_fill_effect,{"x": 296, "y": 663, "width": 502, "height": 1037}
 page_dispenser->label_press,{"x": 50, "y": 350, "width": 689, "height": 252}
 page_dispenser->label_to_refill,{"x": 431, "y": 200, "width": 219, "height": 100}
-page_dispenser->label_product_summary_background,{"x": 50, "y": 1336, "width": 447, "height": 298}
+page_dispenser->label_product_summary_background,{"x": 54, "y": 1339, "width": 447, "height": 298}
 page_dispenser->label_product_name,{"x": 115, "y": 1366, "width": 365, "height": 45}
 page_dispenser->label_product_selected,{"x": 115, "y": 1415, "width": 365, "height": 90}
 page_dispenser->label_product_icon,{"x": 75, "y": 1375, "width": 30, "height": 30}
@@ -111,6 +110,9 @@ page_dispenser->label_volume_dispensed_ml,{"x": 115, "y": 1565, "width": 365, "h
 page_dispenser->pushButton_abort,{"x": 711, "y": 1544, "width": 322, "height": 100}
 page_dispenser->pushButton_debug_Button,{"x": 1000, "y": 240, "width": 81, "height": 71}
 page_dispenser->pushButton_problems,{"x": 711, "y": 1394, "width": 322, "height": 100}
+page_dispenser->label_dispense_message_background,{"x": 54, "y": 1181, "width": 447, "height": 138}
+page_dispenser->label_dispense_message,{"x": 153, "y": 1204, "width": 335, "height": 89}
+page_dispenser->label_dispense_message_icon,{"x": 80, "y": 1226, "width": 50, "height": 47}
 
 statusbar->statusbar,{"width": 75, "height": 75}
 

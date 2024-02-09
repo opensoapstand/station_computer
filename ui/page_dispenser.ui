@@ -323,6 +323,32 @@
     <string>TextLabel</string>
    </property>
   </widget>
+  <widget class="QLabel" name="label_dispense_message_background">
+   <property name="geometry">
+    <rect>
+     <x>54</x>
+     <y>1181</y>
+     <width>447</width>
+     <height>138</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_dispense_message_icon">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>1226</y>
+     <width>50</width>
+     <height>47</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
   <zorder>label_product_summary_background</zorder>
   <zorder>pushButton_abort</zorder>
   <zorder>label_moving_bottle_fill_effect</zorder>
@@ -344,6 +370,8 @@
   <zorder>label_volume_dispensed_ml</zorder>
   <zorder>label_dispense_message</zorder>
   <zorder>label_indicate_active_spout</zorder>
+  <zorder>label_dispense_message_background</zorder>
+  <zorder>label_dispense_message_icon</zorder>
  </widget>
  <resources/>
  <connections/>

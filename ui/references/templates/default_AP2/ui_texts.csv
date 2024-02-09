@@ -76,6 +76,9 @@ page_dispenser->label_instructions_container,01. The selected spout is indicated
 page_dispenser->label_volume_dispensed,Volume Dispensed
 page_dispenser->pushButton_problems,Report Issue
 page_dispenser->label_product_selected->custom_volume,Custom (max: %1)
+page_dispenser->label_dispense_message->priming,Please press the button for up<br>to 15 seconds before the<br>product starts dispensing.
+page_dispenser->label_dispense_message->out_of_stock,It appears we're out of stock.
+page_dispenser->label_dispense_message->needs_attention,Station technical issue, Please<br>tap the Report Issue button.
 
 # page_end
 page_end->pushButton_contact,Feedback

@@ -6,6 +6,7 @@
 
 
 std::map<std::string, std::string> registerDevice(int socket){
+    qDebug() << "Register TAP device";
     std::string public_key = read_public_key();
     std::cout << "Registering tap device";
     std::string registerCommand = "<TRANSACTION> <FUNCTION_TYPE>SECURITY</FUNCTION_TYPE> \
@@ -15,7 +16,7 @@ std::map<std::string, std::string> registerDevice(int socket){
                     </TRANSACTION>";
     std::cout << registerCommand; 
     qDebug() << QString::fromUtf8(registerCommand.c_str());
-    qDebug() << "Socket id" << socket;
+    qDebug() << "Socket id: " << socket;
     std::map<std::string, std::string> dataReceived = sendAndReceivePacket(registerCommand, socket, true);
     if(dataReceived["MAC_KEY"]!=""){
         qDebug() << "Mac Key received after registration";
@@ -31,6 +32,7 @@ std::map<std::string, std::string> registerDevice(int socket){
 }
 
 std::string getCounter(int socket, std::string MAC_LABEL, std::string MAC_KEY){
+    qDebug() << "Get current counter from TAP device";
     std::string get_counter_command = "<TRANSACTION> \
                             <FUNCTION_TYPE>ADMIN</FUNCTION_TYPE> \
                             <COMMAND>GET_COUNTER</COMMAND> \
@@ -42,7 +44,7 @@ std::string getCounter(int socket, std::string MAC_LABEL, std::string MAC_KEY){
 }
 
 std::map<std::string, std::string> getNextCounterMac(int socket, std::string MAC_LABEL, std::string MAC_KEY){
-
+    qDebug() << "Get Next counter and MAC";
     int counter = std::stoi(getCounter(socket, MAC_LABEL, MAC_KEY));
     counter +=1;
     std::string encoded_counter = create_counter_mac(counter, MAC_KEY);
@@ -53,6 +55,7 @@ std::map<std::string, std::string> getNextCounterMac(int socket, std::string MAC
 }
 
 std::map<std::string, std::string> startSession(int socket, std::string MAC_LABEL, std::string MAC_KEY, int invoice){
+    qDebug() << "Starting the session";
     auto now = std::chrono::system_clock::now();
     std::time_t time = std::chrono::system_clock::to_time_t(now);
     // Convert the time to a string

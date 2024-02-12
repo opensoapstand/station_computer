@@ -229,6 +229,7 @@ void page_payment_tap_tcp::tapPaymentHandler()
 
 void page_payment_tap_tcp::startPaymentProcess()
 {
+    state_tap_payment = s_payment_processing;
     if (numberOfTapAttempts < 3)
     {
         numberOfTapAttempts += 1;
@@ -315,6 +316,7 @@ void page_payment_tap_tcp::check_card_tapped()
 
 void page_payment_tap_tcp::authorized_transaction(std::map<std::string, std::string> responseObj)
 {
+    state_tap_payment = s_payment_done;
     stopPayTimers();
     QMovie *currentGif = ui->animated_Label->movie();
     currentGif->stop();
@@ -437,20 +439,17 @@ void page_payment_tap_tcp::on_pushButton_previous_page_clicked()
 
     if (exitConfirm())
     {
-        if (tap_payment)
+        stop_tap_action_thread = true;
+        stop_authorization_thread = true;
+        // stopPayTimers();
+        qDebug() << "Stopping the threads";
+        std::map<std::string, std::string> cancelResp = cancelTransaction(connectSecondarySocket());
+        qDebug() << "My socket address is " << QString::fromStdString(socketAddr) << endl;
+        if (cancelResp["RESULT"] == "OK")
         {
-            stop_tap_action_thread = true;
-            stop_authorization_thread = true;
-            // stopPayTimers();
-            qDebug() << "Stopping the threads";
-            std::map<std::string, std::string> cancelResp = cancelTransaction(connectSecondarySocket());
-            qDebug() << "My socket address is " << QString::fromStdString(socketAddr) << endl;
-            if (cancelResp["RESULT"] == "OK")
-            {
-                qDebug() << QString::fromUtf8(cancelResp["RESULT"].c_str());
-                finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
-                qDebug() << "Session finished sent";
-            }
+            qDebug() << QString::fromUtf8(cancelResp["RESULT"].c_str());
+            finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
+            qDebug() << "Session finished sent";
         }
         p_page_idle->thisMachine->hasMixing() ? hideCurrentPageAndShowProvided(p_page_product_mixing) : hideCurrentPageAndShowProvided(p_page_product);
     }

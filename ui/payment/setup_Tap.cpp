@@ -94,7 +94,7 @@ void receiveAuthorizationThread(int sockfd)
         xml_packet_string += bufferReceived;
         if (strstr(xml_packet_string.c_str(), delimiter) != NULL)
         {
-             std::cout << "received packet complete. " << std::endl;
+            std::cout << "received packet complete. " << std::endl;
             xml_packet_received_complete = true;
             break;
         }
@@ -109,6 +109,8 @@ bool checkPacketReceived(bool logging, std::map<std::string, std::string> *xml_p
         if (logging)
         {
             std::cout << xml_packet_string << std::endl;
+            qDebug() << QString::fromUtf8(xml_packet_string.c_str());
+
         }
         std::map<std::string, std::string> xmlObject = readXmlPacket(xml_packet_string);
         *xml_packet = xmlObject;

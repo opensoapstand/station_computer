@@ -335,7 +335,7 @@ void page_payment_tap_tcp::authorized_transaction(std::map<std::string, std::str
         tapPaymentObject["status"] = "Authorized";
         hideCurrentPageAndShowProvided(p_page_dispense);
     }
-    else if (responseObj["result"] == "APPROVED/STORED")
+    else if (responseObj["RESULT"] == "APPROVED/STORED")
     {
         p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
         // CTROUTD = responseObj["CTROUTD"];
@@ -352,7 +352,7 @@ void page_payment_tap_tcp::authorized_transaction(std::map<std::string, std::str
         tapPaymentObject["status"] = "Authorized Offline";
         hideCurrentPageAndShowProvided(p_page_dispense);
     }
-    else if (responseObj["result"] == "DECLINED")
+    else if (responseObj["RESULT"] == "DECLINED")
     {
 
         p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_FAIL);
@@ -448,7 +448,7 @@ void page_payment_tap_tcp::on_pushButton_previous_page_clicked()
             if (cancelResp["RESULT"] == "OK")
             {
                 qDebug() << QString::fromUtf8(cancelResp["RESULT"].c_str());
-                // finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
+                finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
                 qDebug() << "Session finished sent";
             }
         }
@@ -475,6 +475,5 @@ void page_payment_tap_tcp::resetPaymentPage()
     stopPayTimers();
     p_page_idle->thisMachine->resetTransactionLogging();
     // transactionLogging = "";
-    response = true;
     qDebug() << "Cancelled";
 }

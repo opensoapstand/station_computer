@@ -210,6 +210,8 @@ using namespace std;
 //Page End
 #define PORTAL_UPDATE_ALREADY_CREATED_ORDER             "api/machine_data/updateOrder"
 #define PORTAL_SEND_NEW_COMPLETE_ORDER                  "api/machine_data/pushPrinterOrder"
+#define PORTAL_SEND_NEW_COMPLETE_ORDER_DEV              "api/order/sendCompleteNewOrder"
+
 //Feedback page
 #define PORTAL_SEND_FEEDBACK                            "api/alert/sendFeedbackEmail"
 //Maintenance Page

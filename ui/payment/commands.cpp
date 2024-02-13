@@ -255,7 +255,7 @@ std::map<std::string, std::string> voidTransactionOffline(int socket, std::strin
                     <MAC_LABEL>"+MAC_LABEL+"</MAC_LABEL>\
             </TRANSACTION>";
     std::cout << command << std::endl;
-        std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
+    std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
     return dataReceived;
 }
 std::map<std::string, std::string> testMac(int socket, std::string MAC_KEY, std::string MAC_LABEL){

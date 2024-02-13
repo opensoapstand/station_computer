@@ -229,7 +229,7 @@ void page_payment_tap_tcp::tapPaymentHandler()
 
 void page_payment_tap_tcp::startPaymentProcess()
 {
-    state_tap_payment = s_payment_processing;
+    state_tap_payment = s_tap_payment_processing;
     if (numberOfTapAttempts < 3)
     {
         numberOfTapAttempts += 1;
@@ -316,7 +316,7 @@ void page_payment_tap_tcp::check_card_tapped()
 
 void page_payment_tap_tcp::authorized_transaction(std::map<std::string, std::string> responseObj)
 {
-    state_tap_payment = s_payment_done;
+    state_tap_payment = s_tap_payment_done;
     stopPayTimers();
     QMovie *currentGif = ui->animated_Label->movie();
     currentGif->stop();

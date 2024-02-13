@@ -142,6 +142,7 @@ using namespace std;
 // #define PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH   "background_dispense_instructions_multispout.png"
 #define PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_RIGHT    "arrow_right_white_big.png"
 #define PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_DOWN "arrow_down_white_big.png"
+#define PAGE_IDLE_WARNING_ICON "warning_icon.png"
 #define PAGE_DISPENSE_BACKGROUND_PATH "background_dispense.png"
 #define PAGE_DISPENSE_ALERT_ICON "label_alert_icon.png"
 #define PAGE_DISPENSE_VOLUME_ICON "label_volume_icon.png"

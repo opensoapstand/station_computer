@@ -70,6 +70,13 @@ page_product_menu::page_product_menu(QWidget *parent) : QWidget(parent),
     labels_dispense_product_name[4] = ui->label_dispense_product_name_5;
     labels_dispense_product_name[5] = ui->label_dispense_product_name_6;
 
+    labels_product_overlay_text[0] = ui->label_dispense_product_overlay_text_1;
+    labels_product_overlay_text[1] = ui->label_dispense_product_overlay_text_2;
+    labels_product_overlay_text[2] = ui->label_dispense_product_overlay_text_3;
+    labels_product_overlay_text[3] = ui->label_dispense_product_overlay_text_4;
+    labels_product_overlay_text[4] = ui->label_dispense_product_overlay_text_5;
+    labels_product_overlay_text[5] = ui->label_dispense_product_overlay_text_6;
+
     // pushButtons_product_select[0] = ui->pushButton_selection1;
     // pushButtons_product_select[1] = ui->pushButton_selection2;
     // pushButtons_product_select[2] = ui->pushButton_selection3;
@@ -80,25 +87,10 @@ page_product_menu::page_product_menu(QWidget *parent) : QWidget(parent),
     // labels_product_picture[2] = ui->label_product_3_photo;
     // labels_product_picture[3] = ui->label_product_4_photo;
 
-    // labels_product_overlay_text[0] = ui->label_product_1_overlay_text;
-    // labels_product_overlay_text[1] = ui->label_product_2_overlay_text;
-    // labels_product_overlay_text[2] = ui->label_product_3_overlay_text;
-    // labels_product_overlay_text[3] = ui->label_product_4_overlay_text;
-
     // labels_product_name[0] = ui->label_product_1_name;
     // labels_product_name[1] = ui->label_product_2_name;
     // labels_product_name[2] = ui->label_product_3_name;
     // labels_product_name[3] = ui->label_product_4_name;
-
-    // labels_product_icon[0] = ui->label_product_1_icon;
-    // labels_product_icon[1] = ui->label_product_2_icon;
-    // labels_product_icon[2] = ui->label_product_3_icon;
-    // labels_product_icon[3] = ui->label_product_4_icon;
-
-    // labels_product_type[0] = ui->label_product_1_type;
-    // labels_product_type[1] = ui->label_product_2_type;
-    // labels_product_type[2] = ui->label_product_3_type;
-    // labels_product_type[3] = ui->label_product_4_type;
 
     productPageEndTimer = new QTimer(this);
     productPageEndTimer->setInterval(1000);
@@ -290,13 +282,10 @@ void page_product_menu::displayProducts()
             qDebug() << "Icon for product type not found : " << type_text << " Set to default. ";
         }
         QString product_type_icon_path = p_page_idle->thisMachine->getTemplatePathFromName(icon_path);
-        p_page_idle->thisMachine->addPictureToLabel(labels_product_icon[option_index], product_type_icon_path);
 
         //  labels_selectProductOverlay[option_index]->raise();
         labels_product_overlay_text[option_index]->raise();
-        pushButtons_product_select[option_index]->raise();
-        labels_product_icon[option_index]->setText("");
-        labels_product_icon[option_index]->raise();
+        pushButtons_dispense_product[option_index]->raise();
 
         if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
         {
@@ -336,7 +325,6 @@ void page_product_menu::displayProducts()
             labels_product_overlay_text[option_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->default"));
         }
 
-        labels_product_type[option_index]->setText(type_text);
     }
 }
 

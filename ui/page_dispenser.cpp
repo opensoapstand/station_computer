@@ -742,7 +742,7 @@ void page_dispenser::fsmReceiveDispenserStatus(QString status)
         }
         else if (dispenseStatus == "SLOT_STATE_PROBLEM_EMPTY")
         {
-            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "priming");
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "out_of_stock");
             p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
             p_page_idle->thisMachine->getSelectedSlot()->setSlotEnabled(false);
             ui->label_dispense_message->show();

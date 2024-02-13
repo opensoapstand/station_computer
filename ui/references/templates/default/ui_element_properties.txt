@@ -21,6 +21,28 @@
 # page_select_product->label_product_1_type,{"x":53, "y":814, "width":450, "height":46,"isVisibleAtLoad":true}
 # page_select_product->label_product_2_type,{"x":562, "y":814, "width":450, "height":46,"isVisibleAtLoad":false}
 
+page_init->pushButton_continue,{"x": 260, "y": 1410, "width": 251, "height": 121}
+page_init->pushButton_reboot,{"x": 540, "y": 1410, "width": 251, "height": 121}
+page_init->label_init_message,{"x": 150, "y": 920, "width": 891, "height": 471}
+page_init->label_fail_message,{"x": 270, "y": 1430, "width": 531, "height": 111}
+
+page_idle->label_client_logo,{"x": 370, "y": 1580, "width": 351, "height": 211}
+page_idle->label_manufacturer_logo,{"x": 300, "y": 250, "width": 471, "height": 331}
+page_idle->label_printer_status,{"x": 50, "y": 1050, "width": 980, "height": 120}
+page_idle->label_reboot_nightly_bg,{"x": 341, "y": 630, "width": 400, "height": 421}
+page_idle->label_reboot_nightly_icon,{"x": 491, "y": 650, "width": 100, "height": 100}
+page_idle->label_reboot_nightly_text,{"x": 341, "y": 840, "width": 400, "height": 120}
+page_idle->label_reboot_nightly_title,{"x": 341, "y": 750, "width": 400, "height": 80}
+page_idle->label_show_temperature,{"x": 0, "y": 1860, "width": 121, "height": 61}
+page_idle->label_temperature_warning,{"x": 49, "y": 1000, "width": 981, "height": 381}
+page_idle->label_welcome_message,{"x": 40, "y": 600, "width": 981, "height": 481}
+page_idle->media_player,{"x": 200, "y": 570, "width": 331, "height": 221}
+page_idle->pushButton_reboot_nightly,{"x": 341, "y": 970, "width": 400, "height": 80}
+page_idle->psuhButton_test,{"x": 0, "y": 480, "width": 161, "height": 131}
+page_idle->pushButton_to_select_product_page,{"x": 0, "y": 0, "width": 1081, "height": 1921}
+page_idle->saveBottles_label,{"x": 0, "y": 1690, "width": 1080, "height": 141}
+page_idle->video_player,{"x": 10, "y": -10, "width": 1080, "height": 1920}
+
 page_dispenser->label_background_during_dispense_animation,{"x": 0, "y": 0, "width": 1080, "height": 1920}
 page_dispenser->label_dispense_flowrate,{"x": 650, "y": 280, "width": 411, "height": 51}
 page_dispenser->label_dispense_message,{"x": 0, "y": 1710, "width": 1051, "height": 191}

@@ -17,9 +17,23 @@
 # comment example (needs to start with a #)
 # empty lines are also permitted
 
+page_init->pushButton_continue,{"x": 165, "y": 1548, "width": 326, "height": 153}
+page_init->pushButton_reboot,{"x": 590, "y": 1548, "width": 326, "height": 153}
+page_init->label_init_message,{"x": 241, "y": 301, "width": 600, "height": 259}
 
 # page_idle->label_client_logo,{"x":370, "y":1580, "width":351, "height":211,"isVisibleAtLoad":true}
 page_idle->label_show_temperature,{"x":10000}
+page_idle->label_printer_status,{"x": 323, "y": 1442, "width": 443, "height": 76}
+page_idle->label_reboot_nightly_bg,{"x": 341, "y": 630, "width": 400, "height": 421}
+page_idle->label_reboot_nightly_icon,{"x": 491, "y": 650, "width": 100, "height": 100}
+page_idle->label_reboot_nightly_text,{"x": 341, "y": 840, "width": 400, "height": 120}
+page_idle->label_reboot_nightly_title,{"x": 341, "y": 750, "width": 400, "height": 80}
+# page_idle->label_show_temperature,{"x": 0, "y": 1860, "width": 121, "height": 61}
+page_idle->label_temperature_warning,{"x": 437, "y": 1723, "width": 187, "height": 76}
+page_idle->label_welcome_message,{"x": 228, "y": 439, "width": 624, "height": 156}
+page_idle->pushButton_reboot_nightly,{"x": 341, "y": 970, "width": 400, "height": 80}
+page_idle->psuhButton_test,{"x": 0, "y": 480, "width": 161, "height": 131}
+page_idle->pushButton_to_select_product_page,{"x": 0, "y": 0, "width": 1081, "height": 1921}
 
 page_product_menu->label_product_menu_title,{"x": 0, "y": 188, "width": 1080, "height": 86}
 

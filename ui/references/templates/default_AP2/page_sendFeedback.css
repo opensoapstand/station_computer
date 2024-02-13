@@ -23,36 +23,6 @@
    color: #211403;
 }
 
-QCheckBox::indicator {
-   width: 65px;
-   height: 65px;
-}
-
-QCheckBox::indicator:checked {
-   image: url(%1);
-}
-
-QCheckBox::indicator:unchecked {
-   image: url(%2);
-}
-
-QCheckBox{
-   border: none;
-   background: transparent;
-}
-
-.checkBoxLabelStyling{
-   font-family: 'Lato';
-   font-style: normal;
-   font-weight: 400;
-   font-size: 30px;
-   color: #211403;
-   text-align: left;
-   border: none;
-   wordWrap:true;
-   background-color: transparent;
-}
-
 #label_enter_feedback, #label_enter_email{
    font-family: 'El Messiri';
    font-style: normal;
@@ -63,12 +33,45 @@ QCheckBox{
    text-align: left;
 }
 
-#textEdit_custom_message, #textEdit_enter_email{
+.textEdit_custom_message{
    font-family: 'Lato';
    font-style: normal;
    font-weight: 400;
    font-size: 24px;
    color: #211403;
+   background: #FFF;
+   border-radius: 25px;
+   padding: 25px;
+}
+
+.textEdit_custom_message_alert{
+   font-family: 'Lato';
+   font-style: normal;
+   font-weight: 700;
+   font-size: 24px;
+   color: #895e25;
+   background: #FFF;
+   border-radius: 25px;
+   padding: 25px;
+}
+
+.lineEdit_enter_email{
+   font-family: 'Lato';
+   font-style: normal;
+   font-weight: 400;
+   font-size: 24px;
+   color: #211403;
+   background: #FFF;
+   border-radius: 25px;
+   padding: 25px;
+}
+
+.lineEdit_enter_email_alert{
+   font-family: 'Lato';
+   font-style: normal;
+   font-weight: 700;
+   font-size: 24px;
+   color: #895e25;
    background: #FFF;
    border-radius: 25px;
    padding: 25px;
@@ -86,7 +89,25 @@ QCheckBox{
 }
 
 #label_thanks_for_feedback{
-   color: #FFFFFF;
+   font-family: 'El Messiri';
+   font-size: 64px;
+   color: #211403;
+   font-style: normal;
+   font-weight: 400;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   background-color: transparent;
+}
+
+#label_thanks_for_feedback_2{
+   font-family: 'Lato';
+   font-size: 30px;
+   color: #211403;
+   font-style: normal;
+   font-weight: 400;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   background-color: transparent;
 }
 
 
@@ -165,14 +186,32 @@ QString {
    border: 5px inset #58595B;
 }
 
-QLineEdit {
-   font-family: 'EuropaNuova-Regular', sans-serif;
-   font-style: normal;
-   font-weight: 400;
-   font-size: 32px;
-   line-height: 99px;
-   /* letter-spacing: 1.5px; */
-   color: #221F20;
-   border: none;
+QCheckBox::indicator {
+   width: 65px;
+   height: 65px;
 }
 
+QCheckBox::indicator:checked {
+   image: url(%1);
+}
+
+QCheckBox::indicator:unchecked {
+   image: url(%2);
+}
+
+QCheckBox{
+   border: none;
+   background: transparent;
+}
+
+.checkBoxLabelStyling{
+   font-family: 'Lato';
+   font-style: normal;
+   font-weight: 400;
+   font-size: 30px;
+   color: #211403;
+   text-align: left;
+   border: none;
+   wordWrap:true;
+   background-color: transparent;
+}

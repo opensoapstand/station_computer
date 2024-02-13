@@ -2481,7 +2481,6 @@ outline: none;
   <zorder>pushButton_promo_input</zorder>
   <zorder>label_total</zorder>
   <zorder>label_product_photo</zorder>
-  <zorder>label_gif</zorder>
   <zorder>pushButton_to_help</zorder>
   <zorder>label_page_title</zorder>
   <zorder>label_checkout_title</zorder>
@@ -2495,6 +2494,7 @@ outline: none;
   <zorder>pushButton_continue</zorder>
   <zorder>pushButton_continue_additional</zorder>
   <zorder>promoKeyboard</zorder>
+  <zorder>label_gif</zorder>
  </widget>
  <resources/>
  <connections/>

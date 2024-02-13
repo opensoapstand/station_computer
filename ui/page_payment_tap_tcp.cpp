@@ -205,6 +205,9 @@ bool page_payment_tap_tcp::setpaymentProcess(bool status)
 
 void page_payment_tap_tcp::tapPaymentHandler()
 {
+    if(p_page_idle->thisMachine->hasMixing()){
+        ui->animated_Label->hide();
+    }
     ui->animated_Label->move(221, 327);
     QString image_path = p_page_idle->thisMachine->getTemplatePathFromName("tap.gif");
     QMovie *tapGif = new QMovie(image_path);

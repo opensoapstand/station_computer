@@ -73,18 +73,18 @@
 }
 
 #label_dispense_message {
-   font-family: 'Brevia';
+   font-family: 'Lato';
    font-style: normal;
-   font-weight: 75;
-   font-size: 42px;
-   background-color: orangered;
-   border: 0px;
-   line-height: 99px;
+   font-weight: 400;
+   text-align: left;
+   qproperty-alignment: AlignVCenter;
    color: #FFFFFF;
-   text-align: center;
-   qproperty-alignment: AlignCenter;
-   border: none;
-   border-radius: 20px;
+   font-size: 24px;
+}
+
+#label_dispense_message_background{
+   background-color: #bc8439;
+   border-radius: 15px;
 }
 
 #pushButton_problems.normal {

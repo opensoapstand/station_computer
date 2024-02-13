@@ -116,8 +116,7 @@ void page_help::showEvent(QShowEvent *event)
     _helpIdleTimeoutSec = 60;
 
     if(p_page_idle->thisMachine->hasMixing()){
-        p_keyboard->needCAPS(true);
-        p_keyboard->initializeKeyboard(false, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
+        p_keyboard->resetKeyboard();
         p_input_widget->toggleInputWidget(false);
         statusbarLayout->removeWidget(p_keyboard);    
         statusbarLayout->removeWidget(p_input_widget);  
@@ -159,7 +158,7 @@ void page_help::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     helpIdleTimer->stop();
     if(p_page_idle->thisMachine->hasMixing()){
         statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
-        p_keyboard->keyboardButtonDefaultAllInCAPS();
+        p_keyboard->resetKeyboard();
     }else{
         ui->keyboard_3->hide();
         statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
@@ -171,12 +170,12 @@ void page_help::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 void page_help::on_pushButton_to_idle_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_idle);
-    p_keyboard->keyboardButtonDefaultAllInCAPS();
+    p_keyboard->resetKeyboard();
 }
 
 void page_help::on_pushButton_to_howTo_clicked(){
     hideCurrentPageAndShowProvided(p_page_howTo);
-    p_keyboard->keyboardButtonDefaultAllInCAPS();
+    p_keyboard->resetKeyboard();
 }
 
 void page_help::onHelpTimeoutTick()
@@ -215,7 +214,8 @@ void page_help::on_pushButton_to_maintenance_clicked()
         // provide keyboard if not yet logged in. 
         if(p_page_idle->thisMachine->hasMixing()){
             p_keyboard->registerCallBack(std::bind(&page_help::doneButtonPressed, this));
-            p_keyboard->initializeKeyboard(true, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
+            p_keyboard->needCAPS(true);
+            p_keyboard->setKeyboardVisibility(true, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
             p_input_widget->toggleInputWidget(true);
         }else{
             ui->keyboard_3->show();
@@ -234,15 +234,14 @@ void page_help::doneButtonPressed(){
         if (p_page_idle->thisMachine->isAllowedAsMaintainer())
         {
             hideCurrentPageAndShowProvided(p_page_maintenance);
-            p_keyboard->initializeKeyboard(false, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
+            p_keyboard->setKeyboardVisibility(false, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
         }
         else
         {
             p_input_widget->findChild<QLineEdit *>("lineEdit_input")->setText("");
-            p_keyboard->initializeKeyboard(true, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
+            p_keyboard->setKeyboardVisibility(true, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
         }
     }
-    p_keyboard->keyboardButtonDefaultAllInCAPS();
     if (p_page_idle->thisMachine->isAllowedAsMaintainer())
     {
         hideCurrentPageAndShowProvided(p_page_maintenance);

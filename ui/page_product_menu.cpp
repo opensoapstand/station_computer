@@ -77,21 +77,6 @@ page_product_menu::page_product_menu(QWidget *parent) : QWidget(parent),
     labels_product_overlay_text[4] = ui->label_dispense_product_overlay_text_5;
     labels_product_overlay_text[5] = ui->label_dispense_product_overlay_text_6;
 
-    // pushButtons_product_select[0] = ui->pushButton_selection1;
-    // pushButtons_product_select[1] = ui->pushButton_selection2;
-    // pushButtons_product_select[2] = ui->pushButton_selection3;
-    // pushButtons_product_select[3] = ui->pushButton_selection4;
-
-    // labels_product_picture[0] = ui->label_product_1_photo;
-    // labels_product_picture[1] = ui->label_product_2_photo;
-    // labels_product_picture[2] = ui->label_product_3_photo;
-    // labels_product_picture[3] = ui->label_product_4_photo;
-
-    // labels_product_name[0] = ui->label_product_1_name;
-    // labels_product_name[1] = ui->label_product_2_name;
-    // labels_product_name[2] = ui->label_product_3_name;
-    // labels_product_name[3] = ui->label_product_4_name;
-
     productPageEndTimer = new QTimer(this);
     productPageEndTimer->setInterval(1000);
     connect(productPageEndTimer, SIGNAL(timeout()), this, SLOT(onProductPageTimeoutTick()));
@@ -121,8 +106,6 @@ void page_product_menu::showEvent(QShowEvent *event)
 {
     statusbarLayout->addWidget(p_statusbar); // with an index of 0.
 
-    //  statusbarLayout->setAlignment(Qt::AlignBottom); // Align at the bottom of the layout
-    // statusbarLayout->setContentsMargins(50, 50, 50, 50); // int left, int top, int right, int bottom);
     statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
 
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
@@ -151,9 +134,6 @@ void page_product_menu::showEvent(QShowEvent *event)
         labels_base_product_bg[slot_index]->setStyleSheet(styleSheet);
         pushButtons_base_product[slot_index]->setProperty("class", "pushButton_base_product");
         pushButtons_base_product[slot_index]->setStyleSheet(styleSheet);
-        
-        // QString picturePath = p_page_idle->thisMachine->getSlotBaseProduct(slot_index + 1)->getProductPicturePath();
-        // styleSheet.replace("%IMAGE_PATH%", picturePath);
         
         p_page_idle->thisMachine->addPictureToLabelCircle(labels_base_product_picture[slot_index], p_page_idle->thisMachine->getSlotBaseProduct(slot_index + 1)->getProductPicturePath());
         labels_base_product_picture[slot_index]->setProperty("class", "label_base_product_picture");
@@ -187,150 +167,10 @@ void page_product_menu::resizeEvent(QResizeEvent *event)
     QWidget::resizeEvent(event);
 }
 
-void page_product_menu::displayProducts()
-{
-    QString product_type_icons[9] = {ICON_TYPE_CONCENTRATE_PATH, ICON_TYPE_ALL_PURPOSE_PATH, ICON_TYPE_DISH_PATH, ICON_TYPE_HAND_PATH, ICON_TYPE_LAUNDRY_PATH, ICON_TYPE_PROBIOTIC_PATH, ICON_TYPE_KOMBUCHA_PATH, ICON_TYPE_JUICE_PATH, ICON_TYPE_TEA_PATH};
-
-    QString product_type;
-    QString product_name;
-    QString product_status_text;
-
-    for (uint8_t option_index = 0; option_index < p_page_idle->thisMachine->getOptionCount(); option_index++)
-    {
-        qDebug() << "Page select. Set up option: " << option_index + 1;
-        QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_PRODUCT_MENU_CSS);
-
-        // display product picture
-
-        p_page_idle->thisMachine->addPictureToLabel(labels_product_picture[option_index], p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductPicturePath());
-        product_type = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductType();
-        product_name = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductName();
-
-        if (!p_page_idle->thisMachine->getIsOptionAvailable(option_index + 1))
-        {
-            p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[option_index], "label_product_overlay_unavailable", PAGE_PRODUCT_MENU_CSS);
-
-            labels_product_overlay_text[option_index]->setStyleSheet(styleSheet);
-            QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_PRODUCT_MENU_CSS);
-            labels_product_overlay_text[option_index]->setProperty("class", "label_product_overlay_unavailable"); // apply class BEFORE setStyleSheet!!
-
-            // qDebug() << labels_product_picture[option_index]->styleSheet();
-        }
-        else
-        {
-            p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[option_index], "label_product_overlay_available", PAGE_PRODUCT_MENU_CSS);
-        }
-
-        product_status_text = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getStatusText();
-
-        qDebug() << "Product: " << product_type << "At Option: " << (option_index + 1) << ", enabled: " << p_page_idle->thisMachine->getIsOptionAvailable(option_index + 1) << " Status text: " << product_status_text;
-
-        labels_product_name[option_index]->setText(product_name);
-
-        // display product type icon  picture
-        QString icon_path = "not found";
-        QString type_text;
-        if (product_type == "Dish")
-        {
-            icon_path = ICON_TYPE_DISH_PATH;
-            type_text = "DISH SOAP";
-        }
-        else if (product_type == "Hand")
-        {
-            icon_path = ICON_TYPE_HAND_PATH;
-            type_text = "HAND SOAP";
-        }
-        else if (product_type == "Laundry")
-        {
-            icon_path = ICON_TYPE_LAUNDRY_PATH;
-            type_text = "LAUNDRY";
-        }
-        else if (product_type == "All Purpose")
-        {
-            icon_path = ICON_TYPE_ALL_PURPOSE_PATH;
-            type_text = "CLEANER";
-        }
-        else if (product_type == "Concentrate")
-        {
-            icon_path = ICON_TYPE_CONCENTRATE_PATH;
-            type_text = "CONCENTRATE";
-        }
-        else if (product_type == "Kombucha")
-        {
-            icon_path = ICON_TYPE_KOMBUCHA_PATH;
-            type_text = "KOMBUCHA";
-        }
-        else if (product_type == "Probiotic Soda")
-        {
-            icon_path = ICON_TYPE_PROBIOTIC_PATH;
-            type_text = "PROBIOTIC SODA";
-        }
-        else if (product_type == "Juice")
-        {
-            icon_path = ICON_TYPE_JUICE_PATH;
-            type_text = "JUICE";
-        }
-        else if (product_type == "Tea")
-        {
-            icon_path = ICON_TYPE_JUICE_PATH;
-            type_text = "TEA";
-        }
-        else
-        {
-            icon_path = ICON_TYPE_DEFAULT;
-            type_text = product_type;
-            qDebug() << "Icon for product type not found : " << type_text << " Set to default. ";
-        }
-        QString product_type_icon_path = p_page_idle->thisMachine->getTemplatePathFromName(icon_path);
-
-        //  labels_selectProductOverlay[option_index]->raise();
-        labels_product_overlay_text[option_index]->raise();
-        pushButtons_dispense_product[option_index]->raise();
-
-        if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
-        {
-            labels_product_overlay_text[option_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->coming_soon"));
-        }
-        else if (product_status_text.compare("SLOT_STATE_DISABLED") == 0)
-        {
-            labels_product_overlay_text[option_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
-        }
-        else if (!p_page_idle->thisMachine->getIsOptionAvailable(option_index + 1))
-        {
-            labels_product_overlay_text[option_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
-        }
-        else if (!(p_page_idle->thisMachine->isProductVolumeInContainer(p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getPNumber())))
-        {
-
-            labels_product_overlay_text[option_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->empty"));
-        }
-        else if (product_status_text.compare("SLOT_STATE_AVAILABLE") == 0)
-        {
-            labels_product_overlay_text[option_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->available"));
-        }
-        else if (product_status_text.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
-        {
-            labels_product_overlay_text[option_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->almost_empty"));
-        }
-        else if (product_status_text.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
-        {
-            labels_product_overlay_text[option_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->empty"));
-        }
-        else if (product_status_text.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
-        {
-            labels_product_overlay_text[option_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->assistance"));
-        }
-        else
-        {
-            labels_product_overlay_text[option_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->default"));
-        }
-
-    }
-}
-
 void page_product_menu::displayDispenseProductsMenu()
 {
     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_PRODUCT_MENU_CSS);
+    QString product_status_text;
     for (int sub_menu_index = 0; sub_menu_index < DISPENSE_PRODUCTS_PER_BASE_LINE_MAX; sub_menu_index++)
     {
         int option_index = m_selectedBaseProductIndex * DISPENSE_PRODUCTS_PER_BASE_LINE_MAX + sub_menu_index;
@@ -338,7 +178,6 @@ void page_product_menu::displayDispenseProductsMenu()
         if (p_page_idle->thisMachine->isOptionExisting(option_index + 1))
         {
             pnumberproduct *dispenseProduct = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1);
-            // p_page_idle->thisMachine->addPictureToLabel(labels_dispense_product_picture[sub_menu_index], dispenseProduct->getProductPicturePath());
 
             QString picturePath = dispenseProduct->getProductPicturePath();
             QString increment_text = "%IMAGE_PATH%1%";
@@ -361,12 +200,68 @@ void page_product_menu::displayDispenseProductsMenu()
             pushButtons_dispense_product[sub_menu_index]->show();
             labels_dispense_product_picture[sub_menu_index]->show();
             labels_dispense_product_name[sub_menu_index]->show();
-            pushButtons_dispense_product[sub_menu_index]->raise();
+            labels_product_overlay_text[sub_menu_index]->show();
+
+            QString unavailable_increment_text = "label_overlay_unavailable_increment%1";
+            QString label_overlay_unavailable_increment = unavailable_increment_text.arg(sub_menu_index);
+            if (!p_page_idle->thisMachine->getIsOptionAvailable(option_index + 1)){
+                p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[sub_menu_index], label_overlay_unavailable_increment, PAGE_PRODUCT_MENU_CSS);
+
+            }else{
+                p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[sub_menu_index], "label_product_overlay_available", PAGE_PRODUCT_MENU_CSS);
+            }
+
         }else{
             qDebug() << "Set up sub menu for item: " << sub_menu_index + 1 << "Invalid pnumber product. Will hide option. ";
             pushButtons_dispense_product[sub_menu_index]->hide();
             labels_dispense_product_picture[sub_menu_index]->hide();
             labels_dispense_product_name[sub_menu_index]->hide();
+            labels_product_overlay_text[sub_menu_index]->hide();
+        }
+        labels_product_overlay_text[sub_menu_index]->raise();
+        pushButtons_dispense_product[sub_menu_index]->raise();
+
+        QString available_increment_text = "label_product_overlay_available_with_status%1";
+        QString label_overlay_available_with_status_increment = available_increment_text.arg(sub_menu_index);
+        product_status_text = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getStatusText();
+        if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
+        {
+            labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->coming_soon"));
+            p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[sub_menu_index], label_overlay_available_with_status_increment, PAGE_PRODUCT_MENU_CSS);
+        }
+        else if (product_status_text.compare("SLOT_STATE_DISABLED") == 0)
+        {
+            labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
+        }
+        else if (!p_page_idle->thisMachine->getIsOptionAvailable(option_index + 1))
+        {
+            labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
+        }
+        else if (!(p_page_idle->thisMachine->isProductVolumeInContainer(p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getPNumber())))
+        {
+            labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->empty"));
+        }
+        else if (product_status_text.compare("SLOT_STATE_AVAILABLE") == 0)
+        {
+            labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->available"));
+        }
+        else if (product_status_text.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
+        {
+            labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->almost_empty"));
+            p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[sub_menu_index], label_overlay_available_with_status_increment, PAGE_PRODUCT_MENU_CSS);
+        }
+        else if (product_status_text.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
+        {
+            labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->empty"));
+        }
+        else if (product_status_text.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
+        {
+            labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->assistance"));
+            p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[sub_menu_index], label_overlay_available_with_status_increment, PAGE_PRODUCT_MENU_CSS);
+        }
+        else
+        {
+            labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->default"));
         }
     }
 }

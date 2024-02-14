@@ -846,7 +846,7 @@ std::string stateDispenseEnd::mapToString(const std::map<std::string, std::vecto
     for (const auto& entry : dictionary) {
         
         std::cout << "Product: P-" << entry.first << ", Dispensed volume: " << entry.second[0] << ", Volume remaining: " << entry.second[1] << std::endl;
-        ss <<"P-" << entry.first << ":[" << to_string(entry.second[0]) << ","<<to_string(entry.second[1]) <<"]" << ",";
+        ss <<"\"P-" << entry.first << "\":[" << to_string(entry.second[0]) << ","<<to_string(entry.second[1]) <<"]" << ",";
     }
     std::string result = ss.str();
     if (!result.empty()) {

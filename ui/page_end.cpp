@@ -190,12 +190,9 @@ void page_end::sendCompleteOrderToCloud(QString paymentMethod)
                  "&end_time=" + endTime + "&MachineSerialNumber=" + MachineSerialNumber + "&paymentMethod="+paymentMethod+"&volume_remaining_ml=" + 
                  volume_remaining + "&quantity_dispensed_ml=" + dispensed_correct_units +
                  "&volume_remaining=" + volume_remaining + "&coupon=" + promoCode +"&buttonDuration=" + button_press_duration + 
-                 "&buttonTimes=" + button_press_count + "&pnumber=" + soapstand_product_serial + "&mixProductInfo=" + volume_dispensed_mix_product;
+                 "&buttonTimes=" + button_press_count + "&pnumber=" + soapstand_product_serial + "&mixProductInfo={" + volume_dispensed_mix_product+"}";
                  
-    std::tie(res,readBuffer, http_code) = p_page_idle->thisMachine->sendRequestToPortal(PORTAL_SEND_NEW_COMPLETE_ORDER, "POST", curl_params, "PAGE_END");
-
-    // res = returnObject.first;
-    // readBuffer = returnObject.second;
+    std::tie(res,readBuffer, http_code) = p_page_idle->thisMachine->sendRequestToPortal(PORTAL_SEND_NEW_COMPLETE_ORDER_DEV, "POST", curl_params, "PAGE_END");
 
     if (res != CURLE_OK)
     {

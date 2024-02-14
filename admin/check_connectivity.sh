@@ -17,7 +17,7 @@ getTemperature2="Select temperature_2 from temperature ORDER BY time DESC LIMIT 
 temperatureValue2=$(sqlite3 "$database_temperature2" "$getTemperature2")
 
 # Check Wi-Fi connectivity strength
-wifi_strength=$(nmcli -t dev wifi|grep '*')
+wifi_strength=$(nmcli -t -f ssid,mode,freq,rate,signal,security dev wifi | grep '*')
 #Check if folder exists or create folder and file if it doesn't exist
 folder="/home/df-admin/production/logging/wifi"
 mkdir -p "$folder" && touch "$folder"/logging.txt

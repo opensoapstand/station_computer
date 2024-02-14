@@ -16,6 +16,7 @@ public:
     void transactionEndSlot();
     void updateVolumeSlot(double dispensed);
     void updateFinalVolumeDispensed(double dispensed);
+    void sendFinalTransactionMessage(QString start_time, QString end_time, double button_press_duration, double button_press_count, double volume_dispensed,QString volumeDispensedMixProduct);
     void dispenseRateSlot(double flowrate);
     void dispenseStatusSlot(QString status);
     void printerStatusSlot(bool isOnline, bool hasPaper);
@@ -38,6 +39,7 @@ signals:
     void pleaseReset();
     void signalUpdateVolume(double dispensed, bool isFull);
     void finalVolumeDispensed(double dispensed);
+    void finalTransactionMessage(QString start_time, QString end_time, double button_press_duration, double button_press_count, double volume_dispensed,QString volumeDispensedMixProduct);
     void signalDispenseRate(double flowrate);
     void signalDispenseStatus(QString status);
     void targetHit();

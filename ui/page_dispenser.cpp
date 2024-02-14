@@ -24,11 +24,9 @@
 #include "payment/commands.h"
 extern bool isFreeEmailOrder;
 extern QString transactionLogging;
-// extern std::string CTROUTD;
 extern std::string MAC_KEY;
 extern std::string MAC_LABEL;
 extern std::string AUTH_CODE;
-// extern std::string SAF_NUM;
 extern std::string socketAddr;
 extern std::map<std::string, std::string> tapPaymentObject;
 double current_price;
@@ -506,90 +504,7 @@ void page_dispenser::dispensing_end_admin()
         }
         }
     }
-    // else if (this->cancelPayment && (paymentMethod == PAYMENT_TAP_USA || paymentMethod == PAYMENT_TAP_CANADA))
-    // {
-    //     ui->label_indicate_active_spout->hide();
-    //     ui->label_to_refill->hide();
-    //     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_finishTransactionMessage, "no_pay");
-    //     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_CANCEL);
-
-    //     std::map<std::string, std::string> response;
-    //     qDebug() << "dispense end: tap payment No volume dispensed.";
-    //     // REVERSE PAYMENT.
-    //     if (paymentMethod == PAYMENT_TAP_USA)
-    //     {
-    //         if (tapPaymentObject.find("saf_num") != tapPaymentObject.end())
-    //         {
-    //             std::cout << "Voiding transaction";
-    //             qDebug() << "SAF_NUM" << QString::fromStdString(tapPaymentObject["saf_num"]);
-    //             tapPaymentObject["ctrout_saf"] = tapPaymentObject["saf_num"];
-    //             response = voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["saf_num"]);
-    //         }
-    //         else if (tapPaymentObject.find("ctroutd") != tapPaymentObject.end())
-    //         {
-    //             qDebug() << "CTROUTD" << QString::fromStdString(tapPaymentObject["ctroutd"]);
-    //             response = voidTransaction(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["ctroutd"]);
-    //             tapPaymentObject["ctrout_saf"] = tapPaymentObject["ctroutd"];
-    //         }
-
-    //         tapPaymentObject["amount"] = stream.str();
-    //         tapPaymentObject["status"] = "Voided";
-    //         p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
-
-    //         finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
-    //     }
-    //     if (paymentMethod == PAYMENT_TAP_CANADA)
-    //     {
-    //         com.page_init();
-    //         pktToSend = paymentPacket.reversePurchasePacket();
-    //         if (sendToUX410())
-    //         {
-    //             waitForUX410();
-    //             qDebug() << "Payment Reversed" << endl;
-    //             pktResponded.clear();
-    //             com.flushSerial();
-    //         }
-
-    //         tapPaymentObject["status"] = "Voided";
-    //         // tapPaymentObject["session_id"] = "1";
-    //         p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
-    //     }
-    // }
-    // else if (((paymentMethod == PAYMENT_TAP_USA || paymentMethod == PAYMENT_TAP_CANADA)))
-    // {
-
-    //     QString base_text = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_finishTransactionMessage, "display_price");
-    //     ui->label_finishTransactionMessage->setText(base_text.arg(QString::number(current_price, 'f', 2))); // will replace %1 character in string by the provide text
-    //     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
-    //     if (paymentMethod == PAYMENT_TAP_USA)
-    //     {
-    //         if (tapPaymentObject.find("ctroutd") != tapPaymentObject.end())
-    //         {
-    //             qDebug() << "CTROUTD" << QString::fromStdString(tapPaymentObject["ctroutd"]);
-    //             tapPaymentObject["ctrout_saf"] = tapPaymentObject["ctroutd"];
-    //             std::map<std::string, std::string> testResponse = capture(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["ctroutd"], stream.str());
-    //             tapPaymentObject["amount"] = stream.str();
-    //         }
-    //         else if (tapPaymentObject.find("saf_num") != tapPaymentObject.end())
-    //         {
-    //             qDebug() << "SAF_NUM" << QString::fromStdString(tapPaymentObject["saf_num"]);
-    //             tapPaymentObject["ctrout_saf"] = tapPaymentObject["saf_num"];
-    //             std::map<std::string, std::string> testResponse = editSaf(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["saf_num"], stream.str(), "ELIGIBLE");
-    //             tapPaymentObject["amount"] = stream.str();
-    //         }
-    //         tapPaymentObject["status"] = "CAPTURED";
-
-    //         p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
-
-    //         finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
-    //     }
-    //     else if (paymentMethod == PAYMENT_TAP_CANADA)
-    //     {
-    //         tapPaymentObject["status"] = "CAPTURED";
-    //         p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
-    //     }
-    // }
-
+    
     qDebug() << "Finished dispense admin handling";
     current_price = 0.0;
     if (askForFeedbackAtEnd)
@@ -625,8 +540,6 @@ void page_dispenser::fsmSendStartDispensing()
     qDebug() << "Send order details to FSM: " << order_command;
     p_page_idle->thisMachine->dfUtility->send_command_to_FSM(order_command, true);
     QThread::msleep(50); // Sleep for 50 milliseconds
-    
-    
 
     bool isCustomMix = p_page_idle->thisMachine->getSelectedProduct()->isCustomMix();
     int pNumberSelectedProduct = p_page_idle->thisMachine->getSelectedProduct()->getPNumber();

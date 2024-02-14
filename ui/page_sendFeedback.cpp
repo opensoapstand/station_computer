@@ -342,24 +342,8 @@ void page_sendFeedback::on_pushButton_send_clicked()
             QString MachineSerialNumber = p_page_idle->thisMachine->getMachineId();
             QString customFeedback = ui->textEdit_custom_message->toPlainText();
             QString customerEmail = ui->lineEdit_enter_email->text();
-            QString curl_param = "customer_email= "+ customerEmail+ " ,"+"&problems= " + problems + " ," + customFeedback + "&MachineSerialNumber=" + MachineSerialNumber;
-            qDebug() << "Curl params" << curl_param;
-            curl_param_array = curl_param.toLocal8Bit();
-            qDebug() << curl_param_array;
-            curl = curl_easy_init();
-            if (!curl)
-            {
-                qDebug() << "page_end: cURL failed to init. parameters:" + curl_param;
-
-                return;
-            }
-
-            curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/alert/sendFeedbackEmail");
-            curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
-            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallbackFeedback);
-            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-            curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
-            res = curl_easy_perform(curl);
+            QString curl_params = "customer_email= "+ customerEmail+ " ,"+"&problems= " + problems + " ," + customFeedback + "&MachineSerialNumber=" + MachineSerialNumber;
+            std::tie(res,readBuffer, http_code) = p_page_idle->thisMachine->sendRequestToPortal(PORTAL_SEND_FEEDBACK, "POST", curl_params, "PAGE_SEND_FEEDBACK");
 
             if (res != CURLE_OK)
             {

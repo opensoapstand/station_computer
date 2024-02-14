@@ -1053,3 +1053,5 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
 
    return e_ret;
 }
+
+

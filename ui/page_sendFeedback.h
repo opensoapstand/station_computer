@@ -85,8 +85,11 @@ private:
     void reset_and_show_page_elements();
     void selectOnTick();
     void mainPage();
-
+    
+    CURLcode res;
     std::string readBuffer;
+    long http_code;
+
     Ui::page_sendFeedback *ui;
     page_select_product *p_page_select_product;
     page_qr_payment *paymentPage;
@@ -105,9 +108,6 @@ private:
     QShowEvent *dispenseEvent;
     QShowEvent *wifiErrorEvent;
 
-    CURL *curl;
-    CURLcode res;
-    QByteArray curl_param_array;
     QString MachineSerialNumber;
     QVBoxLayout *statusbarLayout;
 };

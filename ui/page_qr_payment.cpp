@@ -181,12 +181,12 @@ void page_qr_payment::setupQrOrder()
             map.fill(QColor("black"));
         }
         QPainter painter(&map);
-
+        QString portal_base_url = p_page_idle->thisMachine->getPortalBaseUrl();
         // build up qr content (link)
-        QString qrdata = "https://soapstandportal.com/payment?oid=" + orderId;
+        QString qrdata = portal_base_url + "payment?oid=" + orderId;
         if ((p_page_idle->thisMachine->getMachineId()).left(2) == "AP")
         {
-            qrdata = "https://soapstandportal.com/paymentAelen?oid=" + orderId;
+            qrdata = portal_base_url+"paymentAelen?oid=" + orderId;
         }
         // create qr code graphics
         p_page_idle->thisMachine->hasMixing() ? paintQR(painter, QSize(451, 451), qrdata, QColor("white")) : paintQR(painter, QSize(360, 360), qrdata, QColor("white"));
@@ -246,80 +246,46 @@ bool page_qr_payment::createOrderIdAndSendToBackend()
     orderId = orderId.remove("}");
 
     // send order details to backend
-    QString curl_order_parameters_string = "orderId=" + orderId + "&size=" + drinkSize + "&MachineSerialNumber=" + MachineSerialNumber +
+    QString curl_params = "orderId=" + orderId + "&size=" + drinkSize + "&MachineSerialNumber=" + MachineSerialNumber +
                                            "&contents=" + contents + "&price=" + price + "&productId=" + productId + "&quantity_requested=" + quantity_requested + "&size_unit=" + productUnits + "&logging=" + p_page_idle->thisMachine->getTransactionLogging();
-    curl_order_parameters = curl_order_parameters_string.toLocal8Bit();
-
-    curl1 = curl_easy_init();
-
-    if (!curl1)
-    {
-        qDebug() << "pagepayement cURL Failed to init : " + curl_order_parameters_string + "to: " + "https://soapstandportal.com/api/machine_data/createOrderInDb";
-        return shouldShowQR;
-    }
-
-    curl_easy_setopt(curl1, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/createOrderInDb");
-    curl_easy_setopt(curl1, CURLOPT_POSTFIELDS, curl_order_parameters.data());
-    curl_easy_setopt(curl1, CURLOPT_WRITEFUNCTION, WriteCallback);
-    curl_easy_setopt(curl1, CURLOPT_WRITEDATA, &readBuffer);
-    curl_easy_setopt(curl1, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
 
     int createOrderInDbAttempts = 0;
     QString feedback;
     do
     {
-        res1 = curl_easy_perform(curl1);
+        std::tie(res,readBuffer, http_code) = p_page_idle->thisMachine->sendRequestToPortal(PORTAL_CREATE_ORDER, "POST", curl_params, "PAGE_QR_PAYMENT");
         feedback = QString::fromUtf8(readBuffer.c_str());
         createOrderInDbAttempts += 1;
     } while (feedback != "true" && createOrderInDbAttempts <= 3);
     if (feedback != "true")
     {
-        qDebug() << "ERROR: Problem at create order in the cloud request. error code: " + QString::number(res1);
+        qDebug() << "ERROR: Problem at create order in the cloud request. error code: " + QString::number(res);
     }
     else
     {
-        qDebug() << "create order in the cloud request sent to soapstandportal (" + curl_order_parameters_string + "). Server feedback: " << feedback;
+        qDebug() << "create order in the cloud request sent to soapstandportal (" + curl_params + "). Server feedback: " << feedback;
     }
     if (feedback == "true")
     {
         shouldShowQR = true;
     }
-    curl_easy_cleanup(curl1);
-    readBuffer = "";
+
     feedback = "";
 
     _pageTimeoutCounterSecondsLeft = QR_PAGE_TIMEOUT_SECONDS;
     _qrProcessedPeriodicalCheckSec = QR_PROCESSED_PERIODICAL_CHECK_SECONDS;
-    // qrPeriodicalCheckTimer->start(1000);
     return shouldShowQR;
 }
 
 void page_qr_payment::isQrProcessedCheckOnline()
 {
 
-    curl = curl_easy_init();
-    if (!curl)
-    {
-        qDebug() << "cURL failed to page_init";
-        return;
-    }
-
-    QString curl_param = "oid=" + orderId;
-    curl_param_array = curl_param.toLocal8Bit();
-
-    curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/check_order_status");
-
-    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-    curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
-
-    res = curl_easy_perform(curl);
+    QString curl_params = "oid=" + orderId;
+    std::tie(res,readBuffer, http_code) = p_page_idle->thisMachine->sendRequestToPortal(PORTAL_CHECK_ORDER_STATUS, "POST", curl_params, "PAGE_QR_PAYMENT");
     qDebug() << "Send check qr status for order " << orderId;
 
     if (res != CURLE_OK)
     {
-        // string test = std::string(curl_easy_strerror(res));
         qDebug() << "ERROR: cURL fail at page_qr_payment. Error code: " + QString::number(res);
     }
     else
@@ -330,7 +296,6 @@ void page_qr_payment::isQrProcessedCheckOnline()
         if (readBuffer == "true")
         {
             p_page_idle->thisMachine->addToTransactionLogging("\n 4: Order Paid - True");
-            // transactionLogging += "\n 4: Order Paid - True";
             qDebug() << "QR processed. It's time to dispense.";
             proceed_to_dispense();
             state_payment = s_payment_done;
@@ -347,7 +312,6 @@ void page_qr_payment::isQrProcessedCheckOnline()
             if (!p_page_idle->thisMachine->getTransactionLogging().contains("\n 3: QR Scanned - True"))
             {
                 p_page_idle->thisMachine->addToTransactionLogging("\n 3: QR Scanned - True");
-                // transactionLogging += "\n 3: QR Scanned - True";
             }
             qDebug() << "Wait for QR processed. User must have finished transaction to continue.";
             // user scanned qr code and is processing transaction. Delete qr code and make it harder for user to leave page.
@@ -372,7 +336,6 @@ void page_qr_payment::isQrProcessedCheckOnline()
             qDebug() << "ASSERT ERROR: Unknown message from Server";
         }
     }
-    curl_easy_cleanup(curl);
     readBuffer = "";
 }
 

@@ -770,5 +770,5 @@ void page_idle::rebootTapDevice()
 {
     qDebug() << "Rebooting Tap Device";
     page_payment_tap_serial paymentSerialObject;
-    paymentSerialObject.resetDevice();
+    paymentSerialObject.rebootDevice();
 }

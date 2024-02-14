@@ -223,12 +223,14 @@ void page_sendFeedback::onSelectTimeoutTick()
 
 void page_sendFeedback::reset_and_show_page_elements()
 {
-    ui->lineEdit_enter_email->clear();
-    ui->lineEdit_enter_email->show();
+    if(p_page_idle->thisMachine->hasMixing()){
+        ui->lineEdit_enter_email->clear();
+        ui->lineEdit_enter_email->show();
+        qDebug() << "Setting email text to:" << TEXTBOX_EMAIL_TEXT;
+        ui->lineEdit_enter_email->setPlaceholderText(TEXTBOX_EMAIL_TEXT);
+    }
     ui->textEdit_custom_message->clear();
     ui->textEdit_custom_message->show();
-    qDebug() << "Setting email text to:" << TEXTBOX_EMAIL_TEXT;
-    ui->lineEdit_enter_email->setPlaceholderText(TEXTBOX_EMAIL_TEXT);
     qDebug() << "Setting feedback text to:" << TEXTBOX_INVITE_TEXT;
     ui->textEdit_custom_message->setPlaceholderText(TEXTBOX_INVITE_TEXT);
     ui->feedbackKeyboard->hide();
@@ -316,12 +318,57 @@ void page_sendFeedback::on_pushButton_send_clicked()
     }
     qDebug() << problemList;
     QString problems = problemList.join(",");
-    if(ui->lineEdit_enter_email->text().isEmpty()){
-        p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_enter_email, "lineEdit_enter_email_alert", PAGE_FEEDBACK_CSS);
-        ui->lineEdit_enter_email->setPlaceholderText(TEXTBOX_EMAIL_TEXT_ALERT);
+    if(p_page_idle->thisMachine->hasMixing()){
+        if(ui->lineEdit_enter_email->text().isEmpty()){
+            p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_enter_email, "lineEdit_enter_email_alert", PAGE_FEEDBACK_CSS);
+            ui->lineEdit_enter_email->setPlaceholderText(TEXTBOX_EMAIL_TEXT_ALERT);
+        }else{
+            if ((problems.length() != 0 || (!(ui->textEdit_custom_message->toPlainText().isEmpty()) && (ui->textEdit_custom_message->toPlainText() != TEXTBOX_INVITE_TEXT)))
+                && emailValid(ui->lineEdit_enter_email->text()))
+            {
+                qDebug() << "Will send feedback to backend";
+
+                // instant reaction by hiding the page into "thank you"
+                ui->label_thank_you_image->show();
+                ui->label_thank_you_image->raise();
+                ui->label_thank_you_image->repaint(); // instant showing instead of waiting for function to be finished.
+
+                ui->label_thanks_for_feedback->show();
+                ui->label_thanks_for_feedback->raise();
+                ui->label_thanks_for_feedback->repaint(); // instant showing instead of waiting for function to be finished.
+
+                ui->label_thanks_for_feedback_2->show();
+                ui->label_thanks_for_feedback_2->raise();
+                ui->label_thanks_for_feedback_2->repaint(); // instant showing instead of waiting for function to be finished.
+
+                // send to backend
+                QString MachineSerialNumber = p_page_idle->thisMachine->getMachineId();
+                QString customFeedback = ui->textEdit_custom_message->toPlainText();
+                QString customerEmail = ui->lineEdit_enter_email->text();
+                QString curl_params = "customer_email= "+ customerEmail+ " ,"+"&problems= " + problems + " ," + customFeedback + "&MachineSerialNumber=" + MachineSerialNumber;
+                std::tie(res,readBuffer, http_code) = p_page_idle->thisMachine->sendRequestToPortal(PORTAL_SEND_FEEDBACK, "POST", curl_params, "PAGE_SEND_FEEDBACK");
+
+                if (res != CURLE_OK)
+                {
+                    qDebug() << "ERROR: Transaction NOT sent to cloud. cURL fail. Error code: " + QString::number(res);
+                }
+
+                // this will trigger the reversal to idle page (start only after curl command completed)
+                _selectIdleTimeoutSec = 2;
+            }else{
+                if(!emailValid(ui->lineEdit_enter_email->text())){
+                    qDebug() << "User entered invalid email";
+                    p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_enter_email, "lineEdit_enter_email_alert", PAGE_FEEDBACK_CSS);
+                    ui->lineEdit_enter_email->clear();
+                    ui->lineEdit_enter_email->setPlaceholderText(TEXTBOX_EMAIL_TEXT_INVALID);
+                }
+                qDebug() << "User needs to select an option or enter text message";
+                p_page_idle->thisMachine->addCssClassToObject(ui->textEdit_custom_message, "textEdit_custom_message_alert", PAGE_FEEDBACK_CSS);
+                ui->textEdit_custom_message->setPlaceholderText(TEXTBOX_INVITE_TEXT_ALERT);
+            }
+        }
     }else{
-        if ((problems.length() != 0 || (!(ui->textEdit_custom_message->toPlainText().isEmpty()) && (ui->textEdit_custom_message->toPlainText() != TEXTBOX_INVITE_TEXT)))
-            && emailValid(ui->lineEdit_enter_email->text()))
+        if (problems.length() != 0 || (!(ui->textEdit_custom_message->toPlainText().isEmpty()) && (ui->textEdit_custom_message->toPlainText() != TEXTBOX_INVITE_TEXT)))
         {
             qDebug() << "Will send feedback to backend";
 
@@ -334,32 +381,25 @@ void page_sendFeedback::on_pushButton_send_clicked()
             ui->label_thanks_for_feedback->raise();
             ui->label_thanks_for_feedback->repaint(); // instant showing instead of waiting for function to be finished.
 
-            ui->label_thanks_for_feedback_2->show();
-            ui->label_thanks_for_feedback_2->raise();
-            ui->label_thanks_for_feedback_2->repaint(); // instant showing instead of waiting for function to be finished.
-
             // send to backend
             QString MachineSerialNumber = p_page_idle->thisMachine->getMachineId();
             QString customFeedback = ui->textEdit_custom_message->toPlainText();
-            QString customerEmail = ui->lineEdit_enter_email->text();
-            QString curl_param = "customer_email= "+ customerEmail+ " ,"+"&problems= " + problems + " ," + customFeedback + "&MachineSerialNumber=" + MachineSerialNumber;
-            qDebug() << "Curl params" << curl_param;
-            curl_param_array = curl_param.toLocal8Bit();
-            qDebug() << curl_param_array;
-            curl = curl_easy_init();
-            if (!curl)
-            {
-                qDebug() << "page_end: cURL failed to init. parameters:" + curl_param;
+            QString curl_params = "problems=" + problems + " ," + customFeedback + "&MachineSerialNumber=" + MachineSerialNumber;
+            std::tie(res,readBuffer, http_code) = p_page_idle->thisMachine->sendRequestToPortal(PORTAL_SEND_FEEDBACK, "POST", curl_params, "PAGE_SEND_FEEDBACK");
 
-                return;
-            }
+            // if (!curl)
+            // {
+            //     qDebug() << "page_end: cURL failed to init. parameters:" + curl_param;
 
-            curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/alert/sendFeedbackEmail");
-            curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
-            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallbackFeedback);
-            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-            curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
-            res = curl_easy_perform(curl);
+            //     return;
+            // }
+
+            // curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/alert/sendFeedbackEmail");
+            // curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
+            // curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallbackFeedback);
+            // curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+            // curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
+            // res = curl_easy_perform(curl);
 
             if (res != CURLE_OK)
             {
@@ -368,18 +408,9 @@ void page_sendFeedback::on_pushButton_send_clicked()
 
             // this will trigger the reversal to idle page (start only after curl command completed)
             _selectIdleTimeoutSec = 2;
-        }else{
-            if(!emailValid(ui->lineEdit_enter_email->text())){
-                qDebug() << "User entered invalid email";
-                p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_enter_email, "lineEdit_enter_email_alert", PAGE_FEEDBACK_CSS);
-                ui->lineEdit_enter_email->clear();
-                ui->lineEdit_enter_email->setPlaceholderText(TEXTBOX_EMAIL_TEXT_INVALID);
-            }
-            qDebug() << "User needs to select an option or enter text message";
-            p_page_idle->thisMachine->addCssClassToObject(ui->textEdit_custom_message, "textEdit_custom_message_alert", PAGE_FEEDBACK_CSS);
-            ui->textEdit_custom_message->setPlaceholderText(TEXTBOX_INVITE_TEXT_ALERT);
         }
     }
+
 
     p_keyboard->resetKeyboard();
 }

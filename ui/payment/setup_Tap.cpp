@@ -12,6 +12,7 @@ std::atomic<bool> stop_authorization_thread(false);
 
 std::string read_public_key()
 {
+    qDebug() << "Reading public key";
     std::ifstream infile("/home/df-admin/production/admin/tap_payment/public_key.txt");
     if (!infile.is_open())
     {
@@ -31,6 +32,7 @@ std::string read_public_key()
 }
 std::map<std::string, std::string> readXmlPacket(std::string xmlString)
 {
+    qDebug() << "Reading XML packet from string";
     std::string tag, attribute, value;             // variables to store tag, attribute, and value information
     std::map<std::string, std::string> dictionary; // dictionary to store parsed XML information
     int textStart = 0;
@@ -61,6 +63,7 @@ std::map<std::string, std::string> readXmlPacket(std::string xmlString)
 
 std::string sendPacket(std::string command, int sockfd, bool logging)
 {
+    qDebug() << "Send packet to socket";
     char buffer[4096];
 
     memset(buffer, 0, sizeof(buffer));
@@ -94,7 +97,7 @@ void receiveAuthorizationThread(int sockfd)
         xml_packet_string += bufferReceived;
         if (strstr(xml_packet_string.c_str(), delimiter) != NULL)
         {
-             std::cout << "received packet complete. " << std::endl;
+            std::cout << "received packet complete. " << std::endl;
             xml_packet_received_complete = true;
             break;
         }
@@ -109,6 +112,8 @@ bool checkPacketReceived(bool logging, std::map<std::string, std::string> *xml_p
         if (logging)
         {
             std::cout << xml_packet_string << std::endl;
+            qDebug() << QString::fromUtf8(xml_packet_string.c_str());
+
         }
         std::map<std::string, std::string> xmlObject = readXmlPacket(xml_packet_string);
         *xml_packet = xmlObject;
@@ -205,6 +210,7 @@ void receiveCardTapAction()
 }
 std::tuple<bool , std::string> checkCardTapped(bool logging, std::map<std::string, std::string> *card_tapped)
 { 
+    qDebug() << "Check if card is tapped";
     if(xml_card_tap_complete || stop_tap_action_thread){
         if (logging)
         {
@@ -229,6 +235,7 @@ std::tuple<bool , std::string> checkCardTapped(bool logging, std::map<std::strin
 
 std::map<std::string, std::string> sendAndReceivePacket(std::string command, int sockfd, bool logging)
 {
+    qDebug() << "In send and receive packet";
     char buffer[4096];
     memset(buffer, 0, sizeof(buffer));
     strcpy(buffer, command.c_str());
@@ -267,7 +274,7 @@ std::map<std::string, std::string> sendAndReceivePacket(std::string command, int
     if (logging)
     {
         std::cout << xml_string << std::endl;
-    qDebug() << QString::fromUtf8(xml_string.c_str());
+        qDebug() << QString::fromUtf8(xml_string.c_str());
     }
     std::map<std::string, std::string> xmlObject = readXmlPacket(xml_string);
     memset(bufferReceived, 0, sizeof(bufferReceived));
@@ -276,14 +283,16 @@ std::map<std::string, std::string> sendAndReceivePacket(std::string command, int
 
 int connectSocket()
 {
+    qDebug() << "Connection attempt - Primary socket";
     int sockfd;
     struct sockaddr_in serv_addr;
-
+    qDebug() << "Connecting to server socket";
     // Create a socket
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0)
     {
         std::cerr << "Error opening socket" << std::endl;
+        qDebug() << "Error opening socket";
         return 1;
     }
     // Set up the server address
@@ -293,19 +302,23 @@ int connectSocket()
     if (inet_pton(AF_INET, "192.168.1.25", &serv_addr.sin_addr) <= 0)
     {
         std::cerr << "Error converting IP address" << std::endl;
+        qDebug() << "Error converting IP address";
         return 1;
     }
     // Connect to the server
     if (connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
     {
         std::cerr << "Error connecting to server" << std::endl;
+        qDebug() << "Connection attempt Error- Primary socket";
         return 1;
     }
+    qDebug() << "Connection attempt Success- Primary socket";
     return sockfd;
 }
 
 int connectSecondarySocket()
 {
+    qDebug() << "Connection attempt - Secondary socket";
     int sockfd;
     struct sockaddr_in serv_addr;
 
@@ -331,7 +344,7 @@ int connectSecondarySocket()
         std::cerr << "Error connecting to server" << std::endl;
         return 1;
     }
-
+    qDebug() << "Connection attempt Success - Secondary socket";
     return sockfd;
 }
 
@@ -415,24 +428,26 @@ std::vector<unsigned char> int_to_bytes(unsigned int value)
     return result;
 }
 
-void print_vector_as_hex(const std::vector<unsigned char> &vec)
-{
-    std::cout << std::hex << std::setfill('0');
-    for (const auto &val : vec)
-    {
-        std::cout << std::setw(2) << static_cast<unsigned>(val);
-    }
-    std::cout << std::dec << std::endl;
-}
+// void print_vector_as_hex(const std::vector<unsigned char> &vec)
+// {
+//     std::cout << std::hex << std::setfill('0');
+//     for (const auto &val : vec)
+//     {
+//         std::cout << std::setw(2) << static_cast<unsigned>(val);
+//     }
+//     std::cout << std::dec << std::endl;
+// }
 
 std::string create_counter_mac(int counter, std::string encrypted_mac)
 {
+    qDebug() << "Create mac for counter";
     std::vector<unsigned char> ciphertext = base64_decode(encrypted_mac);
     RSA *private_key = load_private_key("/home/df-admin/production/admin/tap_payment/private_key.der");
     if (private_key == NULL)
     {
         // Handle error
         std::cout << "Error in reading private key";
+        qDebug() << "Error in reading private key";
     }
     std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
     std::wstring myWideString = std::to_wstring(counter);

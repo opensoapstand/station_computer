@@ -43,6 +43,16 @@ public:
     void setStatusText(QString status);
     QString getStatusText();
 
+    QString getDispenseStartTime();
+    QString getDispenseEndTime();
+    double getButtonPressDuration();
+    double getButtonPressCount();
+    void setDispenseStartTime(QString start_time);
+    void setDispenseEndTime(QString end_time);
+    void setButtonPressDuration(double button_duration);
+    void setButtonPressCount(double button_count);
+    
+
     // void setBasePNumber(int);
     // void getBasePNumber(int);
     // int *getAdditivesPNumbers();
@@ -73,6 +83,10 @@ private:
     QVector<int> m_additivePNumbers; // int m_mixPNumbers[ADDITIVES_PER_SLOT_COUNT_MAX];
     bool m_is_enabled;
     QString m_status_text;
+    QString m_dispense_start_time;
+    QString m_dispense_end_time;
+    double m_button_press_duration;
+    double m_button_press_count;
 
     // QString m_payment;  // --> machine?!
     // QString m_currency; // --> machine

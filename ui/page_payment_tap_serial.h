@@ -97,7 +97,7 @@ public:
     }
     bool tap_serial_initiate();
     void getLanInfo();
-    void resetDevice();
+    void rebootDevice();
 
     QTimer *readTimer;
     StatePaymentSerial state_payment;

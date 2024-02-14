@@ -59,7 +59,6 @@ page_payment_tap_tcp::page_payment_tap_tcp(QWidget *parent) : QWidget(parent),
 
     ui->pushButton_payment_bypass->setEnabled(false);
     ui->label_title->hide();
-    // ui->order_total_amount->hide();
     statusbarLayout = new QVBoxLayout(this);
 }
 
@@ -70,7 +69,8 @@ void page_payment_tap_tcp::initiate_tap_setup()
     std::map<std::string, std::string> configMap = readConfigFile();
     std::map<std::string, std::string> deviceStatus = checkDeviceStatus(connectSecondarySocket());
     if (deviceStatus["MACLABEL_IN_SESSION"] != "")
-    {
+    {   
+        qDebug() << "Finishing session";
         // finishSession(connectSocket(), configMap["MAC_KEY"], configMap["MAC_LABEL"]);
     }
     cancelTransaction(connectSecondarySocket());
@@ -232,6 +232,7 @@ void page_payment_tap_tcp::tapPaymentHandler()
 
 void page_payment_tap_tcp::startPaymentProcess()
 {
+    state_tap_payment = s_tap_payment_processing;
     if (numberOfTapAttempts < 3)
     {
         numberOfTapAttempts += 1;
@@ -318,6 +319,7 @@ void page_payment_tap_tcp::check_card_tapped()
 
 void page_payment_tap_tcp::authorized_transaction(std::map<std::string, std::string> responseObj)
 {
+    state_tap_payment = s_tap_payment_done;
     stopPayTimers();
     QMovie *currentGif = ui->animated_Label->movie();
     currentGif->stop();
@@ -338,7 +340,7 @@ void page_payment_tap_tcp::authorized_transaction(std::map<std::string, std::str
         tapPaymentObject["status"] = "Authorized";
         hideCurrentPageAndShowProvided(p_page_dispense);
     }
-    else if (responseObj["result"] == "APPROVED/STORED")
+    else if (responseObj["RESULT"] == "APPROVED/STORED")
     {
         p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
         // CTROUTD = responseObj["CTROUTD"];
@@ -355,7 +357,7 @@ void page_payment_tap_tcp::authorized_transaction(std::map<std::string, std::str
         tapPaymentObject["status"] = "Authorized Offline";
         hideCurrentPageAndShowProvided(p_page_dispense);
     }
-    else if (responseObj["result"] == "DECLINED")
+    else if (responseObj["RESULT"] == "DECLINED")
     {
 
         p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_FAIL);
@@ -440,21 +442,17 @@ void page_payment_tap_tcp::on_pushButton_previous_page_clicked()
 
     if (exitConfirm())
     {
-        if (tap_payment)
+        stop_tap_action_thread = true;
+        stop_authorization_thread = true;
+        // stopPayTimers();
+        qDebug() << "Stopping the threads";
+        std::map<std::string, std::string> cancelResp = cancelTransaction(connectSecondarySocket());
+        qDebug() << "My socket address is " << QString::fromStdString(socketAddr) << endl;
+        if (cancelResp["RESULT"] == "OK")
         {
-            stop_tap_action_thread = true;
-            stop_authorization_thread = true;
-            // stopPayTimers();
-            qDebug() << "Stopping the threads";
-            std::map<std::string, std::string> cancelResp = cancelTransaction(connectSecondarySocket());
-            qDebug() << "My socket address is " << QString::fromStdString(socketAddr) << endl;
-            if (cancelResp["RESULT"] == "OK")
-            {
-                qDebug() << QString::fromUtf8(cancelResp["RESULT"].c_str());
-                // sleep(3);
-                // finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
-                qDebug() << "Session finished sent";
-            }
+            qDebug() << QString::fromUtf8(cancelResp["RESULT"].c_str());
+            finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
+            qDebug() << "Session finished sent";
         }
         p_page_idle->thisMachine->hasMixing() ? hideCurrentPageAndShowProvided(p_page_product_mixing) : hideCurrentPageAndShowProvided(p_page_product);
     }
@@ -479,6 +477,5 @@ void page_payment_tap_tcp::resetPaymentPage()
     stopPayTimers();
     p_page_idle->thisMachine->resetTransactionLogging();
     // transactionLogging = "";
-    response = true;
     qDebug() << "Cancelled";
 }

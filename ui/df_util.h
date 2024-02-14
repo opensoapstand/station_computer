@@ -9,7 +9,7 @@
 
 
 // TODO: Refactor to fit with dfuicommthread
-#define UI_VERSION "3.2"
+#define UI_VERSION "3.3"
 
 #define OPTION_SLOT_INVALID 0
 #define SELECT_PRODUCT_PAGE_SLOT_COUNT_MAX 4
@@ -64,7 +64,8 @@
 
 using namespace std;
 
-#define PAGE_INIT_READY_TIMEOUT_SECONDS 10
+
+#define PAGE_INIT_READY_TIMEOUT_SECONDS 30
 #define PAGE_INIT_REBOOT_TIMEOUT_SECONDS 3600
 #define PAGE_IDLE_DELAY_BEFORE_ENTERING_IDLE_PRODUCTS 15
 #define PAGE_IDLE_DELAY_BEFORE_ENTERING_IDLE_PRODUCTS 15
@@ -200,6 +201,25 @@ using namespace std;
 #define PAYMENT_TAP_USA                                 "tap_usa"
 #define PAYMENT_TAP_CANADA_QR                           "tap_canada_qr"
 #define PAYMENT_TAP_USA_QR                              "tap_usa_qr"
+#define PAYMENT_RECEIPT_PRINTER                         "receipt_printer"
+
+//Portal API Endpoints
+
+//Page QR Payment
+#define PORTAL_PING                                     "api/machine_data/ping"
+#define PORTAL_CREATE_ORDER                             "api/machine_data/createOrderInDb"
+#define PORTAL_CHECK_ORDER_STATUS                       "api/machine_data/check_order_status"
+//Page End
+#define PORTAL_UPDATE_ALREADY_CREATED_ORDER             "api/machine_data/updateOrder"
+#define PORTAL_SEND_NEW_COMPLETE_ORDER                  "api/machine_data/pushPrinterOrder"
+#define PORTAL_SEND_NEW_COMPLETE_ORDER_DEV              "api/order/sendCompleteNewOrder"
+
+//Feedback page
+#define PORTAL_SEND_FEEDBACK                            "api/alert/sendFeedbackEmail"
+//Maintenance Page
+#define PORTAL_RESET_STOCK                              "api/machine_data/resetStock"
+#define PORTAL_UPDATE_PRODUCT_FROM_STATION              "api/product/update_product_from_station"
+
 
 
 class df_util : public QWidget

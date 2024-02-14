@@ -1,14 +1,13 @@
 #!/bin/bash
 
-# Set your ping target (Google's public DNS server)
-PING_TARGET="8.8.8.8"
+CURL_TARGET="http://www.google.com"
 
 # Set your service details
 SERVICE_NAME="rtunnel.service"
 
 # Function to check internet connectivity
 check_internet_connection() {
-    ping -c 1 -W 5 $PING_TARGET > /dev/null && return 0 || return 1
+    curl --silent --head --fail $CURL_TARGET > /dev/null && return 0 || return 1
 }
 
 # Function to restart the service
@@ -35,9 +34,7 @@ checkRecentPingFromAWS(){
     return $((time_difference/60)); 
 
 }
-check_internet_connection() {
-    ping -c 1 -W 5 $PING_TARGET > /dev/null && return 0 || return 1
-}
+
 
 
 if check_internet_connection; then
@@ -50,7 +47,7 @@ if check_internet_connection; then
     fi
 else
     echo "Internet is not active, Restarting network"
-    restart_network
+    # restart_network 
     if check_internet_connection; then
         restart_rtunnel
     fi

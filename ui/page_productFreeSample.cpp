@@ -83,7 +83,8 @@ void page_product_freeSample::showEvent(QShowEvent *event)
 {
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
-    p_keyboard->initializeKeyboard(false, ui->lineEdit_promo_code);
+    // need CAPS button for keyboard widget T or F
+    p_keyboard->resetKeyboard();
     statusbarLayout->removeWidget(p_keyboard);
 
     p_keyboard->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
@@ -100,6 +101,7 @@ void page_product_freeSample::showEvent(QShowEvent *event)
     statusbarLayout->addWidget(p_statusbar);   
 
     statusbarLayout->setAlignment(Qt::AlignBottom | Qt::AlignVCenter);
+    p_keyboard->registerCallBack(std::bind(&page_product_freeSample::enterButtonPressed, this));
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
 
@@ -196,11 +198,12 @@ void page_product_freeSample::enterButtonPressed(){
         p_page_idle->thisMachine->setCouponState(enabled_processing_input);
         reset_and_show_page_elements();
         apply_promo_code(ui->lineEdit_promo_code->text());
-        p_keyboard->initializeKeyboard(false, ui->lineEdit_promo_code);
+        p_keyboard->resetKeyboard();
     }
     else
     {
         qDebug() << "ASSERT ERROR: Illegal press. Still processing other call.";
+        reset_and_show_page_elements();
     }
 }
 
@@ -290,7 +293,7 @@ void page_product_freeSample::reset_and_show_page_elements()
         qDebug() << "Coupon state: Show keyboard";
         // p_keyboard->setVisibility(true);
         p_keyboard->registerCallBack(std::bind(&page_product_freeSample::enterButtonPressed, this));
-        p_keyboard->initializeKeyboard(true, ui->lineEdit_promo_code);
+        p_keyboard->setKeyboardVisibility(true, ui->lineEdit_promo_code);
         ui->lineEdit_promo_code->clear();
         ui->lineEdit_promo_code->show();
         p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_promo_code, "promoCode", PAGE_PRODUCT_FREESAMPLE_CSS);
@@ -325,6 +328,7 @@ void page_product_freeSample::hideCurrentPageAndShowProvided(QWidget *pageToShow
 
     if (p_page_idle->thisMachine->getCouponState() == enabled_show_keyboard ||
         p_page_idle->thisMachine->getCouponState() == enabled_invalid_input ||
+        p_page_idle->thisMachine->getCouponState() == enabled_not_eligible ||
         p_page_idle->thisMachine->getCouponState() == enabled_processing_input ||
         p_page_idle->thisMachine->getCouponState() == network_error)
     {
@@ -354,6 +358,7 @@ size_t WriteCallback_coupon2(char *contents, size_t size, size_t nmemb, void *us
 void page_product_freeSample::apply_promo_code(QString promocode)
 {
     QString image_path = p_page_idle->thisMachine->getTemplatePathFromName("soapstandspinner.gif");
+    
     QMovie *movie = new QMovie(image_path);
     ui->label_gif->setMovie(movie);
     movie->start();
@@ -362,6 +367,7 @@ void page_product_freeSample::apply_promo_code(QString promocode)
     long http_code = 0;
     QString machine_id = p_page_idle->thisMachine->getMachineId();
     QString product_serial = p_page_idle->thisMachine->getSelectedProduct()->getPNumberAsPString();
+
     // csuccess
     p_page_idle->thisMachine->setCouponState(enabled_invalid_input);
 
@@ -369,65 +375,56 @@ void page_product_freeSample::apply_promo_code(QString promocode)
     {
         ui->label_gif->show();
         readBuffer.clear();
-        curl = curl_easy_init();
+       
+        QString api_url = "api/coupon/find/" + promocode + "/" + machine_id + "/" + product_serial;
+        std::tie(res,readBuffer, http_code) =  p_page_idle->thisMachine->sendRequestToPortal(api_url, "GET", "", "PAGE_FREE_SAMPLE");
+
+        if (res != CURLE_OK)
         {
-            if (!curl)
-            {
-                qDebug() << "page_product_freeSample: apply promo cURL failed init";
-                p_page_idle->thisMachine->setCouponState(network_error);
-                return;
-            }
-            curl_easy_setopt(curl, CURLOPT_URL, ("https://soapstandportal.com/api/coupon/find/" + promocode + "/" + machine_id + "/" + product_serial).toUtf8().constData());
-            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback_coupon2);
-            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-            res = curl_easy_perform(curl);
-            curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
-            if (res != CURLE_OK)
-            {
-                qDebug() << "Backend coupon response: curl backend problem. error code: " << res;
-                p_page_idle->thisMachine->setCouponState(network_error);
-            }
-            else
-            {
-                int new_percent;
-                QString myQString = QString::fromStdString(readBuffer);
-                p_page_idle->thisMachine->setCouponConditions(myQString);
-                ui->label_gif->hide();
-                qDebug() << myQString;
+            qDebug() << "Backend coupon response: curl backend problem. error code: " << res;
+            p_page_idle->thisMachine->setCouponState(network_error);
+        }
+        else
+        {
+            int new_percent;
+            QString myQString = QString::fromStdString(readBuffer);
+            p_page_idle->thisMachine->setCouponConditions(myQString);
+            ui->label_gif->hide();
+            qDebug() << myQString;
 
-                if (http_code == 200)
+            if (http_code == 200)
+            {
+                json coupon_obj = json::parse(readBuffer);
+                //For free samples, the coupons are created with 0% discount as the price is already 0. 
+                // With 0 price, customer need to have a valid coupon code to restrict the system abuse
+                if (coupon_obj["active"] && coupon_obj["discount_amount"]==0)
                 {
-                    json coupon_obj = json::parse(readBuffer);
-                    //For free samples, the coupons are created with 0% discount as the price is already 0. 
-                    // With 0 price, customer need to have a valid coupon code to restrict the system abuse
-                    if (coupon_obj["active"] && coupon_obj["discount_amount"]==0)
-                    {
-                        qDebug() << "Backend coupon response: Valid. Discount percentage: " << new_percent;
-                        new_percent = coupon_obj["discount_amount"];
+                    qDebug() << "Backend coupon response: Valid. Discount percentage: " << new_percent;
+                    new_percent = coupon_obj["discount_amount"];
 
-                        p_page_idle->thisMachine->setCouponCode(promocode);
-                        p_page_idle->thisMachine->setDiscountPercentageFraction((new_percent * 1.0) / 100);
-                        p_page_idle->thisMachine->setCouponState(enabled_valid_active);
-                    }
-                    else
-                    {
-                        qDebug() << "Backend coupon response: Invalid ";
-                        p_page_idle->thisMachine->setCouponState(enabled_invalid_input);
-                    }
+                    p_page_idle->thisMachine->setCouponCode(promocode);
+                    p_page_idle->thisMachine->setDiscountPercentageFraction((new_percent * 1.0) / 100);
+                    p_page_idle->thisMachine->setCouponState(enabled_valid_active);
                 }
                 else
                 {
-                    qDebug() << "Backend coupon response: http 200 response ";
-                    if (myQString == "Not Eligible")
-                    {
-                        p_page_idle->thisMachine->setCouponState(enabled_not_eligible);
-                    }
-                    else
-                    {
-                        p_page_idle->thisMachine->setCouponState(enabled_invalid_input);
-                    }
+                    qDebug() << "Backend coupon response: Invalid ";
+                    p_page_idle->thisMachine->setCouponState(enabled_invalid_input);
                 }
             }
+            else
+            {
+                qDebug() << "Backend coupon response: http 200 response ";
+                if (myQString == "Not Eligible")
+                {
+                    p_page_idle->thisMachine->setCouponState(enabled_not_eligible);
+                }
+                else
+                {
+                    p_page_idle->thisMachine->setCouponState(enabled_invalid_input);
+                }
+            }
+            
         }
     }
     else

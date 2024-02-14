@@ -9,7 +9,7 @@
 
 
 // TODO: Refactor to fit with dfuicommthread
-#define UI_VERSION "3.2"
+#define UI_VERSION "3.3"
 
 #define OPTION_SLOT_INVALID 0
 #define SELECT_PRODUCT_PAGE_SLOT_COUNT_MAX 4
@@ -64,7 +64,8 @@
 
 using namespace std;
 
-#define PAGE_INIT_READY_TIMEOUT_SECONDS 10
+
+#define PAGE_INIT_READY_TIMEOUT_SECONDS 30
 #define PAGE_INIT_REBOOT_TIMEOUT_SECONDS 3600
 #define PAGE_IDLE_DELAY_BEFORE_ENTERING_IDLE_PRODUCTS 15
 #define PAGE_IDLE_DELAY_BEFORE_ENTERING_IDLE_PRODUCTS 15
@@ -131,6 +132,9 @@ using namespace std;
 #define PAGE_END_BACKGROUND_PATH                        "background_end.png"
 #define PAGE_TRANSACTIONS_BACKGROUND_PATH               "background_transactions.png"
 
+#define PAGE_SEND_FEEDBACK_BACKGROUND_PATH              "background_sendFeedback.png"
+#define CHECKBOX_UNCHECKED_PATH                         "checkbox_unchecked.png"
+#define CHECKBOX_CHECKED_PATH                           "checkbox_checked.png"
 #define PAGE_PRODUCT_MENU_BACKGROUND_PATH               "background_product_menu.png"
 #define PAGE_SELECT_PRODUCT_BACKGROUND_PATH             "background_product_select.png"
 #define PAGE_PRODUCT_BACKGROUND_PATH                    "background_product_quantity.png"
@@ -139,7 +143,11 @@ using namespace std;
 // #define PAGE_DISPENSE_INSTRUCTIONS_MULTISPOUT_BACKGROUND_PATH   "background_dispense_instructions_multispout.png"
 #define PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_RIGHT    "arrow_right_white_big.png"
 #define PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_DOWN "arrow_down_white_big.png"
+#define PAGE_IDLE_WARNING_ICON "warning_icon.png"
 #define PAGE_DISPENSE_BACKGROUND_PATH "background_dispense.png"
+#define PAGE_DISPENSE_ALERT_ICON "label_alert_icon.png"
+#define PAGE_DISPENSE_VOLUME_ICON "label_volume_icon.png"
+#define PAGE_DISPENSE_PRODUCT_ICON "label_product_icon.png"
 #define PAGE_QR_PAY_BACKGROUND_PATH "background_qr.png"
 #define PAGE_MAINTENANCE_BACKGROUND_PATH "background_maintenance.png"
 #define ERROR_MESSAGE_PATH "error_message.png"
@@ -149,13 +157,16 @@ using namespace std;
 #define PAGE_TAP_PAY "tapNow.png"
 #define PAGE_AUTHORIZE_NOW "authorizeNow.png"
 #define PAGE_TAP_GENERIC "genericTap.png"
-#define PAGE_SEND_FEEDBACK_PATH "background_sendfeedback.png"
 #define PAGE_INIT_BACKGROUND_IMAGE_PATH "background_init.png"
 #define IMAGE_BUTTON_HELP "help_icon.png"
 #define THANK_YOU_FOR_YOUR_FEEDBACK "background_feedbacksent.png"
 #define PAGE_ERROR_BACKGROUND_PATH "background_error_wifi.png"
 #define KEYBOARD_IMAGE_PATH "soapstand-keyboard.png"
-#define UNIVERSAL_KEYBOARD_IMAGE_PATH "universal_keyboard.png"
+#define UNIVERSAL_LINE_EDIT_KEYBOARD_WITH_CAPS_UPPERCASE_IMAGE_PATH "universal_lineEdit_with_caps_uppercase_keyboard.png"
+#define UNIVERSAL_LINE_EDIT_KEYBOARD_WITH_CAPS_LOWERCASE_IMAGE_PATH "universal_lineEdit_with_caps_lowercase_keyboard.png"
+#define UNIVERSAL_LINE_EDIT_KEYBOARD_WITHOUT_CAPS_IMAGE_PATH "universal_lineEdit_without_caps_keyboard.png"
+#define UNIVERSAL_TEXT_EDIT_KEYBOARD_UPPERCASE_IMAGE_PATH "universal_textEdit_uppercase_keyboard.png"
+#define UNIVERSAL_TEXT_EDIT_KEYBOARD_LOWERCASE_IMAGE_PATH "universal_textEdit_lowercase_keyboard.png"
 #define COUPON_ICON_UNAVAILABLE_PATH "coupon_unavailable.png"
 #define COUPON_ICON_AVAILABLE_PATH "coupon_available.png"
 #define MACHINE_LOGO_PATH "machine_logo.png"
@@ -190,6 +201,25 @@ using namespace std;
 #define PAYMENT_TAP_USA                                 "tap_usa"
 #define PAYMENT_TAP_CANADA_QR                           "tap_canada_qr"
 #define PAYMENT_TAP_USA_QR                              "tap_usa_qr"
+#define PAYMENT_RECEIPT_PRINTER                         "receipt_printer"
+
+//Portal API Endpoints
+
+//Page QR Payment
+#define PORTAL_PING                                     "api/machine_data/ping"
+#define PORTAL_CREATE_ORDER                             "api/machine_data/createOrderInDb"
+#define PORTAL_CHECK_ORDER_STATUS                       "api/machine_data/check_order_status"
+//Page End
+#define PORTAL_UPDATE_ALREADY_CREATED_ORDER             "api/machine_data/updateOrder"
+#define PORTAL_SEND_NEW_COMPLETE_ORDER                  "api/machine_data/pushPrinterOrder"
+#define PORTAL_SEND_NEW_COMPLETE_ORDER_DEV              "api/order/sendCompleteNewOrder"
+
+//Feedback page
+#define PORTAL_SEND_FEEDBACK                            "api/alert/sendFeedbackEmail"
+//Maintenance Page
+#define PORTAL_RESET_STOCK                              "api/machine_data/resetStock"
+#define PORTAL_UPDATE_PRODUCT_FROM_STATION              "api/product/update_product_from_station"
+
 
 
 class df_util : public QWidget

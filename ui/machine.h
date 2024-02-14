@@ -5,6 +5,8 @@
 #include "pnumberproduct.h"
 #include "dbmanager.h"
 #include <vector>
+#include <curl/curl.h>
+#include <ctime>
 
 typedef enum UserRole
 {
@@ -226,6 +228,8 @@ public:
     void applyDynamicPropertiesFromTemplateToWidgetChildren(QWidget *widget);
 
     bool isProductVolumeInContainer(int pnumber);
+    std::tuple<CURLcode, std::string, long> sendRequestToPortal(QString api_url, QString request_type, QString curl_params,QString page_name);
+
 
     // void activateKeyboard(QWidget *page);
 
@@ -265,6 +269,8 @@ public:
     int m_screen_wakeup_time24h;
     int m_buy_bottle_1;
     int m_buy_bottle_2;
+    QString m_portal_base_url;
+
     QString m_freesample_end_url;
     int m_is_enabled;
     QString m_status_text;
@@ -277,6 +283,13 @@ public:
     QString m_max_dollar_amount_discount;
 
     df_util *dfUtility;
+
+    CURLcode res;
+    CURL *curl;
+    std::string readBuffer;
+    QByteArray curl_param_array;
+    char *curl_data;
+    long http_code;
 
     QJsonObject m_propertiesObject;
     void loadElementPropertiesFile();
@@ -293,6 +306,8 @@ public:
     void addToTransactionLogging(QString text);
     QString getTransactionLogging();
     bool hasMixing();
+    QString getPortalBaseUrl();
+
     void setFreeSampleEndURL(QString ending_url);
     QString getFreeSampleEndURL();
 public slots:

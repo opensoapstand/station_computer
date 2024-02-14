@@ -14,50 +14,72 @@ QLabel {
     qproperty-alignment: AlignCenter;
 }
 
-#label_welcome_message {
-    font-size: 80px;
-    font-weight: 700;
-    line-height: 43px;
-    color: white;
-    font-family: 'Lora';
-    /* font-family: 'Vollkorn'; */
+#label_welcome_message_small_top, #label_welcome_message_small_bottom{
+    background: transparent;
+    color: #895E25;
+    text-align: center;
     qproperty-alignment: AlignCenter;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 700;
+    font-family: 'El Messiri';
+}
+
+#label_welcome_message {
+    font-family: 'El Messiri';
+    font-size: 100px;
+    font-style: normal;
+    font-weight: 700;
+    qproperty-alignment: AlignCenter;
+    background: transparent;
+    color: #895E25;
 }
 
 #label_show_temperature {
-    font-size: 30px;
+    font-size: 32px;
+    font-family: 'El Messiri';
+    font-style: normal;
     font-weight: 700;
-    line-height: 43px;
-    color: gray;
-    
-    font-family: 'Lora';
-    /* font-family: 'Vollkorn'; */
-    qproperty-alignment: AlignCenter;
 }
 
 #label_printer_status {
-    font-family: 'EuropaNuova';
+    font-family: 'El Messiri';
     font-style: normal;
-    font-weight: 100;
-    background-color: #5E8580;
-    font-size: 42px;
-    text-align: center;
-    line-height: auto;
-    /* qproperty-alignment: AlignCenter; */
+    font-weight: 400;
+    background-color: transparent;
+    font-size: 24px;
+    text-align: left;
+    qproperty-alignment: AlignLeft;
     border-radius: 20px;
     color: white;
     border: none;
+    line-height: normal;
+}
+
+#label_printer_status_background{
+    border-radius: 15px;
+    background: #bc8439;
+}
+
+#label_temperature_warning_background{
+    border-radius: 15px;
+    background: #895E25;
+}
+
+#label_temperature_warning{
+    color: white;
+    background: transparent;
+    font-family: 'El Messiri';
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    text-align: left;
+    qproperty-alignment: AlignLeft;
 }
 
 #pushButton_to_select_product_page {
-
     background-color: transparent;
     border: 0px;
-}
-
-#label_manufacturer_logo {
-    qproperty-alignment: AlignCenter;
-    text-align: center;
 }
 
 #label_reboot_nightly_title{
@@ -81,3 +103,4 @@ QLabel {
     font-size: 22px;
     border-radius: 5px;
 }
+

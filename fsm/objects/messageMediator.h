@@ -63,7 +63,6 @@ public:
    int getCommandValue() { return m_commandValue; }
    void setRequestedSize(char size);
    void sendTemperatureData();
-
    double getRequestedPrice()
    {
       debugOutput::sendMessage("getRequestedPrice price" + to_string(m_requestedDiscountPrice), MSG_INFO);

@@ -31,42 +31,42 @@ bool mCommunication::page_init(){
     /* O_NOCTTY - No terminal will control the process   */
     /* O_NDELAY -Non Blocking Mode,Does not care about-  */
     /* -the status of DCD line,Open() returns immediatly */
-    // if(fd == -1) {
-    //     qDebug() << "Serial (mpos) Status: "<< "Failed";
-    //     perror("Error opening serial port");
-    //     return bRet;
-    // }
-    // else {
-    //     //set the serial port setting for MONERIS h/w
-    //     struct termios SerialPortSettings;	/* Create the structure                          */
+    if(fd == -1) {
+        qDebug() << "TAP connection status: "<< "Physical Connection failed (USB)";
+        perror("Error opening serial port");
+        return bRet;
+    }
+    else {
+        //set the serial port setting for MONERIS h/w
+        struct termios SerialPortSettings;	/* Create the structure                          */
 
-    //     tcgetattr(fd, &SerialPortSettings);	/* Get the current attributes of the Serial port */
+        tcgetattr(fd, &SerialPortSettings);	/* Get the current attributes of the Serial port */
 
-    //     cfsetispeed(&SerialPortSettings, speed_t(B9600)); /* Set Read  Speed as 9600                      */
-    //     cfsetospeed(&SerialPortSettings, speed_t(B9600)); /* Set Write Speed as 9600                       */
+        cfsetispeed(&SerialPortSettings, speed_t(B9600)); /* Set Read  Speed as 9600                      */
+        cfsetospeed(&SerialPortSettings, speed_t(B9600)); /* Set Write Speed as 9600                       */
 
-    //     SerialPortSettings.c_cflag &= ~PARENB;   /* Disables the Parity Enable bit(PARENB),So No Parity   */
-    //     SerialPortSettings.c_cflag &= ~CSTOPB;   /* CSTOPB = 2 Stop bits,here it is cleared so 1 Stop bit */
-    //     SerialPortSettings.c_cflag &= ~CSIZE;	 /* Clears the mask for setting the data size             */
-    //     SerialPortSettings.c_cflag |=  CS8;      /* Set the data bits = 8                                 */
-    //     SerialPortSettings.c_cflag &= ~CRTSCTS;       /* No Hardware flow Control                         */
-    //     SerialPortSettings.c_cflag |= CREAD | CLOCAL; /* Enable receiver,Ignore Modem Control lines       */
-    //     SerialPortSettings.c_iflag &= (IXON | IXOFF | IXANY);          /* Disable XON/XOFF flow control both i/p and o/p */
-    //     SerialPortSettings.c_iflag &= ~(ICANON | ECHO | ECHOE | ISIG);  /* Non Cannonical mode            */
-    //     SerialPortSettings.c_oflag &= ~OPOST;/*No Output Processing*/
-    //     SerialPortSettings.c_cc[VMIN]   =  1;                  // read doesn't block
-    //     SerialPortSettings.c_cc[VTIME]  =  10;                  // 1 seconds read timeout
-    //     /* Make raw */
-    //     cfmakeraw(&SerialPortSettings);
-    //     if((tcsetattr(fd,TCSANOW,&SerialPortSettings)) != 0) {
-    //         std::cout << "Some error occured";
-    //     } else {
-    //         tcflush(fd,TCIOFLUSH);
-    //         bRet = true;
-    //     }
-    //     qDebug() << "Serial (mpos) Status: "<< "Success";
-    //     return bRet;
-    // };
+        SerialPortSettings.c_cflag &= ~PARENB;   /* Disables the Parity Enable bit(PARENB),So No Parity   */
+        SerialPortSettings.c_cflag &= ~CSTOPB;   /* CSTOPB = 2 Stop bits,here it is cleared so 1 Stop bit */
+        SerialPortSettings.c_cflag &= ~CSIZE;	 /* Clears the mask for setting the data size             */
+        SerialPortSettings.c_cflag |=  CS8;      /* Set the data bits = 8                                 */
+        SerialPortSettings.c_cflag &= ~CRTSCTS;       /* No Hardware flow Control                         */
+        SerialPortSettings.c_cflag |= CREAD | CLOCAL; /* Enable receiver,Ignore Modem Control lines       */
+        SerialPortSettings.c_iflag &= (IXON | IXOFF | IXANY);          /* Disable XON/XOFF flow control both i/p and o/p */
+        SerialPortSettings.c_iflag &= ~(ICANON | ECHO | ECHOE | ISIG);  /* Non Cannonical mode            */
+        SerialPortSettings.c_oflag &= ~OPOST;/*No Output Processing*/
+        SerialPortSettings.c_cc[VMIN]   =  1;                  // read doesn't block
+        SerialPortSettings.c_cc[VTIME]  =  10;                  // 1 seconds read timeout
+        /* Make raw */
+        cfmakeraw(&SerialPortSettings);
+        if((tcsetattr(fd,TCSANOW,&SerialPortSettings)) != 0) {
+            std::cout << "Some error occured";
+        } else {
+            tcflush(fd,TCIOFLUSH);
+            bRet = true;
+        }
+        qDebug() << "Tap Connection status: "<< "Success";
+        return bRet;
+    };
 
 }
 
@@ -76,15 +76,12 @@ std::vector<uint8_t> mCommunication::readPacket(){
     long int readSize = -1;
     long int readSize2 = -1;
     std::vector<uint8_t> pktRead;
-    // tcflush(fd, TCIOFLUSH);
-    //tcflush(fd, TCIOFLUSH);
     
     readSize = read(fd, buffer, MAX_SIZE);
     if (readSize == -1)
     {
         pktRead.clear();
         pktRead.push_back(0xFF);
-        // std::cout << "Packet read failed...\n";
         return pktRead;
     }
     else{
@@ -92,7 +89,6 @@ std::vector<uint8_t> mCommunication::readPacket(){
         pktRead.reserve(uint(readSize));
         for (long i = 0; i < readSize; i++){ //store read bytes into vector
             pktRead.push_back(buffer[i]);
-            // std::cout << "buffer[" << i << "] = " << int(buffer[i]) << " \n";
         }
         while ((pktRead.end()[-2] != 0x03) && ((int(buffer[1]) + int(buffer[2])) != readSize-0x05)){
             readSize2 = read(fd, buffer, MAX_SIZE);
@@ -109,7 +105,6 @@ std::vector<uint8_t> mCommunication::readPacket(){
                 }
         }
 
-        //tcflush(fd, TCIOFLUSH);
         buffer[1024] = {};
         return pktRead;
     }

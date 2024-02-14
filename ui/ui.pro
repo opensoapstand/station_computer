@@ -57,7 +57,6 @@ HEADERS += \
     posm/packetfromecr.h \
     posm/packetfromux410.h \
     posm/packetreadsort.h \
-    posm/paymentdatabase.h \
     posm/transactionPackets.h \
     posm/transactioninfo.h \
     page_product_menu.h \
@@ -104,7 +103,6 @@ SOURCES += \
     posm/packetfromecr.cpp \
     posm/packetfromux410.cpp \
     posm/packetreadsort.cpp \
-    posm/paymentdatabase.cpp \
     posm/transactionPackets.cpp \
     posm/transactioninfo.cpp \
     page_product_menu.cpp \

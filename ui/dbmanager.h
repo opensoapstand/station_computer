@@ -119,7 +119,8 @@ public:
                                  int *screen_sleep_time24h,
                                  int *screen_wakeup_time24h,
                                  int *buy_bottle_1,
-                                 int *buy_bottle_2
+                                 int *buy_bottle_2,
+                                 QString *portal_base_url
 
     );
     QString getHardwareVersion();

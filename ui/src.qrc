@@ -32,8 +32,6 @@
         <file>posm/packetfromux410.h</file>
         <file>posm/packetreadsort.cpp</file>
         <file>posm/packetreadsort.h</file>
-        <file>posm/paymentdatabase.cpp</file>
-        <file>posm/paymentdatabase.h</file>
         <file>posm/transactioninfo.cpp</file>
         <file>posm/transactioninfo.h</file>
         <file>posm/transactionPackets.cpp</file>

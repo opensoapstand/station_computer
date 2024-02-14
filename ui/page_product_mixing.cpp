@@ -247,7 +247,6 @@ void page_product_mixing::showEvent(QShowEvent *event)
             additivePercentageLabels[j]->hide();
         }
     }
-
     p_page_idle->thisMachine->resetTransactionLogging();
     // transactionLogging = "";
     reset_and_show_page_elements();
@@ -529,7 +528,8 @@ void page_product_mixing::reset_and_show_page_elements()
     {
         ui->pushButton_order_sample->show();
         ui->pushButton_order_sample->raise();
-        
+    }else{
+        ui->pushButton_order_sample->hide();
     }
 
     qDebug() << "-------------------------- END LOAD PRODUCTS ----------------";

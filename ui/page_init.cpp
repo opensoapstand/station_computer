@@ -59,6 +59,9 @@ void page_init::showEvent(QShowEvent *event)
     ui->pushButton_continue->hide();
     ui->pushButton_reboot->setStyleSheet(styleSheet);
     ui->pushButton_reboot->hide();
+    if(p_page_idle->thisMachine->hasMixing()){
+        ui->label_init_message->setStyleSheet(styleSheet);
+    }
 
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_continue);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_reboot);
@@ -283,9 +286,9 @@ void page_init::initiateTapPayment()
         break;
     }
     }
-
     m_tap_payment_ready = true;
 }
+
 void page_init::on_pushButton_continue_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_idle);

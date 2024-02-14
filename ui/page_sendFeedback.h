@@ -27,6 +27,7 @@
 #include <curl/curl.h>
 
 class statusbar;
+class keyboard;
 class page_select_product;
 class page_qr_payment;
 class page_idle;
@@ -51,12 +52,15 @@ public:
     QLabel *orderSizeBackgroundLabels[4];
 
     explicit page_sendFeedback(QWidget *parent = nullptr);
-    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, page_product *page_product, page_end *page_end, statusbar *p_statusbar);
+    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, page_product *page_product, page_end *page_end, statusbar *p_statusbar, keyboard * keyboard);
     ~page_sendFeedback();
 
     void resizeEvent(QResizeEvent *event);
     void showEvent(QShowEvent *event);
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
+    void lineEditReturnButtonPressed();
+    void textEditReturnButtonPressed();
+    void textEditCancelButtonPressed();
     // void paintEvent(QPaintEvent *event);
 
 signals:
@@ -68,12 +72,12 @@ private slots:
     void onSelectTimeoutTick();
 
     void on_pushButton_send_clicked();
-
     void on_pushButton_previous_page_clicked();
     void on_pushButton_start_input_clicked();
+    void on_pushButton_enter_email_clicked();
     void on_feedback_Text_Input_clicked();
     void keyboardButtonPressed(int);
-
+    bool emailValid(QString email);
     void on_pushButton_help_page_clicked();
 
 private:
@@ -81,8 +85,11 @@ private:
     void reset_and_show_page_elements();
     void selectOnTick();
     void mainPage();
-
+    
+    CURLcode res;
     std::string readBuffer;
+    long http_code;
+
     Ui::page_sendFeedback *ui;
     page_select_product *p_page_select_product;
     page_qr_payment *paymentPage;
@@ -92,6 +99,7 @@ private:
     page_help *p_page_help;
     page_product *p_page_product;
     statusbar *p_statusbar;
+    keyboard *p_keyboard;
 
     QTimer *selectIdleTimer;
     int _selectIdleTimeoutSec;
@@ -100,9 +108,6 @@ private:
     QShowEvent *dispenseEvent;
     QShowEvent *wifiErrorEvent;
 
-    CURL *curl;
-    CURLcode res;
-    QByteArray curl_param_array;
     QString MachineSerialNumber;
     QVBoxLayout *statusbarLayout;
 };

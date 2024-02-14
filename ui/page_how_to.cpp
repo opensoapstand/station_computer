@@ -100,7 +100,7 @@ void page_how_to::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_to_help);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_to_maintenance);
 
-    p_keyboard->initializeKeyboard(false, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
+    p_keyboard->setKeyboardVisibility(false, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
     p_input_widget->toggleInputWidget(false);
     statusbarLayout->removeWidget(p_keyboard);    
     statusbarLayout->removeWidget(p_input_widget);  
@@ -145,7 +145,7 @@ void page_how_to::on_pushButton_to_maintenance_clicked()
     else
     {
         p_keyboard->registerCallBack(std::bind(&page_how_to::doneButtonPressed, this));
-        p_keyboard->initializeKeyboard(true, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
+        p_keyboard->setKeyboardVisibility(true, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
         p_input_widget->toggleInputWidget(true);
     }
 }
@@ -161,12 +161,12 @@ void page_how_to::doneButtonPressed(){
         if (p_page_idle->thisMachine->isAllowedAsMaintainer())
         {
             hideCurrentPageAndShowProvided(p_page_maintenance);
-            p_keyboard->initializeKeyboard(false, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
+            p_keyboard->setKeyboardVisibility(false, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
         }
         else
         {
             p_input_widget->findChild<QLineEdit *>("lineEdit_input")->setText("");
-            p_keyboard->initializeKeyboard(true, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
+            p_keyboard->setKeyboardVisibility(true, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
         }
     }
 

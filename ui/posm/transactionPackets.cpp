@@ -152,7 +152,7 @@ std::vector<uint8_t> transactionPacket::reversePurchasePacket()
     return packet.getPacket();
 }
 
-std::vector<uint8_t> transactionPacket::resetDevice()
+std::vector<uint8_t> transactionPacket::rebootDevice()
 {
     uint8_t dataPacket[] = {}; //ECR transaction type 'R' - forced controller reversal
 

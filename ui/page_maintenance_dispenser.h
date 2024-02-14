@@ -180,18 +180,14 @@ private:
 
     void sendRestockToCloud();
     void autoDispenseStart(int size);
-    void restockTransactionToFile(char *curl_params);
+    void restockTransactionToFile(QString curl_params);
     time_t rawtime;
     struct tm *timeinfo;
-    CURL *curl;
-    CURLcode res;
-    CURL *curl2;
-    CURLcode res2;
-    std::string readBuffer;
-    QByteArray curl_param_array;
-    QByteArray curl_param_array2;
-    char *curl_data;
 
+    CURLcode res;
+    std::string readBuffer;
+    long http_code;
+   
     QString activeEditField = "";
     QVBoxLayout *statusbarLayout;
 };

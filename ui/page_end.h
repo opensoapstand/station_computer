@@ -44,7 +44,9 @@ public:
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void finishHandler();
     void fsmReceiveFinalDispensedVolume(double dispensed);
+    void fsmReceiveFinalTransactionMessage(QString start_time, QString end_time, double button_press_duration, double button_press_count, double volume_dispensed,QString volumeDispensedMixProduct);
     void updateDispensedVolumeLabel();
+    void waitToFinishTransactionInFsm();
     bool is_controller_finished;
     bool is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER;
 
@@ -73,18 +75,16 @@ private:
     // int _rinseTimerTimeoutSec;
     // bool rinse;
 
-    CURL *curl;
     CURLcode res;
     std::string readBuffer;
-    QByteArray curl_param_array;
-    char *curl_data;
-
+    long http_code;
+    
     time_t rawtime;
     struct tm *timeinfo;
 
     void sendDispenseEndToCloud();
-    void sendTapOrderToCloud();
-    void transactionToFile(char *curl_params);
+    void sendCompleteOrderToCloud(QString paymentMethod);
+    void transactionToFile(QString curl_params);
 
 
     bool exitIsForceable; // avoid being stuck if internet fails.

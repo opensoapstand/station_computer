@@ -50,5 +50,7 @@ void input_widget::refresh()
     else
     {
         this->hide();
+        // clear the input value when input field is hidden
+        ui->lineEdit_input->clear();
     }
 }

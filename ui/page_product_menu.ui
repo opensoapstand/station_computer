@@ -549,6 +549,180 @@
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="label_dispense_product_overlay_text_1">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>430</y>
+     <width>338</width>
+     <height>338</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>48</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_dispense_product_overlay_text_2">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>430</y>
+     <width>338</width>
+     <height>338</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>48</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_dispense_product_overlay_text_3">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>916</y>
+     <width>338</width>
+     <height>338</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>48</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_dispense_product_overlay_text_4">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>916</y>
+     <width>338</width>
+     <height>338</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>48</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_dispense_product_overlay_text_5">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1402</y>
+     <width>338</width>
+     <height>338</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>48</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_dispense_product_overlay_text_6">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>1402</y>
+     <width>338</width>
+     <height>338</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>48</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
   <zorder>label_product_menu_title</zorder>
   <zorder>label_help</zorder>
   <zorder>pushButton_help_page</zorder>
@@ -590,6 +764,12 @@
   <zorder>label_dispense_product_name_4</zorder>
   <zorder>label_dispense_product_name_5</zorder>
   <zorder>label_dispense_product_name_6</zorder>
+  <zorder>label_dispense_product_overlay_text_1</zorder>
+  <zorder>label_dispense_product_overlay_text_2</zorder>
+  <zorder>label_dispense_product_overlay_text_3</zorder>
+  <zorder>label_dispense_product_overlay_text_4</zorder>
+  <zorder>label_dispense_product_overlay_text_5</zorder>
+  <zorder>label_dispense_product_overlay_text_6</zorder>
  </widget>
  <resources/>
  <connections/>

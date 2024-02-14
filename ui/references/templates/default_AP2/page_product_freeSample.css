@@ -178,10 +178,10 @@ QLabel {
     font-weight: 600;
     font-size: 36px;
     line-height: 40px;
-    color: #58595B;
-    padding: 3px;
-    border:8px solid #248C8C;
+    color: #FFF7ED;
     border-radius: 20px;
+    background-color: #BC8439;
+    qproperty-alignment: AlignCenter;
 }
 #label_selected_volume{
     color: #211403;

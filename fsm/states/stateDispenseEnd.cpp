@@ -775,7 +775,10 @@ void stateDispenseEnd::setup_and_print_receipt()
     // add base price
     if (size == 'c' || size == 't')
     {
-        if (base_unit == "l")
+        if (base_unit == "oz"){
+            price_per_unit = price_per_ml * ML_TO_OZ;
+        }
+        else if (base_unit == "l")
         {
             price_per_unit = price_per_ml * 1000;
         }

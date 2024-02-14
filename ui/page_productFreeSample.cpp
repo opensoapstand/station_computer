@@ -83,8 +83,8 @@ void page_product_freeSample::showEvent(QShowEvent *event)
 {
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
-    p_keyboard->needCAPS(false);
-    p_keyboard->initializeKeyboard(false, ui->lineEdit_promo_code);
+    // need CAPS button for keyboard widget T or F
+    p_keyboard->resetKeyboard();
     statusbarLayout->removeWidget(p_keyboard);
 
     p_keyboard->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
@@ -198,11 +198,12 @@ void page_product_freeSample::enterButtonPressed(){
         p_page_idle->thisMachine->setCouponState(enabled_processing_input);
         reset_and_show_page_elements();
         apply_promo_code(ui->lineEdit_promo_code->text());
-        p_keyboard->initializeKeyboard(false, ui->lineEdit_promo_code);
+        p_keyboard->resetKeyboard();
     }
     else
     {
         qDebug() << "ASSERT ERROR: Illegal press. Still processing other call.";
+        reset_and_show_page_elements();
     }
 }
 
@@ -292,7 +293,7 @@ void page_product_freeSample::reset_and_show_page_elements()
         qDebug() << "Coupon state: Show keyboard";
         // p_keyboard->setVisibility(true);
         p_keyboard->registerCallBack(std::bind(&page_product_freeSample::enterButtonPressed, this));
-        p_keyboard->initializeKeyboard(true, ui->lineEdit_promo_code);
+        p_keyboard->setKeyboardVisibility(true, ui->lineEdit_promo_code);
         ui->lineEdit_promo_code->clear();
         ui->lineEdit_promo_code->show();
         p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_promo_code, "promoCode", PAGE_PRODUCT_FREESAMPLE_CSS);
@@ -327,6 +328,7 @@ void page_product_freeSample::hideCurrentPageAndShowProvided(QWidget *pageToShow
 
     if (p_page_idle->thisMachine->getCouponState() == enabled_show_keyboard ||
         p_page_idle->thisMachine->getCouponState() == enabled_invalid_input ||
+        p_page_idle->thisMachine->getCouponState() == enabled_not_eligible ||
         p_page_idle->thisMachine->getCouponState() == enabled_processing_input ||
         p_page_idle->thisMachine->getCouponState() == network_error)
     {

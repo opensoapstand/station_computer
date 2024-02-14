@@ -26,25 +26,49 @@ keyboard::~keyboard()
 }
 
 // for QLineEdit
-void keyboard::initializeKeyboard(bool isVisible, QLineEdit *widget)
+void keyboard::setKeyboardVisibility(bool isVisible, QLineEdit *widget)
 {
     is_keyboard_visible = isVisible;
     widgetForLineEdit = widget;
-    hasStartedTyping = false;
+    widgetForTextEdit = NULL;
+    // hasStartedTyping = false;
     lineEdit = isVisible;
     refresh();
 }
 
 // for QTextEdit
-void keyboard::initializeKeyboard(bool isVisible, QTextEdit *widget)
+void keyboard::setKeyboardVisibility(bool isVisible, QTextEdit *widget)
 {
     is_keyboard_visible = isVisible;
     widgetForTextEdit = widget;
-    hasStartedTyping = false;
+    widgetForLineEdit = NULL;
+    // hasStartedTyping = false;
     lineEdit = false;
     refresh();
 }
 
+void keyboard::resetKeyboard(){
+    qDebug() << "Keyboard reset.";
+    is_keyboard_visible = false;
+    lineEdit = false;
+    widgetForTextEdit = NULL;
+    widgetForLineEdit = NULL;
+    needCAPSbutton = false;
+    foreach (QAbstractButton *button, ui->buttonGroup->buttons())
+    {
+        if (button->text() == "Space" || button->text() == "Enter" || button->text() == "Done" || button->text() == "Cancel" || button->text() == "Clear" || button->text() == "Backspace" || button->text() == "Return")
+        {
+            // doing nothing
+        }
+        else
+        {
+            button->setText(button->text().toUpper());
+        }
+    }
+    refresh();
+}
+
+// keyboard widget for maintenance keyboard and sendFeedback keyboard will need CAPS button
 void keyboard::needCAPS(bool capsYorN){
     needCAPSbutton = capsYorN;
 }
@@ -65,19 +89,20 @@ void keyboard::registerCancelCallBack(const std::function<void()>& func) {
     cancelCallbackFunction = func;
 }
 
-void keyboard::keyboardButtonDefaultAllInCAPS(){
-    foreach (QAbstractButton *button, ui->buttonGroup->buttons())
-    {
-        if (button->text() == "Space" || button->text() == "Enter" || button->text() == "Done" || button->text() == "Cancel" || button->text() == "Clear" || button->text() == "Backspace" || button->text() == "Return")
-        {
-            // doing nothing
-        }
-        else
-        {
-            button->setText(button->text().toUpper());
-        }
-    }
-}
+// // reset all keyboard buttons to CAPS
+// void keyboard::keyboardButtonDefaultAllInCAPS(){
+//     foreach (QAbstractButton *button, ui->buttonGroup->buttons())
+//     {
+//         if (button->text() == "Space" || button->text() == "Enter" || button->text() == "Done" || button->text() == "Cancel" || button->text() == "Clear" || button->text() == "Backspace" || button->text() == "Return")
+//         {
+//             // doing nothing
+//         }
+//         else
+//         {
+//             button->setText(button->text().toUpper());
+//         }
+//     }
+// }
 
 void keyboard::keyboardButtonPressed(int buttonID)
 {
@@ -86,10 +111,10 @@ void keyboard::keyboardButtonPressed(int buttonID)
     }
     QAbstractButton *buttonpressed = ui->buttonGroup->button(buttonID);
     QString buttonText = buttonpressed->text();
-    if (!hasStartedTyping){
-        hasStartedTyping = true;
-        widgetForLineEdit->clear();
-    }
+    // if (!hasStartedTyping){
+    //     hasStartedTyping = true;
+    //     widgetForLineEdit->clear();
+    // }
     if (buttonText == "CAPS")
     {
         foreach (QAbstractButton *button, ui->buttonGroup->buttons())

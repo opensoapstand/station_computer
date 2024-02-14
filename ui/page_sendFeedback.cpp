@@ -368,49 +368,47 @@ void page_sendFeedback::on_pushButton_send_clicked()
             }
         }
     }else{
-        // if (problems.length() != 0 || (!(ui->textEdit_custom_message->toPlainText().isEmpty()) && (ui->textEdit_custom_message->toPlainText() != TEXTBOX_INVITE_TEXT)))
-        // {
-        //     qDebug() << "Will send feedback to backend";
+        if (problems.length() != 0 || (!(ui->textEdit_custom_message->toPlainText().isEmpty()) && (ui->textEdit_custom_message->toPlainText() != TEXTBOX_INVITE_TEXT)))
+        {
+            qDebug() << "Will send feedback to backend";
 
-        //     // instant reaction by hiding the page into "thank you"
-        //     ui->label_thank_you_image->show();
-        //     ui->label_thank_you_image->raise();
-        //     ui->label_thank_you_image->repaint(); // instant showing instead of waiting for function to be finished.
+            // instant reaction by hiding the page into "thank you"
+            ui->label_thank_you_image->show();
+            ui->label_thank_you_image->raise();
+            ui->label_thank_you_image->repaint(); // instant showing instead of waiting for function to be finished.
 
-        //     ui->label_thanks_for_feedback->show();
-        //     ui->label_thanks_for_feedback->raise();
-        //     ui->label_thanks_for_feedback->repaint(); // instant showing instead of waiting for function to be finished.
+            ui->label_thanks_for_feedback->show();
+            ui->label_thanks_for_feedback->raise();
+            ui->label_thanks_for_feedback->repaint(); // instant showing instead of waiting for function to be finished.
 
-        //     // send to backend
-        //     QString MachineSerialNumber = p_page_idle->thisMachine->getMachineId();
-        //     QString customFeedback = ui->textEdit_custom_message->toPlainText();
-        //     QString curl_param = "problems=" + problems + " ," + customFeedback + "&MachineSerialNumber=" + MachineSerialNumber;
-        //     qDebug() << "Curl params" << curl_param;
-        //     curl_param_array = curl_param.toLocal8Bit();
-        //     qDebug() << curl_param_array;
-        //     curl = curl_easy_init();
-        //     if (!curl)
-        //     {
-        //         qDebug() << "page_end: cURL failed to init. parameters:" + curl_param;
+            // send to backend
+            QString MachineSerialNumber = p_page_idle->thisMachine->getMachineId();
+            QString customFeedback = ui->textEdit_custom_message->toPlainText();
+            QString curl_params = "problems=" + problems + " ," + customFeedback + "&MachineSerialNumber=" + MachineSerialNumber;
+            std::tie(res,readBuffer, http_code) = p_page_idle->thisMachine->sendRequestToPortal(PORTAL_SEND_FEEDBACK, "POST", curl_params, "PAGE_SEND_FEEDBACK");
 
-        //         return;
-        //     }
+            // if (!curl)
+            // {
+            //     qDebug() << "page_end: cURL failed to init. parameters:" + curl_param;
 
-        //     curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/alert/sendFeedbackEmail");
-        //     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
-        //     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallbackFeedback);
-        //     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-        //     curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
-        //     res = curl_easy_perform(curl);
+            //     return;
+            // }
 
-        //     if (res != CURLE_OK)
-        //     {
-        //         qDebug() << "ERROR: Transaction NOT sent to cloud. cURL fail. Error code: " + QString::number(res);
-        //     }
+            // curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/alert/sendFeedbackEmail");
+            // curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
+            // curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallbackFeedback);
+            // curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+            // curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
+            // res = curl_easy_perform(curl);
 
-        //     // this will trigger the reversal to idle page (start only after curl command completed)
-        //     _selectIdleTimeoutSec = 2;
-        // }
+            if (res != CURLE_OK)
+            {
+                qDebug() << "ERROR: Transaction NOT sent to cloud. cURL fail. Error code: " + QString::number(res);
+            }
+
+            // this will trigger the reversal to idle page (start only after curl command completed)
+            _selectIdleTimeoutSec = 2;
+        }
     }
 
 

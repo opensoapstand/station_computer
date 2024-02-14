@@ -75,7 +75,10 @@ scp /home/df-admin/station_computer/admin/screenshotbot_sequence_qr.txt /home/df
 scp /home/df-admin/station_computer/admin/updateDatabase.py /home/df-admin/production/admin/updateDatabase.py
 scp /home/df-admin/station_computer/admin/missingTransactions.py /home/df-admin/production/admin/missingTransactions.py
 
+scp /home/df-admin/station_computer/admin/enableIPForward.sh /home/df-admin/production/admin/
+scp /home/df-admin/station_computer/admin/disableIPForward.sh /home/df-admin/production/admin/
 scp /home/df-admin/station_computer/admin/enableIPForward.sh /home/df-admin/production/admin/tap_payment
+scp /home/df-admin/station_computer/admin/disableIPForward.sh /home/df-admin/production/admin/tap_payment
 scp /home/df-admin/station_computer/ui/payment/private_key.der /home/df-admin/production/admin/tap_payment
 scp /home/df-admin/station_computer/ui/payment/public_key.txt /home/df-admin/production/admin/tap_payment
 

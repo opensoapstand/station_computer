@@ -646,6 +646,7 @@ DF_ERROR dispenser::finishSelectedProductDispense()
 
     m_pcb->setDispenseButtonLightsAllOff();
     m_pcb->disableAllSolenoidsOfSlot(getSlot());
+    
 }
 
 string dispenser::getSelectedProductDispenseStartTime()
@@ -1752,4 +1753,16 @@ void dispenser::updateDispenseStatus()
     }
 
     previous_dispense_state = dispense_state;
+}
+
+void dispenser::setMixProductsDispenseInfo(std::string pNumber, double volumeDispensed, double volume_remaining){
+    m_dispenseInfoMixProducts.insert({pNumber,{volumeDispensed,volume_remaining}});
+}
+
+std::map<std::string, std::vector<double>> dispenser::getMixProductsDispenseInfo(){
+    return m_dispenseInfoMixProducts;
+}
+
+void dispenser::resetMixProductsDispenseInfo(){
+    m_dispenseInfoMixProducts = {};
 }

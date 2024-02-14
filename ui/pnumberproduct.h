@@ -121,6 +121,8 @@ public:
     double getAdditivesRatioModifier(int index);
     QVector<double> getCustomMixRatios();
     void setCustomMixRatios();
+    QString getVolumeDispensedMixedProduct();
+    void setVolumeDispensedMixedProduct(QString volumeDispensedMixProduct);
 
 private:
     int m_PNumber;
@@ -175,6 +177,7 @@ private:
     QString m_sizeIndexPIDs[SIZES_COUNT];
     double m_sizeIndexPrices[SIZES_COUNT];
     double m_sizeIndexVolumes[SIZES_COUNT];
+    QString volumeDispensedMixProduct;
 };
 
 #endif // PNUMBERPRODUCT_H

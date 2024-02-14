@@ -228,6 +228,84 @@ text-transform: lowercase;</string>
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="label_printer_status_background">
+   <property name="geometry">
+    <rect>
+     <x>298</x>
+     <y>1418</y>
+     <width>484</width>
+     <height>115</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_printer_status_icon">
+   <property name="geometry">
+    <rect>
+     <x>648</x>
+     <y>1426</y>
+     <width>106</width>
+     <height>100</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_temperature_warning_background">
+   <property name="geometry">
+    <rect>
+     <x>414</x>
+     <y>1701</y>
+     <width>252</width>
+     <height>108</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_temperature_warning_icon">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>1704</y>
+     <width>106</width>
+     <height>100</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_welcome_message_small_top">
+   <property name="geometry">
+    <rect>
+     <x>414</x>
+     <y>302</y>
+     <width>253</width>
+     <height>47</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_welcome_message_small_bottom">
+   <property name="geometry">
+    <rect>
+     <x>367</x>
+     <y>349</y>
+     <width>347</width>
+     <height>47</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
   <zorder>pushButton_to_select_product_page</zorder>
   <zorder>savedBottles_label</zorder>
   <zorder>label_client_logo</zorder>
@@ -244,6 +322,12 @@ text-transform: lowercase;</string>
   <zorder>pushButton_reboot_nightly</zorder>
   <zorder>label_reboot_nightly_icon</zorder>
   <zorder>label_reboot_nightly_title</zorder>
+  <zorder>label_printer_status_background</zorder>
+  <zorder>label_printer_status_icon</zorder>
+  <zorder>label_temperature_warning_background</zorder>
+  <zorder>label_temperature_warning_icon</zorder>
+  <zorder>label_welcome_message_small_top</zorder>
+  <zorder>label_welcome_message_small_bottom</zorder>
  </widget>
  <resources/>
  <connections/>

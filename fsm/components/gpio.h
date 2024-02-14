@@ -34,8 +34,8 @@ public:
 
 	// Getters
 	// TODO these chouldn't be here, MCP does not exist at this level
-	virtual int getMCPAddress(){};
-	virtual int getMCPPin(){};
+	// virtual int getMCPAddress(){};
+	// virtual int getMCPPin(){};
 
 	// Functions for Threaded GPIO Interrupts
 	void registerProduct(product *pDispenser) { m_pDispenser = pDispenser; } 

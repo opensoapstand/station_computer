@@ -188,3 +188,35 @@ void dispenser_slot::setSlot(int slot)
     }
     m_dispenser_slot = slot;
 }
+
+void dispenser_slot::setDispenseStartTime(QString start_time){
+    m_dispense_start_time = start_time;
+}
+
+void dispenser_slot::setDispenseEndTime(QString end_time){
+    m_dispense_end_time = end_time;
+}
+
+QString dispenser_slot::getDispenseStartTime(){
+    return m_dispense_start_time;
+}
+
+QString dispenser_slot::getDispenseEndTime(){
+    return m_dispense_end_time;
+}
+
+void dispenser_slot::setButtonPressDuration(double button_duration){
+    m_button_press_duration = button_duration;
+}
+
+void dispenser_slot::setButtonPressCount(double button_count){
+    m_button_press_count = button_count;
+}
+
+double dispenser_slot::getButtonPressDuration(){
+    return m_button_press_duration;
+}
+
+double dispenser_slot::getButtonPressCount(){
+    return m_button_press_count;
+}

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1125</width>
+    <width>1080</width>
     <height>1920</height>
    </rect>
   </property>
@@ -1701,9 +1701,9 @@ font: 11pt &quot;Montserrat&quot;;</string>
   <widget class="QLabel" name="label_thanks_for_feedback">
    <property name="geometry">
     <rect>
-     <x>-30</x>
+     <x>0</x>
      <y>570</y>
-     <width>1121</width>
+     <width>1080</width>
      <height>481</height>
     </rect>
    </property>
@@ -1753,8 +1753,90 @@ font: 11pt &quot;Montserrat&quot;;</string>
     <string/>
    </property>
   </widget>
+  <widget class="QLabel" name="label_feedback_title">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>400</y>
+     <width>765</width>
+     <height>47</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_enter_email">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>922</y>
+     <width>780</width>
+     <height>47</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_enter_email">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>994</y>
+     <width>780</width>
+     <height>95</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit_enter_email">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>994</y>
+     <width>780</width>
+     <height>95</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>391</width>
+     <height>35</height>
+    </size>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="frame">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_thanks_for_feedback_2">
+   <property name="geometry">
+    <rect>
+     <x>323</x>
+     <y>1228</y>
+     <width>435</width>
+     <height>35</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
   <zorder>label_thank_you_image</zorder>
-  <zorder>pushButton_send</zorder>
   <zorder>label_problem_options</zorder>
   <zorder>pushButton_to_idle</zorder>
   <zorder>label_select_problem</zorder>
@@ -1773,13 +1855,19 @@ font: 11pt &quot;Montserrat&quot;;</string>
   <zorder>label_contact_info</zorder>
   <zorder>pushButton_previous_page</zorder>
   <zorder>label_enter_feedback</zorder>
-  <zorder>pushButton_start_input</zorder>
   <zorder>label_thanks_for_feedback</zorder>
   <zorder>label_help</zorder>
   <zorder>feedbackText</zorder>
   <zorder>textEdit_custom_message</zorder>
-  <zorder>feedbackKeyboard</zorder>
   <zorder>pushButton_help_page</zorder>
+  <zorder>pushButton_start_input</zorder>
+  <zorder>label_feedback_title</zorder>
+  <zorder>pushButton_send</zorder>
+  <zorder>feedbackKeyboard</zorder>
+  <zorder>label_enter_email</zorder>
+  <zorder>lineEdit_enter_email</zorder>
+  <zorder>pushButton_enter_email</zorder>
+  <zorder>label_thanks_for_feedback_2</zorder>
  </widget>
  <resources/>
  <connections/>

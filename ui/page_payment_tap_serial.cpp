@@ -110,15 +110,14 @@ void page_payment_tap_serial::getLanInfo()
     com.flushSerial();
 }
 
-void page_payment_tap_serial::resetDevice()
+void page_payment_tap_serial::rebootDevice()
 {
     while (!paymentConnected)
     {
         paymentConnected = com.page_init();
         sleep(1);
     }
-    qDebug() << "Device reboot" << endl;
-    pktToSend = paymentPacket.resetDevice();
+    pktToSend = paymentPacket.rebootDevice();
     sendToUX410();    
 }
 
@@ -171,6 +170,7 @@ void page_payment_tap_serial::showEvent(QShowEvent *event)
     while (!paymentConnected)
     {
         paymentConnected = com.page_init();
+        sleep(1);
     }
     pktResponded = com.readForAck();
 
@@ -279,7 +279,7 @@ bool page_payment_tap_serial::tap_serial_initiate()
         pktResponded.clear();
     }
     else{
-        resetDevice();
+        rebootDevice();
         sleep(45);
     }
 
@@ -369,7 +369,7 @@ bool page_payment_tap_serial::sendToUX410()
             return true;
         }
     }
-    // resetDevice();
+    // rebootDevice();
     return false;
 }
 bool page_payment_tap_serial::waitForUX410()
@@ -477,7 +477,7 @@ void page_payment_tap_serial::readTimer_loop()
                         response = getResponse();
                         on_pushButton_previous_page_clicked();
                         // readTimer->start(10);
-                        // idlePaymentTimeout();
+                        idlePaymentTimeout();
                     }
 
                     else if (pktResponded[19] == 0x4e)

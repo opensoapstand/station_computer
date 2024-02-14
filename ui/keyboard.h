@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QLineEdit>
+#include <QTextEdit>
 #include "page_idle.h"
 #include "page_productOverview.h"
 
@@ -24,16 +25,29 @@ public:
     void showEvent(QShowEvent *event);
     void refresh();
     QString roleTimeOutTrailingText;
+    // checking if its a QLineEdit or QTextEdit
+    bool lineEdit;
     void registerCallBack(const std::function<void()>& func);
     std::function<void()> callbackFunction;
-    // void* callback;
-    void initializeKeyboard(bool isVisible, QLineEdit *widget);
+    void registerCancelCallBack(const std::function<void()>& func);
+    std::function<void()> cancelCallbackFunction;
+    void setKeyboardVisibility(bool isVisible, QLineEdit *widget);
+    void setKeyboardVisibility(bool isVisible, QTextEdit *widget);
+    void resetKeyboard();
+    // checking if the keyboard needs CAPS button
+    void needCAPS(bool capsYorN);
+    void setTimeoutSec(int* seconds, bool timeoutYorN);
+    void adjustTimeoutSec(int seconds);
+    // void keyboardButtonDefaultAllInCAPS();
 private slots:
     void keyboardButtonPressed(int buttonID);
     void onRefreshTimerTick();
-
 private:
-    QLineEdit* widgetForTextEdit;
+    int* timeoutSec;
+    bool timeout = false;
+    bool needCAPSbutton;
+    QLineEdit* widgetForLineEdit;
+    QTextEdit* widgetForTextEdit;
     bool is_keyboard_visible;
     bool hasStartedTyping = false;
     Ui::keyboard *ui;

@@ -473,7 +473,6 @@ text-align: center;</string>
   <zorder>label_invoice_name</zorder>
   <zorder>pushButton_select_product_page</zorder>
   <zorder>pushButton_promo_input</zorder>
-  <zorder>label_gif</zorder>
   <zorder>pushButton_to_help</zorder>
   <zorder>label_page_title</zorder>
   <zorder>label_invoice_size_title</zorder>
@@ -485,6 +484,7 @@ text-align: center;</string>
   <zorder>label_steps</zorder>
   <zorder>label_web_url</zorder>
   <zorder>label_invoice_title</zorder>
+  <zorder>label_gif</zorder>
  </widget>
  <resources/>
  <connections/>

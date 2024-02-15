@@ -51,7 +51,7 @@ page_product_overview::page_product_overview(QWidget *parent) : QWidget(parent),
     connect(selectIdleTimer, SIGNAL(timeout()), this, SLOT(onSelectTimeoutTick()));
 
     connect(ui->pushButton_promo_input, SIGNAL(clicked()), this, SLOT(on_lineEdit_promo_codeInput_clicked()));
-   connect(ui->buttonGroup, SIGNAL(buttonPressed(int)), this, SLOT(keyboardButtonPressed(int)));
+    connect(ui->buttonGroup, SIGNAL(buttonPressed(int)), this, SLOT(keyboardButtonPressed(int)));
     connect(ui->buttonGroup_continue, SIGNAL(buttonPressed(int)), this, SLOT(on_pushButton_continue(int)));
 
     ui->label_gif->hide();
@@ -100,7 +100,8 @@ void page_product_overview::showEvent(QShowEvent *event)
 {
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
-    p_keyboard->initializeKeyboard(false, ui->lineEdit_promo_code);
+    // need CAPS button for keyboard widget T or F
+    p_keyboard->resetKeyboard();
     statusbarLayout->removeWidget(p_keyboard);
 
     qDebug() << "is Custom mix? : " << p_page_idle->thisMachine->getSelectedProduct()->isCustomMix();
@@ -112,6 +113,12 @@ void page_product_overview::showEvent(QShowEvent *event)
         qDebug() << QString::number(i) + " : " + QString::number(customRatios[i]);
     }
 
+    p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+    // p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(ui->promoKeyboard);
+    QString coupon_icon_path = p_page_idle->thisMachine->getTemplatePathFromName(COUPON_ICON_UNAVAILABLE_PATH);
+    p_page_idle->thisMachine->addPictureToLabel(ui->label_coupon_icon, coupon_icon_path);
+    QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_PRODUCT_OVERVIEW_CSS);
+    
     if (p_page_idle->thisMachine->hasMixing())
     {
         p_keyboard->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
@@ -129,16 +136,14 @@ void page_product_overview::showEvent(QShowEvent *event)
         statusbarLayout->addWidget(p_statusbar);   
 
         statusbarLayout->setAlignment(Qt::AlignBottom | Qt::AlignVCenter);
+        QString picturePath = p_page_idle->thisMachine->getSelectedProduct()->getProductPicturePath();
+        styleSheet.replace("%IMAGE_PATH%", picturePath);
+        p_keyboard->registerCallBack(std::bind(&page_product_overview::enterButtonPressed, this));
     }else{
         statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
         statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
     }
 
-    p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
-    // p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(ui->promoKeyboard);
-    QString coupon_icon_path = p_page_idle->thisMachine->getTemplatePathFromName(COUPON_ICON_UNAVAILABLE_PATH);
-    p_page_idle->thisMachine->addPictureToLabel(ui->label_coupon_icon, coupon_icon_path);
-    QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_PRODUCT_OVERVIEW_CSS);
     ui->label_page_title->setStyleSheet(styleSheet);
     ui->label_checkout_title->setStyleSheet(styleSheet);
     ui->pushButton_promo_input->setStyleSheet(styleSheet);
@@ -197,12 +202,6 @@ void page_product_overview::showEvent(QShowEvent *event)
     ui->label_gif->setStyleSheet(styleSheet);
     ui->line_invoice->setStyleSheet(styleSheet);
     ui->pushButton_select_product_page->setStyleSheet(styleSheet);
-
-    if (p_page_idle->thisMachine->hasMixing())
-    {
-        QString picturePath = p_page_idle->thisMachine->getSelectedProduct()->getProductPicturePath();
-        styleSheet.replace("%IMAGE_PATH%", picturePath);
-    }
     ui->label_product_photo->setStyleSheet(styleSheet);
     /* Hacky transparent button */
     ui->pushButton_previous_page->setProperty("class", "buttonBGTransparent");
@@ -274,8 +273,8 @@ void page_product_overview::showEvent(QShowEvent *event)
     }
     else if (numberOfPaymentMethods == 2)
     {
-        // ui->pushButton_continue->raise();
-        // ui->pushButton_continue_additional->raise();
+        ui->pushButton_continue->raise();
+        ui->pushButton_continue_additional->raise();
         ui->pushButton_continue->setFixedSize(QSize(360, 100));
         ui->pushButton_continue->setProperty("activePaymentMethod", paymentMethods[0]);
         ui->pushButton_continue_additional->setFixedSize(QSize(360, 100));
@@ -436,7 +435,7 @@ void page_product_overview::reset_and_show_page_elements()
         qDebug() << "Coupon state: Show keyboard";
         if(p_page_idle->thisMachine->hasMixing()){
             p_keyboard->registerCallBack(std::bind(&page_product_overview::enterButtonPressed, this));
-            p_keyboard->initializeKeyboard(true, ui->lineEdit_promo_code);
+            p_keyboard->setKeyboardVisibility(true, ui->lineEdit_promo_code);
         }else{
             ui->promoKeyboard->show();
         }
@@ -444,7 +443,7 @@ void page_product_overview::reset_and_show_page_elements()
         ui->lineEdit_promo_code->clear();
         ui->lineEdit_promo_code->show();
         p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_promo_code, "promoCode", PAGE_PRODUCT_OVERVIEW_CSS);
-        m_readyToSendCoupon = true;
+        // m_readyToSendCoupon = true;
     }
     break;
     case (enabled_not_set):
@@ -478,6 +477,7 @@ void page_product_overview::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
     if (p_page_idle->thisMachine->getCouponState() == enabled_show_keyboard ||
         p_page_idle->thisMachine->getCouponState() == enabled_invalid_input ||
+        p_page_idle->thisMachine->getCouponState() == enabled_not_eligible ||
         p_page_idle->thisMachine->getCouponState() == enabled_processing_input ||
         p_page_idle->thisMachine->getCouponState() == network_error)
     {
@@ -617,63 +617,52 @@ void page_product_overview::apply_promo_code(QString promocode)
     {
         ui->label_gif->show();
         readBuffer.clear();
-        curl = curl_easy_init();
+ 
+        QString api_url = "api/coupon/find/" + promocode + "/" + machine_id + "/" + product_serial;
+        std::tie(res,readBuffer, http_code) =  p_page_idle->thisMachine->sendRequestToPortal(api_url, "GET", "", "PAGE_PRODUCT_OVERVIEW");
+        if (res != CURLE_OK)
         {
-            if (!curl)
-            {
-                qDebug() << "page_product_overview: apply promo cURL failed init";
-                p_page_idle->thisMachine->setCouponState(network_error);
-                return;
-            }
-            curl_easy_setopt(curl, CURLOPT_URL, ("https://soapstandportal.com/api/coupon/find/" + promocode + "/" + machine_id + "/" + product_serial).toUtf8().constData());
-            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback_coupon1);
-            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-            res = curl_easy_perform(curl);
-            curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
-            if (res != CURLE_OK)
-            {
-                qDebug() << "Backend coupon response: curl backend problem. error code: " << res;
-                p_page_idle->thisMachine->setCouponState(network_error);
-            }
-            else
-            {
-                int new_percent;
-                QString myQString = QString::fromStdString(readBuffer);
-                p_page_idle->thisMachine->setCouponConditions(myQString);
-                ui->label_gif->hide();
-                qDebug() << myQString;
+            qDebug() << "Backend coupon response: curl backend problem. error code: " << res;
+            p_page_idle->thisMachine->setCouponState(network_error);
+        }
+        else
+        {
+            int new_percent;
+            QString myQString = QString::fromStdString(readBuffer);
+            p_page_idle->thisMachine->setCouponConditions(myQString);
+            ui->label_gif->hide();
+            qDebug() << myQString;
 
-                if (http_code == 200)
+            if (http_code == 200)
+            {
+                json coupon_obj = json::parse(readBuffer);
+                if (coupon_obj["active"] && coupon_obj["discount_amount"] != 0)
                 {
-                    json coupon_obj = json::parse(readBuffer);
-                    if (coupon_obj["active"] && coupon_obj["discount_amount"] != 0)
-                    {
-                        qDebug() << "Backend coupon response: Valid. Discount percentage: " << new_percent;
-                        new_percent = coupon_obj["discount_amount"];
+                    qDebug() << "Backend coupon response: Valid. Discount percentage: " << new_percent;
+                    new_percent = coupon_obj["discount_amount"];
 
-                        p_page_idle->thisMachine->setCouponCode(promocode);
-                        p_page_idle->thisMachine->setDiscountPercentageFraction((new_percent * 1.0) / 100);
-                        p_page_idle->thisMachine->setCouponState(enabled_valid_active);
-                    }
-                    else
-                    {
-                        qDebug() << "Backend coupon response: Invalid ";
-                        p_page_idle->thisMachine->setCouponState(enabled_invalid_input);
-                    }
+                    p_page_idle->thisMachine->setCouponCode(promocode);
+                    p_page_idle->thisMachine->setDiscountPercentageFraction((new_percent * 1.0) / 100);
+                    p_page_idle->thisMachine->setCouponState(enabled_valid_active);
                 }
                 else
                 {
-                    qDebug() << "Backend coupon response: http 200 response ";
-                    if (myQString == "Not Eligible")
-                    {
-                        p_page_idle->thisMachine->setCouponState(enabled_not_eligible);
-                    }
-                    else
-                    {
-                        p_page_idle->thisMachine->setCouponState(enabled_invalid_input);
-                    }
+                    qDebug() << "Backend coupon response: Invalid ";
+                    p_page_idle->thisMachine->setCouponState(enabled_invalid_input);
                 }
             }
+            else
+            {
+                qDebug() << "Backend coupon response: http 200 response ";
+                if (myQString == "Not Eligible")
+                {
+                    p_page_idle->thisMachine->setCouponState(enabled_not_eligible);
+                }
+                else
+                {
+                    p_page_idle->thisMachine->setCouponState(enabled_invalid_input);
+                }
+            } 
         }
     }
     else
@@ -686,19 +675,22 @@ void page_product_overview::apply_promo_code(QString promocode)
 
 void page_product_overview::enterButtonPressed()
 {
-    if (m_readyToSendCoupon && p_page_idle->thisMachine->getCouponState() != enabled_processing_input)
+    // if (m_readyToSendCoupon && p_page_idle->thisMachine->getCouponState() != enabled_processing_input)
+    if (p_page_idle->thisMachine->getCouponState() == enabled_show_keyboard)
+
     {
-        m_readyToSendCoupon = false;
+        // m_readyToSendCoupon = false;
         qDebug() << "Done clicked, initiated apply promo.";
         // hack, sometimes it appears like the 'done' button code is called twice.
         p_page_idle->thisMachine->setCouponState(enabled_processing_input);
         reset_and_show_page_elements();
         apply_promo_code(ui->lineEdit_promo_code->text());
-        p_keyboard->initializeKeyboard(false, ui->lineEdit_promo_code);
+        p_keyboard->resetKeyboard();
     }
     else
     {
         qDebug() << "ASSERT ERROR: Illegal press. Still processing other call.";
+        reset_and_show_page_elements();
     }
 }
 
@@ -713,9 +705,11 @@ void page_product_overview::keyboardButtonPressed(int buttonID)
     }
     else if (buttonText == "done")
     {
-        if (m_readyToSendCoupon && p_page_idle->thisMachine->getCouponState() != enabled_processing_input)
+        if (p_page_idle->thisMachine->getCouponState() == enabled_show_keyboard)
+       //if (m_readyToSendCoupon && p_page_idle->thisMachine->getCouponState() != enabled_processing_input)
+
         {
-            m_readyToSendCoupon = false;
+            // m_readyToSendCoupon = false;
             qDebug() << "Done clicked, initiated apply promo.";
 
             // hack, sometimes it appears like the 'done' button code is called twice.
@@ -726,6 +720,7 @@ void page_product_overview::keyboardButtonPressed(int buttonID)
         else
         {
             qDebug() << "ASSERT ERROR: Illegal press. Still processing other call.";
+            qDebug() << "#######" << p_page_idle->thisMachine->getCouponState();
         }
     }
     else if (buttonText.mid(0, 3) == "num")
@@ -781,20 +776,8 @@ void page_product_overview::on_pushButton_continue(int buttonID)
     case 0:
     {
         p_page_idle->thisMachine->setActivePaymentMethod(ActivePaymentMethod::qr);
-        CURL *curl;
-        CURLcode res;
-        curl = curl_easy_init();
 
-        if (!curl)
-        {
-            qDebug() << "page_product_overview: cURL failed init";
-            return;
-        }
-
-        curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/ping");
-        curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
-
-        res = curl_easy_perform(curl);
+        std::tie(res,readBuffer, http_code) =  p_page_idle->thisMachine->sendRequestToPortal(PORTAL_PING, "GET", "", "PAGE_PRODUCT_OVERVIEW");
         if (res != CURLE_OK)
         {
             qDebug() << "ERROR: Failed to reach soapstandportal. error code: " + QString::number(res);
@@ -808,8 +791,7 @@ void page_product_overview::on_pushButton_continue(int buttonID)
             ui->label_invoice_price->text();
             hideCurrentPageAndShowProvided(p_page_payment_qr);
         }
-        curl_easy_cleanup(curl);
-        readBuffer = "";
+
         break;
     }
     case 1:
@@ -831,55 +813,7 @@ void page_product_overview::on_pushButton_continue(int buttonID)
         break;
     }
     }
-    // else if (paymentMethod == PAYMENT_QR)
-    // {
-    //     CURL *curl;
-    //     CURLcode res;
-    //     curl = curl_easy_init();
-
-    //     if (!curl)
-    //     {
-    //         qDebug() << "page_product_overview: cURL failed init";
-    //         return;
-    //     }
-
-    //     curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/ping");
-    //     curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
-
-    //     res = curl_easy_perform(curl);
-    //     if (res != CURLE_OK)
-    //     {
-    //         qDebug() << "ERROR: Failed to reach soapstandportal. error code: " + QString::number(res);
-    //         hideCurrentPageAndShowProvided(p_page_wifi_error);
-    //     }
-    //     else
-    //     {
-    //         QString feedback = QString::fromUtf8(readBuffer.c_str());
-    //         qDebug() << "Server feedback readbuffer: " << feedback;
-
-    //         ui->label_invoice_price->text();
-    //         hideCurrentPageAndShowProvided(p_page_payment_qr);
-    //     }
-    //     curl_easy_cleanup(curl);
-    //     readBuffer = "";
-    // }
-    // else if (paymentMethod == PAYMENT_TAP_USA)
-    // {
-    //     hideCurrentPageAndShowProvided(p_page_payment_tap_tcp);
-    // }
-    // else if (paymentMethod == PAYMENT_TAP_CANADA)
-    // {
-    //     hideCurrentPageAndShowProvided(p_page_payment_tap_serial);
-    // }
-    // else if (paymentMethod == "plu" || paymentMethod == "barcode" || paymentMethod == "barcode_EAN-2 " || paymentMethod == "barcode_EAN-13")
-    // {
-    //     hideCurrentPageAndShowProvided(p_page_dispense);
-    // }
-    // else
-    // {
-    //     qDebug() << "WARNING: No payment method detected.";
-    //     hideCurrentPageAndShowProvided(p_page_dispense);
-    // }
+    
 }
 
 void page_product_overview::return_to_selectProductPage()
@@ -892,20 +826,6 @@ void page_product_overview::on_pushButton_select_product_page_clicked()
     this->return_to_selectProductPage();
 }
 
-// void page_product_overview::check_to_page_email()
-// {
-//     double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
-//     double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
-//     if (finalPrice == 0.0 || selectedPrice == 0.0)
-//     {
-//         ui->pushButton_continue_additional->lower();
-//         ui->pushButton_continue->setFixedSize(QSize(740, 100));
-//         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_free");
-//     }
-//     // else{
-//     // p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay");
-//     // }
-// }
 
 QString page_product_overview::additivies_overview(QString product_additives_overview)
 {

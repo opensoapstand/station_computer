@@ -381,6 +381,18 @@ double pnumberproduct::inputTextToMlConvertUnits(QString inputValueAsText)
     }
 }
 
+void pnumberproduct::setVolumeDispensedMixedProduct(QString volumeDispensedMixProduct)
+{
+    // volume for this dispense
+    this->volumeDispensedMixProduct = volumeDispensedMixProduct;
+}
+
+QString pnumberproduct::getVolumeDispensedMixedProduct()
+{
+    // volume for this dispense
+    return this->volumeDispensedMixProduct;
+}
+
 ///////////////////////////////////////////// GENERAL
 /////////////////////////////////////////////
 /////////////////////////////////////////////

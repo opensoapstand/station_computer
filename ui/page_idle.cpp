@@ -194,6 +194,36 @@ void page_idle::showEvent(QShowEvent *event)
 
     ui->label_show_temperature->hide(); // always hide by default
     ui->label_temperature_warning->hide();
+    if(thisMachine->hasMixing()){
+        QString warning_icon_full_path = thisMachine->getTemplatePathFromName(PAGE_IDLE_WARNING_ICON);
+
+        ui->label_temperature_warning_background->setStyleSheet(styleSheet);
+        thisMachine->addPictureToLabel(ui->label_temperature_warning_icon, warning_icon_full_path);
+        ui->label_temperature_warning_background->hide(); // for default_AP2; always hide initially, will show if enabled and has problems.
+        ui->label_temperature_warning_icon->hide(); // for default_AP2; always hide initially, will show if enabled and has problems.
+
+        ui->label_printer_status_background->setStyleSheet(styleSheet);
+        thisMachine->addPictureToLabel(ui->label_printer_status_icon, warning_icon_full_path);
+        ui->label_printer_status_background->hide(); // for default_AP2; always hide initially, will show if enabled and has problems.
+        ui->label_printer_status_icon->hide(); // for default_AP2; always hide initially, will show if enabled and has problems.
+
+        ui->label_client_logo->hide();
+        ui->label_manufacturer_logo->hide();
+        ui->media_player->hide();
+        ui->savedBottles_label->hide();
+        ui->video_player->hide();
+        ui->label_welcome_message_small_top->setStyleSheet(styleSheet);
+        ui->label_welcome_message_small_bottom->setStyleSheet(styleSheet);
+        thisMachine->setTemplateTextToObject(ui->label_welcome_message_small_top);
+        thisMachine->setTemplateTextToObject(ui->label_welcome_message_small_bottom);
+    }else{
+        ui->label_temperature_warning_background->hide(); // for default_AP2 only;
+        ui->label_temperature_warning_icon->hide(); // for default_AP2 only;
+        ui->label_printer_status_background->hide(); // for default_AP2 only;
+        ui->label_printer_status_icon->hide(); // for default_AP2 only;
+        ui->label_welcome_message_small_top->hide();
+        ui->label_welcome_message_small_bottom->hide();
+    }
     if (thisMachine->isAelenPillarElseSoapStand())
     {
         refreshTemperature();
@@ -540,10 +570,22 @@ void page_idle::refreshTemperature()
         QString base = thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_temperature_warning, "temperature_too_high");
         ui->label_temperature_warning->setText(base.arg(temperatureStr));
         ui->label_temperature_warning->show();
+        if(thisMachine->hasMixing()){
+            qDebug() << "########### ";
+            ui->label_temperature_warning_background->show();
+            ui->label_temperature_warning_background->raise();
+            ui->label_temperature_warning_icon->show();
+            ui->label_temperature_warning_icon->raise();
+            ui->label_temperature_warning->raise();
+        }
     }
     else
     {
         ui->label_temperature_warning->hide();
+        if(thisMachine->hasMixing()){
+            ui->label_temperature_warning_background->hide();
+            ui->label_temperature_warning_icon->hide();
+        }
     }
 }
 
@@ -580,6 +622,10 @@ void page_idle::onIdlePageTypeSelectorTimerTick()
 void page_idle::checkReceiptPrinterStatus()
 {
     ui->label_printer_status->hide(); // always hide here, will show if enabled and has problems.
+    if(thisMachine->hasMixing()){
+        ui->label_printer_status_background->hide();
+        ui->label_printer_status_icon->hide();
+    }
     m_tappingBlockedUntilPrinterReply = false;
 
     if (thisMachine->hasReceiptPrinter())
@@ -598,18 +644,34 @@ void page_idle::printerStatusFeedback(bool isOnline, bool hasPaper)
 
     if (!isOnline)
     {
+        if(thisMachine->hasMixing()){
+            ui->label_printer_status_background->raise();
+            ui->label_printer_status_icon->raise();
+            ui->label_printer_status_background->show();
+            ui->label_printer_status_icon->show();
+        }
         ui->label_printer_status->raise();
         thisMachine->setTemplateTextWithIdentifierToObject(ui->label_printer_status, "offline");
         ui->label_printer_status->show();
     }
     else if (!hasPaper)
     {
+        if(thisMachine->hasMixing()){
+            ui->label_printer_status_background->raise();
+            ui->label_printer_status_icon->raise();
+            ui->label_printer_status_background->show();
+            ui->label_printer_status_icon->show();
+        }
         ui->label_printer_status->raise();
         thisMachine->setTemplateTextWithIdentifierToObject(ui->label_printer_status, "nopaper");
         ui->label_printer_status->show();
     }
     else
     {
+        if(thisMachine->hasMixing()){
+            ui->label_printer_status_background->hide();
+            ui->label_printer_status_icon->hide();
+        }
         ui->label_printer_status->hide();
     }
     // ui->pushButton_to_select_product_page->show();
@@ -707,5 +769,5 @@ void page_idle::rebootTapDevice()
 {
     qDebug() << "Rebooting Tap Device";
     page_payment_tap_serial paymentSerialObject;
-    paymentSerialObject.resetDevice();
+    paymentSerialObject.rebootDevice();
 }

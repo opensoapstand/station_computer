@@ -101,7 +101,9 @@ private:
     bool stopSelectTimers();
     void selectOnTick();
 
+    CURLcode res;
     std::string readBuffer;
+    long http_code;
     Ui::page_product_overview *ui;
     page_select_product *p_page_select_product;
     page_qr_payment *p_page_payment_qr;
@@ -124,6 +126,8 @@ private:
     QShowEvent *dispenseEvent;
     QShowEvent *wifiErrorEvent;
     QVBoxLayout *statusbarLayout;
+
+
 };
 
 #endif // PAYSELECT_H

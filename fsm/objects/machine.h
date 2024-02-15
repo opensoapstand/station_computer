@@ -152,6 +152,7 @@ private:
     string m_status_text;
     string m_payment;
     string m_size_unit;
+    // string m_portal_base_url;
 };
 
 #endif

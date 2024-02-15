@@ -14,13 +14,12 @@
 # empty lines are also permitted
 
 # page_idle
-page_idle->label_welcome_message,Fancy a free<br>beverage sample?
-page_idle->label_printer_status->offline,Assistance needed<br>Receipt Printer offline.
-page_idle->label_printer_status->nopaper,Assistance needed<br>Receipt Printer empty or improperly loaded.
-page_idle->label_show_temperature->temperature,Temperature is..
-#page_idle->label_show_temperature,Temperature: %1
-page_idle->label_show_temperature,%1°C
-page_idle->msgBox_reboot->default,<p align=center>System will be rebooted in<br></p>
+page_idle->label_welcome_message_small_top,The Ultimate Drink
+page_idle->label_welcome_message_small_bottom,Enriching Your Entire Day
+page_idle->label_welcome_message,Enjoy It Today
+page_idle->label_printer_status->offline,Assistance Needed<br>Receipt Printer offline.
+page_idle->label_printer_status->nopaper,Assistance Needed<br>Receipt Printer empty or improperly loaded.
+page_idle->label_temperature_warning->temperature_too_high,Temperature Alert<br>Max %1 °C
 page_idle->label_reboot_nightly_title,NIGHTLY REBOOT
 page_idle->label_reboot_nightly_text,System will be rebooted in<br>%1 second(s)
 page_idle->pushButton_reboot_nightly,Cancel
@@ -72,11 +71,20 @@ page_product_overview->label_selected_volume->custom_volume,Custom Volume (maxim
 
 # page_dispenser
 page_dispenser->label_to_refill,To Refill
-page_dispenser->label_instructions_container,bring container to nozzle
-page_dispenser->label_press,press and hold the<br>button
+page_dispenser->label_instructions_container,01. The selected spout is indicated with a light<br><br>02. Hold your bottle into the spout<br><br>03. Keep button pressed to dispense
+page_dispenser->label_volume_dispensed,Volume Dispensed
+page_dispenser->pushButton_problems,Report Issue
+page_dispenser->label_product_selected->custom_volume,Custom (max: %1)
+page_dispenser->label_dispense_message->priming,Please press the button for up<br>to 15 seconds before the<br>product starts dispensing.
+page_dispenser->label_dispense_message->out_of_stock,It appears we're out of stock.
+page_dispenser->label_dispense_message->needs_attention,Station technical issue, Please<br>tap the Report Issue button.
 
 # page_end
 page_end->pushButton_contact,Feedback
+page_end->label_message->hasReceiptPrinter,Please take your receipt!
+page_end->label_message_2->hasReceiptPrinter2,By refilling you've helped keep a<br>plastic bottle out of our landfills.<br>Thank you!
+page_end->label_message->finish_transaction,Finishing Transaction
+page_end->label_volume_dispensed,Volume Dispensed:
 
 # page_help
 page_help->pushButton_to_idle,←BACK
@@ -84,6 +92,9 @@ page_help->pushButton_to_transactions,TRANSACTIONS→
 page_help->pushButton_to_howTo,Instruction
 page_help->pushButton_to_maintenance,Settings
 page_help->pushButton_to_feedback,Contact us
+
+#page_transactions
+page_transactions->pushButton_back,←BACK
 
 #page_how_to
 page_how_to->label_page_title,How to Use
@@ -99,14 +110,19 @@ page_how_to->pushButton_to_maintenance,Settings
 
 # page_sendFeedback
 page_sendFeedback->pushButton_previous_page,←BACK
+page_sendFeedback->label_select_problem,We Value Your Feedback
+page_sendFeedback->label_feedback_title,Let us know your feedback:
 page_sendFeedback->checkBox_1_Label,I love this, keep me in the loop
 page_sendFeedback->checkBox_2_Label,User interface problem
 page_sendFeedback->checkBox_3_Label,Drink dispensing problem
 page_sendFeedback->checkBox_4_Label,Payment problem
 page_sendFeedback->checkBox_5_Label,Other
-page_sendFeedback->label_enter_feedback,Please enter details or comments below.<br>Provide email for feedback.
-page_sendFeedback->label_thanks_for_feedback,Thank you for <br> your feedback
+page_sendFeedback->label_enter_email,Please update me via this email:
+page_sendFeedback->label_enter_feedback,Please enter details or comments below
+page_sendFeedback->label_thanks_for_feedback,Thanks for your feedback!
+page_sendFeedback->label_thanks_for_feedback_2,Your feedback is invaluable to us
 page_sendFeedback->pushButton_send,Send
+page_sendFeedback->label_contact_info,Contact Information<br>Phone: (+1) 604-283-5311<br>Email: hello@aelen.com
 
 # page_qr_payment
 page_qr_payment->pushButton_previous_page,←BACK

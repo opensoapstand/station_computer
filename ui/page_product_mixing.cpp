@@ -192,38 +192,11 @@ void page_product_mixing::showEvent(QShowEvent *event)
         ui->pushButton_recommended->show();
         ui->label_additives_background->setText("");
         ui->label_additives_background->hide();
-        for (int j = 0; j < ADDITIVES_PER_SLOT_COUNT_MAX; j++){
-            if(isAdditiveEnabled(j)){
-                additiveTitles[j]->setProperty("class", "additiveTitles");
-                additiveBackgroundRows[j]->setProperty("class", "additiveBackgroundRows");
-                additiveMinusButtonBackgrounds[j]->setProperty("class", "additiveMinusButtonBackgrounds");
-                additiveMinusButtons[j]->setProperty("class", "additiveMinusButtons");
-                additivePlusButtonBackgrounds[j]->setProperty("class", "additivePlusButtonBackgrounds");
-                additivePlusButtons[j]->setProperty("class", "additivePlusButtons");
-                additivePercentageLabels[j]->setProperty("class", "additivePercentageLabels");
-
-                additiveTitles[j]->setStyleSheet(styleSheet);
-                additiveBackgroundRows[j]->setStyleSheet(styleSheet);
-                additiveMinusButtonBackgrounds[j]->setStyleSheet(styleSheet);
-                additiveMinusButtons[j]->setStyleSheet(styleSheet);
-                additivePlusButtonBackgrounds[j]->setStyleSheet(styleSheet);
-                additivePlusButtons[j]->setStyleSheet(styleSheet);
-                additivePercentageLabels[j]->setStyleSheet(styleSheet);
-
-                additiveTitles[j]->show();
-                additiveBackgroundRows[j]->show();
-                additiveMinusButtonBackgrounds[j]->show();
-                additiveMinusButtons[j]->show();
-                additivePlusButtonBackgrounds[j]->show();
-                additivePlusButtons[j]->show();
-                additivePercentageLabels[j]->show();
-
-                int additivePNumber = p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers()[j+1];
-                additiveTitles[j]->setText(p_page_idle->thisMachine->getProductByPNumber(additivePNumber)->getProductName());
-                double additivePRatio = p_page_idle->thisMachine->getSelectedProduct()->getAdditivesRatioModifier(j);
-                QString additivePRatio_string = QString::number(convertAdditivePRatioToPercentage(additivePRatio));
-                additivePercentageLabels[j]->setText(additivePRatio_string + "%");
-            }else{
+        if(p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size() == 1){
+            ui->pushButton_recommended->hide();
+            ui->label_additives_background->show();
+            p_page_idle->thisMachine->setTemplateTextToObject(ui->label_additives_background);
+            for (uint8_t j = 0; j < ADDITIVES_PER_SLOT_COUNT_MAX; j++){
                 additiveTitles[j]->hide();
                 additiveBackgroundRows[j]->hide();
                 additiveMinusButtonBackgrounds[j]->hide();
@@ -231,6 +204,48 @@ void page_product_mixing::showEvent(QShowEvent *event)
                 additivePlusButtonBackgrounds[j]->hide();
                 additivePlusButtons[j]->hide();
                 additivePercentageLabels[j]->hide();
+            }
+        }else{
+            for (int j = 0; j < ADDITIVES_PER_SLOT_COUNT_MAX; j++){
+                if(isAdditiveEnabled(j)){
+                    additiveTitles[j]->setProperty("class", "additiveTitles");
+                    additiveBackgroundRows[j]->setProperty("class", "additiveBackgroundRows");
+                    additiveMinusButtonBackgrounds[j]->setProperty("class", "additiveMinusButtonBackgrounds");
+                    additiveMinusButtons[j]->setProperty("class", "additiveMinusButtons");
+                    additivePlusButtonBackgrounds[j]->setProperty("class", "additivePlusButtonBackgrounds");
+                    additivePlusButtons[j]->setProperty("class", "additivePlusButtons");
+                    additivePercentageLabels[j]->setProperty("class", "additivePercentageLabels");
+
+                    additiveTitles[j]->setStyleSheet(styleSheet);
+                    additiveBackgroundRows[j]->setStyleSheet(styleSheet);
+                    additiveMinusButtonBackgrounds[j]->setStyleSheet(styleSheet);
+                    additiveMinusButtons[j]->setStyleSheet(styleSheet);
+                    additivePlusButtonBackgrounds[j]->setStyleSheet(styleSheet);
+                    additivePlusButtons[j]->setStyleSheet(styleSheet);
+                    additivePercentageLabels[j]->setStyleSheet(styleSheet);
+
+                    additiveTitles[j]->show();
+                    additiveBackgroundRows[j]->show();
+                    additiveMinusButtonBackgrounds[j]->show();
+                    additiveMinusButtons[j]->show();
+                    additivePlusButtonBackgrounds[j]->show();
+                    additivePlusButtons[j]->show();
+                    additivePercentageLabels[j]->show();
+
+                    int additivePNumber = p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers()[j+1];
+                    additiveTitles[j]->setText(p_page_idle->thisMachine->getProductByPNumber(additivePNumber)->getProductName());
+                    double additivePRatio = p_page_idle->thisMachine->getSelectedProduct()->getAdditivesRatioModifier(j);
+                    QString additivePRatio_string = QString::number(convertAdditivePRatioToPercentage(additivePRatio));
+                    additivePercentageLabels[j]->setText(additivePRatio_string + "%");
+                }else{
+                    additiveTitles[j]->hide();
+                    additiveBackgroundRows[j]->hide();
+                    additiveMinusButtonBackgrounds[j]->hide();
+                    additiveMinusButtons[j]->hide();
+                    additivePlusButtonBackgrounds[j]->hide();
+                    additivePlusButtons[j]->hide();
+                    additivePercentageLabels[j]->hide();
+                }
             }
         }
     }else{

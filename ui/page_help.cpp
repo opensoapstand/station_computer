@@ -214,13 +214,20 @@ void page_help::on_pushButton_to_maintenance_clicked()
         // provide keyboard if not yet logged in. 
         if(p_page_idle->thisMachine->hasMixing()){
             p_keyboard->registerCallBack(std::bind(&page_help::doneButtonPressed, this));
+            p_keyboard->registerCancelCallBack(std::bind(&page_help::cancelButtonPressed, this));
             p_keyboard->needCAPS(true);
+            p_keyboard->needCANCEL(true);
             p_keyboard->setKeyboardVisibility(true, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
             p_input_widget->toggleInputWidget(true);
         }else{
             ui->keyboard_3->show();
         }
     }
+}
+
+void page_help::cancelButtonPressed(){
+    p_input_widget->toggleInputWidget(false);
+    p_keyboard->setKeyboardVisibility(false, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
 }
 
 void page_help::doneButtonPressed(){

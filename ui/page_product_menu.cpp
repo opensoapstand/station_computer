@@ -248,7 +248,6 @@ void page_product_menu::displayDispenseProductsMenu()
         else if (product_status_text.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
         {
             labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->almost_empty"));
-            p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[sub_menu_index], label_overlay_available_with_status_increment, PAGE_PRODUCT_MENU_CSS);
         }
         else if (product_status_text.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
         {

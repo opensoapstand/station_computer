@@ -32,7 +32,7 @@ page_product_menu->label_base_products_section_title,1. Select Type
 page_product_menu->label_dispense_products_section_title,2. Pick a drink
 page_product_menu->status_text->not_enabled,Out of stock
 page_product_menu->status_text->empty,Out of stock
-page_product_menu->status_text->almost_empty,Almost empty
+page_product_menu->status_text->almost_empty,
 page_product_menu->status_text->sold_out,Out of stock
 page_product_menu->status_text->assistance,Needs assistance
 page_product_menu->status_text->coming_soon,Coming soon

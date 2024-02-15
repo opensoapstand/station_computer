@@ -80,7 +80,7 @@ void page_payment_tap_tcp::initiate_tap_setup()
         std::map<std::string, std::string> testResponse = testMac(connectSocket(), configMap["MAC_KEY"], configMap["MAC_LABEL"]);
         if (testResponse["RESPONSE_TEXT"] == "Match")
         {
-            qDebug() << "Test Mac Command Matched" << endl;
+            qDebug() << "Test Mac Command Matched" << Qt::endl;
         }
         else
         {
@@ -90,7 +90,7 @@ void page_payment_tap_tcp::initiate_tap_setup()
     }
     else
     {
-        qDebug() << "No file config" << endl;
+        qDebug() << "No file config" << Qt::endl;
         registerDevice(connectSocket());
     }
 }
@@ -99,18 +99,18 @@ void page_payment_tap_tcp::stopPayTimers()
 
     if (checkPacketReceivedTimer != nullptr)
     {
-        qDebug() << "cancel payment progress Timer" << endl;
+        qDebug() << "cancel payment progress Timer" << Qt::endl;
         checkPacketReceivedTimer->stop();
     }
     if (checkCardTappedTimer != nullptr)
     {
-        qDebug() << "cancel TAP progress Timer" << endl;
+        qDebug() << "cancel TAP progress Timer" << Qt::endl;
         checkCardTappedTimer->stop();
     }
 
     if (idlePaymentTimer != nullptr)
     {
-        qDebug() << "cancel page_idle payment Timer" << endl;
+        qDebug() << "cancel page_idle payment Timer" << Qt::endl;
         idlePaymentTimer->stop();
     }
 }
@@ -438,7 +438,7 @@ bool page_payment_tap_tcp::exitConfirm()
 // Navigation: Back to Drink Size Selection
 void page_payment_tap_tcp::on_pushButton_previous_page_clicked()
 {
-    qDebug() << "In previous page button" << endl;
+    qDebug() << "In previous page button" << Qt::endl;
 
     if (exitConfirm())
     {

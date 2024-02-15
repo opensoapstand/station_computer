@@ -15,6 +15,7 @@
 
 #include <bitset>
 #include <vector>
+#include <ostream>
 
 #include "enums.h"
 

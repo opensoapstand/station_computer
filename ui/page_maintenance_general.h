@@ -53,6 +53,7 @@ public:
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
 
 private slots:
+    void onPage_maintenance_general_TimeoutTick();
 
     void on_pushButton_back_clicked();
 

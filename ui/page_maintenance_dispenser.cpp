@@ -49,6 +49,13 @@ page_maintenance_dispenser::page_maintenance_dispenser(QWidget *parent) : QWidge
     buttons_select_mix[3] = ui->pushButton_dispense_pnumber_4;
     buttons_select_mix[4] = ui->pushButton_dispense_pnumber_5;
     buttons_select_mix[5] = ui->pushButton_dispense_pnumber_6;
+    
+    buttons_select_size[0] = ui->pushButton_set_quantity_small;
+    buttons_select_size[1] = ui->pushButton_set_quantity_medium;
+    buttons_select_size[2] = ui->pushButton_set_quantity_large;
+    buttons_select_size[3] = ui->pushButton_set_quantity_custom;
+    buttons_select_size[4] = ui->pushButton_set_quantity_test;
+    buttons_select_size[5] = ui->pushButton_set_quantity_sample;
 
     buttons_slot_shortcuts[0] = ui->pushButton_activate_slot_1;
     buttons_slot_shortcuts[1] = ui->pushButton_activate_slot_2;
@@ -147,6 +154,19 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     ui->pushButton_active_pnumber_base->setStyleSheet(styleSheet);
     ui->pushButton_active_pnumber_base->setText("Base\nP-" + QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getBasePNumber()));
 
+    // first, pretend like there is no selected size
+    for (int size_index = 1; size_index < SIZES_COUNT; size_index++)
+    {
+        buttons_select_size[size_index - 1]->setProperty("class", "product_not_available");
+        buttons_select_size[size_index - 1]->setStyleSheet(styleSheet);
+        // buttons_select_mix[buttons_select_size - 1]->setText("Dispense Product " + QString::number(dispense_product_position) + "\nN/A");
+
+
+        buttons_select_size[size_index - 1]->setEnabled(false);
+
+       
+    }
+
     // first, pretend like there are no dispense products
     for (int dispense_product_position = 1; dispense_product_position <= DISPENSE_PRODUCTS_PER_BASE_LINE_MAX; dispense_product_position++)
     {
@@ -156,7 +176,6 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
         buttons_select_mix[dispense_product_position - 1]->setEnabled(false);
         // buttons_select_mix[dispense_product_position - 1]->hide();
     }
-
     // set up for all available dispense products
     int dispense_product_position = 1;
     while (dispense_product_position <= this->p_page_idle->thisMachine->getSelectedSlot()->getDispenseProductsCount())
@@ -177,7 +196,6 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
         buttons_select_additive[additive_position - 1]->setEnabled(false);
         // buttons_select_additive[additive_position - 1]->hide();
     }
-
     // set up for all available additives
     int additive_position = 1;
     while (additive_position <= this->p_page_idle->thisMachine->getSelectedSlot()->getAdditiveCount())
@@ -228,6 +246,21 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
     {
         p_page_idle->thisMachine->loadDynamicContent();
     }
+
+    // product size selection buttons
+    for (int size_index = 1; size_index < SIZES_COUNT; size_index++)
+    {
+        buttons_select_size[size_index - 1]->setEnabled(true);
+
+        if (size_index == m_selected_size_index)
+        {
+            p_page_idle->thisMachine->addCssClassToObject(buttons_select_size[size_index - 1], "product_active", PAGE_MAINTENANCE_DISPENSER_CSS);
+        }else{
+            p_page_idle->thisMachine->addCssClassToObject(buttons_select_size[size_index - 1], "product_not_active", PAGE_MAINTENANCE_DISPENSER_CSS);
+       
+        }
+    }
+
 
     // BASE PNUMBER
     if (this->p_page_idle->thisMachine->getSelectedSlot()->getBasePNumber() == this->p_page_idle->thisMachine->getSelectedProduct()->getPNumber())
@@ -479,17 +512,19 @@ void page_maintenance_dispenser::on_pushButton_enable_pump_clicked()
 
 void page_maintenance_dispenser::on_pushButton_auto_dispense_large_clicked()
 {
-    autoDispenseStart(SIZE_LARGE_INDEX);
+    // autoDispenseStart(SIZE_LARGE_INDEX);
 }
 
 void page_maintenance_dispenser::on_pushButton_auto_dispense_medium_clicked()
 {
-    autoDispenseStart(SIZE_MEDIUM_INDEX);
+    qDebug() << "Button not available!!!";
+    // autoDispenseStart(SIZE_MEDIUM_INDEX);
 }
 
-void page_maintenance_dispenser::on_pushButton_auto_dispense_small_clicked()
+void page_maintenance_dispenser::on_pushButton_auto_dispense_selected_quantity_clicked()
 {
-    autoDispenseStart(SIZE_SMALL_INDEX);
+    qDebug() << "Button not available!";
+    autoDispenseStart(m_selected_size_index);
 }
 
 void page_maintenance_dispenser::autoDispenseStart(int size)
@@ -501,30 +536,34 @@ void page_maintenance_dispenser::autoDispenseStart(int size)
         qDebug() << "Autofill quantity pressed.";
         QString dispenseCommand = QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
 
-        switch (size)
-        {
-        case SIZE_SMALL_INDEX:
-        {
-            dispenseCommand.append("s");
-        }
-        break;
-        case SIZE_MEDIUM_INDEX:
-        {
-            dispenseCommand.append("m");
-        }
-        break;
-        case SIZE_LARGE_INDEX:
-        {
-            dispenseCommand.append("l");
-        }
-        break;
-        default:
-        {
-            qDebug() << "ERROR: size type not specified. will chose small size.";
-            dispenseCommand.append("s");
-        }
-        break;
-        }
+
+        dispenseCommand.append(df_util::sizeIndexToChar(m_selected_size_index));
+
+        // switch (size)
+        // {
+        // case SIZE_SMALL_INDEX:
+        // {
+        //     dispenseCommand.append("s");
+        // }
+        // break;
+        // case SIZE_MEDIUM_INDEX:
+        // {
+        //     dispenseCommand.append("m");
+        // }
+        // break;
+        // case SIZE_LARGE_INDEX:
+        // {
+        //     dispenseCommand.append("l");
+        // }
+        // break;
+        // default:
+        // {
+        //     qDebug() << "ERROR: size type not specified. will chose small size.";
+        //     dispenseCommand.append("s");
+        // }
+        // break;
+        // }
+
         dispenseCommand.append(SEND_DISPENSE_AUTOFILL);
 
         reset_all_dispense_stats();
@@ -550,7 +589,13 @@ void page_maintenance_dispenser::dispense_test_start()
 {
     qDebug() << "Start dispense in maintenance mode. (FYI: if app crashes, it's probably about the update volume interrupts caused by the controller sending data.)";
     QString dispenseCommand = QString::number(p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
-    dispenseCommand.append("t");
+
+
+    qDebug() << "Autofill quantity pressed.";
+
+    dispenseCommand.append(df_util::sizeIndexToChar(m_selected_size_index));
+
+    // dispenseCommand.append("t");
     // dispenseCommand.append("t");
     dispenseCommand.append(SEND_DISPENSE_START);
 
@@ -1398,27 +1443,58 @@ void page_maintenance_dispenser::on_pushButton_activate_slot_1_clicked()
     this->p_page_idle->thisMachine->setSelectedSlot(1);
     showSlotShortcut(this->p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
 }
-
 void page_maintenance_dispenser::on_pushButton_activate_slot_2_clicked()
 {
     this->p_page_idle->thisMachine->setSelectedSlot(2);
     showSlotShortcut(this->p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
 }
-
 void page_maintenance_dispenser::on_pushButton_activate_slot_3_clicked()
 {
     this->p_page_idle->thisMachine->setSelectedSlot(3);
     showSlotShortcut(this->p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
 }
-
 void page_maintenance_dispenser::on_pushButton_activate_slot_4_clicked()
 {
     this->p_page_idle->thisMachine->setSelectedSlot(4);
     showSlotShortcut(this->p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
 }
-
 void page_maintenance_dispenser::on_pushButton_activate_slot_5_clicked()
 {
     this->p_page_idle->thisMachine->setSelectedSlot(5);
     showSlotShortcut(this->p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
+}
+
+void page_maintenance_dispenser::setSizeIndex(int size_index)
+{
+    if (!isDispenserPumpEnabledWarningBox())
+    {
+        qDebug() << "Select size index: " << QString::number(size_index);
+        m_selected_size_index = size_index;
+        updateProductLabelValues(false);
+    }
+}
+
+void page_maintenance_dispenser::on_pushButton_set_quantity_small_clicked()
+{
+    setSizeIndex(SIZE_SMALL_INDEX);
+}
+void page_maintenance_dispenser::on_pushButton_set_quantity_medium_clicked()
+{
+    setSizeIndex(SIZE_MEDIUM_INDEX);
+}
+void page_maintenance_dispenser::on_pushButton_set_quantity_large_clicked()
+{
+    setSizeIndex(SIZE_LARGE_INDEX);
+}
+void page_maintenance_dispenser::on_pushButton_set_quantity_custom_clicked()
+{
+    setSizeIndex(SIZE_CUSTOM_INDEX);
+}
+void page_maintenance_dispenser::on_pushButton_set_quantity_test_clicked()
+{
+    setSizeIndex(SIZE_TEST_INDEX);
+}
+void page_maintenance_dispenser::on_pushButton_set_quantity_sample_clicked()
+{
+    setSizeIndex(SIZE_SAMPLE_INDEX);
 }

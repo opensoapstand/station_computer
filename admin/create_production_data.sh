@@ -28,8 +28,6 @@ sudo -u df-admin mkdir /home/df-admin/production/references
 sudo -u df-admin mkdir /home/df-admin/production/references/logos
 sudo -u df-admin mkdir /home/df-admin/production/admin/tap_payment
 
-
-
 # Get Ubuntu version
 UBUNTU_VERSION=$(lsb_release -rs)
 CONTROLLER_VERSIONED="controller_"$UBUNTU_VERSION 

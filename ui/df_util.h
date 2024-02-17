@@ -150,6 +150,7 @@ using namespace std;
 #define PAGE_DISPENSE_VOLUME_ICON "label_volume_icon.png"
 #define PAGE_DISPENSE_PRODUCT_ICON "label_product_icon.png"
 #define PAGE_QR_PAY_BACKGROUND_PATH "background_qr.png"
+#define PAGE_QR_WARNING_ICON "page_qr_warning_icon.png"
 #define PAGE_MAINTENANCE_BACKGROUND_PATH "background_maintenance.png"
 #define ERROR_MESSAGE_PATH "error_message.png"
 #define PAGE_TAP_CANCEL "tapCancel.png"

@@ -181,6 +181,7 @@ void page_product_freeSample::onSelectTimeoutTick()
 {
     if (--_selectIdleTimeoutSec >= 0)
     {
+        // qDebug() << "Tick Down: " << _selectIdleTimeoutSec;
     }
     else
     {

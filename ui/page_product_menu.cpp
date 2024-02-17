@@ -157,7 +157,7 @@ void page_product_menu::showEvent(QShowEvent *event)
     maintenanceCounter = 0;
 
     productPageEndTimer->start(1000);
-    _productPageTimeoutSec = 15;
+    _productPageTimeoutSec = 60;
 
     ui->pushButton_to_idle->raise();
 }
@@ -267,7 +267,7 @@ void page_product_menu::displayDispenseProductsMenu()
 
 void page_product_menu::select_base_product_in_menu(int base_product_index)
 {
-
+    _productPageTimeoutSec = 60;
     m_selectedBaseProductIndex = base_product_index;
     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_PRODUCT_MENU_CSS);
 

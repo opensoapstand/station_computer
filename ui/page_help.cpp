@@ -182,6 +182,7 @@ void page_help::onHelpTimeoutTick()
 {
     if (--_helpIdleTimeoutSec >= 0)
     {
+        // qDebug() << "page_help Tick Down: " << _helpIdleTimeoutSec ;
     }
     else
     {

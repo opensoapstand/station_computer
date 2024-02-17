@@ -179,7 +179,7 @@ void page_payment_tap_tcp::showEvent(QShowEvent *event)
     msgBox = nullptr;
 
     qDebug() << "Prepare tap order";
-    tapPaymentHandler();
+    // tapPaymentHandler();
 }
 
 void page_payment_tap_tcp::hideCurrentPageAndShowProvided(QWidget *pageToShow)
@@ -468,7 +468,16 @@ void page_payment_tap_tcp::on_pushButton_to_idle_clicked()
 
 void page_payment_tap_tcp::idlePaymentTimeout()
 {
-    hideCurrentPageAndShowProvided(p_page_idle);
+    // if (--_pageTimeoutCounterSecondsLeft >= 0)
+    // {
+    //     qDebug() << "Tick Down: " << _pageTimeoutCounterSecondsLeft;
+    // }
+    // else
+    // {
+    //     qDebug() << "Timer Done!" << _pageTimeoutCounterSecondsLeft;
+    //     hideCurrentPageAndShowProvided(p_page_idle);
+    // }
+    // hideCurrentPageAndShowProvided(p_page_idle);
 }
 void page_payment_tap_tcp::resetPaymentPage()
 {

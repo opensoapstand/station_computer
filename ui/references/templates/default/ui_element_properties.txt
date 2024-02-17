@@ -137,6 +137,7 @@ page_qr_payment->label_steps,{"x": 100, "y": 940, "width": 980, "height": 501}
 page_qr_payment->label_product_information,{"x": 100, "y": 1470, "width": 521, "height": 81}
 page_qr_payment->label_product_price,{"x": 530, "y": 1470, "width": 451, "height": 41}
 page_qr_payment->label_gif,{"x": 365, "y": 960, "width": 350, "height": 350}
+page_qr_payment->label_refresh_page,{"x": 150, "y": 1340, "width": 861, "height": 421}
 
 page_payment_tap_serial->pushButton_to_idle,{"x": 460, "y": 1760, "width": 161, "height": 141}
 page_payment_tap_serial->animated_Label,{"x": 221, "y": 327, "width": 639, "height": 639}

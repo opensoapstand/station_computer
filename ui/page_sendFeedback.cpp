@@ -212,7 +212,7 @@ void page_sendFeedback::onSelectTimeoutTick()
 {
     if (--_selectIdleTimeoutSec >= 0)
     {
-        qDebug() << "page_sendFeedback: Tick Down - " << _selectIdleTimeoutSec;
+        // qDebug() << "page_sendFeedback: Tick Down - " << _selectIdleTimeoutSec;
         p_statusbar->refresh();
     }
     else

@@ -275,6 +275,7 @@ void page_product_mixing::onSelectTimeoutTick()
 {
     if (--_selectIdleTimeoutSec >= 0)
     {
+        // qDebug() << "Tick Down: " << _selectIdleTimeoutSec;
     }
     else
     {

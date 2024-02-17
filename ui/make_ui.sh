@@ -14,19 +14,12 @@ rm Makefile
 sudo apt-get install libcrypto++-dev libcrypto++-doc libcrypto++-utils
 # qmake "CONFIG+=releaselode" 
 
-
-
-cd ..
 # rm -fr build-ui-cli-debug
 mkdir build-ui-cli-debug
 cd build-ui-cli-debug
-qmake ../ui/ui.pro -spec linux-g++ CONFIG+=debug
+qmake ../src/ui.pro -spec linux-g++ CONFIG+=debug
 # qmake ../ui.pro
-cp DF_UI ../ui
-# qmake ../ui.pro -spec linux-g++ CONFIG+=debug CONFIG+=static
-
-
-
+# qmake ../src/ui.pro -spec linux-g++ CONFIG+=debug CONFIG+=static
 
 # rm -fr build-ui-cli-debug
 # mkdir build-ui-cli-debug
@@ -37,5 +30,9 @@ cp DF_UI ../ui
 # # qmake ../ui.pro -spec linux-g++ CONFIG+=debug CONFIG+=static
 
 make --debug
+
+UBUNTU_VERSION=$(lsb_release -rs)
+DF_UI_VERSIONED="station_ui_ubuntu"$UBUNTU_VERSION 
+cp DF_UI ../$DF_UI_VERSIONED
 
 echo "UI make complete"

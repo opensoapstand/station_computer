@@ -11,8 +11,10 @@ gsettings set org.gnome.desktop.interface enable-animations false  # instant tra
 echo 
 while true
 	do
-
-	    DISPLAY=:0 xterm -maximized /home/df-admin/production/bin/DF_UI
+		UBUNTU_VERSION=$(lsb_release -rs)
+		CONTROLLER_VERSIONED="station_controller_ubuntu"$UBUNTU_VERSION 
+		UI_VERSIONED="station_ui_ubuntu"$UBUNTU_VERSION 
+	    DISPLAY=:0 xterm -maximized /home/df-admin/production/bin/$UI_VERSIONED
         sleep 1
 done
 

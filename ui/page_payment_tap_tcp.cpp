@@ -54,8 +54,8 @@ page_payment_tap_tcp::page_payment_tap_tcp(QWidget *parent) : QWidget(parent),
     checkCardTappedTimer->setInterval(500); // was 500
 
     // Idle Payment reset
-    idlePaymentTimer = new QTimer(this);
-    connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
+    // idlePaymentTimer = new QTimer(this);
+    // connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
 
     ui->pushButton_payment_bypass->setEnabled(false);
     ui->label_title->hide();
@@ -65,7 +65,6 @@ page_payment_tap_tcp::page_payment_tap_tcp(QWidget *parent) : QWidget(parent),
 void page_payment_tap_tcp::initiate_tap_setup()
 {
     qDebug() << "InitializingTap payment";
-    tap_payment = true;
     std::map<std::string, std::string> configMap = readConfigFile();
     std::map<std::string, std::string> deviceStatus = checkDeviceStatus(connectSecondarySocket());
     if (deviceStatus["MACLABEL_IN_SESSION"] != "")
@@ -144,7 +143,7 @@ void page_payment_tap_tcp::on_pushButton_payment_bypass_clicked()
 void page_payment_tap_tcp::cancelPayment()
 {
     // finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
-    checkPacketReceivedTimer->stop();
+    // checkPacketReceivedTimer->stop();
 }
 
 void page_payment_tap_tcp::showEvent(QShowEvent *event)
@@ -405,56 +404,46 @@ bool page_payment_tap_tcp::exitConfirm()
             } });
 
         timeoutTimer->start(1000); // Update every 1000 milliseconds (1 second)
-
+        
         msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         int ret = msgBox->exec();
         msgBox = nullptr;
-        bool success;
+        timeoutTimer->stop();
+        
         switch (ret)
         {
         case QMessageBox::Yes:
-        {
-            // resetPaymentPage();
-            // p_page_idle->thisMachine->resetTransactionLogging();
             return true;
-        }
-        break;
         case QMessageBox::No:
-        {
             return false;
         }
-        break;
-        }
-    }
-    else
-    {
-        // exit, no questions asked.
-        // resetPaymentPage();
-        // p_page_idle->thisMachine->resetTransactionLogging();
-        return true;
+
+        // WARNING: if messagbox still active while qr-page times out, it will still run in the background. 
+        return false; // return false as default e.g. if message box timed out
     }
 }
 
 // Navigation: Back to Drink Size Selection
 void page_payment_tap_tcp::on_pushButton_previous_page_clicked()
 {
-    qDebug() << "In previous page button" << endl;
+    qDebug() << "In previous page button";
 
     if (exitConfirm())
     {
         stop_tap_action_thread = true;
         stop_authorization_thread = true;
         // stopPayTimers();
-        qDebug() << "Stopping the threads";
+        // qDebug() << "Stopping the threads";
         std::map<std::string, std::string> cancelResp = cancelTransaction(connectSecondarySocket());
         qDebug() << "My socket address is " << QString::fromStdString(socketAddr) << endl;
         if (cancelResp["RESULT"] == "OK")
         {
             qDebug() << QString::fromUtf8(cancelResp["RESULT"].c_str());
+            sleep(3);
             finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
             qDebug() << "Session finished sent";
         }
-        p_page_idle->thisMachine->hasMixing() ? hideCurrentPageAndShowProvided(p_page_product_mixing) : hideCurrentPageAndShowProvided(p_page_product);
+    p_page_idle->thisMachine->hasMixing() ? hideCurrentPageAndShowProvided(p_page_product_mixing) : hideCurrentPageAndShowProvided(p_page_product);
     }
 }
 

@@ -126,7 +126,6 @@ private:
 
     void cancelPayment();
 
-    bool response;
     bool tap_payment;
     int lastTransactionId;
 

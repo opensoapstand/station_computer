@@ -332,7 +332,6 @@ bool page_dispenser::sendToUX410()
     while (waitForAck < 3)
     {
         cout << "Wait for ACK counter: " << waitForAck << endl;
-        qDebug() << "Wait for ACK counter: " << endl;
         com.sendPacket(pktToSend, uint(pktToSend.size()));
         std::cout << "sendtoUX410 Electronic Card Reader: " << paymentPacket.getSendPacket() << endl;
 
@@ -425,7 +424,7 @@ void page_dispenser::dispensing_end_admin()
                 if (sendToUX410())
                 {
                     waitForUX410();
-                    qDebug() << "Payment Reversed" << endl;
+                    qDebug() << "Payment Reversed";
                     pktResponded.clear();
                     com.flushSerial();
                 }

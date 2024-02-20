@@ -93,7 +93,7 @@ private slots:
 
     void on_pushButton_auto_dispense_large_clicked();
     void on_pushButton_auto_dispense_medium_clicked();
-    void on_pushButton_auto_dispense_small_clicked();
+    void on_pushButton_auto_dispense_selected_quantity_clicked();
 
     void update_changes_to_portal();
     void buttonGroup_edit_product_Pressed(int buttonId);
@@ -144,19 +144,34 @@ private slots:
 
     void on_pushButton_activate_slot_5_clicked();
 
+    void on_pushButton_set_quantity_small_clicked();
+
+    void on_pushButton_set_quantity_medium_clicked();
+
+    void on_pushButton_set_quantity_large_clicked();
+
+    void on_pushButton_set_quantity_custom_clicked();
+
+    void on_pushButton_set_quantity_test_clicked();
+
+    void on_pushButton_set_quantity_sample_clicked();
+
 private:
     void setSelectedProduct(int pnumber);
     void setStatusTextLabel(QLabel* label, QString statusText, bool displayRawStatus);
     void setButtonPressCountLabel(bool init);
     void setButtonPressCountLabel2(bool init);
+    void setSizeIndex(int size_index);
 
     int m_activePNumber;
+    int m_selected_size_index;
 
 
     QPushButton *buttons_select_additive[ADDITIVES_PER_SLOT_COUNT_MAX];
     QPushButton *buttons_slot_shortcuts[BASE_LINE_COUNT_MAX];
 
     QPushButton *buttons_select_mix[DISPENSE_PRODUCTS_PER_BASE_LINE_MAX];
+    QPushButton *buttons_select_size[SIZES_COUNT];
 
     void showEvent(QShowEvent *event);
     Ui::page_maintenance_dispenser *ui;

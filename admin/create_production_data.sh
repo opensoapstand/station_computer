@@ -28,9 +28,17 @@ sudo -u df-admin mkdir /home/df-admin/production/references
 sudo -u df-admin mkdir /home/df-admin/production/references/logos
 sudo -u df-admin mkdir /home/df-admin/production/admin/tap_payment
 
+# Get Ubuntu version
+UBUNTU_VERSION=$(lsb_release -rs)
+CONTROLLER_VERSIONED="station_controller_ubuntu"$UBUNTU_VERSION 
+UI_VERSIONED="station_ui_ubuntu"$UBUNTU_VERSION 
+
+
 # move binary files
 scp /home/df-admin/station_computer/ui/DF_UI /home/df-admin/production/bin/DF_UI
+scp /home/df-admin/station_computer/ui/$UI_VERSIONED /home/df-admin/production/bin
 scp /home/df-admin/station_computer/fsm/controller /home/df-admin/production/bin/controller
+scp /home/df-admin/station_computer/fsm/controller /home/df-admin/production/bin/$CONTROLLER_VERSIONED
 
 # move auxiliary to production folder
 sudo -u df-admin scp -r /home/df-admin/station_computer/ui/references /home/df-admin/production

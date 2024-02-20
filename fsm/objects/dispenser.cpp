@@ -762,12 +762,16 @@ void dispenser::linkActiveProductVolumeUpdate()
 void dispenser::linkDispenserFlowSensorTick()
 {
     auto lambdaFunc = [this]()
-    { this->registerFlowSensorTickFromPcb(); };
+    { 
+        this->registerFlowSensorTickFromPcb(); 
+
+    };
     m_pcb->registerFlowSensorTickCallback(getSlot(), lambdaFunc);
 }
 
 void dispenser::registerFlowSensorTickFromPcb()
 {
+    
 
     // the actual dispensed produce gets always registered
     getActiveProduct()->registerFlowSensorTickFromPcb();

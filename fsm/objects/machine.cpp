@@ -31,17 +31,67 @@ machine::machine()
     // m_button_lights_behaviour = Button_lights_behaviour::IDLE_OFF;
     m_button_animation_program = 0;
 }
-
+std::string machine::executeCommmandLineCommand(const char *cmd)
+{
+    std::array<char, 128> buffer;
+    std::string result;
+    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
+    if (!pipe)
+    {
+        throw std::runtime_error("popen() failed!");
+    }
+    while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr)
+    {
+        result += buffer.data();
+    }
+    return result;
+}
 void machine::setup(product *pnumbers)
 {
+
+    std::string kernelVersion = executeCommmandLineCommand("uname -r");
+    int major, minor, patch;
+    sscanf(kernelVersion.c_str(), "%d.%d.%d", &major, &minor, &patch);
+
+    debugOutput::sendMessage(kernelVersion, MSG_INFO);
+    // Compare to versions 5.4.0 --> Linux kernel from ubuntu 18
+    // Compare to versions 5.15.0 --> Linux kernel from ubuntu 22
+
+    int pin_enable_3point3V;
+    int pin_enable_24V;
+    int pin_enable_5V;
+
+    if (major <= 5 && minor <= 4)
+    {
+        debugOutput::sendMessage("Ubuntu 18.04. Update the computer to Ubuntu 22.04 when possible.", MSG_INFO);
+        pin_enable_3point3V = IO_PIN_ENABLE_3point3V_BEFORE_SYSFS_DEPRECATED;
+        pin_enable_5V = IO_PIN_ENABLE_5V_BEFORE_SYSFS_DEPRECATED;
+        pin_enable_24V = IO_PIN_ENABLE_24V_BEFORE_SYSFS_DEPRECATED;
+    }
+    else if (major >= 5 && minor >= 15)
+    {
+        debugOutput::sendMessage("Ubuntu 22.04. --> sysfs used, which is deprecated. Transform to character based gpio interface.", MSG_INFO);
+        // std::cout << "new" << std::endl;
+        pin_enable_3point3V = IO_PIN_ENABLE_3point3V_AFTER_SYSFS_DEPRECATED;
+        pin_enable_5V = IO_PIN_ENABLE_5V_AFTER_SYSFS_DEPRECATED;
+        pin_enable_24V = IO_PIN_ENABLE_24V_AFTER_SYSFS_DEPRECATED;
+    }
+    else
+    {
+        debugOutput::sendMessage("between 5.4.0 and 5.15.0. Check functionality and choose between the pin numbers needed...... Ubuntu 22.04 functionality chosen for now.  ", MSG_ERROR);
+        pin_enable_3point3V = IO_PIN_ENABLE_3point3V_AFTER_SYSFS_DEPRECATED;
+        pin_enable_5V = IO_PIN_ENABLE_5V_AFTER_SYSFS_DEPRECATED;
+        pin_enable_24V = IO_PIN_ENABLE_24V_AFTER_SYSFS_DEPRECATED;
+    }
+
     // 3.3V control power to the pcb.
-    switch_3point3V = new FSModdyseyx86GPIO(IO_PIN_ENABLE_3point3V);
+    switch_3point3V = new FSModdyseyx86GPIO(pin_enable_3point3V);
     signal3point3VEnabled = false;
     switch_3point3V->setPinAsInputElseOutput(false); // set as output
     pcb3point3VPowerSwitch(true);
 
     // the 24V power has a master on/off switch
-    switch_24V = new FSModdyseyx86GPIO(IO_PIN_ENABLE_24V);
+    switch_24V = new FSModdyseyx86GPIO(pin_enable_24V);
     power24VEnabled = false;
     switch_24V->setPinAsInputElseOutput(false); // set as output
 

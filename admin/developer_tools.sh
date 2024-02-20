@@ -44,8 +44,11 @@ make_options () {
         sudo systemctl stop ui_soapstand
         sudo systemctl stop controller_soapstand
 
-        sudo scp /home/df-admin/station_computer/ui/DF_UI /home/df-admin/production/bin/DF_UI
-        sudo scp /home/df-admin/station_computer/fsm/controller /home/df-admin/production/bin/controller
+        UBUNTU_VERSION=$(lsb_release -rs)
+        CONTROLLER_VERSIONED="station_controller_ubuntu"$UBUNTU_VERSION 
+        UI_VERSIONED="station_ui_ubuntu"$UBUNTU_VERSION 
+        sudo scp /home/df-admin/station_computer/ui/$UI_VERSIONED /home/df-admin/production/bin
+        sudo scp /home/df-admin/station_computer/fsm/$CONTROLLER_VERSIONED /home/df-admin/production/bin
         
         sudo systemctl start controller_soapstand.service
         sudo systemctl start ui_soapstand.service
@@ -89,8 +92,11 @@ do
             sudo systemctl stop ui_soapstand
             sudo systemctl stop controller_soapstand
             
-            sudo scp /home/df-admin/station_computer/ui/DF_UI /home/df-admin/production/bin/DF_UI
-            sudo scp /home/df-admin/station_computer/fsm/controller /home/df-admin/production/bin/controller
+            UBUNTU_VERSION=$(lsb_release -rs)
+            CONTROLLER_VERSIONED="station_controller_ubuntu"$UBUNTU_VERSION 
+            UI_VERSIONED="station_ui_ubuntu"$UBUNTU_VERSION 
+            sudo scp /home/df-admin/station_computer/ui/$UI_VERSIONED /home/df-admin/production/bin
+            sudo scp /home/df-admin/station_computer/fsm/$CONTROLLER_VERSIONED /home/df-admin/production/bin
             
             sudo systemctl start ui_soapstand.service
             sudo systemctl start controller_soapstand.service

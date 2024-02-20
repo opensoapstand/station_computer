@@ -10,7 +10,7 @@
         <file>page_idle.cpp</file>
         <file>page_idle.ui</file>
 
-        <file>ui_page_init.h</file>
+        <!-- <file>ui_page_init.h</file> -->
         <file>page_init.ui</file>
         <file>page_init.h</file>
         <file>page_init.cpp</file>
@@ -61,16 +61,17 @@
         <file>page_select_product.h</file>
         <file>page_end.cpp</file>
         <file>page_end.h</file>
-        <file>ui_page_dispenser.h</file>
-        <file>ui_page_help.h</file>
-        <file>ui_page_idle.h</file>
-        <file>ui_page_maintenance_dispenser.h</file>
-        <file>ui_page_maintenance.h</file>
-        <file>ui_page_qr_payment.h</file>
-        <file>ui_page_product.h</file>
-        <file>ui_page_product_mixing.h</file>
-        <file>ui_page_select_product.h</file>
-        <file>ui_page_end.h</file>
+
+        <!-- <file>ui_page_dispenser.h</file> -->
+        <!-- <file>ui_page_help.h</file> -->
+        <!-- <file>ui_page_idle.h</file> -->
+        <!-- <file>ui_page_maintenance_dispenser.h</file> -->
+        <!-- <file>ui_page_maintenance.h</file> -->
+        <!-- <file>ui_page_qr_payment.h</file> -->
+        <!-- <file>ui_page_product.h</file> -->
+        <!-- <file>ui_page_product_mixing.h</file> -->
+        <!-- <file>ui_page_select_product.h</file> -->
+        <!-- <file>ui_page_end.h</file> -->
 
     </qresource>
 </RCC>

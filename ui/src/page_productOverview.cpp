@@ -572,13 +572,13 @@ void page_product_overview::updatePriceLabel()
             {
                 selectedBottlePrice = p_page_idle->thisMachine->getSelectedBottle()->getPriceOfSelectedBottle();
                 selectedPriceCorrected = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice) + selectedBottlePrice;
-                qDebug() << "Selcted price corrected" << selectedPriceCorrected;
+                qDebug() << "Price (bottle selected): " << selectedPriceCorrected;
                 discountAmount = selectedPrice - (selectedPriceCorrected - selectedBottlePrice);
             }
             else
             {
                 selectedPriceCorrected = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
-                qDebug() << "Selcted price corrected" << selectedPriceCorrected;
+                qDebug() << "Price (no bottle selected): " << selectedPriceCorrected;
                 discountAmount = selectedPrice - selectedPriceCorrected;
                 // do hide labels for bottle
             }
@@ -586,7 +586,7 @@ void page_product_overview::updatePriceLabel()
         else
         {
             selectedPriceCorrected = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
-            qDebug() << "Selcted price corrected" << selectedPriceCorrected;
+            qDebug() << "Price selected: " << selectedPriceCorrected;
             discountAmount = selectedPrice - selectedPriceCorrected;
         }
 

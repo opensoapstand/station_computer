@@ -1,5 +1,9 @@
 /.vscode/
 ui/DF_UI 
+ui/station_ui_ubuntu18.04 
+ui/station_ui_ubuntu22.04 
+ui/station_ui_ubuntu24.04 
+
 fsm/.vscode/
 fsm/.vs/fsm/v15/Browse.VC.db
 fsm/.vs/fsm/v15/Browse.VC.opendb
@@ -11,7 +15,13 @@ fsm/.vs/fsm/v15/ipch/AutoPCH/a7b8246a94880a47/MCPGPIO.ipch
 fsm/makefile.save
 
 fsm/build
-fsm/controller
+fsm/station_controller
+fsm/station_controller_18.04
+fsm/station_controller_22.04
+fsm/station_controller_24.04
+
+.qmake.stash
+
 sqlite/build
 *.db-journal
 

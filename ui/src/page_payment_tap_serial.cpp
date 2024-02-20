@@ -42,7 +42,7 @@ page_payment_tap_serial::page_payment_tap_serial(QWidget *parent) : QWidget(pare
 void page_payment_tap_serial::stopPayTimers()
 {
     if (readTimer && readTimer->isActive()) {
-        qDebug() << "Cancel readTimer" ;
+        qDebug() << "Cancel readTimer";
         readTimer->stop();
     }
 }
@@ -124,7 +124,7 @@ void page_payment_tap_serial::rebootDevice()
 // Navigation: Back to Drink Size Selection
 void page_payment_tap_serial::on_pushButton_previous_page_clicked()
 {
-    qDebug() << "In previous page button" ;
+    qDebug() << "In previous page button";
 
     if (exitConfirm())
     {
@@ -377,7 +377,7 @@ bool page_payment_tap_serial::waitForUX410()
     bool waitResponse = false;
     while (!waitResponse)
     {
-        qDebug() << "Waiting for packet from TAP" ;
+        qDebug() << "Waiting for packet from TAP";
         usleep(1000);
         QCoreApplication::processEvents();
         cout << readPacket << endl;

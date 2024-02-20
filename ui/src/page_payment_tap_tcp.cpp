@@ -54,8 +54,8 @@ page_payment_tap_tcp::page_payment_tap_tcp(QWidget *parent) : QWidget(parent),
     checkCardTappedTimer->setInterval(500); // was 500
 
     // Idle Payment reset
-    idlePaymentTimer = new QTimer(this);
-    connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
+    // idlePaymentTimer = new QTimer(this);
+    // connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
 
     ui->pushButton_payment_bypass->setEnabled(false);
     ui->label_title->hide();
@@ -65,7 +65,6 @@ page_payment_tap_tcp::page_payment_tap_tcp(QWidget *parent) : QWidget(parent),
 void page_payment_tap_tcp::initiate_tap_setup()
 {
     qDebug() << "InitializingTap payment";
-    tap_payment = true;
     std::map<std::string, std::string> configMap = readConfigFile();
     std::map<std::string, std::string> deviceStatus = checkDeviceStatus(connectSecondarySocket());
     if (deviceStatus["MACLABEL_IN_SESSION"] != "")
@@ -80,7 +79,7 @@ void page_payment_tap_tcp::initiate_tap_setup()
         std::map<std::string, std::string> testResponse = testMac(connectSocket(), configMap["MAC_KEY"], configMap["MAC_LABEL"]);
         if (testResponse["RESPONSE_TEXT"] == "Match")
         {
-            qDebug() << "Test Mac Command Matched" ;
+            qDebug() << "Test Mac Command Matched";
         }
         else
         {
@@ -90,7 +89,7 @@ void page_payment_tap_tcp::initiate_tap_setup()
     }
     else
     {
-        qDebug() << "No file config" ;
+        qDebug() << "No file config";
         registerDevice(connectSocket());
     }
 }
@@ -99,18 +98,18 @@ void page_payment_tap_tcp::stopPayTimers()
 
     if (checkPacketReceivedTimer != nullptr)
     {
-        qDebug() << "cancel payment progress Timer" ;
+        qDebug() << "cancel payment progress Timer";
         checkPacketReceivedTimer->stop();
     }
     if (checkCardTappedTimer != nullptr)
     {
-        qDebug() << "cancel TAP progress Timer" ;
+        qDebug() << "cancel TAP progress Timer";
         checkCardTappedTimer->stop();
     }
 
     if (idlePaymentTimer != nullptr)
     {
-        qDebug() << "cancel page_idle payment Timer" ;
+        qDebug() << "cancel page_idle payment Timer";
         idlePaymentTimer->stop();
     }
 }
@@ -144,7 +143,7 @@ void page_payment_tap_tcp::on_pushButton_payment_bypass_clicked()
 void page_payment_tap_tcp::cancelPayment()
 {
     // finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
-    checkPacketReceivedTimer->stop();
+    // checkPacketReceivedTimer->stop();
 }
 
 void page_payment_tap_tcp::showEvent(QShowEvent *event)
@@ -217,7 +216,7 @@ void page_payment_tap_tcp::tapPaymentHandler()
 
     int socket = connectSocket();
     socketAddr = to_string(socket);
-    qDebug() << "Tap terminal Socket Connected to " << QString::fromStdString(socketAddr) << endl;
+    qDebug() << "Tap terminal Socket Connected to " << QString::fromStdString(socketAddr);
     std::map<std::string, std::string> configMap = readConfigFile();
     MAC_KEY = configMap["MAC_KEY"];
     MAC_LABEL = configMap["MAC_LABEL"];
@@ -233,16 +232,19 @@ void page_payment_tap_tcp::tapPaymentHandler()
 void page_payment_tap_tcp::startPaymentProcess()
 {
     state_tap_payment = s_tap_payment_processing;
+    int pnumber_selected = p_page_idle->thisMachine->getSelectedProduct()->getPNumber();
+    double price = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
+    if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize() == SIZE_CUSTOM_INDEX)
+    {
+        double max_custom_volume = p_page_idle->thisMachine->getSelectedProduct()->getVolumeOfSelectedSize();
+        price = price*max_custom_volume;
+    }
+    price = p_page_idle->thisMachine->getPriceWithDiscount(price);
+
     if (numberOfTapAttempts < 3)
     {
         numberOfTapAttempts += 1;
-        int pnumber_selected = p_page_idle->thisMachine->getSelectedProduct()->getPNumber();
-        double price = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
-        // if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar() == 'c')
-        // {
-        //     price = p_page_idle->thisMachine->getSelectedProduct()->getPriceCustom();
-        // }
-        //price = p_page_idle->thisMachine->getPriceWithDiscount(price);
+        
         std::ostringstream stream;
         stream << std::fixed << std::setprecision(2) << price;
         std::string authCommand = authorizationCommand(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, stream.str());
@@ -405,56 +407,49 @@ bool page_payment_tap_tcp::exitConfirm()
             } });
 
         timeoutTimer->start(1000); // Update every 1000 milliseconds (1 second)
-
+        
         msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         int ret = msgBox->exec();
         msgBox = nullptr;
-        bool success;
+        timeoutTimer->stop();
+        bool exitPage = false; //return false as default e.g. if message box timed out
         switch (ret)
         {
         case QMessageBox::Yes:
-        {
-            // resetPaymentPage();
-            // p_page_idle->thisMachine->resetTransactionLogging();
-            return true;
-        }
-        break;
+            exitPage = true;
+            break;
+            // return true;
         case QMessageBox::No:
-        {
-            return false;
+            exitPage = false;
+            break;
+            // return false;
         }
-        break;
-        }
-    }
-    else
-    {
-        // exit, no questions asked.
-        // resetPaymentPage();
-        // p_page_idle->thisMachine->resetTransactionLogging();
-        return true;
+
+        // WARNING: if messagbox still active while TAP page times out, it will still run in the background. 
+        return exitPage; // return false as default e.g. if message box timed out
     }
 }
 
-// Navigation: Back to Drink Size Selection
+// Navigation: Back to Product Size Selection
 void page_payment_tap_tcp::on_pushButton_previous_page_clicked()
 {
-    qDebug() << "In previous page button" ;
+    qDebug() << "In previous page button";
 
     if (exitConfirm())
     {
         stop_tap_action_thread = true;
         stop_authorization_thread = true;
-        // stopPayTimers();
-        qDebug() << "Stopping the threads";
         std::map<std::string, std::string> cancelResp = cancelTransaction(connectSecondarySocket());
-        qDebug() << "My socket address is " << QString::fromStdString(socketAddr) << endl;
+        qDebug() << "My socket address is " << QString::fromStdString(socketAddr);
         if (cancelResp["RESULT"] == "OK")
         {
             qDebug() << QString::fromUtf8(cancelResp["RESULT"].c_str());
+            // It needs around 2-3 seconds before sending finish session. Tried without sleep and/or changed sleep time to 1 and 2 second, it crashes
+            sleep(3);
             finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
             qDebug() << "Session finished sent";
         }
-        p_page_idle->thisMachine->hasMixing() ? hideCurrentPageAndShowProvided(p_page_product_mixing) : hideCurrentPageAndShowProvided(p_page_product);
+    p_page_idle->thisMachine->hasMixing() ? hideCurrentPageAndShowProvided(p_page_product_mixing) : hideCurrentPageAndShowProvided(p_page_product);
     }
 }
 
@@ -476,6 +471,5 @@ void page_payment_tap_tcp::resetPaymentPage()
 
     stopPayTimers();
     p_page_idle->thisMachine->resetTransactionLogging();
-    // transactionLogging = "";
-    qDebug() << "Cancelled";
+    qDebug() << "Reset Payment Page";
 }

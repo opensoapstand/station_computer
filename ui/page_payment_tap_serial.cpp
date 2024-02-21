@@ -29,6 +29,10 @@ page_payment_tap_serial::page_payment_tap_serial(QWidget *parent) : QWidget(pare
 {
     // Fullscreen background setup
     ui->setupUi(this);
+    // Payment Serial Page Timeout Timer
+    paymentSerialPageEndTimer = new QTimer(this);
+    paymentSerialPageEndTimer->setInterval(1000);
+    connect(paymentSerialPageEndTimer, SIGNAL(timeout()), this, SLOT(onPaymentSerialPageTimeoutTick()));
     // Payment Tap Ready
     readTimer = new QTimer(this);
     connect(readTimer, SIGNAL(timeout()), this, SLOT(readTimer_loop()));
@@ -140,6 +144,8 @@ void page_payment_tap_serial::showEvent(QShowEvent *event)
 {
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
+    paymentSerialPageEndTimer->start(1000);
+    _paymentSerialPageTimeoutSec = PAGE_PAYMENT_TAP_SERIAL_PAGE_TIMEOUT_SECONDS;
 
     statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
     statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
@@ -242,6 +248,7 @@ void page_payment_tap_serial::on_pushButton_to_idle_clicked()
 
 void page_payment_tap_serial::hideCurrentPageAndShowProvided(QWidget *pageToShow, bool cancelTapPayment)
 {
+    paymentSerialPageEndTimer->stop();
     resetPaymentPage(cancelTapPayment);
     statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
@@ -504,5 +511,20 @@ void page_payment_tap_serial::readTimer_loop()
                 }
             }
         }
+    }
+}
+
+void page_payment_tap_serial::onPaymentSerialPageTimeoutTick()
+{
+    _paymentSerialPageTimeoutSec= _paymentSerialPageTimeoutSec - 1;
+    if (_paymentSerialPageTimeoutSec >= 0)
+    {
+        // qDebug() << "Tick Down: " << _paymentSerialPageTimeoutSec;
+    }
+    else
+    {
+        _paymentSerialPageTimeoutSec = PAGE_PAYMENT_TAP_SERIAL_PAGE_TIMEOUT_SECONDS;
+        // qDebug() << "Timer Done!" << _paymentSerialPageTimeoutSec;
+        p_page_idle->thisMachine->hasMixing() ? hideCurrentPageAndShowProvided(p_page_product_mixing,true) : hideCurrentPageAndShowProvided(p_page_product,true);
     }
 }

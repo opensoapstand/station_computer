@@ -54,8 +54,9 @@ page_payment_tap_tcp::page_payment_tap_tcp(QWidget *parent) : QWidget(parent),
     checkCardTappedTimer->setInterval(500); // was 500
 
     // Idle Payment reset
-    // idlePaymentTimer = new QTimer(this);
-    // connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
+    idlePaymentTimer = new QTimer(this);
+    idlePaymentTimer->setInterval(1000);
+    connect(idlePaymentTimer, SIGNAL(timeout()), this, SLOT(idlePaymentTimeout()));
 
     ui->pushButton_payment_bypass->setEnabled(false);
     ui->label_title->hide();
@@ -150,6 +151,8 @@ void page_payment_tap_tcp::showEvent(QShowEvent *event)
 {
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
+    idlePaymentTimer->start(1000);
+    _pageTimeoutCounterSecondsLeft = PAGE_PAYMENT_TAP_TCP_PAGE_TIMEOUT_SECONDS;
 
     statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
     statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
@@ -186,6 +189,7 @@ void page_payment_tap_tcp::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 
     resetPaymentPage();
     statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
+    idlePaymentTimer->stop();
 
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
 
@@ -463,7 +467,16 @@ void page_payment_tap_tcp::on_pushButton_to_idle_clicked()
 
 void page_payment_tap_tcp::idlePaymentTimeout()
 {
-    hideCurrentPageAndShowProvided(p_page_idle);
+    if (--_pageTimeoutCounterSecondsLeft >= 0)
+    {
+        // qDebug() << "Tick Down: " << _pageTimeoutCounterSecondsLeft;
+    }
+    else
+    {
+        // qDebug() << "Timer Done!" << _pageTimeoutCounterSecondsLeft;
+        _pageTimeoutCounterSecondsLeft = PAGE_PAYMENT_TAP_TCP_PAGE_TIMEOUT_SECONDS;
+        p_page_idle->thisMachine->hasMixing() ? hideCurrentPageAndShowProvided(p_page_product_mixing) : hideCurrentPageAndShowProvided(p_page_product);
+    }
 }
 void page_payment_tap_tcp::resetPaymentPage()
 {

@@ -230,6 +230,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     isDispenseButtonPressed = false;
     activeEditField = "";
 
+    maintainProductPageEndTimer->start();
     reset_all_dispense_stats();
     update_volume_received_dispense_stats(0);
     updateProductLabelValues(false);
@@ -464,7 +465,7 @@ void page_maintenance_dispenser::onMaintainProductPageTimeoutTick()
 
     if (--_maintainProductPageTimeoutSec >= 0)
     {
-        //        qDebug() << "Maintain Product Tick Down: " << _maintainProductPageTimeoutSec ;
+        // qDebug() << "Maintain Product Tick Down: " << _maintainProductPageTimeoutSec ;
     }
     else
     {

@@ -119,6 +119,7 @@ private:
     QTimer *checkPacketReceivedTimer;
     QTimer *checkCardTappedTimer;
 
+    int _pageTimeoutCounterSecondsLeft;
     QTimer *idlePaymentTimer;
     QTimer *inFlightTimer;
 

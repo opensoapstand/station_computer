@@ -80,10 +80,13 @@ using namespace std;
 #define PAGE_IDLE_RECEIPT_PRINTER_TIMEOUT_SECONDS 3
 #define PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN 300
 
+#define PAGE_PAYMENT_TAP_SERIAL_PAGE_TIMEOUT_SECONDS 60
+#define PAGE_PAYMENT_TAP_TCP_PAGE_TIMEOUT_SECONDS 300
 #define QR_PAGE_TIMEOUT_SECONDS  420
 #define QR_PAGE_TIMEOUT_WARNING_SECONDS  120
 #define PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS 600
 #define PAGE_MAINTENANCE_TIMEOUT_SECONDS 60
+#define PAGE_MAINTENANCE_GENERAL_TIMEOUT_SECONDS 3600
 #define PAGE_THANK_YOU_TIMEOUT_SECONDS 7
 #define SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS 3000
 #define QR_PROCESSED_PERIODICAL_CHECK_SECONDS 5
@@ -149,6 +152,7 @@ using namespace std;
 #define PAGE_DISPENSE_VOLUME_ICON "label_volume_icon.png"
 #define PAGE_DISPENSE_PRODUCT_ICON "label_product_icon.png"
 #define PAGE_QR_PAY_BACKGROUND_PATH "background_qr.png"
+#define PAGE_QR_WARNING_ICON "page_qr_warning_icon.png"
 #define PAGE_MAINTENANCE_BACKGROUND_PATH "background_maintenance.png"
 #define ERROR_MESSAGE_PATH "error_message.png"
 #define PAGE_TAP_CANCEL "tapCancel.png"
@@ -164,6 +168,8 @@ using namespace std;
 #define KEYBOARD_IMAGE_PATH "soapstand-keyboard.png"
 #define UNIVERSAL_LINE_EDIT_KEYBOARD_WITH_CAPS_UPPERCASE_IMAGE_PATH "universal_lineEdit_with_caps_uppercase_keyboard.png"
 #define UNIVERSAL_LINE_EDIT_KEYBOARD_WITH_CAPS_LOWERCASE_IMAGE_PATH "universal_lineEdit_with_caps_lowercase_keyboard.png"
+#define UNIVERSAL_LINE_EDIT_KEYBOARD_WITH_CAPS_WITH_CANCEL_UPPERCASE_IMAGE_PATH "universal_lineEdit_with_caps_with_cancel_uppercase_keyboard.png"
+#define UNIVERSAL_LINE_EDIT_KEYBOARD_WITH_CAPS_WITH_CANCEL_LOWERCASE_IMAGE_PATH "universal_lineEdit_with_caps_with_cancel_lowercase_keyboard.png"
 #define UNIVERSAL_LINE_EDIT_KEYBOARD_WITHOUT_CAPS_IMAGE_PATH "universal_lineEdit_without_caps_keyboard.png"
 #define UNIVERSAL_TEXT_EDIT_KEYBOARD_UPPERCASE_IMAGE_PATH "universal_textEdit_uppercase_keyboard.png"
 #define UNIVERSAL_TEXT_EDIT_KEYBOARD_LOWERCASE_IMAGE_PATH "universal_textEdit_lowercase_keyboard.png"

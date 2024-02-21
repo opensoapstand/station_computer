@@ -204,6 +204,7 @@ void page_how_to::onHelpTimeoutTick()
 {
     if (--_helpIdleTimeoutSec >= 0)
     {
+        // qDebug() << "page_how_to Tick Down: " << _helpIdleTimeoutSec ;
     }
     else
     {

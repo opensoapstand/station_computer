@@ -14,15 +14,13 @@ int selection = 0;
 page_maintenance::page_maintenance(QWidget *parent) : QWidget(parent),
                                                       ui(new Ui::page_maintenance)
 {
-
-    QPalette palette;
-    palette.setBrush(QPalette::Background, Qt::white);
-    this->setPalette(palette);
-
     // Fullscreen background setup
     ui->setupUi(this);
 
     // background = background.scaled(this->size(), Qt::IgnoreAspectRatio);
+    QPalette palette;
+    palette.setBrush(QPalette::Background, Qt::white);
+    this->setPalette(palette);
 
     page_maintenanceEndTimer = new QTimer(this);
     page_maintenanceEndTimer->setInterval(1000);
@@ -66,8 +64,6 @@ void page_maintenance::showEvent(QShowEvent *event)
     statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
     
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
-    
-    _page_maintenanceTimeoutSec = PAGE_MAINTENANCE_TIMEOUT_SECONDS;
     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_MAINTENANCE_BACKGROUND_PATH); // delays the page loading significantly.
 
     QString qr_manual_full_path = p_page_idle->thisMachine->getTemplatePathFromName(QR_MANUAL_PATH);
@@ -183,6 +179,8 @@ void page_maintenance::showEvent(QShowEvent *event)
             labels_product_position[slot_index]->hide();
         }
     }
+    _page_maintenanceTimeoutSec = PAGE_MAINTENANCE_TIMEOUT_SECONDS;
+    page_maintenanceEndTimer->start();
     qDebug() << "End maintenance load";
 }
 
@@ -208,9 +206,9 @@ void page_maintenance::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 
 void page_maintenance::onPage_maintenanceTimeoutTick()
 {
-
     if (--_page_maintenanceTimeoutSec >= 0)
     {
+        // qDebug() << "page_maintenance: Tick Down - " << _page_maintenanceTimeoutSec;
     }
     else
     {

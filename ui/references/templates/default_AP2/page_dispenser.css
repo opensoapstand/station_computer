@@ -111,13 +111,6 @@
    font-weight: 400;
 }
 
-#pushButton_debug_Button {
-   color: #5E8580;
-   /* background-color: transparent; */
-   border: 5px;
-   border-color: #5E8580;
-}
-
 #pushButton_abort {
    background: #FFF;
    border: 5px solid #895E25;
@@ -141,7 +134,13 @@ QPushButton {
    text-align: center;
    border-radius: 20px;
    border: none;
-  
+}
+
+#pushButton_debug_Button {
+   /* color: #5E8580; */
+   background-color: transparent;
+   /* border: 5px; */
+   /* border-color: #5E8580; */
 }
 
 QMessageBox {

@@ -43,7 +43,6 @@ public:
     ~page_product_menu();
 
     void select_submenu_option(int position);
-    void displayProducts();
 
     QLabel *labels_base_product_bg[4];
     QPushButton *pushButtons_base_product[4];
@@ -55,29 +54,15 @@ public:
     QLabel *labels_dispense_product_name[6];
     QLabel *labels_product_overlay_text[6];
 
-    QPushButton *pushButtons_product_select[4];
-    QLabel *labels_product_picture[4];
-    QLabel *labels_product_name[4];
-
 private slots:
-    // **** Navigation ****
-    // void on_nextPageButton_clicked();
     void on_pushButton_base_product_1_clicked();
     void on_pushButton_base_product_2_clicked();
     void on_pushButton_base_product_3_clicked();
     void on_pushButton_base_product_4_clicked();
 
-    // HACK: Could have better way for modular reference to buttons and drink orders...
-    // void on_pushButton_selection1_clicked();
-    // void on_pushButton_selection2_clicked();
-    // void on_pushButton_selection3_clicked();
-    // void on_pushButton_selection4_clicked();
-    // void on_pushButton_selection5_clicked();
-    // void on_pushButton_selection6_clicked();
 
     void onProductPageTimeoutTick();
-    // void on_backButton_clicked();
-    //  void on_pushButton_to_maintenance_pressed();
+
     void on_pushButton_to_idle_clicked();
     void on_pushButton_help_page_clicked();
 
@@ -100,7 +85,7 @@ private:
     void select_base_product_in_menu(int base_product_index);
     void displayDispenseProductsMenu();
     Ui::page_product_menu *ui;
-    // productPage_2 *selection_PageTwo;
+
     page_product *p_page_product;
     page_product_mixing *p_page_product_mixing;
     page_idle *p_page_idle;

@@ -36,6 +36,7 @@ public:
     void resetKeyboard();
     // checking if the keyboard needs CAPS button
     void needCAPS(bool capsYorN);
+    void needCANCEL(bool cancelYorN);
     void setTimeoutSec(int* seconds, bool timeoutYorN);
     void adjustTimeoutSec(int seconds);
     // void keyboardButtonDefaultAllInCAPS();
@@ -46,6 +47,7 @@ private:
     int* timeoutSec;
     bool timeout = false;
     bool needCAPSbutton;
+    bool needCANCELbutton = false;
     QLineEdit* widgetForLineEdit;
     QTextEdit* widgetForTextEdit;
     bool is_keyboard_visible;

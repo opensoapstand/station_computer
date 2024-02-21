@@ -154,17 +154,14 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     ui->pushButton_active_pnumber_base->setStyleSheet(styleSheet);
     ui->pushButton_active_pnumber_base->setText("Base\nP-" + QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getBasePNumber()));
 
+    setSizeIndex(SIZE_SMALL_INDEX); //default selected size for dispensing
+
     // first, pretend like there is no selected size
     for (int size_index = 1; size_index < SIZES_COUNT; size_index++)
     {
         buttons_select_size[size_index - 1]->setProperty("class", "product_not_available");
         buttons_select_size[size_index - 1]->setStyleSheet(styleSheet);
-        // buttons_select_mix[buttons_select_size - 1]->setText("Dispense Product " + QString::number(dispense_product_position) + "\nN/A");
-
-
         buttons_select_size[size_index - 1]->setEnabled(false);
-
-       
     }
 
     // first, pretend like there are no dispense products

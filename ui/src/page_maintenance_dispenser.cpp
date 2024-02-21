@@ -459,19 +459,6 @@ void page_maintenance_dispenser::fsmReceiveTemperature(double temperature_1, dou
     }
 }
 
-// void page_maintenance_dispenser::fsmReceiveTemperature2(double temperature2)
-// {
-
-//     qDebug() << "Temperature 2 received from FSM: " << temperature2;
-
-//     // p_page_idle->thisMachine->fsmReceiveTemperature(temperature);
-//     p_page_idle->thisMachine->fsmReceiveTemperature2(temperature2);
-//     // ui->label_setting_temperature->setText("Temp="+temperature);
-//     // ui->label_setting_temperature->setText( QString::number(temperature, 'f', 2));
-//     ui->label_setting_temperature_2->setText( QString::number(temperature2, 'f', 2));
-
-// };
-
 void page_maintenance_dispenser::onMaintainProductPageTimeoutTick()
 {
 
@@ -535,34 +522,7 @@ void page_maintenance_dispenser::autoDispenseStart(int size)
         p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_enable_pump, "pump_disable", PAGE_MAINTENANCE_DISPENSER_CSS);
         qDebug() << "Autofill quantity pressed.";
         QString dispenseCommand = QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
-
-
         dispenseCommand.append(df_util::sizeIndexToChar(m_selected_size_index));
-
-        // switch (size)
-        // {
-        // case SIZE_SMALL_INDEX:
-        // {
-        //     dispenseCommand.append("s");
-        // }
-        // break;
-        // case SIZE_MEDIUM_INDEX:
-        // {
-        //     dispenseCommand.append("m");
-        // }
-        // break;
-        // case SIZE_LARGE_INDEX:
-        // {
-        //     dispenseCommand.append("l");
-        // }
-        // break;
-        // default:
-        // {
-        //     qDebug() << "ERROR: size type not specified. will chose small size.";
-        //     dispenseCommand.append("s");
-        // }
-        // break;
-        // }
 
         dispenseCommand.append(SEND_DISPENSE_AUTOFILL);
 
@@ -594,7 +554,7 @@ void page_maintenance_dispenser::dispense_test_start()
     qDebug() << "Autofill quantity pressed.";
 
     dispenseCommand.append(df_util::sizeIndexToChar(m_selected_size_index));
-
+    
     // dispenseCommand.append("t");
     // dispenseCommand.append("t");
     dispenseCommand.append(SEND_DISPENSE_START);

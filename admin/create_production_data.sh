@@ -35,10 +35,10 @@ UI_VERSIONED="station_ui_ubuntu"$UBUNTU_VERSION
 
 
 # move binary files
-scp /home/df-admin/station_computer/ui/DF_UI /home/df-admin/production/bin/DF_UI
+# scp /home/df-admin/station_computer/ui/DF_UI /home/df-admin/production/bin/DF_UI
 scp /home/df-admin/station_computer/ui/$UI_VERSIONED /home/df-admin/production/bin
-scp /home/df-admin/station_computer/fsm/controller /home/df-admin/production/bin/controller
-scp /home/df-admin/station_computer/fsm/controller /home/df-admin/production/bin/$CONTROLLER_VERSIONED
+#scp /home/df-admin/station_computer/fsm/controller /home/df-admin/production/bin/controller
+scp /home/df-admin/station_computer/fsm/$CONTROLLER_VERSIONED /home/df-admin/production/bin
 
 # move auxiliary to production folder
 sudo -u df-admin scp -r /home/df-admin/station_computer/ui/references /home/df-admin/production

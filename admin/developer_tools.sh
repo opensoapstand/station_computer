@@ -68,6 +68,7 @@ do
         "(Re)start ui and controller")
             sudo systemctl stop ui_soapstand
             sudo systemctl stop controller_soapstand
+	# sudo systemctl stop fsm_soapstand
             sudo systemctl start ui_soapstand.service
             sudo systemctl start controller_soapstand.service
             ;;

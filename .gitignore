@@ -16,9 +16,9 @@ fsm/makefile.save
 
 fsm/build
 fsm/station_controller
-fsm/station_controller_18.04
-fsm/station_controller_22.04
-fsm/station_controller_24.04
+fsm/station_controller_ubuntu18.04
+fsm/station_controller_ubuntu22.04
+fsm/station_controller_ubuntu24.04
 
 .qmake.stash
 

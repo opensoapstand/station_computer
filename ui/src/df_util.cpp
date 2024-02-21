@@ -294,7 +294,7 @@ void df_util::send_to_FSM(QString command, bool isLoggingMessage)
     }
     else
     {
-        qDebug() << "ERROR: Failed Connection to controller (Port ok? or Restarting the computer has worked to solve the issue in the past)" <<  Qt::endl;;
+        qDebug() << "ERROR: Failed Connection to controller (Port ok? or Restarting the computer has worked to solve the issue in the past)";
     }
     QString send_msg = command;
     send_msg.append(";");

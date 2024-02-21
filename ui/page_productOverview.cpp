@@ -560,7 +560,7 @@ void page_product_overview::updatePriceLabel()
         // It's intended behaviour so user doesnt have to retype the promo-code
         // promo codes get reset when going to idle page.
         double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
-        qDebug() << "Selcted price" << selectedPrice;
+        qDebug() << "Selected price" << selectedPrice;
         double selectedPriceCorrected;
         double selectedBottlePrice;
         double discountAmount;

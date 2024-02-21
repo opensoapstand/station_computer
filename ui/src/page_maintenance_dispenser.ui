@@ -314,7 +314,7 @@
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>820</y>
+     <y>650</y>
      <width>331</width>
      <height>631</height>
     </rect>
@@ -586,12 +586,12 @@
     <rect>
      <x>40</x>
      <y>1570</y>
-     <width>251</width>
-     <height>251</height>
+     <width>261</width>
+     <height>201</height>
     </rect>
    </property>
    <property name="text">
-    <string>Toggle Pump Enable</string>
+    <string>Dispense selected quantity Manually</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_pump_enabled_status">
@@ -679,17 +679,17 @@
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_auto_dispense_small">
+  <widget class="QPushButton" name="pushButton_auto_dispense_selected_quantity">
    <property name="geometry">
     <rect>
-     <x>330</x>
-     <y>1240</y>
-     <width>200</width>
-     <height>200</height>
+     <x>50</x>
+     <y>1790</y>
+     <width>251</width>
+     <height>111</height>
     </rect>
    </property>
    <property name="text">
-    <string>Auto Dispense Small </string>
+    <string>Auto Dispense Selected Quantity</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_auto_dispense_medium">
@@ -1902,17 +1902,95 @@
     <string>to slot 5</string>
    </property>
   </widget>
-  <widget class="Line" name="line_25">
+  <widget class="QPushButton" name="pushButton_set_quantity_small">
    <property name="geometry">
     <rect>
-     <x>340</x>
-     <y>780</y>
-     <width>691</width>
+     <x>40</x>
+     <y>1350</y>
+     <width>81</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>small</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_set_quantity_medium">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>1350</y>
+     <width>81</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>medium</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_set_quantity_large">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>1350</y>
+     <width>81</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>large</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_set_quantity_custom">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>1440</y>
+     <width>81</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>custom</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_set_quantity_test">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>1440</y>
+     <width>81</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>test</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_set_quantity_sample">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>1440</y>
+     <width>81</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>sample</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_8">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>1310</y>
+     <width>251</width>
      <height>20</height>
     </rect>
    </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
+   <property name="text">
+    <string>Select dispense quantity:</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_row_sample">
@@ -1926,6 +2004,19 @@
    </property>
    <property name="text">
     <string>Sample</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_enable_sample">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>760</y>
+     <width>16</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_price_sample">
@@ -1977,24 +2068,11 @@
     <string>Sample PLU</string>
    </property>
   </widget>
-  <widget class="QCheckBox" name="checkBox_enable_sample">
-   <property name="geometry">
-    <rect>
-     <x>440</x>
-     <y>760</y>
-     <width>16</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="Line" name="line_28">
+  <widget class="Line" name="line_25">
    <property name="geometry">
     <rect>
      <x>340</x>
-     <y>740</y>
+     <y>780</y>
      <width>691</width>
      <height>20</height>
     </rect>
@@ -2007,7 +2085,7 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_edit_product"/>
   <buttongroup name="buttonGroup_keypad"/>
+  <buttongroup name="buttonGroup_edit_product"/>
  </buttongroups>
 </ui>

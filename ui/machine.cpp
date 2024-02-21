@@ -636,7 +636,7 @@ double machine::getPriceWithDiscount(double price)
     // there is a maximum absolute number of discount available.
     // will return discounted price
     double discount = price * m_discount_percentage_fraction;
-    qDebug() << "Discount: " << m_max_dollar_amount_discount;
+    // qDebug() << "Discount: " << m_max_dollar_amount_discount;
     max_discount = m_max_dollar_amount_discount.toDouble();
     double resulting_discount = (max_discount == 0.0) ? discount : std::min(max_discount, discount); // if discount > max_discount, take max_discount
     return (price - resulting_discount);

@@ -24,6 +24,10 @@ page_maintenance_general::page_maintenance_general(QWidget *parent) : QWidget(pa
     palette.setBrush(QPalette::Background, Qt::white);
     this->setPalette(palette);
 
+    maintenanceGeneralPageEndTimer = new QTimer(this);
+    maintenanceGeneralPageEndTimer->setInterval(1000);
+    connect(maintenanceGeneralPageEndTimer, SIGNAL(timeout()), this, SLOT(onPage_maintenance_general_TimeoutTick()));
+
     connect(ui->buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(keyboardButtonPressed(int)));
     statusbarLayout = new QVBoxLayout(this);
 }
@@ -93,6 +97,8 @@ void page_maintenance_general::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_status_feedback);
 
     updateLabelValues();
+    _maintenanceGeneralPageTimeoutSec = PAGE_MAINTENANCE_GENERAL_TIMEOUT_SECONDS;
+    maintenanceGeneralPageEndTimer->start();
 }
 
 /*
@@ -602,5 +608,18 @@ void page_maintenance_general::on_checkBox_enable_pcb_3point3V_clicked(bool chec
 
     }
 }
+
+void page_maintenance_general::onPage_maintenance_general_TimeoutTick()
+{
+    if (--_maintenanceGeneralPageTimeoutSec >= 0)
+    {
+        // qDebug() << "page_maintenance_general: Tick Down - " << _maintenanceGeneralPageTimeoutSec;
+    }
+    else
+    {
+        hideCurrentPageAndShowProvided(p_page_idle);
+    }
+}
+
 
 

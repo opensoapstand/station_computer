@@ -597,6 +597,7 @@ void page_dispenser::onDispenseIdleTick()
 {
     if (--_dispenseIdleTimeoutSec >= 0)
     {
+        // qDebug() << "Tick Down: " << _dispenseIdleTimeoutSec;  
     }
     else
     {

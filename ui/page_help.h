@@ -65,6 +65,7 @@ private slots:
 
     void keyboardButtonPressed(int);
     void doneButtonPressed();
+    void cancelButtonPressed();
     void on_pushButton_to_maintenance_clicked();
 
     void on_pushButton_to_feedback_clicked();

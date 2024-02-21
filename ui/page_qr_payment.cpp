@@ -146,7 +146,6 @@ void page_qr_payment::showEvent(QShowEvent *event)
 
     ui->label_steps->show();
     ui->label_processing->hide();
-
     paymentEndTimer->start(1000);
     _pageTimeoutCounterSecondsLeft = QR_PAGE_TIMEOUT_SECONDS;
 
@@ -157,8 +156,17 @@ void page_qr_payment::showEvent(QShowEvent *event)
 
     if(p_page_idle->thisMachine->hasMixing()){
         ui->label_qr_background->show();
+        ui->label_refresh_page->setStyleSheet(styleSheet);
+        ui->label_refresh_page_background->setStyleSheet(styleSheet);
+        QString warning_icon_full_path = p_page_idle->thisMachine->getTemplatePathFromName(PAGE_QR_WARNING_ICON);
+        p_page_idle->thisMachine->addPictureToLabel(ui->label_refresh_page_icon, warning_icon_full_path);
+
+        ui->label_refresh_page_background->hide();
+        ui->label_refresh_page_icon->hide();
     }else{
         ui->label_qr_background->hide();
+        ui->label_refresh_page_background->hide();
+        ui->label_refresh_page_icon->hide();
     }
 
     setupQrOrder();
@@ -195,7 +203,6 @@ void page_qr_payment::setupQrOrder()
         // _paymentTimeoutSec = QR_PAGE_TIMEOUT_SECONDS;
 
         _paymentTimeLabel = QR_PAGE_TIMEOUT_SECONDS;
-
         _pageTimeoutCounterSecondsLeft = QR_PAGE_TIMEOUT_SECONDS;
 
         _qrProcessedPeriodicalCheckSec = QR_PROCESSED_PERIODICAL_CHECK_SECONDS;
@@ -355,6 +362,10 @@ void page_qr_payment::qrProcessedPeriodicalCheck()
 void page_qr_payment::on_pushButton_refresh_clicked()
 {
     ui->label_refresh_page->hide();
+    if(p_page_idle->thisMachine->hasMixing()){
+        ui->label_refresh_page_background->hide();
+        ui->label_refresh_page_icon->hide();
+    }
     _pageTimeoutCounterSecondsLeft = QR_PAGE_TIMEOUT_SECONDS;
 }
 
@@ -363,6 +374,8 @@ void page_qr_payment::onTimeoutTick()
 {
     if (--_pageTimeoutCounterSecondsLeft >= 0)
     {
+        qDebug() << "Tick Down: " << _pageTimeoutCounterSecondsLeft;
+
         QString label_text = "Transaction will be cancelled in " + QString::number(_pageTimeoutCounterSecondsLeft) + "s.\nTOUCH THE SCREEN\n if you need more time \n";
         ui->label_refresh_page->setText(label_text);
     }
@@ -377,6 +390,13 @@ void page_qr_payment::onTimeoutTick()
     if (_pageTimeoutCounterSecondsLeft < QR_PAGE_TIMEOUT_WARNING_SECONDS)
     {
         ui->label_refresh_page->show();
+        if(p_page_idle->thisMachine->hasMixing()){
+            ui->label_refresh_page_background->show();
+            ui->label_refresh_page_icon->show();
+            ui->label_refresh_page_background->raise();
+            ui->label_refresh_page_icon->raise();
+            ui->label_refresh_page->raise();
+        }
     }
 }
 

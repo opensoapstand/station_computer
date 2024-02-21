@@ -383,49 +383,49 @@ bool DbManager::getAllProductProperties(int pnumber,
             "currency,"
             "name_receipt,"
             "concentrate_multiplier,"
-            "dispense_speed," // 9
+            "dispense_speed," // 8
             "threshold_flow,"
-            "retraction_time," // 11
+            "retraction_time," // 10
             "calibration_const,"
             "volume_per_tick,"
             "last_restock,"
             "volume_full,"
             "volume_remaining,"
-            "volume_dispensed_since_restock," // 17
+            "volume_dispensed_since_restock," // 16
             "volume_dispensed_total,"
             "is_enabled_small,"
             "is_enabled_medium,"
-            "is_enabled_large," // 21
+            "is_enabled_large," // 20
             "is_enabled_custom,"
             "size_small,"
             "size_medium,"
             "size_large,"
             "size_custom_min,"
-            "size_custom_max," // 27
+            "size_custom_max," // 26
             "price_small,"
             "price_medium,"
             "price_large,"
-            "price_custom," // 31
+            "price_custom," // 30
             "plu_small,"
             "plu_medium,"
             "plu_large,"
             "plu_custom,"
-            "pid_small,"
+            "pid_small," // 35
             "pid_medium,"
             "pid_large,"
             "pid_custom,"
             "flavour,"
             "image_url,"
-            "type," // 42
+            "type," // 41
             "ingredients,"
             "features,"
             "description,"
-            "is_enabled_custom_discount," // 46
+            "is_enabled_custom_discount," // 45
             "size_custom_discount,"
-            "price_custom_discount," // 48
+            "price_custom_discount," // 47
             "is_enabled,"
-            "status_text," // 50
-            "is_enabled_sample,"
+            "status_text," // 49
+            "is_enabled_sample," 
             "size_sample,"
             "price_sample "
             "FROM products WHERE soapstand_product_serial=:pnumber"
@@ -494,6 +494,8 @@ bool DbManager::getAllProductProperties(int pnumber,
             *is_enabled_custom_discount = qry.value(45).toInt();
             *size_custom_discount = qry.value(46).toDouble();
             *price_custom_discount = qry.value(47).toDouble();
+            *is_enabled = qry.value(48).toInt();
+            *status_text = qry.value(49).toString();
             // Sample size assignment
             isSizeEnabled[6] = qry.value(50).toInt();
             volumes[6] = qry.value(51).toDouble();

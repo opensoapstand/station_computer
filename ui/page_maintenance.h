@@ -53,6 +53,7 @@ public:
 
 private slots:
     // void on_label_qr_user_manual_linkActivated(const QString &link);
+    void onPage_maintenanceTimeoutTick();
     void on_pushButton_to_previous_page_clicked();
     void on_pushButton_product_1_clicked();
     void on_pushButton_product_2_clicked();
@@ -66,7 +67,6 @@ private slots:
     // void on_wifiButton_clicked();
     //void on_clean_button_clicked();
     //void on_restock_button_clicked();
-    void onPage_maintenanceTimeoutTick();
 
 
 
@@ -91,8 +91,9 @@ private:
     QLabel* labels_product_status[MAX_SLOT_COUNT];
     QLabel* labels_product_name[MAX_SLOT_COUNT];
     QLabel* labels_product_position[MAX_SLOT_COUNT];
-    int _page_maintenanceTimeoutSec;
+
     QTimer* page_maintenanceEndTimer;
+    int _page_maintenanceTimeoutSec;
     QVBoxLayout *statusbarLayout;
 
 };

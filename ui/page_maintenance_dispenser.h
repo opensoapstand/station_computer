@@ -68,14 +68,17 @@ private slots:
     void on_pushButton_price_medium_clicked();
     void on_pushButton_price_large_clicked();
     void on_pushButton_price_custom_clicked();
+    void on_pushButton_price_sample_clicked();
     void on_pushButton_target_volume_small_clicked();
     void on_pushButton_target_volume_medium_clicked();
     void on_pushButton_target_volume_large_clicked();
     void on_pushButton_target_volume_custom_clicked();
+    void on_pushButton_target_volume_sample_clicked();
     void on_pushButton_plu_small_clicked();
     void on_pushButton_plu_medium_clicked();
     void on_pushButton_plu_large_clicked();
     void on_pushButton_plu_custom_clicked();
+    void on_pushButton_plu_sample_clicked();
     void on_pushButton_volume_per_tick_clicked();
     void on_pushButton_restock_clicked();
     void on_pushButton_set_status_clicked();
@@ -109,6 +112,8 @@ private slots:
     void on_checkBox_enable_large_clicked();
 
     void on_checkBox_enable_custom_clicked();
+
+    void on_checkBox_enable_sample_clicked();
 
     void on_pushButton_active_pnumber_base_clicked();
 

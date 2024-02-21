@@ -75,6 +75,7 @@ void page_init::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->loadDynamicContent();
 
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+    qDebug() << "setting background in page init";
     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_INIT_BACKGROUND_IMAGE_PATH);
 
     _initIdleTimeoutSec = PAGE_INIT_READY_TIMEOUT_SECONDS;

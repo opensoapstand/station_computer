@@ -282,16 +282,19 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
     ui->pushButton_price_medium->setText("$" + QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePrice(SIZE_MEDIUM_INDEX)));
     ui->pushButton_price_large->setText("$" + QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePrice(SIZE_LARGE_INDEX)));
     ui->pushButton_price_custom->setText("$" + QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePrice(SIZE_CUSTOM_INDEX)));
+    ui->pushButton_price_sample->setText("$" + QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePrice(SIZE_SAMPLE_INDEX)));
 
     ui->pushButton_target_volume_small->setText(p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(SIZE_SMALL_INDEX, false, true));
     ui->pushButton_target_volume_medium->setText(p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(SIZE_MEDIUM_INDEX, false, true));
     ui->pushButton_target_volume_large->setText(p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(SIZE_LARGE_INDEX, false, true));
     ui->pushButton_target_volume_custom->setText(p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(SIZE_CUSTOM_INDEX, false, true));
+    ui->pushButton_target_volume_sample->setText(p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(SIZE_SAMPLE_INDEX, false, true));
 
     ui->checkBox_enable_small->setChecked(p_page_idle->thisMachine->getSelectedProduct()->getSizeEnabled(SIZE_SMALL_INDEX));
     ui->checkBox_enable_medium->setChecked(p_page_idle->thisMachine->getSelectedProduct()->getSizeEnabled(SIZE_MEDIUM_INDEX));
     ui->checkBox_enable_large->setChecked(p_page_idle->thisMachine->getSelectedProduct()->getSizeEnabled(SIZE_LARGE_INDEX));
     ui->checkBox_enable_custom->setChecked(p_page_idle->thisMachine->getSelectedProduct()->getSizeEnabled(SIZE_CUSTOM_INDEX));
+    ui->checkBox_enable_sample->setChecked(p_page_idle->thisMachine->getSelectedProduct()->getSizeEnabled(SIZE_SAMPLE_INDEX));
 
     ui->label_restock_volume->setText(p_page_idle->thisMachine->getSelectedProduct()->getFullVolumeCorrectUnits(true));
 
@@ -307,6 +310,7 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
     ui->pushButton_plu_medium->setText(p_page_idle->thisMachine->getSelectedProduct()->getPlu(SIZE_MEDIUM_INDEX));
     ui->pushButton_plu_large->setText(p_page_idle->thisMachine->getSelectedProduct()->getPlu(SIZE_LARGE_INDEX));
     ui->pushButton_plu_custom->setText(p_page_idle->thisMachine->getSelectedProduct()->getPlu(SIZE_CUSTOM_INDEX));
+    ui->pushButton_plu_sample->setText(p_page_idle->thisMachine->getSelectedProduct()->getPlu(SIZE_SAMPLE_INDEX));
 
     QString statusText = p_page_idle->thisMachine->getSelectedSlot()->getStatusText();
 
@@ -1067,6 +1071,14 @@ void page_maintenance_dispenser::on_pushButton_price_custom_clicked()
     }
 }
 
+void page_maintenance_dispenser::on_pushButton_price_sample_clicked()
+{
+    if (!isDispenserPumpEnabledWarningBox())
+    {
+        ui->textEntry->setText(QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePrice(SIZE_SAMPLE_INDEX)));
+    }
+}
+
 void page_maintenance_dispenser::on_pushButton_target_volume_small_clicked()
 {
     if (!isDispenserPumpEnabledWarningBox())
@@ -1099,6 +1111,14 @@ void page_maintenance_dispenser::on_pushButton_target_volume_custom_clicked()
     }
 }
 
+void page_maintenance_dispenser::on_pushButton_target_volume_sample_clicked()
+{
+    if (!isDispenserPumpEnabledWarningBox())
+    {
+        ui->textEntry->setText(p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(SIZE_SAMPLE_INDEX, false, false));
+    }
+}
+
 void page_maintenance_dispenser::on_pushButton_plu_small_clicked()
 {
     if (!isDispenserPumpEnabledWarningBox())
@@ -1128,6 +1148,14 @@ void page_maintenance_dispenser::on_pushButton_plu_custom_clicked()
     if (!isDispenserPumpEnabledWarningBox())
     {
         ui->textEntry->setText(p_page_idle->thisMachine->getSelectedProduct()->getPlu(SIZE_CUSTOM_INDEX));
+    }
+}
+
+void page_maintenance_dispenser::on_pushButton_plu_sample_clicked()
+{
+    if (!isDispenserPumpEnabledWarningBox())
+    {
+        ui->textEntry->setText(p_page_idle->thisMachine->getSelectedProduct()->getPlu(SIZE_SAMPLE_INDEX));
     }
 }
 
@@ -1258,6 +1286,12 @@ void page_maintenance_dispenser::on_checkBox_enable_large_clicked()
 void page_maintenance_dispenser::on_checkBox_enable_custom_clicked()
 {
     p_page_idle->thisMachine->getSelectedProduct()->toggleSizeEnabled(SIZE_CUSTOM_INDEX);
+    updateProductLabelValues(true);
+}
+
+void page_maintenance_dispenser::on_checkBox_enable_sample_clicked()
+{
+    p_page_idle->thisMachine->getSelectedProduct()->toggleSizeEnabled(SIZE_SAMPLE_INDEX);
     updateProductLabelValues(true);
 }
 

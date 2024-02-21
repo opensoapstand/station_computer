@@ -119,6 +119,7 @@ private:
     QTimer *checkPacketReceivedTimer;
     QTimer *checkCardTappedTimer;
 
+    int _pageTimeoutCounterSecondsLeft;
     QTimer *idlePaymentTimer;
     QTimer *inFlightTimer;
 
@@ -126,7 +127,6 @@ private:
 
     void cancelPayment();
 
-    bool response;
     bool tap_payment;
     int lastTransactionId;
 

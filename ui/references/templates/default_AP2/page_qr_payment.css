@@ -67,6 +67,21 @@ QPushButton {
    qproperty-alignment: AlignCenter;
 }
 
+#label_refresh_page{
+   color: white;
+   font-family: 'El Messiri';
+   font-size: 24px;
+   font-style: normal;
+   font-weight: 400;
+   text-align: left;
+   qproperty-alignment: AlignLeft;
+}
+
+#label_refresh_page_background{
+   background: #BC8439;
+   border-radius: 15px;
+}
+
 #label_scan {
    font-family: 'El Messiri';
    color: #895E25;

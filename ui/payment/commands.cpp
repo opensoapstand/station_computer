@@ -25,7 +25,7 @@ std::map<std::string, std::string> registerDevice(int socket){
     }
     else{
         qDebug() << "Registration failed";
-        // rebootDevice(connectSecondarySocket());
+        rebootDevice(connectSecondarySocket());
     }
     
     return dataReceived;
@@ -103,7 +103,7 @@ std::map<std::string, std::string> cancelTransaction(int socket){
                         <COMMAND>CANCEL</COMMAND> \
                     </TRANSACTION>";
     std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
-    // close(socket);
+    close(socket);
     return dataReceived;
 }
 

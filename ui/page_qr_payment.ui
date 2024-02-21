@@ -254,6 +254,76 @@ line-height: 29px;</string>
     <bool>false</bool>
    </property>
   </widget>
+  <widget class="QLabel" name="label_refresh_page_background">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>1612</y>
+     <width>500</width>
+     <height>147</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Montserrat</family>
+     <pointsize>-1</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: #FF0000;
+font-family: Montserrat;
+font-style: light;
+font-weight: bold;
+font-size: 40px;
+line-height: 29px;</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_refresh_page_icon">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>1636</y>
+     <width>106</width>
+     <height>100</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Montserrat</family>
+     <pointsize>-1</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: #FF0000;
+font-family: Montserrat;
+font-style: light;
+font-weight: bold;
+font-size: 40px;
+line-height: 29px;</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
   <zorder>label_qr_background</zorder>
   <zorder>pushButton_refresh</zorder>
   <zorder>pushButton_previous_page</zorder>
@@ -266,6 +336,8 @@ line-height: 29px;</string>
   <zorder>label_scan</zorder>
   <zorder>label_processing</zorder>
   <zorder>label_gif</zorder>
+  <zorder>label_refresh_page_background</zorder>
+  <zorder>label_refresh_page_icon</zorder>
  </widget>
  <resources/>
  <connections/>

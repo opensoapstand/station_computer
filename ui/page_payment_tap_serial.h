@@ -108,6 +108,7 @@ private slots:
     void on_pushButton_previous_page_clicked();
     void on_pushButton_payment_bypass_clicked();
     void on_pushButton_to_idle_clicked();
+    void onPaymentSerialPageTimeoutTick();
 
     void readTimer_loop();
     void idlePaymentTimeout();
@@ -128,6 +129,9 @@ private:
     void stopPayTimers();
 
     QSqlDatabase db;
+
+    int _paymentSerialPageTimeoutSec;
+    QTimer* paymentSerialPageEndTimer;
 
     // Tap Payment Control
     string merchantName;

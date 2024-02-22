@@ -215,8 +215,8 @@ page_maintenance_dispenser->pushButton_set_restock_volume,Define restock volume
 page_maintenance_dispenser->pushButton_update_portal,Update Changes to Portal
 page_maintenance_dispenser->pushButton_keypad_cancel,CANCEL
 page_maintenance_dispenser->pushButton_keypad_done,DONE
-page_maintenance_dispenser->pushButton_enable_pump->enable_pump,ENABLE PUMP
-page_maintenance_dispenser->pushButton_enable_pump->disable_pump,DISABLE PUMP
+page_maintenance_dispenser->pushButton_enable_pump->enable_pump,ENABLE TEST\nDISPENSE
+page_maintenance_dispenser->pushButton_enable_pump->disable_pump,DISABLE TEST\nDISPENSE
 page_maintenance_dispenser->pushButton_set_status->unavailable,DISABLE\nproduct
 page_maintenance_dispenser->pushButton_set_status->available,ENABLE\nproduct
 page_maintenance_dispenser->label_pump_enabled_status->pump_ready,Manual Pump ready. Press dispense button.
@@ -240,6 +240,17 @@ page_maintenance_dispenser->label_status_dispenser->coming_soon,Coming soon
 page_maintenance_dispenser->label_status_dispenser->sold_out,Sold Out
 page_maintenance_dispenser->label_status_dispenser->default,No<br>Status
 
+page_maintenance_dispenser->label_status_selected_product->priming,Priming
+page_maintenance_dispenser->label_status_selected_product->auto_empty,Empty detected
+page_maintenance_dispenser->label_status_selected_product->almost_empty,Almost Empty
+page_maintenance_dispenser->label_status_selected_product->empty,Empty
+page_maintenance_dispenser->label_status_selected_product->available,In Service
+page_maintenance_dispenser->label_status_selected_product->not_enabled,Not enabled
+page_maintenance_dispenser->label_status_selected_product->assistance,Assistance Needed
+page_maintenance_dispenser->label_status_selected_product->coming_soon,Coming soon
+page_maintenance_dispenser->label_status_selected_product->sold_out,Sold Out
+page_maintenance_dispenser->label_status_selected_product->default,No<br>Status
+
 page_maintenance_dispenser->label_status_dispenser_elaborated->not_enabled,Enable manually with the button on top\nof this page.
 page_maintenance_dispenser->label_status_dispenser_elaborated->empty,No more product available.
 page_maintenance_dispenser->label_status_dispenser_elaborated->almost_empty,Little product left.
@@ -250,6 +261,9 @@ page_maintenance_dispenser->label_status_dispenser_elaborated->default,Not an id
 page_maintenance_dispenser->label_status_dispenser_elaborated->available,Product available and dispenser working normally.
 page_maintenance_dispenser->label_status_dispenser_elaborated->priming,If the pump is working: See procedure to use the\npriming syringe on the nozzle to guide the product into the pump.\nCheck stock volume, air leaks and pump,\nsolenoid, button and flow sensor in case of problems. 
 page_maintenance_dispenser->label_status_dispenser_elaborated->disabled,Enable the dispenser with the button on top\nof this page. 
+
+
+
 page_maintenance_dispenser->pushButton_clear_problem,Clear\nProblem
 
 #################### page_maintenance_general

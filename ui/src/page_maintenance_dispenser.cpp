@@ -80,7 +80,7 @@ void page_maintenance_dispenser::setPage(page_maintenance *pageMaintenance, page
 
 void page_maintenance_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
-    debug()<<"Exit Maintenance dispense page";
+    qDebug()<<"Exit Maintenance dispense page";
     dispense_test_end(true);
     maintainProductPageEndTimer->stop();
     statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
@@ -343,10 +343,15 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
     ui->pushButton_plu_custom->setText(p_page_idle->thisMachine->getSelectedProduct()->getPlu(SIZE_CUSTOM_INDEX));
     ui->pushButton_plu_sample->setText(p_page_idle->thisMachine->getSelectedProduct()->getPlu(SIZE_SAMPLE_INDEX));
 
-    QString statusText = p_page_idle->thisMachine->getSelectedSlot()->getStatusText();
 
+    QString statusText = p_page_idle->thisMachine->getSelectedSlot()->getStatusText();
     setStatusTextLabel(ui->label_status_dispenser_elaborated, statusText, true);
+
     setStatusTextLabel(ui->label_status_dispenser, statusText, false);
+    
+    QString statusTextProduct = p_page_idle->thisMachine->getSelectedProduct()->getStatusText();
+    setStatusTextLabel(ui->label_status_selected_product, statusTextProduct, false);
+    
 
     if (p_page_idle->thisMachine->getSelectedSlot()->getIsSlotEnabled())
     {

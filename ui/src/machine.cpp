@@ -1347,12 +1347,17 @@ void machine::setBackgroundPictureToQWidget(QWidget *p_widget, QString image_pat
 {
     QPixmap background(image_path);
 
-    // background = background.scaled(p_widget->size(), Qt::IgnoreAspectRatio);
-    QPalette palette;
-    palette.setBrush(QPalette::Background, background);
-    p_widget->setPalette(palette);
-    p_widget->repaint();
-    p_widget->update();
+    if (background.isNull()) {
+        qDebug() << "Failed to load image. Check if the file exists and the path is correct.";
+    } else {
+        QPalette palette;
+        palette.setBrush(QPalette::Background, background);
+        p_widget->setPalette(palette);
+        p_widget->setAutoFillBackground(true); // Ensure autoFillBackground is set to true
+        p_widget->repaint();
+        p_widget->update();
+    }
+
 }
 
 void machine::setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier)

@@ -175,4 +175,5 @@ page_product_freeSample->label_steps,<ol><li><span class='tab'></span>Scan QR to
 
 
 # input_widget
-input_widget->label_input_info,Enter password followed by the "Return" key to enter maintenance mode
+input_widget->label_input_info->page_help,Enter password followed by the "Return" key to enter maintenance mode
+input_widget->label_input_info->page_maintenance_general,Please enter wifi password followed by the "Return" key

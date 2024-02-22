@@ -21,6 +21,7 @@ public:
     void setPage(page_idle *pageIdle);
     void showEvent(QShowEvent *event);
     void toggleInputWidget(bool isVisible);
+    void setLabelInfoText(QString label);
     void refresh();
 private:
     Ui::input_widget *ui;

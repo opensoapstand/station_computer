@@ -742,11 +742,8 @@ void page_maintenance_dispenser::on_pushButton_clear_problem_clicked()
     if (!isDispenserPumpEnabledWarningBox())
     {
         QString statusText = p_page_idle->thisMachine->getSelectedSlot()->getStatusText();
-        qDebug() << "Clear problem button clicked. Status is: " + statusText;
-        if (statusText.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
-        {
-            p_page_idle->thisMachine->getSelectedSlot()->setStatusText("SLOT_STATE_AVAILABLE");
-        }
+        qDebug() << "Clear problem button clicked. Will set to available. Status was: " + statusText;
+        p_page_idle->thisMachine->getSelectedSlot()->setStatusText("SLOT_STATE_AVAILABLE");
         updateProductLabelValues(true);
     }
 }

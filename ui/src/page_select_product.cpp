@@ -161,9 +161,7 @@ void page_select_product::displayProducts()
 
         if (p_page_idle->thisMachine->isSlotExisting(slot_index + 1))
         {
-
             // display product picture
-
             p_page_idle->thisMachine->addPictureToLabel(labels_product_picture[slot_index], p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductPicturePath());
             product_type = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductType();
             product_name = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductName();

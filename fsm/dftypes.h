@@ -58,23 +58,30 @@
 #define CYCLIC_PUMP_TEST_OFF_CYCLE_MILLIS 30000
 
 #define MILLIS_INIT_DUMMY 0
-#define IO_PIN_BUTTON_MAINTENANCE 340 // connector pin 38
-#define IO_PIN_BUTTON_SHUTDOWN 341 //  connector pin 40 deprecated 
-#define IO_PIN_BUTTON_MAINTENANCE_SHUTDOWN_EDGE_DETECTOR 391 // connector pin 32 deprecated.
-#define IO_PIN_FLOW_SENSOR 364 // connector pin 11
+// #define IO_PIN_BUTTON_MAINTENANCE 340 // connector pin 38
+// #define IO_PIN_BUTTON_SHUTDOWN 341 //  connector pin 40 deprecated 
+// #define IO_PIN_BUTTON_MAINTENANCE_SHUTDOWN_EDGE_DETECTOR 391 // connector pin 32 deprecated.
+#define IO_PIN_FLOW_SENSOR 364 // deprecated, try to get through i2c chip for consitency. connector pin 11
 
 #define FLOWSENSOR_DEJITTER_MICROS 700ULL  //digmesa flowsensor
 //#define FLOWSENSOR_DEJITTER_MICROS 10000ULL  // AICHI flow sensor
-#define IO_PIN_BUTTON_4 410   // connector pin 36 for EN-29 pcb
-#define IO_PIN_ENABLE_24V 410 // connector pin 36 for EN-134 pcb
-#define IO_PIN_ENABLE_3point3V 389 // connector pin 28 for EN258 pcb
-#define IO_PIN_ENABLE_5V 338       // connector pin 12 for EN258 pcb
+// #define IO_PIN_BUTTON_4 410   // connector pin 36 for EN-29 pcb
+
+#define IO_PIN_ENABLE_3point3V_BEFORE_SYSFS_DEPRECATED 389 // connector pin 28 for EN258 pcb
+#define IO_PIN_ENABLE_5V_BEFORE_SYSFS_DEPRECATED 338       // connector pin 12 for EN258 pcb
+#define IO_PIN_ENABLE_24V_BEFORE_SYSFS_DEPRECATED 410 // connector pin 36 for EN-134 pcb
+ 
+// sysfs deprecated --> still works if all pins have 512 added to it...
+// https://forum.seeedstudio.com/t/gpio-pins-not-responding-in-code/252187/2
+#define IO_PIN_ENABLE_3point3V_AFTER_SYSFS_DEPRECATED 901 // connector pin 28 for EN258 pcb
+#define IO_PIN_ENABLE_5V_AFTER_SYSFS_DEPRECATED 850       // connector pin 12 for EN258 pcb
+#define IO_PIN_ENABLE_24V_AFTER_SYSFS_DEPRECATED 922 // connector pin 36 for EN-134 pcb
 
 #define power_cycle_attempt_AT_INVALID_PCB 10
 
-#define PIC_PROGRAMMER_PIN_VPP 337
-#define PIC_PROGRAMMER_PIN_PGC 412
-#define PIC_PROGRAMMER_PIN_PGD 413
+// #define PIC_PROGRAMMER_PIN_VPP 337
+// #define PIC_PROGRAMMER_PIN_PGC 412
+// #define PIC_PROGRAMMER_PIN_PGD 413
 
 // #define IO_PIN_FLOW_SENSOR_STRING "364"
 #define RUNNING_AVERAGE_WINDOW_LENGTH 10000

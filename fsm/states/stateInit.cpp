@@ -142,7 +142,7 @@ DF_ERROR stateInit::dispenserSetup()
         for (int slot = 1; slot <= g_machine.getPcb()->getSlotCountByPcbType(); slot++)
         {
             g_machine.getPcb()->setFlowSensorType(slot, pcb::FlowSensorType::DIGMESA);
-            //g_machine.getPcb()->setFlowSensorType(slot, pcb::FlowSensorType::AICHI);
+            // g_machine.getPcb()->setFlowSensorType(slot, pcb::FlowSensorType::AICHI);
         }
     }
     break;

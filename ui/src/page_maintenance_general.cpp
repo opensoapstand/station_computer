@@ -492,7 +492,7 @@ void page_maintenance_general::keyboardButtonPressed(int buttonID)
 
 void page_maintenance_general::on_pushButton_wifi_networks_clicked()
 {
-    //    qDebug() << "WiFi button clicked" << endl;
+    //    qDebug() << "WiFi button clicked" ;
     // _page_maintenanceTimeoutSec = PAGE_MAINTENANCE_TIMEOUT_SECONDS;
     ui->table_wifi_networks->setRowCount(0);
 

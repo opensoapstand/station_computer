@@ -698,7 +698,6 @@ void page_idle::hideCurrentPageAndShowProductMenu()
 {
     if (thisMachine->hasBuyBottleOption())
     {
-        qDebug() << "hhashsh botttlele";
         this->hideCurrentPageAndShowProvided(p_page_buyBottle, true);
     }
     else

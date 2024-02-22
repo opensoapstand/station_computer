@@ -80,6 +80,7 @@ void page_maintenance_dispenser::setPage(page_maintenance *pageMaintenance, page
 
 void page_maintenance_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
+    debug()<<"Exit Maintenance dispense page";
     dispense_test_end(true);
     maintainProductPageEndTimer->stop();
     statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
@@ -591,6 +592,7 @@ void page_maintenance_dispenser::dispense_test_end(bool sendStopToController)
 {
     if (is_pump_enabled_for_dispense)
     {
+        qDebug() << "Active Dispense stop.";
         dispenseTimer->stop();
         is_pump_enabled_for_dispense = false;
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_pump_enabled_status, "pump_off");
@@ -611,6 +613,8 @@ void page_maintenance_dispenser::dispense_test_end(bool sendStopToController)
         {
             qDebug() << "controller sent stop dispensing signal in maintenance mode.";
         }
+    }else{
+        qDebug() << "Active Dispense was already stopped.";
     }
 }
 

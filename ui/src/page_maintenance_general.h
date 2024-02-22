@@ -28,6 +28,8 @@ class statusbar;
 class page_maintenance;
 class page_idle;
 class page_idle_products;
+class keyboard;
+class input_widget;
 
 namespace Ui
 {
@@ -40,7 +42,7 @@ class page_maintenance_general : public QWidget
 
 public:
     explicit page_maintenance_general(QWidget *parent = nullptr);
-    void setPage(page_maintenance *pageMaintenance, page_idle *pageIdle, page_idle_products *p_page_idle_products, statusbar *p_statusbar);    
+    void setPage(page_maintenance *pageMaintenance, page_idle *pageIdle, page_idle_products *p_page_idle_products, statusbar *p_statusbar, keyboard * keyboard, input_widget * input_widget);    
     ~page_maintenance_general();
     void resizeEvent(QResizeEvent *event);
     void on_pushButton_to_previous_page_clicked();
@@ -69,6 +71,8 @@ private slots:
     void on_test_lineEdit_textChanged(const QString &arg1);
 
     void button_connect_to_specifiic_wifi_network();
+    void doneButtonPressed();
+    void cancelButtonPressed();
     void keyboardButtonPressed(int);
     // void on_wifiButton_clicked();
     // void onPage_maintenanceTimeoutTick();
@@ -95,7 +99,8 @@ private:
     page_maintenance *p_page_maintenance;
     page_idle *p_page_idle;
     statusbar *p_statusbar;
-
+    keyboard *p_keyboard;
+    input_widget *p_input_widget;
     int _maintenanceGeneralPageTimeoutSec;
     QTimer *maintenanceGeneralPageEndTimer;
     QVBoxLayout *statusbarLayout;

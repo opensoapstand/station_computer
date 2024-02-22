@@ -31,6 +31,9 @@
 #include <string>
 #include <vector>
 #include <thread>
+#include <QCryptographicHash>
+#include <openssl/evp.h>
+
 #include <QPainter>
 #include <QUuid>
 #include <QMovie>
@@ -86,6 +89,7 @@ private slots:
     void on_pushButton_refresh_clicked();
     void qrProcessedPeriodicalCheck();
     void showErrorTimerPage();
+    QString generateCode(QString str);
 
 private:
     QMessageBox* msgBox;

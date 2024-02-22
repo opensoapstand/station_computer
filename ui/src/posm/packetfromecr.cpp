@@ -72,6 +72,9 @@ std::vector<uint8_t> packetFromECR::getPacket()
 
 std::ostream &operator <<(std::ostream &out, const packetFromECR &pkt)
 {
+    // TODO: SHOULD NOT BE COMMENTED OUT!!!!!
+    // qDebug()<< "ASSERT ERROR: code should be uncommented! ***********************************";
+
     out << "Packet to Send: ";
     out << std::hex << int(pkt.currentPacket.STX) << " ";
     out << std::hex << int(pkt.currentPacket.dataLen[0]) << " ";
@@ -84,8 +87,8 @@ std::ostream &operator <<(std::ostream &out, const packetFromECR &pkt)
     for (uint i = 0; i < pkt.currentPacket.data.size(); i++)
         out << std::hex << int(pkt.currentPacket.data[i]) << " ";
 
-    out << std::hex << int(pkt.currentPacket.ETX) << " ";
-    out << std::hex << int(pkt.currentPacket.LRC) << std::endl;
+    out << std::hex << static_cast<int>(pkt.currentPacket.ETX) << " ";
+    out << std::hex << static_cast<int>(pkt.currentPacket.LRC) << std::endl;
 
     return out;
 }

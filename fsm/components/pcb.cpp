@@ -1095,7 +1095,6 @@ bool pcb::getDispenseButtonState(uint8_t slot)
     case (EN134_8SLOTS):
     {
         bool val = (ReadByte(get_PCA9534_address_from_slot(slot), 0x00) & (1 << PCA9534_EN134_PIN_IN_BUTTON));
-
         isPressed = !val;
     };
     break;
@@ -1501,7 +1500,7 @@ void pcb::setFlowSensorType(uint8_t slot, FlowSensorType sensorType)
 
 void pcb::registerFlowSensorTickCallback(int slot, std::function<void()> callback)
 {
-
+    debugOutput::sendMessage("Flow sensor tick callback registered!", MSG_ERROR);
     flowSensorTickCallbacks[slot - 1] = callback;
 }
 
@@ -1570,7 +1569,10 @@ void pcb::pollFlowSensor(uint8_t slot)
             }
 
             flow_sensor_pulses_since_enable[slot_index]++;
+
             // debugOutput::sendMessage("Flow sensor pulse detected by PCA chip. Slot: " + to_string(slot) + ". Pulse total: " + to_string(flow_sensor_pulses_since_enable[slot_index]), MSG_INFO);
+            debugOutput::sendMessage("Flow sensor pulse detected while polling", MSG_INFO);
+
             flowSensorTickReceivedEpoch[slot_index] = now_epoch_millis;
         }
         flowSensorStateMemory[slot_index] = state;

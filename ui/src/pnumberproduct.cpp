@@ -235,8 +235,6 @@ bool pnumberproduct::getSizeEnabled(int size)
 char pnumberproduct::getSelectedSizeAsChar()
 {
     // ! = invalid.
-    // t  test to fsm, but should become c for custom. we're so ready for it.
-    // t
     return df_util::sizeIndexToChar(m_selected_size);
 }
 
@@ -517,7 +515,7 @@ QString pnumberproduct::getSizeAsVolumeWithCorrectUnits(int size, bool roundValu
 
     v = getVolumeBySize(size);
     units = getSizeUnit();
-    qDebug() << "unitsssssss" << units;
+    // qDebug() << "unitsssssss" << units;
     volume_as_string = df_util::getConvertedStringVolumeFromMl(v, units, roundValue, addUnits);
     return volume_as_string;
 }

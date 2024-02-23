@@ -270,6 +270,7 @@ public:
     int m_buy_bottle_1;
     int m_buy_bottle_2;
     QString m_portal_base_url;
+    int m_enable_offline_payment;
 
     QString m_freesample_end_url;
     int m_is_enabled;
@@ -307,6 +308,7 @@ public:
     QString getTransactionLogging();
     bool hasMixing();
     QString getPortalBaseUrl();
+    bool isEnabledOfflinePayment();
 
     void setFreeSampleEndURL(QString ending_url);
     QString getFreeSampleEndURL();

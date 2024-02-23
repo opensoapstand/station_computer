@@ -31,6 +31,7 @@ class statusbar;
 class keyboard;
 class page_select_product;
 class page_qr_payment;
+class page_offline_payment;
 class page_payment_tap_tcp;
 class page_payment_tap_serial;
 class page_idle;
@@ -67,7 +68,7 @@ public:
     QLabel *orderSizeBackgroundLabels[4];
 
     explicit page_product_freeSample(QWidget *parent = nullptr);
-    void setPage(page_select_product *pageSelect, page_product_mixing *p_page_product_mixing, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,  page_payment_tap_serial *page_payment_tap_serial,page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product *page_product, page_email *page_email, statusbar * statusbar,keyboard * keyboard);
+    void setPage(page_select_product *pageSelect, page_product_mixing *p_page_product_mixing, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_offline_payment *page_offline_payment, page_payment_tap_serial *page_payment_tap_serial,page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product *page_product, page_email *page_email, statusbar * statusbar,keyboard * keyboard);
     ~page_product_freeSample();
 
     void resizeEvent(QResizeEvent *event);

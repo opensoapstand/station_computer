@@ -33,6 +33,7 @@
 
 
 class page_qr_payment;
+class page_offline_payment;
 class page_payment_tap_tcp;
 class page_payment_tap_serial;
 class page_end;
@@ -54,7 +55,7 @@ public:
 
     // **** GUI ****
     explicit page_dispenser(QWidget *parent = nullptr);
-    void setPage(page_qr_payment* page_qr_payment, page_payment_tap_serial* page_payment_tap_serial, page_payment_tap_tcp* page_payment_tap_tcp,  page_end* page_end, page_idle* pageIdle, page_sendFeedback* pageFeedback, statusbar *p_statusbar);
+    void setPage(page_qr_payment* page_qr_payment,page_offline_payment* page_offline_payment, page_payment_tap_serial* page_payment_tap_serial, page_payment_tap_tcp* page_payment_tap_tcp,  page_end* page_end, page_idle* pageIdle, page_sendFeedback* pageFeedback, statusbar *p_statusbar);
     ~page_dispenser();
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void showEvent(QShowEvent *event);
@@ -108,6 +109,7 @@ private:
     // **** GUI *****
     Ui::page_dispenser *ui;
     page_qr_payment* paymentPage;
+    page_offline_payment* paymentOfflinePage;
     page_payment_tap_tcp* p_page_payment_tap_tcp;
     page_payment_tap_serial* p_page_payment_tap_serial;
     page_end* thanksPage;

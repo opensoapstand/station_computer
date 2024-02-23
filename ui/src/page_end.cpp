@@ -36,11 +36,12 @@ page_end::page_end(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference
  */
-void page_end::setPage(page_dispenser *page_dispenser, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_sendFeedback *page_sendFeedback, statusbar *p_statusbar)
+void page_end::setPage(page_dispenser *page_dispenser, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_offline_payment *page_offline_payment,page_sendFeedback *page_sendFeedback, statusbar *p_statusbar)
 {
     this->p_page_idle = pageIdle;
     this->p_page_dispense = page_dispenser;
     this->paymentPage = page_qr_payment;
+    this->paymentOfflinePage = page_offline_payment;
     this->p_page_sendFeedback = page_sendFeedback;
     this->p_statusbar = p_statusbar;
 }

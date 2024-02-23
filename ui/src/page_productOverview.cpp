@@ -61,11 +61,12 @@ page_product_overview::page_product_overview(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void page_product_overview::setPage(page_select_product *pageSelect, page_product_mixing *p_page_product_mixing, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_payment_tap_serial *page_payment_tap_serial, page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product *page_product, page_email *page_email, statusbar *statusbar, keyboard *keyboard)
+void page_product_overview::setPage(page_select_product *pageSelect, page_product_mixing *p_page_product_mixing, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_offline_payment *page_offline_payment, page_payment_tap_serial *page_payment_tap_serial, page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product *page_product, page_email *page_email, statusbar *statusbar, keyboard *keyboard)
 {
     this->p_page_select_product = pageSelect;
     this->p_page_product_mixing = p_page_product_mixing;
     this->p_page_payment_qr = page_qr_payment;
+    this->p_page_offline_payment = page_offline_payment;
     this->p_page_payment_tap_tcp = page_payment_tap_tcp;
     this->p_page_payment_tap_serial = page_payment_tap_serial;
     this->p_page_idle = pageIdle;
@@ -620,6 +621,7 @@ void page_product_overview::apply_promo_code(QString promocode)
         readBuffer.clear();
  
         QString api_url = "api/coupon/find/" + promocode + "/" + machine_id + "/" + product_serial;
+        qDebug() << api_url;
         std::tie(res,readBuffer, http_code) =  p_page_idle->thisMachine->sendRequestToPortal(api_url, "GET", "", "PAGE_PRODUCT_OVERVIEW");
         if (res != CURLE_OK)
         {
@@ -779,10 +781,16 @@ void page_product_overview::on_pushButton_continue(int buttonID)
         p_page_idle->thisMachine->setActivePaymentMethod(ActivePaymentMethod::qr);
 
         std::tie(res,readBuffer, http_code) =  p_page_idle->thisMachine->sendRequestToPortal(PORTAL_PING, "GET", "", "PAGE_PRODUCT_OVERVIEW");
-        if (res != CURLE_OK)
+        if (res != CURLE_OK || http_code  > 300)
         {
             qDebug() << "ERROR: Failed to reach soapstandportal. error code: " + QString::number(res);
-            hideCurrentPageAndShowProvided(p_page_wifi_error);
+            if(p_page_idle->thisMachine->isEnabledOfflinePayment()){
+                qDebug() << "isEnabled";
+                hideCurrentPageAndShowProvided(p_page_offline_payment);
+            }
+            else{
+                hideCurrentPageAndShowProvided(p_page_wifi_error);
+            }
         }
         else
         {

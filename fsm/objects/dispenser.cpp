@@ -118,21 +118,13 @@ DF_ERROR dispenser::setup(pcb *pcb, product *pnumbers)
 // DF_ERROR dispenser::setup(machine *machine, product *pnumbers)
 {
     // Set the pump PWM value to a nominal value
-    // m_machine = machine;
     m_pnumbers = pnumbers;
     m_pcb = pcb;
-    // m_pcb = m_machine->getPcb();
-
     m_pcb->setPumpPWM(DEFAULT_PUMP_PWM);
-
-    // m_pFlowsensor[NUM_FLOWSENSOR] = nullptr;
-
     millisAtLastCheck = MILLIS_INIT_DUMMY;
     previousDispensedVolume = 0;
     isPumpSoftStarting = false;
     pwm_actual_set_speed = 0;
-    // resetActiveProductVolumeDispensed();
-    // resetSelectedProductVolumeDispensed();
 }
 
 DF_ERROR dispenser::loadGeneralProperties()

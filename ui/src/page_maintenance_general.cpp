@@ -43,9 +43,6 @@ void page_maintenance_general::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->registerUserInteraction(this); // replaces old "<<<<<<< Page Enter: pagename >>>>>>>>>" log entry;
     QWidget::showEvent(event);
 
-    statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
-    statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
-
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
     
     ui->checkBox_enable_empty_container->setText("Enable auto empty detection. (If disabled, will display sold out if less than " + QString::number(CONTAINER_EMPTY_THRESHOLD_ML) + "ml remaining)");
@@ -74,8 +71,6 @@ void page_maintenance_general::showEvent(QShowEvent *event)
 
     ui->table_wifi_networks->setRowCount(0);
 
-    ui->keyboard_2->hide();
-
     ui->label_aws_port->setText("AWS backend port: " + QString::number(p_page_idle->thisMachine->m_aws_port));
     ui->label_machine_id->setText("Station id: " + p_page_idle->thisMachine->getMachineId());
 
@@ -96,6 +91,42 @@ void page_maintenance_general::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_feedback);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_status_feedback);
 
+    if(p_page_idle->thisMachine->hasMixing()){
+        p_keyboard->resetKeyboard();
+        p_input_widget->toggleInputWidget(false);
+        statusbarLayout->removeWidget(p_keyboard);    
+        statusbarLayout->removeWidget(p_input_widget);  
+
+        ui->keyboard_2->hide();
+
+        // when declaring custom widget, please remember to goto QT Creator and set the max size and min size for the parent cutsom widget 
+        // (otherwise will have extra white space when delcare custom widget)
+        // navigate to custom widget, right click on the parent widget, hover over Size Constraints, and select set Minimum Size and Maximum Size
+        p_input_widget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+        p_input_widget->setContentsMargins(0, 0, 0, 0); // int left, int top, int right, int bottom);
+
+        p_keyboard->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+        p_keyboard->setContentsMargins(0, 0, 0, 0);
+        p_keyboard->findChild<QWidget *>("keyboard_3")->setGeometry(21, -25, 1040, 495); // int x, int y, int width, int height;
+
+        p_statusbar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+        p_statusbar->setContentsMargins(0, 0, 0, 0); 
+
+        statusbarLayout->setSpacing(0);
+        statusbarLayout->setContentsMargins(0, 0, 0, 0);
+        statusbarLayout->addWidget(p_input_widget);  
+        statusbarLayout->addWidget(p_keyboard);   
+        statusbarLayout->addWidget(p_statusbar);   
+
+        statusbarLayout->setAlignment(Qt::AlignBottom | Qt::AlignVCenter);
+
+    }else{
+        ui->keyboard_2->hide();
+        ui->keyboardTextEntry->setText("");
+        statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
+        statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
+    }
+
     updateLabelValues();
     _maintenanceGeneralPageTimeoutSec = PAGE_MAINTENANCE_GENERAL_TIMEOUT_SECONDS;
     maintenanceGeneralPageEndTimer->start();
@@ -104,19 +135,30 @@ void page_maintenance_general::showEvent(QShowEvent *event)
 /*
  * Page Tracking reference
  */
-void page_maintenance_general::setPage(page_maintenance *pageMaintenance, page_idle *pageIdle, page_idle_products *p_page_idle_products, statusbar *p_statusbar)
+void page_maintenance_general::setPage(page_maintenance *pageMaintenance, page_idle *pageIdle, page_idle_products *p_page_idle_products, statusbar *p_statusbar, keyboard *keyboard, input_widget *input_widget)
 {
 
     this->p_page_maintenance = pageMaintenance;
     this->p_page_idle = pageIdle;
     this->p_statusbar = p_statusbar; 
+    this->p_keyboard = keyboard;
+    this->p_input_widget = input_widget;
 
     ui->pushButton_minimize->setStyleSheet("QPushButton {}"); // flat transparent button  https://stackoverflow.com/questions/29941464/how-to-add-a-button-with-image-and-transparent-background-to-qvideowidget
 }
 
 void page_maintenance_general::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
-    statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
+    maintenanceGeneralPageEndTimer->stop();
+
+    if(p_page_idle->thisMachine->hasMixing()){
+        statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
+        p_input_widget->findChild<QLineEdit *>("lineEdit_input")->setEchoMode(QLineEdit::Password); //set it back to password mode
+        p_keyboard->resetKeyboard();
+    }else{
+        ui->keyboard_2->hide();
+        statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
+    }
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
 }
 void page_maintenance_general::resizeEvent(QResizeEvent *event)
@@ -269,10 +311,20 @@ void page_maintenance_general::button_connect_to_specifiic_wifi_network()
     // _page_maintenanceTimeoutSec = PAGE_MAINTENANCE_TIMEOUT_SECONDS;
 
     // OPEN ON-SCREEN KEYBOARD FOR PASSWORD ENTRY
-
-    ui->keyboard_2->show();
+    if(p_page_idle->thisMachine->hasMixing()){
+        p_keyboard->registerCallBack(std::bind(&page_maintenance_general::doneButtonPressed, this));
+        p_keyboard->registerCancelCallBack(std::bind(&page_maintenance_general::cancelButtonPressed, this));
+        p_keyboard->needCAPS(true);
+        p_keyboard->needCANCEL(true);
+        p_input_widget->findChild<QLineEdit *>("lineEdit_input")->setEchoMode(QLineEdit::Normal);
+        p_keyboard->setKeyboardVisibility(true, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
+        p_input_widget->setLabelInfoText("page_maintenance_general");
+        p_input_widget->toggleInputWidget(true);
+    }else{
+        ui->keyboard_2->show();
+        ui->keyboardTextEntry->setText("");
+    }
     ui->wifiPassLabel->setText(button->objectName());
-    ui->keyboardTextEntry->setText("");
 
     QProcess process;
     process.start("iwgetid -r"); // nmcli -t -f NAME connection show --active
@@ -294,6 +346,50 @@ void page_maintenance_general::button_connect_to_specifiic_wifi_network()
     process.waitForFinished(-1);
     stdout = process.readAllStandardOutput();
     ui->label_wifi_status->setText("Wifi State: " + stdout);
+}
+
+void page_maintenance_general::cancelButtonPressed(){
+    p_input_widget->toggleInputWidget(false);
+    p_keyboard->resetKeyboard();
+    p_keyboard->setKeyboardVisibility(false, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
+}
+
+void page_maintenance_general::doneButtonPressed(){
+    QString textEntry = p_input_widget->findChild<QLineEdit *>("lineEdit_input")->text();
+    QString password = p_input_widget->findChild<QLineEdit *>("lineEdit_input")->text();
+    //        qDebug() << "Password: " << password;
+    // ATTEMPT nmcli connection
+
+    QString connect_string = "nmcli dev wifi connect '" + ui->wifiPassLabel->text() + "' password '" + textEntry + "'";
+    QByteArray ba = connect_string.toLocal8Bit();
+    const char *c_str = ba.data();
+    //        qDebug() << c_str;
+    system(c_str);
+
+    QProcess process;
+    process.start("iwgetid -r");
+    process.waitForFinished(-1);
+    QString stdout = process.readAllStandardOutput();
+    ui->label_wifi_name->setText("Wifi Name: " + stdout);
+
+    process.start("hostname -I");
+    process.waitForFinished(-1);
+    stdout = process.readAllStandardOutput();
+    ui->label_wifi_ip_address->setText("Wifi IP Address: " + stdout);
+
+    process.start("nmcli -t -f STATE general");
+    process.waitForFinished(-1);
+    stdout = process.readAllStandardOutput();
+    ui->label_wifi_status->setText("Wifi State: " + stdout);
+
+    process.start("nmcli networking connectivity");
+    process.waitForFinished(-1);
+    stdout = process.readAllStandardOutput();
+    ui->label_wifi_internet->setText("Wifi Connectivity: " + stdout);
+
+    p_keyboard->setKeyboardVisibility(false, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
+    p_keyboard->resetKeyboard();
+    p_input_widget->toggleInputWidget(false);
 }
 
 void page_maintenance_general::keyboardButtonPressed(int buttonID)

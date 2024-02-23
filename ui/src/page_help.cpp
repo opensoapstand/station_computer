@@ -219,6 +219,7 @@ void page_help::on_pushButton_to_maintenance_clicked()
             p_keyboard->needCAPS(true);
             p_keyboard->needCANCEL(true);
             p_keyboard->setKeyboardVisibility(true, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
+            p_input_widget->setLabelInfoText("page_help");
             p_input_widget->toggleInputWidget(true);
         }else{
             ui->keyboard_3->show();
@@ -228,6 +229,7 @@ void page_help::on_pushButton_to_maintenance_clicked()
 
 void page_help::cancelButtonPressed(){
     p_input_widget->toggleInputWidget(false);
+    p_keyboard->resetKeyboard();
     p_keyboard->setKeyboardVisibility(false, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
 }
 

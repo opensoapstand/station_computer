@@ -246,7 +246,7 @@ int main(int argc, char *argv[])
     initPage->setPage(p_page_idle);
     p_page_maintenance_dispenser->setPage(p_page_maintenance, p_page_idle, p_page_idle_products, p_statusbar);
 
-    p_page_maintenance_general->setPage(p_page_maintenance, p_page_idle, p_page_idle_products, p_statusbar);
+    p_page_maintenance_general->setPage(p_page_maintenance, p_page_idle, p_page_idle_products, p_statusbar, p_keyboard, p_input_widget);
     p_page_maintenance->setPage(p_page_idle, p_page_maintenance_dispenser, p_page_maintenance_general, p_page_select_product, p_page_product, p_statusbar);
     p_page_idle->setPage(p_page_select_product, p_page_buyBottle, p_page_maintenance, p_page_maintenance_general, p_page_idle_products, p_page_wifi_error, p_statusbar, p_page_product_menu, p_keyboard);
     p_page_idle_products->setPage(p_page_idle, p_page_select_product);

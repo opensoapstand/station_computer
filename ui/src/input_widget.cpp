@@ -30,9 +30,13 @@ void input_widget::showEvent(QShowEvent *event)
     ui->label_input_info->setStyleSheet(styleSheet);
     ui->lineEdit_input->setStyleSheet(styleSheet);
 
-    p_page_idle->thisMachine->setTemplateTextToObject(ui->label_input_info);
+    // p_page_idle->thisMachine->setTemplateTextToObject(ui->label_input_info);
 
     refresh();
+}
+
+void input_widget::setLabelInfoText(QString label){
+    p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_input_info, label);
 }
 
 void input_widget::toggleInputWidget(bool isVisible)

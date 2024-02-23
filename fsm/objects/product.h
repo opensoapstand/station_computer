@@ -138,7 +138,7 @@ private:
 
         char sizeIndexToChar[4] = SIZE_INDEX_TO_CHAR_ARRAY;
 
-        string m_product_properties[100];
+        string m_product_properties[PRODUCT_DETAILS_FIELD_COUNT];
 
         // string m_display_unit;
         string m_mix_pnumbers_str;

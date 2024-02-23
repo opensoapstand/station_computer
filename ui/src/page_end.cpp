@@ -217,7 +217,6 @@ void page_end::sendCompleteOrderToCloud(QString paymentMethod)
     }
 }
 
-
 void page_end::controllerFinishedTransaction()
 {
     if (is_in_state_thank_you)
@@ -231,8 +230,6 @@ void page_end::controllerFinishedTransaction()
         qDebug() << "WARNING: Transaction end received while not in thank you page.";
     }
 }
-
-
 
 void page_end::transactionToFile(QString curl_params)
 {
@@ -261,16 +258,10 @@ void page_end::on_pushButton_to_idle_clicked()
 
 void page_end::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
-
     is_in_state_thank_you = false;
-    // p_page_idle->setCouponCode("");
-
     thankYouEndTimer->stop();
-    //  qDebug() << "Thank you timer stopped. ";
     statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
-    //  qDebug() << "statusbar hidden ";
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
-    //  qDebug() << "page transition done.  ";
 }
 
 void page_end::finishHandler()

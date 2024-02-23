@@ -883,6 +883,7 @@ void product::loadProductPropertiesFromCsv()
             return;
         }
     }
+
     debugOutput::sendMessage("Could not load product from products file (not found). Pnumber " + std::to_string(m_pnumber), MSG_ERROR);
 }
 
@@ -1023,6 +1024,9 @@ bool product::loadProductParametersFromDb()
     }
 
     parseMixPNumbersAndRatiosCsv(m_mix_pnumbers_str, m_mix_ratios_str);
+    
+    
+    
     // product::parseDoubleCsvString(m_mix_ratios_str, m_mix_ratios, m_mix_ratios_count);
     // product::parseIntCsvString(m_mix_pnumbers_str, m_mix_pnumbers, m_mix_pnumbers_count);
 

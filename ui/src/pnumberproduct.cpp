@@ -72,6 +72,9 @@ bool pnumberproduct::loadProductPropertiesFromProductsFile()
             m_description_ui = fields[CSV_PRODUCT_COL_DESCRIPTION_UI];
             m_features_ui = fields[CSV_PRODUCT_COL_FEATURES_UI];
             m_ingredients_ui = fields[CSV_PRODUCT_COL_INGREDIENTS_UI];
+
+            //Jordan: set product mixing parameters here CSV_PRODUCT_COL_MIX_RATIOS_DEFAULT
+
             break;
         }
     }

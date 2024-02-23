@@ -340,7 +340,9 @@ bool DbManager::getAllProductProperties(int pnumber,
                                         QString *productId,
                                         QString *soapstand_product_serial,
                                         QVector<int> &mixPNumbers,
-                                        QVector<double> &mixRatios,
+                                        QVector<double> &mixRatiosLow,
+                                        QVector<double> &mixRatiosDefault,
+                                        QVector<double> &mixRatiosHigh,
                                         // QString *size_unit,
                                         // QString *m_currency_deprecated, //_dummy_deprecated
                                         // QString *m_payment_deprecated,  //_deprecated,
@@ -365,7 +367,9 @@ bool DbManager::getAllProductProperties(int pnumber,
 
 {
     QString mix_pnumbers_str;
-    QString mix_ratios_str;
+    QString mix_ratios_low_str;
+    QString mix_ratios_default_str;
+    QString mix_ratios_high_str;
     int row_count = 0;
 
     qDebug() << "Open db: load all product properties for pnumber: " << pnumber << "From: " << CONFIG_DB_PATH;
@@ -377,54 +381,56 @@ bool DbManager::getAllProductProperties(int pnumber,
             "SELECT "
             "soapstand_product_serial," // 0
             "mix_pnumbers,"
-            "mix_ratios,"
-            "productId,"
+            "mix_ratios_low," // 2
+            "mix_ratios_default," // 3
+            "mix_ratios_high," // 4
+            "productId," // 5
             "name,"
             "currency,"
             "name_receipt,"
             "concentrate_multiplier,"
-            "dispense_speed," // 8
+            "dispense_speed," // 10
             "threshold_flow,"
-            "retraction_time," // 10
+            "retraction_time," // 12
             "calibration_const,"
             "volume_per_tick,"
             "last_restock,"
             "volume_full,"
             "volume_remaining,"
-            "volume_dispensed_since_restock," // 16
+            "volume_dispensed_since_restock," // 18
             "volume_dispensed_total,"
             "is_enabled_small,"
             "is_enabled_medium,"
-            "is_enabled_large," // 20
+            "is_enabled_large," // 22
             "is_enabled_custom,"
             "size_small,"
             "size_medium,"
             "size_large,"
             "size_custom_min,"
-            "size_custom_max," // 26
+            "size_custom_max," // 28
             "price_small,"
             "price_medium,"
             "price_large,"
-            "price_custom," // 30
+            "price_custom," // 32
             "plu_small,"
             "plu_medium,"
             "plu_large,"
             "plu_custom,"
-            "pid_small," // 35
+            "pid_small," // 37
             "pid_medium,"
             "pid_large,"
             "pid_custom,"
             "flavour,"
             "image_url,"
-            "type," // 41
+            "type," // 43
             "ingredients,"
             "features,"
             "description,"
-            "is_enabled_custom_discount," // 45
+            "is_enabled_custom_discount," // 47
             "size_custom_discount,"
-            "price_custom_discount," // 47
+            "price_custom_discount," // 49
             "is_enabled,"
-            "status_text," // 49
+            "status_text," // 51
             "is_enabled_sample," 
             "size_sample,"
             "price_sample "
@@ -449,57 +455,59 @@ bool DbManager::getAllProductProperties(int pnumber,
 
             *soapstand_product_serial = qry.value(0).toString();
             mix_pnumbers_str = qry.value(1).toString();
-            mix_ratios_str = qry.value(2).toString();
-            *productId = qry.value(3).toString();
+            mix_ratios_low_str = qry.value(2).toString();
+            mix_ratios_default_str = qry.value(3).toString();
+            mix_ratios_high_str = qry.value(4).toString();
+            *productId = qry.value(5).toString();
 
-            *name_receipt = qry.value(6).toString();
-            *concentrate_multiplier = qry.value(7).toInt();
-            *dispense_speed = qry.value(8).toInt();
-            *threshold_flow = qry.value(9).toDouble();
-            *retraction_time = qry.value(10).toInt();
-            *calibration_const = qry.value(11).toDouble();
-            *volume_per_tick = qry.value(12).toDouble();
-            *last_restock = qry.value(13).toString();
-            *volume_full = qry.value(14).toDouble();
-            *volume_remaining = qry.value(15).toDouble();
-            *volume_dispensed_since_restock = qry.value(16).toDouble();
-            *volume_dispensed_total = qry.value(17).toDouble();
+            *name_receipt = qry.value(8).toString();
+            *concentrate_multiplier = qry.value(9).toInt();
+            *dispense_speed = qry.value(10).toInt();
+            *threshold_flow = qry.value(11).toDouble();
+            *retraction_time = qry.value(12).toInt();
+            *calibration_const = qry.value(13).toDouble();
+            *volume_per_tick = qry.value(14).toDouble();
+            *last_restock = qry.value(15).toString();
+            *volume_full = qry.value(16).toDouble();
+            *volume_remaining = qry.value(17).toDouble();
+            *volume_dispensed_since_restock = qry.value(18).toDouble();
+            *volume_dispensed_total = qry.value(19).toDouble();
 
-            isSizeEnabled[1] = qry.value(18).toInt(); // small is index 1!!
-            isSizeEnabled[2] = qry.value(19).toInt();
-            isSizeEnabled[3] = qry.value(20).toInt();
-            isSizeEnabled[4] = qry.value(21).toInt();
+            isSizeEnabled[1] = qry.value(20).toInt(); // small is index 1!!
+            isSizeEnabled[2] = qry.value(21).toInt();
+            isSizeEnabled[3] = qry.value(22).toInt();
+            isSizeEnabled[4] = qry.value(23).toInt();
 
-            volumes[1] = qry.value(22).toDouble();
-            volumes[2] = qry.value(23).toDouble();
-            volumes[3] = qry.value(24).toDouble();
+            volumes[1] = qry.value(24).toDouble();
+            volumes[2] = qry.value(25).toDouble();
+            volumes[3] = qry.value(26).toDouble();
             // size custom min
-            volumes[4] = qry.value(26).toDouble(); // size custom max.
+            volumes[4] = qry.value(28).toDouble(); // size custom max.
 
-            prices[1] = qry.value(27).toDouble();
-            prices[2] = qry.value(28).toDouble();
-            prices[3] = qry.value(29).toDouble();
-            prices[4] = qry.value(30).toDouble();
+            prices[1] = qry.value(29).toDouble();
+            prices[2] = qry.value(30).toDouble();
+            prices[3] = qry.value(31).toDouble();
+            prices[4] = qry.value(32).toDouble();
 
-            PLUs[SIZE_SMALL_INDEX] = qry.value(31).toString();
-            PLUs[SIZE_MEDIUM_INDEX] = qry.value(32).toString();
-            PLUs[SIZE_LARGE_INDEX] = qry.value(33).toString();
-            PLUs[SIZE_CUSTOM_INDEX] = qry.value(34).toString();
+            PLUs[SIZE_SMALL_INDEX] = qry.value(33).toString();
+            PLUs[SIZE_MEDIUM_INDEX] = qry.value(34).toString();
+            PLUs[SIZE_LARGE_INDEX] = qry.value(35).toString();
+            PLUs[SIZE_CUSTOM_INDEX] = qry.value(36).toString();
 
-            PIDs[1] = qry.value(35).toString();
-            PIDs[2] = qry.value(36).toString();
-            PIDs[3] = qry.value(37).toString();
-            PIDs[4] = qry.value(38).toString();
+            PIDs[1] = qry.value(37).toString();
+            PIDs[2] = qry.value(38).toString();
+            PIDs[3] = qry.value(39).toString();
+            PIDs[4] = qry.value(40).toString();
 
-            *is_enabled_custom_discount = qry.value(45).toInt();
-            *size_custom_discount = qry.value(46).toDouble();
-            *price_custom_discount = qry.value(47).toDouble();
-            *is_enabled = qry.value(48).toInt();
-            *status_text = qry.value(49).toString();
+            *is_enabled_custom_discount = qry.value(47).toInt();
+            *size_custom_discount = qry.value(48).toDouble();
+            *price_custom_discount = qry.value(49).toDouble();
+            *is_enabled = qry.value(50).toInt();
+            *status_text = qry.value(51).toString();
             // Sample size assignment
-            isSizeEnabled[6] = qry.value(50).toInt();
-            volumes[6] = qry.value(51).toDouble();
-            prices[6] = qry.value(52).toDouble();
+            isSizeEnabled[6] = qry.value(52).toInt();
+            volumes[6] = qry.value(53).toDouble();
+            prices[6] = qry.value(54).toDouble();
         }
 
         qry.finish();
@@ -518,7 +526,9 @@ bool DbManager::getAllProductProperties(int pnumber,
     }
 
     df_util::csvQStringToQVectorInt(mix_pnumbers_str, mixPNumbers);
-    df_util::csvQStringToQVectorDouble(mix_ratios_str, mixRatios);
+    df_util::csvQStringToQVectorDouble(mix_ratios_low_str, mixRatiosLow);
+    df_util::csvQStringToQVectorDouble(mix_ratios_default_str, mixRatiosDefault);
+    df_util::csvQStringToQVectorDouble(mix_ratios_high_str, mixRatiosHigh);
     return true;
 }
 

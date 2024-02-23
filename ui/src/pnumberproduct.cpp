@@ -121,16 +121,16 @@ QString pnumberproduct::getMixPNumbersAsCsv()
     return csvString;
 }
 
-QString pnumberproduct::getMixRatiosAsCsv()
+QString pnumberproduct::getMixRatiosAsCsv(QVector<double> ratios)
 {
     QString csvString;
-    if (m_mixRatios.size() > 0)
+    if (ratios.size() > 0)
     {
 
-        for (int i = 0; i < m_mixRatios.size(); ++i)
+        for (int i = 0; i < ratios.size(); ++i)
         {
-            csvString += QString::number(m_mixRatios[i]);
-            if (i < m_mixRatios.size() - 1) // Don't add a comma after the last element
+            csvString += QString::number(ratios[i]);
+            if (i < ratios.size() - 1) // Don't add a comma after the last element
                 csvString += ",";
         }
     }
@@ -145,9 +145,17 @@ QVector<int> pnumberproduct::getMixPNumbers()
 {
     return m_mixPNumbers;
 }
+QVector<double> pnumberproduct::getMixRatiosLow()
+{
+    return m_mixRatiosLow;
+}
 QVector<double> pnumberproduct::getMixRatios()
 {
-    return m_mixRatios;
+    return m_mixRatiosDefault;
+}
+QVector<double> pnumberproduct::getMixRatiosHigh()
+{
+    return m_mixRatiosHigh;
 }
 
 bool pnumberproduct::loadProductPropertiesFromDb()
@@ -157,7 +165,9 @@ bool pnumberproduct::loadProductPropertiesFromDb()
                                   &m_aws_product_id,
                                   &m_soapstand_product_serial,
                                   m_mixPNumbers,
-                                  m_mixRatios,
+                                  m_mixRatiosLow,
+                                  m_mixRatiosDefault,
+                                  m_mixRatiosHigh,
                                   &m_name_receipt,
                                   &m_concentrate_multiplier,
                                   &m_dispense_speed,
@@ -623,59 +633,55 @@ bool pnumberproduct::isCustomMix()
     return isCustomMix;
 }
 
-void pnumberproduct::resetCustomMixRatioParameters()
-{
-    // the mixing ratios might be altered by the user. For this we use a ratio-modifier.
-    // additives is mixPNumbers - base product.
-    m_additivesCustomMixRatioModifiers.clear();
-    for (int i = 0; i < getMixRatios().size() - 1; i++)
-    {
-        m_additivesCustomMixRatioModifiers.append(1);
-    }
-    m_customMixRatios.clear();
-    for (int i = 0; i < getMixRatios().size(); i++)
-    {
-
-        m_customMixRatios.append(getMixRatios()[i]); // add base product ratio
-    }
-}
-
-void pnumberproduct::adjustAdditivesRatioModifier(int index, double additiveModifier)
-{
-
-    m_additivesCustomMixRatioModifiers[index] = additiveModifier;
-    setCustomMixRatios();
-}
-
-QVector<double> pnumberproduct::getAdditivesRatioModifier()
-{
-    return m_additivesCustomMixRatioModifiers;
-}
-
 QVector<double> pnumberproduct::getCustomMixRatios()
 {
     return m_customMixRatios;
 }
 
-void pnumberproduct::setCustomMixRatios()
-{
-    // two options:
-    //    1. keep rations e.g. 0.7,0.2,0.1 --> 0.1 become custom *2 ==> 0.2  ==> remaining 0.7+0.2 used to be 90%, but will now be 80%, so: modifier: 0.8/0.9  ==> new ratios = 62.22%,17.77%,20% ONLY WORKS FOR ONE CHANGE AT A TIME
-    //    or
-    //    2. used modifiers to change the additives percentages and use "the rest" to add with base product. e.g. 0.7,0.2,0.1   --> 0.1 becomes custom 0.2 ==> 0.2,0.2 for the addtives = 40% ==> base will be 60% now.    0.6,0.2,0.2 as end custom mix
+void pnumberproduct::resetCustomMixRatioParameters(){
+    m_customMixRatios.clear();
+    for (int i = 0; i < getMixRatios().size(); i++)
+    {
+        // set default mix ratio to custom mix ratio
+        m_customMixRatios.append(getMixRatios()[i]);
+    }
+}
 
-    // let's keep it simple and use method 2, always recalculate for zero.
-
+void pnumberproduct::setCustomMixRatios(int index, QString plusOrMinus){
     double custom_ratios_total = 0;
     m_customMixRatios.clear();
-    m_customMixRatios.append(getMixRatios()[0]); // add base product ratio
+    // m_customMixRatios.append(getMixRatios()[0]); // add base product ratio
+
+    // minus
+    if(plusOrMinus == "-"){
+        if(m_customMixRatios[index] == getMixRatiosLow()[index]){
+            // dont do anything
+        }else{
+            if(m_customMixRatios[index] == getMixRatios()[index]){
+                m_customMixRatios[index] = getMixRatiosLow()[index];
+            }else{
+                m_customMixRatios[index] = getMixRatios()[index];
+            }
+
+        }
+    }else{
+        // plus
+        if(m_customMixRatios[index] == getMixRatiosHigh()[index]){
+            // dont do anything
+        }else{
+            if(m_customMixRatios[index] == getMixRatios()[index]){
+                m_customMixRatios[index] = getMixRatiosHigh()[index];
+            }else{
+                m_customMixRatios[index] = getMixRatios()[index];
+            }
+
+        }
+    }
+
     for (int i = 1; i < getMixRatios().size(); i++)
     {
         // go over all ADDITIVES (skip base)
-        // ratio_modifiers_total += m_additivesCustomMixRatioModifiers[i - 1];
-        double customRatio = m_additivesCustomMixRatioModifiers[i - 1] * getMixRatios()[i];
-        custom_ratios_total += customRatio;
-        m_customMixRatios.append(customRatio);
+        custom_ratios_total += m_customMixRatios[i+1];
     }
 
     if (custom_ratios_total > 1.0)
@@ -689,7 +695,79 @@ void pnumberproduct::setCustomMixRatios()
     }
 }
 
+QVector<double> pnumberproduct::getAdditivesRatioModifier()
+{
+    return m_customMixRatios;
+}
+
 double pnumberproduct::getAdditivesRatioModifier(int index)
 {
-    return m_additivesCustomMixRatioModifiers[index];
+    return m_customMixRatios[index];
 }
+
+///////// FOR PERCENTAGE /////////////
+// void pnumberproduct::setCustomMixRatios()
+// {
+//     // two options:
+//     //    1. keep rations e.g. 0.7,0.2,0.1 --> 0.1 become custom *2 ==> 0.2  ==> remaining 0.7+0.2 used to be 90%, but will now be 80%, so: modifier: 0.8/0.9  ==> new ratios = 62.22%,17.77%,20% ONLY WORKS FOR ONE CHANGE AT A TIME
+//     //    or
+//     //    2. used modifiers to change the additives percentages and use "the rest" to add with base product. e.g. 0.7,0.2,0.1   --> 0.1 becomes custom 0.2 ==> 0.2,0.2 for the addtives = 40% ==> base will be 60% now.    0.6,0.2,0.2 as end custom mix
+
+//     // let's keep it simple and use method 2, always recalculate for zero.
+
+//     double custom_ratios_total = 0;
+//     m_customMixRatios.clear();
+//     m_customMixRatios.append(getMixRatios()[0]); // add base product ratio
+//     for (int i = 1; i < getMixRatios().size(); i++)
+//     {
+//         // go over all ADDITIVES (skip base)
+//         // ratio_modifiers_total += m_additivesCustomMixRatioModifiers[i - 1];
+//         double customRatio = m_additivesCustomMixRatioModifiers[i - 1] * getMixRatios()[i];
+//         custom_ratios_total += customRatio;
+//         m_customMixRatios.append(customRatio);
+//     }
+
+//     if (custom_ratios_total > 1.0)
+//     {
+//         qDebug() << "ERROR: too much additives added, will reset to default.";
+//         resetCustomMixRatioParameters();
+//     }
+//     else
+//     {
+//         m_customMixRatios[0] = 1.0 - custom_ratios_total;
+//     }
+// }
+
+// void pnumberproduct::resetCustomMixRatioParameters()
+// {
+//     // the mixing ratios might be altered by the user. For this we use a ratio-modifier.
+//     // additives is mixPNumbers - base product.
+//     m_additivesCustomMixRatioModifiers.clear();
+//     for (int i = 0; i < getMixRatios().size() - 1; i++)
+//     {
+//         m_additivesCustomMixRatioModifiers.append(1);
+//     }
+//     m_customMixRatios.clear();
+//     for (int i = 0; i < getMixRatios().size(); i++)
+//     {
+
+//         m_customMixRatios.append(getMixRatios()[i]); // add base product ratio
+//     }
+// }
+
+// void pnumberproduct::adjustAdditivesRatioModifier(int index, double additiveModifier)
+// {
+
+//     m_additivesCustomMixRatioModifiers[index] = additiveModifier;
+//     setCustomMixRatios();
+// }
+
+// QVector<double> pnumberproduct::getAdditivesRatioModifier()
+// {
+//     return m_additivesCustomMixRatioModifiers;
+// }
+
+// double pnumberproduct::getAdditivesRatioModifier(int index)
+// {
+//     return m_additivesCustomMixRatioModifiers[index];
+// }

@@ -668,13 +668,14 @@ void page_product_mixing::additiveMinusButtonsPressed(int index){
     // double additiveDefaultPRatio = p_page_idle->thisMachine->getSelectedProduct()->getMixRatios()[index];
     // double additiveHighPRatio = p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosHigh()[index];
     // double additiveCustomMixPRatio = p_page_idle->thisMachine->getSelectedProduct()->getAdditivesRatioModifier(index);
-    qDebug() << "LOWWWW" << p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosLow()[index];
-    qDebug() << "DEFAULTTT" << p_page_idle->thisMachine->getSelectedProduct()->getMixRatios()[index];
-    qDebug() << "HIGHHH" << p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosHigh()[index];
-    qDebug() << "CUSTOM" << p_page_idle->thisMachine->getSelectedProduct()->getAdditivesRatioModifier(index);
+    qDebug() << index;
+    qDebug() << "LOWWWW" << p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosLow();
+    qDebug() << "DEFAULTTT" << p_page_idle->thisMachine->getSelectedProduct()->getMixRatios();
+    qDebug() << "HIGHHH" << p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosHigh();
+    qDebug() << "CUSTOM" << p_page_idle->thisMachine->getSelectedProduct()->getCustomMixRatios();
 
-    // p_page_idle->thisMachine->getSelectedProduct()->setCustomMixRatios(index, "-");
-    // qDebug() << "CUSTOM AFTERRRRR" << p_page_idle->thisMachine->getSelectedProduct()->getAdditivesRatioModifier(index);
+    p_page_idle->thisMachine->getSelectedProduct()->setCustomMixRatios(index, "-");
+    qDebug() << "CUSTOM AFTERRRRR" << p_page_idle->thisMachine->getSelectedProduct()->getCustomMixRatios();
     // double additiveRatioToPercentage = convertAdditivePRatioToPercentage(additivePRatio) - ADDITIVES_RATIO_INCREMENT;
     // if( additiveRatioToPercentage >= 0){
     //     additivePercentageLabels[index - 1]->setText(QString::number(additiveRatioToPercentage) + "%");

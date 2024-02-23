@@ -147,15 +147,15 @@ QVector<int> pnumberproduct::getMixPNumbers()
 }
 QVector<double> pnumberproduct::getMixRatiosLow()
 {
-    return m_mixRatiosLow;
+    // return m_mixRatiosLow;
 }
 QVector<double> pnumberproduct::getMixRatios()
 {
-    return m_mixRatiosDefault;
+    // return m_mixRatiosDefault;
 }
 QVector<double> pnumberproduct::getMixRatiosHigh()
 {
-    return m_mixRatiosHigh;
+    // return m_mixRatiosHigh;
 }
 
 bool pnumberproduct::loadProductPropertiesFromDb()
@@ -165,9 +165,6 @@ bool pnumberproduct::loadProductPropertiesFromDb()
                                   &m_aws_product_id,
                                   &m_soapstand_product_serial,
                                   m_mixPNumbers,
-                                  m_mixRatiosLow,
-                                  m_mixRatiosDefault,
-                                  m_mixRatiosHigh,
                                   &m_name_receipt,
                                   &m_concentrate_multiplier,
                                   &m_dispense_speed,
@@ -638,6 +635,11 @@ QVector<double> pnumberproduct::getCustomMixRatios()
     return m_customMixRatios;
 }
 
+double pnumberproduct::getCustomMixRatios(int index)
+{
+    return m_customMixRatios[index];
+}
+
 void pnumberproduct::resetCustomMixRatioParameters(){
     m_customMixRatios.clear();
     for (int i = 0; i < getMixRatios().size(); i++)
@@ -649,9 +651,7 @@ void pnumberproduct::resetCustomMixRatioParameters(){
 
 void pnumberproduct::setCustomMixRatios(int index, QString plusOrMinus){
     double custom_ratios_total = 0;
-    m_customMixRatios.clear();
     // m_customMixRatios.append(getMixRatios()[0]); // add base product ratio
-
     // minus
     if(plusOrMinus == "-"){
         if(m_customMixRatios[index] == getMixRatiosLow()[index]){
@@ -681,7 +681,7 @@ void pnumberproduct::setCustomMixRatios(int index, QString plusOrMinus){
     for (int i = 1; i < getMixRatios().size(); i++)
     {
         // go over all ADDITIVES (skip base)
-        custom_ratios_total += m_customMixRatios[i+1];
+        custom_ratios_total += m_customMixRatios[i];
     }
 
     if (custom_ratios_total > 1.0)
@@ -693,16 +693,6 @@ void pnumberproduct::setCustomMixRatios(int index, QString plusOrMinus){
     {
         m_customMixRatios[0] = 1.0 - custom_ratios_total;
     }
-}
-
-QVector<double> pnumberproduct::getAdditivesRatioModifier()
-{
-    return m_customMixRatios;
-}
-
-double pnumberproduct::getAdditivesRatioModifier(int index)
-{
-    return m_customMixRatios[index];
 }
 
 ///////// FOR PERCENTAGE /////////////

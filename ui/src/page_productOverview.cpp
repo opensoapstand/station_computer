@@ -834,7 +834,7 @@ QString page_product_overview::additivies_overview(QString product_additives_ove
     { // first pnumber in mixpnumber is the base product, so ignore
         int additivePNumber = p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers()[i + 1];
         product_additives_overview = product_additives_overview + p_page_idle->thisMachine->getProductByPNumber(additivePNumber)->getProductName() + " ";
-        double additivePRatio = p_page_idle->thisMachine->getSelectedProduct()->getAdditivesRatioModifier(i);
+        double additivePRatio = p_page_idle->thisMachine->getSelectedProduct()->getCustomMixRatios(i+1);
         QString additivePRatio_string = QString::number(p_page_product_mixing->convertAdditivePRatioToPercentage(additivePRatio));
         if (i + 1 == p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size() - 1)
         {

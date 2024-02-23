@@ -118,9 +118,8 @@ public:
 
     bool isCustomMix();
     // void adjustAdditivesRatioModifier(int index, double additiveModifier);
-    QVector<double> getAdditivesRatioModifier();
-    double getAdditivesRatioModifier(int index);
     QVector<double> getCustomMixRatios();
+    double getCustomMixRatios(int index);
     void resetCustomMixRatioParameters();
     void setCustomMixRatios(int index, QString plusOrMinus);
     QString getVolumeDispensedMixedProduct();

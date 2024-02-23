@@ -204,23 +204,20 @@ void page_offline_payment::apply_code(QString promocode){
 
 void page_offline_payment::setupQrOrder()
 {
-    QString MachineSerialNumber = p_page_idle->thisMachine->getMachineId();
-    QString productUnits = p_page_idle->thisMachine->getSizeUnit();
     QString productId = p_page_idle->thisMachine->getSelectedProduct()->getAwsProductId();
-    QString contents = p_page_idle->thisMachine->getSelectedProduct()->getProductName();
     QString quantity_requested = p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(false, false);
     char drinkSize = p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar();
     double originalPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
+    QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
 
     QString price = QString::number(p_page_idle->thisMachine->getPriceWithDiscount(originalPrice), 'f', 2);
-    QString curl_params = QString("size=%1&price=%2&pid=%3&quantity=%4")
+    QString curl_params = QString("size=%1&price=%2&pid=%3&quantity=%4&session=%5")
                           .arg(drinkSize)
                           .arg(price)
                           .arg(productId)
-                          .arg(quantity_requested);
+                          .arg(quantity_requested)
+                          .arg(time);
     secretCode = generateCode(curl_params);
-    qDebug() << curl_params;
-    qDebug() << secretCode;
     QPixmap map;
     if(p_page_idle->thisMachine->hasMixing()){
         map = QPixmap(451, 451);
@@ -232,7 +229,7 @@ void page_offline_payment::setupQrOrder()
     QPainter painter(&map);
     QString portal_base_url = p_page_idle->thisMachine->getPortalBaseUrl();
     // build up qr content (link)
-    QString qrdata = portal_base_url + "offline?order=" + curl_params;
+    QString qrdata = portal_base_url + "offlinePayment?" + curl_params;
     if ((p_page_idle->thisMachine->getMachineId()).left(2) == "AP")
     {
         qrdata = portal_base_url+"paymentAelen?oid=" + curl_params;

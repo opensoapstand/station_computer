@@ -339,10 +339,10 @@ bool DbManager::getAllSlotProperties(int slot,
 bool DbManager::getAllProductProperties(int pnumber,
                                         QString *productId,
                                         QString *soapstand_product_serial,
-                                        QVector<int> &mixPNumbers,
-                                        QVector<double> &mixRatiosLow,
-                                        QVector<double> &mixRatiosDefault,
-                                        QVector<double> &mixRatiosHigh,
+                                        // QVector<int> &mixPNumbers,
+                                        // QVector<double> &mixRatiosLow,
+                                        // QVector<double> &mixRatiosDefault,
+                                        // QVector<double> &mixRatiosHigh,
                                         // QString *size_unit,
                                         // QString *m_currency_deprecated, //_dummy_deprecated
                                         // QString *m_payment_deprecated,  //_deprecated,
@@ -525,10 +525,10 @@ bool DbManager::getAllProductProperties(int pnumber,
         return false;
     }
 
-    df_util::csvQStringToQVectorInt(mix_pnumbers_str, mixPNumbers);
-    df_util::csvQStringToQVectorDouble(mix_ratios_low_str, mixRatiosLow);
-    df_util::csvQStringToQVectorDouble(mix_ratios_default_str, mixRatiosDefault);
-    df_util::csvQStringToQVectorDouble(mix_ratios_high_str, mixRatiosHigh);
+    // df_util::csvQStringToQVectorInt(mix_pnumbers_str, mixPNumbers);
+    // df_util::csvQStringToQVectorDouble(mix_ratios_low_str, mixRatiosLow);
+    // df_util::csvQStringToQVectorDouble(mix_ratios_default_str, mixRatiosDefault);
+    // df_util::csvQStringToQVectorDouble(mix_ratios_high_str, mixRatiosHigh);
     return true;
 }
 

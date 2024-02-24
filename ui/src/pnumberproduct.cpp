@@ -62,6 +62,10 @@ bool pnumberproduct::loadProductPropertiesFromProductsFile()
 
         QStringList fields = line.split("\t");
         QString pnumberNotation = convertPNumberToPNotation(getPNumber());
+        QString mix_pnumbers_str;
+        QString mix_ratios_low_str;
+        QString mix_ratios_default_str;
+        QString mix_ratios_high_str;
         int compareResult = QString::compare(fields[CSV_PRODUCT_COL_ID], pnumberNotation, Qt::CaseSensitive);
         if (compareResult == 0)
         {
@@ -73,10 +77,22 @@ bool pnumberproduct::loadProductPropertiesFromProductsFile()
             m_features_ui = fields[CSV_PRODUCT_COL_FEATURES_UI];
             m_ingredients_ui = fields[CSV_PRODUCT_COL_INGREDIENTS_UI];
 
-            //Jordan: set product mixing parameters here CSV_PRODUCT_COL_MIX_RATIOS_DEFAULT
+            mix_pnumbers_str = fields[CSV_PRODUCT_COL_MIX_PNUMBERS];
+            mix_ratios_low_str = fields[CSV_PRODUCT_COL_MIX_RATIOS_LOW];
+            mix_ratios_default_str = fields[CSV_PRODUCT_COL_MIX_RATIOS_DEFAULT];
+            mix_ratios_high_str = fields[CSV_PRODUCT_COL_MIX_RATIOS_HIGH];
 
+            qDebug() << "@!@@@@" << mix_pnumbers_str;
+            qDebug() << "@!@@@@" << mix_ratios_low_str;
+            qDebug() << "@!@@@@" << mix_ratios_default_str;
+            qDebug() << "@!@@@@" << mix_ratios_high_str;
+            df_util::csvQStringToQVectorInt(mix_pnumbers_str, m_mixPNumbers);
+            df_util::csvQStringToQVectorDouble(mix_ratios_low_str, m_mixRatiosLow);
+            df_util::csvQStringToQVectorDouble(mix_ratios_default_str, m_mixRatiosDefault);
+            df_util::csvQStringToQVectorDouble(mix_ratios_high_str, m_mixRatiosHigh);
             break;
         }
+
     }
     file.close();
     return true;
@@ -150,15 +166,15 @@ QVector<int> pnumberproduct::getMixPNumbers()
 }
 QVector<double> pnumberproduct::getMixRatiosLow()
 {
-    // return m_mixRatiosLow;
+    return m_mixRatiosLow;
 }
 QVector<double> pnumberproduct::getMixRatios()
 {
-    // return m_mixRatiosDefault;
+    return m_mixRatiosDefault;
 }
 QVector<double> pnumberproduct::getMixRatiosHigh()
 {
-    // return m_mixRatiosHigh;
+    return m_mixRatiosHigh;
 }
 
 bool pnumberproduct::loadProductPropertiesFromDb()
@@ -167,7 +183,10 @@ bool pnumberproduct::loadProductPropertiesFromDb()
     bool success = m_db->getAllProductProperties(getPNumber(),
                                   &m_aws_product_id,
                                   &m_soapstand_product_serial,
-                                  m_mixPNumbers,
+                                //   m_mixPNumbers,
+                                //   m_mixRatiosLow,
+                                //   m_mixRatiosDefault,
+                                //   m_mixRatiosHigh,
                                   &m_name_receipt,
                                   &m_concentrate_multiplier,
                                   &m_dispense_speed,

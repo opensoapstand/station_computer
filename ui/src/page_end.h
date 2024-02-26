@@ -43,7 +43,7 @@ public:
     void controllerFinishedTransaction();
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void finishHandler();
-    void fsmReceiveFinalDispensedVolume(double dispensed);
+    // void fsmReceiveFinalDispensedVolume(double dispensed);
     void fsmReceiveFinalTransactionMessage(QString start_time, QString end_time, double button_press_duration, double button_press_count, double volume_dispensed,QString volumeDispensedMixProduct);
     void updateDispensedVolumeLabel();
     void waitToFinishTransactionInFsm();
@@ -66,6 +66,7 @@ private:
     statusbar *p_statusbar;
 
     QDialog *popup;
+    
 
     int _thankYouTimeoutSec;
     QTimer *thankYouEndTimer;
@@ -88,8 +89,10 @@ private:
 
 
     bool exitIsForceable; // avoid being stuck if internet fails.
-
     bool is_in_state_thank_you;
+    bool is_in_page_end;
+
+
 };
 
 #endif // PAGE_END_H

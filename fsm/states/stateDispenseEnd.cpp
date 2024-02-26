@@ -62,9 +62,10 @@ DF_ERROR stateDispenseEnd::onAction()
     sendEndTransactionMessageToUI();
     double volume_dispensed = g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed();
     
-    std::string message = "finalVolumeDispensed|" + std::to_string(volume_dispensed) + "|";
-    usleep(100000); // send message delay
-    m_pMessaging->sendMessageOverIP(message, true); // send to UI
+    // 
+    // replaced by sendEndTransactionMessageToUI! std::string message = "finalVolumeDispensed|" + std::to_string(volume_dispensed) + "|";
+    // usleep(100000); // send message delay
+    // m_pMessaging->sendMessageOverIP(message, true); // send to UI
 
     g_machine.m_productDispensers[m_slot_index].finishSelectedProductDispense();
 

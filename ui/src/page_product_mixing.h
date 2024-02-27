@@ -66,6 +66,9 @@ public:
     QLabel *additivePlusButtonBackgrounds[5];
     QPushButton *additivePlusButtons[5];
     QLabel *additivePercentageLabels[5];
+    QLabel *additiveBarsLow[5];
+    QLabel *additiveBarsDefault[5];
+    QLabel *additiveBarsHigh[5];
 
     QPushButton *orderSizeButtons[4];
     QLabel *orderSizeLabelsPrice[4];

@@ -1521,6 +1521,501 @@ text-align: center;
     <string>Try Sample</string>
    </property>
   </widget>
+  <widget class="QLabel" name="label_additive_bar_low_1">
+   <property name="geometry">
+    <rect>
+     <x>607</x>
+     <y>609</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_bar_default_1">
+   <property name="geometry">
+    <rect>
+     <x>722</x>
+     <y>599</y>
+     <width>100</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_bar_high_1">
+   <property name="geometry">
+    <rect>
+     <x>837</x>
+     <y>589</y>
+     <width>100</width>
+     <height>35</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_bar_default_2">
+   <property name="geometry">
+    <rect>
+     <x>722</x>
+     <y>738</y>
+     <width>100</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_bar_high_2">
+   <property name="geometry">
+    <rect>
+     <x>837</x>
+     <y>728</y>
+     <width>100</width>
+     <height>35</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_bar_low_2">
+   <property name="geometry">
+    <rect>
+     <x>607</x>
+     <y>748</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_bar_low_3">
+   <property name="geometry">
+    <rect>
+     <x>608</x>
+     <y>887</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_bar_default_3">
+   <property name="geometry">
+    <rect>
+     <x>723</x>
+     <y>877</y>
+     <width>100</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_bar_high_3">
+   <property name="geometry">
+    <rect>
+     <x>838</x>
+     <y>867</y>
+     <width>100</width>
+     <height>35</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_bar_low_4">
+   <property name="geometry">
+    <rect>
+     <x>608</x>
+     <y>1026</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_bar_default_4">
+   <property name="geometry">
+    <rect>
+     <x>723</x>
+     <y>1016</y>
+     <width>100</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_bar_high_4">
+   <property name="geometry">
+    <rect>
+     <x>838</x>
+     <y>1006</y>
+     <width>100</width>
+     <height>35</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_bar_low_5">
+   <property name="geometry">
+    <rect>
+     <x>608</x>
+     <y>1165</y>
+     <width>100</width>
+     <height>15</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_bar_default_5">
+   <property name="geometry">
+    <rect>
+     <x>723</x>
+     <y>1155</y>
+     <width>100</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_additive_bar_high_5">
+   <property name="geometry">
+    <rect>
+     <x>838</x>
+     <y>1145</y>
+     <width>100</width>
+     <height>35</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font-family: Montserrat;
+background-image: url(background.png);
+font-style: normal;
+font-weight: bold;
+font-size: 36px;
+line-height: 44px;
+color: #FFFFFF;
+text-align: center;
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
   <zorder>label_background_custom</zorder>
   <zorder>pushButton_order_sample</zorder>
   <zorder>pushButton_order_custom</zorder>
@@ -1585,6 +2080,21 @@ text-align: center;
   <zorder>pushButton_additive_plus_5</zorder>
   <zorder>pushButton_recommended</zorder>
   <zorder>pushButton_order_medium</zorder>
+  <zorder>label_additive_bar_low_1</zorder>
+  <zorder>label_additive_bar_default_1</zorder>
+  <zorder>label_additive_bar_high_1</zorder>
+  <zorder>label_additive_bar_default_2</zorder>
+  <zorder>label_additive_bar_high_2</zorder>
+  <zorder>label_additive_bar_low_2</zorder>
+  <zorder>label_additive_bar_low_3</zorder>
+  <zorder>label_additive_bar_default_3</zorder>
+  <zorder>label_additive_bar_high_3</zorder>
+  <zorder>label_additive_bar_low_4</zorder>
+  <zorder>label_additive_bar_default_4</zorder>
+  <zorder>label_additive_bar_high_4</zorder>
+  <zorder>label_additive_bar_low_5</zorder>
+  <zorder>label_additive_bar_default_5</zorder>
+  <zorder>label_additive_bar_high_5</zorder>
  </widget>
  <resources/>
  <connections/>

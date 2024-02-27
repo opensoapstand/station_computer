@@ -82,6 +82,24 @@ page_product_mixing::page_product_mixing(QWidget *parent) : QWidget(parent),
     // additivePercentageLabels[3] = ui->label_additive_percentage_4;
     // additivePercentageLabels[4] = ui->label_additive_percentage_5;
 
+    additiveBarsLow[0] = ui->label_additive_bar_low_1;
+    additiveBarsLow[1] = ui->label_additive_bar_low_2;
+    additiveBarsLow[2] = ui->label_additive_bar_low_3;
+    additiveBarsLow[3] = ui->label_additive_bar_low_4;
+    additiveBarsLow[4] = ui->label_additive_bar_low_5;
+
+    additiveBarsDefault[0] = ui->label_additive_bar_default_1;
+    additiveBarsDefault[1] = ui->label_additive_bar_default_2;
+    additiveBarsDefault[2] = ui->label_additive_bar_default_3;
+    additiveBarsDefault[3] = ui->label_additive_bar_default_4;
+    additiveBarsDefault[4] = ui->label_additive_bar_default_5;
+
+    additiveBarsHigh[0] = ui->label_additive_bar_high_1;
+    additiveBarsHigh[1] = ui->label_additive_bar_high_2;
+    additiveBarsHigh[2] = ui->label_additive_bar_high_3;
+    additiveBarsHigh[3] = ui->label_additive_bar_high_4;
+    additiveBarsHigh[4] = ui->label_additive_bar_high_5;
+
     orderSizeButtons[0] = ui->pushButton_order_small;
     orderSizeButtons[1] = ui->pushButton_order_medium;
     orderSizeButtons[2] = ui->pushButton_order_big;
@@ -188,64 +206,77 @@ void page_product_mixing::showEvent(QShowEvent *event)
     }
         
     qDebug() << "!!!!!!!!!!!!!!" << p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size();
-    if(p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size() > 0){
+    if(p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size() > 1){
         ui->pushButton_recommended->show();
         ui->label_additives_background->setText("");
         ui->label_additives_background->hide();
-        if(p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size() == 1){
-            ui->pushButton_recommended->hide();
-            ui->label_additives_background->show();
-            p_page_idle->thisMachine->setTemplateTextToObject(ui->label_additives_background);
-            for (uint8_t j = 0; j < ADDITIVES_PER_SLOT_COUNT_MAX; j++){
-                additiveTitles[j]->hide();
-                additiveBackgroundRows[j]->hide();
-                additiveMinusButtonBackgrounds[j]->hide();
-                additiveMinusButtons[j]->hide();
-                additivePlusButtonBackgrounds[j]->hide();
-                additivePlusButtons[j]->hide();
-                // additivePercentageLabels[j]->hide();
-            }
-        }else{
-            for (int j = 0; j < ADDITIVES_PER_SLOT_COUNT_MAX; j++){
-                if(isAdditiveEnabled(j)){
-                    additiveTitles[j]->setProperty("class", "additiveTitles");
-                    additiveBackgroundRows[j]->setProperty("class", "additiveBackgroundRows");
-                    additiveMinusButtonBackgrounds[j]->setProperty("class", "additiveMinusButtonBackgrounds");
-                    additiveMinusButtons[j]->setProperty("class", "additiveMinusButtons");
-                    additivePlusButtonBackgrounds[j]->setProperty("class", "additivePlusButtonBackgrounds");
-                    additivePlusButtons[j]->setProperty("class", "additivePlusButtons");
-                    // additivePercentageLabels[j]->setProperty("class", "additivePercentageLabels");
+        for (int j = 0; j < ADDITIVES_PER_SLOT_COUNT_MAX; j++){
+            if(isAdditiveEnabled(j)){
+                additiveTitles[j]->setProperty("class", "additiveTitles");
+                additiveBackgroundRows[j]->setProperty("class", "additiveBackgroundRows");
+                additiveMinusButtonBackgrounds[j]->setProperty("class", "additiveMinusButtonBackgrounds");
+                additiveMinusButtons[j]->setProperty("class", "additiveMinusButtons");
+                additivePlusButtonBackgrounds[j]->setProperty("class", "additivePlusButtonBackgrounds");
+                additivePlusButtons[j]->setProperty("class", "additivePlusButtons");
+                additiveBarsLow[j]->setProperty("class", "additiveBarsLow");
+                additiveBarsDefault[j]->setProperty("class", "additiveBarsDefault");
+                additiveBarsHigh[j]->setProperty("class", "additiveBarsHigh");
 
-                    additiveTitles[j]->setStyleSheet(styleSheet);
-                    additiveBackgroundRows[j]->setStyleSheet(styleSheet);
-                    additiveMinusButtonBackgrounds[j]->setStyleSheet(styleSheet);
-                    additiveMinusButtons[j]->setStyleSheet(styleSheet);
-                    additivePlusButtonBackgrounds[j]->setStyleSheet(styleSheet);
-                    additivePlusButtons[j]->setStyleSheet(styleSheet);
-                    // additivePercentageLabels[j]->setStyleSheet(styleSheet);
+                additiveTitles[j]->setStyleSheet(styleSheet);
+                additiveBackgroundRows[j]->setStyleSheet(styleSheet);
+                additiveMinusButtonBackgrounds[j]->setStyleSheet(styleSheet);
+                additiveMinusButtons[j]->setStyleSheet(styleSheet);
+                additivePlusButtonBackgrounds[j]->setStyleSheet(styleSheet);
+                additivePlusButtons[j]->setStyleSheet(styleSheet);
+                additiveBarsLow[j]->setStyleSheet(styleSheet);
+                additiveBarsDefault[j]->setStyleSheet(styleSheet);
+                additiveBarsHigh[j]->setStyleSheet(styleSheet);
 
-                    additiveTitles[j]->show();
-                    additiveBackgroundRows[j]->show();
-                    additiveMinusButtonBackgrounds[j]->show();
-                    additiveMinusButtons[j]->show();
-                    additivePlusButtonBackgrounds[j]->show();
-                    additivePlusButtons[j]->show();
-                    // additivePercentageLabels[j]->hide(); // no longer needed because its changed to adjustable bars
-
-                    int additivePNumber = p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers()[j+1];
-                    additiveTitles[j]->setText(p_page_idle->thisMachine->getProductByPNumber(additivePNumber)->getProductName());
-                    // double additivePRatio = p_page_idle->thisMachine->getSelectedProduct()->getAdditivesRatioModifier(j);
-                    // QString additivePRatio_string = QString::number(convertAdditivePRatioToPercentage(additivePRatio));
-                    // additivePercentageLabels[j]->setText(additivePRatio_string + "%");
-                }else{
+                // if additive getMixRatiosLow()[j] == getMixRatiosDefault()[j] == getMixRatiosHigh()[j]; hide the additive adjustment row
+                if(p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosLow()[j]
+                == p_page_idle->thisMachine->getSelectedProduct()->getMixRatios()[j]
+                == p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosHigh()[j]){
                     additiveTitles[j]->hide();
                     additiveBackgroundRows[j]->hide();
                     additiveMinusButtonBackgrounds[j]->hide();
                     additiveMinusButtons[j]->hide();
                     additivePlusButtonBackgrounds[j]->hide();
                     additivePlusButtons[j]->hide();
-                    // additivePercentageLabels[j]->hide();
+                    additiveBarsLow[j]->hide();
+                    additiveBarsDefault[j]->hide();
+                    additiveBarsHigh[j]->hide();
+                }else{
+                    additiveTitles[j]->show();
+                    additiveBackgroundRows[j]->show();
+                    additiveMinusButtonBackgrounds[j]->show();
+                    additiveMinusButtons[j]->show();
+                    additivePlusButtonBackgrounds[j]->show();
+                    additivePlusButtons[j]->show();
+                    additiveBarsLow[j]->show();
+                    additiveBarsDefault[j]->show();
+                    additiveBarsHigh[j]->show();
                 }
+                int additivePNumber = p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers()[j+1];
+                additiveTitles[j]->setText(p_page_idle->thisMachine->getProductByPNumber(additivePNumber)->getProductName());
+                
+                // no longer needed because its changed to adjustable bars
+                // additivePercentageLabels[j]->setProperty("class", "additivePercentageLabels");
+                // additivePercentageLabels[j]->setStyleSheet(styleSheet);
+                // additivePercentageLabels[j]->hide(); 
+                // double additivePRatio = p_page_idle->thisMachine->getSelectedProduct()->getAdditivesRatioModifier(j);
+                // QString additivePRatio_string = QString::number(convertAdditivePRatioToPercentage(additivePRatio));
+                // additivePercentageLabels[j]->setText(additivePRatio_string + "%");
+            }else{
+                additiveTitles[j]->hide();
+                additiveBackgroundRows[j]->hide();
+                additiveMinusButtonBackgrounds[j]->hide();
+                additiveMinusButtons[j]->hide();
+                additivePlusButtonBackgrounds[j]->hide();
+                additivePlusButtons[j]->hide();
+                additiveBarsLow[j]->hide();
+                additiveBarsDefault[j]->hide();
+                additiveBarsHigh[j]->hide();
+                // additivePercentageLabels[j]->hide();
             }
         }
     }else{
@@ -259,6 +290,9 @@ void page_product_mixing::showEvent(QShowEvent *event)
             additiveMinusButtons[j]->hide();
             additivePlusButtonBackgrounds[j]->hide();
             additivePlusButtons[j]->hide();
+            additiveBarsLow[j]->hide();
+            additiveBarsDefault[j]->hide();
+            additiveBarsHigh[j]->hide();
             // additivePercentageLabels[j]->hide();
         }
     }
@@ -299,28 +333,7 @@ void page_product_mixing::reset_and_show_page_elements()
     ui->label_product_ingredients->setWordWrap(true);
     ui->pushButton_continue->hide();
 
-    // p_page_idle->thisMachine->addPictureToLabel(ui->label_product_photo, p_page_idle->thisMachine->getSelectedProduct()->getProductPicturePath());
     QString picturePath = p_page_idle->thisMachine->getSelectedProduct()->getProductPicturePath();
-    // ui->label_product_photo->setStyleSheet("QLabel {"
-    //                  "border-radius: 10px;"
-    //                  "background-image: url(/home/df-admin/production/references/products/P-91.png);"
-    //                  "border: 1px solid red;"
-    //                  "background-repeat: no-repeat;"
-    //                  "background-size: cover;"
-    //                  "background-clip: content;"
-    //                  "}");
-    // ui->label_product_photo->setStyleSheet(QString("QLabel {"
-    //                             "border-radius: 10px;"
-    //                             "background-image: url(%1);"
-    //                             "background-repeat: no-repeat;"
-    //                             "background-size: cover;"
-    //                             "background-clip: content;"
-    //                             "border: 1px solid blue;"
-    //                             "}").arg(picturePath));
-    ///home/df-admin/production/references/products/P-91.png
-    // ui->label_product_photo->setProperty("background-image", QString("url(%1)").arg(picturePath));
-    // qDebug() << QString("url(%1)").arg(picturePath);
-
     ui->label_product_title->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductName());
     ui->label_product_ingredients->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductIngredients());
     // ui->label_product_description->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductDescription());

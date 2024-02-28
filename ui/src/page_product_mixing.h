@@ -68,6 +68,9 @@ public:
     QLabel *additivePlusButtonBackgrounds[5];
     QPushButton *additivePlusButtons[5];
     QLabel *additivePercentageLabels[5];
+    QLabel *additiveBarsLow[5];
+    QLabel *additiveBarsDefault[5];
+    QLabel *additiveBarsHigh[5];
 
     QPushButton *orderSizeButtons[4];
     QLabel *orderSizeLabelsPrice[4];
@@ -88,6 +91,9 @@ public:
     void hideCurrentPageAndShowProductMenu();
     double convertAdditivePRatioToPercentage(double additivePRatio);
     bool isAdditiveEnabled(int index);
+    void checkMixRatiosLevel();
+    void resetMixRatiosLevel();
+    void updateMixRatiosLevel();
 signals:
     void paymentTotal(string, string, string);
 
@@ -263,6 +269,7 @@ private:
 
     std::string readBuffer;
     Ui::page_product_mixing *ui;
+    QVector<int> m_mixRatios_level;
     page_product_menu *p_page_product_menu;
     page_select_product *p_page_select_product;
     page_qr_payment *paymentPage;

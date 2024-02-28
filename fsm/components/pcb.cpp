@@ -1571,7 +1571,7 @@ void pcb::pollFlowSensor(uint8_t slot)
             flow_sensor_pulses_since_enable[slot_index]++;
 
             // debugOutput::sendMessage("Flow sensor pulse detected by PCA chip. Slot: " + to_string(slot) + ". Pulse total: " + to_string(flow_sensor_pulses_since_enable[slot_index]), MSG_INFO);
-            debugOutput::sendMessage("Flow sensor pulse detected while polling", MSG_INFO);
+            //debugOutput::sendMessage("Flow sensor pulse detected while polling", MSG_INFO);
 
             flowSensorTickReceivedEpoch[slot_index] = now_epoch_millis;
         }

@@ -572,7 +572,7 @@ void page_maintenance_dispenser::dispense_test_start()
 #ifdef DISPENSE_CUSTOM_MIX
     // check if pnumber is a mix.
     QString pNumbersAsCsvString = this->p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbersAsCsv();
-    QString pNumberRatiosAsCsvString = this->p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosAsCsv();
+    QString pNumberRatiosAsCsvString = this->p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosAsCsv(this->p_page_idle->thisMachine->getSelectedProduct()->getCustomMixRatios());
     int pNumberSelectedProduct = this->p_page_idle->thisMachine->getSelectedProduct()->getPNumber();
 
     QString command = "dispenseCustomMix|" + dispenseCommand + "|" + QString::number(pNumberSelectedProduct) + "|" + pNumbersAsCsvString + "|" + pNumberRatiosAsCsvString + "|"; // dipenseMix|slot|dispensePNumber|pnumberscsv|ratioscsv

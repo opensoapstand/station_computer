@@ -56,7 +56,23 @@
    border: none;
 }
 
-.additivePercentageLabels{
+/* Bar adjustment */
+.additiveBarsLow, .additiveBarsDefault, .additiveBarsHigh{
+   border-radius: 6px;
+}
+
+.empty{
+   background: #e7cca7;
+   border-radius: 6px;
+}
+
+.fill{
+   background: #c89959;
+   border-radius: 6px;
+}
+
+/* Percentage adjustment */
+/* .additivePercentageLabels{
    color: #895E25;
    text-align: center;
    font-family: 'Lato';
@@ -64,7 +80,7 @@
    font-style: normal;
    font-weight: 400;
    line-height: normal;
-}
+} */
 
 #label_customize_drink, #label_select_quantity {
    font-family: "El Messiri";

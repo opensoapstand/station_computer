@@ -164,7 +164,7 @@ QVector<double> pnumberproduct::getMixRatiosLow()
 {
     return m_mixRatiosLow;
 }
-QVector<double> pnumberproduct::getMixRatios()
+QVector<double> pnumberproduct::getMixRatiosDefault()
 {
     return m_mixRatiosDefault;
 }
@@ -637,11 +637,11 @@ bool pnumberproduct::isCustomMix()
 {
     bool isCustomMix = false;
 
-    for (int i = 0; i < getMixRatios().size(); i++)
+    for (int i = 0; i < getMixRatiosDefault().size(); i++)
     {
-        if (m_customMixRatios[i] != getMixRatios()[i])
+        if (m_customMixRatios[i] != getMixRatiosDefault()[i])
         {
-            // qInfo() << "i: normal mix ratio: " << getMixRatios()[i]<< "  custom: " << m_customMixRatios[i];
+            // qInfo() << "i: normal mix ratio: " << getMixRatiosDefault()[i]<< "  custom: " << m_customMixRatios[i];
             isCustomMix = true;
         }
     }
@@ -660,43 +660,41 @@ double pnumberproduct::getCustomMixRatios(int index)
 
 void pnumberproduct::resetCustomMixRatioParameters(){
     m_customMixRatios.clear();
-    for (int i = 0; i < getMixRatios().size(); i++)
+    for (int i = 0; i < getMixRatiosDefault().size(); i++)
     {
         // set default mix ratio to custom mix ratio
-        m_customMixRatios.append(getMixRatios()[i]);
+        m_customMixRatios.append(getMixRatiosDefault()[i]);
     }
 }
 
 void pnumberproduct::setCustomMixRatios(int index, QString plusOrMinus){
     double custom_ratios_total = 0;
-    // m_customMixRatios.append(getMixRatios()[0]); // add base product ratio
+    // m_customMixRatios.append(getMixRatiosDefault()[0]); // add base product ratio
     // minus
     if(plusOrMinus == "-"){
         if(m_customMixRatios[index] == getMixRatiosLow()[index]){
             // dont do anything
         }else{
-            if(m_customMixRatios[index] == getMixRatios()[index]){
+            if(m_customMixRatios[index] == getMixRatiosDefault()[index]){
                 m_customMixRatios[index] = getMixRatiosLow()[index];
             }else{
-                m_customMixRatios[index] = getMixRatios()[index];
+                m_customMixRatios[index] = getMixRatiosDefault()[index];
             }
-
         }
     }else{
         // plus
         if(m_customMixRatios[index] == getMixRatiosHigh()[index]){
             // dont do anything
         }else{
-            if(m_customMixRatios[index] == getMixRatios()[index]){
+            if(m_customMixRatios[index] == getMixRatiosDefault()[index]){
                 m_customMixRatios[index] = getMixRatiosHigh()[index];
             }else{
-                m_customMixRatios[index] = getMixRatios()[index];
+                m_customMixRatios[index] = getMixRatiosDefault()[index];
             }
-
         }
     }
 
-    for (int i = 1; i < getMixRatios().size(); i++)
+    for (int i = 1; i < getMixRatiosDefault().size(); i++)
     {
         // go over all ADDITIVES (skip base)
         custom_ratios_total += m_customMixRatios[i];
@@ -725,12 +723,12 @@ void pnumberproduct::setCustomMixRatios(int index, QString plusOrMinus){
 
 //     double custom_ratios_total = 0;
 //     m_customMixRatios.clear();
-//     m_customMixRatios.append(getMixRatios()[0]); // add base product ratio
-//     for (int i = 1; i < getMixRatios().size(); i++)
+//     m_customMixRatios.append(getMixRatiosDefault()[0]); // add base product ratio
+//     for (int i = 1; i < getMixRatiosDefault().size(); i++)
 //     {
 //         // go over all ADDITIVES (skip base)
 //         // ratio_modifiers_total += m_additivesCustomMixRatioModifiers[i - 1];
-//         double customRatio = m_additivesCustomMixRatioModifiers[i - 1] * getMixRatios()[i];
+//         double customRatio = m_additivesCustomMixRatioModifiers[i - 1] * getMixRatiosDefault()[i];
 //         custom_ratios_total += customRatio;
 //         m_customMixRatios.append(customRatio);
 //     }
@@ -751,15 +749,15 @@ void pnumberproduct::setCustomMixRatios(int index, QString plusOrMinus){
 //     // the mixing ratios might be altered by the user. For this we use a ratio-modifier.
 //     // additives is mixPNumbers - base product.
 //     m_additivesCustomMixRatioModifiers.clear();
-//     for (int i = 0; i < getMixRatios().size() - 1; i++)
+//     for (int i = 0; i < getMixRatiosDefault().size() - 1; i++)
 //     {
 //         m_additivesCustomMixRatioModifiers.append(1);
 //     }
 //     m_customMixRatios.clear();
-//     for (int i = 0; i < getMixRatios().size(); i++)
+//     for (int i = 0; i < getMixRatiosDefault().size(); i++)
 //     {
 
-//         m_customMixRatios.append(getMixRatios()[i]); // add base product ratio
+//         m_customMixRatios.append(getMixRatiosDefault()[i]); // add base product ratio
 //     }
 // }
 

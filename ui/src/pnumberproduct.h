@@ -20,7 +20,7 @@ public:
     QString getMixPNumbersAsCsv();
     QString getMixRatiosAsCsv(QVector<double> ratios);
     QVector<double> getMixRatiosLow();
-    QVector<double> getMixRatios();
+    QVector<double> getMixRatiosDefault();
     QVector<double> getMixRatiosHigh();
 
     bool loadProductPropertiesFromProductsFile();

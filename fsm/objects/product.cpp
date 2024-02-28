@@ -163,7 +163,7 @@ bool product::isMixingProduct()
     return isMix;
 }
 
-void product::getMixRatios(double *&mixRatios, int &count)
+void product::getMixRatiosDefault(double *&mixRatios, int &count)
 {
     mixRatios = m_mix_ratios;
     count = m_mix_ratios_count;

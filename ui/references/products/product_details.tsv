@@ -113,36 +113,36 @@ P-106	Lemon & Mint - Liquid Hand Soap	Hand						everspring		Water, Sodium Coco-S
 P-107	Mixed berry 	Additive 						Sodastream		WATER, FRUCTOSE, SUGAR, APPLE JUICE CONCENTRATE, CITRIC ACID, NATURAL FLAVORS, ELDERBERRY JUICE CONCENTRATE, FRUIT AND VEGETABLE JUICE COLOR, POTASSIUM SORBATE (AS PRESERVATIVE).				Mixed berry 	Sodastream Mixed Berry						
 P-108	Classic Syrup 	Additive 						Starbucks		SUGAR, WATER, NATURAL FLAVOUR,PRESERVATIVE: POTASSIUM SORBATE (E202),CITRIC ACID (E330).				Classic Syrup 	Starbucks Classic Syrup						
 P-109	Pineapple Syrup	Additive						Trojan						Pineapple Syrup	Pineapple Syrup						
-P-110	Berry Sugar water	Mixed Drink	1,108,107		0.8,0.1,0.1									Berry Sugar water	Berry Sugar water						
-P-111	Berry water	Mixed Drink	1,107		0.9,0.1									Berry water	Berry water						
-P-112	Sugar water	Mixed Drink	1,108		0.9,0.1									Sugar water	Sugar water						
-P-113	Very sweet Berry sugar water	Mixed Drink	1,108,107		0.6,0.3,0.1									Very sweet Berry sugar water	Very sweet Berry sugar water						
-P-114	Very Berry sugar water	Mixed Drink	1,108,107		0.6,0.1,0.3									Very Berry sugar water	Very Berry sugar water						
-P-115	Jordan water	Mixed Drink	1,108,120		0.8,0.1,0.1									Jordan water	Jordan water						
-P-116	Very Berry 	Mixed Drink	1,107,121		0.8,0.1,0.1									Very Berry 	Very Berry 						
+P-110	Berry Sugar water	Mixed Drink	1,108,107	0.9,0.05,0.05	0.8,0.1,0.1	0.7,0.15,0.15								Berry Sugar water	Berry Sugar water						
+P-111	Berry water	Mixed Drink	1,107	0.95,0.05	0.9,0.1	0.8,0.2								Berry water	Berry water						
+P-112	Sugar water	Mixed Drink	1,108	0.95,0.05	0.9,0.1	0.8,0.2								Sugar water	Sugar water						
+P-113	Very sweet Berry sugar water	Mixed Drink	1,108,107	0.7,0.25,0.05	0.6,0.3,0.1	0.5,0.35,0.15								Very sweet Berry sugar water	Very sweet Berry sugar water						
+P-114	Very Berry sugar water	Mixed Drink	1,108,107	0.7,0.25,0.05	0.6,0.1,0.3	0.5,0.35,0.15								Very Berry sugar water	Very Berry sugar water						
+P-115	Jordan water	Mixed Drink	1,108,120	0.9,0.05,0.05	0.8,0.1,0.1	0.7,0.15,0.15								Jordan water	Jordan water						
+P-116	Very Berry 	Mixed Drink	1,107,121	0.9,0.05,0.05	0.8,0.1,0.1	0.7,0.15,0.15								Very Berry 	Very Berry 						
 P-117	Jack Juice	Base												Jack Juice	Jack Juice						
 P-118	Lode Liquid 	Base												Lode Liquid 	Lode Liquid 						
 P-119	Daniel Drink	Base												Daniel Drink	Daniel Drink						
 P-120	Pop	Additve												Pavel Pop	Pavel Pop						
 P-121	Malt	Additive 												Melissa Malt	Melissa Malt						
-P-122	Jorge Horchata	Mixed Drink	117,121		0.7,0.3									Jorge Horchata	Jorge Horchata						
-P-123	Josh Jasmine tea	Mixed Drink	119,109		0.7,0.3									Josh Jasmine tea	Josh Jasmine tea						
-P-124	Ying Sling	Mixed Drink	118,108		0.7,0.3									Ying Sling	Ying Sling						
-P-125	Izar Isotonic	Mixed Drink	91,120		0.7,0.3									Izar isotonic	Izar isotonic						
-P-126	Andy Ale 	Mixed Drink	117,120		0.7,0.3									Andy Ale 	Andy Ale 						
-P-127	Ash Splash	Mixed Drink	118,107		0.7,0.3									Ash Splash	Ash Splash						
+P-122	Jorge Jarritos	Mixed Drink	117,121	0.8,0.2	0.7,0.3	0.6,0.4								Jorge Horchata	Jorge Horchata						
+P-123	Josh Jasmine tea	Mixed Drink	119,109	0.8,0.2	0.7,0.3	0.6,0.4								Josh Jasmine tea	Josh Jasmine tea						
+P-124	Ying Sling	Mixed Drink	118,108	0.8,0.2	0.7,0.3	0.6,0.4								Ying Sling	Ying Sling						
+P-125	Izar Isotonic	Mixed Drink	91,120	0.8,0.2	0.7,0.3	0.6,0.4								Izar isotonic	Izar isotonic						
+P-126	Andy Ale 	Mixed Drink	117,120	0.8,0.2	0.7,0.3	0.6,0.4								Andy Ale 	Andy Ale 						
+P-127	Ash Splash	Mixed Drink	118,107	0.8,0.2	0.7,0.3	0.6,0.4								Ash Splash	Ash Splash						
 P-128	Kombucha	Base																			
 P-129	Green Tea	Base																			
 P-130	Black Tea	Base																			
 P-131	Sparkling Water	Base																			
-P-132	Cold Brew Coffee	Base	111,111,111																		
-P-133	Demi Delight 	Mixed Drink	117,121,107		0.8,0.1,0.1																
-P-134	Melissa Malt	Mixed Drink	117,120,108		0.8,0.1,0.1																
-P-135	Pavel Pop	Mixed Drink	117,109,121		0.8,0.1,0.1																
-P-136	I Anita Drink	Mixed Drink	118,121,108		0.8,0.1,0.1																
-P-137	Lode Liquid 2	Mixed Drink	118,109,108		0.8,0.1,0.1																
-P-138	Lode Liquid 3	Mixed Drink	118,120,121		0.8,0.1,0.1																
-P-139	Celeste Cocktail	Mixed Drink	119,109,107		0.8,0.1,0.1																
-P-140	Daniel Drink 2	Mixed Drink	119,109,120		0.8,0.1,0.1																
-P-141	Daniel Drink 3	Mixed Drink	119,107,108		0.8,0.1,0.1																
-P-142	Daniel Drink 4	Mixed Drink	119,107,121		0.8,0.1,0.1																
+P-132	Cold Brew Coffee	Base																			
+P-133	Demy Delight 	Mixed Drink	117,121,107	0.9,0.05,0.05	0.8,0.1,0.1	0.7,0.15,0.15															
+P-134	Melissa Malt	Mixed Drink	117,120,108	0.9,0.05,0.05	0.8,0.1,0.1	0.7,0.15,0.15															
+P-135	Pavel Pop	Mixed Drink	117,109,121	0.9,0.05,0.05	0.8,0.1,0.1	0.7,0.15,0.15															
+P-136	I Anita Drink	Mixed Drink	118,121,108	0.9,0.05,0.05	0.8,0.1,0.1	0.7,0.15,0.15															
+P-137	Chia Wei Chai	Mixed Drink	118,109,108	0.9,0.05,0.05	0.8,0.1,0.1	0.7,0.15,0.15															
+P-138	Yu-Lin Oolong	Mixed Drink	118,120,121	0.9,0.05,0.05	0.8,0.1,0.1	0.7,0.15,0.15															
+P-139	Celeste Cocktail	Mixed Drink	119,109,107	0.9,0.05,0.05	0.8,0.1,0.1	0.7,0.15,0.15															
+P-140	Daniel Drink 2	Mixed Drink	119,109,120	0.9,0.05,0.05	0.8,0.1,0.1	0.7,0.15,0.15															
+P-141	Daniel Drink 3	Mixed Drink	119,107,108	0.9,0.05,0.05	0.8,0.1,0.1	0.7,0.15,0.15															
+P-142	Daniel Drink 4	Mixed Drink	119,107,121	0.9,0.05,0.05	0.8,0.1,0.1	0.7,0.15,0.15															

@@ -24,6 +24,7 @@ class statusbar;
 class page_dispenser;
 class page_idle;
 class page_qr_payment;
+class page_offline_payment;
 class page_sendFeedback;
 
 namespace Ui
@@ -37,7 +38,7 @@ class page_end : public QWidget
 
 public:
     explicit page_end(QWidget *parent = nullptr);
-    void setPage(page_dispenser* page_dispenser, page_idle* pageIdle, page_qr_payment* page_qr_payment, page_sendFeedback *page_sendFeedback, statusbar *p_statusbar);
+    void setPage(page_dispenser* page_dispenser, page_idle* pageIdle, page_qr_payment* page_qr_payment,page_offline_payment* page_offline_payment, page_sendFeedback *page_sendFeedback, statusbar *p_statusbar);
     ~page_end();
 
     void controllerFinishedTransaction();
@@ -62,6 +63,7 @@ private:
     page_dispenser* p_page_dispense;
     page_idle* p_page_idle;
     page_qr_payment* paymentPage;
+    page_offline_payment *paymentOfflinePage;
     page_sendFeedback* p_page_sendFeedback;
     statusbar *p_statusbar;
 

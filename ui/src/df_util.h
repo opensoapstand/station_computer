@@ -9,7 +9,7 @@
 
 
 // TODO: Refactor to fit with dfuicommthread
-#define UI_VERSION "3.3"
+#define UI_VERSION "3.4"
 
 #define OPTION_SLOT_INVALID 0
 #define SELECT_PRODUCT_PAGE_SLOT_COUNT_MAX 4
@@ -130,6 +130,7 @@ using namespace std;
 #define PAGE_PRODUCT_FREESAMPLE_CSS                     "page_product_freeSample.css"
 #define PAGE_END_CSS                                    "page_end.css"
 #define PAGE_QR_PAYMENT_CSS                             "page_qr_payment.css"
+#define PAGE_OFFLINE_PAYMENT_CSS                        "page_offline_payment.css"
 #define PAGE_ERROR_WIFI_CSS                             "page_error_wifi.css"
 #define PAGE_TAP_PAYMENT_CSS                            "page_payment_tap_tcp.css"
 #define PAGE_TRANSACTIONS_CSS                           "page_transactions.css"

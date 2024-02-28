@@ -260,6 +260,7 @@ bool page_qr_payment::createOrderIdAndSendToBackend()
     QString feedback;
     do
     {
+        qDebug() << generateCode(curl_params);
         std::tie(res,readBuffer, http_code) = p_page_idle->thisMachine->sendRequestToPortal(PORTAL_CREATE_ORDER, "POST", curl_params, "PAGE_QR_PAYMENT");
         feedback = QString::fromUtf8(readBuffer.c_str());
         createOrderInDbAttempts += 1;
@@ -674,4 +675,24 @@ void page_qr_payment::paintQR(QPainter &painter, const QSize sz, const QString &
             }
         }
     }
+}
+
+QString page_qr_payment::generateCode(QString inputString) {
+    EVP_MD_CTX *ctx = EVP_MD_CTX_new();
+    EVP_DigestInit_ex(ctx, EVP_sha256(), NULL);
+    EVP_DigestUpdate(ctx, inputString.toStdString().c_str(), inputString.size());
+    unsigned char hash[EVP_MAX_MD_SIZE];
+    unsigned int hash_len;
+    EVP_DigestFinal_ex(ctx, hash, &hash_len);
+    EVP_MD_CTX_free(ctx);
+
+    // Extract the last 6 hexadecimal digits directly into a QString
+    QString code;
+    for (int i = hash_len - 6; i < hash_len; i++) {
+        code += QString("%1").arg((int)hash[i], 2, 16, QChar('0'));
+    }
+    bool ok;    
+    quint64 decimalValue = code.toULongLong(&ok, 16);
+    QString secretCode = QString::number(decimalValue%1000000);
+    return secretCode;
 }

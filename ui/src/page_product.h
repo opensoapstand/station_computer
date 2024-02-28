@@ -29,6 +29,7 @@
 #include "page_payment_tap_serial.h"
 #include "page_payment_tap_tcp.h"
 #include "page_qr_payment.h"
+#include "page_offline_payment.h"
 #include "page_select_product.h"
 #include "dispenser_slot.h"
 #include "page_idle.h"
@@ -39,6 +40,7 @@
 class statusbar;
 class page_select_product;
 class page_qr_payment;
+class page_offline_payment;
 class page_idle;
 class page_dispenser;
 class page_error_wifi;
@@ -64,7 +66,7 @@ public:
     QLabel *orderSizeBackgroundLabels[4];
 
     explicit page_product(QWidget *parent = nullptr);
-    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_payment_tap_serial *page_payment_tap_serial, page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product_overview *page_Overview, statusbar *p_statusbar, page_product_menu *page_product_menu);
+    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_offline_payment *page_offline_payment,page_payment_tap_serial *page_payment_tap_serial, page_payment_tap_tcp *page_payment_tap_tcp, page_help *pageHelp, page_product_overview *page_Overview, statusbar *p_statusbar, page_product_menu *page_product_menu);
     ~page_product();
 
     void resizeEvent(QResizeEvent *event);
@@ -254,6 +256,7 @@ private:
     page_product_menu *p_page_product_menu;
     page_select_product *p_page_select_product;
     page_qr_payment *paymentPage;
+    page_offline_payment *paymentOfflinePage;
     page_idle *p_page_idle;
     page_dispenser *p_page_dispense;
     page_error_wifi *p_page_wifi_error;

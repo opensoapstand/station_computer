@@ -30,6 +30,7 @@ class statusbar;
 class keyboard;
 class page_select_product;
 class page_qr_payment;
+class page_offline_payment;
 class page_idle;
 class page_dispenser;
 class page_error_wifi;
@@ -52,7 +53,7 @@ public:
     QLabel *orderSizeBackgroundLabels[4];
 
     explicit page_sendFeedback(QWidget *parent = nullptr);
-    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_help *pageHelp, page_product *page_product, page_end *page_end, statusbar *p_statusbar, keyboard * keyboard);
+    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_offline_payment *page_offline_payment,page_help *pageHelp, page_product *page_product, page_end *page_end, statusbar *p_statusbar, keyboard * keyboard);
     ~page_sendFeedback();
 
     void resizeEvent(QResizeEvent *event);
@@ -93,6 +94,7 @@ private:
     Ui::page_sendFeedback *ui;
     page_select_product *p_page_select_product;
     page_qr_payment *paymentPage;
+    page_offline_payment *paymentOfflinePage;
     page_idle *p_page_idle;
     page_dispenser *p_page_dispense;
     page_error_wifi *p_page_wifi_error;

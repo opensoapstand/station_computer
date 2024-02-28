@@ -140,6 +140,14 @@ page_qr_payment->label_scan->label_scan_1,QR Pay
 page_qr_payment->label_scan->finalize_transaction,\n Please follow the instructions in <br>your phone browser
 page_qr_payment->label_steps,<ol><li><span class='tab'></span>Scan QR code with phone camera</li>        <li><span class='tab'></span>Click to open the link that appears</li>        <li><span class='tab'></span>Follow payment instructions on phone</li>        <li><span class='tab'></span>The station will proceed after payment</li>        <li><span class='tab'></span>Refill your beverage!</li>        </ol>  
 
+# page_offline_payment
+page_offline_payment->pushButton_previous_page,←BACK
+page_offline_payment->label_title->pay_by_phone,Scan to Pay
+page_offline_payment->label_scan->label_scan_1,QR Pay
+page_offline_payment->label_scan->finalize_transaction,\n Please follow the instructions in <br>your phone browser
+page_offline_payment->label_steps,<ol><li><span class='tab'></span>Scan QR code with phone camera</li>        <li><span class='tab'></span>Click to open the link that appears</li>        <li><span class='tab'></span>Follow payment instructions on phone</li>        <li><span class='tab'></span>Enter the code received after the payment</li>        <li><span class='tab'></span>Refill your beverage!</li>        </ol>  
+
+
 # page_payment_tap_tcp
 page_payment_tap_tcp->pushButton_previous_page,←BACK
 

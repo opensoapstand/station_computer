@@ -197,7 +197,7 @@ DF_ERROR stateLoop()
 
             if (fsmState != previousState)
             {
-                debugOutput::sendMessage("Exit state: " + stateStrings[previousState], MSG_STATE);
+                debugOutput::sendMessage("Exit state: " + stateStrings[previousState] + "\n", MSG_STATE);
                 dfRet = g_stateArray[previousState]->onExit();
             }
         }

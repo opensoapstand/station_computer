@@ -122,9 +122,8 @@ public:
                                  int *screen_wakeup_time24h,
                                  int *buy_bottle_1,
                                  int *buy_bottle_2,
-                                 QString *portal_base_url
-
-    );
+                                 QString *portal_base_url,
+                                 int *enable_offline_payment);
     QString getHardwareVersion();
 
     void setPaymentTransaction(const std::map<std::string, std::string> &paymentObject);

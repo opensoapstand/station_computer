@@ -316,7 +316,7 @@ bool dispenser::isPNumberValidInThisDispenser(int pnumber, bool mustBeAdditiveOr
 
     if (!isValid)
     {
-        debugOutput::sendMessage("ASSERT ERROR: invalid pnumber as selected pnumber in dispenser: " + std::to_string(pnumber), MSG_ERROR);
+        debugOutput::sendMessage("ASSERT ERROR: invalid pnumber as selected pnumber in dispenser: " + std::to_string(pnumber) + " (must be additive or base?: " + std::to_string(mustBeAdditiveOrBase) + ")", MSG_ERROR);
     }
     return isValid;
 }
@@ -638,7 +638,6 @@ DF_ERROR dispenser::finishSelectedProductDispense()
 
     m_pcb->setDispenseButtonLightsAllOff();
     m_pcb->disableAllSolenoidsOfSlot(getSlot());
-    
 }
 
 string dispenser::getSelectedProductDispenseStartTime()
@@ -754,30 +753,28 @@ void dispenser::linkActiveProductVolumeUpdate()
 void dispenser::linkDispenserFlowSensorTick()
 {
     auto lambdaFunc = [this]()
-    { 
-        this->registerFlowSensorTickFromPcb(); 
-
+    {
+        this->registerFlowSensorTickFromPcb();
     };
     m_pcb->registerFlowSensorTickCallback(getSlot(), lambdaFunc);
 }
 
 void dispenser::registerFlowSensorTickFromPcb()
 {
-    
 
     // the actual dispensed produce gets always registered
     getActiveProduct()->registerFlowSensorTickFromPcb();
 
     // #define MIX_PARTS_WITH_TICKS  // if mixes have their own calibration, it kindof makes sense, but better will be to just sum up the volumes of the parts
 
-// #ifdef MIX_PARTS_WITH_TICKS
+    // #ifdef MIX_PARTS_WITH_TICKS
     if (getActivePNumber() != getSelectedPNumber())
     {
         // if this is part of a mix, register the tick also for the mix volume
         getSelectedProduct()->setVolumeDispensed(getActiveProduct()->getVolumePerTick(true) + getSelectedProduct()->getVolumeDispensed());
     }
-    
-// #endif
+
+    // #endif
 }
 
 // double dispenser::getDispenserVolumeDispensed()
@@ -1525,9 +1522,9 @@ string dispenser::getDispenseUpdateString()
     {
         message +=
             " (part " + std::to_string(getSelectedProduct()->getMixProductsCount() - m_mix_active_index) + "/" + std::to_string(getSelectedProduct()->getMixProductsCount()) +
-            ") : P-" + std::to_string(getActivePNumber()) + " volume: " + std::to_string(getActiveProduct()->getVolumeDispensed()) + "/" + std::to_string(getProductTargetVolume(getActivePNumber())) + "ml " + 
-            "P-" + std::to_string(getActivePNumber()) + " volume: "+ std::to_string(getSelectedProduct()->getVolumeDispensed()) + "/"  + std::to_string(getProductTargetVolume(getSelectedPNumber())) + "ml ";
-            ;
+            ") : P-" + std::to_string(getActivePNumber()) + " volume: " + std::to_string(getActiveProduct()->getVolumeDispensed()) + "/" + std::to_string(getProductTargetVolume(getActivePNumber())) + "ml " +
+            "P-" + std::to_string(getActivePNumber()) + " volume: " + std::to_string(getSelectedProduct()->getVolumeDispensed()) + "/" + std::to_string(getProductTargetVolume(getSelectedPNumber())) + "ml ";
+        ;
     }
     else
     {
@@ -1747,14 +1744,17 @@ void dispenser::updateDispenseStatus()
     previous_dispense_state = dispense_state;
 }
 
-void dispenser::setMixProductsDispenseInfo(std::string pNumber, double volumeDispensed, double volume_remaining){
-    m_dispenseInfoMixProducts.insert({pNumber,{volumeDispensed,volume_remaining}});
+void dispenser::setMixProductsDispenseInfo(std::string pNumber, double volumeDispensed, double volume_remaining)
+{
+    m_dispenseInfoMixProducts.insert({pNumber, {volumeDispensed, volume_remaining}});
 }
 
-std::map<std::string, std::vector<double>> dispenser::getMixProductsDispenseInfo(){
+std::map<std::string, std::vector<double>> dispenser::getMixProductsDispenseInfo()
+{
     return m_dispenseInfoMixProducts;
 }
 
-void dispenser::resetMixProductsDispenseInfo(){
+void dispenser::resetMixProductsDispenseInfo()
+{
     m_dispenseInfoMixProducts = {};
 }

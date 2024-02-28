@@ -1151,7 +1151,8 @@ bool machine::loadMachineParameterFromDb()
         &m_screen_wakeup_time24h,
         &m_buy_bottle_1,
         &m_buy_bottle_2,
-        &m_portal_base_url);
+        &m_portal_base_url,
+        &m_enable_offline_payment);
 
     qDebug() << "Machine ID as loaded from db: " << getMachineId();
     qDebug() << "Template folder: " << getTemplateFolder();
@@ -1697,6 +1698,11 @@ bool machine::hasMixing()
 QString machine::getPortalBaseUrl(){
     return m_portal_base_url;
 }
+
+bool machine::isEnabledOfflinePayment(){
+    return m_enable_offline_payment;
+}
+
 void machine::setFreeSampleEndURL(QString ending_url){
     m_freesample_end_url = ending_url;
 }

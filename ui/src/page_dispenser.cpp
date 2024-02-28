@@ -53,10 +53,11 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Payment page and completed payment
  */
-void page_dispenser::setPage(page_qr_payment *page_qr_payment, page_payment_tap_serial *page_payment_tap_serial, page_payment_tap_tcp *page_payment_tap_tcp, page_end *page_end, page_idle *pageIdle, page_sendFeedback *pageFeedback, statusbar *p_statusbar)
+void page_dispenser::setPage(page_qr_payment *page_qr_payment,page_offline_payment *page_offline_payment, page_payment_tap_serial *page_payment_tap_serial, page_payment_tap_tcp *page_payment_tap_tcp, page_end *page_end, page_idle *pageIdle, page_sendFeedback *pageFeedback, statusbar *p_statusbar)
 {
     this->thanksPage = page_end;
     this->paymentPage = page_qr_payment;
+    this->paymentOfflinePage = page_offline_payment;
     this->p_page_payment_tap_tcp = page_payment_tap_tcp;
     this->p_page_idle = pageIdle;
     this->feedbackPage = pageFeedback;

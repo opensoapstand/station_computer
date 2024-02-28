@@ -81,11 +81,7 @@ bool pnumberproduct::loadProductPropertiesFromProductsFile()
             mix_ratios_low_str = fields[CSV_PRODUCT_COL_MIX_RATIOS_LOW];
             mix_ratios_default_str = fields[CSV_PRODUCT_COL_MIX_RATIOS_DEFAULT];
             mix_ratios_high_str = fields[CSV_PRODUCT_COL_MIX_RATIOS_HIGH];
-
-            qDebug() << "@!@@@@" << mix_pnumbers_str;
-            qDebug() << "@!@@@@" << mix_ratios_low_str;
-            qDebug() << "@!@@@@" << mix_ratios_default_str;
-            qDebug() << "@!@@@@" << mix_ratios_high_str;
+            
             df_util::csvQStringToQVectorInt(mix_pnumbers_str, m_mixPNumbers);
             df_util::csvQStringToQVectorDouble(mix_ratios_low_str, m_mixRatiosLow);
             df_util::csvQStringToQVectorDouble(mix_ratios_default_str, m_mixRatiosDefault);

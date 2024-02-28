@@ -721,7 +721,6 @@ void page_product_overview::keyboardButtonPressed(int buttonID)
         else
         {
             qDebug() << "ASSERT ERROR: Illegal press. Still processing other call.";
-            qDebug() << "#######" << p_page_idle->thisMachine->getCouponState();
         }
     }
     else if (buttonText.mid(0, 3) == "num")
@@ -845,6 +844,6 @@ QString page_product_overview::additivies_overview(QString product_additives_ove
             product_additives_overview = product_additives_overview + additivePRatio_string + "%, ";
         }
     }
-    qDebug() << product_additives_overview;
+    // qDebug() << product_additives_overview;
     return product_additives_overview;
 }

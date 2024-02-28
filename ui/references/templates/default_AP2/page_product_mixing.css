@@ -58,6 +58,15 @@
 
 /* Bar adjustment */
 .additiveBarsLow, .additiveBarsDefault, .additiveBarsHigh{
+   border-radius: 6px;
+}
+
+.empty{
+   background: #e7cca7;
+   border-radius: 6px;
+}
+
+.fill{
    background: #c89959;
    border-radius: 6px;
 }

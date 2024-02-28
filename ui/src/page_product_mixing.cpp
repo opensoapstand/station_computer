@@ -205,96 +205,41 @@ void page_product_mixing::showEvent(QShowEvent *event)
         orderSizeButtons[i]->setStyleSheet(styleSheet);
     }
         
-    qDebug() << "!!!!!!!!!!!!!!" << p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size();
     if(p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size() > 1){
         ui->pushButton_recommended->show();
         ui->label_additives_background->setText("");
         ui->label_additives_background->hide();
         for (int j = 0; j < ADDITIVES_PER_SLOT_COUNT_MAX; j++){
-            if(isAdditiveEnabled(j)){
-                additiveTitles[j]->setProperty("class", "additiveTitles");
-                additiveBackgroundRows[j]->setProperty("class", "additiveBackgroundRows");
-                additiveMinusButtonBackgrounds[j]->setProperty("class", "additiveMinusButtonBackgrounds");
-                additiveMinusButtons[j]->setProperty("class", "additiveMinusButtons");
-                additivePlusButtonBackgrounds[j]->setProperty("class", "additivePlusButtonBackgrounds");
-                additivePlusButtons[j]->setProperty("class", "additivePlusButtons");
-                additiveBarsLow[j]->setProperty("class", "additiveBarsLow");
-                additiveBarsDefault[j]->setProperty("class", "additiveBarsDefault");
-                additiveBarsHigh[j]->setProperty("class", "additiveBarsHigh");
+            additiveTitles[j]->setProperty("class", "additiveTitles");
+            additiveBackgroundRows[j]->setProperty("class", "additiveBackgroundRows");
+            additiveMinusButtonBackgrounds[j]->setProperty("class", "additiveMinusButtonBackgrounds");
+            additiveMinusButtons[j]->setProperty("class", "additiveMinusButtons");
+            additivePlusButtonBackgrounds[j]->setProperty("class", "additivePlusButtonBackgrounds");
+            additivePlusButtons[j]->setProperty("class", "additivePlusButtons");
+            additiveBarsLow[j]->setProperty("class", "additiveBarsLow");
+            additiveBarsDefault[j]->setProperty("class", "additiveBarsDefault");
+            additiveBarsHigh[j]->setProperty("class", "additiveBarsHigh");
 
-                additiveTitles[j]->setStyleSheet(styleSheet);
-                additiveBackgroundRows[j]->setStyleSheet(styleSheet);
-                additiveMinusButtonBackgrounds[j]->setStyleSheet(styleSheet);
-                additiveMinusButtons[j]->setStyleSheet(styleSheet);
-                additivePlusButtonBackgrounds[j]->setStyleSheet(styleSheet);
-                additivePlusButtons[j]->setStyleSheet(styleSheet);
-                additiveBarsLow[j]->setStyleSheet(styleSheet);
-                additiveBarsDefault[j]->setStyleSheet(styleSheet);
-                additiveBarsHigh[j]->setStyleSheet(styleSheet);
-
-                // if additive getMixRatiosLow()[j] == getMixRatiosDefault()[j] == getMixRatiosHigh()[j]; hide the additive adjustment row
-                if(p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosLow()[j]
-                == p_page_idle->thisMachine->getSelectedProduct()->getMixRatios()[j]
-                == p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosHigh()[j]){
-                    additiveTitles[j]->hide();
-                    additiveBackgroundRows[j]->hide();
-                    additiveMinusButtonBackgrounds[j]->hide();
-                    additiveMinusButtons[j]->hide();
-                    additivePlusButtonBackgrounds[j]->hide();
-                    additivePlusButtons[j]->hide();
-                    additiveBarsLow[j]->hide();
-                    additiveBarsDefault[j]->hide();
-                    additiveBarsHigh[j]->hide();
-                }else{
-                    additiveTitles[j]->show();
-                    additiveBackgroundRows[j]->show();
-                    additiveMinusButtonBackgrounds[j]->show();
-                    additiveMinusButtons[j]->show();
-                    additivePlusButtonBackgrounds[j]->show();
-                    additivePlusButtons[j]->show();
-                    additiveBarsLow[j]->show();
-                    additiveBarsDefault[j]->show();
-                    additiveBarsHigh[j]->show();
-                }
-                int additivePNumber = p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers()[j+1];
-                additiveTitles[j]->setText(p_page_idle->thisMachine->getProductByPNumber(additivePNumber)->getProductName());
-                
-                // no longer needed because its changed to adjustable bars
-                // additivePercentageLabels[j]->setProperty("class", "additivePercentageLabels");
-                // additivePercentageLabels[j]->setStyleSheet(styleSheet);
-                // additivePercentageLabels[j]->hide(); 
-                // double additivePRatio = p_page_idle->thisMachine->getSelectedProduct()->getAdditivesRatioModifier(j);
-                // QString additivePRatio_string = QString::number(convertAdditivePRatioToPercentage(additivePRatio));
-                // additivePercentageLabels[j]->setText(additivePRatio_string + "%");
-            }else{
-                additiveTitles[j]->hide();
-                additiveBackgroundRows[j]->hide();
-                additiveMinusButtonBackgrounds[j]->hide();
-                additiveMinusButtons[j]->hide();
-                additivePlusButtonBackgrounds[j]->hide();
-                additivePlusButtons[j]->hide();
-                additiveBarsLow[j]->hide();
-                additiveBarsDefault[j]->hide();
-                additiveBarsHigh[j]->hide();
-                // additivePercentageLabels[j]->hide();
-            }
+            additiveTitles[j]->setStyleSheet(styleSheet);
+            additiveBackgroundRows[j]->setStyleSheet(styleSheet);
+            additiveMinusButtonBackgrounds[j]->setStyleSheet(styleSheet);
+            additiveMinusButtons[j]->setStyleSheet(styleSheet);
+            additivePlusButtonBackgrounds[j]->setStyleSheet(styleSheet);
+            additivePlusButtons[j]->setStyleSheet(styleSheet);
+            additiveBarsLow[j]->setStyleSheet(styleSheet);
+            additiveBarsDefault[j]->setStyleSheet(styleSheet);
+            additiveBarsHigh[j]->setStyleSheet(styleSheet);
         }
+        qDebug() << "DEFAULTTT" << p_page_idle->thisMachine->getSelectedProduct()->getMixRatios();
+        qDebug() << "CUSTOM" << p_page_idle->thisMachine->getSelectedProduct()->getCustomMixRatios();
+        checkMixRatiosLevel();
+        updateMixRatiosLevel();
     }else{
         ui->pushButton_recommended->hide();
         ui->label_additives_background->show();
         p_page_idle->thisMachine->setTemplateTextToObject(ui->label_additives_background);
-        for (uint8_t j = 0; j < ADDITIVES_PER_SLOT_COUNT_MAX; j++){
-            additiveTitles[j]->hide();
-            additiveBackgroundRows[j]->hide();
-            additiveMinusButtonBackgrounds[j]->hide();
-            additiveMinusButtons[j]->hide();
-            additivePlusButtonBackgrounds[j]->hide();
-            additivePlusButtons[j]->hide();
-            additiveBarsLow[j]->hide();
-            additiveBarsDefault[j]->hide();
-            additiveBarsHigh[j]->hide();
-            // additivePercentageLabels[j]->hide();
-        }
+        resetMixRatiosLevel();
+        updateMixRatiosLevel();
     }
     p_page_idle->thisMachine->resetTransactionLogging();
     // transactionLogging = "";
@@ -339,7 +284,6 @@ void page_product_mixing::reset_and_show_page_elements()
     // ui->label_product_description->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductDescription());
 
     QString full_path = p_page_idle->thisMachine->getTemplatePathFromName(IMAGE_BUTTON_HELP);
-    qDebug() << full_path;
     p_page_idle->thisMachine->addPictureToLabel(ui->label_help, full_path);
 
     selectIdleTimer->start(1000);
@@ -677,19 +621,17 @@ bool page_product_mixing::isAdditiveEnabled(int index){
 }
 
 void page_product_mixing::additiveMinusButtonsPressed(int index){
-    // double additiveLowPRatio = p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosLow()[index];
-    // double additiveDefaultPRatio = p_page_idle->thisMachine->getSelectedProduct()->getMixRatios()[index];
-    // double additiveHighPRatio = p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosHigh()[index];
-    // double additiveCustomMixPRatio = p_page_idle->thisMachine->getSelectedProduct()->getAdditivesRatioModifier(index);
-    qDebug() << "LOWWWW" << p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosLow();
-    qDebug() << "DEFAULTTT" << p_page_idle->thisMachine->getSelectedProduct()->getMixRatios();
-    qDebug() << "HIGHHH" << p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosHigh();
-    qDebug() << "CUSTOM" << p_page_idle->thisMachine->getSelectedProduct()->getCustomMixRatios();
+    p_page_idle->thisMachine->getSelectedProduct()->setCustomMixRatios(index, "-"); //starts off index = 1; perfect for this function because index 0 is base, which is not an additive
+    if(m_mixRatios_level[index-1] > 0){ // m_mixRatios_level does not include base, index starts off at 1; need to start of from zero
+        if(m_mixRatios_level[index-1] == 1){
+            // dont do anything because lowest level
+        }else{
+            m_mixRatios_level[index-1]--;
+        }
+    }
+    updateMixRatiosLevel();
 
-    p_page_idle->thisMachine->getSelectedProduct()->setCustomMixRatios(index, "-");
-    qDebug() << "CUSTOM AFTERRRRR" << p_page_idle->thisMachine->getSelectedProduct()->getCustomMixRatios();
-
-    // For displaying percentages - will probably need tweaking
+    // !!!!!!!!! For displaying percentages - will probably need tweaking !!!!!!!!!!!!!!
     // double additiveRatioToPercentage = convertAdditivePRatioToPercentage(additivePRatio) - ADDITIVES_RATIO_INCREMENT;
     // if( additiveRatioToPercentage >= 0){
     //     additivePercentageLabels[index - 1]->setText(QString::number(additiveRatioToPercentage) + "%");
@@ -702,14 +644,23 @@ void page_product_mixing::additiveMinusButtonsPressed(int index){
 }
 
 void page_product_mixing::additivePlusButtonsPressed(int index){
-    qDebug() << "LOWWWW" << p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosLow();
-    qDebug() << "DEFAULTTT" << p_page_idle->thisMachine->getSelectedProduct()->getMixRatios();
-    qDebug() << "HIGHHH" << p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosHigh();
-    qDebug() << "CUSTOM" << p_page_idle->thisMachine->getSelectedProduct()->getCustomMixRatios();
-    p_page_idle->thisMachine->getSelectedProduct()->setCustomMixRatios(index, "+");
-    qDebug() << "CUSTOM AFTERRRRR" << p_page_idle->thisMachine->getSelectedProduct()->getCustomMixRatios();
-
-    // For displaying percentages - will probably need tweaking
+    // qDebug() << "INDEX" << index;
+    // qDebug() << "LOWWWW" << p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosLow();
+    // qDebug() << "DEFAULTTT" << p_page_idle->thisMachine->getSelectedProduct()->getMixRatios();
+    // qDebug() << "HIGHHH" << p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosHigh();
+    // qDebug() << "CUSTOM" << p_page_idle->thisMachine->getSelectedProduct()->getCustomMixRatios();
+    p_page_idle->thisMachine->getSelectedProduct()->setCustomMixRatios(index, "+"); //starts off index = 1; perfect for this function because index 0 is base, which is not an additive
+    if(m_mixRatios_level[index-1] < 3){ // m_mixRatios_level does not include base, index starts off at 1; need to start of from zero
+        if(m_mixRatios_level[index-1] == 0){
+            // dont do anything because additive unadjustable
+        }else{
+            m_mixRatios_level[index-1]++;
+        }
+    }
+    updateMixRatiosLevel();
+    // qDebug() << "CUSTOM AFTERRRRR" << p_page_idle->thisMachine->getSelectedProduct()->getCustomMixRatios();
+    // qDebug() << "!!!!!!!!!!!!!!!!!!!!!";
+    // !!!!!!!!! For displaying percentages - will probably need tweaking !!!!!!!!!
     // double additivePRatio = p_page_idle->thisMachine->getSelectedProduct()->getAdditivesRatioModifier(index - 1);
     // double additiveRatioToPercentage = convertAdditivePRatioToPercentage(additivePRatio) + ADDITIVES_RATIO_INCREMENT;
     // if( additiveRatioToPercentage <= 999){
@@ -723,6 +674,9 @@ void page_product_mixing::additivePlusButtonsPressed(int index){
 }
 
 void page_product_mixing::on_pushButton_recommended_clicked(){
+    resetMixRatiosLevel();
+    p_page_idle->thisMachine->getSelectedProduct()->resetCustomMixRatioParameters();
+    updateMixRatiosLevel();
     // For displaying percentages - will probably need tweaking
     // p_page_idle->thisMachine->getSelectedProduct()->resetCustomMixRatioParameters();
     // for (int j = 0; j < 5; j++){
@@ -732,5 +686,99 @@ void page_product_mixing::on_pushButton_recommended_clicked(){
     //         additivePercentageLabels[j]->setText(additivePRatio_string + "%");
     //     }
     // }
+}
+
+void page_product_mixing::checkMixRatiosLevel(){ 
+    //check if customer has already adjust additives
+    // if adjusted; don't do anything
+    // otherwise reset mix ratios level
+    qDebug() << "DEFAULTTTTT" << p_page_idle->thisMachine->getSelectedProduct()->getMixRatios();
+    qDebug() << "CUSTOMMMMM" << p_page_idle->thisMachine->getSelectedProduct()->getCustomMixRatios();
+    bool resetCustomMixRatios = false;
+    for(int i = 1; i < p_page_idle->thisMachine->getSelectedProduct()->getMixRatios().size(); i++){
+        if(p_page_idle->thisMachine->getSelectedProduct()->getMixRatios()[i] == p_page_idle->thisMachine->getSelectedProduct()->getCustomMixRatios()[i]){
+            resetCustomMixRatios = true;
+        }
+    }
+    if(resetCustomMixRatios){
+        resetMixRatiosLevel();
+    }
+}
+
+void page_product_mixing::resetMixRatiosLevel(){
+    m_mixRatios_level.clear();
+    if(p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size() > 1){
+        for (int j = 1; j <= ADDITIVES_PER_SLOT_COUNT_MAX; j++){ // 1, 2, 3, 4, 5 -> additives
+            if(j <= p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size() - 1){ // max Mix PNumbers = 6; dont need the first because base product
+                double low = p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosLow()[j];
+                double def = p_page_idle->thisMachine->getSelectedProduct()->getMixRatios()[j];
+                double high = p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosHigh()[j];
+                if(low == def && def == high){ 
+                    // if additive getMixRatiosLow()[j] == getMixRatiosDefault()[j] == getMixRatiosHigh()[j]; hide the additive adjustment row
+                    // if additive level are the same for low, default, and high; it means additivie is not adjustable
+                    // set to Zero Level
+                    m_mixRatios_level.insert(j-1, 0);
+                }else{
+                    // set to Two Level for default
+                    m_mixRatios_level.insert(j-1, 2);
+                }
+            }else{
+                // set to Zero Level
+                m_mixRatios_level.insert(j-1, 0);
+            }
+        }
+    }else{
+        for (int j = 1; j <= ADDITIVES_PER_SLOT_COUNT_MAX; j++){ // 1, 2, 3, 4, 5 -> additives
+            // set to Zero Level for all Mix PNumbers because no additives for the dispense product
+            m_mixRatios_level.insert(j-1, 0);
+        }
+    }
+}
+
+void page_product_mixing::updateMixRatiosLevel(){
+    qDebug() << "DEFAULTTT" << p_page_idle->thisMachine->getSelectedProduct()->getMixRatios();
+    qDebug() << "CUSTOM" << p_page_idle->thisMachine->getSelectedProduct()->getCustomMixRatios();
+    qDebug() << "LEVEL" << m_mixRatios_level;
+    for (int i = 0; i < m_mixRatios_level.size(); i++){
+        if(m_mixRatios_level[i] > 0){ 
+            additiveTitles[i]->show();
+            additiveBackgroundRows[i]->show();
+            additiveMinusButtonBackgrounds[i]->show();
+            additiveMinusButtons[i]->show();
+            additivePlusButtonBackgrounds[i]->show();
+            additivePlusButtons[i]->show();
+            additiveBarsLow[i]->show();
+            additiveBarsDefault[i]->show();
+            additiveBarsHigh[i]->show();
+            int additivePNumber = p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers()[i+1];
+            additiveTitles[i]->setText(p_page_idle->thisMachine->getProductByPNumber(additivePNumber)->getProductName());
+            if(m_mixRatios_level[i] == 3){ // shade in all 3 bars = high
+                p_page_idle->thisMachine->addCssClassToObject(additiveBarsLow[i], "fill", PAGE_PRODUCT_MIXING_CSS);
+                p_page_idle->thisMachine->addCssClassToObject(additiveBarsDefault[i], "fill", PAGE_PRODUCT_MIXING_CSS);
+                p_page_idle->thisMachine->addCssClassToObject(additiveBarsHigh[i], "fill", PAGE_PRODUCT_MIXING_CSS);
+            }else if(m_mixRatios_level[i] == 2){ // shade in 2 bars = default
+                p_page_idle->thisMachine->addCssClassToObject(additiveBarsLow[i], "fill", PAGE_PRODUCT_MIXING_CSS);
+                p_page_idle->thisMachine->addCssClassToObject(additiveBarsDefault[i], "fill", PAGE_PRODUCT_MIXING_CSS);
+                p_page_idle->thisMachine->addCssClassToObject(additiveBarsHigh[i], "empty", PAGE_PRODUCT_MIXING_CSS);
+            }else{ // shade in 1 bar = low
+                p_page_idle->thisMachine->addCssClassToObject(additiveBarsLow[i], "fill", PAGE_PRODUCT_MIXING_CSS);
+                p_page_idle->thisMachine->addCssClassToObject(additiveBarsDefault[i], "empty", PAGE_PRODUCT_MIXING_CSS);
+                p_page_idle->thisMachine->addCssClassToObject(additiveBarsHigh[i], "empty", PAGE_PRODUCT_MIXING_CSS);
+            }
+        }else{ // if zero bars; hide the row
+            additiveTitles[i]->hide();
+            additiveBackgroundRows[i]->hide();
+            additiveMinusButtonBackgrounds[i]->hide();
+            additiveMinusButtons[i]->hide();
+            additivePlusButtonBackgrounds[i]->hide();
+            additivePlusButtons[i]->hide();
+            additiveBarsLow[i]->hide();
+            additiveBarsDefault[i]->hide();
+            additiveBarsHigh[i]->hide();
+            // p_page_idle->thisMachine->addCssClassToObject(additiveBarsLow[i], "empty", PAGE_PRODUCT_MIXING_CSS);
+            // p_page_idle->thisMachine->addCssClassToObject(additiveBarsDefault[i], "empty", PAGE_PRODUCT_MIXING_CSS);
+            // p_page_idle->thisMachine->addCssClassToObject(additiveBarsHigh[i], "empty", PAGE_PRODUCT_MIXING_CSS);
+        }
+    }
 }
 

@@ -342,7 +342,7 @@ DF_ERROR messageMediator::updateCmdString(char key)
       // ; is the command finished char
       m_receiveStringBuffer.clear();
       m_bCommandStringReceived = true;
-      debugOutput::sendMessage("Received message (unparsed, finished): " + m_processCommand, MSG_INFO);
+      //debugOutput::sendMessage("Received message (unparsed, finished): " + m_processCommand, MSG_INFO);
    }
 
    return df_ret;
@@ -353,7 +353,7 @@ DF_ERROR messageMediator::updateCmdString(char key)
 DF_ERROR messageMediator::updateCmdString()
 {
    DF_ERROR df_ret = ERROR_BAD_PARAMS;
-   debugOutput::sendMessage("Process received message: " + m_receiveStringBuffer, MSG_INFO);
+   //debugOutput::sendMessage("Process received message: " + m_receiveStringBuffer, MSG_INFO);
 
    if (!m_processCommand.empty())
    {
@@ -422,7 +422,7 @@ void *messageMediator::doIPThread(void *pThreadArgs)
          {
             ServerSocket new_sock;
             fsm_comm_server.accept(new_sock);
-            debugOutput::sendMessage("Server: New incoming socket accepted. ", MSG_INFO);
+            // debugOutput::sendMessage("Server: New incoming socket accepted. ", MSG_INFO);
 
             try
             {
@@ -504,21 +504,24 @@ DF_ERROR messageMediator::parseCommandString()
    if (sCommand.find("pcabugfix") != string::npos)
    {
       // debugOutput::sendMessage("*************************************************", MSG_INFO);
-      debugOutput::sendMessage("Action: Repair PCA9534", MSG_INFO);
+      debugOutput::sendMessage("Received Message: " + sCommand, MSG_INFO);
       m_requestedAction = ACTION_REPAIR_PCA;
    }
    else if (sCommand.find("Ping") != string::npos)
    {
+      debugOutput::sendMessage("Received Message: " + sCommand, MSG_INFO);
       // simple is alive command will reset to idle state
       m_requestedAction = ACTION_RESET;
    }
    else if (sCommand.find("getTemperature") != string::npos)
    {
+      // debugOutput::sendMessage("Received Message: " + sCommand, MSG_INFO);
       sendTemperatureData();
       m_requestedAction = ACTION_NO_ACTION;
    }
    else if (sCommand.find("pcbPower") != string::npos)
    {
+      debugOutput::sendMessage("Received Message: " + sCommand, MSG_INFO);
       std::string delimiter = "|";
       std::size_t found0 = sCommand.find(delimiter);
       std::size_t found1 = sCommand.find(delimiter, found0 + 1);
@@ -541,6 +544,7 @@ DF_ERROR messageMediator::parseCommandString()
 
    else if (sCommand.find("DispenseButtonLights") != string::npos)
    {
+      debugOutput::sendMessage("Received Message: " + sCommand, MSG_INFO);
       // simple is alive command will reset to idle state
       // e.g.   ButtonLights|ON
       std::string delimiter = "|";
@@ -561,6 +565,7 @@ DF_ERROR messageMediator::parseCommandString()
    }
    else if (sCommand.find("stopDispense") != string::npos)
    {
+      debugOutput::sendMessage("Received Message: " + sCommand, MSG_INFO);
       debugOutput::sendMessage("Action: Abort Dispense Request", MSG_INFO);
       m_requestedAction = ACTION_DISPENSE_END;
    }
@@ -570,6 +575,7 @@ DF_ERROR messageMediator::parseCommandString()
       // e.g.    // dipenseMix|1|91|95|1|
       // e.g.    // dipenseMix|1|91|95,3,4|0.6,0.2,0.2|
 
+      debugOutput::sendMessage("Received Message: " + sCommand, MSG_INFO);
       debugOutput::sendMessage("Dispense command found", MSG_INFO);
       std::string delimiter = "|";
       std::size_t found0 = sCommand.find(delimiter);
@@ -606,6 +612,7 @@ DF_ERROR messageMediator::parseCommandString()
    }
    else if (sCommand.find("dispensePNumber") != string::npos)
    {
+      debugOutput::sendMessage("Received Message: " + sCommand, MSG_INFO);
       // dipenseMix|slot|dispenseProduct
       // e.g.    // dipenseMix|1|91|
       // e.g.    // dipenseMix|1|91|
@@ -633,6 +640,7 @@ DF_ERROR messageMediator::parseCommandString()
    }
    else if (sCommand.find("orderDetails") != string::npos)
    {
+      debugOutput::sendMessage("Received Message: " + sCommand, MSG_INFO);
       // e.g.   orderDetails|2.2|super30off  // price|couponcode
       debugOutput::sendMessage("Order details received", MSG_INFO);
       std::string delimiter = "|";
@@ -703,29 +711,33 @@ DF_ERROR messageMediator::parseCommandString()
    //  first_char == '4')
 
    {
+      debugOutput::sendMessage("Received Message: " + sCommand, MSG_INFO);
       // length 3 command is always a dispense instruction. This is annoying, but it's grown organically like that.
       // check for dispensing command
       e_ret = parseDispenseCommand(sCommand);
    }
    else if (sCommand.find("Printer") != string::npos)
    {
+      // debugOutput::sendMessage("Received Message: " + sCommand, MSG_INFO);
       m_requestedAction = ACTION_UI_COMMAND_PRINTER_MENU;
    }
    else if (sCommand.find("getThermalprinterStatus") != string::npos)
    {
+      // debugOutput::sendMessage("Received Message: " + sCommand, MSG_INFO);
       // debugOutput::sendMessage("Printer status request received.", MSG_INFO);
       // sendPrinterStatus();
       m_requestedAction = ACTION_UI_COMMAND_PRINTER_SEND_STATUS;
    }
    else if (sCommand.find("thermalprinterPrintTest") != string::npos)
    {
+      debugOutput::sendMessage("Received Message: " + sCommand, MSG_INFO);
       // debugOutput::sendMessage("Printer status request received.", MSG_INFO);
       // sendPrinterStatus();
       m_requestedAction = ACTION_UI_COMMAND_TEST_PRINT;
    }
    else if (sCommand.find("thermalprinterPrintTransaction") != string::npos)
    {
-      // debugOutput::sendMessage("Printer status request received.", MSG_INFO);
+      debugOutput::sendMessage("Received Message: " + sCommand, MSG_INFO);
       // sendPrinterStatus();
 
       debugOutput::sendMessage("Print transaction command received", MSG_INFO);
@@ -748,11 +760,13 @@ DF_ERROR messageMediator::parseCommandString()
        first_char == ACTION_MANUAL_PUMP_PWM_SET ||
        first_char == ACTION_MANUAL_PUMP_SET)
    {
+      debugOutput::sendMessage("Received Message: " + sCommand, MSG_INFO);
       m_requestedAction = first_char;
       std::string number = sCommand.substr(1, sCommand.size());
       m_commandValue = std::stoi(number);
    }
    else if (
+      debugOutput::sendMessage("Received Message: " + sCommand, MSG_INFO);
        // single digit commands
        first_char == '0' ||
        first_char == '1' ||

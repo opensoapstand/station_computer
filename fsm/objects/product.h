@@ -42,7 +42,7 @@ public:
         string getPNumberAsPString();
 
         bool isMixingProduct();
-        void getMixRatios(double *&mixRatios, int &count);
+        void getMixRatiosDefault(double *&mixRatios, int &count);
         void getMixPNumbers(int *&pnumbers, int &count);
 
         int getMixProductsCount();
@@ -145,7 +145,9 @@ private:
 
         int m_mix_pnumbers[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
         int m_mix_pnumbers_count;
+        string m_mix_ratios_low_str;
         string m_mix_ratios_str;
+        string m_mix_ratios_high_str;
         double m_mix_ratios[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
         int m_mix_ratios_count;
 

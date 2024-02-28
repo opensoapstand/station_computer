@@ -135,6 +135,7 @@ page_sendFeedback->label_contact_info,Contact Information<br>Phone: (+1) 604-283
 # page_qr_payment
 page_qr_payment->pushButton_previous_page,←BACK
 page_qr_payment->label_title->pay_by_phone,Scan to Pay
+page_qr_payment->label_title->almost_there,Processing Payment
 page_qr_payment->label_scan->label_scan_1,QR Pay
 page_qr_payment->label_scan->finalize_transaction,\n Please follow the instructions in <br>your phone browser
 page_qr_payment->label_steps,<ol><li><span class='tab'></span>Scan QR code with phone camera</li>        <li><span class='tab'></span>Click to open the link that appears</li>        <li><span class='tab'></span>Follow payment instructions on phone</li>        <li><span class='tab'></span>The station will proceed after payment</li>        <li><span class='tab'></span>Refill your beverage!</li>        </ol>  

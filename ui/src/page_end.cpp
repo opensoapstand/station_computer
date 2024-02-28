@@ -110,6 +110,9 @@ void page_end::fsmReceiveFinalTransactionMessage(QString start_time, QString end
     p_page_idle->thisMachine->getSelectedSlot()->setButtonPressCount(button_press_count);
     p_page_idle->thisMachine->getSelectedProduct()->setVolumeDispensedMl(volume_dispensed);
     p_page_idle->thisMachine->getSelectedProduct()->setVolumeDispensedMixedProduct(volumeDispensedMixProduct);    
+
+
+    // maintenance mode dispenses also get processed here... Make sure never to trigger page_end end.
     if(is_in_page_end){
         waitToFinishTransactionInFsm();
     }

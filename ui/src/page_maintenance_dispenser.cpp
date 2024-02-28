@@ -80,6 +80,7 @@ void page_maintenance_dispenser::setPage(page_maintenance *pageMaintenance, page
 
 void page_maintenance_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
+    qDebug()<<"Exit Maintenance dispense page";
     dispense_test_end(true);
     maintainProductPageEndTimer->stop();
     statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
@@ -342,10 +343,15 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
     ui->pushButton_plu_custom->setText(p_page_idle->thisMachine->getSelectedProduct()->getPlu(SIZE_CUSTOM_INDEX));
     ui->pushButton_plu_sample->setText(p_page_idle->thisMachine->getSelectedProduct()->getPlu(SIZE_SAMPLE_INDEX));
 
-    QString statusText = p_page_idle->thisMachine->getSelectedSlot()->getStatusText();
 
+    QString statusText = p_page_idle->thisMachine->getSelectedSlot()->getStatusText();
     setStatusTextLabel(ui->label_status_dispenser_elaborated, statusText, true);
+
     setStatusTextLabel(ui->label_status_dispenser, statusText, false);
+    
+    QString statusTextProduct = p_page_idle->thisMachine->getSelectedProduct()->getStatusText();
+    setStatusTextLabel(ui->label_status_selected_product, statusTextProduct, false);
+    
 
     if (p_page_idle->thisMachine->getSelectedSlot()->getIsSlotEnabled())
     {
@@ -595,6 +601,7 @@ void page_maintenance_dispenser::dispense_test_end(bool sendStopToController)
 {
     if (is_pump_enabled_for_dispense)
     {
+        qDebug() << "Active Dispense stop.";
         dispenseTimer->stop();
         is_pump_enabled_for_dispense = false;
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_pump_enabled_status, "pump_off");
@@ -615,6 +622,8 @@ void page_maintenance_dispenser::dispense_test_end(bool sendStopToController)
         {
             qDebug() << "controller sent stop dispensing signal in maintenance mode.";
         }
+    }else{
+        qDebug() << "Active Dispense was already stopped.";
     }
 }
 
@@ -746,11 +755,8 @@ void page_maintenance_dispenser::on_pushButton_clear_problem_clicked()
     if (!isDispenserPumpEnabledWarningBox())
     {
         QString statusText = p_page_idle->thisMachine->getSelectedSlot()->getStatusText();
-        qDebug() << "Clear problem button clicked. Status is: " + statusText;
-        if (statusText.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
-        {
-            p_page_idle->thisMachine->getSelectedSlot()->setStatusText("SLOT_STATE_AVAILABLE");
-        }
+        qDebug() << "Clear problem button clicked. Will set to available. Status was: " + statusText;
+        p_page_idle->thisMachine->getSelectedSlot()->setStatusText("SLOT_STATE_AVAILABLE");
         updateProductLabelValues(true);
     }
 }

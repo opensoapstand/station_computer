@@ -9,7 +9,7 @@
 
 
 // TODO: Refactor to fit with dfuicommthread
-#define UI_VERSION "3.3"
+#define UI_VERSION "3.4"
 
 #define OPTION_SLOT_INVALID 0
 #define SELECT_PRODUCT_PAGE_SLOT_COUNT_MAX 4
@@ -45,15 +45,25 @@
 #define CSV_PRODUCT_COL_ID 0
 #define CSV_PRODUCT_COL_NAME 1
 #define CSV_PRODUCT_COL_TYPE 2
-#define CSV_PRODUCT_COL_SUPPLIER 3
-#define CSV_PRODUCT_COL_BRAND 4
-#define CSV_PRODUCT_COL_INGREDIENTS 5
-#define CSV_PRODUCT_COL_LOCATION 6
-#define CSV_PRODUCT_COL_NAME_UI 7
-#define CSV_PRODUCT_COL_DESCRIPTION_UI 8
-#define CSV_PRODUCT_COL_FEATURES_UI 9
-#define CSV_PRODUCT_COL_INGREDIENTS_UI 10
-#define CSV_PRODUCT_COL_NOTES 11
+#define CSV_PRODUCT_COL_MIX_PNUMBERS 3
+#define CSV_PRODUCT_COL_MIX_RATIOS_LOW 4
+#define CSV_PRODUCT_COL_MIX_RATIOS_DEFAULT 5
+#define CSV_PRODUCT_COL_MIX_RATIOS_HIGH 6
+#define CSV_PRODUCT_COL_SUPPLIER 7
+#define CSV_PRODUCT_COL_BRAND 8
+#define CSV_PRODUCT_COL_LOCATION 9
+#define CSV_PRODUCT_COL_INGREDIENTS 10
+#define CSV_PRODUCT_COL_PRODUCT_NAME_SHORT 11
+#define CSV_PRODUCT_COL_PRODUCT_TITLE 12
+#define CSV_PRODUCT_COL_PRODUCT_TAG_LINE 13
+#define CSV_PRODUCT_COL_PRODUCT_NAME_RECEIPT 14
+#define CSV_PRODUCT_COL_NAME_UI 15
+#define CSV_PRODUCT_COL_DESCRIPTION_UI 16
+#define CSV_PRODUCT_COL_FEATURES_UI 17
+#define CSV_PRODUCT_COL_INGREDIENTS_UI 18
+#define CSV_PRODUCT_COL_CALIBRATION 19
+#define CSV_PRODUCT_COL_NOTES 20
+#define CSV_PRODUCT_COL_URL 21
 
 #define TRANSACTION_DISPENSE_END_OFFINE_PATH "/home/df-admin/production/logging/transactions/failed_curl_transaction_dispense_end.txt"
 #define TRANSACTIONS_RESTOCK_OFFINE_PATH "/home/df-admin/production/logging/transactions/failed_curl_transaction_restock.txt"
@@ -120,6 +130,7 @@ using namespace std;
 #define PAGE_PRODUCT_FREESAMPLE_CSS                     "page_product_freeSample.css"
 #define PAGE_END_CSS                                    "page_end.css"
 #define PAGE_QR_PAYMENT_CSS                             "page_qr_payment.css"
+#define PAGE_OFFLINE_PAYMENT_CSS                        "page_offline_payment.css"
 #define PAGE_ERROR_WIFI_CSS                             "page_error_wifi.css"
 #define PAGE_TAP_PAYMENT_CSS                            "page_payment_tap_tcp.css"
 #define PAGE_TRANSACTIONS_CSS                           "page_transactions.css"

@@ -42,10 +42,10 @@ void DfUiServer::updateVolumeSlot(double dispensed)
     emit signalUpdateVolume(dispensed, false);
 }
 
-void DfUiServer::updateFinalVolumeDispensed(double dispensed)
-{
-    emit finalVolumeDispensed(dispensed);
-}
+// void DfUiServer::updateFinalVolumeDispensed(double dispensed)
+// {
+//     emit finalVolumeDispensed(dispensed);
+// }
 
 void DfUiServer::sendFinalTransactionMessage(QString start_time, QString end_time, double button_press_duration, double button_press_count, double volume_dispensed,QString volumeDispensedMixProduct){
     emit finalTransactionMessage(start_time,end_time,button_press_duration,button_press_count, volume_dispensed, volumeDispensedMixProduct);
@@ -144,7 +144,7 @@ void DfUiServer::incomingConnection(qintptr socketDescriptor)
     connect(messageHandlerThread, &DfUiCommThread::transactionEndSignal, this, &DfUiServer::transactionEndSlot);
     connect(messageHandlerThread, &DfUiCommThread::resetTimerSignal, this, &DfUiServer::resetTimerSlot);
     connect(messageHandlerThread, &DfUiCommThread::updateVolumeSignal, this, &DfUiServer::updateVolumeSlot);
-    connect(messageHandlerThread, &DfUiCommThread::updateFinalVolumeDispensedSignal, this, &DfUiServer::updateFinalVolumeDispensed);
+    // connect(messageHandlerThread, &DfUiCommThread::updateFinalVolumeDispensedSignal, this, &DfUiServer::updateFinalVolumeDispensed);
     connect(messageHandlerThread, &DfUiCommThread::finalTransactionMessageSignal, this, &DfUiServer::sendFinalTransactionMessage);
     connect(messageHandlerThread, &DfUiCommThread::dispenseRateSignal, this, &DfUiServer::dispenseRateSlot);
     connect(messageHandlerThread, &DfUiCommThread::dispenseStatusSignal, this, &DfUiServer::dispenseStatusSlot);

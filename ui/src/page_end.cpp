@@ -31,16 +31,18 @@ page_end::page_end(QWidget *parent) : QWidget(parent),
 
     is_in_state_thank_you = false;
     statusbarLayout = new QVBoxLayout(this);
+    is_in_page_end = false;
 }
 
 /*
  * Page Tracking reference
  */
-void page_end::setPage(page_dispenser *page_dispenser, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_sendFeedback *page_sendFeedback, statusbar *p_statusbar)
+void page_end::setPage(page_dispenser *page_dispenser, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_offline_payment *page_offline_payment,page_sendFeedback *page_sendFeedback, statusbar *p_statusbar)
 {
     this->p_page_idle = pageIdle;
     this->p_page_dispense = page_dispenser;
     this->paymentPage = page_qr_payment;
+    this->paymentOfflinePage = page_offline_payment;
     this->p_page_sendFeedback = page_sendFeedback;
     this->p_statusbar = p_statusbar;
 }
@@ -88,16 +90,17 @@ void page_end::showEvent(QShowEvent *event)
     if(p_page_idle->thisMachine->hasMixing()){
         ui->label_manufacturer_logo->hide();
     }
+    is_in_page_end = true;
     // p_page_idle->setDiscountPercentage(0.0);
+
 }
 
-
-void page_end::fsmReceiveFinalDispensedVolume(double dispensed)
-{
-    qDebug() << "Updated dispensed volume" << dispensed;
-    p_page_idle->thisMachine->getSelectedProduct()->setVolumeDispensedMl(dispensed);
-    updateDispensedVolumeLabel();    
-}
+// void page_end::fsmReceiveFinalDispensedVolume(double dispensed)
+// {
+//     qDebug() << "Updated dispensed volume" << dispensed;
+//     p_page_idle->thisMachine->getSelectedProduct()->setVolumeDispensedMl(dispensed);
+//     updateDispensedVolumeLabel();    
+// }
 
 void page_end::fsmReceiveFinalTransactionMessage(QString start_time, QString end_time, double button_press_duration, double button_press_count, double volume_dispensed,QString volumeDispensedMixProduct)
 {
@@ -107,7 +110,12 @@ void page_end::fsmReceiveFinalTransactionMessage(QString start_time, QString end
     p_page_idle->thisMachine->getSelectedSlot()->setButtonPressCount(button_press_count);
     p_page_idle->thisMachine->getSelectedProduct()->setVolumeDispensedMl(volume_dispensed);
     p_page_idle->thisMachine->getSelectedProduct()->setVolumeDispensedMixedProduct(volumeDispensedMixProduct);    
-    waitToFinishTransactionInFsm();
+
+
+    // maintenance mode dispenses also get processed here... Make sure never to trigger page_end end.
+    if(is_in_page_end){
+        waitToFinishTransactionInFsm();
+    }
 }
 
 void page_end::updateDispensedVolumeLabel(){
@@ -119,9 +127,7 @@ void page_end::updateDispensedVolumeLabel(){
     price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize()*p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl());
     }
     ui->label_volume_dispensed_ml->setText(dispensed_correct_units + " ( $" + QString::number(price, 'f', 2) + " )");
-
 }
-
 
 void page_end::sendDispenseEndToCloud()
 {
@@ -217,7 +223,6 @@ void page_end::sendCompleteOrderToCloud(QString paymentMethod)
     }
 }
 
-
 void page_end::controllerFinishedTransaction()
 {
     if (is_in_state_thank_you)
@@ -232,8 +237,6 @@ void page_end::controllerFinishedTransaction()
     }
 }
 
-
-
 void page_end::transactionToFile(QString curl_params)
 {
     p_page_idle->thisMachine->dfUtility->write_to_file(TRANSACTION_DISPENSE_END_OFFINE_PATH, curl_params);
@@ -247,6 +250,7 @@ void page_end::onThankyouTimeoutTick()
     }
     else
     {
+        qDebug() << "page end: timemout. forceable exit = true";
         finishHandler();
         // once finishHandler is activated "unsuccessfully" make sure, next time it will finish for sure!
         exitIsForceable = true;
@@ -261,16 +265,11 @@ void page_end::on_pushButton_to_idle_clicked()
 
 void page_end::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
-
     is_in_state_thank_you = false;
-    // p_page_idle->setCouponCode("");
-
     thankYouEndTimer->stop();
-    //  qDebug() << "Thank you timer stopped. ";
     statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
-    //  qDebug() << "statusbar hidden ";
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
-    //  qDebug() << "page transition done.  ";
+    is_in_page_end = false;
 }
 
 void page_end::finishHandler()

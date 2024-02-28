@@ -79,8 +79,8 @@ scp /home/df-admin/station_computer/admin/enableIPForward.sh /home/df-admin/prod
 scp /home/df-admin/station_computer/admin/disableIPForward.sh /home/df-admin/production/admin/
 scp /home/df-admin/station_computer/admin/enableIPForward.sh /home/df-admin/production/admin/tap_payment
 scp /home/df-admin/station_computer/admin/disableIPForward.sh /home/df-admin/production/admin/tap_payment
-scp /home/df-admin/station_computer/ui/payment/private_key.der /home/df-admin/production/admin/tap_payment
-scp /home/df-admin/station_computer/ui/payment/public_key.txt /home/df-admin/production/admin/tap_payment
+scp /home/df-admin/station_computer/ui/src/payment/private_key.der /home/df-admin/production/admin/tap_payment
+scp /home/df-admin/station_computer/ui/src/payment/public_key.txt /home/df-admin/production/admin/tap_payment
 
 
 # database gets copied from the backup folder. aka we do not copy the database from the station_computer folder. 

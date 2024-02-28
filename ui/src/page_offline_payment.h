@@ -1,6 +1,6 @@
 //***************************************
 //
-// page_qr_payment.h
+// page_offline_payment.h
 // GUI class while machine is processing
 // payment.
 //
@@ -13,8 +13,8 @@
 // copyright 2023 by Drinkfill Beverages Ltd// all rights reserved
 //***************************************
 
-#ifndef page_qr_payment_H
-#define page_qr_payment_H
+#ifndef page_offline_payment_H
+#define page_offline_payment_H
 
 #include "df_util.h"
 
@@ -31,7 +31,6 @@
 #include <string>
 #include <vector>
 #include <thread>
-#include <QCryptographicHash>
 #include <openssl/evp.h>
 
 #include <QPainter>
@@ -46,29 +45,31 @@ class page_dispenser;
 class page_idle;
 class page_help;
 class page_product_mixing;
+class keyboard;
+
 
 namespace Ui {
-class page_qr_payment;
+class page_offline_payment;
 }
 
-typedef enum StatePayment{
-    s_init,
-    s_payment_processing,
-    s_payment_done
-}StatePayment;
+typedef enum StatePaymentOffline{
+    s_init_offline,
+    s_payment_offline_processing,
+    s_payment_offline_done
+}StatePaymentOffline;
 
 using namespace std;
 using namespace qrcodegen;
 
-class page_qr_payment : public QWidget
+class page_offline_payment : public QWidget
 {
     Q_OBJECT
 
 public:
     // **** GUI Setup ****
-    explicit page_qr_payment(QWidget *parent = nullptr);
-    void setPage(page_product* p_page_product,page_error_wifi *pageWifiError, page_dispenser* page_dispenser, page_idle* pageIdle, page_help *pageHelp, statusbar *p_statusbar, page_product_mixing* p_page_product_mixing);
-    ~page_qr_payment();
+    explicit page_offline_payment(QWidget *parent = nullptr);
+    void setPage(page_product* p_page_product,page_error_wifi *pageWifiError, page_dispenser* page_dispenser, page_idle* pageIdle, page_help *pageHelp, statusbar *p_statusbar, page_product_mixing* p_page_product_mixing, keyboard * keyboard);
+    ~page_offline_payment();
 
     void showEvent(QShowEvent *event);
     bool exitConfirm();
@@ -77,7 +78,7 @@ public:
         return orderId;
     }
 
-    StatePayment state_payment;
+    StatePaymentOffline state_payment;
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
 
 private slots:
@@ -87,13 +88,13 @@ private slots:
     void onTimeoutTick();
     void idlePaymentTimeout();
     void on_pushButton_refresh_clicked();
-    void qrProcessedPeriodicalCheck();
     void showErrorTimerPage();
     QString generateCode(QString str);
+    void on_lineEdit_promo_codeInput_clicked();
 
 private:
     QMessageBox* msgBox;
-    Ui::page_qr_payment *ui;
+    Ui::page_offline_payment *ui;
     page_product* p_page_product;
     page_dispenser* p_page_dispense;
     page_idle* p_page_idle;
@@ -101,6 +102,7 @@ private:
     page_error_wifi *p_page_wifi_error;
     statusbar *p_statusbar;
     page_product_mixing *p_page_product_mixing;
+    keyboard *p_keyboard;
 
     QString _paymentTimeLabel;
     int _pageTimeoutCounterSecondsLeft;
@@ -114,18 +116,14 @@ private:
     std::string toSvgString(const QrCode &qr, int border);
     void paintQR(QPainter &painter, const QSize sz, const QString &data, QColor fg);
     void resetPaymentPage();
-
+    void enterButtonPressed();
+    void apply_code(QString promoCode);
     QString orderId="";
-
-    CURLcode res;
-    std::string readBuffer;
-    long http_code;
+    QString secretCode = "";
     QVBoxLayout *statusbarLayout;
 
-    void isQrProcessedCheckOnline();
     void setupQrOrder();
-    bool createOrderIdAndSendToBackend();
     
 };
 
-#endif // page_qr_payment_H
+#endif // page_offline_payment_H

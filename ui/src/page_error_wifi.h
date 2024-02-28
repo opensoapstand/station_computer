@@ -24,6 +24,7 @@
 
 
 class page_qr_payment;
+class page_offline_payment;
 class page_end;
 class page_idle;
 
@@ -38,7 +39,7 @@ class page_error_wifi : public QWidget
 public:
     // **** GUI ****
     explicit page_error_wifi(QWidget *parent = nullptr);
-    void setPage(page_qr_payment* page_qr_payment, page_end* page_end, page_idle* pageIdle);
+    void setPage(page_qr_payment* page_qr_payment, page_offline_payment *page_offline_payment,page_end* page_end, page_idle* pageIdle);
     ~page_error_wifi();
     void showEvent(QShowEvent *event);
     void exit_page();
@@ -56,6 +57,7 @@ private:
     // **** GUI *****
     Ui::page_error_wifi *ui;
     page_qr_payment* paymentPage;
+    page_offline_payment* paymentOfflinePage;
     page_end* thanksPage;
     page_idle* p_page_idle;
 

@@ -645,11 +645,6 @@ void page_product_mixing::additiveMinusButtonsPressed(int index){
 }
 
 void page_product_mixing::additivePlusButtonsPressed(int index){
-    // qDebug() << "INDEX" << index;
-    // qDebug() << "LOWWWW" << p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosLow();
-    // qDebug() << "DEFAULTTT" << p_page_idle->thisMachine->getSelectedProduct()->getMixRatios();
-    // qDebug() << "HIGHHH" << p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosHigh();
-    // qDebug() << "CUSTOM" << p_page_idle->thisMachine->getSelectedProduct()->getCustomMixRatios();
     p_page_idle->thisMachine->getSelectedProduct()->setCustomMixRatios(index, "+"); //starts off index = 1; perfect for this function because index 0 is base, which is not an additive
     if(m_mixRatios_level[index-1] < 3){ // m_mixRatios_level does not include base, index starts off at 1; need to start of from zero
         if(m_mixRatios_level[index-1] == 0){
@@ -659,8 +654,7 @@ void page_product_mixing::additivePlusButtonsPressed(int index){
         }
     }
     updateMixRatiosLevel();
-    // qDebug() << "CUSTOM AFTERRRRR" << p_page_idle->thisMachine->getSelectedProduct()->getCustomMixRatios();
-    // qDebug() << "!!!!!!!!!!!!!!!!!!!!!";
+
     // !!!!!!!!! For displaying percentages - will probably need tweaking !!!!!!!!!
     // double additivePRatio = p_page_idle->thisMachine->getSelectedProduct()->getAdditivesRatioModifier(index - 1);
     // double additiveRatioToPercentage = convertAdditivePRatioToPercentage(additivePRatio) + ADDITIVES_RATIO_INCREMENT;
@@ -678,6 +672,7 @@ void page_product_mixing::on_pushButton_recommended_clicked(){
     resetMixRatiosLevel();
     p_page_idle->thisMachine->getSelectedProduct()->resetCustomMixRatioParameters();
     updateMixRatiosLevel();
+
     // For displaying percentages - will probably need tweaking
     // p_page_idle->thisMachine->getSelectedProduct()->resetCustomMixRatioParameters();
     // for (int j = 0; j < 5; j++){
@@ -693,12 +688,12 @@ void page_product_mixing::checkMixRatiosLevel(){
     //check if customer has already adjust additives
     // if adjusted; don't do anything
     // otherwise reset mix ratios level
-    qDebug() << "DEFAULTTTTT" << p_page_idle->thisMachine->getSelectedProduct()->getMixRatios();
-    qDebug() << "CUSTOMMMMM" << p_page_idle->thisMachine->getSelectedProduct()->getCustomMixRatios();
-    bool resetCustomMixRatios = false;
+    // qDebug() << "DEFAULTTTTT" << p_page_idle->thisMachine->getSelectedProduct()->getMixRatios();
+    // qDebug() << "CUSTOMMMMM" << p_page_idle->thisMachine->getSelectedProduct()->getCustomMixRatios();
+    bool resetCustomMixRatios = true;
     for(int i = 1; i < p_page_idle->thisMachine->getSelectedProduct()->getMixRatios().size(); i++){
-        if(p_page_idle->thisMachine->getSelectedProduct()->getMixRatios()[i] == p_page_idle->thisMachine->getSelectedProduct()->getCustomMixRatios()[i]){
-            resetCustomMixRatios = true;
+        if(p_page_idle->thisMachine->getSelectedProduct()->getMixRatios()[i] != p_page_idle->thisMachine->getSelectedProduct()->getCustomMixRatios()[i]){
+            resetCustomMixRatios = false;
         }
     }
     if(resetCustomMixRatios){
@@ -776,9 +771,6 @@ void page_product_mixing::updateMixRatiosLevel(){
             additiveBarsLow[i]->hide();
             additiveBarsDefault[i]->hide();
             additiveBarsHigh[i]->hide();
-            // p_page_idle->thisMachine->addCssClassToObject(additiveBarsLow[i], "empty", PAGE_PRODUCT_MIXING_CSS);
-            // p_page_idle->thisMachine->addCssClassToObject(additiveBarsDefault[i], "empty", PAGE_PRODUCT_MIXING_CSS);
-            // p_page_idle->thisMachine->addCssClassToObject(additiveBarsHigh[i], "empty", PAGE_PRODUCT_MIXING_CSS);
         }
     }
 }

@@ -235,29 +235,29 @@ DF_ERROR stateDispenseEnd::handleTransactionPayment()
 
     // Currently only Drinkfill used the tap method of payment, so this checks if it is a tap payment system and runs the cleaning cycle if it is...
     // TODO: Change this to just check if the system is Soapstand or Drinkfill instead of payment system!
-    if (paymentMethod == "qr")
-    {
-        debugOutput::sendMessage("QR payment. No payment action in controller", MSG_INFO);
-    }
-    else if (paymentMethod == "tap")
-    {
-        // sleep(5);
-        // debugOutput::sendMessage("Dispense OnEXIT", MSG_INFO);
-        // debugOutput::sendMessage("------Cleaning Mode------", MSG_INFO);
-        // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", MSG_INFO);
-        // debugOutput::sendMessage("Pin -> " + to_string(g_machine.m_productDispensers[m_slot_index].getI2CPin(WATER)), MSG_INFO);
-        // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", MSG_INFO);
-        // debugOutput::sendMessage("Pin -> " + to_string(g_machine.m_productDispensers[m_slot_index].getI2CPin(PRODUCT)), MSG_INFO);
-    }
-    else if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13" || paymentMethod == "barcode_EAN-2" || paymentMethod == "plu")
-    {
-        debugOutput::sendMessage("Print receipt:", MSG_INFO);
-        setup_and_print_receipt();
-    }
-    else
-    {
-        debugOutput::sendMessage("WARNING: No payment method detected.", MSG_INFO);
-    }
+    // if (paymentMethod == "qr")
+    // {
+    //     debugOutput::sendMessage("QR payment. No payment action in controller", MSG_INFO);
+    // }
+    // else if (paymentMethod == "tap")
+    // {
+    //     // sleep(5);
+    //     // debugOutput::sendMessage("Dispense OnEXIT", MSG_INFO);
+    //     // debugOutput::sendMessage("------Cleaning Mode------", MSG_INFO);
+    //     // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", MSG_INFO);
+    //     // debugOutput::sendMessage("Pin -> " + to_string(g_machine.m_productDispensers[m_slot_index].getI2CPin(WATER)), MSG_INFO);
+    //     // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", MSG_INFO);
+    //     // debugOutput::sendMessage("Pin -> " + to_string(g_machine.m_productDispensers[m_slot_index].getI2CPin(PRODUCT)), MSG_INFO);
+    // }
+    // else if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13" || paymentMethod == "barcode_EAN-2" || paymentMethod == "plu")
+    // {
+    //     debugOutput::sendMessage("Print receipt:", MSG_INFO);
+    //     setup_and_print_receipt();
+    // }
+    // else
+    // {
+    //     debugOutput::sendMessage("WARNING: No payment method detected.", MSG_INFO);
+    // }
     return e_ret;
 }
 
@@ -631,9 +631,9 @@ double stateDispenseEnd::getFinalPrice()
     double price_per_ml;
     double volume_dispensed;
     double price;
-    // bool isCustomSizeEnabled = g_machine.m_productDispensers.getProduct()->getIsSizeEnabled(SIZE_CUSTOM_CHAR);
+    bool isCustomSizeEnabled = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getIsSizeEnabled(SIZE_CUSTOM_CHAR);
     // If custom volume is enabled, adjust the price to actual quantity dispensed
-    if (size == SIZE_CUSTOM_CHAR)
+    if (size == SIZE_CUSTOM_CHAR||isCustomSizeEnabled)
     {
 
         bool isDiscountEnabled;
@@ -838,7 +838,7 @@ void stateDispenseEnd:: sendEndTransactionMessageToUI(){
     std::string pNumber_dispense_info_string = mapToString(g_machine.m_productDispensers[m_slot_index].getMixProductsDispenseInfo());
 
     std::string message = "finalTransactionMessage|start_time|" + start_time+"|end_time|" + end_time+"|button_press_duration|"+button_press_duration \
-                            + "|button_press_count|" + button_press_count+ "|volume_dispensed|" + volume_dispensed+"|pNumber_dispense_info|" + pNumber_dispense_info_string;
+                            + "|button_press_count|" + button_press_count+ "|volume_dispensed|" + volume_dispensed+"|pNumber_dispense_info|" + pNumber_dispense_info_string ;
     usleep(100000); // send message delay
     m_pMessaging->sendMessageOverIP(message, true); // send to UI
 }

@@ -342,6 +342,7 @@ double product::getVolumeFromSize(char size)
     {
         debugOutput::sendMessage("Unknown volume parameter: " + size, MSG_INFO);
     }
+    return 666.0;
 }
 
 // double product::getCustomVolumePriceDependingOnDispensedVolume(double volume)
@@ -419,11 +420,11 @@ void product::setIsEnabled(bool isEnabled)
     this->m_is_enabled = isEnabled;
 }
 
-string product::getStatusText()
+string product::getProductStatusText()
 {
     return m_status_text;
 }
-void product::setStatusText(string statusText)
+void product::setProductStatusText(string statusText)
 {
     this->m_status_text = statusText;
 }
@@ -617,6 +618,7 @@ string product::getBasePLU(char size)
     {
         debugOutput::sendMessage("Unknown volume parameter for plu: " + size, MSG_INFO);
     }
+    return "fake plu ";
 }
 // example of adding columns to table
 // void product::addColumnExample()

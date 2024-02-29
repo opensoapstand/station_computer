@@ -113,8 +113,8 @@ public:
 
     bool getIsProductEnabled();
     void setIsProductEnabled(bool isEnabled);
-    QString getStatusText();
-    void setStatusText(QString statusText);
+    QString getProductStatusText();
+    void setProductStatusText(QString statusText);
 
     bool isCustomMix();
     // void adjustAdditivesRatioModifier(int index, double additiveModifier);

@@ -872,6 +872,7 @@ bool pcb::isSlotAvailable(uint8_t slot)
     }
     break;
     }
+    return false;
 }
 ///////////////////////////////////////////////////////////////////////////
 // BUTTON FUNCTIONS
@@ -1820,7 +1821,7 @@ unsigned char pcb::getPumpPWM()
 
 } // End of getPumpRPM()
 
-bool pcb::setPumpPWM(uint8_t pwm_val)
+void pcb::setPumpPWM(uint8_t pwm_val)
 {
     // pump speed is set globally. Not set per slot!
     // pwm_val = byte value max = 255
@@ -1828,7 +1829,7 @@ bool pcb::setPumpPWM(uint8_t pwm_val)
     {
     case DSED8344_NO_PIC:
     {
-        return SendByte(MAX31760_ADDRESS, 0x50, pwm_val); // PWM value
+        SendByte(MAX31760_ADDRESS, 0x50, pwm_val); // PWM value
     };
     break;
     case (DSED8344_PIC_MULTIBUTTON):
@@ -1878,7 +1879,7 @@ bool pcb::setPumpPWM(uint8_t pwm_val)
 
 } // End of setPumpPWM()
 
-bool pcb::setPumpSpeedPercentage(uint8_t speed_percentage)
+void pcb::setPumpSpeedPercentage(uint8_t speed_percentage)
 {
     bool success = false;
     // pump speed is set globally. Not set per slot!
@@ -1906,10 +1907,9 @@ bool pcb::setPumpSpeedPercentage(uint8_t speed_percentage)
     }
     break;
     }
-    return success;
 }
 
-bool pcb::setPumpsDisableAll()
+void pcb::setPumpsDisableAll()
 {
     switch (pcb_version)
     {
@@ -1922,8 +1922,6 @@ bool pcb::setPumpsDisableAll()
         reg_value = ReadByte(get_PCA9534_address_from_slot(1), 0x01);
         reg_value = reg_value & 0b11111000;
         SendByte(get_PCA9534_address_from_slot(1), 0x01, reg_value);
-
-        return true;
     };
     break;
     case (EN258_4SLOTS):
@@ -1958,7 +1956,7 @@ bool pcb::setPumpsDisableAll()
 
 } // End setPumpsDisableAll()
 
-bool pcb::setPumpEnable(uint8_t slot)
+void pcb::setPumpEnable(uint8_t slot)
 {
     // in 8344 one button: do not take into account button press, it is hardwired on the pcb
     // in 8344 multibutton:
@@ -1991,11 +1989,10 @@ bool pcb::setPumpEnable(uint8_t slot)
             reg_value = reg_value | 0b00000111;
             break;
         default:
-            return false;
+            ;
         }
         SendByte(get_PCA9534_address_from_slot(1), 0x01, reg_value); // slot 1 because there is only one PCA9534
 
-        return true;
     };
     break;
     case (EN134_4SLOTS):
@@ -2015,7 +2012,7 @@ bool pcb::setPumpEnable(uint8_t slot)
     }
 }
 
-bool pcb::startPump(uint8_t slot)
+void pcb::startPump(uint8_t slot)
 {
     switch (pcb_version)
     {
@@ -2058,7 +2055,7 @@ bool pcb::startPump(uint8_t slot)
     }
 }
 
-bool pcb::stopPump(uint8_t slot)
+void pcb::stopPump(uint8_t slot)
 {
     switch (pcb_version)
     {
@@ -2087,7 +2084,7 @@ bool pcb::stopPump(uint8_t slot)
     }
 }
 
-bool pcb::setPumpDirection(uint8_t slot, bool forwardElseReverse)
+void pcb::setPumpDirection(uint8_t slot, bool forwardElseReverse)
 {
     switch (pcb_version)
     {

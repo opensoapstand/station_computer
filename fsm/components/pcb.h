@@ -77,8 +77,8 @@
 #define MCP23017_REGISTER_GPB 0x19
 
 #define MCP23017_EN258_GPA0_PIN_OUT_SOLENOID_6 0
-#define MCP23017_EN258_GPA1_PIN_OUT_SOLENOID_7 1
-#define MCP23017_EN258_GPA2_PIN_OUT_SOLENOID_8 2
+#define MCP23017_EN258_GPA1_PIN_OUT_SOLENOID_7 1 // e.g. base
+#define MCP23017_EN258_GPA2_PIN_OUT_SOLENOID_8 2 // e.g. spout
 #define MCP23017_EN258_GPA3_NOT_USED 3
 #define MCP23017_EN258_GPA4_NOT_USED 4
 #define MCP23017_EN258_GPA5_NOT_USED 5
@@ -178,16 +178,16 @@ public:
 
 
     unsigned char getPumpPWM();
-    bool setPumpPWM(uint8_t pwm_val);
-    bool setPumpSpeedPercentage(uint8_t speed_percentage);
+    void setPumpPWM(uint8_t pwm_val);
+    void setPumpSpeedPercentage(uint8_t speed_percentage);
     int getSlotCountByPcbType();
     void setDispenseButtonLightsAllOff();
-    bool setPumpsDisableAll();
-    bool setPumpEnable(uint8_t slot);
+    void setPumpsDisableAll();
+    void setPumpEnable(uint8_t slot);
     void independentDispensingRefresh();
-    bool setPumpDirection(uint8_t slot, bool forwardElseReverse);
-    bool startPump(uint8_t slot);
-    bool stopPump(uint8_t slot);
+    void setPumpDirection(uint8_t slot, bool forwardElseReverse);
+    void startPump(uint8_t slot);
+    void stopPump(uint8_t slot);
 
     double getTemperature(TemperatureSensor sensor);
 

@@ -77,7 +77,7 @@ private:
 
     DF_ERROR handleTransactionPayment();
     DF_ERROR dispenseEndUpdateTransactionDB();
-    DF_ERROR databaseUpdateSql(string sqlStatement, string dbPath);
+    void databaseUpdateSql(string sqlStatement, string dbPath);
 
     // DF_ERROR print_text(std::string text);
 

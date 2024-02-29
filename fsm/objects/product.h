@@ -57,8 +57,8 @@ public:
 
         bool getIsEnabled();
         void setIsEnabled(bool isEnabled);
-        string getStatusText();
-        void setStatusText(string statusText);
+        string getProductStatusText();
+        void setProductStatusText(string statusText);
 
         int getPWM();
         int getRetractionTimeMillis();

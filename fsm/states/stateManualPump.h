@@ -34,13 +34,13 @@ public:
     ~stateManualPump();
 
     string toString();
-    DF_ERROR pumpTest();
-    DF_ERROR autofillPresetQuantity();
-    DF_ERROR pumpCyclicTest();
-    DF_ERROR pumpCyclicTestCycleStart();
-    DF_ERROR pumpCyclicTestCycleFinish();
-    DF_ERROR pumpFlowTest();
-    DF_ERROR customVolumeDispenseTest();
+    void pumpTest();
+    void autofillPresetQuantity();
+    void pumpCyclicTest();
+    void pumpCyclicTestCycleStart();
+    void pumpCyclicTestCycleFinish();
+    void pumpFlowTest();
+    void customVolumeDispenseTest();
 
     DF_ERROR onEntry();
     DF_ERROR onAction();

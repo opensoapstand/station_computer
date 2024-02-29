@@ -225,23 +225,24 @@ public:
 
     void PCA9534SendByteToSlot(uint8_t slot, unsigned char reg, unsigned char byte);
     void sendEN134DefaultConfigurationToPCA9534(uint8_t slot, bool reportIfModified);
-    void sendByteIfNotSetToSlot(uint8_t slot, unsigned char reg, unsigned char value, bool reportIfModified);
-
+    void sendByteToPCA9534SlotIfNotSet(uint8_t slot, unsigned char reg, unsigned char value, bool reportIfModified);
     void EN134_PumpCycle_refresh(uint8_t slots);
 
     bool set_i2c_address(unsigned char address);
     void setup_i2c_bus(void);
     unsigned char ReadByte(unsigned char address, unsigned char reg);
     bool SendByte(unsigned char address, unsigned char reg, unsigned char byte);
+
     bool getPCA9534Input(uint8_t slot, int posIndex);
     void setPCA9534Output(uint8_t slot, int posIndex, bool onElseOff);
     uint8_t get_PCA9534_address_from_slot(uint8_t slot);
+    
+    bool getMCP23017GPIOState(uint8_t slot, int posIndex, uint8_t GPIORegister);
+    uint8_t getMCP23017Register(uint8_t slot, uint8_t reg);
+    void setMCP23017Register(uint8_t slot, uint8_t reg, uint8_t value);
     bool getMCP23017Input(uint8_t slot, int posIndex, uint8_t GPIORegister);
     void setMCP23017Output(uint8_t slot, int posIndex, bool onElseOff, uint8_t GPIORegister);
     uint8_t get_MCP23017_address_from_slot(uint8_t slot);
-    uint8_t getMCP23017Register(uint8_t slot, uint8_t reg);
-    void setMCP23017Register(uint8_t slot, uint8_t reg, uint8_t value);
-
     void displayMCP23017IORegisters(uint8_t slot);
 
     void registerFlowSensorTickCallback(int slot, std::function<void()> callback);

@@ -1550,7 +1550,7 @@ string dispenser::getDispenseUpdateString()
     else
     {
         message +=
-            "non mix. P-active=P-dispense: volume: " + std::to_string(getActiveProduct()->getVolumeDispensed()) + "/" + std::to_string(getProductTargetVolume(getActivePNumber())) + "ml";
+            "non mix. (P-active=P-dispense): volume: " + std::to_string(getActiveProduct()->getVolumeDispensed()) + "/" + std::to_string(getProductTargetVolume(getActivePNumber())) + "ml";
     }
     return message;
 }

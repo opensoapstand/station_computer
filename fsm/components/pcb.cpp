@@ -264,8 +264,12 @@ uint8_t pcb::getMCP23017Register(uint8_t slot, uint8_t reg)
 
 bool pcb::getMCP23017Input(uint8_t slot, int posIndex, uint8_t GPIORegister)
 {
+    return getMCP23017GPIOState(slot, posIndex, GPIORegister);
+}
 
-    return (ReadByte(get_MCP23017_address_from_slot(slot), GPIORegister) & (1 << posIndex));
+bool pcb::getMCP23017GPIOState(uint8_t slot, int posIndex, uint8_t GPIORegister)
+{
+    return (getMCP23017Register(slot, GPIORegister) & (1 << posIndex));
 }
 
 void pcb::displayMCP23017IORegisters(uint8_t slot)
@@ -294,21 +298,33 @@ void pcb::setMCP23017Output(uint8_t slot, int posIndex, bool onElseOff, uint8_t 
 
     // GPIORegister --> gpioA or gpioB register value
 
-    unsigned char reg_value;
+    int attempts = 3;
 
-    reg_value = ReadByte(get_MCP23017_address_from_slot(slot), GPIORegister);
-
-    if (onElseOff)
+    // check if set correctly.
+    while (onElseOff != getMCP23017GPIOState(slot, posIndex, GPIORegister) && attempts > 0)
     {
-        reg_value = reg_value | (1UL << posIndex);
-    }
-    else
-    {
-        reg_value = reg_value & ~(1UL << posIndex);
-    }
-    // debugOutput::sendMessage("value to be sent: " + to_string(reg_value) + " to address: " + to_string(get_PCA9534_address_from_slot(slot)), MSG_INFO);
+        attempts--;
 
-    SendByte(get_MCP23017_address_from_slot(slot), GPIORegister, reg_value);
+        unsigned char reg_value;
+
+        reg_value = ReadByte(get_MCP23017_address_from_slot(slot), GPIORegister);
+
+        if (onElseOff)
+        {
+            reg_value = reg_value | (1UL << posIndex);
+        }
+        else
+        {
+            reg_value = reg_value & ~(1UL << posIndex);
+        }
+        // debugOutput::sendMessage("value to be sent: " + to_string(reg_value) + " to address: " + to_string(get_PCA9534_address_from_slot(slot)), MSG_INFO);
+        SendByte(get_MCP23017_address_from_slot(slot), GPIORegister, reg_value);
+    }
+
+    if (attempts <= 0){
+        debugOutput::sendMessage("ASSERT ERROR: Failed to set output! Desired: slot: " + to_string(slot) + ", posIndex: " + to_string(posIndex) + ", register: " + to_string(GPIORegister) + ", onElseOff: " + to_string(onElseOff), MSG_ERROR);
+        displayMCP23017IORegisters(slot);
+    }
 }
 
 uint8_t pcb::get_MCP23017_address_from_slot(uint8_t slot)
@@ -678,14 +694,14 @@ bool pcb::define_pcb_version(void)
 
 void pcb::sendEN134DefaultConfigurationToPCA9534(uint8_t slot, bool reportIfModified)
 {
-    // sendByteIfNotSetToSlot(slot, 0x01, 0b00100000, reportIfModified); // BAAAD load  this to emulate a glitch in the chip
-    // sendByteIfNotSetToSlot(slot, 0x03, 0b11111111, reportIfModified); //BAAAD load  this to emulate a glitch in the chip
-    sendByteIfNotSetToSlot(slot, 0x01, 0b00100000, reportIfModified);
-    sendByteIfNotSetToSlot(slot, 0x03, 0b01011000, reportIfModified);
+    // sendByteToPCA9534SlotIfNotSet(slot, 0x01, 0b00100000, reportIfModified); // BAD load!!!  Use this to emulate a glitch in the chip
+    // sendByteToPCA9534SlotIfNotSet(slot, 0x03, 0b11111111, reportIfModified); // BAD load!!!  Use this to emulate a glitch in the chip
+    sendByteToPCA9534SlotIfNotSet(slot, 0x01, 0b00100000, reportIfModified);
+    sendByteToPCA9534SlotIfNotSet(slot, 0x03, 0b01011000, reportIfModified);
     debugOutput::sendMessage("Default config sent to PCA9534 for slot: " + to_string(slot), MSG_INFO);
 }
 
-void pcb::sendByteIfNotSetToSlot(uint8_t slot, unsigned char reg, unsigned char value, bool reportIfModified)
+void pcb::sendByteToPCA9534SlotIfNotSet(uint8_t slot, unsigned char reg, unsigned char value, bool reportIfModified)
 {
     int attempts = 10;
     uint8_t readVal = PCA9534ReadRegisterFromSlot(slot, reg);
@@ -1572,7 +1588,7 @@ void pcb::pollFlowSensor(uint8_t slot)
             flow_sensor_pulses_since_enable[slot_index]++;
 
             // debugOutput::sendMessage("Flow sensor pulse detected by PCA chip. Slot: " + to_string(slot) + ". Pulse total: " + to_string(flow_sensor_pulses_since_enable[slot_index]), MSG_INFO);
-            //debugOutput::sendMessage("Flow sensor pulse detected while polling", MSG_INFO);
+            // debugOutput::sendMessage("Flow sensor pulse detected while polling", MSG_INFO);
 
             flowSensorTickReceivedEpoch[slot_index] = now_epoch_millis;
         }
@@ -1988,11 +2004,9 @@ void pcb::setPumpEnable(uint8_t slot)
         case 4:
             reg_value = reg_value | 0b00000111;
             break;
-        default:
-            ;
+        default:;
         }
         SendByte(get_PCA9534_address_from_slot(1), 0x01, reg_value); // slot 1 because there is only one PCA9534
-
     };
     break;
     case (EN134_4SLOTS):

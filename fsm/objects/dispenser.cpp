@@ -1537,12 +1537,12 @@ string dispenser::getDispenseUpdateString()
     string message = "Dispenser: Dispense Product: P-" + std::to_string(getSelectedPNumber());
     
     // add selected product total volume update.
-    message += "P-" + std::to_string(getActivePNumber()) + " volume: " + std::to_string(getSelectedProduct()->getVolumeDispensed()) + "/" + std::to_string(getProductTargetVolume(getSelectedPNumber())) + "ml ";
+    message += " (" + std::to_string(getSelectedProduct()->getVolumeDispensed()) + "/" + std::to_string(getProductTargetVolume(getSelectedPNumber())) + "ml ): ";
     
     if (getSelectedProduct()->isMixingProduct())
     {
         message +=
-            " (part " + std::to_string(getSelectedProduct()->getMixProductsCount() - m_mix_active_index) + "/" + std::to_string(getSelectedProduct()->getMixProductsCount()) +
+            "(mix part " + std::to_string(getSelectedProduct()->getMixProductsCount() - m_mix_active_index) + "/" + std::to_string(getSelectedProduct()->getMixProductsCount()) +
             " : P-" + std::to_string(getActivePNumber()) + " volume: " + std::to_string(getActiveProduct()->getVolumeDispensed()) + "/" + std::to_string(getProductTargetVolume(getActivePNumber())) + "ml )";
             
         ;
@@ -1550,7 +1550,7 @@ string dispenser::getDispenseUpdateString()
     else
     {
         message +=
-            " volume: " + std::to_string(getActiveProduct()->getVolumeDispensed()) + "/" + std::to_string(getProductTargetVolume(getActivePNumber())) + "ml";
+            "non mix. P-active=P-dispense: volume: " + std::to_string(getActiveProduct()->getVolumeDispensed()) + "/" + std::to_string(getProductTargetVolume(getActivePNumber())) + "ml";
     }
     return message;
 }

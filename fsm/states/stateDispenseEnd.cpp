@@ -68,6 +68,7 @@ DF_ERROR stateDispenseEnd::onAction()
     // m_pMessaging->sendMessageOverIP(message, true); // send to UI
 
     g_machine.m_productDispensers[m_slot_index].finishSelectedProductDispense();
+    g_machine.getPcb()->displayMCP23017IORegisters(m_slot);
 
     // handle minimum dispensing
     bool is_valid_dispense = volume_dispensed >= MINIMUM_DISPENSE_VOLUME_ML;

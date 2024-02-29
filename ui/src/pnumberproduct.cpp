@@ -222,11 +222,11 @@ void pnumberproduct::setIsProductEnabled(bool isEnabled)
     m_db->updateTableProductsWithInt(getPNumber(), "is_enabled", isEnabled);
 }
 
-QString pnumberproduct::getStatusText()
+QString pnumberproduct::getProductStatusText()
 {
     return m_status_text;
 }
-void pnumberproduct::setStatusText(QString statusText)
+void pnumberproduct::setProductStatusText(QString statusText)
 {
     m_status_text = statusText;
     m_db->updateTableProductsWithText(getPNumber(), "status_text", statusText);
@@ -467,7 +467,7 @@ void pnumberproduct::setVolumePerTickForSlot(QString volumePerTickInput)
 {
     double ml_per_tick = inputTextToMlConvertUnits(volumePerTickInput);
     qInfo() << "Open db: set vol per tick";
-    m_db->updateTableProductsWithDouble(getPNumber(), "volume_per_tick", ml_per_tick, 2);
+    m_db->updateTableProductsWithDouble(getPNumber(), "volume_per_tick", ml_per_tick, 3);
 }
 
 void pnumberproduct::configureVolumeToSizeForSlot(QString volumeInput, int size)

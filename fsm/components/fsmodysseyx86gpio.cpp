@@ -434,6 +434,7 @@ bool FSModdyseyx86GPIO::readButtonPin(int pin)
                         return false;
                 }
         }
+        return false;
 }
 
 // Utility

@@ -264,7 +264,7 @@ private:
       bool isStatusUpdateSendAndPrintAllowed;
       Dispense_behaviour previous_dispense_state;
       Dispense_behaviour dispense_state;
-      Slot_state slot_state;
+      Slot_state m_slot_state;
 
       Time_val flowRateBuffer[RUNNING_AVERAGE_WINDOW_LENGTH];
       int flowRateBufferIndex;

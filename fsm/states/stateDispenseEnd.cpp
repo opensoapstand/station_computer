@@ -68,6 +68,7 @@ DF_ERROR stateDispenseEnd::onAction()
     // m_pMessaging->sendMessageOverIP(message, true); // send to UI
 
     g_machine.m_productDispensers[m_slot_index].finishSelectedProductDispense();
+    g_machine.getPcb()->displayMCP23017IORegisters(m_slot);
 
     // handle minimum dispensing
     bool is_valid_dispense = volume_dispensed >= MINIMUM_DISPENSE_VOLUME_ML;
@@ -279,7 +280,7 @@ static int db_sql_callback(void *NotUsed, int argc, char **argv, char **azColNam
     //     printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
     // }
     // printf("\n");
-    // return 0;
+    return 0;
 }
 
 size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
@@ -464,7 +465,7 @@ void stateDispenseEnd::write_curl_to_file(std::string curl_params)
 //     return str;
 // }
 
-DF_ERROR stateDispenseEnd::databaseUpdateSql(string sqlStatement, string dbPath)
+void stateDispenseEnd::databaseUpdateSql(string sqlStatement, string dbPath)
 {
 
     // FIXME: DB needs fully qualified link to find...obscure with XML loading.
@@ -580,7 +581,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     std::string updated_volume_remaining_str = to_string(updated_volume_remaining);
     std::string updated_volume_dispensed_total_ever_str = to_string(updated_volume_dispensed_total_ever);
     std::string updated_volume_dispensed_since_restock_str = to_string(updated_volume_dispensed_since_restock);
-    std::string slot_state_str = g_machine.m_productDispensers[m_slot_index].getSlotStateAsString();
+    std::string m_slot_state_str = g_machine.m_productDispensers[m_slot_index].getSlotStateAsString();
     // std::string product_id = getProductID(slot);
     std::string product_id = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->m_product_id_combined_with_location_for_backend;
      //Get mix product object to be used for updating local station database
@@ -614,13 +615,14 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
 
     // update dipenser table
     std::string sql3;
-    sql3 = ("UPDATE slots SET status_text='" + slot_state_str + "' WHERE slot_id=" + to_string(m_slot) + ";");
+    sql3 = ("UPDATE slots SET status_text='" + m_slot_state_str + "' WHERE slot_id=" + to_string(m_slot) + ";");
     databaseUpdateSql(sql3, CONFIG_DB_PATH);
 
     // reload (changed) db values
     g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->loadParameters();
     g_machine.m_productDispensers[m_slot_index].resetMixProductsDispenseInfo();
-
+    DF_ERROR dfRet = OK;
+    return dfRet;
 }
 
 double stateDispenseEnd::getFinalPrice()

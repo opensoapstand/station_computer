@@ -287,25 +287,20 @@ DF_ERROR stateManualPump::onAction()
       {
          pumpFlowTest();
       }
-      // debugOutput::sendMessage("a", MSG_INFO);
    }
    else if (isFlowTest)
    {
       pumpFlowTest();
-      // debugOutput::sendMessage("b", MSG_INFO);
    }
    else if (iscustomVolumeDispenseTest)
    {
       customVolumeDispenseTest();
-      // debugOutput::sendMessage("c", MSG_INFO);
    }
    else
    {
       // manual
       if (g_machine.m_productDispensers[m_active_pump_index].getDispenseButtonValue())
       {
-         // debugOutput::sendMessage("button: " + to_string(g_machine.m_productDispensers[m_active_pump_index].getDispenseButtonValue()), MSG_INFO);
-
          double volume = g_machine.m_productDispensers[m_active_pump_index].getSelectedProductVolumeDispensed();
 
          // instant flow rate
@@ -364,7 +359,7 @@ DF_ERROR stateManualPump::onAction()
    return e_ret;
 }
 
-DF_ERROR stateManualPump::customVolumeDispenseTest()
+void stateManualPump::customVolumeDispenseTest()
 {
 
    // 1. pump with retraction at end
@@ -419,11 +414,8 @@ DF_ERROR stateManualPump::customVolumeDispenseTest()
    // if motor running and flow sensor dispensing.
 }
 
-DF_ERROR stateManualPump::pumpFlowTest()
+void stateManualPump::pumpFlowTest()
 {
-   // if (g_machine.m_productDispensers[m_active_pump_index].getDispenseButtonValue() & g_machine.m_productDispensers[m_active_pump_index].isSlotEnabled())
-   // {
-
    // instant flow rate
    double flowRate = g_machine.m_productDispensers[m_active_pump_index].getProductFlowRateInstantaneous();
 
@@ -446,11 +438,9 @@ DF_ERROR stateManualPump::pumpFlowTest()
                                    to_string(avg_05s.value),
                                MSG_INFO);
    }
-   // }
-   // usleep(50000);
 }
 
-DF_ERROR stateManualPump::pumpCyclicTestCycleStart()
+void stateManualPump::pumpCyclicTestCycleStart()
 {
    pump_test_cycle_count++;
 
@@ -472,7 +462,7 @@ DF_ERROR stateManualPump::pumpCyclicTestCycleStart()
    isCyclicTestingPumpOn = true;
 }
 
-DF_ERROR stateManualPump::pumpCyclicTestCycleFinish()
+void stateManualPump::pumpCyclicTestCycleFinish()
 {
 
    // if (g_machine.m_productDispensers[m_active_pump_index].m_pcb->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
@@ -488,7 +478,7 @@ DF_ERROR stateManualPump::pumpCyclicTestCycleFinish()
    isCyclicTestingPumpOn = false;
 }
 
-DF_ERROR stateManualPump::pumpCyclicTest()
+void stateManualPump::pumpCyclicTest()
 {
 
    using namespace std::chrono;
@@ -567,7 +557,7 @@ DF_ERROR stateManualPump::pumpCyclicTest()
 //    }
 // }
 
-DF_ERROR stateManualPump::autofillPresetQuantity()
+void stateManualPump::autofillPresetQuantity()
 {
    using namespace std::chrono;
    uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
@@ -631,7 +621,7 @@ DF_ERROR stateManualPump::autofillPresetQuantity()
    }
 }
 
-DF_ERROR stateManualPump::pumpTest()
+void stateManualPump::pumpTest()
 {
    debugOutput::sendMessage("pump test", MSG_INFO);
 

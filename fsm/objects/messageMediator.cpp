@@ -404,6 +404,7 @@ void *messageMediator::doKBThread(void *pThreadArgs)
 
    // df_ret;
    // return 0;
+   return 0;
 }
 
 // Loop for threaded listening for Socket input

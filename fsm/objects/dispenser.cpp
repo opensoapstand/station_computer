@@ -237,45 +237,48 @@ void dispenser::setPNumberAsSingleDispenseSelectedProduct(int pnumber)
 //     }
 //     return m_custom_mix_pnumbers[mixIndex];
 // }
+
 void dispenser::setCustomMixParametersToSelectedProduct(string pnumbers, string pnumberRatios)
 {
-    int custom_mix_pnumbers[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
-    double custom_mix_ratios[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
-    int custom_mix_pnumbers_count;
-    int custom_mix_ratios_count;
+    // int custom_mix_pnumbers[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
+    // double custom_mix_ratios[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
+    // int custom_mix_pnumbers_count;
+    // int custom_mix_ratios_count;
 
-    dispenser::parseIntCsvString(pnumbers, custom_mix_pnumbers, custom_mix_pnumbers_count);
-    dispenser::parseDoubleCsvString(pnumberRatios, custom_mix_ratios, custom_mix_ratios_count);
+    // dispenser::parseIntCsvString(pnumbers, custom_mix_pnumbers, custom_mix_pnumbers_count);
+    // dispenser::parseDoubleCsvString(pnumberRatios, custom_mix_ratios, custom_mix_ratios_count);
 
-    if (custom_mix_pnumbers_count != custom_mix_ratios_count)
-    {
-        debugOutput::sendMessage("ASSERT ERROR: Number of mix pnumbers is not equal to number of mixing ratios!", MSG_ERROR);
-        return;
-    }
+    // if (custom_mix_pnumbers_count != custom_mix_ratios_count)
+    // {
+    //     debugOutput::sendMessage("ASSERT ERROR: Number of mix pnumbers is not equal to number of mixing ratios!", MSG_ERROR);
+    //     return;
+    // }
 
-    int pnumber;
-    m_custom_mix_pnumbers_count = 0;
-    m_custom_mix_ratios_count = 0;
-    for (int i = 0; i < custom_mix_pnumbers_count; i++)
-    {
-        pnumber = custom_mix_pnumbers[i];
-        if (isPNumberValidInThisDispenser(pnumber, true))
-        {
+    // int pnumber;
+    // m_custom_mix_pnumbers_count = 0;
+    // m_custom_mix_ratios_count = 0;
+    // for (int i = 0; i < custom_mix_pnumbers_count; i++)
+    // {
+    //     pnumber = custom_mix_pnumbers[i];
+    //     if (isPNumberValidInThisDispenser(pnumber, true))
+    //     {
 
-            m_custom_mix_pnumbers[m_custom_mix_pnumbers_count] = custom_mix_pnumbers[i];
-            m_custom_mix_ratios[m_custom_mix_pnumbers_count] = custom_mix_ratios[i];
+    //         m_custom_mix_pnumbers[m_custom_mix_pnumbers_count] = custom_mix_pnumbers[i];
+    //         m_custom_mix_ratios[m_custom_mix_pnumbers_count] = custom_mix_ratios[i];
 
-            debugOutput::sendMessage("Mixing: Pnumber at mix position index: " + std::to_string(i) + " P-" + std::to_string(m_custom_mix_pnumbers[m_custom_mix_pnumbers_count]) + " ratio: " + std::to_string(m_custom_mix_ratios[m_custom_mix_pnumbers_count]), MSG_INFO);
+    //         debugOutput::sendMessage("Mixing: Pnumber at mix position index: " + std::to_string(i) + " P-" + std::to_string(m_custom_mix_pnumbers[m_custom_mix_pnumbers_count]) + " ratio: " + std::to_string(m_custom_mix_ratios[m_custom_mix_pnumbers_count]), MSG_INFO);
 
-            m_custom_mix_pnumbers_count++;
-            m_custom_mix_ratios_count++;
-        }
-    }
+    //         m_custom_mix_pnumbers_count++;
+    //         m_custom_mix_ratios_count++;
+    //     }
+    // }
 
-    // setSelectedProduct(CUSTOM_MIX_PNUMBER);
-    getSelectedProduct()->parseMixPNumbersAndRatiosCsv(pnumbers, pnumberRatios);
+    // // setSelectedProduct(CUSTOM_MIX_PNUMBER);
+    // getSelectedProduct()->parseMixPNumbersAndRatiosCsv(pnumbers, pnumberRatios);
 
-    debugOutput::sendMessage("Dispenser: Set active product as mixing product: (TODO: for now, will only set first component as single dispense product) ", MSG_WARNING);
+    // debugOutput::sendMessage("Dispenser: Set active product as mixing product: (TODO: for now, will only set first component as single dispense product) ", MSG_WARNING);
+
+    getSelectedProduct()->parseAndSetCustomMixRatios(pnumbers, pnumberRatios);
 }
 
 bool dispenser::isPNumberValidInThisDispenser(int pnumber, bool mustBeAdditiveOrBase)

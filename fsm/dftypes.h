@@ -221,6 +221,13 @@ typedef struct Time_val Time_val;
 
 #define TABLE_PRODUCTS_COLUMN_COUNT 55
 
+typedef enum MIX_RATIO_SETTING
+{
+   LOW,
+   DEFAULT,
+   HIGH
+} MIX_RATIO_SETTING;
+
 typedef enum DF_FSM
 {
    STATE_DUMMY,

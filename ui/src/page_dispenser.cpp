@@ -314,7 +314,7 @@ void page_dispenser::updatelabel_volume_dispensed_ml(double dispensed)
         dispensedVolumeUnitsCorrected = QString::number(ceil(dispensed));
     }
 
-    if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize() == SIZE_CUSTOM_INDEX || p_page_idle->thisMachine->getSelectedProduct()->getSizeEnabled(SIZE_CUSTOM_INDEX))
+    if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize() == SIZE_CUSTOM_INDEX)
     {
 
         double unitprice = (p_page_idle->thisMachine->getSelectedProduct()->getBasePrice(SIZE_CUSTOM_INDEX));

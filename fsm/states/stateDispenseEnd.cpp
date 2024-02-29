@@ -59,7 +59,6 @@ DF_ERROR stateDispenseEnd::onAction()
     DF_ERROR e_ret = OK;
     debugOutput::sendMessage("onAction Dispense End...", MSG_STATE);
     double price = getFinalPrice();
-    sendEndTransactionMessageToUI();
     double volume_dispensed = g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed();
     
     // 
@@ -113,6 +112,7 @@ DF_ERROR stateDispenseEnd::onAction()
     {
         debugOutput::sendMessage("Normal transaction.", MSG_INFO);
         e_ret = handleTransactionPayment();
+    sendEndTransactionMessageToUI();
 
         dispenseEndUpdateDB(true);
 
@@ -634,6 +634,8 @@ double stateDispenseEnd::getFinalPrice()
     double volume_dispensed;
     double price;
     bool isCustomSizeEnabled = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getIsSizeEnabled(SIZE_CUSTOM_CHAR);
+
+    std::cout << size;
     // If custom volume is enabled, adjust the price to actual quantity dispensed
     if (size == SIZE_CUSTOM_CHAR||isCustomSizeEnabled)
     {
@@ -657,6 +659,7 @@ double stateDispenseEnd::getFinalPrice()
         }
 
         price = price_per_ml * volume_dispensed;
+        std::cout<< "final price" << price;
         if (size != SIZE_CUSTOM_CHAR)
         {
             price = std::min(price, m_pMessaging->getRequestedPrice());

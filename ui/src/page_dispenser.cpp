@@ -101,6 +101,8 @@ void page_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     // }
 
     qDebug() << "msgBox done. ";
+    cancelPayment = false;
+
     statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
 
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
@@ -315,7 +317,7 @@ void page_dispenser::updatelabel_volume_dispensed_ml(double dispensed)
     if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize() == SIZE_CUSTOM_INDEX)
     {
 
-        double unitprice = (p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize());
+        double unitprice = (p_page_idle->thisMachine->getSelectedProduct()->getBasePrice(SIZE_CUSTOM_INDEX));
         current_price = p_page_idle->thisMachine->getPriceWithDiscount(dispensed * unitprice);
         ui->label_volume_dispensed_ml->setText(dispensedVolumeUnitsCorrected + " " + units + " ( $" + QString::number(current_price, 'f', 2) + " )");
     }
@@ -358,8 +360,7 @@ bool page_dispenser::waitForUX410()
     bool waitResponse = false;
     while (!waitResponse)
     {
-        //        QCoreApplication::processEvents();
-        // cout << readPacket << endl;
+
         if (pktResponded[0] != 0x02)
         {
             pktResponded.clear();
@@ -368,7 +369,6 @@ bool page_dispenser::waitForUX410()
         }
         else
         {
-            //  pktResponded = com.readPacket();
             readPacket.packetReadFromUX(pktResponded);
             std::cout << readPacket;
             com.sendAck();
@@ -853,16 +853,6 @@ void page_dispenser::on_pushButton_abort_clicked()
             break;
         }
         }
-        // if (paymentMethod == PAYMENT_QR || paymentMethod == PAYMENT_TAP_USA || paymentMethod == PAYMENT_TAP_CANADA)
-        // {
-        //     QString searchString = this->objectName() + "->" + msgBox_abort->objectName() + "->" + "qr_tap";
-        //     p_page_idle->thisMachine->setTextToObject(msgBox_abort, p_page_idle->thisMachine->getTemplateText(searchString));
-        // }
-        // else
-        // {
-        //     QString searchString = this->objectName() + "->" + msgBox_abort->objectName() + "->" + "default";
-        //     p_page_idle->thisMachine->setTextToObject(msgBox_abort, p_page_idle->thisMachine->getTemplateText(searchString));
-        // }
 
         p_page_idle->thisMachine->addCssClassToObject(msgBox_abort, "msgBoxbutton msgBox", PAGE_DISPENSER_CSS);
         msgBox_abort->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
@@ -934,16 +924,6 @@ void page_dispenser::on_pushButton_problems_clicked()
         break;
     }
     }
-    // else if (paymentMethod == "qr" || paymentMethod == PAYMENT_TAP_USA || paymentMethod == PAYMENT_TAP_CANADA)
-    // {
-    //     QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "qr_tap";
-    //     p_page_idle->thisMachine->setTextToObject(msgBox_problems, p_page_idle->thisMachine->getTemplateText(searchString));
-    // }
-    // else
-    // {
-    //     QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "default";
-    //     p_page_idle->thisMachine->setTextToObject(msgBox_problems, p_page_idle->thisMachine->getTemplateText(searchString));
-    // }
 
     p_page_idle->thisMachine->addCssClassToObject(msgBox_problems, "msgBoxbutton msgBox", PAGE_DISPENSER_CSS);
 

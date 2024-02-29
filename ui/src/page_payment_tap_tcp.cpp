@@ -181,7 +181,7 @@ void page_payment_tap_tcp::showEvent(QShowEvent *event)
     msgBox = nullptr;
 
     qDebug() << "Prepare tap order";
-    // tapPaymentHandler();
+    tapPaymentHandler();
 }
 
 void page_payment_tap_tcp::hideCurrentPageAndShowProvided(QWidget *pageToShow)
@@ -349,9 +349,7 @@ void page_payment_tap_tcp::authorized_transaction(std::map<std::string, std::str
     else if (responseObj["RESULT"] == "APPROVED/STORED")
     {
         p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
-        // CTROUTD = responseObj["CTROUTD"];
-        // AUTH_CODE = responseObj["AUTH_CODE"];
-        // SAF_NUM = responseObj["SAF_NUM"];
+
         tapPaymentObject["ctroutd"] = responseObj["CTROUTD"];
         tapPaymentObject["auth_code"] = responseObj["AUTH_CODE"];
         tapPaymentObject["saf_num"] = responseObj["SAF_NUM"];

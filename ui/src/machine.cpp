@@ -1167,7 +1167,7 @@ QString machine::getIdlePageType()
 bool machine::getCouponsEnabled()
 {
 
-    return m_coupons_enabled == 1;
+    return m_coupons_enabled==1;
 }
 
 QString machine::getPaymentMethod()

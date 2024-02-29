@@ -290,7 +290,13 @@ char product::getSizeCharFromTargetVolume(double volume)
 {
     // this is a necessary evil as in transactions, the requested volume is not stored as char
     // #define VOLUME_MARGIN 0.1
-    if (volume == m_nVolumeTarget_s)
+    // Bug Alert: If the custom max size is same as any target volume size, it will take that size but the price will be taken from custom
+    
+    if (volume == m_nVolumeTarget_c_max)
+    {
+        return 'c';
+    }
+    else if (volume == m_nVolumeTarget_s)
     {
         return 's';
     }
@@ -302,10 +308,7 @@ char product::getSizeCharFromTargetVolume(double volume)
     {
         return 'l';
     }
-    else if (volume == m_nVolumeTarget_c_max)
-    {
-        return 'c';
-    }
+    
     else if (volume == m_nVolumeTarget_f)
     {
         return 'f';

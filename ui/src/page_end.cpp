@@ -110,8 +110,7 @@ void page_end::fsmReceiveFinalTransactionMessage(QString start_time, QString end
     p_page_idle->thisMachine->getSelectedSlot()->setButtonPressCount(button_press_count);
     p_page_idle->thisMachine->getSelectedProduct()->setVolumeDispensedMl(volume_dispensed);
     p_page_idle->thisMachine->getSelectedProduct()->setVolumeDispensedMixedProduct(volumeDispensedMixProduct);    
-
-
+    qDebug() << "In page end" << is_in_page_end;
     // maintenance mode dispenses also get processed here... Make sure never to trigger page_end end.
     if(is_in_page_end){
         waitToFinishTransactionInFsm();
@@ -124,7 +123,7 @@ void page_end::updateDispensedVolumeLabel(){
     double price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize());
     if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize() == SIZE_CUSTOM_INDEX)
     {
-    price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize()*p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl());
+    price = p_page_idle->thisMachine->getPriceWithDiscount(p_page_idle->thisMachine->getSelectedProduct()->getBasePrice(SIZE_CUSTOM_INDEX)*p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl());
     }
     ui->label_volume_dispensed_ml->setText(dispensed_correct_units + " ( $" + QString::number(price, 'f', 2) + " )");
 }
@@ -177,10 +176,18 @@ void page_end::sendCompleteOrderToCloud(QString paymentMethod)
     QString productUnits = p_page_idle->thisMachine->getSizeUnit();
     QString productId = p_page_idle->thisMachine->getSelectedProduct()->getAwsProductId();
     QString contents = p_page_idle->thisMachine->getSelectedProduct()->getProductName();
-    QString quantity_requested = p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(false, false);
+    QString quantity_requested = QString::number(p_page_idle->thisMachine->getSelectedProduct()->getVolumeOfSelectedSize());
     char drinkSize = p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar();
-    QString originalPrice = QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize());  
+    QString originalPrice;
+    if(p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize() == SIZE_CUSTOM_INDEX){
+        qDebug() << "IN custom size";
+        originalPrice = QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize()*p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl());  
+    }
+    else{
+        originalPrice = QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize());
+    }
     QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl(), productUnits, false, false);
+    QString dispensed_volume_ml = QString::number(p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl());
     QString volume_remaining = p_page_idle->thisMachine->getSelectedProduct()->getVolumeRemainingCorrectUnits(false);
     QString soapstand_product_serial = p_page_idle->thisMachine->getSelectedProduct()->getPNumberAsPString();
     QString promoCode = this->p_page_idle->thisMachine->getCouponCode();  
@@ -189,19 +196,20 @@ void page_end::sendCompleteOrderToCloud(QString paymentMethod)
     QString button_press_duration = QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getButtonPressDuration());
     QString button_press_count = QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getButtonPressCount());
     QString volume_dispensed_mix_product = this->p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMixedProduct();
+
     if (dispensed_correct_units == 0)
         {
             p_page_idle->thisMachine->addToTransactionLogging("\n ERROR: No Volume dispensed");
         }
-    QString curl_params = "contents=" + contents + "&quantity_requested=" + quantity_requested + "&quantity_dispensed=" + dispensed_correct_units + \
+    QString curl_params = "contents=" + contents + "&quantity_requested=" + quantity_requested + "&quantity_dispensed=" + dispensed_volume_ml + \
                  "&size_unit=" + productUnits + "&price=" + originalPrice + "&productId=" + productId + "&start_time=" + startTime + 
                  "&end_time=" + endTime + "&MachineSerialNumber=" + MachineSerialNumber + "&paymentMethod="+paymentMethod+"&volume_remaining_ml=" + 
-                 volume_remaining + "&quantity_dispensed_ml=" + dispensed_correct_units +
+                 volume_remaining + "&quantity_dispensed_ml=" + dispensed_volume_ml +
                  "&volume_remaining=" + volume_remaining + "&coupon=" + promoCode +"&buttonDuration=" + button_press_duration + 
                  "&buttonTimes=" + button_press_count + "&pnumber=" + soapstand_product_serial + "&mixProductInfo={" + volume_dispensed_mix_product+"}";
                  
     std::tie(res,readBuffer, http_code) = p_page_idle->thisMachine->sendRequestToPortal(PORTAL_SEND_NEW_COMPLETE_ORDER_DEV, "POST", curl_params, "PAGE_END");
-
+    qDebug() << curl_params;
     if (res != CURLE_OK)
     {
         qDebug() << "ERROR: Transaction NOT sent to cloud. cURL fail. Error code: " + QString::number(res);
@@ -299,23 +307,33 @@ void page_end::on_pushButton_contact_clicked()
 }
 
 void page_end::waitToFinishTransactionInFsm(){
+    qDebug() << "Wait for finish";
     ActivePaymentMethod paymentMethod = p_page_idle->thisMachine->getActivePaymentMethod();
 
     ui->label_volume_dispensed_ml->setText("");
     switch(paymentMethod){
         case 0:
         {
+            //QR Payment - Payment Method
             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "qr");
             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "qr2");
             is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
             sendDispenseEndToCloud();
         }
-        case 1:
-        case 2:{
-            //Tap Payment - Payment Method
+        case 1:{
+            //Tap Canada Payment - Payment Method
             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "qr");
             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "qr2");
-            is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
+            is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
+            sendCompleteOrderToCloud(PAYMENT_TAP_CANADA);
+            break;
+        }
+        case 2:{
+            //Tap USA Payment - Payment Method
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "qr");
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "qr2");
+            is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
+            sendCompleteOrderToCloud(PAYMENT_TAP_USA);
             break;
         }
         case 3:{
@@ -328,7 +346,7 @@ void page_end::waitToFinishTransactionInFsm(){
         default:{
             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "any_pay");
             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "any_pay2");
-            is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
+            is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
             sendCompleteOrderToCloud(PAYMENT_RECEIPT_PRINTER);
             break;
         }

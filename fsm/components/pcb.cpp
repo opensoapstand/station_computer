@@ -297,13 +297,18 @@ void pcb::setMCP23017Output(uint8_t slot, int posIndex, bool onElseOff, uint8_t 
     // slot starts at 1!
 
     // GPIORegister --> gpioA or gpioB register value
-
+    
     int attempts = 3;
 
+    int attempt = attempts;
+
     // check if set correctly.
-    while (onElseOff != getMCP23017GPIOState(slot, posIndex, GPIORegister) && attempts > 0)
+    while (onElseOff != getMCP23017GPIOState(slot, posIndex, GPIORegister) && attempt > 0)
     {
-        attempts--;
+        if (attempt != attempts){
+            debugOutput::sendMessage("Warning: retrying to set MCP23017 to requested output", MSG_WARNING);
+        }
+        attempt--;
 
         unsigned char reg_value;
 
@@ -311,17 +316,18 @@ void pcb::setMCP23017Output(uint8_t slot, int posIndex, bool onElseOff, uint8_t 
 
         if (onElseOff)
         {
-            reg_value = reg_value | (1UL << posIndex);
+            reg_value = reg_value | (1UL << posIndex); // modify bit to one in the byte
         }
         else
         {
-            reg_value = reg_value & ~(1UL << posIndex);
+            reg_value = reg_value & ~(1UL << posIndex); // modify bit to zero in the byte
         }
         // debugOutput::sendMessage("value to be sent: " + to_string(reg_value) + " to address: " + to_string(get_PCA9534_address_from_slot(slot)), MSG_INFO);
         SendByte(get_MCP23017_address_from_slot(slot), GPIORegister, reg_value);
     }
 
-    if (attempts <= 0){
+    if (attempt <= 0)
+    {
         debugOutput::sendMessage("ASSERT ERROR: Failed to set output! Desired: slot: " + to_string(slot) + ", posIndex: " + to_string(posIndex) + ", register: " + to_string(GPIORegister) + ", onElseOff: " + to_string(onElseOff), MSG_ERROR);
         displayMCP23017IORegisters(slot);
     }
@@ -433,10 +439,11 @@ bool pcb::define_pcb_version(void)
         slot_mcp23017_found[i] = false;
     }
 
+    debugOutput::sendMessage("Check I2C addresses 0x03 to 0x77", MSG_INFO);
     for (i2c_probe_address = 0x03; i2c_probe_address <= 0x77; i2c_probe_address++)
     {
         // Go through all the addresses
-        debugOutput::sendMessage("Check I2C address " + to_string(i2c_probe_address), MSG_INFO);
+        // debugOutput::sendMessage("Check I2C address " + to_string(i2c_probe_address), MSG_INFO);
 
         if (!set_i2c_address(i2c_probe_address))
         {
@@ -457,6 +464,7 @@ bool pcb::define_pcb_version(void)
         }
         else
         {
+            debugOutput::sendMessage("Device found at I2C address " + to_string(i2c_probe_address) + ":", MSG_INFO);
             if (i2c_probe_address == PCA9534_ADDRESS_SLOT_1 || i2c_probe_address == MCP23017_ADDRESS_SLOT_1)
             {
                 debugOutput::sendMessage("Slot 1 PCA9534 OR mcp23017 found on I2C bus for pcb I/O", MSG_INFO);
@@ -703,16 +711,16 @@ void pcb::sendEN134DefaultConfigurationToPCA9534(uint8_t slot, bool reportIfModi
 
 void pcb::sendByteToPCA9534SlotIfNotSet(uint8_t slot, unsigned char reg, unsigned char value, bool reportIfModified)
 {
-    int attempts = 10;
+    int attempt = 10;
     uint8_t readVal = PCA9534ReadRegisterFromSlot(slot, reg);
     while (readVal != value)
     {
-        if (attempts < 0)
+        if (attempt < 0)
         {
             debugOutput::sendMessage("Too many attempts. Could not set register 0x01 of PCA9534 for slot " + to_string(slot), MSG_ERROR);
             break;
         }
-        attempts--;
+        attempt--;
         PCA9534SendByteToSlot(slot, reg, value); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
         debugOutput::sendMessage("PCA9534 register " + to_string(reg) + " of slot: " + to_string(slot) + ": " + to_string(readVal) + ". Not configured right. Set to value: " + to_string(value), MSG_INFO);
         if (reportIfModified)
@@ -1846,6 +1854,7 @@ void pcb::setPumpPWM(uint8_t pwm_val)
     case DSED8344_NO_PIC:
     {
         SendByte(MAX31760_ADDRESS, 0x50, pwm_val); // PWM value
+        debugOutput::sendMessage("pwm val set. ", MSG_ERROR);
     };
     break;
     case (DSED8344_PIC_MULTIBUTTON):
@@ -1865,7 +1874,7 @@ void pcb::setPumpPWM(uint8_t pwm_val)
         unsigned char speed_percentage = (unsigned char)f_value;
         uint8_t inverted_percentage = 100 - (uint8_t)speed_percentage;
         setPumpSpeedPercentage(speed_percentage);
-        debugOutput::sendMessage("speed percentage sent =" + std::to_string(speed_percentage), MSG_ERROR);
+        debugOutput::sendMessage("speed percentage set =" + std::to_string(speed_percentage), MSG_ERROR);
     };
     break;
     case (EN134_4SLOTS):
@@ -1884,11 +1893,12 @@ void pcb::setPumpPWM(uint8_t pwm_val)
         f_value = floor(f_value / 2.55);
         unsigned char speed_percentage = 100 - (unsigned char)f_value; // invert speed. pwm is inverted.
         setPumpSpeedPercentage((uint8_t)speed_percentage);
+        debugOutput::sendMessage("speed percentage set =" + std::to_string(speed_percentage), MSG_ERROR);
     };
     break;
     default:
     {
-        debugOutput::sendMessage("Pcb: Pcb has No pwm setting available", MSG_ERROR);
+        // debugOutput::sendMessage("Pcb: Pcb has No pwm setting available", MSG_ERROR);
     }
     break;
     }
@@ -1919,7 +1929,7 @@ void pcb::setPumpSpeedPercentage(uint8_t speed_percentage)
     break;
     default:
     {
-        debugOutput::sendMessage("Pcb: Pcb has no setPumpSpeedPercentage available", MSG_ERROR);
+        //debugOutput::sendMessage("Pcb: Pcb has no setPumpSpeedPercentage available", MSG_ERROR);
     }
     break;
     }

@@ -619,7 +619,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     databaseUpdateSql(sql3, CONFIG_DB_PATH);
 
     // reload (changed) db values
-    g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->loadParameters();
+    g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->loadParameters(true);
     g_machine.m_productDispensers[m_slot_index].resetMixProductsDispenseInfo();
     DF_ERROR dfRet = OK;
     return dfRet;

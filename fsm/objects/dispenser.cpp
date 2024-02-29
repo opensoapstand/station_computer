@@ -442,13 +442,12 @@ bool dispenser::loadDispenserParametersFromDb()
     string base_pnumber_str;
     string dispense_numbers_str;
     string additive_pnumbers_str;
-    debugOutput::sendMessage("Dispenser slot: " + std::to_string(m_slot) + ". Load parameters from db. Status : " + std::to_string(status) + " sql: " + sql_string, MSG_INFO);
+    debugOutput::sendMessage("Dispenser slot: " + std::to_string(m_slot) , MSG_INFO);
+    //debugOutput::sendMessage("Load parameters from db. Status : " + std::to_string(status) + " sql: " + sql_string, MSG_INFO);
     while (status == SQLITE_ROW)
     {
         numberOfRecordsFound++;
-
         // debugOutput::sendMessage("Record found for slot : " + std::to_string(getSlot()), MSG_INFO);
-
         dispense_numbers_str = product::dbFieldAsValidString(stmt, 1);
         base_pnumber_str = product::dbFieldAsValidString(stmt, 2);
         additive_pnumbers_str = product::dbFieldAsValidString(stmt, 3);
@@ -478,16 +477,23 @@ bool dispenser::loadDispenserParametersFromDb()
         }
 
         debugOutput::sendMessage("Base pnumber: " + std::to_string(m_base_pnumber), MSG_INFO);
-        debugOutput::sendMessage("Additives: ", MSG_INFO);
+        string additives_str = "Additives: ";
+        // debugOutput::sendMessage("Additives: ", MSG_INFO);
         for (int additivePosition = 1; additivePosition <= m_additive_pnumbers_count; additivePosition++)
         {
-            debugOutput::sendMessage(std::to_string(additivePosition) + " : " + std::to_string(getAdditivePNumber(additivePosition)), MSG_INFO);
+            additives_str += std::to_string(additivePosition) + ":" + std::to_string(getAdditivePNumber(additivePosition)) + ", ";
+            // debugOutput::sendMessage(std::to_string(additivePosition) + " : " + std::to_string(getAdditivePNumber(additivePosition)), MSG_INFO);
         }
-        debugOutput::sendMessage("Next lines are a list of all m_dispense_pnumbers for this dispenser: ", MSG_INFO);
+        debugOutput::sendMessage(additives_str, MSG_INFO);
+
+        string dispensables_str = "Dispense pnumbers: ";
+        // debugOutput::sendMessage("Next lines are a list of all m_dispense_pnumbers for this dispenser: ", MSG_INFO);
         for (int pos = 1; pos <= m_dispense_pnumbers_count; pos++)
         {
-            debugOutput::sendMessage(std::to_string(pos) + " : " + std::to_string(m_dispense_pnumbers[pos - 1]), MSG_INFO);
+            dispensables_str += std::to_string(pos) + ":" + std::to_string(m_dispense_pnumbers[pos - 1]) + ", ";
+            // debugOutput::sendMessage(std::to_string(pos) + " : " + std::to_string(m_dispense_pnumbers[pos - 1]), MSG_INFO);
         }
+        debugOutput::sendMessage(dispensables_str, MSG_INFO);
     }
     else if (numberOfRecordsFound > 1)
     {
@@ -719,8 +725,18 @@ void dispenser::startActiveDispensing()
 {
 
     debugOutput::sendMessage("Dispenser: Start active product dispensing.", MSG_INFO);
-    m_pcb->setPumpSpeedPercentage(0); // pump speed is inverted!
-    m_pcb->setPumpDirection(getSlot(), true);
+    switch (m_pcb->get_pcb_version())
+    {
+    case (pcb::DSED8344_NO_PIC):
+    case (pcb::DSED8344_PIC_MULTIBUTTON):
+    case (pcb::EN134_4SLOTS):
+    case (pcb::EN134_8SLOTS):
+    {
+        m_pcb->setPumpSpeedPercentage(0); // pump speed is inverted!
+        m_pcb->setPumpDirection(getSlot(), true);
+    }
+    break;
+    }
 
     m_pcb->startPump(getSlot());
     m_pcb->setSpoutSolenoid(getSlot(), true);
@@ -1256,7 +1272,7 @@ DF_ERROR dispenser::pumpSlowStopBlocking()
         debugOutput::sendMessage("Dispenser: Pump was already stopped.", MSG_INFO);
     }
     setPumpsDisableAll();
-    
+
     return dfRet;
 }
 
@@ -1538,22 +1554,24 @@ string dispenser::getDispenseUpdateString()
 {
     // string intro =
     string message = "Dispenser: Dispense Product: P-" + std::to_string(getSelectedPNumber());
-    
+
     // add selected product total volume update.
     message += " (" + std::to_string(getSelectedProduct()->getVolumeDispensed()) + "/" + std::to_string(getProductTargetVolume(getSelectedPNumber())) + "ml ): ";
-    
+
     if (getSelectedProduct()->isMixingProduct())
     {
         message +=
             "(mix part " + std::to_string(getSelectedProduct()->getMixProductsCount() - m_mix_active_index) + "/" + std::to_string(getSelectedProduct()->getMixProductsCount()) +
             " : P-" + std::to_string(getActivePNumber()) + " volume: " + std::to_string(getActiveProduct()->getVolumeDispensed()) + "/" + std::to_string(getProductTargetVolume(getActivePNumber())) + "ml )";
-            
+
         ;
     }
     else
     {
         message +=
-            "non mix. (P-active=P-dispense): volume: " + std::to_string(getActiveProduct()->getVolumeDispensed()) + "/" + std::to_string(getProductTargetVolume(getActivePNumber())) + "ml";
+            "non mix. ";
+        // message +=
+        //     "non mix. (P-active=P-dispense): volume: " + std::to_string(getActiveProduct()->getVolumeDispensed()) + "/" + std::to_string(getProductTargetVolume(getActivePNumber())) + "ml";
     }
     return message;
 }

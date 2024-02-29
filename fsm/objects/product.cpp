@@ -32,7 +32,7 @@ void product::init(int pnumber)
     m_pnumber = pnumber;
     // m_display_unit = size_unit;
     // m_paymentMethod = paymentMethod;
-    this->loadParameters();
+    this->loadParameters(false);
 }
 
 int product::getPNumber()
@@ -861,14 +861,17 @@ std::string product::dbFieldAsValidString(sqlite3_stmt *stmt, int column_index)
     }
 }
 
-bool product::loadParameters()
+bool product::loadParameters(bool onlyLoadFromDb)
 {
     bool success = true;
     if (getPNumber() != CUSTOM_MIX_PNUMBER)
     {
-        debugOutput::sendMessage("Product: Data loading for product: " + to_string(getPNumber()), MSG_INFO);
+        debugOutput::sendMessage("Product: Load data from db for product: " + to_string(getPNumber()), MSG_INFO);
         success &= loadProductParametersFromDb();
-        loadProductPropertiesFromCsv();
+        if (onlyLoadFromDb){
+            debugOutput::sendMessage("Product: Load data from .tsv file for product: " + to_string(getPNumber()), MSG_INFO);
+            loadProductPropertiesFromCsv();
+        }
     }
     else
     {
@@ -1080,7 +1083,7 @@ bool product::loadProductParametersFromDb()
     }
     else
     {
-        debugOutput::sendMessage("No db record for product: " + std::to_string(m_pnumber), MSG_WARNING);
+        debugOutput::sendMessage("No db record for product: " + std::to_string(m_pnumber), MSG_INFO);
     }
 
     sqlite3_finalize(stmt);

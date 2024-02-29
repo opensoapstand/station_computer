@@ -97,7 +97,7 @@ public:
         char sizeIndexToSizeChar(int sizeIndex);
         bool getIsSizeEnabled(char size);
 
-        bool loadParameters();
+        bool loadParameters(bool onlyLoadFromDb);
         bool loadProductParametersFromDb();
         bool isColumnInTable(string table, string column_name);
         void executeSQLStatement(string sql_string);

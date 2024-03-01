@@ -104,6 +104,7 @@ void page_product_overview::showEvent(QShowEvent *event)
     // need CAPS button for keyboard widget T or F
     p_keyboard->resetKeyboard();
     statusbarLayout->removeWidget(p_keyboard);
+    ui->label_gif->hide();
 
     qDebug() << "is Custom mix? : " << p_page_idle->thisMachine->getSelectedProduct()->isCustomMix();
     QVector<double> customRatios = p_page_idle->thisMachine->getSelectedProduct()->getCustomMixRatios();

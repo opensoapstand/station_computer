@@ -767,7 +767,6 @@ DF_ERROR messageMediator::parseCommandString()
       m_commandValue = std::stoi(number);
    }
    else if (
-      debugOutput::sendMessage("Received Message: " + sCommand, MSG_INFO);
        // single digit commands
        first_char == '0' ||
        first_char == '1' ||
@@ -800,6 +799,7 @@ DF_ERROR messageMediator::parseCommandString()
        //  first_char == ACTION_PRINTER_REACHABLE
        first_char == ACTION_QUIT)
    {
+      debugOutput::sendMessage("Received Message: " + sCommand, MSG_INFO);
       m_requestedAction = first_char;
    }
 

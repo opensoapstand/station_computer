@@ -91,6 +91,8 @@ pcb::~pcb(void)
 bool pcb::SendByte(unsigned char address, unsigned char reg, unsigned char byte)
 {
 
+    debugOutput::sendMessage("i2c send: address: " + to_string(address) + ", register: " + to_string(reg) + " ,value:" + to_string(byte), MSG_INFO);
+
 #ifdef __USE_SMBUS_I2C_LIBRARY__
     set_i2c_address(address);
     i2c_smbus_write_byte_data(i2c_handle, reg, byte);

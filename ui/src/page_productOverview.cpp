@@ -106,9 +106,9 @@ void page_product_overview::showEvent(QShowEvent *event)
     statusbarLayout->removeWidget(p_keyboard);
     ui->label_gif->hide();
 
-    qDebug() << "is Custom mix? : " << p_page_idle->thisMachine->getSelectedProduct()->isCustomMix();
+    // qDebug() << "is Custom mix? : " << p_page_idle->thisMachine->getSelectedProduct()->isCustomMix();
     QVector<double> customRatios = p_page_idle->thisMachine->getSelectedProduct()->getCustomMixRatios();
-    qDebug() << "Mixing products (includes base) ratios:";
+    // qDebug() << "Mixing products (includes base) ratios:";
 
     for (int i = 0; i < customRatios.size(); i++)
     {

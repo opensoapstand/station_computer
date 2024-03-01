@@ -25,7 +25,7 @@ std::map<std::string, std::string> registerDevice(int socket){
     }
     else{
         qDebug() << "Registration failed";
-        rebootDevice(connectSecondarySocket());
+        // rebootDevice(connectSecondarySocket());
     }
     
     return dataReceived;

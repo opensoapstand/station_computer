@@ -1022,7 +1022,7 @@ void machine::setIsMachineEnabled(bool isEnabled, QString statusText)
 {
     setIsMachineEnabled(isEnabled);
 
-    //  m_slots[slot-1].setStatusText();
+    //  m_slots[slot-1].setSlotStatusText();
     //  m_slots[slot-1].setSlotEnabled();
 }
 
@@ -1167,7 +1167,7 @@ QString machine::getIdlePageType()
 bool machine::getCouponsEnabled()
 {
 
-    return m_coupons_enabled == 1;
+    return m_coupons_enabled==1;
 }
 
 QString machine::getPaymentMethod()

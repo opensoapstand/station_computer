@@ -127,7 +127,7 @@ QString df_util::getConvertedStringVolumeFromMl(double volumeMilliLiter, QString
     if (units == "ml")
     {
 
-        int decimals = 2;
+        int decimals = 3;
         if (roundNumber)
         {
             decimals = 0;

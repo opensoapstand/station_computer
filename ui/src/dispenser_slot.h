@@ -40,8 +40,8 @@ public:
     void setSlotEnabled(bool isEnabled, QString statusText);
     void setSlotEnabled(bool isEnabled);
     bool getIsSlotEnabled();
-    void setStatusText(QString status);
-    QString getStatusText();
+    void setSlotStatusText(QString status);
+    QString getSlotStatusText();
 
     QString getDispenseStartTime();
     QString getDispenseEndTime();
@@ -61,8 +61,8 @@ public:
     // bool getSlotEnabled();
     // void setSlotEnabled(bool isEnabled);
     // void setSlotEnabled(bool isEnabled, QString statusText);
-    // QString getStatusText();
-    // void setStatusText(QString status);
+    // QString getSlotStatusText();
+    // void setSlotStatusText(QString status);
 
 
 public slots:

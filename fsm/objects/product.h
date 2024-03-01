@@ -42,7 +42,7 @@ public:
         string getPNumberAsPString();
 
         bool isMixingProduct();
-        void getMixRatios(double *&mixRatios, int &count);
+        void getMixRatiosDefault(double *&mixRatios, int &count);
         void getMixPNumbers(int *&pnumbers, int &count);
 
         int getMixProductsCount();
@@ -57,8 +57,8 @@ public:
 
         bool getIsEnabled();
         void setIsEnabled(bool isEnabled);
-        string getStatusText();
-        void setStatusText(string statusText);
+        string getProductStatusText();
+        void setProductStatusText(string statusText);
 
         int getPWM();
         int getRetractionTimeMillis();

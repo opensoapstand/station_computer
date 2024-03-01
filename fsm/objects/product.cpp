@@ -163,7 +163,7 @@ bool product::isMixingProduct()
     return isMix;
 }
 
-void product::getMixRatios(double *&mixRatios, int &count)
+void product::getMixRatiosDefault(double *&mixRatios, int &count)
 {
     mixRatios = m_mix_ratios;
     count = m_mix_ratios_count;
@@ -263,7 +263,13 @@ char product::getSizeCharFromTargetVolume(double volume)
 {
     // this is a necessary evil as in transactions, the requested volume is not stored as char
     // #define VOLUME_MARGIN 0.1
-    if (volume == m_nVolumeTarget_s)
+    // Bug Alert: If the custom max size is same as any target volume size, it will take that size but the price will be taken from custom
+    
+    if (volume == m_nVolumeTarget_c_max)
+    {
+        return 'c';
+    }
+    else if (volume == m_nVolumeTarget_s)
     {
         return 's';
     }
@@ -275,10 +281,7 @@ char product::getSizeCharFromTargetVolume(double volume)
     {
         return 'l';
     }
-    else if (volume == m_nVolumeTarget_c_max)
-    {
-        return 'c';
-    }
+    
     else if (volume == m_nVolumeTarget_f)
     {
         return 'f';
@@ -342,6 +345,7 @@ double product::getVolumeFromSize(char size)
     {
         debugOutput::sendMessage("Unknown volume parameter: " + size, MSG_INFO);
     }
+    return 666.0;
 }
 
 // double product::getCustomVolumePriceDependingOnDispensedVolume(double volume)
@@ -419,11 +423,11 @@ void product::setIsEnabled(bool isEnabled)
     this->m_is_enabled = isEnabled;
 }
 
-string product::getStatusText()
+string product::getProductStatusText()
 {
     return m_status_text;
 }
-void product::setStatusText(string statusText)
+void product::setProductStatusText(string statusText)
 {
     this->m_status_text = statusText;
 }
@@ -617,6 +621,7 @@ string product::getBasePLU(char size)
     {
         debugOutput::sendMessage("Unknown volume parameter for plu: " + size, MSG_INFO);
     }
+    return "fake plu ";
 }
 // example of adding columns to table
 // void product::addColumnExample()

@@ -59,7 +59,6 @@ DF_ERROR stateDispenseEnd::onAction()
     DF_ERROR e_ret = OK;
     debugOutput::sendMessage("onAction Dispense End...", MSG_STATE);
     double price = getFinalPrice();
-    sendEndTransactionMessageToUI();
     double volume_dispensed = g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed();
     
     // 
@@ -68,6 +67,7 @@ DF_ERROR stateDispenseEnd::onAction()
     // m_pMessaging->sendMessageOverIP(message, true); // send to UI
 
     g_machine.m_productDispensers[m_slot_index].finishSelectedProductDispense();
+    g_machine.getPcb()->displayMCP23017IORegisters(m_slot);
 
     // handle minimum dispensing
     bool is_valid_dispense = volume_dispensed >= MINIMUM_DISPENSE_VOLUME_ML;
@@ -112,6 +112,7 @@ DF_ERROR stateDispenseEnd::onAction()
     {
         debugOutput::sendMessage("Normal transaction.", MSG_INFO);
         e_ret = handleTransactionPayment();
+    sendEndTransactionMessageToUI();
 
         dispenseEndUpdateDB(true);
 
@@ -235,29 +236,29 @@ DF_ERROR stateDispenseEnd::handleTransactionPayment()
 
     // Currently only Drinkfill used the tap method of payment, so this checks if it is a tap payment system and runs the cleaning cycle if it is...
     // TODO: Change this to just check if the system is Soapstand or Drinkfill instead of payment system!
-    if (paymentMethod == "qr")
-    {
-        debugOutput::sendMessage("QR payment. No payment action in controller", MSG_INFO);
-    }
-    else if (paymentMethod == "tap")
-    {
-        // sleep(5);
-        // debugOutput::sendMessage("Dispense OnEXIT", MSG_INFO);
-        // debugOutput::sendMessage("------Cleaning Mode------", MSG_INFO);
-        // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", MSG_INFO);
-        // debugOutput::sendMessage("Pin -> " + to_string(g_machine.m_productDispensers[m_slot_index].getI2CPin(WATER)), MSG_INFO);
-        // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", MSG_INFO);
-        // debugOutput::sendMessage("Pin -> " + to_string(g_machine.m_productDispensers[m_slot_index].getI2CPin(PRODUCT)), MSG_INFO);
-    }
-    else if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13" || paymentMethod == "barcode_EAN-2" || paymentMethod == "plu")
-    {
-        debugOutput::sendMessage("Print receipt:", MSG_INFO);
-        setup_and_print_receipt();
-    }
-    else
-    {
-        debugOutput::sendMessage("WARNING: No payment method detected.", MSG_INFO);
-    }
+    // if (paymentMethod == "qr")
+    // {
+    //     debugOutput::sendMessage("QR payment. No payment action in controller", MSG_INFO);
+    // }
+    // else if (paymentMethod == "tap")
+    // {
+    //     // sleep(5);
+    //     // debugOutput::sendMessage("Dispense OnEXIT", MSG_INFO);
+    //     // debugOutput::sendMessage("------Cleaning Mode------", MSG_INFO);
+    //     // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", MSG_INFO);
+    //     // debugOutput::sendMessage("Pin -> " + to_string(g_machine.m_productDispensers[m_slot_index].getI2CPin(WATER)), MSG_INFO);
+    //     // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", MSG_INFO);
+    //     // debugOutput::sendMessage("Pin -> " + to_string(g_machine.m_productDispensers[m_slot_index].getI2CPin(PRODUCT)), MSG_INFO);
+    // }
+    // else if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13" || paymentMethod == "barcode_EAN-2" || paymentMethod == "plu")
+    // {
+    //     debugOutput::sendMessage("Print receipt:", MSG_INFO);
+    //     setup_and_print_receipt();
+    // }
+    // else
+    // {
+    //     debugOutput::sendMessage("WARNING: No payment method detected.", MSG_INFO);
+    // }
     return e_ret;
 }
 
@@ -279,7 +280,7 @@ static int db_sql_callback(void *NotUsed, int argc, char **argv, char **azColNam
     //     printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
     // }
     // printf("\n");
-    // return 0;
+    return 0;
 }
 
 size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
@@ -464,7 +465,7 @@ void stateDispenseEnd::write_curl_to_file(std::string curl_params)
 //     return str;
 // }
 
-DF_ERROR stateDispenseEnd::databaseUpdateSql(string sqlStatement, string dbPath)
+void stateDispenseEnd::databaseUpdateSql(string sqlStatement, string dbPath)
 {
 
     // FIXME: DB needs fully qualified link to find...obscure with XML loading.
@@ -580,7 +581,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     std::string updated_volume_remaining_str = to_string(updated_volume_remaining);
     std::string updated_volume_dispensed_total_ever_str = to_string(updated_volume_dispensed_total_ever);
     std::string updated_volume_dispensed_since_restock_str = to_string(updated_volume_dispensed_since_restock);
-    std::string slot_state_str = g_machine.m_productDispensers[m_slot_index].getSlotStateAsString();
+    std::string m_slot_state_str = g_machine.m_productDispensers[m_slot_index].getSlotStateAsString();
     // std::string product_id = getProductID(slot);
     std::string product_id = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->m_product_id_combined_with_location_for_backend;
      //Get mix product object to be used for updating local station database
@@ -614,13 +615,14 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
 
     // update dipenser table
     std::string sql3;
-    sql3 = ("UPDATE slots SET status_text='" + slot_state_str + "' WHERE slot_id=" + to_string(m_slot) + ";");
+    sql3 = ("UPDATE slots SET status_text='" + m_slot_state_str + "' WHERE slot_id=" + to_string(m_slot) + ";");
     databaseUpdateSql(sql3, CONFIG_DB_PATH);
 
     // reload (changed) db values
     g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->loadParameters();
     g_machine.m_productDispensers[m_slot_index].resetMixProductsDispenseInfo();
-
+    DF_ERROR dfRet = OK;
+    return dfRet;
 }
 
 double stateDispenseEnd::getFinalPrice()
@@ -631,9 +633,11 @@ double stateDispenseEnd::getFinalPrice()
     double price_per_ml;
     double volume_dispensed;
     double price;
-    // bool isCustomSizeEnabled = g_machine.m_productDispensers.getProduct()->getIsSizeEnabled(SIZE_CUSTOM_CHAR);
+    bool isCustomSizeEnabled = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getIsSizeEnabled(SIZE_CUSTOM_CHAR);
+
+    std::cout << size;
     // If custom volume is enabled, adjust the price to actual quantity dispensed
-    if (size == SIZE_CUSTOM_CHAR)
+    if (size == SIZE_CUSTOM_CHAR||isCustomSizeEnabled)
     {
 
         bool isDiscountEnabled;
@@ -655,6 +659,7 @@ double stateDispenseEnd::getFinalPrice()
         }
 
         price = price_per_ml * volume_dispensed;
+        std::cout<< "final price" << price;
         if (size != SIZE_CUSTOM_CHAR)
         {
             price = std::min(price, m_pMessaging->getRequestedPrice());
@@ -838,7 +843,7 @@ void stateDispenseEnd:: sendEndTransactionMessageToUI(){
     std::string pNumber_dispense_info_string = mapToString(g_machine.m_productDispensers[m_slot_index].getMixProductsDispenseInfo());
 
     std::string message = "finalTransactionMessage|start_time|" + start_time+"|end_time|" + end_time+"|button_press_duration|"+button_press_duration \
-                            + "|button_press_count|" + button_press_count+ "|volume_dispensed|" + volume_dispensed+"|pNumber_dispense_info|" + pNumber_dispense_info_string;
+                            + "|button_press_count|" + button_press_count+ "|volume_dispensed|" + volume_dispensed+"|pNumber_dispense_info|" + pNumber_dispense_info_string ;
     usleep(100000); // send message delay
     m_pMessaging->sendMessageOverIP(message, true); // send to UI
 }

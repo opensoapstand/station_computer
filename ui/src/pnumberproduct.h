@@ -20,7 +20,7 @@ public:
     QString getMixPNumbersAsCsv();
     QString getMixRatiosAsCsv(QVector<double> ratios);
     QVector<double> getMixRatiosLow();
-    QVector<double> getMixRatios();
+    QVector<double> getMixRatiosDefault();
     QVector<double> getMixRatiosHigh();
 
     bool loadProductPropertiesFromProductsFile();
@@ -113,8 +113,8 @@ public:
 
     bool getIsProductEnabled();
     void setIsProductEnabled(bool isEnabled);
-    QString getStatusText();
-    void setStatusText(QString statusText);
+    QString getProductStatusText();
+    void setProductStatusText(QString statusText);
 
     bool isCustomMix();
     // void adjustAdditivesRatioModifier(int index, double additiveModifier);

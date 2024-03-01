@@ -344,12 +344,12 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
     ui->pushButton_plu_sample->setText(p_page_idle->thisMachine->getSelectedProduct()->getPlu(SIZE_SAMPLE_INDEX));
 
 
-    QString statusText = p_page_idle->thisMachine->getSelectedSlot()->getStatusText();
+    QString statusText = p_page_idle->thisMachine->getSelectedSlot()->getSlotStatusText();
     setStatusTextLabel(ui->label_status_dispenser_elaborated, statusText, true);
 
     setStatusTextLabel(ui->label_status_dispenser, statusText, false);
     
-    QString statusTextProduct = p_page_idle->thisMachine->getSelectedProduct()->getStatusText();
+    QString statusTextProduct = p_page_idle->thisMachine->getSelectedProduct()->getProductStatusText();
     setStatusTextLabel(ui->label_status_selected_product, statusTextProduct, false);
     
 
@@ -657,7 +657,7 @@ void page_maintenance_dispenser::reset_all_dispense_stats()
     ui->label_calibration_result->setText("-"); // calibration constant
 
     setButtonPressCountLabel(true);
-    QString statusText = p_page_idle->thisMachine->getSelectedSlot()->getStatusText();
+    QString statusText = p_page_idle->thisMachine->getSelectedSlot()->getSlotStatusText();
     setStatusTextLabel(ui->label_status_dispenser_elaborated, statusText, true);
 }
 
@@ -678,7 +678,7 @@ void page_maintenance_dispenser::update_volume_received_dispense_stats(double di
     // update calibration field, ticks per ml if 1000ml would have been dispensed in reality at this point.
     if (vol_dispensed > 0)
     {
-        QString vol_per_tick_for_1000ml = QString::number(1000 / (vol_dispensed / volume_per_tick_buffer), 'f', 2);
+        QString vol_per_tick_for_1000ml = QString::number(1000 / (vol_dispensed / volume_per_tick_buffer), 'f', 3);
 
         if (this->units_selected_product == "oz")
         {
@@ -754,9 +754,9 @@ void page_maintenance_dispenser::on_pushButton_clear_problem_clicked()
 {
     if (!isDispenserPumpEnabledWarningBox())
     {
-        QString statusText = p_page_idle->thisMachine->getSelectedSlot()->getStatusText();
+        QString statusText = p_page_idle->thisMachine->getSelectedSlot()->getSlotStatusText();
         qDebug() << "Clear problem button clicked. Will set to available. Status was: " + statusText;
-        p_page_idle->thisMachine->getSelectedSlot()->setStatusText("SLOT_STATE_AVAILABLE");
+        p_page_idle->thisMachine->getSelectedSlot()->setSlotStatusText("SLOT_STATE_AVAILABLE");
         updateProductLabelValues(true);
     }
 }
@@ -805,7 +805,7 @@ void page_maintenance_dispenser::on_pushButton_restock_clicked()
         {
             sendRestockToCloud();
             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_action_feedback, "success");
-            p_page_idle->thisMachine->getSelectedProduct()->setStatusText("SLOT_STATE_AVAILABLE");
+            p_page_idle->thisMachine->getSelectedProduct()->setProductStatusText("SLOT_STATE_AVAILABLE");
         }
         else
         {
@@ -824,7 +824,7 @@ void page_maintenance_dispenser::on_pushButton_set_status_clicked()
 
         _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 
-        QString slotStatus = p_page_idle->thisMachine->getSelectedSlot()->getStatusText();
+        QString slotStatus = p_page_idle->thisMachine->getSelectedSlot()->getSlotStatusText();
 
         bool isEnabled = p_page_idle->thisMachine->getSelectedSlot()->getIsSlotEnabled();
 

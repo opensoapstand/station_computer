@@ -144,7 +144,7 @@ bool dispenser_slot::loadSlotParametersFromDb()
 void dispenser_slot::setSlotEnabled(bool isEnabled, QString statusText)
 {
     setSlotEnabled(isEnabled);
-    setStatusText(statusText);
+    setSlotStatusText(statusText);
 }
 
 void dispenser_slot::setSlotEnabled(bool isEnabled)
@@ -159,16 +159,16 @@ bool dispenser_slot::getIsSlotEnabled()
     return m_is_enabled;
 }
 
-void dispenser_slot::setStatusText(QString status)
+void dispenser_slot::setSlotStatusText(QString status)
 {
     m_status_text = status;
     m_db->updateTableSlotsWithText(getSlotId(), "status_text", m_status_text);
 }
 
-QString dispenser_slot::getStatusText()
+QString dispenser_slot::getSlotStatusText()
 {
     return m_status_text;
-    // return thisMachine->getStatusText(getSlotId());
+    // return thisMachine->getSlotStatusText(getSlotId());
 }
 
 int dispenser_slot::getSlotId()

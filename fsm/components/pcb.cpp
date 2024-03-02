@@ -91,7 +91,9 @@ pcb::~pcb(void)
 bool pcb::SendByte(unsigned char address, unsigned char reg, unsigned char byte)
 {
 
-    debugOutput::sendMessage("i2c send: address: " + to_string(address) + ", register: " + to_string(reg) + " ,value:" + to_string(byte), MSG_INFO);
+    // uint8_t register_value = byte;
+    std::bitset<8> binaryA(byte);
+    debugOutput::sendMessage("i2c send: address: " + to_string(address) + ", register: " + to_string(reg) + " ,value:" + binaryA.to_string(), MSG_INFO);
 
 #ifdef __USE_SMBUS_I2C_LIBRARY__
     set_i2c_address(address);
@@ -299,7 +301,7 @@ void pcb::setMCP23017Output(uint8_t slot, int posIndex, bool onElseOff, uint8_t 
     // slot starts at 1!
 
     // GPIORegister --> gpioA or gpioB register value
-    
+
     int attempts = 3;
 
     int attempt = attempts;
@@ -307,7 +309,8 @@ void pcb::setMCP23017Output(uint8_t slot, int posIndex, bool onElseOff, uint8_t 
     // check if set correctly.
     while (onElseOff != getMCP23017GPIOState(slot, posIndex, GPIORegister) && attempt > 0)
     {
-        if (attempt != attempts){
+        if (attempt != attempts)
+        {
             debugOutput::sendMessage("Warning: retrying to set MCP23017 to requested output", MSG_WARNING);
         }
         attempt--;
@@ -1931,7 +1934,7 @@ void pcb::setPumpSpeedPercentage(uint8_t speed_percentage)
     break;
     default:
     {
-        //debugOutput::sendMessage("Pcb: Pcb has no setPumpSpeedPercentage available", MSG_ERROR);
+        // debugOutput::sendMessage("Pcb: Pcb has no setPumpSpeedPercentage available", MSG_ERROR);
     }
     break;
     }

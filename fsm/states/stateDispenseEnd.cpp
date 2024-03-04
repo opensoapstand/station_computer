@@ -111,8 +111,8 @@ DF_ERROR stateDispenseEnd::onAction()
     else
     {
         debugOutput::sendMessage("Normal transaction.", MSG_INFO);
-        e_ret = handleTransactionPayment();
         sendEndTransactionMessageToUI();
+        e_ret = handleTransactionPayment();
 
         dispenseEndUpdateDB(true);
 

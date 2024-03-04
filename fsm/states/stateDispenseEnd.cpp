@@ -60,8 +60,8 @@ DF_ERROR stateDispenseEnd::onAction()
     debugOutput::sendMessage("onAction Dispense End...", MSG_STATE);
     double price = getFinalPrice();
     double volume_dispensed = g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed();
-    
-    // 
+
+    //
     // replaced by sendEndTransactionMessageToUI! std::string message = "finalVolumeDispensed|" + std::to_string(volume_dispensed) + "|";
     // usleep(100000); // send message delay
     // m_pMessaging->sendMessageOverIP(message, true); // send to UI
@@ -111,36 +111,37 @@ DF_ERROR stateDispenseEnd::onAction()
     else
     {
         debugOutput::sendMessage("Normal transaction.", MSG_INFO);
+        sendEndTransactionMessageToUI();
         e_ret = handleTransactionPayment();
-    sendEndTransactionMessageToUI();
 
         dispenseEndUpdateDB(true);
 
-#define ENABLE_TRANSACTION_TO_CLOUD
-#ifdef ENABLE_TRANSACTION_TO_CLOUD
+// #define ENABLE_TRANSACTION_TO_CLOUD
+// #ifdef ENABLE_TRANSACTION_TO_CLOUD
 
-        std::string paymentMethod = g_machine.getPaymentMethod();
-        
-        if (paymentMethod == "qr" && price != 0.0)
-        {
-            // these transactions are dealt with in the UI
-        }
-        else
-        {
-            // bool success = false;
-            // make sure to do this after dispenseEndUpdateDB
-            // at that point remaining product volume is already updated in db, and in Product
-            // success = sendTransactionToCloud(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeRemaining());
-        }
-#else
-        debugOutput::sendMessage("NOT SENDING transaction to cloud.", MSG_INFO);
-#endif
+//         std::string paymentMethod = g_machine.getPaymentMethod();
+
+//         if (paymentMethod == "qr" && price != 0.0)
+//         {
+//             // these transactions are dealt with in the UI
+//         }
+//         else
+//         {
+//             // bool success = false;
+//             // make sure to do this after dispenseEndUpdateDB
+//             // at that point remaining product volume is already updated in db, and in Product
+//             // success = sendTransactionToCloud(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeRemaining());
+//         }
+// #else
+//         debugOutput::sendMessage("NOT SENDING transaction to cloud.", MSG_INFO);
+// #endif
     }
 
     debugOutput::sendMessage("Post dispense final price: " + to_string(price), MSG_INFO);
 
     // send dispensed volume to ui (will be used to write to portal)
     m_state_requested = STATE_IDLE;
+    usleep(1000000); // give UI the chance to catch up (and display page end)
     m_pMessaging->sendMessageOverIP("Transaction End", true); // send to UI
 
     return e_ret;
@@ -236,29 +237,30 @@ DF_ERROR stateDispenseEnd::handleTransactionPayment()
 
     // Currently only Drinkfill used the tap method of payment, so this checks if it is a tap payment system and runs the cleaning cycle if it is...
     // TODO: Change this to just check if the system is Soapstand or Drinkfill instead of payment system!
-    // if (paymentMethod == "qr")
-    // {
-    //     debugOutput::sendMessage("QR payment. No payment action in controller", MSG_INFO);
-    // }
-    // else if (paymentMethod == "tap")
-    // {
-    //     // sleep(5);
-    //     // debugOutput::sendMessage("Dispense OnEXIT", MSG_INFO);
-    //     // debugOutput::sendMessage("------Cleaning Mode------", MSG_INFO);
-    //     // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", MSG_INFO);
-    //     // debugOutput::sendMessage("Pin -> " + to_string(g_machine.m_productDispensers[m_slot_index].getI2CPin(WATER)), MSG_INFO);
-    //     // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", MSG_INFO);
-    //     // debugOutput::sendMessage("Pin -> " + to_string(g_machine.m_productDispensers[m_slot_index].getI2CPin(PRODUCT)), MSG_INFO);
-    // }
-    // else if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13" || paymentMethod == "barcode_EAN-2" || paymentMethod == "plu")
-    // {
-    //     debugOutput::sendMessage("Print receipt:", MSG_INFO);
-    //     setup_and_print_receipt();
-    // }
-    // else
-    // {
-    //     debugOutput::sendMessage("WARNING: No payment method detected.", MSG_INFO);
-    // }
+    if (paymentMethod == "qr")
+    {
+        debugOutput::sendMessage("QR payment. No payment action in controller", MSG_INFO);
+    }
+    else if (paymentMethod == "tap")
+    {
+        debugOutput::sendMessage("Tap payment. No payment action in controller", MSG_INFO);
+        // sleep(5);
+        // debugOutput::sendMessage("Dispense OnEXIT", MSG_INFO);
+        // debugOutput::sendMessage("------Cleaning Mode------", MSG_INFO);
+        // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", MSG_INFO);
+        // debugOutput::sendMessage("Pin -> " + to_string(g_machine.m_productDispensers[m_slot_index].getI2CPin(WATER)), MSG_INFO);
+        // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", MSG_INFO);
+        // debugOutput::sendMessage("Pin -> " + to_string(g_machine.m_productDispensers[m_slot_index].getI2CPin(PRODUCT)), MSG_INFO);
+    }
+    else if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13" || paymentMethod == "barcode_EAN-2" || paymentMethod == "plu")
+    {
+        debugOutput::sendMessage("Print receipt:", MSG_INFO);
+        setup_and_print_receipt();
+    }
+    else
+    {
+        debugOutput::sendMessage("WARNING: No payment method detected.", MSG_INFO);
+    }
     return e_ret;
 }
 
@@ -584,8 +586,8 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     std::string m_slot_state_str = g_machine.m_productDispensers[m_slot_index].getSlotStateAsString();
     // std::string product_id = getProductID(slot);
     std::string product_id = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->m_product_id_combined_with_location_for_backend;
-     //Get mix product object to be used for updating local station database
-    std::map<std::string, std::vector<double>> mixProductDispenseObject= g_machine.m_productDispensers[m_slot_index].getMixProductsDispenseInfo();
+    // Get mix product object to be used for updating local station database
+    std::map<std::string, std::vector<double>> mixProductDispenseObject = g_machine.m_productDispensers[m_slot_index].getMixProductsDispenseInfo();
 
     // FIXME: DB needs fully qualified link to find...obscure with XML loading.
     debugOutput::sendMessage("Update DB at dispense end: Vol dispensed: " + dispensed_volume_str, MSG_INFO);
@@ -603,7 +605,8 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     // update product table with p Number
     std::string sql2;
     // Iterate over the mix product dispense object to get individual values for each product
-    for (const auto& entry : mixProductDispenseObject) {
+    for (const auto &entry : mixProductDispenseObject)
+    {
 
         volume_dispensed_total_ever = ceil(g_machine.m_productDispensers[m_slot_index].getProductFromPNumber(std::stoi(entry.first))->getProductVolumeDispensedTotalEver());
         volume_dispensed_since_restock = ceil(g_machine.m_productDispensers[m_slot_index].getProductFromPNumber(std::stoi(entry.first))->getProductVolumeDispensedSinceLastRestock());
@@ -619,7 +622,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     databaseUpdateSql(sql3, CONFIG_DB_PATH);
 
     // reload (changed) db values
-    g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->loadParameters();
+    g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->loadParameters(true);
     g_machine.m_productDispensers[m_slot_index].resetMixProductsDispenseInfo();
     DF_ERROR dfRet = OK;
     return dfRet;
@@ -637,7 +640,7 @@ double stateDispenseEnd::getFinalPrice()
 
     std::cout << size;
     // If custom volume is enabled, adjust the price to actual quantity dispensed
-    if (size == SIZE_CUSTOM_CHAR||isCustomSizeEnabled)
+    if (size == SIZE_CUSTOM_CHAR || isCustomSizeEnabled)
     {
 
         bool isDiscountEnabled;
@@ -659,7 +662,7 @@ double stateDispenseEnd::getFinalPrice()
         }
 
         price = price_per_ml * volume_dispensed;
-        std::cout<< "final price" << price;
+        std::cout << "final price" << price;
         if (size != SIZE_CUSTOM_CHAR)
         {
             price = std::min(price, m_pMessaging->getRequestedPrice());
@@ -679,7 +682,7 @@ double stateDispenseEnd::getFinalPrice()
 // This function prints the receipts by calling a system function (could be done better)
 void stateDispenseEnd::setup_and_print_receipt()
 {
-    
+
     char chars_cost[MAX_BUF];
     char chars_volume_formatted[MAX_BUF];
     char chars_price_per_ml_formatted[MAX_BUF];
@@ -689,7 +692,7 @@ void stateDispenseEnd::setup_and_print_receipt()
     std::string paymentMethod = g_machine.getPaymentMethod();
     std::string name_receipt = (g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getProductName());
 
-    std::string units =  g_machine.getSizeUnit();
+    std::string units = g_machine.getSizeUnit();
     double price = getFinalPrice();
     double price_per_ml;
     debugOutput::sendMessage("Price final for receipt:" + to_string(price), MSG_INFO);
@@ -741,7 +744,7 @@ void stateDispenseEnd::setup_and_print_receipt()
     {
         debugOutput::sendMessage("invalid size provided" + size, MSG_INFO);
     }
-    
+
     std::string plu = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getFinalPLU(size, price, g_machine.getPaymentMethod());
 
     // convert units
@@ -782,7 +785,8 @@ void stateDispenseEnd::setup_and_print_receipt()
     // add base price
     if (size == 'c' || size == 't')
     {
-        if (base_unit == "oz"){
+        if (base_unit == "oz")
+        {
             price_per_unit = price_per_ml * ML_TO_OZ;
         }
         else if (base_unit == "l")
@@ -833,30 +837,34 @@ void stateDispenseEnd::setup_and_print_receipt()
 //     system(printer_command_string.c_str());
 // }
 
-void stateDispenseEnd:: sendEndTransactionMessageToUI(){
+void stateDispenseEnd::sendEndTransactionMessageToUI()
+{
     std::string start_time = g_machine.m_productDispensers[m_slot_index].getSelectedProductDispenseStartTime();
     std::string end_time = g_machine.m_productDispensers[m_slot_index].getSelectedProductDispenseEndTime();
     std::string button_press_duration = to_string(g_machine.m_productDispensers[m_slot_index].getButtonPressedTotalMillis());
     std::string button_press_count = to_string(g_machine.m_productDispensers[m_slot_index].getDispenseButtonPressesDuringDispensing());
-    std::string volume_dispensed =to_string(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed());
-    //Get mix product object as a string to pass to UI
+    std::string volume_dispensed = to_string(g_machine.m_productDispensers[m_slot_index].getSelectedProductVolumeDispensed());
+    // Get mix product object as a string to pass to UI
     std::string pNumber_dispense_info_string = mapToString(g_machine.m_productDispensers[m_slot_index].getMixProductsDispenseInfo());
 
-    std::string message = "finalTransactionMessage|start_time|" + start_time+"|end_time|" + end_time+"|button_press_duration|"+button_press_duration \
-                            + "|button_press_count|" + button_press_count+ "|volume_dispensed|" + volume_dispensed+"|pNumber_dispense_info|" + pNumber_dispense_info_string ;
-    usleep(100000); // send message delay
+    std::string message = "finalTransactionMessage|start_time|" + start_time + "|end_time|" + end_time + "|button_press_duration|" + button_press_duration + "|button_press_count|" + button_press_count + "|volume_dispensed|" + volume_dispensed + "|pNumber_dispense_info|" + pNumber_dispense_info_string;
+    usleep(100000);                                 // send message delay
     m_pMessaging->sendMessageOverIP(message, true); // send to UI
 }
 
-std::string stateDispenseEnd::mapToString(const std::map<std::string, std::vector<double>>& dictionary) {
+std::string stateDispenseEnd::mapToString(const std::map<std::string, std::vector<double>> &dictionary)
+{
     std::stringstream ss;
-    for (const auto& entry : dictionary) {
-        
+    for (const auto &entry : dictionary)
+    {
+
         std::cout << "Product: P-" << entry.first << ", Dispensed volume: " << entry.second[0] << ", Volume remaining: " << entry.second[1] << std::endl;
-        ss <<"\"P-" << entry.first << "\":[" << to_string(entry.second[0]) << ","<<to_string(entry.second[1]) <<"]" << ",";
+        ss << "\"P-" << entry.first << "\":[" << to_string(entry.second[0]) << "," << to_string(entry.second[1]) << "]"
+           << ",";
     }
     std::string result = ss.str();
-    if (!result.empty()) {
+    if (!result.empty())
+    {
         result.pop_back();
     }
     return result;

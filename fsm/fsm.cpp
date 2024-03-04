@@ -179,7 +179,8 @@ DF_ERROR stateLoop()
         // state change, deal with new state
         if (fsmState != previousState)
         {
-            debugOutput::sendMessage("Enter state: " + stateStrings[fsmState], MSG_STATE);
+            debugOutput::sendMessage("Enter state: ===============================  " + stateStrings[fsmState] + "  =====================================", MSG_STATE);
+            // debugOutput::sendMessage("Enter state: " + stateStrings[fsmState], MSG_STATE);
             dfRet = g_stateArray[fsmState]->onEntry();
         }
         previousState = fsmState;
@@ -197,7 +198,7 @@ DF_ERROR stateLoop()
 
             if (fsmState != previousState)
             {
-                debugOutput::sendMessage("Exit state: " + stateStrings[previousState] + "\n", MSG_STATE);
+                debugOutput::sendMessage("Exit state: " + stateStrings[previousState], MSG_STATE);
                 dfRet = g_stateArray[previousState]->onExit();
             }
         }

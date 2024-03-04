@@ -153,8 +153,10 @@ DF_ERROR messageMediator::sendMessageOverIP(string msg, bool isLoggingMessage)
       catch (SocketException &e)
       {
          //  std::cout << "Connection Exception was caught:" << e.description() << "\n";
-         debugOutput::sendMessage("UI server not reachable (UI not running? or Still processing previous message?).  " + e.description() + " Attempts left: " + to_string(attempts), MSG_ERROR);
-         usleep(100000);
+         if (attempts%10 == 0){
+            debugOutput::sendMessage("UI server not reachable (UI not running? or Still processing previous message?).  " + e.description() + " Attempts left: " + to_string(attempts), MSG_ERROR);
+         }
+         usleep(100000); //0.1 seconds
          attempts--;
       }
    }
@@ -767,7 +769,6 @@ DF_ERROR messageMediator::parseCommandString()
       m_commandValue = std::stoi(number);
    }
    else if (
-      debugOutput::sendMessage("Received Message: " + sCommand, MSG_INFO);
        // single digit commands
        first_char == '0' ||
        first_char == '1' ||
@@ -800,6 +801,7 @@ DF_ERROR messageMediator::parseCommandString()
        //  first_char == ACTION_PRINTER_REACHABLE
        first_char == ACTION_QUIT)
    {
+      debugOutput::sendMessage("Received Message: " + sCommand, MSG_INFO);
       m_requestedAction = first_char;
    }
 

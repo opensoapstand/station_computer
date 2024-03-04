@@ -36,6 +36,8 @@ public:
     DF_ERROR onAction();
     DF_ERROR onExit();
 
+    DF_ERROR statusUpdateLoggingAndOverIP(bool onlyIfAllowed);
+
 private:
     int slot;
     int slot_index;

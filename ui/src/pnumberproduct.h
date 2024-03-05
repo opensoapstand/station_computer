@@ -34,8 +34,8 @@ public:
 
     double inputTextToMlConvertUnits(QString inputValueAsText);
 
-    QString getAwsProductId(); // this is a combo of dispenser AND product.
-
+    QString getAwsProductIdSuffix();
+    QString getAwsProductId(); 
     QString getFullVolumeCorrectUnits(bool addUnits);
 
     void setVolumeRemainingUserInput(QString volumeRemainingAsUserText); // productt

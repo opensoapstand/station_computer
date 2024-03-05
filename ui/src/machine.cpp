@@ -108,15 +108,16 @@ void machine::reboot()
 
 void machine::loadBottle()
 {
-    if (m_buy_bottle_1)
+    // default is pnumber 0;
+    if (m_pNumber_bottle_1 != DUMMY_PNUMBER)
     {
-        m_pnumberproducts[m_buy_bottle_1].loadProductProperties();
-        m_pnumberproducts[m_buy_bottle_1].setSizeUnit(getSizeUnit());
+        getProductByPNumber(m_pNumber_bottle_1)->loadProductProperties();
+        getProductByPNumber(m_pNumber_bottle_1)->setSizeUnit(getSizeUnit());
     }
-    if (m_buy_bottle_2)
+    if (m_pNumber_bottle_2)
     {
-        m_pnumberproducts[m_buy_bottle_2].loadProductProperties();
-        m_pnumberproducts[m_buy_bottle_2].setSizeUnit(getSizeUnit());
+        getProductByPNumber(m_pNumber_bottle_2)->loadProductProperties();
+        getProductByPNumber(m_pNumber_bottle_2)->setSizeUnit(getSizeUnit());
     }
 }
 
@@ -172,7 +173,7 @@ bool machine::isProductVolumeInContainer(int pnumber)
 
     if (getEmptyContainerDetectionEnabled())
     {
-        retval = m_pnumberproducts[pnumber].getVolumeRemaining() > CONTAINER_EMPTY_THRESHOLD_ML;
+        retval = getProductByPNumber(pnumber)->getVolumeRemaining() > CONTAINER_EMPTY_THRESHOLD_ML;
     }
     return retval;
 }
@@ -255,25 +256,19 @@ pnumberproduct *machine::getProductFromMenuOption(int productOption)
 
     int pnumber = dispenseProductsMenuOptions[productOption - 1];
     qDebug() << "Get product with pnumber " << pnumber << "from product option:  " << productOption;
-    return &m_pnumberproducts[pnumber];
+    return getProductByPNumber(pnumber);
 }
 
 pnumberproduct *machine::getSlotBaseProduct(int slot)
 {
     int basePNumber = m_slots[slot - 1].getBasePNumber();
-    return &m_pnumberproducts[basePNumber];
-}
-
-pnumberproduct *machine::getProductByPNumber(int pnumber)
-{
-    qDebug() << pnumber;
-    return &m_pnumberproducts[pnumber];
+    return getProductByPNumber(basePNumber);
 }
 
 void machine::setSelectedProductByOption(int productOption)
 {
     int pnumber = dispenseProductsMenuOptions[productOption - 1];
-    m_selectedProduct = &m_pnumberproducts[pnumber];
+    m_selectedProduct = getProductByPNumber(pnumber);
 }
 
 bool machine::getIsOptionAvailable(int productOption)
@@ -348,7 +343,7 @@ pnumberproduct *machine::getSelectedBottle()
 void machine::setSelectedBottle(int pnumber)
 {
     // pnumber is the index. Clever... until you have one million options....
-    m_selectedBottle = &m_pnumberproducts[pnumber];
+    m_selectedBottle = getProductByPNumber(pnumber);
 }
 
 void machine::resetSelectedBottle()
@@ -370,7 +365,7 @@ bool machine::hasSelectedBottle()
 
 bool machine::hasBuyBottleOption()
 {
-    if (m_buy_bottle_1 || m_buy_bottle_2)
+    if (m_pNumber_bottle_1 || m_pNumber_bottle_2)
     {
         return true;
     }
@@ -378,6 +373,28 @@ bool machine::hasBuyBottleOption()
     {
         return false;
     }
+}
+
+QString machine::getSelectedProductAwsProductId(){
+    return getAwsProductId(getSelectedProduct()->getPNumber());
+}
+
+QString machine::getAwsProductId(int pnumber){
+    
+    QString productId = getMachineId() + "_" + QString::number(pnumber);
+    QString suffix = getProductByPNumber(pnumber)->getAwsProductIdSuffix();
+
+    if (!suffix.isEmpty()){
+        productId += "_" + suffix;
+    }
+    qDebug()<< "Product Id for P-" + QString::number(pnumber) + QString(": ") + productId;
+    return productId;
+}
+
+pnumberproduct *machine::getProductByPNumber(int pnumber)
+{
+    //qDebug() << pnumber;
+    return &m_pnumberproducts[pnumber];
 }
 
 pnumberproduct *machine::getSelectedProduct()
@@ -388,7 +405,7 @@ pnumberproduct *machine::getSelectedProduct()
 void machine::setSelectedProduct(int pnumber)
 {
     // pnumber is the index. Clever... until you have one million options....
-    m_selectedProduct = &m_pnumberproducts[pnumber];
+    m_selectedProduct = getProductByPNumber(pnumber);
 }
 
 dispenser_slot *machine::getSlotByPosition(int slotPosition)
@@ -645,8 +662,7 @@ double machine::getPriceWithDiscount(double price)
 double machine::getPriceCorrectedForSelectedSize(int pnumber, bool maximumVolumeForCustom)
 {
     double price;
-    QVector<int> all_pnumbers = getAllUsedPNumbersFromSlots();
-    pnumberproduct *product = getProductByPNumber(all_pnumbers[pnumber]);
+    pnumberproduct *product = getProductByPNumber(pnumber);
     if (product->is_valid_size_selected())
     {
         qDebug() << "Selected size" << product->getSelectedSize();
@@ -1149,8 +1165,8 @@ bool machine::loadMachineParameterFromDb()
         &m_size_unit,
         &m_screen_sleep_time24h,
         &m_screen_wakeup_time24h,
-        &m_buy_bottle_1,
-        &m_buy_bottle_2,
+        &m_pNumber_bottle_1,
+        &m_pNumber_bottle_2,
         &m_portal_base_url,
         &m_enable_offline_payment);
 

@@ -1208,7 +1208,7 @@ void page_maintenance_dispenser::on_pushButton_set_restock_volume_clicked()
 
 void page_maintenance_dispenser::sendRestockToCloud()
 {
-    QString curl_params = "pid=" + p_page_idle->thisMachine->getSelectedProduct()->getAwsProductId() + "&volume_full=" + p_page_idle->thisMachine->getSelectedProduct()->getFullVolumeCorrectUnits(false);
+    QString curl_params = "pid=" + p_page_idle->thisMachine->getSelectedProductAwsProductId() + "&volume_full=" + p_page_idle->thisMachine->getSelectedProduct()->getFullVolumeCorrectUnits(false);
     
     std::tie(res,readBuffer, http_code) = p_page_idle->thisMachine->sendRequestToPortal(PORTAL_RESET_STOCK, "POST", curl_params, "PAGE_MAINTENANCE_DISPENSER");
     // error code 6 (cannot resolve host) showed up when not connected to wifi. Make distinct!
@@ -1241,7 +1241,7 @@ void page_maintenance_dispenser::restockTransactionToFile(QString curl_params)
 void page_maintenance_dispenser::update_changes_to_portal()
 {
     qDebug() << "update portal clicked ";
-    QString curl_params = "productId=" + p_page_idle->thisMachine->getSelectedProduct()->getAwsProductId() + "&source=soapstandStation" +
+    QString curl_params = "productId=" + p_page_idle->thisMachine->getSelectedProductAwsProductId() + "&source=soapstandStation" +
                           "&price_small=" + QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePrice(SIZE_SMALL_INDEX)) +
                           "&price_medium=" + QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePrice(SIZE_MEDIUM_INDEX)) +
                           "&price_large=" + QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePrice(SIZE_LARGE_INDEX)) +

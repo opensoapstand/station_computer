@@ -596,8 +596,9 @@ void pnumberproduct::setPlu(int sizeIndex, QString plu)
     bool success = m_db->updateTableProductsWithText(getPNumber(), column_name, plu);
 }
 
-QString pnumberproduct::getAwsProductId()
+QString pnumberproduct::getAwsProductIdSuffix()
 {
+    // The table value can absolutely be left empty. Only if for whatever reason (e.g. twice the same product in a machine) there needs to be a distinction, the column can have a value. Originally, all products linked to a specific machine had a unique 32bit number.(e.g. 81a3a30e-1283-4bef-bd16-d37e2fead410)
     return m_aws_product_id;
 }
 

@@ -174,7 +174,9 @@ void page_end::sendCompleteOrderToCloud(QString paymentMethod)
 {
     QString MachineSerialNumber = p_page_idle->thisMachine->getMachineId();
     QString productUnits = p_page_idle->thisMachine->getSizeUnit();
-    QString productId = p_page_idle->thisMachine->getSelectedProduct()->getAwsProductId();
+    
+    QString productId = p_page_idle->thisMachine->getSelectedProductAwsProductId();
+
     QString contents = p_page_idle->thisMachine->getSelectedProduct()->getProductName();
     QString quantity_requested = QString::number(p_page_idle->thisMachine->getSelectedProduct()->getVolumeOfSelectedSize());
     char drinkSize = p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar();

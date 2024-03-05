@@ -204,7 +204,7 @@ void page_offline_payment::apply_code(QString promocode){
 
 void page_offline_payment::setupQrOrder()
 {
-    QString productId = p_page_idle->thisMachine->getSelectedProduct()->getAwsProductId();
+    QString productId = p_page_idle->thisMachine->getSelectedProductAwsProductId();
     QString quantity_requested = p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(false, false);
     char drinkSize = p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar();
     double originalPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();

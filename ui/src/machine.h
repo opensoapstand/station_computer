@@ -45,6 +45,7 @@ typedef enum ActivePaymentMethod
     tap_canada,
     tap_usa,
     receipt_printer,
+    offline_payment
 } ActivePaymentMethod;
 
 class product; //  forward declaration.

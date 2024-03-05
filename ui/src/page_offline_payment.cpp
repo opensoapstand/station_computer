@@ -34,10 +34,6 @@ page_offline_payment::page_offline_payment(QWidget *parent) : QWidget(parent),
     paymentEndTimer = new QTimer(this);
     paymentEndTimer->setInterval(1000);
     connect(paymentEndTimer, SIGNAL(timeout()), this, SLOT(onTimeoutTick()));
-
-
-    showErrorTimer = new QTimer(this);
-    connect(showErrorTimer, SIGNAL(timeout()), this, SLOT(showErrorTimerPage()));
     
     connect(ui->pushButton_promo_input, SIGNAL(clicked()), this, SLOT(on_lineEdit_promo_codeInput_clicked()));
 
@@ -128,7 +124,7 @@ void page_offline_payment::showEvent(QShowEvent *event)
     ui->lineEdit_promo_code->setProperty("class", "promoCode");
     ui->lineEdit_promo_code->setStyleSheet(styleSheet);
 
-
+    ui->lineEdit_promo_code->clear();
     ui->lineEdit_promo_code->show();
     ui->pushButton_promo_input->show(); 
  
@@ -237,20 +233,12 @@ void page_offline_payment::setupQrOrder()
     // create qr code graphics
     p_page_idle->thisMachine->hasMixing() ? paintQR(painter, QSize(451, 451), qrdata, QColor("white")) : paintQR(painter, QSize(360, 360), qrdata, QColor("white"));
     ui->label_qrCode->setPixmap(map);
-    // ui->label_qrCode->show();
     ui->label_product_information->show();
     ui->label_product_price->show();
     ui->label_title->show();
     ui->label_scan->show();
     ui->label_steps->show();
-    // showErrorTimer->start();
     
-}
-
-void page_offline_payment::showErrorTimerPage()
-{
-    qDebug() << "show error page";
-    hideCurrentPageAndShowProvided(p_page_wifi_error);
 }
 
 
@@ -391,7 +379,6 @@ void page_offline_payment::resetPaymentPage()
 {
     p_page_idle->thisMachine->resetTransactionLogging();
     paymentEndTimer->stop();
-    showErrorTimer->stop();
 }
 
 std::string page_offline_payment::toSvgString(const QrCode &qr, int border)
@@ -425,20 +412,6 @@ std::string page_offline_payment::toSvgString(const QrCode &qr, int border)
     return sb.str();
 }
 
-// Prints the given QrCode object to the console.
-void page_offline_payment::printQr(const QrCode &qr)
-{
-    int border = 4;
-    for (int y = -border; y < qr.getSize() + border; y++)
-    {
-        for (int x = -border; x < qr.getSize() + border; x++)
-        {
-            std::cout << (qr.getModule(x, y) ? "##" : "  ");
-        }
-        std::cout << std::endl;
-    }
-    std::cout << std::endl;
-}
 
 void page_offline_payment::paintQR(QPainter &painter, const QSize sz, const QString &data, QColor fg)
 {

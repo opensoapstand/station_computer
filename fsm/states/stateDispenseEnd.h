@@ -71,7 +71,7 @@ private:
     void sendEndTransactionMessageToUI();
     
     // std::string getMachineID();
-    std::string getProductID(int slot);
+    // std::string getProductID(int slot);
     std::string mapToString(const std::map<std::string, std::vector<double>>& dictionary);
     double getFinalPrice();
 

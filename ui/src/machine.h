@@ -161,6 +161,9 @@ public:
     void setSelectedProduct(int pnumber);
     pnumberproduct *getSelectedProduct();
 
+    QString getSelectedProductAwsProductId();
+    QString getAwsProductId(int pnumber);
+    
     bool hasReceiptPrinter();
     void getPrinterStatusFromDb(bool *isOnline, bool *hasPaper);
     void getTemperatureFromController();
@@ -268,8 +271,8 @@ public:
     QString m_payment;
     int m_screen_sleep_time24h;
     int m_screen_wakeup_time24h;
-    int m_buy_bottle_1;
-    int m_buy_bottle_2;
+    int m_pNumber_bottle_1=0;
+    int m_pNumber_bottle_2=0;
     QString m_portal_base_url;
     int m_enable_offline_payment;
 

@@ -126,6 +126,7 @@ void page_product_menu::showEvent(QShowEvent *event)
     ui->label_base_products_section_bg->setStyleSheet(styleSheet);
     ui->label_base_products_section_title->setStyleSheet(styleSheet);
     ui->label_dispense_products_section_title->setStyleSheet(styleSheet);
+    ui->label_dispense_products_section_bg->setStyleSheet(styleSheet);
 
     for (int slot_index = 0; slot_index < p_page_idle->thisMachine->getSlotCount(); slot_index++)
     {

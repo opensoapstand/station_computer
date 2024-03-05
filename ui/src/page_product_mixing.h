@@ -94,6 +94,7 @@ public:
     void checkMixRatiosLevel();
     void resetMixRatiosLevel();
     void updateMixRatiosLevel();
+    void toggleResetButton();
 signals:
     void paymentTotal(string, string, string);
 
@@ -283,7 +284,7 @@ private:
     page_payment_tap_tcp *p_page_payment_tap_tcp;
     page_payment_tap_serial *p_page_payment_tap_serial;
     statusbar *p_statusbar;
-
+    bool needResetButton = false;
     QTimer *selectIdleTimer;
     int _selectIdleTimeoutSec;
 

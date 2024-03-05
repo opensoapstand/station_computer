@@ -49,13 +49,13 @@ page_product->pushButton_back,←BACK
 
 #page_product_mixing
 page_product_mixing->pushButton_back,←BACK
-page_product_mixing->label_customize_drink,1. Customize Your Drink
+page_product_mixing->label_customize_drink,1. Personalize Your Beverage
 page_product_mixing->label_select_quantity,2. Select Quantity
 page_product_mixing->label_additives_background,Non-customizable product
 page_product_mixing->label_product_ingredients_title,Curated Ingredients
 page_product_mixing->pushButton_continue,Continue
 page_product_mixing->custom_volume,Custom Volume
-page_product_mixing->pushButton_recommended,Recommended
+page_product_mixing->pushButton_recommended,Reset
 page_product_mixing->pushButton_order_sample,Try a \n sample
 
 # page_product_overview

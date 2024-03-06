@@ -282,6 +282,7 @@ void page_init::initiateTapPayment()
     }
     case tap_canada:
     {
+        qDebug() << "In tap canada";
         page_payment_tap_serial paymentSerialObject;
         paymentSerialObject.tap_serial_initiate();
         break;

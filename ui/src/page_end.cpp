@@ -93,6 +93,8 @@ void page_end::showEvent(QShowEvent *event)
     is_in_page_end = true;
     // p_page_idle->setDiscountPercentage(0.0);
 
+    waitToFinishTransactionInFsm();
+
 }
 
 // void page_end::fsmReceiveFinalDispensedVolume(double dispensed)
@@ -102,7 +104,53 @@ void page_end::showEvent(QShowEvent *event)
 //     updateDispensedVolumeLabel();    
 // }
 
-void page_end::fsmReceiveFinalTransactionMessage(QString start_time, QString end_time, double button_press_duration, double button_press_count, double volume_dispensed,QString volumeDispensedMixProduct)
+void page_end::waitToFinishTransactionInFsm(){
+    qDebug() << "Wait for controller to finish transaction.";
+    ActivePaymentMethod paymentMethod = p_page_idle->thisMachine->getActivePaymentMethod();
+
+    ui->label_volume_dispensed_ml->setText("");
+    switch(paymentMethod){
+        case 0:
+        {
+            //QR Payment - Payment Method
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "qr");
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "qr2");
+        }
+        case 1:{
+            //Tap Canada Payment - Payment Method
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "qr");
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "qr2");
+            break;
+        }
+        case 2:{
+            //Tap USA Payment - Payment Method
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "qr");
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "qr2");
+            break;
+        }
+        case 3:{
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "hasReceiptPrinter");
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "hasReceiptPrinter2");
+            break;
+        }
+        default:{
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "any_pay");
+            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "any_pay2");
+            break;
+        }
+    }
+
+    is_in_state_thank_you = true;
+
+    is_controller_finished = false;
+    exitIsForceable = false;
+  
+    _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
+    thankYouEndTimer->start();
+  
+}
+
+void page_end::fsmReceiveDispenseAftermath(QString start_time, QString end_time, double button_press_duration, double button_press_count, double volume_dispensed,QString volumeDispensedMixProduct)
 {
     p_page_idle->thisMachine->getSelectedSlot()->setDispenseStartTime(start_time);
     p_page_idle->thisMachine->getSelectedSlot()->setDispenseEndTime(end_time);
@@ -110,10 +158,41 @@ void page_end::fsmReceiveFinalTransactionMessage(QString start_time, QString end
     p_page_idle->thisMachine->getSelectedSlot()->setButtonPressCount(button_press_count);
     p_page_idle->thisMachine->getSelectedProduct()->setVolumeDispensedMl(volume_dispensed);
     p_page_idle->thisMachine->getSelectedProduct()->setVolumeDispensedMixedProduct(volumeDispensedMixProduct);    
-    qDebug() << "In page end" << is_in_page_end;
+    qDebug() << "Received final transaction details from controller. In page end?:" << is_in_page_end;
     // maintenance mode dispenses also get processed here... Make sure never to trigger page_end end.
     if(is_in_page_end){
-        waitToFinishTransactionInFsm();
+        //waitToFinishTransactionInFsm();
+
+        is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
+        switch(paymentMethod){
+            case 0:
+            {
+                //QR Payment - Payment Method
+                sendDispenseEndToCloud();
+            }
+            case 1:{
+                //Tap Canada Payment - Payment Method
+                sendCompleteOrderToCloud(PAYMENT_TAP_CANADA);
+                break;
+            }
+            case 2:{
+                //Tap USA Payment - Payment Method
+                sendCompleteOrderToCloud(PAYMENT_TAP_USA);
+                break;
+            }
+            case 3:{
+                is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
+                sendCompleteOrderToCloud(PAYMENT_RECEIPT_PRINTER);
+                break;
+            }
+            default:{
+                is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = true;
+                sendCompleteOrderToCloud(PAYMENT_RECEIPT_PRINTER);
+                break;
+            }
+        }
+        _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
+        updateDispensedVolumeLabel();
     }
 }
 
@@ -239,7 +318,8 @@ void page_end::controllerFinishedTransaction()
     {
         qDebug() << "Thank you page: Controller msg: All done for transaction.";
         is_controller_finished = true;
-        _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
+        //_thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
+        //thankYouEndTimer->start();
     }
     else
     {
@@ -260,10 +340,13 @@ void page_end::onThankyouTimeoutTick()
     }
     else
     {
-        qDebug() << "page end: timemout. forceable exit = true";
+        // qDebug() << "page end: timemout. forceable exit = true";
         finishHandler();
+
         // once finishHandler is activated "unsuccessfully" make sure, next time it will finish for sure!
         exitIsForceable = true;
+
+        // 
         _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
     }
 }
@@ -284,83 +367,30 @@ void page_end::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 
 void page_end::finishHandler()
 {
-    // transactionLogging = "";
     p_page_idle->thisMachine->resetTransactionLogging();
-    if ((is_controller_finished && is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER) || exitIsForceable)
-    {
-        if (exitIsForceable)
-        {
-            qDebug() << "ERROR?!:Forced exit. controller ok?: " << is_controller_finished << " is payment finished?:" << is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER;
-        }
+
+
+    if (exitIsForceable){
+        qDebug() << "ERROR?!:Forced exit. controller ok?: " << is_controller_finished << " is payment finished?:" << is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER;
 
         hideCurrentPageAndShowProvided(p_page_idle);
+    }else if ((is_controller_finished && is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER) || )
+    {
+        
+        hideCurrentPageAndShowProvided(p_page_idle);
+        
+
     }
     else
     {
-
+        
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "finish_transaction");
         ui->label_message_2->hide();
     }
+
 }
 
 void page_end::on_pushButton_contact_clicked()
 {
     hideCurrentPageAndShowProvided(p_page_sendFeedback);
-}
-
-void page_end::waitToFinishTransactionInFsm(){
-    qDebug() << "Wait for finish";
-    ActivePaymentMethod paymentMethod = p_page_idle->thisMachine->getActivePaymentMethod();
-
-    ui->label_volume_dispensed_ml->setText("");
-    switch(paymentMethod){
-        case 0:
-        {
-            //QR Payment - Payment Method
-            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "qr");
-            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "qr2");
-            is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
-            sendDispenseEndToCloud();
-        }
-        case 1:{
-            //Tap Canada Payment - Payment Method
-            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "qr");
-            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "qr2");
-            is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
-            sendCompleteOrderToCloud(PAYMENT_TAP_CANADA);
-            break;
-        }
-        case 2:{
-            //Tap USA Payment - Payment Method
-            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "qr");
-            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "qr2");
-            is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
-            sendCompleteOrderToCloud(PAYMENT_TAP_USA);
-            break;
-        }
-        case 3:{
-            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "hasReceiptPrinter");
-            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "hasReceiptPrinter2");
-            is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
-            sendCompleteOrderToCloud(PAYMENT_RECEIPT_PRINTER);
-            break;
-        }
-        default:{
-            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message, "any_pay");
-            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_message_2, "any_pay2");
-            is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER = false;
-            sendCompleteOrderToCloud(PAYMENT_RECEIPT_PRINTER);
-            break;
-        }
-    }
-
-    is_in_state_thank_you = true;
-
-    is_controller_finished = false;
-    exitIsForceable = false;
-  
-    _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
-    thankYouEndTimer->start();
-
-    updateDispensedVolumeLabel();
 }

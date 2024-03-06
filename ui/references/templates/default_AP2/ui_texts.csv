@@ -56,22 +56,24 @@ page_product_mixing->label_product_ingredients_title,Curated Ingredients
 page_product_mixing->pushButton_continue,Continue
 page_product_mixing->custom_volume,Custom Volume
 page_product_mixing->pushButton_recommended,Reset
+page_product_mixing->label_select_quantity_warning,*Please Select a Quantity
 page_product_mixing->pushButton_order_sample,Try a \n sample
 
 # page_product_overview
-page_product_overview->label_page_title,Your Order
-page_product_overview->label_checkout_title,Checkout
+page_product_overview->label_page_title,Checkout
+page_product_overview->label_checkout_title,
 page_product_overview->label_invoice_size_title,Size: 
 page_product_overview->label_invoice_coupon_title,Coupon Code
 page_product_overview->pushButton_select_product_page,←BACK
 page_product_overview->label_total,Total Amount
-page_product_overview->pushButton_continue->proceed_free,Proceed
-page_product_overview->pushButton_continue->proceed_pay,Proceed to Pay
+page_product_overview->pushButton_continue->proceed_free,Continue
+page_product_overview->pushButton_continue->proceed_pay,Continue
 page_product_overview->pushButton_continue,Continue
 page_product_overview->lineEdit_promo_code->valid,Coupon Code Valid
 page_product_overview->lineEdit_promo_code->invalid,Coupon Code Invalid
 page_product_overview->lineEdit_promo_code->ineligible,Coupon Code Not Eligible At This Station
 page_product_overview->lineEdit_promo_code->invite,Tap here to enter Coupon Code
+page_product_overview->lineEdit_promo_code->offline,Network Error: Coupon Code Temporary Unavailable
 page_product_overview->pushButton_continue->proceed_pay_tap,Pay with TAP
 page_product_overview->pushButton_continue->proceed_pay_qr,Pay with QR
 page_product_overview->pushButton_continue_additional->proceed_pay_qr,Pay with QR

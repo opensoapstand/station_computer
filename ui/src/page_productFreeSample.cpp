@@ -103,6 +103,7 @@ void page_product_freeSample::showEvent(QShowEvent *event)
     statusbarLayout->setAlignment(Qt::AlignBottom | Qt::AlignVCenter);
     p_keyboard->registerCallBack(std::bind(&page_product_freeSample::enterButtonPressed, this));
 
+    ui->label_gif->hide();
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
 
     QString coupon_icon_path = p_page_idle->thisMachine->getTemplatePathFromName(COUPON_ICON_UNAVAILABLE_PATH);
@@ -169,6 +170,16 @@ void page_product_freeSample::showEvent(QShowEvent *event)
     
     _selectIdleTimeoutSec = 400;
     selectIdleTimer->start(1000);
+    CURLcode res;
+    long http_code;
+    std::tie(res,readBuffer, http_code) =  p_page_idle->thisMachine->sendRequestToPortal(PORTAL_PING, "GET", "", "PAGE_PRODUCT_OVERVIEW");
+
+    if (res != CURLE_OK)
+    {
+        p_page_idle->thisMachine->setCouponState(disabled);
+    }else{
+        p_page_idle->thisMachine->setCouponState(enabled_not_set);
+    }
     reset_and_show_page_elements();
     
 }
@@ -280,6 +291,11 @@ void page_product_freeSample::reset_and_show_page_elements()
     case (disabled):
     {
         qDebug() << "Coupon state: Disabled";
+        ui->pushButton_promo_input->hide();
+        ui->lineEdit_promo_code->show();
+        p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_promo_code, "promoCode", PAGE_PRODUCT_OVERVIEW_CSS);
+        QString promo_code_input_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "lineEdit_promo_code->offline");
+        ui->lineEdit_promo_code->setText(promo_code_input_text);
     }
     break;
     case (enabled_processing_input):

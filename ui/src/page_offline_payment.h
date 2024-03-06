@@ -88,7 +88,6 @@ private slots:
     void onTimeoutTick();
     void idlePaymentTimeout();
     void on_pushButton_refresh_clicked();
-    void showErrorTimerPage();
     QString generateCode(QString str);
     void on_lineEdit_promo_codeInput_clicked();
 
@@ -108,9 +107,6 @@ private:
     int _pageTimeoutCounterSecondsLeft;
     QTimer* paymentEndTimer;
 
-    int _qrProcessedPeriodicalCheckSec;
-    QTimer* qrPeriodicalCheckTimer;
-    QTimer* showErrorTimer;
 
     void printQr(const QrCode &qr);
     std::string toSvgString(const QrCode &qr, int border);

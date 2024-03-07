@@ -72,7 +72,7 @@ page_product_overview->pushButton_continue,Continue
 page_product_overview->lineEdit_promo_code->valid,Coupon Code Valid
 page_product_overview->lineEdit_promo_code->invalid,Coupon Code Invalid
 page_product_overview->lineEdit_promo_code->ineligible,Coupon Code Not Eligible At This Station
-page_product_overview->lineEdit_promo_code->invite,Tap here to enter Coupon Code
+page_product_overview->lineEdit_promo_code->invite,Tap here to enter your Coupon Code
 page_product_overview->lineEdit_promo_code->offline,Network Error: Coupon Code Temporary Unavailable
 page_product_overview->pushButton_continue->proceed_pay_tap,Pay with TAP
 page_product_overview->pushButton_continue->proceed_pay_qr,Pay with QR
@@ -81,13 +81,18 @@ page_product_overview->label_selected_volume->custom_volume,Custom Volume (maxim
 
 # page_dispenser
 page_dispenser->label_to_refill,To Refill
-page_dispenser->label_instructions_container,01. The selected spout is indicated with a light<br><br>02. Hold your bottle into the spout<br><br>03. Keep button pressed to dispense
+page_dispenser->label_instructions_container,01. The selected spout is indicated with a light<br><br>02. Bring your bottle up to the spout<br><br>03. Press and hold button to refill
 page_dispenser->label_volume_dispensed,Volume Dispensed
 page_dispenser->pushButton_problems,Report Issue
 page_dispenser->label_product_selected->custom_volume,Custom (max: %1)
 page_dispenser->label_dispense_message->priming,Please press the button for up<br>to 15 seconds before the<br>product starts dispensing.
 page_dispenser->label_dispense_message->out_of_stock,It appears we're out of stock.
 page_dispenser->label_dispense_message->needs_attention,Station technical issue, Please<br>tap the Report Issue button.
+page_dispenser->msgBox_problems->qr_tap,<p align=center><br><br>Oops! Something went wrong.<br> <br> The station does not automatically dispense. Please ensure to press and hold the indicated button to refill your bottle.<br> <br> Still not working?<br>By selecting Help, the refilling process will end and you will only be charged for the dispensed amount. <br></p>
+page_dispenser->msgBox_problems->default,<p align=center><br><br>Oops! Something went wrong.<br> <br> The station does not automatically dispense. Please ensure to press and hold the indicated button to refill your bottle.<br> <br> Still not working?<br>By selecting Help, the refilling process will end and you will only be charged for the dispensed amount. <br></p>
+page_dispenser->msgBox_problems->shopify,<p align=center><br><br>Oops! Something went wrong.<br> <br> The station does not automatically dispense. Please ensure to press and hold the indicated button to refill your bottle.<br> <br> Still not working?<br></p>
+page_dispenser->msgBox_abort->qr_tap,<p align=center><br><br>Are you sure, you want to cancel?<br><br>To refill, please press the lit button on the station. <br><br> If you press Yes, you will not be charged for the order.<br></p>
+page_dispenser->msgBox_abort->default,<p align=center><br><br>Are you sure, you want to cancel?<br><br>To refill, please press the lit button on the station.<br></p>
 
 # page_end
 page_end->pushButton_contact,Feedback
@@ -135,7 +140,7 @@ page_sendFeedback->pushButton_send,Send
 page_sendFeedback->label_contact_info,Contact Information<br>Phone: (+1) 604-283-5311<br>Email: hello@aelen.com
 
 # page_qr_payment
-page_qr_payment->pushButton_previous_page,←BACK
+page_qr_payment->pushButton_previous_page,Cancel
 page_qr_payment->label_title->pay_by_phone,Scan to Pay
 page_qr_payment->label_title->almost_there,Processing Payment
 page_qr_payment->label_scan->label_scan_1,QR Pay
@@ -169,9 +174,9 @@ page_product_freeSample->lineEdit_promo_code->valid,Coupon Code Valid
 page_product_freeSample->lineEdit_promo_code->invalid,Coupon Code Invalid
 page_product_freeSample->lineEdit_promo_code->ineligible,Coupon Code Not Eligible At This Station
 page_product_freeSample->lineEdit_promo_code->network_error,Network error, could not verify. Try again.
-page_product_freeSample->lineEdit_promo_code->invite,Tap here to enter Coupon Code
+page_product_freeSample->lineEdit_promo_code->invite,Tap here to enter your Coupon Code
+page_product_freeSample->lineEdit_promo_code->offline,Network Error: Coupon Code Temporary Unavailable
 page_product_freeSample->label_page_title,Scan QR
-page_product_freeSample->label_invoice_title,Free Sample
 page_product_freeSample->label_invoice_size_title,Size: 
 page_product_freeSample->label_invoice_coupon_title,Coupon Code
 page_product_freeSample->pushButton_select_product_page,←BACK
@@ -182,7 +187,7 @@ page_product_freeSample->pushButton_continue->proceed_pay_tap,Pay with TAP
 page_product_freeSample->pushButton_continue->proceed_pay_qr,Pay with QR
 page_product_freeSample->pushButton_continue_additional->proceed_pay_qr,Pay with QR
 page_product_freeSample->label_selected_volume->custom_volume,Custom Volume (maximum: %1)
-page_product_freeSample->label_steps,<ol><li><span class='tab'></span>Scan QR to get your coupon.</li>        <li><span class='tab'></span>Enter the coupon code.</li>        <li><span class='tab'></span>Enjoy your Sip!</li></ol>  
+page_product_freeSample->label_steps,<ol><li><span class='tab'></span>Scan QR to get your coupon code.</li>        <li><span class='tab'></span>Enter your coupon code below.</li>        <li><span class='tab'></span>Enjoy your Sip!</li></ol>  
 
 
 # input_widget

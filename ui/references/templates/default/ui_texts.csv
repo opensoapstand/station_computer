@@ -78,7 +78,7 @@ page_product_overview->lineEdit_promo_code->valid,Promo Code Valid
 page_product_overview->lineEdit_promo_code->invalid,Promo Code Invalid
 page_product_overview->lineEdit_promo_code->ineligible,Promo Code Not Eligible At This Station
 page_product_overview->lineEdit_promo_code->network_error,Network error, could not verify. Try again.
-page_product_overview->lineEdit_promo_code->invite,Tap here to enter Promo Code / Coupon
+page_product_overview->lineEdit_promo_code->invite,Tap here to enter your Coupon Code
 page_product_overview->lineEdit_promo_code->offline,Network Error: Coupon Code Temporary Unavailable
 page_product_overview->label_selected_volume->custom_volume,Custom Volume<br>(maximum: %1)
 page_product_overview->pushButton_continue->proceed_free,Proceed
@@ -102,8 +102,8 @@ page_dispenser->label_volume_dispensed,Hold button until dispensing stops
 page_dispenser->msgBox_problems->qr_tap,<p align=center><br><br>If the pump is working and you tried to dispense for more than 15s without success, the container is probably empty or the pump is not primed. Seek assistance or report the issue. <br> <br> If no green light is on at any dispenser buttons, please press no and check again as the software will attempt to repair the issue. <br> <br> Are you sure you want to stop dispensing and go to the report page?<br><br><br>You will only be charged for the dispensed amount<br></p>
 page_dispenser->msgBox_problems->default,<p align=center><br>If the pump is working and you tried to dispense for more than 15s without success, the container is probably empty or the pump is not primed. Seek assistance or report the issue. <br> <br> If no green light is on at any dispenser buttons, please press no and check again as the software will attempt to repair the issue. <br> <br> Are you sure you want to stop dispensing and go to the report page?<br><br><br>You will only be charged for the dispensed amount<br></p>
 page_dispenser->msgBox_problems->shopify,<p align=center><br>If the pump is working and you tried to dispense for more than 15s without success, the container is probably empty or the pump is not primed. Seek assistance or report the issue. <br> <br> If no green light is on at any dispenser buttons, please press no and check again as the software will attempt to repair the issue. <br> <br> Are you sure you want to stop dispensing and go to the report page?<br><br></p>
-page_dispenser->msgBox_abort->qr_tap,<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine. <br><br> If you press Yes, you will not be charged for the order.<br></p>
-page_dispenser->msgBox_abort->default,<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine.<br></p>
+page_dispenser->msgBox_abort->qr_tap,<p align=center><br><br>Are you sure, you want to cancel?<br><br>To refill, please press the lit button on the station. <br><br> If you press Yes, you will not be charged for the order.<br></p>
+page_dispenser->msgBox_abort->default,<p align=center><br><br>Are you sure, you want to cancel?<br><br>To refill, please press the lit button on the station.<br></p>
 
 #################### page_end
 page_end->pushButton_contact,Provide Feedback
@@ -152,8 +152,8 @@ page_qr_payment->pushButton_previous_page,<- back
 page_qr_payment->label_product_price->fixed_size,$%1
 page_qr_payment->label_product_price->custom_size,Pre-authorize $%1
 page_qr_payment->label_product_information->volume_up_to, volume max 
-page_qr_payment->msgBox_cancel->default,<p align=center><br><br><h1>Cancel order?</h1><br><br><span style="color: red;">Do not pay</span> cancelled orders if you scanned the QR code<br><br>It can take 30 seconds for dispensing to start after paying <br><br></p>
-page_qr_payment->msgBox_refund->default,<p align=center><br><br><h1>Cancel order?</h1></p><p align=left><br><br><ul><li><span style="color: red;">Do not pay</span> cancelled orders if you scanned the QR code</li><li>Refunds for cancelled/invalid orders will be issued within 48 hours</li></ul><br></p>
+page_qr_payment->msgBox_cancel->default,<p align=center><br><br><h1>Cancel Payment?</h1><br><br><span style="color: red;">Do not pay</span> cancelled orders if you scanned the QR code<br><br>It can take 30 seconds for dispensing to start after paying <br><br></p>
+page_qr_payment->msgBox_refund->default,<p align=center><br><br><h1>Cancel Payment?</h1></p><p align=left><br><br><ul><li><span style="color: red;">Do not pay</span> cancelled orders if you scanned the QR code</li><li>Refunds for cancelled/invalid orders will be issued within 48 hours</li></ul><br></p>
 
 #################### page_offline_payment
 page_offline_payment->label_title->pay_by_phone,pay by phone
@@ -166,8 +166,8 @@ page_offline_payment->pushButton_previous_page,<- back
 page_offline_payment->label_product_price->fixed_size,$%1
 page_offline_payment->label_product_price->custom_size,Pre-authorize $%1
 page_offline_payment->label_product_information->volume_up_to, volume max 
-page_offline_payment->msgBox_cancel->default,<p align=center><br><br><h1>Cancel order?</h1><br><br><span style="color: red;">Do not pay</span> cancelled orders if you scanned the QR code<br><br>It can take 30 seconds for dispensing to start after paying <br><br></p>
-page_offline_payment->msgBox_refund->default,<p align=center><br><br><h1>Cancel order?</h1></p><p align=left><br><br><ul><li><span style="color: red;">Do not pay</span> cancelled orders if you scanned the QR code</li><li>Refunds for cancelled/invalid orders will be issued within 48 hours</li></ul><br></p>
+page_offline_payment->msgBox_cancel->default,<p align=center><br><br><h1>Cancel Payment?</h1><br><br><span style="color: red;">Do not pay</span> cancelled orders if you scanned the QR code<br><br>It can take 30 seconds for dispensing to start after paying <br><br></p>
+page_offline_payment->msgBox_refund->default,<p align=center><br><br><h1>Cancel Payment?</h1></p><p align=left><br><br><ul><li><span style="color: red;">Do not pay</span> cancelled orders if you scanned the QR code</li><li>Refunds for cancelled/invalid orders will be issued within 48 hours</li></ul><br></p>
 
 #################### page_error_wifi
 page_error_wifi->label_oops,oops..

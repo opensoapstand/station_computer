@@ -133,14 +133,6 @@ QLabel {
     line-height: normal;
 }
 
-#label_invoice_title{
-    color: #211403;
-    font-family: 'El Messiri';
-    font-size: 30px;
-    font-style: normal;
-    font-weight: 700;
-}
-
 #label_invoice_size_title{
     color: #211403;
     font-family: 'Lato';

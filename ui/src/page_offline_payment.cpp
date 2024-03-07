@@ -115,8 +115,8 @@ void page_offline_payment::showEvent(QShowEvent *event)
     ui->label_scan->setStyleSheet(styleSheet);
     ui->label_steps->setStyleSheet(styleSheet);
     ui->label_processing->setStyleSheet(styleSheet);
-    ui->label_product_price->setStyleSheet(styleSheet);
-    ui->label_product_information->setStyleSheet(styleSheet);
+    // ui->label_product_price->setStyleSheet(styleSheet);
+    // ui->label_product_information->setStyleSheet(styleSheet);
     ui->label_qr_background->setStyleSheet(styleSheet);
     ui->label_gif->setStyleSheet(styleSheet);
 
@@ -127,33 +127,35 @@ void page_offline_payment::showEvent(QShowEvent *event)
     ui->lineEdit_promo_code->clear();
     ui->lineEdit_promo_code->show();
     ui->pushButton_promo_input->show(); 
- 
+    ui->label_product_price->hide(); // currently not needed
+    ui->label_product_information->hide(); // currently not needed
 
     msgBox = nullptr;
 
     state_payment = s_init_offline;
 
-    int pnumber_selected = p_page_idle->thisMachine->getSelectedProduct()->getPNumber();
-    double price = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
+    // This section is for label_product_price and label_product_information; but both of these widgets are currently hidden because not needed
+    // int pnumber_selected = p_page_idle->thisMachine->getSelectedProduct()->getPNumber();
+    // double price = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
 
-    if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize() == SIZE_CUSTOM_INDEX)
-    {
-        ui->label_product_information->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductName() + p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_information, "volume_up_to") + p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(true, true));
-        QString base_text = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_price, "custom_size");
-        QString label_product_price_text = base_text.arg(price);
-        ui->label_product_price->setText(label_product_price_text);
-    }
-    else
-    {
-        ui->label_product_information->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductName() + " " + p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(true, true));
-        QString base_text = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_price, "fixed_size");
-        QString label_product_price_text = base_text.arg(price);
-        ui->label_product_price->setText(label_product_price_text);
-    }
+    // if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize() == SIZE_CUSTOM_INDEX)
+    // {
+    //     ui->label_product_information->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductName() + p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_information, "volume_up_to") + p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(true, true));
+    //     QString base_text = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_price, "custom_size");
+    //     QString label_product_price_text = base_text.arg(price);
+    //     ui->label_product_price->setText(label_product_price_text);
+    // }
+    // else
+    // {
+    //     ui->label_product_information->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductName() + " " + p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(true, true));
+    //     QString base_text = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_price, "fixed_size");
+    //     QString label_product_price_text = base_text.arg(price);
+    //     ui->label_product_price->setText(label_product_price_text);
+    // }
 
     ui->label_qrCode->show();
-    ui->label_product_information->show();
-    ui->label_product_price->show();
+    // ui->label_product_information->show();
+    // ui->label_product_price->show();
 
     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
 
@@ -162,7 +164,7 @@ void page_offline_payment::showEvent(QShowEvent *event)
     paymentEndTimer->start(1000);
     _pageTimeoutCounterSecondsLeft = QR_PAGE_TIMEOUT_SECONDS;
 
-    // ui->label_refresh_page->hide();
+    ui->label_refresh_page->hide();
     // ui->pushButton_refresh->raise(); // make sure refresh button is on top.
     ui->pushButton_previous_page->raise();
     ui->label_gif->hide();
@@ -233,8 +235,8 @@ void page_offline_payment::setupQrOrder()
     // create qr code graphics
     p_page_idle->thisMachine->hasMixing() ? paintQR(painter, QSize(451, 451), qrdata, QColor("white")) : paintQR(painter, QSize(360, 360), qrdata, QColor("white"));
     ui->label_qrCode->setPixmap(map);
-    ui->label_product_information->show();
-    ui->label_product_price->show();
+    // ui->label_product_information->show();
+    // ui->label_product_price->show();
     ui->label_title->show();
     ui->label_scan->show();
     ui->label_steps->show();

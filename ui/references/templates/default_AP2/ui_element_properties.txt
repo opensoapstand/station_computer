@@ -98,6 +98,7 @@ page_qr_payment->label_product_information,{"x": 240, "y": 1440, "width": 479, "
 page_qr_payment->label_product_price,{"x": 730, "y": 1440, "width": 110, "height": 36}
 page_qr_payment->label_gif,{"x": 365, "y": 548, "width": 350, "height": 350}
 page_qr_payment->label_refresh_page,{"x": 326, "y": 1637, "width": 400, "height": 114}
+page_qr_payment->pushButton_previous_page,{"x": 304, "y": 1740, "width": 472, "height": 100}
 
 page_offline_payment->label_title,{"x": 265, "y": 200, "width": 548, "height": 100}
 page_offline_payment->label_qrCode,{"x": 314, "y": 424, "width": 451, "height": 451}

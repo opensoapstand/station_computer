@@ -118,7 +118,6 @@ void page_product_freeSample::showEvent(QShowEvent *event)
     //  ui->label_product_title->setStyleSheet(styleSheet);
     ui->label_selected_volume->setStyleSheet(styleSheet);
 
-    ui->label_invoice_title->setStyleSheet(styleSheet);
     ui->label_web_url->setStyleSheet(styleSheet);
     ui->label_invoice_name->setProperty("class", "labelOrderOverview");
     ui->label_invoice_additives_overview->setStyleSheet(styleSheet);
@@ -143,7 +142,6 @@ void page_product_freeSample::showEvent(QShowEvent *event)
     ui->pushButton_to_help->setProperty("class", "buttonBGTransparent");
     ui->pushButton_to_help->setStyleSheet(styleSheet);
 
-    p_page_idle->thisMachine->setTemplateTextToObject(ui->label_invoice_title);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_invoice_coupon_title);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_invoice_size_title);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_page_title);

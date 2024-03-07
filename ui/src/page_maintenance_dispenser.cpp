@@ -839,6 +839,7 @@ void page_maintenance_dispenser::on_pushButton_set_status_product_clicked()
         // updateProductLabelValues(true);
     }
 }
+
 void page_maintenance_dispenser::on_pushButton_set_status_slot_clicked()
 {
     if (!isDispenserPumpEnabledWarningBox())
@@ -876,6 +877,11 @@ void page_maintenance_dispenser::on_pushButton_set_status_slot_clicked()
             break;
             }
             isEnabled = false;
+
+            if (!p_page_idle->thisMachine->isAelenPillarElseSoapStand()){
+                // set selected product too to available.
+
+            }
         }
         else
         {
@@ -1021,7 +1027,6 @@ void page_maintenance_dispenser::on_pushButton_done_clicked()
 
 void page_maintenance_dispenser::on_pushButton_cancel_clicked()
 {
-
     ui->buttonPeriod->show();
     ui->numberEntry->hide();
     ui->textEntry->setText("");

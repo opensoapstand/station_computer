@@ -389,7 +389,38 @@ line-height: 29px;</string>
     <bool>false</bool>
    </property>
   </widget>
-  <zorder>lineEdit_promo_code</zorder>
+  <widget class="QLabel" name="label_promo_code_title">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>1285</y>
+     <width>440</width>
+     <height>36</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>title</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_promo_code_background">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>1255</y>
+     <width>600</width>
+     <height>211</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
   <zorder>label_qr_background</zorder>
   <zorder>pushButton_refresh</zorder>
   <zorder>pushButton_previous_page</zorder>
@@ -404,6 +435,9 @@ line-height: 29px;</string>
   <zorder>label_gif</zorder>
   <zorder>label_refresh_page_background</zorder>
   <zorder>label_refresh_page_icon</zorder>
+  <zorder>label_promo_code_background</zorder>
+  <zorder>label_promo_code_title</zorder>
+  <zorder>lineEdit_promo_code</zorder>
   <zorder>pushButton_promo_input</zorder>
  </widget>
  <resources/>

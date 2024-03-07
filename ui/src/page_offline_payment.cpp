@@ -123,8 +123,14 @@ void page_offline_payment::showEvent(QShowEvent *event)
     ui->pushButton_promo_input->setStyleSheet(styleSheet);
     ui->lineEdit_promo_code->setProperty("class", "promoCode");
     ui->lineEdit_promo_code->setStyleSheet(styleSheet);
+    ui->label_promo_code_title->setStyleSheet(styleSheet);
+    ui->label_promo_code_background->setStyleSheet(styleSheet);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->label_promo_code_title);
 
-    ui->lineEdit_promo_code->clear();
+    QString promo_code_input_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "lineEdit_promo_code->initial");
+    ui->lineEdit_promo_code->setText(promo_code_input_text);
+
+    // ui->lineEdit_promo_code->clear();
     ui->lineEdit_promo_code->show();
     ui->pushButton_promo_input->show(); 
     ui->label_product_price->hide(); // currently not needed
@@ -134,7 +140,7 @@ void page_offline_payment::showEvent(QShowEvent *event)
 
     state_payment = s_init_offline;
 
-    // This section is for label_product_price and label_product_information; but both of these widgets are currently hidden because not needed
+    // This section is for label_product_price and label_product_information; but both of these widgets are currently hidden because not needed for the current design
     // int pnumber_selected = p_page_idle->thisMachine->getSelectedProduct()->getPNumber();
     // double price = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
 
@@ -197,6 +203,10 @@ void page_offline_payment::enterButtonPressed(){
 void page_offline_payment::apply_code(QString promocode){
     if(promocode == secretCode){
         hideCurrentPageAndShowProvided(p_page_dispense);
+    }else{
+        p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_promo_code, "promoCode_invalid", PAGE_OFFLINE_PAYMENT_CSS);
+        QString promo_code_input_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "lineEdit_promo_code->invalid");
+        ui->lineEdit_promo_code->setText(promo_code_input_text);
     }
 }
 
@@ -472,6 +482,7 @@ QString page_offline_payment::generateCode(QString inputString) {
 
 void page_offline_payment::on_lineEdit_promo_codeInput_clicked()
 {
+    p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_promo_code, "promoCode", PAGE_OFFLINE_PAYMENT_CSS);
     p_keyboard->registerCallBack(std::bind(&page_offline_payment::enterButtonPressed, this));
     p_keyboard->setKeyboardVisibility(true, ui->lineEdit_promo_code);
     ui->lineEdit_promo_code->clear();

@@ -43,12 +43,12 @@ QPushButton {
    font-family: 'Lato';
    font-style: normal;
    font-weight: 400;
-   font-size: 24px;
-   color: #001810;
-   text-align: left;
-   qproperty-alignment: AlignCenter;
-   border: none;
-   background: transparent;
+   font-size: 48px;
+   color: #895E25;
+   text-align: center;
+   border: 5px solid #895E25;
+   border-radius: 25px;
+   background: #FFFFFF;
 }
 
 
@@ -92,7 +92,7 @@ QPushButton {
 }
 
 #label_steps {
-   color: black;
+   color: #895E25;
    font-family: 'El Messiri';
    font-size: 30px;
    font-style: normal;
@@ -137,7 +137,19 @@ QLabel {
    font-style:light;
 }
 
-
+#label_promo_code_title{
+   color: #211403;
+   font-family: 'Lato';
+   font-size: 30px;
+   font-style: normal;
+   font-weight: 700;
+   text-align: left;
+   qproperty-alignment: AlignLeft;
+}
+#label_promo_code_background{
+   border-radius: 25px;
+   background-color: #FFF7ED;
+}
 #pushButton_promo_input{ 
    background-color: transparent; 
    border: none;
@@ -152,16 +164,6 @@ QLabel {
    border: 2px solid black;
    border-radius: 10px;
 }
-.promoCode_network_error{
-   font-family: "Lato"; 
-   font-style: normal; 
-   font-weight: 700; 
-   font-size: 24px; 
-   padding: 10px;
-   color: #da980a;
-   border: 2px solid #58595B;
-   border-radius: 10px;
-}
 .promoCode_invalid{
    font-family: "Lato"; 
    font-style: normal; 
@@ -169,26 +171,6 @@ QLabel {
    font-size: 24px; 
    padding: 10px;
    color: #f44336;
-   border: 2px solid #58595B;
-   border-radius: 10px;
-}
-.promoCode_processing{
-   font-family: "Lato"; 
-   font-style: normal; 
-   font-weight: 700; 
-   font-size: 24px; 
-   padding: 10px;
-   color: #858585;
-   border: 2px solid #858585;
-   border-radius: 10px;
-}
-.promoCode_valid{
-   font-family: "Lato"; 
-   font-style: normal; 
-   font-weight: 700; 
-   font-size: 24px; 
-   padding: 10px;
-   color: #895E25;
    border: 2px solid #58595B;
    border-radius: 10px;
 }

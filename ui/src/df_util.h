@@ -214,11 +214,16 @@ using namespace std;
 #define SEND_DISPENSE_AUTOFILL "a"
 
 #define PAYMENT_QR                                      "qr"
+#define PAYMENT_QR_EMAILFREE                            "qr/emailfree"   // for ubc
 #define PAYMENT_TAP_CANADA                              "tap_canada"
 #define PAYMENT_TAP_USA                                 "tap_usa"
 #define PAYMENT_TAP_CANADA_QR                           "tap_canada_qr"
 #define PAYMENT_TAP_USA_QR                              "tap_usa_qr"
-#define PAYMENT_RECEIPT_PRINTER                         "receipt_printer"
+#define PAYMENT_RECEIPT_PRINTER_BARCODE_EAN13           "barcode_EAN-13"
+#define PAYMENT_RECEIPT_PRINTER_BARCODE_EAN2            "barcode_EAN-2"
+#define PAYMENT_RECEIPT_PRINTER_BARCODE                 "barcode"
+#define PAYMENT_RECEIPT_PRINTER_PLU                     "plu"
+#define PAYMENT_NONE                                    ""
 
 //Portal API Endpoints
 

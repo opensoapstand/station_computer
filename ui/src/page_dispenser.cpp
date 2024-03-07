@@ -295,7 +295,7 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     p_page_idle->thisMachine->getSelectedProduct()->resetVolumeDispensed();
     updatelabel_volume_dispensed_ml(p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl());
-    paymentMethod = p_page_idle->thisMachine->getActivePaymentMethod();
+    paymentMethod = p_page_idle->thisMachine->getSelectedPaymentMethod();
 
     fsmSendStartDispensing();
 }
@@ -838,9 +838,9 @@ void page_dispenser::on_pushButton_abort_clicked()
         msgBox_abort->setWindowFlags(Qt::FramelessWindowHint| Qt::Dialog); // do not show messagebox header with program name
         switch (paymentMethod)
         {
-        case 0:
-        case 1:
-        case 2:
+        case qr:
+        case tap_canada:
+        case tap_usa:
         {
             QString searchString = this->objectName() + "->" + msgBox_abort->objectName() + "->" + "qr_tap";
             p_page_idle->thisMachine->setTextToObject(msgBox_abort, p_page_idle->thisMachine->getTemplateText(searchString));
@@ -909,9 +909,9 @@ void page_dispenser::on_pushButton_problems_clicked()
     }
     switch (paymentMethod)
     {
-    case 0:
-    case 1:
-    case 2:
+    case qr:
+    case tap_canada:
+    case tap_usa:
     {
         QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "qr_tap";
         p_page_idle->thisMachine->setTextToObject(msgBox_problems, p_page_idle->thisMachine->getTemplateText(searchString));

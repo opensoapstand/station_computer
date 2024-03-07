@@ -279,15 +279,14 @@ int main(int argc, char *argv[])
     DfUiServer dfUiServer;
     dfUiServer.startServer();
 
-    QObject::connect(&dfUiServer, &DfUiServer::controllerFinishedAck, p_page_end, &page_end::controllerFinishedTransaction);
+    QObject::connect(&dfUiServer, &DfUiServer::controllerFinishedAck, p_page_end, &page_end::controllerReceivedFinishedTransaction);
     QObject::connect(&dfUiServer, &DfUiServer::printerStatus, p_page_maintenance_general, &page_maintenance_general::printerStatusFeedback);
     QObject::connect(&dfUiServer, &DfUiServer::printerStatus, p_page_idle, &page_idle::printerStatusFeedback);
     QObject::connect(&dfUiServer, &DfUiServer::pleaseReset, p_page_dispense, &page_dispenser::resetDispenseTimeout);
 
     QObject::connect(&dfUiServer, &DfUiServer::signalUpdateVolume, p_page_dispense, &page_dispenser::fsmReceivedVolumeDispensed);
     QObject::connect(&dfUiServer, &DfUiServer::signalDispenseStatus, p_page_dispense, &page_dispenser::fsmReceiveDispenserStatus);
-    // QObject::connect(&dfUiServer, &DfUiServer::finalVolumeDispensed, p_page_end, &page_end::fsmReceiveFinalDispensedVolume);
-    QObject::connect(&dfUiServer, &DfUiServer::finalTransactionMessage, p_page_end, &page_end::fsmReceiveFinalTransactionMessage);
+    QObject::connect(&dfUiServer, &DfUiServer::finalTransactionMessage, p_page_end, &page_end::controllerReceivedDispenseAftermath);
     QObject::connect(&dfUiServer, &DfUiServer::signalDispenseRate, p_page_dispense, &page_dispenser::fsmReceiveDispenseRate);
     QObject::connect(&dfUiServer, &DfUiServer::targetHit, p_page_dispense, &page_dispenser::fsmReceiveTargetVolumeReached);
     QObject::connect(&dfUiServer, &DfUiServer::noFlowAbort, p_page_dispense, &page_dispenser::fsmReceiveNoFlowAbort);

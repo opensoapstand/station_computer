@@ -37,9 +37,6 @@ public:
     bool getRecentTransactions(QString values[][5], int count, int *count_retreived);
     void getPrinterStatus(bool *isOnline, bool *hasPaper); // do not erase
 
-    // QString getPaymentMethod(int slot); // do not erase yet (wait for ash)
-    // void setPaymentToQR();              // ASh to change.
-
     // bool updateSlotAvailability(int slot, int isEnabled, QString status_text);
 
     void addTemperature(QString machine_id, double temperature_1, double temperature_2, QString alert);
@@ -63,7 +60,7 @@ public:
                                  //  QString *size_unit,
                                  QString *name_receipt,
                                  //  QString *m_currency_deprecated, //_dummy_deprecated
-                                 //  QString *m_payment_deprecated,  //_deprecated,
+                                 //  QString *m_paymentOptions_deprecated,  //_deprecated,
                                  int *concentrate_multiplier,
                                  int *dispense_speed,
                                  double *threshold_flow,

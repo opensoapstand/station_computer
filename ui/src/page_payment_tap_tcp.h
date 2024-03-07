@@ -131,7 +131,7 @@ private:
     int lastTransactionId;
 
     void resetPaymentPage();
-    QString getPaymentMethod();
+    // QString getPaymentOptions();
     QVBoxLayout *statusbarLayout;
 };
 

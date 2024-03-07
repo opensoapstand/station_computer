@@ -524,7 +524,10 @@ void page_idle::onRebootNightlyTimeOutTimerTick()
                 QString paymentMethod = thisMachine->getPaymentOptions();
                 if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA)
                 {
-                    rebootTapDevice();
+                    rebootTapDevice(PAYMENT_TAP_CANADA);
+                }
+                else if(paymentMethod== PAYMENT_TAP_USA_QR || PAYMENT_TAP_USA){
+                    rebootTapDevice(PAYMENT_TAP_USA);
                 }
                 QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -r 0";
                 system(qPrintable(command));
@@ -772,9 +775,16 @@ void page_idle::pingTapDevice()
     }
 }
 
-void page_idle::rebootTapDevice()
+void page_idle::rebootTapDevice(QString paymentMethod)
 {
     qDebug() << "Rebooting Tap Device";
-    page_payment_tap_serial paymentSerialObject;
-    paymentSerialObject.rebootDevice();
+    if (paymentMethod == PAYMENT_TAP_CANADA){
+        page_payment_tap_serial paymentSerialObject;
+        paymentSerialObject.rebootDevice();
+    }
+    else if (paymentMethod == PAYMENT_TAP_USA){
+        page_payment_tap_tcp paymentTcpObject;
+        paymentTcpObject.rebootTapTcpDevice();
+    }
+    
 }

@@ -463,6 +463,10 @@ void page_payment_tap_tcp::on_pushButton_to_idle_clicked()
     }
 }
 
+void page_payment_tap_tcp::rebootTapTcpDevice(){
+    rebootDevice();
+}
+
 void page_payment_tap_tcp::idlePaymentTimeout()
 {
     if (--_pageTimeoutCounterSecondsLeft >= 0)

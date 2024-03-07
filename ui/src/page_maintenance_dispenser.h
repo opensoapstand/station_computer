@@ -81,7 +81,7 @@ private slots:
     void on_pushButton_plu_sample_clicked();
     void on_pushButton_volume_per_tick_clicked();
     void on_pushButton_restock_clicked();
-    void on_pushButton_set_status_clicked();
+    void on_pushButton_set_status_slot_clicked();
     void on_pushButton_set_restock_volume_clicked();
     void onMaintainProductPageTimeoutTick();
     void onDispenseTimerTick();
@@ -160,6 +160,8 @@ private slots:
     void on_pushButton_set_quantity_test_clicked();
 
     void on_pushButton_set_quantity_sample_clicked();
+
+    void on_pushButton_set_status_product_clicked();
 
 private:
     void setSelectedProduct(int pnumber);

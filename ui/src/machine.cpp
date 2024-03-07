@@ -1161,7 +1161,7 @@ bool machine::loadMachineParameterFromDb()
         &m_software_version_controller,
         &m_is_enabled,
         &m_status_text,
-        &m_payment,
+        &m_paymentOptions,
         &m_size_unit,
         &m_screen_sleep_time24h,
         &m_screen_wakeup_time24h,
@@ -1186,25 +1186,27 @@ bool machine::getCouponsEnabled()
     return m_coupons_enabled==1;
 }
 
-QString machine::getPaymentMethod()
+QString machine::getPaymentOptions()
 {
-    return m_payment;
+    // string from the db, can be multiple options e.g. tap_canada_qr
+    return m_paymentOptions;
 }
 
-void machine::setPaymentMethod(QString paymentMethod)
+void machine::setPaymentOptionsInDb(QString paymentMethod)
 {
     qDebug() << "Open db: set payment method";
     m_db->updateTableMachineWithText("payment", paymentMethod);
 }
 
-ActivePaymentMethod machine::getActivePaymentMethod()
+ActivePaymentMethod machine::getSelectedPaymentMethod()
 {
-    return m_activePaymentMethod;
+    // selected payment method for the current session. 
+    return m_selectedPaymentMethod;
 }
 
-void machine::setActivePaymentMethod(ActivePaymentMethod paymentMethod)
+void machine::setSelectedPaymentMethod(ActivePaymentMethod paymentMethod)
 {
-    m_activePaymentMethod = paymentMethod;
+    m_selectedPaymentMethod = paymentMethod;
 }
 
 std::vector<ActivePaymentMethod> machine::getAllowedPaymentMethods()

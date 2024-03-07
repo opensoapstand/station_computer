@@ -88,7 +88,7 @@ private:
     double m_button_press_duration;
     double m_button_press_count;
 
-    // QString m_payment;  // --> machine?!
+    // QString m_paymentOptions;  // --> machine?!
     // QString m_currency; // --> machine
 
     int m_dispenser_slot;

@@ -345,7 +345,7 @@ bool DbManager::getAllProductProperties(int pnumber,
                                         // QVector<double> &mixRatiosHigh,
                                         // QString *size_unit,
                                         // QString *m_currency_deprecated, //_dummy_deprecated
-                                        // QString *m_payment_deprecated,  //_deprecated,
+                                        // QString *m_paymentOptions_deprecated,  //_deprecated,
                                         QString *name_receipt,
                                         int *concentrate_multiplier,
                                         int *dispense_speed,

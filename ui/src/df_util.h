@@ -242,6 +242,40 @@ using namespace std;
 #define PORTAL_RESET_STOCK                              "api/machine_data/resetStock"
 #define PORTAL_UPDATE_PRODUCT_FROM_STATION              "api/product/update_product_from_station"
 
+typedef enum SlotStatus
+{
+    slot_status_available,
+    slot_status_needs_assistance,
+    slot_status_disabled
+} SlotStatus;
+
+typedef enum ProductStatus
+{
+    product_status_available,
+    product_status_low_volume,
+    product_status_empty,
+    product_status_needs_assistance
+} ProductStatus;
+
+// const char *DISPENSE_BEHAVIOUR_STRINGS[] = {
+//     "FLOW_STATE_UNAVAILABLE",
+//     "FLOW_STATE_RAMP_UP",
+//     "FLOW_STATE_DISPENSING",
+//     "FLOW_STATE_PUMPING_NOT_DISPENSING",
+//     "FLOW_STATE_NOT_PUMPING_NOT_DISPENSING",
+//     "FLOW_STATE_PRIMING_OR_EMPTY",
+//     "FLOW_STATE_PRIME_FAIL_OR_EMPTY",
+//     "FLOW_STATE_EMPTY"};
+
+// const char *SLOT_STATE_STRINGS[] = {
+//     "SLOT_STATE_AVAILABLE",
+//     "SLOT_STATE_AVAILABLE_LOW_STOCK",
+//     "SLOT_STATE_WARNING_PRIMING",
+//     "SLOT_STATE_PROBLEM_NEEDS_ATTENTION",
+//     "SLOT_STATE_PROBLEM_EMPTY",
+//     "SLOT_STATE_DISABLED_COMING_SOON",
+//     "SLOT_STATE_DISABLED"};
+
 
 
 class df_util : public QWidget

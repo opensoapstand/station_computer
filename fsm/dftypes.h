@@ -198,7 +198,6 @@ typedef enum Slot_state
    SLOT_STATE_PROBLEM_EMPTY,
    SLOT_STATE_DISABLED_COMING_SOON,
    SLOT_STATE_DISABLED
-
 } Slot_state;
 
 typedef enum Button_lights_behaviour

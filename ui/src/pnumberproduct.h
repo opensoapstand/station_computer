@@ -34,8 +34,8 @@ public:
 
     double inputTextToMlConvertUnits(QString inputValueAsText);
 
-    QString getAwsProductId(); // this is a combo of dispenser AND product.
-
+    QString getAwsProductIdSuffix();
+    QString getAwsProductId(); 
     QString getFullVolumeCorrectUnits(bool addUnits);
 
     void setVolumeRemainingUserInput(QString volumeRemainingAsUserText); // productt
@@ -106,9 +106,6 @@ public:
     int getDispenseSpeedPercentage();                // productt
     void setDispenseSpeedPercentage(int percentage); // productt
 
-    // QString getPaymentMethod();                   // ---> machine?! productt
-    // void setPaymentMethod(QString paymentMethod); //  ---> machine? or productt
-
     double getVolumeRemaining();
 
     bool getIsProductEnabled();
@@ -172,7 +169,7 @@ private:
     double m_price_custom_discount;
     int m_is_enabled_custom_discount;
 
-    // QString m_payment_deprecated;  // placeholders
+    // QString m_paymentOptions_deprecated;  // placeholders
     // QString m_currency_deprecated; // placeholders
 
     bool m_sizeIndexIsEnabled[SIZES_COUNT]; // size indeces.

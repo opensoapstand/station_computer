@@ -511,10 +511,17 @@ void page_idle::onRebootNightlyTimeOutTimerTick()
             else
             {
                 // qDebug() << "================== REBOOT NIGHTLY - SYSTEM REBOOT ==================";
+
+                // Tap Canada or Moneris works on the serial connection and whenever the station reboots,
+                // the device loses communication. 
+                // To keep both the devices communicated,
+                // Tap device needs to restart as the serial connection re-establishes after the restart of TAP device.
+                // Rebooting TAP at the same time as the station will keep the communication in place
+
                 thisMachine->setRebootState(wait_for_trigger);
                 _delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
                 stateScreenCheck = state_screen_check_not_initiated;
-                QString paymentMethod = thisMachine->getPaymentMethod();
+                QString paymentMethod = thisMachine->getPaymentOptions();
                 if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA)
                 {
                     rebootTapDevice();
@@ -756,7 +763,7 @@ void page_idle::on_pushButton_reboot_nightly_clicked()
 
 void page_idle::pingTapDevice()
 {
-    QString paymentMethod = thisMachine->getPaymentMethod();
+    QString paymentMethod = thisMachine->getPaymentOptions();
     if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA)
     {
         qDebug() << "Pinging Tap Serial Device";

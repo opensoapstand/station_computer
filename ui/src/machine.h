@@ -45,6 +45,8 @@ typedef enum ActivePaymentMethod
     tap_canada,
     tap_usa,
     receipt_printer,
+    none,
+    offline_payment
 } ActivePaymentMethod;
 
 class product; //  forward declaration.
@@ -82,8 +84,8 @@ public:
 
     QString getMachineId();
     QString getMachineLocation();
-    QString getPaymentMethod();
-    void setPaymentMethod(QString paymentMethod);
+    QString getPaymentOptions();
+    void setPaymentOptionsInDb(QString paymentMethod);
     bool getCouponsEnabled();
     bool getShowTransactionHistory();
 
@@ -160,6 +162,9 @@ public:
     void setSelectedProduct(int pnumber);
     pnumberproduct *getSelectedProduct();
 
+    QString getSelectedProductAwsProductId();
+    QString getAwsProductId(int pnumber);
+    
     bool hasReceiptPrinter();
     void getPrinterStatusFromDb(bool *isOnline, bool *hasPaper);
     void getTemperatureFromController();
@@ -179,8 +184,8 @@ public:
     StateReboot getRebootState();
     void setRebootState(StateReboot state);
 
-    ActivePaymentMethod getActivePaymentMethod();
-    void setActivePaymentMethod(ActivePaymentMethod paymentMethod);
+    ActivePaymentMethod getSelectedPaymentMethod();
+    void setSelectedPaymentMethod(ActivePaymentMethod paymentMethod);
 
     std::vector<ActivePaymentMethod> getAllowedPaymentMethods();
     void setAllowedPaymentMethods(ActivePaymentMethod paymentMethod);
@@ -264,11 +269,11 @@ public:
     QString m_software_version_controller;
     double m_temperature2;
     double m_alert_temperature2;
-    QString m_payment;
+    QString m_paymentOptions;
     int m_screen_sleep_time24h;
     int m_screen_wakeup_time24h;
-    int m_buy_bottle_1;
-    int m_buy_bottle_2;
+    int m_pNumber_bottle_1=0;
+    int m_pNumber_bottle_2=0;
     QString m_portal_base_url;
     int m_enable_offline_payment;
 
@@ -340,7 +345,7 @@ private:
     double max_discount = 0.0;
     QString m_promoCode;
     StateReboot m_stateReboot;
-    ActivePaymentMethod m_activePaymentMethod;
+    ActivePaymentMethod m_selectedPaymentMethod;
     std::vector<ActivePaymentMethod> allowedPaymentMethods;
     DbManager *m_db;
     UserRole active_role;

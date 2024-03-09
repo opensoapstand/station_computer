@@ -84,8 +84,8 @@ void page_buyBottle::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_button_no_text_L);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_button_no_text_S);
     ui->label_button_yes_text_L_1->setText("Yes");
-    // ui->label_button_yes_text_L_1->setText("Yes, " + getBottleVolumeText(p_page_idle->thisMachine->m_buy_bottle_1));
-    // ui->label_button_yes_text_L_2->setText("Yes, " + getBottleVolumeText(p_page_idle->thisMachine->m_buy_bottle_2));
+    // ui->label_button_yes_text_L_1->setText("Yes, " + getBottleVolumeText(p_page_idle->thisMachine->m_pNumber_bottle_1));
+    // ui->label_button_yes_text_L_2->setText("Yes, " + getBottleVolumeText(p_page_idle->thisMachine->m_pNumber_bottle_2));
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_button_yes_text_S_1);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_button_yes_text_S_2);
 
@@ -96,7 +96,7 @@ void page_buyBottle::showEvent(QShowEvent *event)
         ui->label_button_no_text_L->move(333, 1361);
         ui->label_button_no_text_S->move(296, 1423);
         ////////////// for displaying multiple bottle product with bottle size /////////////////////////
-        // if(isBottleButtonActivated(p_page_idle->thisMachine->m_buy_bottle_1)){
+        // if(isBottleButtonActivated(p_page_idle->thisMachine->m_pNumber_bottle_1)){
         ////////////////////////////////////////////////////////////////////////////////////////////////
         // only display selected bottle name and not the bottle size and only display one bottle type
             ui->pushButton_yes_1->move(565, 1331);
@@ -161,15 +161,15 @@ void page_buyBottle::onbottlePageTimeoutTick()
 }
 
 bool page_buyBottle::areBothBottleButtonsActivated(){
-    if(p_page_idle->thisMachine->m_buy_bottle_1 && p_page_idle->thisMachine->m_buy_bottle_2){
+    if(p_page_idle->thisMachine->m_pNumber_bottle_1 && p_page_idle->thisMachine->m_pNumber_bottle_2){
         return true;
     }else{
         return false;
     }
 }
 
-bool page_buyBottle::isBottleButtonActivated(int bottlePNum){
-    if(bottlePNum){
+bool page_buyBottle::isBottleButtonActivated(int bottlePNumber){
+    if(bottlePNumber){
         return true;
     }else{
         return false;
@@ -207,7 +207,7 @@ void page_buyBottle::on_pushButton_no_clicked()
 
 void page_buyBottle::on_pushButton_yes_1_clicked()
 {
-    p_page_idle->thisMachine->setSelectedBottle(p_page_idle->thisMachine->m_buy_bottle_1);
+    p_page_idle->thisMachine->setSelectedBottle(p_page_idle->thisMachine->m_pNumber_bottle_1);
     if(p_page_idle->thisMachine->hasSelectedBottle()){
         hideCurrentPageAndShowProvided(p_page_select_product);
     }
@@ -215,7 +215,7 @@ void page_buyBottle::on_pushButton_yes_1_clicked()
 
 void page_buyBottle::on_pushButton_yes_2_clicked()
 {
-    p_page_idle->thisMachine->setSelectedBottle(p_page_idle->thisMachine->m_buy_bottle_2);
+    p_page_idle->thisMachine->setSelectedBottle(p_page_idle->thisMachine->m_pNumber_bottle_2);
     if(p_page_idle->thisMachine->hasSelectedBottle()){
         hideCurrentPageAndShowProvided(p_page_select_product);
     }

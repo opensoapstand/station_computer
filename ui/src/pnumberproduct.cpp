@@ -12,6 +12,20 @@ void pnumberproduct::setDb(DbManager *db)
     m_db = db;
 }
 
+QString productStateAsString(ProductState state)
+{
+    // Create a local map of enum values to strings
+    QMap<ProductState, QString> stateMap;
+    stateMap[PRODUCT_STATE_AVAILABLE] = "PRODUCT_STATE_AVAILABLE";
+    stateMap[PRODUCT_STATE_AVAILABLE_LOW_STOCK] = "PRODUCT_STATE_AVAILABLE_LOW_STOCK";
+    stateMap[PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION] = "PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION";
+    stateMap[PRODUCT_STATE_PROBLEM_EMPTY] = "PRODUCT_STATE_PROBLEM_EMPTY";
+    stateMap[PRODUCT_STATE_DISABLED] = "PRODUCT_STATE_DISABLED";
+
+    // Find the string that matches the enum, returning an empty string if not found
+    return stateMap.value(state, "Unknown State");
+}
+
 bool pnumberproduct::loadProductProperties()
 {
     bool success = true;
@@ -81,14 +95,13 @@ bool pnumberproduct::loadProductPropertiesFromProductsFile()
             mix_ratios_low_str = fields[CSV_PRODUCT_COL_MIX_RATIOS_LOW];
             mix_ratios_default_str = fields[CSV_PRODUCT_COL_MIX_RATIOS_DEFAULT];
             mix_ratios_high_str = fields[CSV_PRODUCT_COL_MIX_RATIOS_HIGH];
-            
+
             df_util::csvQStringToQVectorInt(mix_pnumbers_str, m_mixPNumbers);
             df_util::csvQStringToQVectorDouble(mix_ratios_low_str, m_mixRatiosLow);
             df_util::csvQStringToQVectorDouble(mix_ratios_default_str, m_mixRatiosDefault);
             df_util::csvQStringToQVectorDouble(mix_ratios_high_str, m_mixRatiosHigh);
             break;
         }
-
     }
     file.close();
     return true;
@@ -177,30 +190,30 @@ bool pnumberproduct::loadProductPropertiesFromDb()
 {
     qDebug() << "Open db: db load pnumberproduct properties for pnumberproduct for pnumber: " << getPNumber();
     bool success = m_db->getAllProductProperties(getPNumber(),
-                                  &m_aws_product_id,
-                                  &m_soapstand_product_serial,
-                                //   m_mixPNumbers,
-                                //   m_mixRatiosLow,
-                                //   m_mixRatiosDefault,
-                                //   m_mixRatiosHigh,
-                                  &m_name_receipt,
-                                  &m_concentrate_multiplier,
-                                  &m_dispense_speed,
-                                  &m_threshold_flow,
-                                  &m_retraction_time,
-                                  &m_calibration_const,
-                                  &m_volume_per_tick,
-                                  &m_lastRestockDate,
-                                  &m_volume_full,
-                                  &m_volume_remaining,
-                                  &m_volume_dispensed_since_restock,
-                                  &m_volume_dispensed_total,
-                                  &m_is_enabled_custom_discount,
-                                  &m_size_custom_discount,
-                                  &m_price_custom_discount,
-                                  &m_is_enabled,
-                                  &m_status_text,
-                                  m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
+                                                 &m_aws_product_id,
+                                                 &m_soapstand_product_serial,
+                                                 //   m_mixPNumbers,
+                                                 //   m_mixRatiosLow,
+                                                 //   m_mixRatiosDefault,
+                                                 //   m_mixRatiosHigh,
+                                                 &m_name_receipt,
+                                                 &m_concentrate_multiplier,
+                                                 &m_dispense_speed,
+                                                 &m_threshold_flow,
+                                                 &m_retraction_time,
+                                                 &m_calibration_const,
+                                                 &m_volume_per_tick,
+                                                 &m_lastRestockDate,
+                                                 &m_volume_full,
+                                                 &m_volume_remaining,
+                                                 &m_volume_dispensed_since_restock,
+                                                 &m_volume_dispensed_total,
+                                                 &m_is_enabled_custom_discount,
+                                                 &m_size_custom_discount,
+                                                 &m_price_custom_discount,
+                                                 &m_is_enabled,
+                                                 &m_status_text,
+                                                 m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
 
     int pnumberFromDb = convertPStringToPInt(m_soapstand_product_serial);
 
@@ -316,14 +329,15 @@ bool pnumberproduct::is_valid_size_selected()
     return true;
 }
 
-double pnumberproduct::getPriceOfSelectedBottle(){
-    //size: 1 for default bottle size
+double pnumberproduct::getPriceOfSelectedBottle()
+{
+    // size: 1 for default bottle size
     return getBasePrice(1);
 }
 
 double pnumberproduct::getVolumeOfSelectedBottle()
 {
-    //size: 1 for default bottle size
+    // size: 1 for default bottle size
     return getVolumeBySize(1);
 }
 
@@ -370,7 +384,6 @@ double pnumberproduct::getBasePriceSelectedSize()
 {
     return getBasePrice(getSelectedSize());
 }
-
 
 ///////////////////////////////////////////// DISPENSE
 /////////////////////////////////////////////
@@ -596,8 +609,9 @@ void pnumberproduct::setPlu(int sizeIndex, QString plu)
     bool success = m_db->updateTableProductsWithText(getPNumber(), column_name, plu);
 }
 
-QString pnumberproduct::getAwsProductId()
+QString pnumberproduct::getAwsProductIdSuffix()
 {
+    // The table value can absolutely be left empty. Only if for whatever reason (e.g. twice the same product in a machine) there needs to be a distinction, the column can have a value. Originally, all products linked to a specific machine had a unique 32bit number.(e.g. 81a3a30e-1283-4bef-bd16-d37e2fead410)
     return m_aws_product_id;
 }
 
@@ -658,7 +672,8 @@ double pnumberproduct::getCustomMixRatios(int index)
     return m_customMixRatios[index];
 }
 
-void pnumberproduct::resetCustomMixRatioParameters(){
+void pnumberproduct::resetCustomMixRatioParameters()
+{
     m_customMixRatios.clear();
     for (int i = 0; i < getMixRatiosDefault().size(); i++)
     {
@@ -667,28 +682,44 @@ void pnumberproduct::resetCustomMixRatioParameters(){
     }
 }
 
-void pnumberproduct::setCustomMixRatios(int index, QString plusOrMinus){
+void pnumberproduct::setCustomMixRatios(int index, QString plusOrMinus)
+{
     double custom_ratios_total = 0;
     // m_customMixRatios.append(getMixRatiosDefault()[0]); // add base product ratio
     // minus
-    if(plusOrMinus == "-"){
-        if(m_customMixRatios[index] == getMixRatiosLow()[index]){
+    if (plusOrMinus == "-")
+    {
+        if (m_customMixRatios[index] == getMixRatiosLow()[index])
+        {
             // dont do anything
-        }else{
-            if(m_customMixRatios[index] == getMixRatiosDefault()[index]){
+        }
+        else
+        {
+            if (m_customMixRatios[index] == getMixRatiosDefault()[index])
+            {
                 m_customMixRatios[index] = getMixRatiosLow()[index];
-            }else{
+            }
+            else
+            {
                 m_customMixRatios[index] = getMixRatiosDefault()[index];
             }
         }
-    }else{
+    }
+    else
+    {
         // plus
-        if(m_customMixRatios[index] == getMixRatiosHigh()[index]){
+        if (m_customMixRatios[index] == getMixRatiosHigh()[index])
+        {
             // dont do anything
-        }else{
-            if(m_customMixRatios[index] == getMixRatiosDefault()[index]){
+        }
+        else
+        {
+            if (m_customMixRatios[index] == getMixRatiosDefault()[index])
+            {
                 m_customMixRatios[index] = getMixRatiosHigh()[index];
-            }else{
+            }
+            else
+            {
                 m_customMixRatios[index] = getMixRatiosDefault()[index];
             }
         }

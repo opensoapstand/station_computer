@@ -49,7 +49,7 @@ page_maintenance_dispenser::page_maintenance_dispenser(QWidget *parent) : QWidge
     buttons_select_mix[3] = ui->pushButton_dispense_pnumber_4;
     buttons_select_mix[4] = ui->pushButton_dispense_pnumber_5;
     buttons_select_mix[5] = ui->pushButton_dispense_pnumber_6;
-    
+
     buttons_select_size[0] = ui->pushButton_set_quantity_small;
     buttons_select_size[1] = ui->pushButton_set_quantity_medium;
     buttons_select_size[2] = ui->pushButton_set_quantity_large;
@@ -80,7 +80,7 @@ void page_maintenance_dispenser::setPage(page_maintenance *pageMaintenance, page
 
 void page_maintenance_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 {
-    qDebug()<<"Exit Maintenance dispense page";
+    qDebug() << "Exit Maintenance dispense page";
     dispense_test_end(true);
     maintainProductPageEndTimer->stop();
     statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
@@ -155,7 +155,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     ui->pushButton_active_pnumber_base->setStyleSheet(styleSheet);
     ui->pushButton_active_pnumber_base->setText("Base\nP-" + QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getBasePNumber()));
 
-    setSizeIndex(SIZE_SMALL_INDEX); //default selected size for dispensing
+    setSizeIndex(SIZE_SMALL_INDEX); // default selected size for dispensing
 
     // first, pretend like there is no selected size
     for (int size_index = 1; size_index < SIZES_COUNT; size_index++)
@@ -254,12 +254,12 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
         if (size_index == m_selected_size_index)
         {
             p_page_idle->thisMachine->addCssClassToObject(buttons_select_size[size_index - 1], "product_active", PAGE_MAINTENANCE_DISPENSER_CSS);
-        }else{
+        }
+        else
+        {
             p_page_idle->thisMachine->addCssClassToObject(buttons_select_size[size_index - 1], "product_not_active", PAGE_MAINTENANCE_DISPENSER_CSS);
-       
         }
     }
-
 
     // BASE PNUMBER
     if (this->p_page_idle->thisMachine->getSelectedSlot()->getBasePNumber() == this->p_page_idle->thisMachine->getSelectedProduct()->getPNumber())
@@ -343,27 +343,25 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
     ui->pushButton_plu_custom->setText(p_page_idle->thisMachine->getSelectedProduct()->getPlu(SIZE_CUSTOM_INDEX));
     ui->pushButton_plu_sample->setText(p_page_idle->thisMachine->getSelectedProduct()->getPlu(SIZE_SAMPLE_INDEX));
 
-
     QString statusText = p_page_idle->thisMachine->getSelectedSlot()->getSlotStatusText();
     setStatusTextLabel(ui->label_status_dispenser_elaborated, statusText, true);
 
     setStatusTextLabel(ui->label_status_dispenser, statusText, false);
-    
+
     QString statusTextProduct = p_page_idle->thisMachine->getSelectedProduct()->getProductStatusText();
     setStatusTextLabel(ui->label_status_selected_product, statusTextProduct, false);
-    
 
     if (p_page_idle->thisMachine->getSelectedSlot()->getIsSlotEnabled())
     {
         // if slot is enabled, set button text to "make unavailable"
-        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_set_status, "unavailable");
-        p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_set_status, "pushButton_set_status_unavailable", PAGE_MAINTENANCE_DISPENSER_CSS);
+        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_set_status_slot, "unavailable");
+        p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_set_status_slot, "pushButton_set_status_slot_unavailable", PAGE_MAINTENANCE_DISPENSER_CSS);
     }
     else
     {
         // if slot is disabled
-        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_set_status, "available");
-        p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_set_status, "pushButton_set_status_available", PAGE_MAINTENANCE_DISPENSER_CSS);
+        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_set_status_slot, "available");
+        p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_set_status_slot, "pushButton_set_status_slot_available", PAGE_MAINTENANCE_DISPENSER_CSS);
     }
 
     if (statusText.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
@@ -558,11 +556,10 @@ void page_maintenance_dispenser::dispense_test_start()
     qDebug() << "Start dispense in maintenance mode. (FYI: if app crashes, it's probably about the update volume interrupts caused by the controller sending data.)";
     QString dispenseCommand = QString::number(p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
 
-
     qDebug() << "Autofill quantity pressed.";
 
     dispenseCommand.append(df_util::sizeIndexToChar(m_selected_size_index));
-    
+
     // dispenseCommand.append("t");
     // dispenseCommand.append("t");
     dispenseCommand.append(SEND_DISPENSE_START);
@@ -622,7 +619,9 @@ void page_maintenance_dispenser::dispense_test_end(bool sendStopToController)
         {
             qDebug() << "controller sent stop dispensing signal in maintenance mode.";
         }
-    }else{
+    }
+    else
+    {
         qDebug() << "Active Dispense was already stopped.";
     }
 }
@@ -816,7 +815,32 @@ void page_maintenance_dispenser::on_pushButton_restock_clicked()
     }
 }
 
-void page_maintenance_dispenser::on_pushButton_set_status_clicked()
+void page_maintenance_dispenser::on_pushButton_set_status_product_clicked()
+{
+    if (!isDispenserPumpEnabledWarningBox())
+    {
+        qDebug() << "Toggle status button clicked. Product enabled: " << p_page_idle->thisMachine->getSelectedProduct()->getIsProductEnabled() << " Product status: " << p_page_idle->thisMachine->getSelectedProduct()->getProductStatusText();
+
+        // _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+
+        // bool isEnabled = p_page_idle->thisMachine->getSelectedProduct()->getIsProductEnabled();
+        // if (isEnabled)
+        // {
+
+        //     p_page_idle->thisMachine->getSelectedProduct()->setProductStatusText("SLOT_STATE_UNAVAILABLE_TEST");
+        // }
+        // else
+        // {
+        //     p_page_idle->thisMachine->getSelectedProduct()->setProductStatusText("SLOT_STATE_XXXXXXAVAILABLE_TEST");
+        // }
+        // // set to database
+
+        // //ui->label_action_feedback->setText("Slot Status set to " + slotStatus);
+        // updateProductLabelValues(true);
+    }
+}
+
+void page_maintenance_dispenser::on_pushButton_set_status_slot_clicked()
 {
     if (!isDispenserPumpEnabledWarningBox())
     {
@@ -853,6 +877,11 @@ void page_maintenance_dispenser::on_pushButton_set_status_clicked()
             break;
             }
             isEnabled = false;
+
+            if (!p_page_idle->thisMachine->isAelenPillarElseSoapStand()){
+                // set selected product too to available.
+
+            }
         }
         else
         {
@@ -863,7 +892,7 @@ void page_maintenance_dispenser::on_pushButton_set_status_clicked()
 
         // set to database
         p_page_idle->thisMachine->getSelectedSlot()->setSlotEnabled(isEnabled, slotStatus);
-
+        
         ui->label_action_feedback->setText("Slot Status set to " + slotStatus);
         updateProductLabelValues(true);
     }
@@ -998,7 +1027,6 @@ void page_maintenance_dispenser::on_pushButton_done_clicked()
 
 void page_maintenance_dispenser::on_pushButton_cancel_clicked()
 {
-
     ui->buttonPeriod->show();
     ui->numberEntry->hide();
     ui->textEntry->setText("");
@@ -1205,12 +1233,11 @@ void page_maintenance_dispenser::on_pushButton_set_restock_volume_clicked()
 // ****************** BACKEND CLOUD ACTIONS ***********************
 // ****************************************************************
 
-
 void page_maintenance_dispenser::sendRestockToCloud()
 {
-    QString curl_params = "pid=" + p_page_idle->thisMachine->getSelectedProduct()->getAwsProductId() + "&volume_full=" + p_page_idle->thisMachine->getSelectedProduct()->getFullVolumeCorrectUnits(false);
-    
-    std::tie(res,readBuffer, http_code) = p_page_idle->thisMachine->sendRequestToPortal(PORTAL_RESET_STOCK, "POST", curl_params, "PAGE_MAINTENANCE_DISPENSER");
+    QString curl_params = "pid=" + p_page_idle->thisMachine->getSelectedProductAwsProductId() + "&volume_full=" + p_page_idle->thisMachine->getSelectedProduct()->getFullVolumeCorrectUnits(false);
+
+    std::tie(res, readBuffer, http_code) = p_page_idle->thisMachine->sendRequestToPortal(PORTAL_RESET_STOCK, "POST", curl_params, "PAGE_MAINTENANCE_DISPENSER");
     // error code 6 (cannot resolve host) showed up when not connected to wifi. Make distinct!
     if (res != CURLE_OK)
     {
@@ -1237,11 +1264,10 @@ void page_maintenance_dispenser::restockTransactionToFile(QString curl_params)
     p_page_idle->thisMachine->dfUtility->write_to_file(TRANSACTIONS_RESTOCK_OFFINE_PATH, curl_params);
 }
 
-
 void page_maintenance_dispenser::update_changes_to_portal()
 {
     qDebug() << "update portal clicked ";
-    QString curl_params = "productId=" + p_page_idle->thisMachine->getSelectedProduct()->getAwsProductId() + "&source=soapstandStation" +
+    QString curl_params = "productId=" + p_page_idle->thisMachine->getSelectedProductAwsProductId() + "&source=soapstandStation" +
                           "&price_small=" + QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePrice(SIZE_SMALL_INDEX)) +
                           "&price_medium=" + QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePrice(SIZE_MEDIUM_INDEX)) +
                           "&price_large=" + QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePrice(SIZE_LARGE_INDEX)) +
@@ -1249,8 +1275,8 @@ void page_maintenance_dispenser::update_changes_to_portal()
                           "&size_small=" + p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(SIZE_SMALL_INDEX, false, false) +
                           "&size_medium=" + p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(SIZE_MEDIUM_INDEX, false, false) +
                           "&size_large=" + p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(SIZE_LARGE_INDEX, false, false);
-    
-    std::tie(res,readBuffer, http_code) = p_page_idle->thisMachine->sendRequestToPortal(PORTAL_UPDATE_PRODUCT_FROM_STATION, "POST", curl_params,"PAGE_MAINTENANCE_DISPENSER");
+
+    std::tie(res, readBuffer, http_code) = p_page_idle->thisMachine->sendRequestToPortal(PORTAL_UPDATE_PRODUCT_FROM_STATION, "POST", curl_params, "PAGE_MAINTENANCE_DISPENSER");
 
     // error code 6 (cannot resolve host) showed up when not connected to wifi. Make distinct!
     if (res != CURLE_OK)

@@ -28,7 +28,7 @@ public:
     QTimer *userRoleTimeOutTimer;
     int _userRoleTimeOutTimerSec;
     bool areBothBottleButtonsActivated();
-    bool isBottleButtonActivated(int bottlePNum);
+    bool isBottleButtonActivated(int bottlePNumber);
     QString getBottleVolumeText(int bottlOption);
 private slots:
     void onUserRoleTimeOutTimerTick();

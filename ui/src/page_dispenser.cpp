@@ -295,7 +295,7 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     p_page_idle->thisMachine->getSelectedProduct()->resetVolumeDispensed();
     updatelabel_volume_dispensed_ml(p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl());
-    paymentMethod = p_page_idle->thisMachine->getActivePaymentMethod();
+    paymentMethod = p_page_idle->thisMachine->getSelectedPaymentMethod();
 
     fsmSendStartDispensing();
 }
@@ -635,15 +635,19 @@ void page_dispenser::fsmReceiveDispenseRate(double flowrate)
 
 void page_dispenser::fsmReceiveDispenserStatus(QString status)
 {
-    QString dispenseStatus = status;
+    QString dispenseStatusStr = status;
+
+    SlotState dispenseStatus = SlotStateStringMap[dispenseStatusStr];
+
     ui->label_dispense_status->setText(dispenseStatus);
     ui->label_dispense_status->hide();
+
 
     if (dispenseStatus != previousDispenseStatus)
     {
         qDebug() << "Dispense status received from FSM: " << dispenseStatus;
 
-        if (dispenseStatus == "SLOT_STATE_WARNING_PRIMING")
+        if (dispenseStatus == SLOT_STATE_WARNING_PRIMING)
         {
             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "priming");
             p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
@@ -654,7 +658,7 @@ void page_dispenser::fsmReceiveDispenserStatus(QString status)
                 ui->label_dispense_message->raise();
             }
         }
-        else if (dispenseStatus == "SLOT_STATE_PROBLEM_EMPTY")
+        else if (dispenseStatus == SLOT_STATE_PROBLEM_EMPTY)
         {
             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "out_of_stock");
             p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
@@ -666,7 +670,7 @@ void page_dispenser::fsmReceiveDispenserStatus(QString status)
                 ui->label_dispense_message->raise();
             }
         }
-        else if (dispenseStatus == "SLOT_STATE_PROBLEM_NEEDS_ATTENTION")
+        else if (dispenseStatus == SLOT_STATE_PROBLEM_NEEDS_ATTENTION)
         {
             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "needs_attention");
             p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
@@ -677,7 +681,7 @@ void page_dispenser::fsmReceiveDispenserStatus(QString status)
                 ui->label_dispense_message->raise();
             }
         }
-        else if (dispenseStatus == "SLOT_STATE_AVAILABLE")
+        else if (dispenseStatus == SLOT_STATE_AVAILABLE)
         {
             p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_problems, "normal", PAGE_DISPENSER_CSS);
             // normal status
@@ -838,9 +842,9 @@ void page_dispenser::on_pushButton_abort_clicked()
         msgBox_abort->setWindowFlags(Qt::FramelessWindowHint| Qt::Dialog); // do not show messagebox header with program name
         switch (paymentMethod)
         {
-        case 0:
-        case 1:
-        case 2:
+        case qr:
+        case tap_canada:
+        case tap_usa:
         {
             QString searchString = this->objectName() + "->" + msgBox_abort->objectName() + "->" + "qr_tap";
             p_page_idle->thisMachine->setTextToObject(msgBox_abort, p_page_idle->thisMachine->getTemplateText(searchString));
@@ -909,9 +913,9 @@ void page_dispenser::on_pushButton_problems_clicked()
     }
     switch (paymentMethod)
     {
-    case 0:
-    case 1:
-    case 2:
+    case qr:
+    case tap_canada:
+    case tap_usa:
     {
         QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "qr_tap";
         p_page_idle->thisMachine->setTextToObject(msgBox_problems, p_page_idle->thisMachine->getTemplateText(searchString));

@@ -65,7 +65,7 @@ page_sendFeedback::page_sendFeedback(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Select Drink, Payment Page and Idle page
  */
-void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,page_offline_payment *page_offline_payment, page_help *pageHelp, page_product *page_product, page_end *page_end, statusbar *p_statusbar,keyboard *keyboard)
+void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment,page_offline_payment *page_offline_payment, page_help *pageHelp, page_product *page_product, page_end *page_end, statusbar *p_statusbar,keyboard *keyboard, page_product_menu *p_page_product_menu)
 {
 
     this->p_page_select_product = pageSelect;
@@ -78,6 +78,7 @@ void page_sendFeedback::setPage(page_select_product *pageSelect, page_dispenser 
     this->p_page_product = page_product;
     this->p_statusbar = p_statusbar;
     this->p_keyboard = keyboard;
+    this->p_page_product_menu = p_page_product_menu;
 }
 
 // DTOR
@@ -95,7 +96,7 @@ void page_sendFeedback::showEvent(QShowEvent *event)
     p_keyboard->resetKeyboard();
     statusbarLayout->removeWidget(p_keyboard);
     p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
-    
+    feedbackSent = false; // set to false initially
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_previous_page);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_select_problem);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_still_cant_find);
@@ -219,7 +220,11 @@ void page_sendFeedback::onSelectTimeoutTick()
     }
     else
     {
-        hideCurrentPageAndShowProvided(p_page_idle);
+        if(feedbackSent){ // only will be triggered after user sent feedback and for AP2 only
+            hideCurrentPageAndShowProvided(p_page_product_menu);
+        }else{
+            hideCurrentPageAndShowProvided(p_page_idle);
+        }
     }
 }
 
@@ -357,6 +362,7 @@ void page_sendFeedback::on_pushButton_send_clicked()
 
                 // this will trigger the reversal to idle page (start only after curl command completed)
                 _selectIdleTimeoutSec = 2;
+                feedbackSent = true; // if feedbackSent set to True, once timer runs out will take users to page_product_menu
             }else{
                 if(!emailValid(ui->lineEdit_enter_email->text())){
                     qDebug() << "User entered invalid email";
@@ -393,7 +399,6 @@ void page_sendFeedback::on_pushButton_send_clicked()
             {
                 qDebug() << "ERROR: Transaction NOT sent to cloud. cURL fail. Error code: " + QString::number(res);
             }
-
             // this will trigger the reversal to idle page (start only after curl command completed)
             _selectIdleTimeoutSec = 2;
         }

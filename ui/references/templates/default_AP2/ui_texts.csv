@@ -97,31 +97,35 @@ page_dispenser->msgBox_abort->default,<p align=center><br><br>Are you sure, you 
 # page_end
 page_end->pushButton_contact,Feedback
 page_end->label_message->hasReceiptPrinter,Please take your receipt!
-page_end->label_message_2->hasReceiptPrinter2,By refilling you've helped keep a<br>plastic bottle out of our landfills.<br>Thank you!
+page_end->label_message_2->hasReceiptPrinter2,Enjoy your beverage while knowing that<br>you've helped keep a plastic bottle out of<br>our landfills. Thank you!
+page_end->label_message->qr,Cheers to Sustainability!
+page_end->label_message_2->qr2,Enjoy your beverage while knowing that<br>you've helped keep a plastic bottle out of<br>our landfills. Thank you!
+page_end->label_message->any_pay,Cheers to Sustainability!
+page_end->label_message_2->any_pay2,Enjoy your beverage while knowing that<br>you've helped keep a plastic bottle out of<br>our landfills. Thank you!
 page_end->label_message->finish_transaction,Finishing Transaction
 page_end->label_volume_dispensed,Volume Dispensed:
 
 # page_help
 page_help->pushButton_to_idle,←BACK
 page_help->pushButton_to_transactions,TRANSACTIONS→
-page_help->pushButton_to_howTo,Instruction
+page_help->pushButton_to_howTo,How It Works
 page_help->pushButton_to_maintenance,Settings
-page_help->pushButton_to_feedback,Contact us
+page_help->pushButton_to_feedback,Contact Us
 
 #page_transactions
 page_transactions->pushButton_back,←BACK
 
 #page_how_to
-page_how_to->label_page_title,How to Use
-page_how_to->label_step01_heading,01. Pick
-page_how_to->label_step01_instruction,Pick your drink and customize to your liking.
+page_how_to->label_page_title,How It Works
+page_how_to->label_step01_heading,01. Select
+page_how_to->label_step01_instruction,Select the base and choose a flavour to enjoy a crafted beverage or experiment by personalizing to your taste.
 page_how_to->label_step02_heading,02. Pay
 page_how_to->label_step02_instruction,Pay with Tap or QR.
-page_how_to->label_step03_heading,03. Dispense
-page_how_to->label_step03_instruction,Bring bottle up to indicated nozzle, then press and hold to dispense.
+page_how_to->label_step03_heading,03. Refill
+page_how_to->label_step03_instruction,Bring bottle up to indicated spout, then press and hold to refill.
 page_how_to->pushButton_to_feedback,Contact us 
 page_how_to->pushButton_to_help,←BACK
-page_how_to->pushButton_to_maintenance,Settings
+page_how_to->pushButton_to_menu,Beverages
 
 # page_sendFeedback
 page_sendFeedback->pushButton_previous_page,←BACK
@@ -157,10 +161,10 @@ page_offline_payment->lineEdit_promo_code->invalid,Confirmation Code Invalid
 page_offline_payment->label_steps,<ol><li><span class='tab'></span>Scan QR code with phone camera</li>        <li><span class='tab'></span>Click to open the link that appears</li>        <li><span class='tab'></span>Follow payment instructions on phone</li>        <li><span class='tab'></span>Enter the code received after the payment</li>        <li><span class='tab'></span>Refill your beverage!</li>        </ol>  
 
 # page_payment_tap_tcp
-page_payment_tap_tcp->pushButton_previous_page,←BACK
+page_payment_tap_tcp->pushButton_previous_page,Cancel
 
 # page_payment_tap_serial
-page_payment_tap_serial->pushButton_previous_page,←BACK
+page_payment_tap_serial->pushButton_previous_page,Cancel
 page_payment_tap_serial->animated_Label->cancel,Please wait a moment to choose another product
 
 # page_email

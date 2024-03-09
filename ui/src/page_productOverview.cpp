@@ -414,7 +414,7 @@ void page_product_overview::reset_and_show_page_elements()
     break;
     case (disabled):
     {
-        qDebug() << "Coupon state: Disabled";
+        qDebug() << "Coupon state: Disabled due to network offline";
         ui->pushButton_promo_input->hide();
         ui->lineEdit_promo_code->show();
         p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_promo_code, "promoCode", PAGE_PRODUCT_OVERVIEW_CSS);

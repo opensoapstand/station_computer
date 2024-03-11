@@ -681,6 +681,55 @@ transfer_production_static_files(){
         ssh -tt df-admin@localhost -p $destination_port 'bash /home/df-admin/production/admin/deploy_production_from_zip.sh'
     fi
 }
+transfer_production_binary_files(){
+
+    echo "Source Station: "
+    get_station_port
+    source_port=$global_port
+    echo "Destination Station: "
+    get_station_port
+    destination_port=$global_port
+ 
+    production_binary_zip_name=productionbinary.zip  # check for where used, not as a variable. Because... it's hard.
+    
+    # remove previously transferred file
+    cmd0=(rm /home/ubuntu/Stations/$production_zip_name)
+    # zip it up
+    cmd1=( sudo ssh -t df-admin@localhost -p $source_port 'cd /home/df-admin/production/bin; zip -r productionbinary.zip references admin bin; mv productionbinary.zip ..' )
+    # cmd0=( sudo ssh -t df-admin@localhost -p $source_port 'cd "/home/df-admin/production"; zip -r production.zip references admin bin; mv production.zip ..' )
+    
+    # transfer zip from source station to aws 
+    cmd2=( scp -r -P $source_port "df-admin@localhost:/home/df-admin/$production_zip_name" "/home/ubuntu/Stations/" )
+    # transfer zip from aws to destination station
+    cmd3=( scp -r -P $destination_port "/home/ubuntu/Stations/$production_zip_name" df-admin@localhost:/home/df-admin )
+    printf -v cmd0_str '%q ' "${cmd0[@]}"
+    printf -v cmd1_str '%q ' "${cmd1[@]}"
+    printf -v cmd2_str '%q ' "${cmd2[@]}"
+    printf -v cmd2_str '%q ' "${cmd3[@]}"
+
+    # confirm_execute "$cmd_str"
+    echo "Lined up commands: "
+    echo "$cmd0_str"
+    echo "$cmd1_str"
+    echo "$cmd2_str"
+    echo "$cmd3_str"
+    
+    continu_or_exit
+    echo "Remove previously transferred productionbinary.zip from AWS"
+    "${cmd0[@]}"
+    echo "Zip data to productionbinary.zip productionbinary.zip"
+    "${cmd1[@]}"
+    echo "Transfer productionbinary.zip to aws..."
+    "${cmd2[@]}"
+    echo "Transfer productionbinary.zip from aws to station..."
+    "${cmd3[@]}"
+    echo "done"
+
+    if [[ $1 = "deploy" ]]
+    then
+        ssh -tt df-admin@localhost -p $destination_port 'bash /home/df-admin/production/admin/deploy_productionbinary_from_zip.sh'
+    fi
+}
 
 
 scp_aws_transfer(){

@@ -242,47 +242,50 @@ using namespace std;
 #define PORTAL_RESET_STOCK                              "api/machine_data/resetStock"
 #define PORTAL_UPDATE_PRODUCT_FROM_STATION              "api/product/update_product_from_station"
 
-typedef enum SlotStatus
+typedef enum ProductState
 {
-    slot_status_available,
-    slot_status_needs_assistance,
-    slot_status_disabled
-} SlotStatus;
+   PRODUCT_STATE_AVAILABLE = 0,
+   PRODUCT_STATE_AVAILABLE_LOW_STOCK,
+   PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION,
+   PRODUCT_STATE_PROBLEM_EMPTY,
+   PRODUCT_STATE_DISABLED,
+   PRODUCT_STATE_INVALID,
+} ProductState;
 
-typedef enum ProductStatus
+static const QMap<QString, ProductState> ProductStateStringMap = {
+    {"PRODUCT_STATE_AVAILABLE", PRODUCT_STATE_AVAILABLE},
+    {"PRODUCT_STATE_AVAILABLE_LOW_STOCK", PRODUCT_STATE_AVAILABLE_LOW_STOCK},
+    {"PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION", PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION},
+    {"PRODUCT_STATE_PROBLEM_EMPTY", PRODUCT_STATE_PROBLEM_EMPTY},
+    {"PRODUCT_STATE_DISABLED", PRODUCT_STATE_DISABLED},
+    {"PRODUCT_STATE_INVALID", PRODUCT_STATE_INVALID}
+};
+
+typedef enum SlotState
 {
-    product_status_available,
-    product_status_low_volume,
-    product_status_empty,
-    product_status_needs_assistance
-} ProductStatus;
+   SLOT_STATE_AVAILABLE = 0,
+   SLOT_STATE_WARNING_PRIMING,
+   SLOT_STATE_PROBLEM_NEEDS_ATTENTION,
+   SLOT_STATE_DISABLED,
+   SLOT_STATE_INVALID
+} SlotState;
 
-// const char *DISPENSE_BEHAVIOUR_STRINGS[] = {
-//     "FLOW_STATE_UNAVAILABLE",
-//     "FLOW_STATE_RAMP_UP",
-//     "FLOW_STATE_DISPENSING",
-//     "FLOW_STATE_PUMPING_NOT_DISPENSING",
-//     "FLOW_STATE_NOT_PUMPING_NOT_DISPENSING",
-//     "FLOW_STATE_PRIMING_OR_EMPTY",
-//     "FLOW_STATE_PRIME_FAIL_OR_EMPTY",
-//     "FLOW_STATE_EMPTY"};
-
-// const char *SLOT_STATE_STRINGS[] = {
-//     "SLOT_STATE_AVAILABLE",
-//     "SLOT_STATE_AVAILABLE_LOW_STOCK",
-//     "SLOT_STATE_WARNING_PRIMING",
-//     "SLOT_STATE_PROBLEM_NEEDS_ATTENTION",
-//     "SLOT_STATE_PROBLEM_EMPTY",
-//     "SLOT_STATE_DISABLED_COMING_SOON",
-//     "SLOT_STATE_DISABLED"};
-
-
+static const QMap<QString, SlotState> SlotStateStringMap = {
+    {"SLOT_STATE_AVAILABLE", SLOT_STATE_AVAILABLE},
+    {"SLOT_STATE_WARNING_PRIMING", SLOT_STATE_WARNING_PRIMING},
+    {"SLOT_STATE_PROBLEM_NEEDS_ATTENTION", SLOT_STATE_PROBLEM_NEEDS_ATTENTION},
+    {"SLOT_STATE_DISABLED", SLOT_STATE_DISABLED},
+    {"SLOT_STATE_INVALID", SLOT_STATE_INVALID}
+};
 
 class df_util : public QWidget
 {
     Q_OBJECT
 public:
     explicit df_util(QWidget *parent = nullptr);
+
+    static QString convertSlotStatusToString(SlotState state);
+    static QString convertProductStatusToString(ProductState state);
 
     static void warnIfPathDoesNotExist(QString path);
     static bool pathExists(QString path);

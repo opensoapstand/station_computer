@@ -223,7 +223,7 @@ void page_product_menu::displayDispenseProductsMenu()
 
         QString available_increment_text = "label_product_overlay_available_with_status%1";
         QString label_overlay_available_with_status_increment = available_increment_text.arg(sub_menu_index);
-        product_status_text = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductStatusText();
+        product_status_text = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductStateAsString();
         if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
         {
             labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->coming_soon"));

@@ -35,7 +35,7 @@ public:
     double inputTextToMlConvertUnits(QString inputValueAsText);
 
     QString getAwsProductIdSuffix();
-    QString getAwsProductId(); 
+    QString getAwsProductId();
     QString getFullVolumeCorrectUnits(bool addUnits);
 
     void setVolumeRemainingUserInput(QString volumeRemainingAsUserText); // productt
@@ -56,8 +56,8 @@ public:
     void setPlu(int sizeIndex, QString plu); // productt
     bool is_valid_size_selected();           // productt
 
-    QString getProductName();            // productt
-    QString getProductType();            // productt
+    QString getProductName();      // productt
+    QString getProductType();      // productt
     QString getPNumberAsPString(); // productt
 
     QString getProductDescription(); // productt
@@ -90,7 +90,7 @@ public:
     void setVolumePerTickForSlot(QString volumePerTickInput);         // productt
 
     void setSizeUnit(QString units);
-    QString getSizeUnit();              // productt
+    QString getSizeUnit(); // productt
     // QString getSizeAsVolume(QString units); // productt
 
     QString getSizeAsVolumeWithCorrectUnits(bool round, bool addUnits);                // productt
@@ -110,8 +110,12 @@ public:
 
     bool getIsProductEnabled();
     void setIsProductEnabled(bool isEnabled);
-    QString getProductStatusText();
-    void setProductStatusText(QString statusText);
+    // QString getProductStatusText();
+    // void setProductStatusText(QString statusText);
+
+    void setProductState(ProductState state);
+    ProductState getProductState();
+    QString getProductStateAsString();
 
     bool isCustomMix();
     // void adjustAdditivesRatioModifier(int index, double additiveModifier);
@@ -143,7 +147,8 @@ private:
     QString m_product_type;
 
     bool m_is_enabled;
-    QString m_status_text;
+    // QString m_status_text;
+    ProductState m_product_state;
 
     QString m_name;
     QString m_name_ui;

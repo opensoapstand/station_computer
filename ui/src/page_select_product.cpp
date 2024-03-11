@@ -179,7 +179,7 @@ void page_select_product::displayProducts()
                 p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[slot_index], "label_product_overlay_available", PAGE_SELECT_PRODUCT_CSS);
             }
 
-            product_status_text = p_page_idle->thisMachine->getSlotByPosition(slot_index + 1)->getSlotStatusText();
+            product_status_text = p_page_idle->thisMachine->getSlotByPosition(slot_index + 1)->getSlotStatusAsString();
 
             qDebug() << "Product: " << product_type << "At Option: " << (option_index + 1) << ", enabled: " << p_page_idle->thisMachine->getSlotByPosition(slot_index + 1)->getIsSlotEnabled() << " Status text: " << product_status_text;
 

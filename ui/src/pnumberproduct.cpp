@@ -81,14 +81,13 @@ bool pnumberproduct::loadProductPropertiesFromProductsFile()
             mix_ratios_low_str = fields[CSV_PRODUCT_COL_MIX_RATIOS_LOW];
             mix_ratios_default_str = fields[CSV_PRODUCT_COL_MIX_RATIOS_DEFAULT];
             mix_ratios_high_str = fields[CSV_PRODUCT_COL_MIX_RATIOS_HIGH];
-            
+
             df_util::csvQStringToQVectorInt(mix_pnumbers_str, m_mixPNumbers);
             df_util::csvQStringToQVectorDouble(mix_ratios_low_str, m_mixRatiosLow);
             df_util::csvQStringToQVectorDouble(mix_ratios_default_str, m_mixRatiosDefault);
             df_util::csvQStringToQVectorDouble(mix_ratios_high_str, m_mixRatiosHigh);
             break;
         }
-
     }
     file.close();
     return true;
@@ -175,33 +174,37 @@ QVector<double> pnumberproduct::getMixRatiosHigh()
 
 bool pnumberproduct::loadProductPropertiesFromDb()
 {
+
+    QString status_text;
     qDebug() << "Open db: db load pnumberproduct properties for pnumberproduct for pnumber: " << getPNumber();
     bool success = m_db->getAllProductProperties(getPNumber(),
-                                  &m_aws_product_id,
-                                  &m_soapstand_product_serial,
-                                //   m_mixPNumbers,
-                                //   m_mixRatiosLow,
-                                //   m_mixRatiosDefault,
-                                //   m_mixRatiosHigh,
-                                  &m_name_receipt,
-                                  &m_concentrate_multiplier,
-                                  &m_dispense_speed,
-                                  &m_threshold_flow,
-                                  &m_retraction_time,
-                                  &m_calibration_const,
-                                  &m_volume_per_tick,
-                                  &m_lastRestockDate,
-                                  &m_volume_full,
-                                  &m_volume_remaining,
-                                  &m_volume_dispensed_since_restock,
-                                  &m_volume_dispensed_total,
-                                  &m_is_enabled_custom_discount,
-                                  &m_size_custom_discount,
-                                  &m_price_custom_discount,
-                                  &m_is_enabled,
-                                  &m_status_text,
-                                  m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
+                                                 &m_aws_product_id,
+                                                 &m_soapstand_product_serial,
+                                                 //   m_mixPNumbers,
+                                                 //   m_mixRatiosLow,
+                                                 //   m_mixRatiosDefault,
+                                                 //   m_mixRatiosHigh,
+                                                 &m_name_receipt,
+                                                 &m_concentrate_multiplier,
+                                                 &m_dispense_speed,
+                                                 &m_threshold_flow,
+                                                 &m_retraction_time,
+                                                 &m_calibration_const,
+                                                 &m_volume_per_tick,
+                                                 &m_lastRestockDate,
+                                                 &m_volume_full,
+                                                 &m_volume_remaining,
+                                                 &m_volume_dispensed_since_restock,
+                                                 &m_volume_dispensed_total,
+                                                 &m_is_enabled_custom_discount,
+                                                 &m_size_custom_discount,
+                                                 &m_price_custom_discount,
+                                                 &m_is_enabled,
+                                                 &status_text,
+                                                 m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
 
+    m_product_state = ProductStateStringMap[status_text];
+    
     int pnumberFromDb = convertPStringToPInt(m_soapstand_product_serial);
 
     if (getPNumber() != pnumberFromDb)
@@ -222,15 +225,20 @@ void pnumberproduct::setIsProductEnabled(bool isEnabled)
     m_db->updateTableProductsWithInt(getPNumber(), "is_enabled", isEnabled);
 }
 
-QString pnumberproduct::getProductStatusText()
-{
-    return m_status_text;
+void pnumberproduct::setProductState(ProductState state){
+    m_product_state = state;
+    m_db->updateTableProductsWithText(getPNumber(), "status_text", getProductStateAsString());
 }
-void pnumberproduct::setProductStatusText(QString statusText)
-{
-    m_status_text = statusText;
-    m_db->updateTableProductsWithText(getPNumber(), "status_text", statusText);
+
+ProductState pnumberproduct::getProductState(){
+    return m_product_state;
 }
+
+QString pnumberproduct::getProductStateAsString()
+{
+    return df_util::convertProductStatusToString(m_product_state);
+}
+
 
 ///////////////////////////////////////////// SIZE
 /////////////////////////////////////////////
@@ -316,14 +324,15 @@ bool pnumberproduct::is_valid_size_selected()
     return true;
 }
 
-double pnumberproduct::getPriceOfSelectedBottle(){
-    //size: 1 for default bottle size
+double pnumberproduct::getPriceOfSelectedBottle()
+{
+    // size: 1 for default bottle size
     return getBasePrice(1);
 }
 
 double pnumberproduct::getVolumeOfSelectedBottle()
 {
-    //size: 1 for default bottle size
+    // size: 1 for default bottle size
     return getVolumeBySize(1);
 }
 
@@ -370,7 +379,6 @@ double pnumberproduct::getBasePriceSelectedSize()
 {
     return getBasePrice(getSelectedSize());
 }
-
 
 ///////////////////////////////////////////// DISPENSE
 /////////////////////////////////////////////
@@ -659,7 +667,8 @@ double pnumberproduct::getCustomMixRatios(int index)
     return m_customMixRatios[index];
 }
 
-void pnumberproduct::resetCustomMixRatioParameters(){
+void pnumberproduct::resetCustomMixRatioParameters()
+{
     m_customMixRatios.clear();
     for (int i = 0; i < getMixRatiosDefault().size(); i++)
     {
@@ -668,28 +677,44 @@ void pnumberproduct::resetCustomMixRatioParameters(){
     }
 }
 
-void pnumberproduct::setCustomMixRatios(int index, QString plusOrMinus){
+void pnumberproduct::setCustomMixRatios(int index, QString plusOrMinus)
+{
     double custom_ratios_total = 0;
     // m_customMixRatios.append(getMixRatiosDefault()[0]); // add base product ratio
     // minus
-    if(plusOrMinus == "-"){
-        if(m_customMixRatios[index] == getMixRatiosLow()[index]){
+    if (plusOrMinus == "-")
+    {
+        if (m_customMixRatios[index] == getMixRatiosLow()[index])
+        {
             // dont do anything
-        }else{
-            if(m_customMixRatios[index] == getMixRatiosDefault()[index]){
+        }
+        else
+        {
+            if (m_customMixRatios[index] == getMixRatiosDefault()[index])
+            {
                 m_customMixRatios[index] = getMixRatiosLow()[index];
-            }else{
+            }
+            else
+            {
                 m_customMixRatios[index] = getMixRatiosDefault()[index];
             }
         }
-    }else{
+    }
+    else
+    {
         // plus
-        if(m_customMixRatios[index] == getMixRatiosHigh()[index]){
+        if (m_customMixRatios[index] == getMixRatiosHigh()[index])
+        {
             // dont do anything
-        }else{
-            if(m_customMixRatios[index] == getMixRatiosDefault()[index]){
+        }
+        else
+        {
+            if (m_customMixRatios[index] == getMixRatiosDefault()[index])
+            {
                 m_customMixRatios[index] = getMixRatiosHigh()[index];
-            }else{
+            }
+            else
+            {
                 m_customMixRatios[index] = getMixRatiosDefault()[index];
             }
         }

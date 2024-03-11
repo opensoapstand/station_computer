@@ -37,11 +37,14 @@ public:
     void setSlot(int slot);
     int getSlotId();
 
-    void setSlotEnabled(bool isEnabled, QString statusText);
+    void setSlotEnabled(bool isEnabled, SlotState status);
     void setSlotEnabled(bool isEnabled);
     bool getIsSlotEnabled();
+
+    SlotState getSlotStatus();
+    void setSlotStatus(SlotState state);
     void setSlotStatusText(QString status);
-    QString getSlotStatusText();
+    QString getSlotStatusAsString();
 
     QString getDispenseStartTime();
     QString getDispenseEndTime();
@@ -61,8 +64,6 @@ public:
     // bool getSlotEnabled();
     // void setSlotEnabled(bool isEnabled);
     // void setSlotEnabled(bool isEnabled, QString statusText);
-    // QString getSlotStatusText();
-    // void setSlotStatusText(QString status);
 
 
 public slots:
@@ -83,6 +84,7 @@ private:
     QVector<int> m_additivePNumbers; // int m_mixPNumbers[ADDITIVES_PER_SLOT_COUNT_MAX];
     bool m_is_enabled;
     QString m_status_text;
+    SlotState m_slot_state;
     QString m_dispense_start_time;
     QString m_dispense_end_time;
     double m_button_press_duration;

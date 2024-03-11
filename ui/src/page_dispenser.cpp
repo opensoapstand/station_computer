@@ -156,7 +156,7 @@ void page_dispenser::showEvent(QShowEvent *event)
 
 
 
-    previousDispenseStatus = "NO STATE";
+    previousDispenseStatus = SLOT_STATE_INVALID;
 
     // if (p_page_idle->thisMachine->getSlotCount() == 1)
     // {
@@ -635,9 +635,20 @@ void page_dispenser::fsmReceiveDispenseRate(double flowrate)
 
 void page_dispenser::fsmReceiveDispenserStatus(QString status)
 {
-    QString dispenseStatus = status;
-    ui->label_dispense_status->setText(dispenseStatus);
+
+    //////////////////////////////////////////////////////
+    //     dispense status DOES NOT equal slot status.  // 
+    //////////////////////////////////////////////////////
+
+    QString dispenseStatusStr = status;
+    QString dispenseStatus = dispenseStatusStr;
+
+    // SlotState dispenseStatus = SlotStateStringMap[dispenseStatusStr];
+    // SlotState dispenseStatus = df_util::convertSlotStatusToString(dispenseStatusStr);
+
+    ui->label_dispense_status->setText(dispenseStatusStr);
     ui->label_dispense_status->hide();
+
 
     if (dispenseStatus != previousDispenseStatus)
     {

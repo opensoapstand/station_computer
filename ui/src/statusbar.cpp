@@ -132,7 +132,8 @@ void statusbar::on_pushButton_hide_clicked()
 {
     qDebug() << "Statusbar: reset and hide! ";
 
-    p_page_idle->thisMachine->resetUserState();
+    p_page_idle->thisMachine->resetUserState(); // todo: check if this is ok, or too drastic. hiding the statusbar always resets everything?!?!
+    //p_page_idle->thisMachine->setRole(UserRole::user);
 
     refresh();
 }

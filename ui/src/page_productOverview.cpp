@@ -754,7 +754,7 @@ void page_product_overview::on_pushButton_continue(int buttonID)
         {
             qDebug() << "ERROR: Failed to reach soapstandportal. error code: " + QString::number(res);
             if(p_page_idle->thisMachine->isEnabledOfflinePayment()){
-                // p_page_idle->thisMachine->setActivePaymentMethod(ActivePaymentMethod::offline_payment);
+                p_page_idle->thisMachine->setSelectedPaymentMethod(ActivePaymentMethod::offline_payment);
                 hideCurrentPageAndShowProvided(p_page_offline_payment);
             }
             else{

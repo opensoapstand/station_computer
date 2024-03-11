@@ -318,6 +318,12 @@ void page_dispenser::updatelabel_volume_dispensed_ml(double dispensed)
     {
 
         double unitprice = (p_page_idle->thisMachine->getSelectedProduct()->getBasePrice(SIZE_CUSTOM_INDEX));
+        double max_custom_volume = p_page_idle->thisMachine->getSelectedProduct()->getVolumeOfSelectedSize();
+        //Hack: To authorize the maximum pre-authorized amount. If removing this condition, the price increases more from the initial pre-auth amount and user need to TAP card again
+        // Allowing a margin of extra 1 tick product dispense to user
+        if(dispensed >= max_custom_volume){
+            dispensed = max_custom_volume;
+        }
         current_price = p_page_idle->thisMachine->getPriceWithDiscount(dispensed * unitprice);
         ui->label_volume_dispensed_ml->setText(dispensedVolumeUnitsCorrected + " " + units + " ( $" + QString::number(current_price, 'f', 2) + " )");
     }
@@ -457,7 +463,7 @@ void page_dispenser::dispensing_end_admin()
                 qDebug() << "dispense end: tap payment No volume dispensed.";
                 if (tapPaymentObject.find("saf_num") != tapPaymentObject.end())
                 {
-                    std::cout << "Voiding transaction";
+                    qDebug() << "Voiding transaction";
                     qDebug() << "SAF_NUM" << QString::fromStdString(tapPaymentObject["saf_num"]);
                     tapPaymentObject["ctrout_saf"] = tapPaymentObject["saf_num"];
                     response = voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["saf_num"]);

@@ -524,6 +524,9 @@ void page_idle::onRebootNightlyTimeOutTimerTick()
                 QString paymentMethod = thisMachine->getPaymentOptions();
                 if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA)
                 {
+                    // Tap Canada or Moneris works on the serial connection and whenever the station reboots, the device loses communication. 
+                    //To keep both the devices communicated, Tap device needs to restart as the serial connection re-establishes after the restart of TAP device. 
+                    //Rebooting TAP at the same time as the station will keep the communication in place
                     rebootTapDevice(PAYMENT_TAP_CANADA);
                 }
                 else if(paymentMethod== PAYMENT_TAP_USA_QR || PAYMENT_TAP_USA){

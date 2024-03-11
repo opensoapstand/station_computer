@@ -464,7 +464,7 @@ void page_payment_tap_tcp::on_pushButton_to_idle_clicked()
 }
 
 void page_payment_tap_tcp::rebootTapTcpDevice(){
-    rebootDevice();
+    rebootDevice(connectSocket());
 }
 
 void page_payment_tap_tcp::idlePaymentTimeout()

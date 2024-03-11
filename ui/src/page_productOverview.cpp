@@ -126,7 +126,6 @@ void page_product_overview::showEvent(QShowEvent *event)
         p_keyboard->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
         p_keyboard->setContentsMargins(0, 0, 0, 0);
         p_keyboard->findChild<QWidget *>("keyboard_3")->setGeometry(21, 0, 1040, 495);
-
         p_statusbar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
         p_statusbar->setContentsMargins(0, 0, 0, 0); 
 
@@ -288,8 +287,8 @@ void page_product_overview::showEvent(QShowEvent *event)
     }
     else if (numberOfPaymentMethods == 2)
     {
-        ui->pushButton_continue->raise();
-        ui->pushButton_continue_additional->raise();
+        // ui->pushButton_continue->raise();
+        // ui->pushButton_continue_additional->raise();
         ui->pushButton_continue->setFixedSize(QSize(360, 100));
         ui->pushButton_continue->setProperty("activePaymentMethod", paymentMethods[0]);
         ui->pushButton_continue_additional->setFixedSize(QSize(360, 100));

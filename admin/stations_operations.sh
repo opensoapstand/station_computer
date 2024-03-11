@@ -679,7 +679,7 @@ transfer_production_static_files(){
     if [[ $1 = "deploy" ]]
     then
         # copy script first to df-admin main folder. This provides some redundancy as the production folder gets removed as part of the script. We had issues where production folder was deleted, but not redeployed. At least, the script is still available then...
-        ssh -tt df-admin@localhost -p $destination_port 'bash cp /home/df-admin/production/admin/deploy_production_from_zip.sh /home/df-admin/deploy_production_from_zip.sh ;/home/df-admin/deploy_production_from_zip.sh'
+        ssh -tt df-admin@localhost -p $destination_port 'cp /home/df-admin/production/admin/deploy_production_from_zip.sh /home/df-admin/deploy_production_from_zip.sh ;/home/df-admin/deploy_production_from_zip.sh'
     fi
 }
 transfer_production_binary_files(){

@@ -40,7 +40,7 @@ const char *DISPENSE_BEHAVIOUR_STRINGS[] = {
 const char *SLOT_STATE_STRINGS[] = {
     "SLOT_STATE_AVAILABLE",
     "SLOT_STATE_AVAILABLE_LOW_STOCK",
-    "SLOT_STATE_WARNING_PRIMING",
+    "SLOT_STATE_NOT_PRIMED",
     "SLOT_STATE_PROBLEM_NEEDS_ATTENTION",
     "SLOT_STATE_PROBLEM_EMPTY",
     "SLOT_STATE_DISABLED_COMING_SOON",
@@ -1516,9 +1516,9 @@ void dispenser::analyseSlotState()
     {
         setSlotState(SLOT_STATE_AVAILABLE_LOW_STOCK);
     }
-    else if (slotStateText.find("SLOT_STATE_WARNING_PRIMING") != string::npos)
+    else if (slotStateText.find("SLOT_STATE_NOT_PRIMED") != string::npos)
     {
-        setSlotState(SLOT_STATE_WARNING_PRIMING);
+        setSlotState(SLOT_STATE_NOT_PRIMED);
     }
     else if (slotStateText.find("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") != string::npos)
     {
@@ -1613,7 +1613,7 @@ void dispenser::updateSlotState()
 {
     switch (getSlotState())
     {
-    case SLOT_STATE_WARNING_PRIMING:
+    case SLOT_STATE_NOT_PRIMED:
     {
         if (getDispenseStatus() == FLOW_STATE_EMPTY)
         {
@@ -1640,7 +1640,7 @@ void dispenser::updateSlotState()
 
         if (getDispenseStatus() == FLOW_STATE_PRIMING_OR_EMPTY)
         {
-            setSlotState(SLOT_STATE_WARNING_PRIMING);
+            setSlotState(SLOT_STATE_NOT_PRIMED);
         }
         if (getDispenseStatus() == FLOW_STATE_EMPTY)
         {

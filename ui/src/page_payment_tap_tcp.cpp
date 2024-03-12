@@ -247,6 +247,7 @@ void page_payment_tap_tcp::startPaymentProcess()
 
     if (numberOfTapAttempts < 3)
     {
+        qDebug() << "Attempt" << numberOfTapAttempts;
         numberOfTapAttempts += 1;
         
         std::ostringstream stream;
@@ -483,7 +484,7 @@ void page_payment_tap_tcp::idlePaymentTimeout()
 void page_payment_tap_tcp::resetPaymentPage()
 {
     ui->label_title->hide();
-
+    numberOfTapAttempts = 0;
     stopPayTimers();
     p_page_idle->thisMachine->resetTransactionLogging();
     qDebug() << "Reset Payment Page";

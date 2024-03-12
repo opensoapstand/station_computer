@@ -90,7 +90,11 @@ void page_help::showEvent(QShowEvent *event)
     help_text_html = p_page_idle->thisMachine->getHelpPageHtmlText();
     if (p_page_idle->thisMachine->getShowTransactionHistory())
     {
-        ui->pushButton_to_transactions->show();
+        if(p_page_idle->thisMachine->hasMixing()){
+            ui->pushButton_to_transactions->hide();
+        }else{
+            ui->pushButton_to_transactions->show();
+        }
     }
     else
     {

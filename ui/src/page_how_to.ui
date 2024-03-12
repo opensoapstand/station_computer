@@ -122,8 +122,8 @@
     <rect>
      <x>450</x>
      <y>465</y>
-     <width>395</width>
-     <height>134</height>
+     <width>530</width>
+     <height>186</height>
     </rect>
    </property>
    <property name="text">
@@ -146,9 +146,9 @@
   <widget class="QLabel" name="label_step03_instruction">
    <property name="geometry">
     <rect>
-     <x>458</x>
-     <y>1271</y>
-     <width>387</width>
+     <x>450</x>
+     <y>1273</y>
+     <width>530</width>
      <height>134</height>
     </rect>
    </property>
@@ -169,7 +169,7 @@
     <string>pushButton_to_feedback</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_to_maintenance">
+  <widget class="QPushButton" name="pushButton_to_menu">
    <property name="geometry">
     <rect>
      <x>727</x>
@@ -179,7 +179,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>pushButton_to_maintenance</string>
+    <string>pushButton_to_menu</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_resetTimeout">
@@ -211,7 +211,7 @@
   <zorder>label_step02_instruction</zorder>
   <zorder>label_step03_instruction</zorder>
   <zorder>pushButton_to_feedback</zorder>
-  <zorder>pushButton_to_maintenance</zorder>
+  <zorder>pushButton_to_menu</zorder>
  </widget>
  <resources/>
  <connections/>

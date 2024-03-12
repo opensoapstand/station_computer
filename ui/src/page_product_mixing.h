@@ -94,6 +94,7 @@ public:
     void checkMixRatiosLevel();
     void resetMixRatiosLevel();
     void updateMixRatiosLevel();
+    void toggleResetButton();
 signals:
     void paymentTotal(string, string, string);
 
@@ -108,7 +109,8 @@ private slots:
     void on_pushButton_to_help_clicked();
     void onSelectTimeoutTick();
     void on_pushButton_order_custom_clicked();
-
+    void toggleActiveInactiveOrderButtons(int targetButtonSize, QString sampleButtonState);
+    void toggleSelectQuantityWarning();
     void on_pushButton_order_medium_clicked();
     void on_pushButton_order_sample_clicked();
 
@@ -269,6 +271,7 @@ private:
 
     std::string readBuffer;
     Ui::page_product_mixing *ui;
+    bool orderButtonSelected = false;
     QVector<int> m_mixRatios_level;
     page_product_menu *p_page_product_menu;
     page_select_product *p_page_select_product;
@@ -283,7 +286,7 @@ private:
     page_payment_tap_tcp *p_page_payment_tap_tcp;
     page_payment_tap_serial *p_page_payment_tap_serial;
     statusbar *p_statusbar;
-
+    bool needResetButton = false;
     QTimer *selectIdleTimer;
     int _selectIdleTimeoutSec;
 

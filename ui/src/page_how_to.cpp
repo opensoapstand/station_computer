@@ -26,7 +26,7 @@ page_how_to::~page_how_to()
     delete ui;
 }
 
-void page_how_to::setPage(page_help *pageHelp, page_idle *pageIdle, page_transactions *pageTransactions, page_maintenance *pageMaintenance, page_sendFeedback *pageFeedback, statusbar *p_statusbar, keyboard *keyboard, input_widget *input_widget)
+void page_how_to::setPage(page_help *pageHelp, page_idle *pageIdle, page_transactions *pageTransactions, page_maintenance *pageMaintenance, page_sendFeedback *pageFeedback, statusbar *p_statusbar, keyboard *keyboard, input_widget *input_widget, page_product_menu *p_page_product_menu)
 {
     this->p_page_help = pageHelp;
     this->p_page_idle = pageIdle;
@@ -36,6 +36,7 @@ void page_how_to::setPage(page_help *pageHelp, page_idle *pageIdle, page_transac
     this->p_statusbar = p_statusbar;
     this->p_keyboard = keyboard;
     this->p_input_widget = input_widget;
+    this->p_page_product_menu = p_page_product_menu;
 }
 
 void page_how_to::showEvent(QShowEvent *event)
@@ -64,7 +65,7 @@ void page_how_to::showEvent(QShowEvent *event)
     ui->label_step03_instruction->setWordWrap(true);
 
     ui->pushButton_to_feedback->setProperty("class", "featureButtons");
-    ui->pushButton_to_maintenance->setProperty("class", "featureButtons");
+    ui->pushButton_to_menu->setProperty("class", "featureButtons");
     ui->pushButton_resetTimeout->setProperty("class", "buttonBGTransparent");
 
     QString image_path_1 = p_page_idle->thisMachine->getTemplatePathFromName(PAGE_HOWTO_STEP1);
@@ -86,7 +87,7 @@ void page_how_to::showEvent(QShowEvent *event)
     ui->label_step03_instruction->setStyleSheet(styleSheet);
     ui->pushButton_to_feedback->setStyleSheet(styleSheet);
     ui->pushButton_to_help->setStyleSheet(styleSheet);
-    ui->pushButton_to_maintenance->setStyleSheet(styleSheet);
+    ui->pushButton_to_menu->setStyleSheet(styleSheet);
     ui->pushButton_resetTimeout->setStyleSheet(styleSheet);
 
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_page_title);
@@ -97,8 +98,9 @@ void page_how_to::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_step03_heading);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_step03_instruction);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_to_feedback);
+    ui->pushButton_to_feedback->hide(); //not needed for the current design
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_to_help);
-    p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_to_maintenance);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_to_menu);
 
     p_keyboard->setKeyboardVisibility(false, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
     p_input_widget->toggleInputWidget(false);
@@ -133,21 +135,10 @@ void page_how_to::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 
 }
 
-void page_how_to::on_pushButton_to_maintenance_clicked()
+void page_how_to::on_pushButton_to_menu_clicked()
 {
-    _helpIdleTimeoutSec = 60;
+    hideCurrentPageAndShowProvided(p_page_product_menu); // to page_product_menu
 
-    if (p_page_idle->thisMachine->isAllowedAsMaintainer())
-    {
-        // if already logged in, go straight to maintenance mode.
-        hideCurrentPageAndShowProvided(p_page_maintenance);
-    }
-    else
-    {
-        p_keyboard->registerCallBack(std::bind(&page_how_to::doneButtonPressed, this));
-        p_keyboard->setKeyboardVisibility(true, p_input_widget->findChild<QLineEdit *>("lineEdit_input"));
-        p_input_widget->toggleInputWidget(true);
-    }
 }
 
 void page_how_to::doneButtonPressed(){

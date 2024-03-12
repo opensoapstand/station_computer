@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>page_how_to</class>
+ <widget class="QWidget" name="page_how_to">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1080</width>
+    <height>1920</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QPushButton" name="pushButton_to_help">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>40</y>
+     <width>401</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>pushButton_to_help</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_page_title">
+   <property name="geometry">
+    <rect>
+     <x>382</x>
+     <y>200</y>
+     <width>316</width>
+     <height>96</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>label_page_title</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_step01_image">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>380</y>
+     <width>304</width>
+     <height>304</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>label_step01_image</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_step02_image">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>784</y>
+     <width>304</width>
+     <height>304</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>label_step02_image</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_step03_image">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>1188</y>
+     <width>304</width>
+     <height>304</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>label_step03_image</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_step01_heading">
+   <property name="geometry">
+    <rect>
+     <x>388</x>
+     <y>380</y>
+     <width>642</width>
+     <height>63</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>label_step01_heading</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_step02_heading">
+   <property name="geometry">
+    <rect>
+     <x>388</x>
+     <y>784</y>
+     <width>642</width>
+     <height>63</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>label_step02_heading</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_step03_heading">
+   <property name="geometry">
+    <rect>
+     <x>388</x>
+     <y>1188</y>
+     <width>642</width>
+     <height>63</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>label_step03_heading</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_step01_instruction">
+   <property name="geometry">
+    <rect>
+     <x>450</x>
+     <y>465</y>
+     <width>530</width>
+     <height>186</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>label_step01_instruction</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_step02_instruction">
+   <property name="geometry">
+    <rect>
+     <x>458</x>
+     <y>867</y>
+     <width>395</width>
+     <height>134</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>label_step02_instruction</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_step03_instruction">
+   <property name="geometry">
+    <rect>
+     <x>450</x>
+     <y>1273</y>
+     <width>530</width>
+     <height>134</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>label_step03_instruction</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_to_feedback">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>1740</y>
+     <width>303</width>
+     <height>100</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>pushButton_to_feedback</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_to_menu">
+   <property name="geometry">
+    <rect>
+     <x>727</x>
+     <y>1740</y>
+     <width>303</width>
+     <height>100</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>pushButton_to_menu</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_resetTimeout">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1080</width>
+     <height>1920</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-image: url(/home/df-admin/production/references/background.png);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <zorder>pushButton_resetTimeout</zorder>
+  <zorder>pushButton_to_help</zorder>
+  <zorder>label_page_title</zorder>
+  <zorder>label_step01_image</zorder>
+  <zorder>label_step02_image</zorder>
+  <zorder>label_step03_image</zorder>
+  <zorder>label_step01_heading</zorder>
+  <zorder>label_step02_heading</zorder>
+  <zorder>label_step03_heading</zorder>
+  <zorder>label_step01_instruction</zorder>
+  <zorder>label_step02_instruction</zorder>
+  <zorder>label_step03_instruction</zorder>
+  <zorder>pushButton_to_feedback</zorder>
+  <zorder>pushButton_to_menu</zorder>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

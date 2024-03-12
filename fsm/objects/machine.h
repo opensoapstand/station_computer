@@ -42,14 +42,16 @@ public:
         AP2,
         UNKNOWN
     };
-
     machine();
     void refresh();
+    std::string executeCommmandLineCommand(const char *cmd);
     void pcb24VPowerSwitch(bool enableElseDisable);
     bool getPcb24VPowerSwitchStatus();
 
     bool getPcb3point3VPowerSwitchStatus();
     void pcb3point3VPowerSwitch(bool enableElseDisable);
+
+     double convertVolumeMetricToDisplayUnits(double volume);
 
     // void print_text(string text);
     void print_receipt(string name_receipt, string receipt_cost, string receipt_volume_formatted, string time_stamp, string char_units_formatted, string paymentMethod, string plu, string promoCode, bool sleep_until_printed);
@@ -150,6 +152,7 @@ private:
     string m_status_text;
     string m_payment;
     string m_size_unit;
+    // string m_portal_base_url;
 };
 
 #endif

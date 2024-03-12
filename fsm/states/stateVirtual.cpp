@@ -33,6 +33,8 @@ stateVirtual::stateVirtual()
 stateVirtual::~stateVirtual()
 {
    //clean up
+   debugOutput::sendMessage("stateVirtual: ~stateVirtual", MSG_INFO);
+
 }
 
 //getter for next state from fsm

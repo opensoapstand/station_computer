@@ -32,22 +32,27 @@ stateDispenseIdle::stateDispenseIdle(messageMediator *message)
 // DTOR
 stateDispenseIdle::~stateDispenseIdle()
 {
+    debugOutput::sendMessage("stateDispenseIdle: ~stateDispenseIdle", MSG_INFO);
 }
 
 // FIXME: See state dispense function header
 DF_ERROR stateDispenseIdle::onEntry()
 {
+    DF_ERROR e_ret = OK;
+    return e_ret;
 }
 
 DF_ERROR stateDispenseIdle::onAction()
 {
-   
-   
+    DF_ERROR e_ret = OK;
+    return e_ret;
 }
 
 // Advances to Dispense End with completed Dispense
 DF_ERROR stateDispenseIdle::onExit()
 {
+    DF_ERROR e_ret = OK;
+    return e_ret;
 }
 
 // Overload for Debugger output

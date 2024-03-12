@@ -33,6 +33,7 @@ stateManualPrinter::stateManualPrinter(messageMediator *message)
 stateManualPrinter::~stateManualPrinter()
 {
    // delete stuff
+   debugOutput::sendMessage("stateManualPrinter: ~stateManualPrinter", MSG_INFO);
 }
 
 // Overload for Debugger output
@@ -46,7 +47,7 @@ DF_ERROR stateManualPrinter::onEntry()
 {
    m_state_requested = STATE_MANUAL_PRINTER;
    DF_ERROR e_ret = OK;
-   debugOutput::sendMessage("Test printer manually.", MSG_INFO);
+   debugOutput::sendMessage("Enter Printer commmands state.", MSG_INFO);
 
    printerr = g_machine.receipt_printer;
 
@@ -57,7 +58,7 @@ DF_ERROR stateManualPrinter::onEntry()
    if (!g_machine.getPcb24VPowerSwitchStatus())
    {
       g_machine.pcb24VPowerSwitch(true); // printers take their power from the 24V converted to 5V (because of the high current)
-      // usleep(1200000);                   // wait for printer to come online.
+      usleep(1200000);                   // wait for printer to come online.
       printerr->resetPollCount();
    }
 
@@ -67,6 +68,30 @@ DF_ERROR stateManualPrinter::onEntry()
 DF_ERROR stateManualPrinter::onAction()
 {
    DF_ERROR e_ret = OK;
+
+   // not a new command, reuse when coming from idle.
+   if (m_pMessaging->getAction() == ACTION_UI_COMMAND_PRINTER_SEND_STATUS)
+   {
+      debugOutput::sendMessage("Multi command. Send printer status and exit.", MSG_INFO);
+      sendPrinterStatus();
+      m_state_requested = STATE_IDLE;
+   }
+   else if (ACTION_UI_COMMAND_PRINT_TRANSACTION == m_pMessaging->getAction())
+   {
+      // ACTION_TRANSACTION_ID
+      int id = m_pMessaging->getCommandValue();
+      debugOutput::sendMessage("Print transaction id : " + to_string(id), MSG_INFO);
+      printTransaction(id);
+      m_state_requested = STATE_IDLE;
+   }
+   else if (ACTION_UI_COMMAND_TEST_PRINT == m_pMessaging->getAction())
+   {
+      // ACTION_TRANSACTION_ID
+      int id = m_pMessaging->getCommandValue();
+      debugOutput::sendMessage("Print test print. ", MSG_INFO);
+      printTest();
+      m_state_requested = STATE_IDLE;
+   }
 
    // Check if Command String is ready
    if (m_pMessaging->isCommandStringReadyToBeParsed())
@@ -295,6 +320,8 @@ DF_ERROR stateManualPrinter::sendPrinterStatus()
    // }
 
    m_pMessaging->sendMessageOverIP(statusString, true); // send to UI // if commented out: Let's communicate by setting the db fields only
+   DF_ERROR dfRet = OK;
+   return dfRet;
 }
 
 DF_ERROR stateManualPrinter::getPrinterStatus(bool *r_isOnline, bool *r_hasPaper)
@@ -321,6 +348,8 @@ DF_ERROR stateManualPrinter::getPrinterStatus(bool *r_isOnline, bool *r_hasPaper
    }
    *r_isOnline = r_isOnline;
    *r_hasPaper = hasPaper;
+   DF_ERROR dfRet = OK;
+   return dfRet;
 }
 
 DF_ERROR stateManualPrinter::displayPrinterStatus()
@@ -346,6 +375,8 @@ DF_ERROR stateManualPrinter::displayPrinterStatus()
    {
       debugOutput::sendMessage("Printer not online.", MSG_INFO);
    }
+   DF_ERROR dfRet = OK;
+   return dfRet;
 }
 
 DF_ERROR stateManualPrinter::displayPrinterReachable()
@@ -358,6 +389,8 @@ DF_ERROR stateManualPrinter::displayPrinterReachable()
    {
       debugOutput::sendMessage("printer not reachable", MSG_INFO);
    }
+   DF_ERROR dfRet = OK;
+   return dfRet;
 }
 
 DF_ERROR stateManualPrinter::printTest()
@@ -379,6 +412,9 @@ DF_ERROR stateManualPrinter::printTest()
    //  system(printer_command_string.c_str());
 
    //  printerr->setBarcodeHeight(100);
+   usleep(3000000); // wait for printer to come online.
+   DF_ERROR dfRet = OK;
+   return dfRet;
 }
 
 // Advances to Dispense Idle
@@ -401,15 +437,16 @@ DF_ERROR stateManualPrinter::setup_receipt_from_pnumber_and_dispense_data(int pn
    //  std::string plu = g_machine.m_productDispensers[slot-1].getSelectedProduct()->getBasePLU( SIZE_CUSTOM_CHAR  );
 
    char size = g_pnumbers[pnumber].getSizeCharFromTargetVolume(volume_requested);
-   string plu = g_pnumbers[pnumber].getFinalPLU(size, price);
+   string plu = g_pnumbers[pnumber].getFinalPLU(size, price, g_machine.getPaymentMethod());
 
-   std::string units = g_pnumbers[pnumber].getDisplayUnits();
+   std::string units = g_machine.getSizeUnit();
    std::string paymentMethod = g_machine.getPaymentMethod();
+   volume_dispensed = g_machine.convertVolumeMetricToDisplayUnits(volume_dispensed);
 
    char chars_cost[MAX_BUF];
    char chars_volume_formatted[MAX_BUF];
 
-   std::string char_units_formatted = g_pnumbers[pnumber].getDisplayUnits();
+   std::string char_units_formatted = g_machine.getSizeUnit();
 
    snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.0f", volume_dispensed);
 
@@ -419,4 +456,6 @@ DF_ERROR stateManualPrinter::setup_receipt_from_pnumber_and_dispense_data(int pn
    string receipt_cost = chars_cost;
 
    g_machine.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, time_stamp, units, paymentMethod, plu, "", true);
+   DF_ERROR dfRet = OK;
+   return dfRet;
 }

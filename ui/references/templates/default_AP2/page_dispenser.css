@@ -1,5 +1,26 @@
+#label_to_refill {
+   color: #211403;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   font-family: 'El Messiri';
+   font-size: 64px;
+   font-style: normal;
+   font-weight: 400;
+}
+
+#label_instructions_container {
+   color: #895E25;
+   font-family: 'El Messiri';
+   font-size: 30px;
+   font-style: normal;
+   font-weight: 700;
+   padding: 30px;
+   background: rgba(255, 255, 255, 0.30);
+   border-radius: 25px;
+}
+
 #label_finishTransactionMessage {
-   font-family: 'EuropaNuova-Regular';
+   font-family: 'El Messiri';
    font-style: normal;
    font-weight: 400;
    font-size: 52px;
@@ -7,132 +28,99 @@
    line-height: auto;
    qproperty-alignment: AlignCenter;
    border-radius: 20px;
-   color: #5E826A;
+   color: #895E25;
    border: none;
+}
+
+#label_product_summary_background{
+   background: #fffefd;
+   border-radius: 25px;
+   color: transparent;
+}
+
+#label_volume_dispensed{
+   font-weight: 700;
 }
 
 .label_volume_dispensed_ml {
-   font-family: 'EuropaNuova-Regular';
-   font-style: normal;
-   font-weight: 400;
+   text-align: left;
+   qproperty-alignment: AlignLeft;
+   color: #211403;
+   font-family: 'Lato';
    font-size: 30px;
-   text-align: center;
-   line-height: auto;
-   qproperty-alignment: AlignCenter;
-   border-radius: 20px;
-   color: #5E826A;
-   /* color: white; */
-   border: none;
-
-}
-
-#label_to_refill {
-   font-family: 'EuropaNuova-ExtraBold';
    font-style: normal;
    font-weight: 400;
-   font-size: 78px;
-   background-color: transparent;
-   border: 0px;
-   line-height: 52px;
-   color: #FFFFFF;
-   text-align: center;
-   qproperty-alignment: AlignCenter;
-   border: none;
-
 }
 
-#label_instructions_container {
-   font-family: 'EuropaNuova-Regular';
+#label_product_name{
+   font-weight: 700;
+   text-align: left;
+   qproperty-alignment: AlignLeft;
+   color: #211403;
+   font-family: 'Lato';
+   font-size: 30px;
+   font-style: normal;
+}
+
+#label_product_selected{
+   text-align: left;
+   qproperty-alignment: AlignLeft;
+   color: #211403;
+   font-family: 'Lato';
+   font-size: 30px;
    font-style: normal;
    font-weight: 400;
-   font-size: 55px;
-   background-color: transparent;
-   border: 0px;
-   line-height: 52px;
-   color: #FFFFFF;
-   text-align: center;
-   qproperty-alignment: AlignCenter;
-   border: none;
 }
-
-#label_press {
-   font-family: 'EuropaNuova-Regular';
-   font-style: normal;
-   font-weight: 400;
-   font-size: 55px;
-   background-color: transparent;
-   border: 0px;
-   line-height: 52px;
-   color: #FFFFFF;
-   text-align: center;
-   qproperty-alignment: AlignCenter;
-   border: none;
-}
-
 
 #label_dispense_message {
-   font-family: 'Brevia';
+   font-family: 'Lato';
    font-style: normal;
-   font-weight: 75;
-   font-size: 42px;
-   background-color: orangered;
-   border: 0px;
-   line-height: 99px;
+   font-weight: 400;
+   text-align: left;
+   qproperty-alignment: AlignVCenter;
    color: #FFFFFF;
-   text-align: center;
-   qproperty-alignment: AlignCenter;
-   border: none;
-   border-radius: 20px;
+   font-size: 24px;
+}
+
+#label_dispense_message_background{
+   background-color: #bc8439;
+   border-radius: 15px;
 }
 
 #pushButton_problems.normal {
-   font-family: 'EuropaNuova-Regular';
-   font-style: normal;
-   font-weight: 400;
-   background-color: #5E826A;
-   font-size: 42px;
+   background: #FFF;
+   border: 5px solid #895E25;
+   border-radius: 25px;
+   color: #895E25;
    text-align: center;
-   line-height: auto;
-   /* qproperty-alignment: AlignCenter; */
-   border-radius: 20px;
-   color: white;
-   border: 5px double white;
+   qproperty-alignment: AlignCenter;
+   font-family: 'Lato';
+   font-size: 48px;
+   font-weight: 400;
 }
 
 #pushButton_problems.alert {
-   font-family: 'EuropaNuova-Regular';
-   font-style: normal;
-   font-weight: 400;
-   background-color: #b87b0b;
-   font-size: 42px;
+   background: #895E25;
+   border: 5px solid #895E25;
+   border-radius: 25px;
+   color: #FFF;
    text-align: center;
-   line-height: auto;
-   /* qproperty-alignment: AlignCenter; */
-   border-radius: 20px;
-   color: white;
-   border: 5px double white;
-}
-
-#pushButton_debug_Button {
-   color: #5E8580;
-   background-color: transparent;
-   border: 5px;
-   border-color: #5E8580;
+   qproperty-alignment: AlignCenter;
+   font-family: 'Lato';
+   font-size: 48px;
+   font-weight: 400;
 }
 
 #pushButton_abort {
-   font-family: 'EuropaNuova-ExtraBold';
-   font-style: normal;
-   font-weight: 400;
-   background-color: transparent;
-   font-size: 45px;
-   text-align: center;
-   line-height: auto;
-   /* qproperty-alignment: AlignCenter; */
+   background: #FFF;
+   border: 5px solid #895E25;
    border-radius: 25px;
-   color: white;
-   border: 5px solid white;
-
+   color: #895E25;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   font-family: 'Lato';
+   font-size: 48px;
+   font-weight: 400;
 }
 
 QPushButton {
@@ -146,19 +134,34 @@ QPushButton {
    text-align: center;
    border-radius: 20px;
    border: none;
-  
+}
+
+#pushButton_debug_Button {
+   /* color: #5E8580; */
+   background-color: transparent;
+   /* border: 5px; */
+   /* border-color: #5E8580; */
 }
 
 QMessageBox {
    min-width: 7000px;
    font-size: 24px;
-   font-weight: bold;
+   font-weight: 600;
    font-style: normal;
-   font-family: 'Montserrat';
+   font-family: 'Lato';
+   background: #FFF7ED;
+   border-radius: 25px;
 }
 
 QMessageBox.msgBoxbutton QPushButton{
    font-size: 24px;
-   min-width: 300px;
-   min-height: 300px;
+   min-width: 245px;
+   min-height: 100px;
+   margin: 10px;
+   background: #FFFFFF;
+   font-style: normal;
+   font-weight: 400;
+   font-family: 'Lato';
+   border: 5px solid #895E25;
+   border-radius: 25px;
 }

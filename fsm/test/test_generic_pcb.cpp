@@ -8,9 +8,15 @@
 #include <string>
 #include <iomanip>
 
-#define IO_PIN_ENABLE_24V 410      // connector pin 36 for EN-134 and EN258 pcb
-#define IO_PIN_ENABLE_3point3V 389 // connector pin 28 for EN258 pcb
-#define IO_PIN_ENABLE_5V 338       // connector pin 12 for EN258 pcb
+#define IO_PIN_ENABLE_3point3V_BEFORE_SYSFS_DEPRECATED 389 // connector pin 28 for EN258 pcb
+#define IO_PIN_ENABLE_5V_BEFORE_SYSFS_DEPRECATED 338       // connector pin 12 for EN258 pcb
+#define IO_PIN_ENABLE_24V_BEFORE_SYSFS_DEPRECATED 410      // connector pin 36 for EN-134 pcb
+
+// sysfs deprecated --> still works if all pins have 512 added to it...
+// https://forum.seeedstudio.com/t/gpio-pins-not-responding-in-code/252187/2
+#define IO_PIN_ENABLE_3point3V_AFTER_SYSFS_DEPRECATED 901 // connector pin 28 for EN258 pcb
+#define IO_PIN_ENABLE_5V_AFTER_SYSFS_DEPRECATED 850       // connector pin 12 for EN258 pcb
+#define IO_PIN_ENABLE_24V_AFTER_SYSFS_DEPRECATED 922      // connector pin 36 for EN-134 pcb
 
 enum Dispense_state
 {
@@ -81,13 +87,71 @@ Dispense_state dispense_state;
 //     }
 // }
 
+std::string executeCommmandLineCommand(const char *cmd)
+{
+    std::array<char, 128> buffer;
+    std::string result;
+    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
+    if (!pipe)
+    {
+        throw std::runtime_error("popen() failed!");
+    }
+    while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr)
+    {
+        result += buffer.data();
+    }
+    return result;
+}
 void board_test(pcb *connected_pcb)
 {
     int active_solenoid_position = 0; // first solenoid at position 1, but at first run, will do +1
 
-    int pin = IO_PIN_ENABLE_24V;
-    gpio_odyssey io24VEnable(pin);
-    io24VEnable.setPinAsInputElseOutput(false);
+    std::string kernelVersion = executeCommmandLineCommand("uname -r");
+    int major, minor, patch;
+    sscanf(kernelVersion.c_str(), "%d.%d.%d", &major, &minor, &patch);
+
+    debugOutput::sendMessage("Linux kernel version installed: " + kernelVersion, MSG_INFO);
+    // Compare to versions 5.4.0 --> Linux kernel from ubuntu 18
+    // Compare to versions 5.15.0 --> Linux kernel from ubuntu 22
+
+    int pin_enable_3point3V;
+    int pin_enable_24V;
+    int pin_enable_5V;
+
+    if (major <= 5 && minor <= 4)
+    {
+
+        debugOutput::sendMessage("Ubuntu 18.04. Update the computer to Ubuntu 22.04 when possible.", MSG_INFO);
+        pin_enable_3point3V = IO_PIN_ENABLE_3point3V_BEFORE_SYSFS_DEPRECATED;
+        pin_enable_5V = IO_PIN_ENABLE_5V_BEFORE_SYSFS_DEPRECATED;
+        pin_enable_24V = IO_PIN_ENABLE_24V_BEFORE_SYSFS_DEPRECATED;
+    }
+    else if (major >= 5 && minor >= 15)
+    {
+        debugOutput::sendMessage("Ubuntu 22.04. --> sysfs used, which is deprecated. Transform to character based gpio interface.", MSG_INFO);
+        // std::cout << "new" << std::endl;
+        pin_enable_3point3V = IO_PIN_ENABLE_3point3V_AFTER_SYSFS_DEPRECATED;
+        pin_enable_5V = IO_PIN_ENABLE_5V_AFTER_SYSFS_DEPRECATED;
+        pin_enable_24V = IO_PIN_ENABLE_24V_AFTER_SYSFS_DEPRECATED;
+    }
+    else
+    {
+        debugOutput::sendMessage("between 5.4.0 and 5.15.0. Check functionality and choose between the pin numbers needed...... Ubuntu 22.04 functionality chosen for now.  ", MSG_ERROR);
+        pin_enable_3point3V = IO_PIN_ENABLE_3point3V_AFTER_SYSFS_DEPRECATED;
+        pin_enable_5V = IO_PIN_ENABLE_5V_AFTER_SYSFS_DEPRECATED;
+        pin_enable_24V = IO_PIN_ENABLE_24V_AFTER_SYSFS_DEPRECATED;
+    }
+
+    gpio_odyssey controlPower3point3V(pin_enable_3point3V);
+    controlPower3point3V.setPinAsInputElseOutput(true);
+    controlPower3point3V.writePin(false);
+
+    gpio_odyssey controlPower24V(pin_enable_24V);
+    controlPower24V.setPinAsInputElseOutput(true);
+    controlPower24V.writePin(false);
+    // int pin = IO_PIN_ENABLE_24V;
+    // gpio_odyssey controlPower24V(pin);
+    // controlPower24V.setPinAsInputElseOutput(false);
 
     connected_pcb->setPumpPWM(255); // 255 is max speed
 
@@ -218,7 +282,7 @@ void board_test(pcb *connected_pcb)
         break;
         case (dispense_activate_solenoid):
         {
-            io24VEnable.writePin(true);
+            controlPower24V.writePin(true);
 
             pump_start_delay_start_epoch = now_epoch_millis;
             if (connected_pcb->get_pcb_version() == pcb::EN134_4SLOTS || connected_pcb->get_pcb_version() == pcb::EN134_8SLOTS)
@@ -348,7 +412,7 @@ void board_test(pcb *connected_pcb)
         break;
         case (dispense_end_solenoid_delay):
         {
-            io24VEnable.writePin(false);
+            controlPower24V.writePin(false);
 
             if (!AUTO_DISPENSE_ENABLED && connected_pcb->getDispenseButtonStateDebounced(active_slot))
             {
@@ -627,12 +691,48 @@ void runMainTest()
     pcb *pcb_to_test;
     pcb_to_test = new pcb();
 
-    gpio_odyssey controlPower3point3V(IO_PIN_ENABLE_3point3V);
-    controlPower3point3V.setPinAsInputElseOutput(false);
+    std::string kernelVersion = executeCommmandLineCommand("uname -r");
+    int major, minor, patch;
+    sscanf(kernelVersion.c_str(), "%d.%d.%d", &major, &minor, &patch);
+
+    debugOutput::sendMessage("Linux kernel version installed: " + kernelVersion, MSG_INFO);
+    // Compare to versions 5.4.0 --> Linux kernel from ubuntu 18
+    // Compare to versions 5.15.0 --> Linux kernel from ubuntu 22
+
+    int pin_enable_3point3V;
+    int pin_enable_24V;
+    int pin_enable_5V;
+
+    if (major <= 5 && minor <= 4)
+    {
+
+        debugOutput::sendMessage("Ubuntu 18.04. Update the computer to Ubuntu 22.04 when possible.", MSG_INFO);
+        pin_enable_3point3V = IO_PIN_ENABLE_3point3V_BEFORE_SYSFS_DEPRECATED;
+        pin_enable_5V = IO_PIN_ENABLE_5V_BEFORE_SYSFS_DEPRECATED;
+        pin_enable_24V = IO_PIN_ENABLE_24V_BEFORE_SYSFS_DEPRECATED;
+    }
+    else if (major >= 5 && minor >= 15)
+    {
+        debugOutput::sendMessage("Ubuntu 22.04. --> sysfs used, which is deprecated. Transform to character based gpio interface.", MSG_INFO);
+        // std::cout << "new" << std::endl;
+        pin_enable_3point3V = IO_PIN_ENABLE_3point3V_AFTER_SYSFS_DEPRECATED;
+        pin_enable_5V = IO_PIN_ENABLE_5V_AFTER_SYSFS_DEPRECATED;
+        pin_enable_24V = IO_PIN_ENABLE_24V_AFTER_SYSFS_DEPRECATED;
+    }
+    else
+    {
+        debugOutput::sendMessage("between 5.4.0 and 5.15.0. Check functionality and choose between the pin numbers needed...... Ubuntu 22.04 functionality chosen for now.  ", MSG_ERROR);
+        pin_enable_3point3V = IO_PIN_ENABLE_3point3V_AFTER_SYSFS_DEPRECATED;
+        pin_enable_5V = IO_PIN_ENABLE_5V_AFTER_SYSFS_DEPRECATED;
+        pin_enable_24V = IO_PIN_ENABLE_24V_AFTER_SYSFS_DEPRECATED;
+    }
+
+    gpio_odyssey controlPower3point3V(pin_enable_3point3V);
+    controlPower3point3V.setPinAsInputElseOutput(true);
     controlPower3point3V.writePin(true);
 
-    gpio_odyssey controlPower24V(IO_PIN_ENABLE_24V);
-    controlPower24V.setPinAsInputElseOutput(false);
+    gpio_odyssey controlPower24V(pin_enable_24V);
+    controlPower24V.setPinAsInputElseOutput(true);
     controlPower24V.writePin(true);
 
     // gpio_odyssey controlPower5V(IO_PIN_ENABLE_5V);
@@ -766,7 +866,8 @@ void runMainTest()
         pcb_to_test->flowSensorsDisableAll();
         for (uint8_t slot = 1; slot <= 4; slot++)
         {
-            pcb_to_test->setFlowSensorType(slot, pcb::AICHI);
+            // pcb_to_test->setFlowSensorType(slot, pcb::AICHI);
+            pcb_to_test->setFlowSensorType(slot, pcb::FlowSensorType::DIGMESA);
             // pcb_to_test->resetFlowSensorPulsesForDispenser(slot);
         }
 
@@ -778,18 +879,23 @@ void runMainTest()
 
                 if (pcb_to_test->getDispenseButtonEdgePositive(slot))
                 {
+                    debugOutput::sendMessage("+++++++++++++ positive button edge ++++++++++++++++++++++++++++", MSG_INFO);
+
                     pcb_to_test->setSingleDispenseButtonLight(slot, true);
                     pcb_to_test->setPumpEnable(slot);
                     pcb_to_test->startPump(slot);
                     pcb_to_test->setSolenoidFromArray(slot, 8, true);
                     pcb_to_test->getFlowSensorPulsesSinceEnabling(slot);
+                    pcb_to_test->displayMCP23017IORegisters(slot);
                 }
 
                 if (pcb_to_test->getDispenseButtonEdgeNegative(slot))
                 {
+                    debugOutput::sendMessage("--------------- negative button edge ----------------------", MSG_INFO);
                     pcb_to_test->setSingleDispenseButtonLight(slot, false);
                     pcb_to_test->setPumpsDisableAll();
                     pcb_to_test->setSolenoidFromArray(slot, 8, false);
+                    pcb_to_test->displayMCP23017IORegisters(slot);
                     // debugOutput::sendMessage("Flow sensor pulses during button press: " + std::to_string(pcb_to_test->getFlowSensorPulsesSinceEnabling(slot)), MSG_INFO);
                     // pcb_to_test->resetFlowSensorPulsesForDispenser(slot);
                 }
@@ -826,6 +932,7 @@ void runMainTest()
     // init_test();
     // test_button_lights(false);
 }
+
 
 int main(int argc, char *argv[])
 {

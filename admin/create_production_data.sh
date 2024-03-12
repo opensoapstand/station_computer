@@ -28,9 +28,17 @@ sudo -u df-admin mkdir /home/df-admin/production/references
 sudo -u df-admin mkdir /home/df-admin/production/references/logos
 sudo -u df-admin mkdir /home/df-admin/production/admin/tap_payment
 
+# Get Ubuntu version
+UBUNTU_VERSION=$(lsb_release -rs)
+CONTROLLER_VERSIONED="station_controller_ubuntu"$UBUNTU_VERSION 
+UI_VERSIONED="station_ui_ubuntu"$UBUNTU_VERSION 
+
+
 # move binary files
-scp /home/df-admin/station_computer/ui/DF_UI /home/df-admin/production/bin/DF_UI
-scp /home/df-admin/station_computer/fsm/controller /home/df-admin/production/bin/controller
+# scp /home/df-admin/station_computer/ui/DF_UI /home/df-admin/production/bin/DF_UI
+scp /home/df-admin/station_computer/ui/$UI_VERSIONED /home/df-admin/production/bin
+#scp /home/df-admin/station_computer/fsm/controller /home/df-admin/production/bin/controller
+scp /home/df-admin/station_computer/fsm/$CONTROLLER_VERSIONED /home/df-admin/production/bin
 
 # move auxiliary to production folder
 sudo -u df-admin scp -r /home/df-admin/station_computer/ui/references /home/df-admin/production
@@ -54,6 +62,8 @@ scp /home/df-admin/station_computer/admin/deploy_production_from_zip.sh /home/df
 scp /home/df-admin/station_computer/admin/create_production_data.sh /home/df-admin/production/admin/create_production_data.sh
 scp /home/df-admin/station_computer/admin/db_operations.sh /home/df-admin/production/admin/db_operations.sh
 scp /home/df-admin/station_computer/admin/enableIPForward.service /home/df-admin/production/admin/enableIPForward.service
+scp /home/df-admin/station_computer/admin/ssh_monitor.sh /home/df-admin/production/admin/ssh_monitor.sh
+scp /home/df-admin/station_computer/admin/ssh_monitor.service /home/df-admin/production/admin/ssh_monitor.service
 
 
 
@@ -65,9 +75,12 @@ scp /home/df-admin/station_computer/admin/screenshotbot_sequence_qr.txt /home/df
 scp /home/df-admin/station_computer/admin/updateDatabase.py /home/df-admin/production/admin/updateDatabase.py
 scp /home/df-admin/station_computer/admin/missingTransactions.py /home/df-admin/production/admin/missingTransactions.py
 
+scp /home/df-admin/station_computer/admin/enableIPForward.sh /home/df-admin/production/admin/
+scp /home/df-admin/station_computer/admin/disableIPForward.sh /home/df-admin/production/admin/
 scp /home/df-admin/station_computer/admin/enableIPForward.sh /home/df-admin/production/admin/tap_payment
-scp /home/df-admin/station_computer/ui/payment/private_key.der /home/df-admin/production/admin/tap_payment
-scp /home/df-admin/station_computer/ui/payment/public_key.txt /home/df-admin/production/admin/tap_payment
+scp /home/df-admin/station_computer/admin/disableIPForward.sh /home/df-admin/production/admin/tap_payment
+scp /home/df-admin/station_computer/ui/src/payment/private_key.der /home/df-admin/production/admin/tap_payment
+scp /home/df-admin/station_computer/ui/src/payment/public_key.txt /home/df-admin/production/admin/tap_payment
 
 
 # database gets copied from the backup folder. aka we do not copy the database from the station_computer folder. 

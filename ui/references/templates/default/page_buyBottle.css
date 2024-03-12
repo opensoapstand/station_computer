@@ -1,0 +1,77 @@
+#pushButton_to_idle{
+    font-family: 'Brevia';
+    font-style: normal;
+    font-weight: 75;
+    font-size: 32px;
+    background-color: transparent;
+    border: 0px;
+    line-height: 99px;
+    color: #003840;
+    text-align: left;
+    /* qproperty-alignment: AlignLeft; */
+    border: none;
+}
+
+#pushButton_help_page, .pushButton_selectBottle{
+    background-color: transparent;
+    border: 0px;
+}
+
+#label_buyBottle_title{
+    font-family: 'Brevia';
+    color: #003840;
+    text-align: center;
+    font-size: 64px;
+    font-style: normal;
+    font-weight: 700;
+}
+
+#label_button_no_bg{
+    border-radius: 32px;
+    border: 1px solid #5E8580;
+    background: #FFF;
+}
+#label_button_yes_bg_1{
+    border-radius: 32px;
+    background: #5E8580;
+}
+#label_button_yes_bg_2{
+    border-radius: 32px;
+    background: #024B51;
+}
+
+#label_button_no_text_L{
+    color: #5E8580;
+    text-align: center;
+    qproperty-alignment: AlignCenter;
+    font-family: 'Montserrat';
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 600;
+}
+#label_button_no_text_S{
+    color: #5E8580;
+    text-align: center;
+    font-family: 'Montserrat';
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 400;
+}
+
+.label_button_yes_L{
+    color: #FFF;
+    text-align: center;
+    qproperty-alignment: AlignCenter;
+    font-family: 'Montserrat';
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 600;
+}
+.label_button_yes_S{
+    color: #FFF;
+    text-align: center;
+    font-family: 'Montserrat';
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 400;
+}

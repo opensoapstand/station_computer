@@ -137,16 +137,18 @@ DF_ERROR initObjects()
 
     debugOutput::sendMessage("message mediator set up.", MSG_INFO);
 
+    for (int pnumber = 0; pnumber < PNUMBERS_COUNT; pnumber++)
+    {
+        debugOutput::sendMessage("Load pnumber " + to_string(pnumber), MSG_INFO);
+        g_pnumbers[pnumber].init(pnumber);
+        // g_pnumbers[pnumber].init(pnumber, g_machine.getSizeUnit(), g_machine.getPaymentMethod());
+    }
+    
     g_machine.setup(g_pnumbers);
     g_pMessaging->setMachine(&g_machine);
 
     debugOutput::sendMessage("Machine set up.", MSG_INFO);
 
-    for (int pnumber = 0; pnumber < PNUMBERS_COUNT; pnumber++)
-    {
-        debugOutput::sendMessage("Load pnumber " + to_string(pnumber), MSG_INFO);
-        g_pnumbers[pnumber].init(pnumber, g_machine.getSizeUnit(), g_machine.getPaymentMethod());
-    }
 
     dfRet = createStateArray();
     if (OK != dfRet)
@@ -177,7 +179,8 @@ DF_ERROR stateLoop()
         // state change, deal with new state
         if (fsmState != previousState)
         {
-            debugOutput::sendMessage("Enter state: " + stateStrings[fsmState], MSG_STATE);
+            debugOutput::sendMessage("Enter state: ===============================  " + stateStrings[fsmState] + "  =====================================", MSG_STATE);
+            // debugOutput::sendMessage("Enter state: " + stateStrings[fsmState], MSG_STATE);
             dfRet = g_stateArray[fsmState]->onEntry();
         }
         previousState = fsmState;

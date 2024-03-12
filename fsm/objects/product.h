@@ -35,13 +35,14 @@ class product
 public:
         product();
         ~product();
-        void init(int pnumber, string size_unit, string paymentMethod);
+        // void init(int pnumber, string size_unit, string paymentMethod);
+        void init(int pnumber);
 
         int getPNumber();
         string getPNumberAsPString();
 
         bool isMixingProduct();
-        void getMixRatios(double *&mixRatios, int &count);
+        void getMixRatiosDefault(double *&mixRatios, int &count);
         void getMixPNumbers(int *&pnumbers, int &count);
 
         int getMixProductsCount();
@@ -50,30 +51,31 @@ public:
         int getAdditivesCount();
         int getAdditivePNumber(int position);
         int getMixPNumber(int position);
-        double getAdditiveMixRatio(int position);
-        double getBaseMixRatio();
+        // double getAdditiveMixRatio(int position);
+        // double getBaseMixRatio();
         double getMixRatio(int position);
+        // double getMixRatio(int position, int lowDefaultHigh);
 
         bool getIsEnabled();
         void setIsEnabled(bool isEnabled);
-        string getStatusText();
-        void setStatusText(string statusText);
+        string getProductStatusText();
+        void setProductStatusText(string statusText);
 
         int getPWM();
         int getRetractionTimeMillis();
         double getPrice(char size);
-        string getDisplayUnits();
-        double convertVolumeMetricToDisplayUnits(double volume);
+        // string getDisplayUnits();
+        // double convertVolumeMetricToDisplayUnits(double volume);
         string getProductName();
         string getBasePLU(char size);
-        string getPaymentMethod();
+        // string getPaymentMethod();
+        string getFinalPLU(char size, double price, string paymentMethod);
 
         void customDispenseDiscountData(bool *isEnabled, double *discountVolume, double *discountPrice);
-        string getFinalPLU(char size, double price);
 
         void registerFlowSensorTickFromPcb();
         void registerFlowSensorTickFromInterrupt();
-        double getVolumePerTick();
+        double getVolumePerTick(bool accountForConcentrationMultiplier);
 
         double getVolumeDispensed();
         void setVolumeDispensed(double volume);
@@ -88,13 +90,14 @@ public:
         double getVolumeFromSize(char size);
         char getSizeCharFromTargetVolume(double volume);
         void setTargetVolumeFromSize(char size);
+        char getTargetVolumeAsChar();
         void setTargetVolume(double volume);
         double getTargetVolume();
         int sizeCharToSizeIndex(char size);
         char sizeIndexToSizeChar(int sizeIndex);
         bool getIsSizeEnabled(char size);
 
-        bool loadParameters();
+        bool loadParameters(bool onlyLoadFromDb);
         bool loadProductParametersFromDb();
         bool isColumnInTable(string table, string column_name);
         void executeSQLStatement(string sql_string);
@@ -103,9 +106,14 @@ public:
         static std::string dbFieldAsValidString(sqlite3_stmt *stmt, int column_index);
         void loadProductPropertiesFromCsv();
 
-        void parseMixPNumbersAndRatiosCsv(const std::string &mixPNumbersCsvString, const std::string &mixRatiosCsvString);
-        static void parseIntCsvString(const std::string &csvString, int* intArray, int &size);
-        static void parseDoubleCsvString(const std::string &csvString, double * doubleArray, int &size);
+        void parseMixPNumbersAndRatiosCsv(const std::string &mixPNumbersCsvString,
+                                          const std::string &mixRatiosLowCsvString,
+                                          const std::string &mixRatiosDefaultCsvString,
+                                          const std::string &mixRatiosHighCsvString);
+        void parseAndSetCustomMixRatios(const std::string &mixPNumbersCsvString, const std::string &mixRatiosCsvString);
+
+        static void parseIntCsvString(const std::string &csvString, int *intArray, int &size);
+        static void parseDoubleCsvString(const std::string &csvString, double *doubleArray, int &size);
 
         string m_name;
         string m_product_id_combined_with_location_for_backend;
@@ -115,8 +123,8 @@ public:
         double m_nVolumeTarget_c_min;           // custom volume dispensing: min (zero volume can be dispensed, but we will still charge for min)
         double m_nVolumeTarget_custom_discount; // custom volume from which a discount is applied.
         double m_nVolumeTarget_c_max;           // custom volume dispensing: max
-
-        double m_nVolumeTarget_t = 10000000; // test dispense (infinite)
+        double m_nVolumeTarget_f;               // how much to dispense (free sample)
+        double m_nVolumeTarget_t = 10000000;    // test dispense (infinite)
 
 private:
         double m_volumePerTick;
@@ -136,22 +144,33 @@ private:
 
         char sizeIndexToChar[4] = SIZE_INDEX_TO_CHAR_ARRAY;
 
-        string m_product_properties[100];
+        string m_product_properties[PRODUCT_DETAILS_FIELD_COUNT];
 
-        string m_display_unit;
+        // string m_display_unit;
         string m_mix_pnumbers_str;
 
         int m_mix_pnumbers[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
         int m_mix_pnumbers_count;
-        string m_mix_ratios_str;
-        double m_mix_ratios[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
-        int m_mix_ratios_count;
+        string m_mix_ratios_low_str;
+        string m_mix_ratios_default_str;
+        string m_mix_ratios_high_str;
+        double m_mix_ratios_low[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
+        double m_mix_ratios_default[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
+        double m_mix_ratios_high[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
+
+        int m_mix_pnumbers_custom[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
+        int m_mix_pnumbers_custom_count;
+        double m_mix_ratios_custom[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
+
+        // int *m_mix_pnumbers_used; // only adjust ratios!! this is not the place to create new products.
+        double *m_mix_ratios_used;
+        // int* m_mix_pnumbers_used_count; // only adjust ratios!! this is not the place to create new products.
 
         string m_nPLU_small;
         string m_nPLU_medium;
         string m_nPLU_large;
         string m_nPLU_custom;
-        string m_paymentMethod;
+        // string m_paymentMethod;
 
         double m_nVolumeDispensed;
 

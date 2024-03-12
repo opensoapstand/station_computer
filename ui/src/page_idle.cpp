@@ -526,7 +526,13 @@ void page_idle::onRebootNightlyTimeOutTimerTick()
                 QString paymentMethod = thisMachine->getPaymentOptions();
                 if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA)
                 {
-                    rebootTapDevice();
+                    // Tap Canada or Moneris works on the serial connection and whenever the station reboots, the device loses communication. 
+                    //To keep both the devices communicated, Tap device needs to restart as the serial connection re-establishes after the restart of TAP device. 
+                    //Rebooting TAP at the same time as the station will keep the communication in place
+                    rebootTapDevice(PAYMENT_TAP_CANADA);
+                }
+                else if(paymentMethod== PAYMENT_TAP_USA_QR || PAYMENT_TAP_USA){
+                    rebootTapDevice(PAYMENT_TAP_USA);
                 }
                 QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -r 0";
                 system(qPrintable(command));
@@ -773,9 +779,16 @@ void page_idle::pingTapDevice()
     }
 }
 
-void page_idle::rebootTapDevice()
+void page_idle::rebootTapDevice(QString paymentMethod)
 {
     qDebug() << "Rebooting Tap Device";
-    page_payment_tap_serial paymentSerialObject;
-    paymentSerialObject.rebootDevice();
+    if (paymentMethod == PAYMENT_TAP_CANADA){
+        page_payment_tap_serial paymentSerialObject;
+        paymentSerialObject.rebootDevice();
+    }
+    else if (paymentMethod == PAYMENT_TAP_USA){
+        page_payment_tap_tcp paymentTcpObject;
+        paymentTcpObject.rebootTapTcpDevice();
+    }
+    
 }

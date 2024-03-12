@@ -227,7 +227,6 @@ void page_payment_tap_tcp::tapPaymentHandler()
     lastTransactionId = std::stoi(configMap["INVOICE"]);
 
     startSession(socket, MAC_LABEL, MAC_KEY, lastTransactionId + 1);
-    // tapPaymentObject["session_id"] = std::to_string(lastTransactionId+1);
     tapPaymentObject["mac_label"] = MAC_LABEL;
 
     startPaymentProcess();
@@ -480,6 +479,7 @@ void page_payment_tap_tcp::idlePaymentTimeout()
         p_page_idle->thisMachine->hasMixing() ? hideCurrentPageAndShowProvided(p_page_product_mixing) : hideCurrentPageAndShowProvided(p_page_product);
     }
 }
+
 void page_payment_tap_tcp::resetPaymentPage()
 {
     ui->label_title->hide();
@@ -488,3 +488,31 @@ void page_payment_tap_tcp::resetPaymentPage()
     p_page_idle->thisMachine->resetTransactionLogging();
     qDebug() << "Reset Payment Page";
 }
+
+// void page_payment_tap_tcp::authorizeTestTransaction()
+// {
+//     std::map<std::string, std::string> configMap = readConfigFile();
+//     MAC_KEY = configMap["MAC_KEY"];
+//     MAC_LABEL = configMap["MAC_LABEL"];
+//     lastTransactionId = std::stoi(configMap["INVOICE"]);
+
+//     startSession(socket, MAC_LABEL, MAC_KEY, lastTransactionId + 1);
+//     // tapPaymentObject["session_id"] = std::to_string(lastTransactionId+1);
+//     tapPaymentObject["mac_label"] = MAC_LABEL;
+//     double price = 1;
+//     std::ostringstream stream;
+//     stream << std::fixed << std::setprecision(2) << price;
+//     std::string authCommand = authorizationCommand(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, stream.str());
+
+//     std::string packetSent = sendPacket(authCommand, std::stoi(socketAddr), true);
+//     stop_tap_action_thread = false;
+//     stop_authorization_thread = false;
+//     cardTapThread = std::thread(receiveCardTapAction);
+//     cardTapThread.detach();
+//     checkCardTappedTimer->start();
+
+//     dataThread = std::thread(receiveAuthorizationThread, std::stoi(socketAddr));
+//     dataThread.detach();
+//     checkPacketReceivedTimer->start();
+    
+// }

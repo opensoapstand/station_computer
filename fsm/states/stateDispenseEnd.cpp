@@ -552,30 +552,34 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     updated_volume_remaining = volume_remaining - dispensed_volume;
     updated_volume_dispensed_since_restock = volume_dispensed_since_restock + dispensed_volume;
 
-    // update slot state
-    if (g_machine.m_productDispensers[m_slot_index].getSlotState() == SLOT_STATE_PROBLEM_EMPTY)
+
+    // update product state
+    if (g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getProductState() == PRODUCT_STATE_PROBLEM_EMPTY)
     {
+         debugOutput::sendMessage("State of selected product is EMPTY. There are repercussions for other products. Is the base empty? Additives empty?... ", MSG_INFO);
         updated_volume_remaining = 0;
     }
-    else if (g_machine.m_productDispensers[m_slot_index].getSlotState() == SLOT_STATE_PROBLEM_NEEDS_ATTENTION)
-    {
-        // do nothing
-    }
-    else if (g_machine.m_productDispensers[m_slot_index].getSlotState() == SLOT_STATE_DISABLED_COMING_SOON || g_machine.m_productDispensers[m_slot_index].getSlotState() == SLOT_STATE_DISABLED)
-    {
-        // do nothing
-    }
+    // else if (g_machine.m_productDispensers[m_slot_index].getSlotState() == SLOT_STATE_PROBLEM_NEEDS_ATTENTION)
+    // {
+    //     // do nothing
+    // }
+    // else if (g_machine.m_productDispensers[m_slot_index].getSlotState() == SLOT_STATE_DISABLED)
+    // {
+    //     // do nothing
+    // }
     else if (updated_volume_remaining < CONTAINER_EMPTY_THRESHOLD_ML)
     {
         // disabled states are only manually changeable.
-        if (g_machine.m_productDispensers[m_slot_index].getSlotState() != SLOT_STATE_DISABLED_COMING_SOON && g_machine.m_productDispensers[m_slot_index].getSlotState() != SLOT_STATE_DISABLED)
-        {
-            g_machine.m_productDispensers[m_slot_index].setSlotState(SLOT_STATE_AVAILABLE_LOW_STOCK);
-        }
-        else
-        {
-            debugOutput::sendMessage("State will not be set, as it's disabled", MSG_INFO);
-        }
+        // if (g_machine.m_productDispensers[m_slot_index].getSlotState() != SLOT_STATE_DISABLED_COMING_SOON && g_machine.m_productDispensers[m_slot_index].getSlotState() != SLOT_STATE_DISABLED)
+        // {
+        //     g_machine.m_productDispensers[m_slot_index].setSlotState(SLOT_STATE_AVAILABLE_LOW_STOCK);
+        // }
+        // else
+        // {
+        //     debugOutput::sendMessage("State will not be set, as it's disabled", MSG_INFO);
+        // }
+        g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->setProductState(PRODUCT_STATE_AVAILABLE_LOW_STOCK);
+        
         debugOutput::sendMessage("Almost empty warning: " + to_string(updated_volume_remaining), MSG_INFO);
     }
 
@@ -583,7 +587,10 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     std::string updated_volume_remaining_str = to_string(updated_volume_remaining);
     std::string updated_volume_dispensed_total_ever_str = to_string(updated_volume_dispensed_total_ever);
     std::string updated_volume_dispensed_since_restock_str = to_string(updated_volume_dispensed_since_restock);
-    std::string m_slot_state_str = g_machine.m_productDispensers[m_slot_index].getSlotStateAsString();
+    std::string slot_state_str = g_machine.m_productDispensers[m_slot_index].getSlotStateAsString();
+    int selectedPNumber = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getPNumber();
+    std::string selected_product_state_str = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->getProductStateAsString();
+    
     // std::string product_id = getProductID(slot);
     std::string product_id = g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->m_product_id_combined_with_location_for_backend;
     // Get mix product object to be used for updating local station database
@@ -618,8 +625,12 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
 
     // update dipenser table
     std::string sql3;
-    sql3 = ("UPDATE slots SET status_text='" + m_slot_state_str + "' WHERE slot_id=" + to_string(m_slot) + ";");
+    sql3 = ("UPDATE slots SET status_text='" + slot_state_str + "' WHERE slot_id=" + to_string(m_slot) + ";");
     databaseUpdateSql(sql3, CONFIG_DB_PATH);
+
+    std::string sql4;
+    sql4 = ("UPDATE products SET status_text='" + selected_product_state_str + "' WHERE soapstand_product_serial=" + to_string(selectedPNumber) + ";");
+    databaseUpdateSql(sql4, CONFIG_DB_PATH);
 
     // reload (changed) db values
     g_machine.m_productDispensers[m_slot_index].getSelectedProduct()->loadParameters(true);

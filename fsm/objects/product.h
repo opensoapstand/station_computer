@@ -37,7 +37,6 @@ public:
         ~product();
         // void init(int pnumber, string size_unit, string paymentMethod);
         void init(int pnumber);
-
         int getPNumber();
         string getPNumberAsPString();
 
@@ -59,7 +58,13 @@ public:
         bool getIsEnabled();
         void setIsEnabled(bool isEnabled);
         string getProductStatusText();
-        void setProductStatusText(string statusText);
+        void updateProductState(Dispense_behaviour dispenseState, bool isEmptyContainerDetectionEnabled);
+        void setProductStateToEmpty(bool isEmptyContainerDetectionEnabled);
+        // void setProductStatusText(string statusText);
+        void setProductStateFromString(string slotStateText);
+        void setProductState(Product_state state);
+        const char *getProductStateAsString();
+        Product_state getProductState();
 
         int getPWM();
         int getRetractionTimeMillis();
@@ -186,8 +191,9 @@ private:
         int m_pnumber;
         bool m_pnumber_loaded_from_db;
         bool m_is_enabled;
-        string m_status_text;
+        // string m_status_text;
 
+        Product_state m_product_state;
         double m_nThresholdFlow_maximum_allowed;
 
         sqlite3 *db;

@@ -38,13 +38,22 @@ const char *DISPENSE_BEHAVIOUR_STRINGS[] = {
     "FLOW_STATE_EMPTY"};
 
 const char *SLOT_STATE_STRINGS[] = {
-    "SLOT_STATE_AVAILABLE",
-    "SLOT_STATE_AVAILABLE_LOW_STOCK",
-    "SLOT_STATE_NOT_PRIMED",
-    "SLOT_STATE_PROBLEM_NEEDS_ATTENTION",
-    "SLOT_STATE_PROBLEM_EMPTY",
-    "SLOT_STATE_DISABLED_COMING_SOON",
-    "SLOT_STATE_DISABLED"};
+   "SLOT_STATE_AVAILABLE",
+   "SLOT_STATE_WARNING_PRIMING",
+   "SLOT_STATE_PROBLEM_NEEDS_ATTENTION",
+   "SLOT_STATE_DISABLED",
+   "SLOT_STATE_INVALID"
+};
+
+
+// const char *SLOT_STATE_STRINGS[] = {
+//     "SLOT_STATE_AVAILABLE",
+//     "SLOT_STATE_AVAILABLE_LOW_STOCK",
+//     "SLOT_STATE_NOT_PRIMED",
+//     "SLOT_STATE_PROBLEM_NEEDS_ATTENTION",
+//     "SLOT_STATE_PROBLEM_EMPTY",
+//     "SLOT_STATE_DISABLED_COMING_SOON",
+//     "SLOT_STATE_DISABLED"};
 
 void dispenser::parseIntCsvString(const std::string &csvString, int *intArray, int &size) //
 {
@@ -101,17 +110,16 @@ dispenser::dispenser()
     // }
     dispense_state = FLOW_STATE_UNAVAILABLE;
     previous_dispense_state = FLOW_STATE_UNAVAILABLE;
+    using namespace std::chrono;
+    previous_status_update_allowed_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+
 }
 
 dispenser::~dispenser()
 {
-    debugOutput::sendMessage("Dispenser: ~dispenser " + to_string(getSlot()) + "(destroyed)", MSG_INFO);
-
+    debugOutput::sendMessage("Dispenser: destructor  " + to_string(getSlot()) + "(destroyed)", MSG_INFO);
     delete m_pcb;
     m_pcb = nullptr;
-
-    using namespace std::chrono;
-    previous_status_update_allowed_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }
 
 DF_ERROR dispenser::setup(pcb *pcb, product *pnumbers)
@@ -136,8 +144,8 @@ DF_ERROR dispenser::loadGeneralProperties()
     // debugOutput::sendMessage("TEMPORARY HACK: base number is the selected product at startup. ", MSG_INFO);
     usleep(20000);
     loadDispenserParametersFromDb();
-    usleep(20000);
-    analyseSlotState();
+    // usleep(20000);
+    //setSlotStateFromString(string slotStateText);
     usleep(20000);
     // setBasePNumberAsSingleDispenseSelectedProduct(); // as default, basePNumber is the active product.
     DF_ERROR dfRet = OK;
@@ -161,6 +169,12 @@ void dispenser::refresh()
 
     dispenseButtonTimingUpdate();
     pumpSlowStartHandler();
+}
+
+void dispenser::setSlotStateFromString(string slotStateText){
+    debugOutput::sendMessage("TODO: SET SLOT STATE from status text. :" + slotStateText, MSG_INFO);
+    m_slot_state = SLOT_STATE_AVAILABLE;
+    
 }
 
 // void dispenser::setAllDispenseButtonLightsOff()
@@ -452,7 +466,9 @@ bool dispenser::loadDispenserParametersFromDb()
         base_pnumber_str = product::dbFieldAsValidString(stmt, 2);
         additive_pnumbers_str = product::dbFieldAsValidString(stmt, 3);
         m_is_slot_enabled = sqlite3_column_int(stmt, 4);
-        m_status_text = product::dbFieldAsValidString(stmt, 5);
+        string status_text = product::dbFieldAsValidString(stmt, 5);
+
+        setSlotStateFromString(status_text);
 
         status = sqlite3_step(stmt); // next record
         // every sqlite3_step returns a row. if it returns 0, it's run over all the rows.
@@ -1504,44 +1520,6 @@ DF_ERROR dispenser::updateActiveProductFlowRateRunningAverageWindow()
 //////////////////////////////////////////////////////////////
 //  Dispenser state
 
-void dispenser::analyseSlotState()
-{
-    string slotStateText = m_status_text;
-
-    if (slotStateText.find("SLOT_STATE_AVAILABLE") != string::npos)
-    {
-        setSlotState(SLOT_STATE_AVAILABLE);
-    }
-    else if (slotStateText.find("SLOT_STATE_AVAILABLE_LOW_STOCK") != string::npos)
-    {
-        setSlotState(SLOT_STATE_AVAILABLE_LOW_STOCK);
-    }
-    else if (slotStateText.find("SLOT_STATE_NOT_PRIMED") != string::npos)
-    {
-        setSlotState(SLOT_STATE_NOT_PRIMED);
-    }
-    else if (slotStateText.find("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") != string::npos)
-    {
-        setSlotState(SLOT_STATE_PROBLEM_NEEDS_ATTENTION);
-    }
-    else if (slotStateText.find("SLOT_STATE_PROBLEM_EMPTY") != string::npos)
-    {
-        setSlotState(SLOT_STATE_PROBLEM_EMPTY);
-    }
-    else if (slotStateText.find("SLOT_STATE_DISABLED_COMING_SOON") != string::npos)
-    {
-        setSlotState(SLOT_STATE_DISABLED_COMING_SOON);
-    }
-    else if (slotStateText.find("SLOT_STATE_DISABLED") != string::npos)
-    {
-        setSlotState(SLOT_STATE_DISABLED);
-    }
-    else
-    {
-        setSlotState(SLOT_STATE_AVAILABLE);
-    }
-    debugOutput::sendMessage("Dispenser: Slot " + std::to_string(getSlot()) + ". State (loaded from db): " + std::string(getSlotStateAsString()) + "(db value: " + std::string(slotStateText) + ")", MSG_INFO);
-}
 
 const char *dispenser::getDispenseStatusAsString()
 {
@@ -1583,20 +1561,6 @@ const char *dispenser::getSlotStateAsString()
     return state_str;
 }
 
-void dispenser::setSlotStateToEmpty()
-{
-    if (m_isEmptyContainerDetectionEnabled)
-    {
-
-        setSlotState(SLOT_STATE_PROBLEM_EMPTY);
-    }
-    else
-    {
-        debugOutput::sendMessage("Empty container detection disabled. But, there is no alternative yet. It detected an empty container, so we'll set it to empty.", MSG_INFO);
-        setSlotState(SLOT_STATE_PROBLEM_EMPTY);
-    }
-}
-
 void dispenser::setSlotState(Slot_state state)
 {
     m_slot_state = state;
@@ -1611,91 +1575,7 @@ Slot_state dispenser::getSlotState()
 
 void dispenser::updateSlotState()
 {
-    switch (getSlotState())
-    {
-    case SLOT_STATE_NOT_PRIMED:
-    {
-        if (getDispenseStatus() == FLOW_STATE_EMPTY)
-        {
-            setSlotStateToEmpty();
-        }
-        if (getDispenseStatus() == FLOW_STATE_PRIME_FAIL_OR_EMPTY)
-        {
-            setSlotState(SLOT_STATE_PROBLEM_NEEDS_ATTENTION);
-        }
-
-        if (getDispenseStatus() == FLOW_STATE_NOT_PUMPING_NOT_DISPENSING)
-        {
-            setSlotState(SLOT_STATE_AVAILABLE);
-        }
-
-        if (getDispenseStatus() == FLOW_STATE_DISPENSING)
-        {
-            setSlotState(SLOT_STATE_AVAILABLE);
-        }
-        break;
-    }
-    case SLOT_STATE_AVAILABLE:
-    {
-
-        if (getDispenseStatus() == FLOW_STATE_PRIMING_OR_EMPTY)
-        {
-            setSlotState(SLOT_STATE_NOT_PRIMED);
-        }
-        if (getDispenseStatus() == FLOW_STATE_EMPTY)
-        {
-            setSlotStateToEmpty();
-        }
-        if (getDispenseStatus() == FLOW_STATE_PRIME_FAIL_OR_EMPTY)
-        {
-            setSlotState(SLOT_STATE_PROBLEM_NEEDS_ATTENTION);
-        }
-
-        break;
-    }
-    case SLOT_STATE_AVAILABLE_LOW_STOCK:
-    {
-        if (getDispenseStatus() == FLOW_STATE_EMPTY)
-        {
-            setSlotStateToEmpty();
-        }
-        if (getDispenseStatus() == FLOW_STATE_PRIME_FAIL_OR_EMPTY)
-        {
-            setSlotState(SLOT_STATE_PROBLEM_NEEDS_ATTENTION);
-        }
-        break;
-    }
-    case SLOT_STATE_PROBLEM_NEEDS_ATTENTION:
-    {
-        if (getDispenseStatus() == FLOW_STATE_DISPENSING)
-        {
-            setSlotState(SLOT_STATE_AVAILABLE);
-        }
-        break;
-    }
-    case SLOT_STATE_PROBLEM_EMPTY:
-    {
-        if (getDispenseStatus() == FLOW_STATE_DISPENSING)
-        {
-            setSlotState(SLOT_STATE_AVAILABLE);
-        }
-        break;
-    }
-    case SLOT_STATE_DISABLED_COMING_SOON:
-    {
-        break;
-    }
-    case SLOT_STATE_DISABLED:
-    {
-        // do nothing can only be altered when set to enabled
-        break;
-    }
-
-    default:
-    {
-        debugOutput::sendMessage("Dispenser: Erroneous dispenser state: " + to_string(m_slot_state), MSG_INFO);
-    }
-    }
+    getActiveProduct()->updateProductState(getDispenseStatus(), m_isEmptyContainerDetectionEnabled);
 }
 
 Dispense_behaviour dispenser::getDispenseStatus()

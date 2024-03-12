@@ -132,9 +132,10 @@ public:
       Dispense_behaviour getDispenseStatus();
       Slot_state getSlotState();
       void setSlotState(Slot_state state);
-      void setSlotStateToEmpty();
+      // void setSlotStateToEmpty();
       void updateSlotState();
-      void analyseSlotState();
+      // void analyseSlotState();
+      void setSlotStateFromString(string slotStateText);
 
       DF_ERROR initActivePNumberDispense();
       DF_ERROR finishActivePNumberDispense();
@@ -239,7 +240,7 @@ private:
       string dispense_numbers_str;
       string m_additive_pnumbers_str;
       bool m_is_slot_enabled;
-      string m_status_text;
+      // string m_status_text;
 
       double m_dispenser_volume_dispensed;
 

@@ -171,7 +171,7 @@ void machine::loadGeneralProperties(bool loadDispenserParameters)
         for (int slot_index = 0; slot_index < getDispensersCount(); slot_index++)
         {
             m_productDispensers[slot_index].loadGeneralProperties();
-            m_productDispensers[slot_index].setEmptyContainerDetectionEnabled(getEmptyContainerDetectionEnabled());
+            //m_productDispensers[slot_index].setEmptyContainerDetectionEnabled(getEmptyContainerDetectionEnabled());
         }
     }
 }

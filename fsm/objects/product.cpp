@@ -18,6 +18,18 @@
 #include "../objects/debugOutput.h"
 #include <fstream>
 
+
+const char *PRODUCT_STATE_STRINGS[] = {
+    "PRODUCT_STATE_AVAILABLE",
+    "PRODUCT_STATE_AVAILABLE_LOW_STOCK",
+    "PRODUCT_STATE_NOT_PRIMED",
+    "PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION",
+    "PRODUCT_STATE_PROBLEM_EMPTY",
+    "PRODUCT_STATE_DISABLED_COMING_SOON",
+    "PRODUCT_STATE_DISABLED",
+    "PRODUCT_STATE_INVALID"
+    };
+
 product::product()
 {
 }
@@ -25,6 +37,161 @@ product::product()
 product::~product()
 {
     debugOutput::sendMessage("product: ~product", MSG_INFO);
+}
+
+const char *product::getProductStateAsString()
+{
+    Product_state state = getProductState();
+    const char *state_str = PRODUCT_STATE_STRINGS[state];
+    return state_str;
+}
+
+void product::setProductState(Product_state state){
+    m_product_state = state;
+}
+
+Product_state product::getProductState(){
+    return m_product_state;
+}
+
+void product::setProductStateToEmpty(bool isEmptyContainerDetectionEnabled){
+    if (isEmptyContainerDetectionEnabled)
+    {
+
+        setProductState(PRODUCT_STATE_PROBLEM_EMPTY);
+    }
+    else
+    {
+        debugOutput::sendMessage("Empty container detection disabled. But, there is no alternative yet. It detected an empty container, so we'll set it to empty.", MSG_INFO);
+        setProductState(PRODUCT_STATE_PROBLEM_EMPTY);
+    }
+}
+
+void product::updateProductState(Dispense_behaviour dispenseState, bool isEmptyContainerDetectionEnabled){
+    switch (getProductState())
+    {
+    case PRODUCT_STATE_NOT_PRIMED:
+    {
+        if (dispenseState == FLOW_STATE_EMPTY)
+        {
+            setProductStateToEmpty(isEmptyContainerDetectionEnabled);
+        }
+        if (dispenseState == FLOW_STATE_PRIME_FAIL_OR_EMPTY)
+        {
+            setProductState(PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION);
+        }
+
+        if (dispenseState == FLOW_STATE_NOT_PUMPING_NOT_DISPENSING)
+        {
+            setProductState(PRODUCT_STATE_AVAILABLE);
+        }
+
+        if (dispenseState == FLOW_STATE_DISPENSING)
+        {
+            setProductState(PRODUCT_STATE_AVAILABLE);
+        }
+        break;
+    }
+    case PRODUCT_STATE_AVAILABLE:
+    {
+
+        if (dispenseState == FLOW_STATE_PRIMING_OR_EMPTY)
+        {
+            setProductState(PRODUCT_STATE_NOT_PRIMED);
+        }
+        if (dispenseState == FLOW_STATE_EMPTY)
+        {
+            setProductStateToEmpty(isEmptyContainerDetectionEnabled);
+        }
+        if (dispenseState == FLOW_STATE_PRIME_FAIL_OR_EMPTY)
+        {
+            setProductState(PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION);
+        }
+
+        break;
+    }
+    case PRODUCT_STATE_AVAILABLE_LOW_STOCK:
+    {
+        if (dispenseState == FLOW_STATE_EMPTY)
+        {
+            setProductStateToEmpty(isEmptyContainerDetectionEnabled);
+        }
+        if (dispenseState == FLOW_STATE_PRIME_FAIL_OR_EMPTY)
+        {
+            setProductState(PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION);
+        }
+        break;
+    }
+    case PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION:
+    {
+        if (dispenseState == FLOW_STATE_DISPENSING)
+        {
+            setProductState(PRODUCT_STATE_AVAILABLE);
+        }
+        break;
+    }
+    case PRODUCT_STATE_PROBLEM_EMPTY:
+    {
+        if (dispenseState == FLOW_STATE_DISPENSING)
+        {
+            setProductState(PRODUCT_STATE_AVAILABLE);
+        }
+        break;
+    }
+    case PRODUCT_STATE_DISABLED_COMING_SOON:
+    {
+        break;
+    }
+    case PRODUCT_STATE_DISABLED:
+    {
+        // do nothing can only be altered when set to enabled
+        break;
+    }
+
+    default:
+    {
+        debugOutput::sendMessage("Dispenser: Erroneous dispenser state: " + std::string(getProductStateAsString()), MSG_INFO);
+    }
+    }
+}
+
+void product::setProductStateFromString(string slotStateText)
+{
+    // string slotStateText = m_status_text;
+
+    if (slotStateText.find("PRODUCT_STATE_AVAILABLE") != string::npos)
+    {
+        setProductState(PRODUCT_STATE_AVAILABLE);
+    }
+    else if (slotStateText.find("PRODUCT_STATE_AVAILABLE_LOW_STOCK") != string::npos)
+    {
+        setProductState(PRODUCT_STATE_AVAILABLE_LOW_STOCK);
+    }
+    else if (slotStateText.find("PRODUCT_STATE_NOT_PRIMED") != string::npos)
+    {
+        setProductState(PRODUCT_STATE_NOT_PRIMED);
+    }
+    else if (slotStateText.find("PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION") != string::npos)
+    {
+        setProductState(PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION);
+    }
+    else if (slotStateText.find("PRODUCT_STATE_PROBLEM_EMPTY") != string::npos)
+    {
+        setProductState(PRODUCT_STATE_PROBLEM_EMPTY);
+    }
+    else if (slotStateText.find("PRODUCT_STATE_DISABLED_COMING_SOON") != string::npos)
+    {
+        setProductState(PRODUCT_STATE_DISABLED_COMING_SOON);
+    }
+    else if (slotStateText.find("PRODUCT_STATE_DISABLED") != string::npos)
+    {
+        setProductState(PRODUCT_STATE_DISABLED);
+    }
+    else
+    {
+        setProductState(PRODUCT_STATE_INVALID);
+    }
+    debugOutput::sendMessage("product: State for " + getPNumberAsPString() + ": " + getProductStateAsString() +  "(db value: " + std::string(slotStateText) + ")", MSG_INFO);
 }
 
 void product::init(int pnumber)
@@ -450,14 +617,14 @@ void product::setIsEnabled(bool isEnabled)
     this->m_is_enabled = isEnabled;
 }
 
-string product::getProductStatusText()
-{
-    return m_status_text;
-}
-void product::setProductStatusText(string statusText)
-{
-    this->m_status_text = statusText;
-}
+// string product::getProductStatusText()
+// {
+//     return m_status_text;
+// }
+// void product::setProductStatusText(string statusText)
+// {
+//     this->m_status_text = statusText;
+// }
 
 bool product::getIsSizeEnabled(char size)
 {
@@ -1051,7 +1218,12 @@ bool product::loadProductParametersFromDb()
         m_nVolumeTarget_custom_discount = sqlite3_column_double(stmt, 36);
         m_price_custom_discount_per_liter = sqlite3_column_double(stmt, 37);
 
-        m_status_text = product::dbFieldAsValidString(stmt, 38);
+        string status_text = product::dbFieldAsValidString(stmt, 38);
+
+
+        setProductStateFromString(status_text);
+        
+
         m_nVolumeTarget_f = sqlite3_column_double(stmt, 40);
         status = sqlite3_step(stmt); // next record
         // every sqlite3_step returns a row. if status is 101=SQLITE_DONE, it's run over all the rows.
@@ -1060,6 +1232,9 @@ bool product::loadProductParametersFromDb()
     // parseMixPNumbersAndRatiosCsv(m_mix_pnumbers_str, m_mix_ratios_low_str, m_mix_ratios_default_str,m_mix_ratios_high_str);
 
     m_pnumber_loaded_from_db = false;
+    
+    
+
     if (numberOfRecordsFound == 1)
     {
         debugOutput::sendMessage("DB loading ok. Found one match. status: " + to_string(status), MSG_INFO);

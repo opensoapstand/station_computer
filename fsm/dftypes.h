@@ -172,27 +172,28 @@
 
 
 
+typedef enum Product_state
+{
+   PRODUCT_STATE_AVAILABLE = 0,
+   PRODUCT_STATE_AVAILABLE_LOW_STOCK,
+   PRODUCT_STATE_NOT_PRIMED,
+   PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION,
+   PRODUCT_STATE_PROBLEM_EMPTY,
+   PRODUCT_STATE_DISABLED_COMING_SOON,
+   PRODUCT_STATE_DISABLED,
+   PRODUCT_STATE_INVALID,
+} Product_state;
 
 
-
-// typedef enum ProductState
-// {
-//    PRODUCT_STATE_AVAILABLE = 0,
-//    PRODUCT_STATE_AVAILABLE_LOW_STOCK,
-//    PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION,
-//    PRODUCT_STATE_PROBLEM_EMPTY,
-//    PRODUCT_STATE_DISABLED,
-//    PRODUCT_STATE_INVALID,
-// } ProductState;
-
-// typedef enum SlotState
-// {
-//    SLOT_STATE_AVAILABLE = 0,
-//    SLOT_STATE_NOT_PRIMED,
-//    SLOT_STATE_PROBLEM_NEEDS_ATTENTION,
-//    SLOT_STATE_DISABLED,
-//    SLOT_STATE_INVALID
-// }
+// slot state basic states for the dispenser. 
+typedef enum SlotState
+{
+   SLOT_STATE_AVAILABLE = 0,
+   SLOT_STATE_NOT_PRIMED,
+   SLOT_STATE_PROBLEM_NEEDS_ATTENTION,
+   SLOT_STATE_DISABLED,
+   SLOT_STATE_INVALID
+}Slot_state;
 
 typedef enum Dispense_behaviour
 {
@@ -213,16 +214,17 @@ struct product_order
 };
 typedef struct product_order product_order;
 
-typedef enum Slot_state
-{
-   SLOT_STATE_AVAILABLE = 0,
-   SLOT_STATE_AVAILABLE_LOW_STOCK,
-   SLOT_STATE_NOT_PRIMED,
-   SLOT_STATE_PROBLEM_NEEDS_ATTENTION,
-   SLOT_STATE_PROBLEM_EMPTY,
-   SLOT_STATE_DISABLED_COMING_SOON,
-   SLOT_STATE_DISABLED
-} Slot_state;
+
+
+// typedef enum ProductState
+// {
+//    PRODUCT_STATE_AVAILABLE = 0,
+//    PRODUCT_STATE_AVAILABLE_LOW_STOCK,
+//    PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION,
+//    PRODUCT_STATE_PROBLEM_EMPTY,
+//    PRODUCT_STATE_DISABLED,
+//    PRODUCT_STATE_INVALID,
+// } ProductState;
 
 typedef enum Button_lights_behaviour
 {

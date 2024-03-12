@@ -349,9 +349,7 @@ void page_payment_tap_tcp::authorized_transaction(std::map<std::string, std::str
     else if (responseObj["RESULT"] == "APPROVED/STORED")
     {
         p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
-        // CTROUTD = responseObj["CTROUTD"];
-        // AUTH_CODE = responseObj["AUTH_CODE"];
-        // SAF_NUM = responseObj["SAF_NUM"];
+
         tapPaymentObject["ctroutd"] = responseObj["CTROUTD"];
         tapPaymentObject["auth_code"] = responseObj["AUTH_CODE"];
         tapPaymentObject["saf_num"] = responseObj["SAF_NUM"];
@@ -463,6 +461,10 @@ void page_payment_tap_tcp::on_pushButton_to_idle_clicked()
     {
         hideCurrentPageAndShowProvided(p_page_help);
     }
+}
+
+void page_payment_tap_tcp::rebootTapTcpDevice(){
+    rebootDevice(connectSocket());
 }
 
 void page_payment_tap_tcp::idlePaymentTimeout()

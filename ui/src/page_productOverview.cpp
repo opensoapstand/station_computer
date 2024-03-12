@@ -104,10 +104,11 @@ void page_product_overview::showEvent(QShowEvent *event)
     // need CAPS button for keyboard widget T or F
     p_keyboard->resetKeyboard();
     statusbarLayout->removeWidget(p_keyboard);
+    ui->label_gif->hide();
 
-    qDebug() << "is Custom mix? : " << p_page_idle->thisMachine->getSelectedProduct()->isCustomMix();
+    // qDebug() << "is Custom mix? : " << p_page_idle->thisMachine->getSelectedProduct()->isCustomMix();
     QVector<double> customRatios = p_page_idle->thisMachine->getSelectedProduct()->getCustomMixRatios();
-    qDebug() << "Mixing products (includes base) ratios:";
+    // qDebug() << "Mixing products (includes base) ratios:";
 
     for (int i = 0; i < customRatios.size(); i++)
     {
@@ -125,7 +126,6 @@ void page_product_overview::showEvent(QShowEvent *event)
         p_keyboard->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
         p_keyboard->setContentsMargins(0, 0, 0, 0);
         p_keyboard->findChild<QWidget *>("keyboard_3")->setGeometry(21, 0, 1040, 495);
-
         p_statusbar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
         p_statusbar->setContentsMargins(0, 0, 0, 0); 
 
@@ -238,21 +238,33 @@ void page_product_overview::showEvent(QShowEvent *event)
 
     _selectIdleTimeoutSec = 400;
     selectIdleTimer->start(1000);
+
+    std::tie(res,readBuffer, http_code) =  p_page_idle->thisMachine->sendRequestToPortal(PORTAL_PING, "GET", "", "PAGE_PRODUCT_OVERVIEW");
+    if (res != CURLE_OK || http_code  > 300)
+    {
+        p_page_idle->thisMachine->setCouponState(disabled);
+    }else{
+        p_page_idle->thisMachine->setCouponState(enabled_not_set);
+    }
     reset_and_show_page_elements();
-    // ready to be killed off;
-    // check_to_page_email();
+
+
+
+    // depending on the amount of payment systems, one or two options are possible. 
+    // beware: The INDEX of the button in the buttongroup is responsible for the type of payment system. 
+    
     std::vector<ActivePaymentMethod> paymentMethods = p_page_idle->thisMachine->getAllowedPaymentMethods();
     size_t numberOfPaymentMethods = paymentMethods.size();
     switch (paymentMethods[0])
     {
-    case 0:
+    case qr:
     {
         // Set the first payment to Pay With QR
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay_qr");
         break;
     }
-    case 1:
-    case 2:
+    case tap_canada:
+    case tap_usa:
     {
         // Set the first payment to Pay with TAP
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay_tap");
@@ -265,6 +277,7 @@ void page_product_overview::showEvent(QShowEvent *event)
         break;
     }
     }
+
     if (numberOfPaymentMethods == 1)
     {
         // ui->pushButton_continue->raise();
@@ -274,19 +287,19 @@ void page_product_overview::showEvent(QShowEvent *event)
     }
     else if (numberOfPaymentMethods == 2)
     {
-        ui->pushButton_continue->raise();
-        ui->pushButton_continue_additional->raise();
+        // ui->pushButton_continue->raise();
+        // ui->pushButton_continue_additional->raise();
         ui->pushButton_continue->setFixedSize(QSize(360, 100));
         ui->pushButton_continue->setProperty("activePaymentMethod", paymentMethods[0]);
         ui->pushButton_continue_additional->setFixedSize(QSize(360, 100));
         ui->pushButton_continue_additional->setProperty("activePaymentMethod", paymentMethods[1]);
         switch (paymentMethods[1])
         {
-        case 0:
+        case qr:
             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue_additional, "proceed_pay_qr");
             break;
-        case 1:
-        case 2:
+        case tap_canada:
+        case tap_usa:
         {
             p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue_additional, "proceed_pay_tap");
             break;
@@ -298,28 +311,6 @@ void page_product_overview::showEvent(QShowEvent *event)
         }
         }
     }
-
-    // for (const auto& method : paymentMethods) {
-    //     qDebug()<< "Payment Method: " << methods[method];
-    // }
-    // if( p_page_idle->thisMachine->getPaymentMethod()==PAYMENT_TAP_CANADA){
-    //     ui->pushButton_continue->raise();
-    //     // ui->pushButton_continue_additional->show();
-    //     ui->pushButton_continue_additional->raise();
-
-    //     ui->pushButton_continue->setFixedSize(QSize(360,92));
-    //     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay_tap");
-    //     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue_additional, "proceed_pay_qr");
-
-    // }
-    // else{
-    //     ui->pushButton_continue->raise();
-    //     ui->pushButton_continue_additional->lower();
-
-    //     ui->pushButton_continue->setFixedSize(QSize(740,92));
-    //     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_continue, "proceed_pay");
-
-    // }
 }
 
 void page_product_overview::resizeEvent(QResizeEvent *event)
@@ -422,7 +413,12 @@ void page_product_overview::reset_and_show_page_elements()
     break;
     case (disabled):
     {
-        qDebug() << "Coupon state: Disabled";
+        qDebug() << "Coupon state: Disabled due to network offline";
+        ui->pushButton_promo_input->hide();
+        ui->lineEdit_promo_code->show();
+        p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_promo_code, "promoCode", PAGE_PRODUCT_OVERVIEW_CSS);
+        QString promo_code_input_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "lineEdit_promo_code->offline");
+        ui->lineEdit_promo_code->setText(promo_code_input_text);
     }
     break;
     case (enabled_processing_input):
@@ -756,35 +752,22 @@ void page_product_overview::on_pushButton_continue(int buttonID)
     ui->pushButton_previous_page->setEnabled(false);
     QAbstractButton *buttonpressed = ui->buttonGroup_continue->button(buttonID);
     int activePaymentMethod = buttonpressed->property("activePaymentMethod").toInt();
-    // QString paymentMethod = p_page_idle->thisMachine->getPaymentMethod();
-    // if(buttonName=="paymentMethodAdditional"){
-    //     paymentMethod = PAYMENT_QR;
-    // }
-    double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
-    double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
-
-    // ready to be killed off;
-    // if (p_page_idle->thisMachine->isAelenPillarElseSoapStand())
-    // {
-    //     if (selectedPrice == 0.0 || finalPrice == 0.0)
-    //     {
-    //         hideCurrentPageAndShowProvided(p_page_email);
-    //         return;
-    //     }
-    // }
+    
+    // double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
+    // double finalPrice = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
 
     switch (activePaymentMethod)
     {
     case 0:
     {
-        p_page_idle->thisMachine->setActivePaymentMethod(ActivePaymentMethod::qr);
+        p_page_idle->thisMachine->setSelectedPaymentMethod(ActivePaymentMethod::qr);
 
         std::tie(res,readBuffer, http_code) =  p_page_idle->thisMachine->sendRequestToPortal(PORTAL_PING, "GET", "", "PAGE_PRODUCT_OVERVIEW");
         if (res != CURLE_OK || http_code  > 300)
         {
             qDebug() << "ERROR: Failed to reach soapstandportal. error code: " + QString::number(res);
             if(p_page_idle->thisMachine->isEnabledOfflinePayment()){
-                qDebug() << "isEnabled";
+                p_page_idle->thisMachine->setSelectedPaymentMethod(ActivePaymentMethod::offline_payment);
                 hideCurrentPageAndShowProvided(p_page_offline_payment);
             }
             else{
@@ -804,19 +787,31 @@ void page_product_overview::on_pushButton_continue(int buttonID)
     }
     case 1:
     {
-        p_page_idle->thisMachine->setActivePaymentMethod(ActivePaymentMethod::tap_canada);
+        p_page_idle->thisMachine->setSelectedPaymentMethod(ActivePaymentMethod::tap_canada);
         hideCurrentPageAndShowProvided(p_page_payment_tap_serial);
         break;
     }
     case 2:
     {
-        p_page_idle->thisMachine->setActivePaymentMethod(ActivePaymentMethod::tap_usa);
+        p_page_idle->thisMachine->setSelectedPaymentMethod(ActivePaymentMethod::tap_usa);
         hideCurrentPageAndShowProvided(p_page_payment_tap_tcp);
+        break;
+    }
+    case 3:
+    {
+        p_page_idle->thisMachine->setSelectedPaymentMethod(ActivePaymentMethod::receipt_printer);
+        hideCurrentPageAndShowProvided(p_page_dispense);
+        break;
+    }
+    case 4:
+    {
+        p_page_idle->thisMachine->setSelectedPaymentMethod(ActivePaymentMethod::none);
+        hideCurrentPageAndShowProvided(p_page_dispense);
         break;
     }
     default:
     {
-        p_page_idle->thisMachine->setActivePaymentMethod(ActivePaymentMethod::receipt_printer);
+        p_page_idle->thisMachine->setSelectedPaymentMethod(ActivePaymentMethod::none);
         hideCurrentPageAndShowProvided(p_page_dispense);
         break;
     }

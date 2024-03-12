@@ -127,7 +127,7 @@ QString df_util::getConvertedStringVolumeFromMl(double volumeMilliLiter, QString
     if (units == "ml")
     {
 
-        int decimals = 2;
+        int decimals = 3;
         if (roundNumber)
         {
             decimals = 0;
@@ -205,7 +205,7 @@ QString df_util::getConvertedStringVolumeFromMl(double volumeMilliLiter, QString
     }
 
     // qDebug() << "vol: " << volume_as_string << " .. units: " << units << " vol metric: " << volumeMilliLiter << "vol oz: " << volume_oz;
-    qWarning() << "volume stringggggg" << volume_as_string;
+    // qWarning() << "volume stringggggg" << volume_as_string;
     return volume_as_string;
 }
 

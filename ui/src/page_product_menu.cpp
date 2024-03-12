@@ -126,6 +126,7 @@ void page_product_menu::showEvent(QShowEvent *event)
     ui->label_base_products_section_bg->setStyleSheet(styleSheet);
     ui->label_base_products_section_title->setStyleSheet(styleSheet);
     ui->label_dispense_products_section_title->setStyleSheet(styleSheet);
+    ui->label_dispense_products_section_bg->setStyleSheet(styleSheet);
 
     for (int slot_index = 0; slot_index < p_page_idle->thisMachine->getSlotCount(); slot_index++)
     {
@@ -223,10 +224,15 @@ void page_product_menu::displayDispenseProductsMenu()
 
         QString available_increment_text = "label_product_overlay_available_with_status%1";
         QString label_overlay_available_with_status_increment = available_increment_text.arg(sub_menu_index);
-        product_status_text = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getStatusText();
+        product_status_text = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductStatusText();
         if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
         {
             labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->coming_soon"));
+            p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[sub_menu_index], label_overlay_available_with_status_increment, PAGE_PRODUCT_MENU_CSS);
+        }
+        else if (product_status_text.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
+        {
+            labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->assistance"));
             p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[sub_menu_index], label_overlay_available_with_status_increment, PAGE_PRODUCT_MENU_CSS);
         }
         else if (product_status_text.compare("SLOT_STATE_DISABLED") == 0)
@@ -252,11 +258,6 @@ void page_product_menu::displayDispenseProductsMenu()
         else if (product_status_text.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
         {
             labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->empty"));
-        }
-        else if (product_status_text.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
-        {
-            labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->assistance"));
-            p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[sub_menu_index], label_overlay_available_with_status_increment, PAGE_PRODUCT_MENU_CSS);
         }
         else
         {

@@ -9,7 +9,7 @@
 
 
 // TODO: Refactor to fit with dfuicommthread
-#define UI_VERSION "3.4"
+#define UI_VERSION "3.5"
 
 #define OPTION_SLOT_INVALID 0
 #define SELECT_PRODUCT_PAGE_SLOT_COUNT_MAX 4
@@ -31,7 +31,7 @@
 #define MAX_SLOT_COUNT BASE_LINE_COUNT_MAX // number of slots
 #define DISPENSE_PRODUCTS_PER_BASE_LINE_MAX 6   // drinks per base line  (not dynamic, redo ui elements in qt creator when changing... )
 #define MENU_PRODUCT_SELECTION_OPTIONS_MAX BASE_LINE_COUNT_MAX * DISPENSE_PRODUCTS_PER_BASE_LINE_MAX // the offered selection of product to the user
-#define DUMMY_PNUMBER 1
+#define DUMMY_PNUMBER 2
 
 #define HIGHEST_PNUMBER_COUNT 1000 // WARNING: this is not the amount of pnumber loaded in the machine, but the amount of pnumbers existing. in this array, even if we only have 10 pnumbers loaded, P-88 will reside at index 88
 
@@ -214,11 +214,16 @@ using namespace std;
 #define SEND_DISPENSE_AUTOFILL "a"
 
 #define PAYMENT_QR                                      "qr"
+#define PAYMENT_QR_EMAILFREE                            "qr/emailfree"   // for ubc
 #define PAYMENT_TAP_CANADA                              "tap_canada"
 #define PAYMENT_TAP_USA                                 "tap_usa"
 #define PAYMENT_TAP_CANADA_QR                           "tap_canada_qr"
 #define PAYMENT_TAP_USA_QR                              "tap_usa_qr"
-#define PAYMENT_RECEIPT_PRINTER                         "receipt_printer"
+#define PAYMENT_RECEIPT_PRINTER_BARCODE_EAN13           "barcode_EAN-13"
+#define PAYMENT_RECEIPT_PRINTER_BARCODE_EAN2            "barcode_EAN-2"
+#define PAYMENT_RECEIPT_PRINTER_BARCODE                 "barcode"
+#define PAYMENT_RECEIPT_PRINTER_PLU                     "plu"
+#define PAYMENT_NONE                                    ""
 
 //Portal API Endpoints
 

@@ -18,7 +18,7 @@
 #include <sqlite3.h>
 #include <stdint.h>
 
-#define CONTROLLER_VERSION "3.2"
+#define CONTROLLER_VERSION "3.3"
 
 #define PRODUCT_DETAILS_TSV_PATH "/home/df-admin/production/references/products/product_details.tsv" // https://docs.google.com/spreadsheets/d/17WR2gRyPIDIlGKBy1YKFAqN-Hyw_3VOJ6JCmfcAtjVk/edit#gid=169583479 download as .tsv file
 #define PRODUCT_DETAILS_FIELD_COUNT 100  // take some extra
@@ -220,6 +220,13 @@ struct Time_val
 typedef struct Time_val Time_val;
 
 #define TABLE_PRODUCTS_COLUMN_COUNT 55
+
+typedef enum MIX_RATIO_SETTING
+{
+   LOW,
+   DEFAULT,
+   HIGH
+} MIX_RATIO_SETTING;
 
 typedef enum DF_FSM
 {

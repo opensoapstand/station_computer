@@ -101,6 +101,8 @@ void page_dispenser::hideCurrentPageAndShowProvided(QWidget *pageToShow)
     // }
 
     qDebug() << "msgBox done. ";
+    cancelPayment = false;
+
     statusbarLayout->removeWidget(p_statusbar); // Only one instance can be shown. So, has to be added/removed per page.
 
     p_page_idle->thisMachine->pageTransition(this, pageToShow);
@@ -293,7 +295,7 @@ void page_dispenser::showEvent(QShowEvent *event)
 
     p_page_idle->thisMachine->getSelectedProduct()->resetVolumeDispensed();
     updatelabel_volume_dispensed_ml(p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl());
-    paymentMethod = p_page_idle->thisMachine->getActivePaymentMethod();
+    paymentMethod = p_page_idle->thisMachine->getSelectedPaymentMethod();
 
     fsmSendStartDispensing();
 }
@@ -315,7 +317,13 @@ void page_dispenser::updatelabel_volume_dispensed_ml(double dispensed)
     if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize() == SIZE_CUSTOM_INDEX)
     {
 
-        double unitprice = (p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize());
+        double unitprice = (p_page_idle->thisMachine->getSelectedProduct()->getBasePrice(SIZE_CUSTOM_INDEX));
+        double max_custom_volume = p_page_idle->thisMachine->getSelectedProduct()->getVolumeOfSelectedSize();
+        //Hack: To authorize the maximum pre-authorized amount. If removing this condition, the price increases more from the initial pre-auth amount and user need to TAP card again
+        // Allowing a margin of extra 1 tick product dispense to user
+        if(dispensed >= max_custom_volume){
+            dispensed = max_custom_volume;
+        }
         current_price = p_page_idle->thisMachine->getPriceWithDiscount(dispensed * unitprice);
         ui->label_volume_dispensed_ml->setText(dispensedVolumeUnitsCorrected + " " + units + " ( $" + QString::number(current_price, 'f', 2) + " )");
     }
@@ -358,8 +366,7 @@ bool page_dispenser::waitForUX410()
     bool waitResponse = false;
     while (!waitResponse)
     {
-        //        QCoreApplication::processEvents();
-        // cout << readPacket << endl;
+
         if (pktResponded[0] != 0x02)
         {
             pktResponded.clear();
@@ -368,7 +375,6 @@ bool page_dispenser::waitForUX410()
         }
         else
         {
-            //  pktResponded = com.readPacket();
             readPacket.packetReadFromUX(pktResponded);
             std::cout << readPacket;
             com.sendAck();
@@ -457,7 +463,7 @@ void page_dispenser::dispensing_end_admin()
                 qDebug() << "dispense end: tap payment No volume dispensed.";
                 if (tapPaymentObject.find("saf_num") != tapPaymentObject.end())
                 {
-                    std::cout << "Voiding transaction";
+                    qDebug() << "Voiding transaction";
                     qDebug() << "SAF_NUM" << QString::fromStdString(tapPaymentObject["saf_num"]);
                     tapPaymentObject["ctrout_saf"] = tapPaymentObject["saf_num"];
                     response = voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["saf_num"]);
@@ -838,9 +844,9 @@ void page_dispenser::on_pushButton_abort_clicked()
         msgBox_abort->setWindowFlags(Qt::FramelessWindowHint| Qt::Dialog); // do not show messagebox header with program name
         switch (paymentMethod)
         {
-        case 0:
-        case 1:
-        case 2:
+        case qr:
+        case tap_canada:
+        case tap_usa:
         {
             QString searchString = this->objectName() + "->" + msgBox_abort->objectName() + "->" + "qr_tap";
             p_page_idle->thisMachine->setTextToObject(msgBox_abort, p_page_idle->thisMachine->getTemplateText(searchString));
@@ -853,16 +859,6 @@ void page_dispenser::on_pushButton_abort_clicked()
             break;
         }
         }
-        // if (paymentMethod == PAYMENT_QR || paymentMethod == PAYMENT_TAP_USA || paymentMethod == PAYMENT_TAP_CANADA)
-        // {
-        //     QString searchString = this->objectName() + "->" + msgBox_abort->objectName() + "->" + "qr_tap";
-        //     p_page_idle->thisMachine->setTextToObject(msgBox_abort, p_page_idle->thisMachine->getTemplateText(searchString));
-        // }
-        // else
-        // {
-        //     QString searchString = this->objectName() + "->" + msgBox_abort->objectName() + "->" + "default";
-        //     p_page_idle->thisMachine->setTextToObject(msgBox_abort, p_page_idle->thisMachine->getTemplateText(searchString));
-        // }
 
         p_page_idle->thisMachine->addCssClassToObject(msgBox_abort, "msgBoxbutton msgBox", PAGE_DISPENSER_CSS);
         msgBox_abort->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
@@ -919,9 +915,9 @@ void page_dispenser::on_pushButton_problems_clicked()
     }
     switch (paymentMethod)
     {
-    case 0:
-    case 1:
-    case 2:
+    case qr:
+    case tap_canada:
+    case tap_usa:
     {
         QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "qr_tap";
         p_page_idle->thisMachine->setTextToObject(msgBox_problems, p_page_idle->thisMachine->getTemplateText(searchString));
@@ -934,20 +930,10 @@ void page_dispenser::on_pushButton_problems_clicked()
         break;
     }
     }
-    // else if (paymentMethod == "qr" || paymentMethod == PAYMENT_TAP_USA || paymentMethod == PAYMENT_TAP_CANADA)
-    // {
-    //     QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "qr_tap";
-    //     p_page_idle->thisMachine->setTextToObject(msgBox_problems, p_page_idle->thisMachine->getTemplateText(searchString));
-    // }
-    // else
-    // {
-    //     QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "default";
-    //     p_page_idle->thisMachine->setTextToObject(msgBox_problems, p_page_idle->thisMachine->getTemplateText(searchString));
-    // }
 
     p_page_idle->thisMachine->addCssClassToObject(msgBox_problems, "msgBoxbutton msgBox", PAGE_DISPENSER_CSS);
 
-    msgBox_problems->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    msgBox_problems->setStandardButtons(QMessageBox::Retry | QMessageBox::Help);
 
     // Use a QTimer to hide and delete the message box after a timeout
     QTimer *timeoutTimer2 = new QTimer(msgBox_problems);
@@ -977,23 +963,22 @@ void page_dispenser::on_pushButton_problems_clicked()
     int ret = msgBox_problems->exec();
     switch (ret)
     {
-    case QMessageBox::Yes:
-    {
-
-        if (this->isDispensing)
-        {
-            askForFeedbackAtEnd = true;
-            force_finish_dispensing();
-        }
-        break;
-    }
-
-    case QMessageBox::No:
+    case QMessageBox::Retry:
     {
         // send repair command
         qDebug() << "Send repair command to fsm";
         p_page_idle->thisMachine->dfUtility->send_command_to_FSM(SEND_REPAIR_PCA, true);
         
+        break;
+    }
+
+    case QMessageBox::Help:
+    {
+        if (this->isDispensing)
+        {
+            askForFeedbackAtEnd = true;
+            force_finish_dispensing();
+        }
         break;
     }
     default:

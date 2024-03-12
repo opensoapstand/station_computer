@@ -59,9 +59,15 @@ do
             sudo systemctl disable controller_soapstand.service
         ;;
         "Setup Ubuntu for drinkfill UI")
-            echo "Screen setup for Drinkfill UI: - disable window transition animations. - set window vertical"
+            echo "Screen setup for UI:"
+
             echo "     - disable window transition animations."
             gsettings set org.gnome.desktop.interface enable-animations false
+
+            echo "     - disable lock screen"
+            gsettings set org.gnome.desktop.screensaver lock-enabled false
+            gsettings set org.gnome.desktop.screensaver ubuntu-lock-on-suspend false
+
             echo "     - decrease reboot time."
             user_question="Continue to decrease boot time? Nano will open, change: GRUB_TIMEOUT=1 add: GRUB_RECORDFAIL_TIMEOUT=\$GRUB_TIMEOUT, [y] to continu, other key to skip."
             read -p "$user_question" -n 1 -r

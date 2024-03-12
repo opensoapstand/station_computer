@@ -194,6 +194,8 @@ void page_idle::showEvent(QShowEvent *event)
 
     ui->label_show_temperature->hide(); // always hide by default
     ui->label_temperature_warning->hide();
+    ui->label_temperature_warning_background->hide(); // for default_AP2; always hide by default
+    ui->label_temperature_warning_icon->hide(); // for default_AP2; always hide by default
     if(thisMachine->hasMixing()){
         QString warning_icon_full_path = thisMachine->getTemplatePathFromName(PAGE_IDLE_WARNING_ICON);
 
@@ -511,13 +513,26 @@ void page_idle::onRebootNightlyTimeOutTimerTick()
             else
             {
                 // qDebug() << "================== REBOOT NIGHTLY - SYSTEM REBOOT ==================";
+
+                // Tap Canada or Moneris works on the serial connection and whenever the station reboots,
+                // the device loses communication. 
+                // To keep both the devices communicated,
+                // Tap device needs to restart as the serial connection re-establishes after the restart of TAP device.
+                // Rebooting TAP at the same time as the station will keep the communication in place
+
                 thisMachine->setRebootState(wait_for_trigger);
                 _delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
                 stateScreenCheck = state_screen_check_not_initiated;
-                QString paymentMethod = thisMachine->getPaymentMethod();
+                QString paymentMethod = thisMachine->getPaymentOptions();
                 if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA)
                 {
-                    rebootTapDevice();
+                    // Tap Canada or Moneris works on the serial connection and whenever the station reboots, the device loses communication. 
+                    //To keep both the devices communicated, Tap device needs to restart as the serial connection re-establishes after the restart of TAP device. 
+                    //Rebooting TAP at the same time as the station will keep the communication in place
+                    rebootTapDevice(PAYMENT_TAP_CANADA);
+                }
+                else if(paymentMethod== PAYMENT_TAP_USA_QR || PAYMENT_TAP_USA){
+                    rebootTapDevice(PAYMENT_TAP_USA);
                 }
                 QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -r 0";
                 system(qPrintable(command));
@@ -569,12 +584,11 @@ void page_idle::refreshTemperature()
         // Update temperature status label
         QString base = thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_temperature_warning, "temperature_too_high");
         ui->label_temperature_warning->setText(base.arg(temperatureStr));
-        ui->label_temperature_warning->show();
+        ui->label_temperature_warning->hide(); // hide temperature warning message from users; set to show if want to enable the temp warning message
         if(thisMachine->hasMixing()){
-            qDebug() << "########### ";
-            ui->label_temperature_warning_background->show();
+            ui->label_temperature_warning_background->hide(); // hide temperature warning message from users; set to show if want to enable the temp warning message
             ui->label_temperature_warning_background->raise();
-            ui->label_temperature_warning_icon->show();
+            ui->label_temperature_warning_icon->hide(); // hide temperature warning message from users; set to show if want to enable the temp warning message
             ui->label_temperature_warning_icon->raise();
             ui->label_temperature_warning->raise();
         }
@@ -756,7 +770,7 @@ void page_idle::on_pushButton_reboot_nightly_clicked()
 
 void page_idle::pingTapDevice()
 {
-    QString paymentMethod = thisMachine->getPaymentMethod();
+    QString paymentMethod = thisMachine->getPaymentOptions();
     if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA)
     {
         qDebug() << "Pinging Tap Serial Device";
@@ -765,9 +779,16 @@ void page_idle::pingTapDevice()
     }
 }
 
-void page_idle::rebootTapDevice()
+void page_idle::rebootTapDevice(QString paymentMethod)
 {
     qDebug() << "Rebooting Tap Device";
-    page_payment_tap_serial paymentSerialObject;
-    paymentSerialObject.rebootDevice();
+    if (paymentMethod == PAYMENT_TAP_CANADA){
+        page_payment_tap_serial paymentSerialObject;
+        paymentSerialObject.rebootDevice();
+    }
+    else if (paymentMethod == PAYMENT_TAP_USA){
+        page_payment_tap_tcp paymentTcpObject;
+        paymentTcpObject.rebootTapTcpDevice();
+    }
+    
 }

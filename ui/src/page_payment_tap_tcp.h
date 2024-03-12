@@ -80,7 +80,7 @@ public:
     bool setpaymentProcess(bool status);
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void authorized_transaction(std::map<std::string, std::string> responseObj);
-
+    void rebootTapTcpDevice();
     StateTapPayment state_tap_payment; 
 
 
@@ -131,7 +131,7 @@ private:
     int lastTransactionId;
 
     void resetPaymentPage();
-    QString getPaymentMethod();
+    // QString getPaymentOptions();
     QVBoxLayout *statusbarLayout;
 };
 

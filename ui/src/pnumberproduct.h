@@ -20,7 +20,7 @@ public:
     QString getMixPNumbersAsCsv();
     QString getMixRatiosAsCsv(QVector<double> ratios);
     QVector<double> getMixRatiosLow();
-    QVector<double> getMixRatios();
+    QVector<double> getMixRatiosDefault();
     QVector<double> getMixRatiosHigh();
 
     bool loadProductPropertiesFromProductsFile();
@@ -34,8 +34,8 @@ public:
 
     double inputTextToMlConvertUnits(QString inputValueAsText);
 
-    QString getAwsProductId(); // this is a combo of dispenser AND product.
-
+    QString getAwsProductIdSuffix();
+    QString getAwsProductId(); 
     QString getFullVolumeCorrectUnits(bool addUnits);
 
     void setVolumeRemainingUserInput(QString volumeRemainingAsUserText); // productt
@@ -106,15 +106,12 @@ public:
     int getDispenseSpeedPercentage();                // productt
     void setDispenseSpeedPercentage(int percentage); // productt
 
-    // QString getPaymentMethod();                   // ---> machine?! productt
-    // void setPaymentMethod(QString paymentMethod); //  ---> machine? or productt
-
     double getVolumeRemaining();
 
     bool getIsProductEnabled();
     void setIsProductEnabled(bool isEnabled);
-    QString getStatusText();
-    void setStatusText(QString statusText);
+    QString getProductStatusText();
+    void setProductStatusText(QString statusText);
 
     bool isCustomMix();
     // void adjustAdditivesRatioModifier(int index, double additiveModifier);
@@ -172,7 +169,7 @@ private:
     double m_price_custom_discount;
     int m_is_enabled_custom_discount;
 
-    // QString m_payment_deprecated;  // placeholders
+    // QString m_paymentOptions_deprecated;  // placeholders
     // QString m_currency_deprecated; // placeholders
 
     bool m_sizeIndexIsEnabled[SIZES_COUNT]; // size indeces.

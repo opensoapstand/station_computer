@@ -84,40 +84,57 @@ void page_init::showEvent(QShowEvent *event)
     _rebootTimeoutSec = PAGE_INIT_REBOOT_TIMEOUT_SECONDS;
     rebootTimer->start(1000);
 
-    paymentMethod = p_page_idle->thisMachine->getPaymentMethod();
+    paymentMethod = p_page_idle->thisMachine->getPaymentOptions();
     if (paymentMethod == PAYMENT_TAP_CANADA_QR)
     {
-        p_page_idle->thisMachine->setActivePaymentMethod(ActivePaymentMethod::tap_canada);
+        p_page_idle->thisMachine->setSelectedPaymentMethod(ActivePaymentMethod::tap_canada);
+
         p_page_idle->thisMachine->setAllowedPaymentMethods(ActivePaymentMethod::tap_canada);
         p_page_idle->thisMachine->setAllowedPaymentMethods(ActivePaymentMethod::qr);
     }
     else if (paymentMethod == PAYMENT_TAP_CANADA)
     {
-        p_page_idle->thisMachine->setActivePaymentMethod(ActivePaymentMethod::tap_canada);
+        p_page_idle->thisMachine->setSelectedPaymentMethod(ActivePaymentMethod::tap_canada);
+
         p_page_idle->thisMachine->setAllowedPaymentMethods(ActivePaymentMethod::tap_canada);
     }
     else if (paymentMethod == PAYMENT_TAP_USA_QR)
     {
-        p_page_idle->thisMachine->setActivePaymentMethod(ActivePaymentMethod::tap_usa);
+        p_page_idle->thisMachine->setSelectedPaymentMethod(ActivePaymentMethod::tap_usa);
+
         p_page_idle->thisMachine->setAllowedPaymentMethods(ActivePaymentMethod::tap_usa);
         p_page_idle->thisMachine->setAllowedPaymentMethods(ActivePaymentMethod::qr);
     }
     else if (paymentMethod == PAYMENT_TAP_USA)
     {
-        p_page_idle->thisMachine->setActivePaymentMethod(ActivePaymentMethod::tap_usa);
+        p_page_idle->thisMachine->setSelectedPaymentMethod(ActivePaymentMethod::tap_usa);
         p_page_idle->thisMachine->setAllowedPaymentMethods(ActivePaymentMethod::tap_usa);
     }
-    else if (paymentMethod == PAYMENT_QR)
+    else if (paymentMethod == PAYMENT_QR || paymentMethod ==  PAYMENT_QR_EMAILFREE)
     {
-        p_page_idle->thisMachine->setActivePaymentMethod(ActivePaymentMethod::qr);
+        p_page_idle->thisMachine->setSelectedPaymentMethod(ActivePaymentMethod::qr);
         p_page_idle->thisMachine->setAllowedPaymentMethods(ActivePaymentMethod::qr);
+    }
+    else if (paymentMethod == PAYMENT_NONE)
+    {
+        p_page_idle->thisMachine->setSelectedPaymentMethod(ActivePaymentMethod::none);
+        p_page_idle->thisMachine->setAllowedPaymentMethods(ActivePaymentMethod::none);
+    }
+    else if (
+        paymentMethod == PAYMENT_RECEIPT_PRINTER_BARCODE_EAN13 ||
+        paymentMethod == PAYMENT_RECEIPT_PRINTER_BARCODE_EAN2 ||
+        paymentMethod == PAYMENT_RECEIPT_PRINTER_BARCODE ||
+        paymentMethod == PAYMENT_RECEIPT_PRINTER_PLU)
+    {
+        p_page_idle->thisMachine->setSelectedPaymentMethod(ActivePaymentMethod::receipt_printer);
+        p_page_idle->thisMachine->setAllowedPaymentMethods(ActivePaymentMethod::receipt_printer);
     }
     else
     {
-        p_page_idle->thisMachine->setActivePaymentMethod(ActivePaymentMethod::receipt_printer);
-        p_page_idle->thisMachine->setAllowedPaymentMethods(ActivePaymentMethod::receipt_printer);
+        p_page_idle->thisMachine->setSelectedPaymentMethod(ActivePaymentMethod::none);
+        p_page_idle->thisMachine->setAllowedPaymentMethods(ActivePaymentMethod::none);
     }
-    activePaymentMethod = p_page_idle->thisMachine->getActivePaymentMethod();
+    activePaymentMethod = p_page_idle->thisMachine->getSelectedPaymentMethod();
     QString command = "Ping";
     p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
 
@@ -282,6 +299,7 @@ void page_init::initiateTapPayment()
     }
     case tap_canada:
     {
+        qDebug() << "In tap canada";
         page_payment_tap_serial paymentSerialObject;
         // paymentSerialObject.tap_serial_initiate();
         break;

@@ -14,6 +14,7 @@
 #include "dbmanager.h"
 #include "page_sendFeedback.h"
 #include "page_how_to.h"
+#include "page_product_menu.h"
 
 class page_help;
 class page_idle;
@@ -23,6 +24,7 @@ class statusbar;
 class keyboard;
 class input_widget;
 class page_how_to;
+class page_product_menu;
 
 namespace Ui {
 class page_how_to;
@@ -35,7 +37,7 @@ class page_how_to : public QWidget
 public:
     explicit page_how_to(QWidget *parent = 0);
     ~page_how_to();
-    void setPage(page_help *pageHelp, page_idle* pageIdle, page_transactions *pageTransactions, page_maintenance* pageMaintenance, page_sendFeedback *pageFeedback, statusbar *p_statusbar, keyboard * keyboard, input_widget * input_widget);
+    void setPage(page_help *pageHelp, page_idle* pageIdle, page_transactions *pageTransactions, page_maintenance* pageMaintenance, page_sendFeedback *pageFeedback, statusbar *p_statusbar, keyboard * keyboard, input_widget * input_widget, page_product_menu *p_page_product_menu);
     QTimer* helpIdleTimer;
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
 
@@ -44,7 +46,7 @@ private slots:
     void on_pushButton_resetTimeout_clicked();
     void onHelpTimeoutTick();
     void doneButtonPressed();
-    void on_pushButton_to_maintenance_clicked();
+    void on_pushButton_to_menu_clicked();
     void on_pushButton_to_feedback_clicked();
 
 
@@ -56,6 +58,7 @@ private:
     page_sendFeedback* p_page_feedback;
     page_transactions* p_page_transactions;
     page_maintenance* p_page_maintenance;
+    page_product_menu *p_page_product_menu;
     page_how_to* p_page_howTo;
     statusbar *p_statusbar;
     keyboard *p_keyboard;

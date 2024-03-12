@@ -41,15 +41,13 @@ public:
     void setPage(page_dispenser* page_dispenser, page_idle* pageIdle, page_qr_payment* page_qr_payment,page_offline_payment* page_offline_payment, page_sendFeedback *page_sendFeedback, statusbar *p_statusbar);
     ~page_end();
 
-    void controllerFinishedTransaction();
+    void controllerReceivedDispenseAftermath(QString start_time, QString end_time, double button_press_duration, double button_press_count, double volume_dispensed,QString volumeDispensedMixProduct);
+    void controllerReceivedFinishedTransaction();
+    
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
-    void finishHandler();
-    // void fsmReceiveFinalDispensedVolume(double dispensed);
-    void fsmReceiveFinalTransactionMessage(QString start_time, QString end_time, double button_press_duration, double button_press_count, double volume_dispensed,QString volumeDispensedMixProduct);
     void updateDispensedVolumeLabel();
-    void waitToFinishTransactionInFsm();
     bool is_controller_finished;
-    bool is_payment_finished_SHOULD_HAPPEN_IN_CONTROLLER;
+    bool is_dispense_aftermath_complete;
 
 public slots:
 private slots:
@@ -91,7 +89,6 @@ private:
 
 
     bool exitIsForceable; // avoid being stuck if internet fails.
-    bool is_in_state_thank_you;
     bool is_in_page_end;
 
 

@@ -227,10 +227,10 @@ private:
       int m_active_pnumber;
       int m_dispense_pnumbers[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
       int m_additive_pnumbers[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
-      int m_custom_mix_pnumbers[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
-      int m_custom_mix_pnumbers_count = 0;
-      double m_custom_mix_ratios[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
-      int m_custom_mix_ratios_count;
+      // int m_custom_mix_pnumbers[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
+      // int m_custom_mix_pnumbers_count = 0;
+      // double m_custom_mix_ratios[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
+      // int m_custom_mix_ratios_count;
 
       int m_mix_active_index; // index --> starts from 0
 
@@ -264,7 +264,7 @@ private:
       bool isStatusUpdateSendAndPrintAllowed;
       Dispense_behaviour previous_dispense_state;
       Dispense_behaviour dispense_state;
-      Slot_state slot_state;
+      Slot_state m_slot_state;
 
       Time_val flowRateBuffer[RUNNING_AVERAGE_WINDOW_LENGTH];
       int flowRateBufferIndex;

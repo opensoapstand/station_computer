@@ -54,7 +54,7 @@ page_dispenser->label_logo,{"x": 600, "y": 180, "width": 151, "height": 131}
 page_dispenser->label_moving_bottle_fill_effect,{"x": 0, "y": 400, "width": 304, "height": 671}
 page_dispenser->label_press,{"x": 0, "y": 1180, "width": 1080, "height": 161}
 page_dispenser->label_to_refill,{"x": 0, "y": 140, "width": 1080, "height": 151}
-page_dispenser->label_volume_dispensed,{"x": 240, "y": 1530, "width": 600, "height": 71}
+page_dispenser->label_volume_dispensed,{"x": 0, "y": 1530, "width": 1080, "height": 71}
 page_dispenser->label_volume_dispensed_ml,{"x": 240, "y": 1620, "width": 600, "height": 71}
 page_dispenser->pushButton_abort,{"x": 340, "y": 1380, "width": 400, "height": 101}
 page_dispenser->pushButton_debug_Button,{"x": 1000, "y": 240, "width": 81, "height": 71}
@@ -138,6 +138,24 @@ page_qr_payment->label_product_information,{"x": 100, "y": 1470, "width": 521, "
 page_qr_payment->label_product_price,{"x": 530, "y": 1470, "width": 451, "height": 41}
 page_qr_payment->label_gif,{"x": 365, "y": 960, "width": 350, "height": 350}
 page_qr_payment->label_refresh_page,{"x": 150, "y": 1340, "width": 861, "height": 421}
+page_qr_payment->pushButton_previous_page,{"x": 70, "y": 40, "width": 401, "height": 41}
+
+page_offline_payment->label_title,{"x": 0, "y": 170, "width": 1080, "height": 81}
+page_offline_payment->label_qrCode,{"x": 360, "y": 530, "width": 360, "height": 360}
+page_offline_payment->label_qr_background,{"x": 240, "y": 325, "width": 600, "height": 615}
+page_offline_payment->label_scan,{"x": 0, "y": 390, "width": 1080, "height": 130}
+page_offline_payment->label_processing,{"x": 0, "y": 690, "width": 1080, "height": 251}
+page_offline_payment->label_steps,{"x": 210, "y": 940, "width": 660, "height": 265}
+page_offline_payment->label_product_information,{"x": 100, "y": 1470, "width": 521, "height": 81}
+page_offline_payment->label_product_price,{"x": 530, "y": 1470, "width": 451, "height": 41}
+page_offline_payment->label_gif,{"x": 365, "y": 960, "width": 350, "height": 350}
+page_offline_payment->pushButton_promo_input,{"x": 270, "y": 1344, "width": 540, "height": 70}
+page_offline_payment->lineEdit_promo_code,{"x": 270, "y": 1344, "width": 540, "height": 70}
+page_offline_payment->label_promo_code_title,{"x": 270, "y": 1285, "width": 440, "height": 36}
+page_offline_payment->label_promo_code_background,{"x": 240, "y": 1255, "width": 600, "height": 211}
+page_offline_payment->label_refresh_page,{"x": 150, "y": 1340, "width": 861, "height": 421}
+page_offline_payment->pushButton_previous_page,{"x": 70, "y": 40, "width": 401, "height": 41}
+page_offline_payment->promoKeyboard,{"x": 120, "y": 1420, "width": 841, "height": 320}
 
 page_payment_tap_serial->pushButton_to_idle,{"x": 460, "y": 1760, "width": 161, "height": 141}
 page_payment_tap_serial->animated_Label,{"x": 221, "y": 327, "width": 639, "height": 639}

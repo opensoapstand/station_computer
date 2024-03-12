@@ -526,7 +526,7 @@ void page_sendFeedback::on_pushButton_start_input_clicked()
     qDebug() << "Feedback input field clicked, will show keyboard for QTextEdit";
     ui->textEdit_custom_message->setFocus(); // give focus to the textEdit_custom_message widget
     if(p_page_idle->thisMachine->hasMixing()){
-        ui->textEdit_custom_message->setProperty("class", "textEdit_custom_message");
+        p_page_idle->thisMachine->addCssClassToObject(ui->textEdit_custom_message, "textEdit_custom_message", PAGE_FEEDBACK_CSS);
         ui->feedbackKeyboard->hide();
         p_keyboard->resetKeyboard();
         p_keyboard->setKeyboardVisibility(true, ui->textEdit_custom_message);

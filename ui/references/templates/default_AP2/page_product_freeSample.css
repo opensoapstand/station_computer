@@ -172,7 +172,6 @@ QLabel {
     line-height: 40px;
     color: #FFF7ED;
     border-radius: 20px;
-    background-color: #BC8439;
     qproperty-alignment: AlignCenter;
 }
 #label_selected_volume{

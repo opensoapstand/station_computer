@@ -159,14 +159,16 @@ page_qr_payment->msgBox_refund->default,<p align=center><br><br><h1>Cancel Payme
 page_offline_payment->label_title->pay_by_phone,pay by phone
 page_offline_payment->label_scan->label_scan_1,Scan to Pay
 page_offline_payment->label_scan->finalize_transaction,\n Please follow the instructions in your <br> phone browser
-page_offline_payment->label_steps,1. Scan QR code with phone camera<br><br>2. Click to open the link that appears<br><br>3. Follow payment instructions on phone<br><br>4. Enter the 6 digit code received on phone<br><br>5. Enter the code below<br><br>6. Refill your soap!        </ol>      
+page_offline_payment->label_steps,1. Scan QR code with phone camera<br>2. Click to open the link that appears<br>3. Follow payment instructions on phone<br>4. Enter the 6 digit code received on phone<br>5. Enter the code below<br>6. Refill your soap!        </ol>      
 page_offline_payment->label_processing,Once paid, it may take a few moments <br> for the station to dispense
 page_offline_payment->label_title->almost_there,Payment Processing
 page_offline_payment->pushButton_previous_page,<- back
-page_offline_payment->label_product_price->fixed_size,$%1
-page_offline_payment->label_product_price->custom_size,Pre-authorize $%1
-page_offline_payment->label_product_information->volume_up_to, volume max 
+# page_offline_payment->label_product_price->fixed_size,$%1
+# page_offline_payment->label_product_price->custom_size,Pre-authorize $%1
+# page_offline_payment->label_product_information->volume_up_to, volume max 
 page_offline_payment->label_promo_code_title, Enter Confirmation Code
+page_offline_payment->lineEdit_promo_code->initial,Tap to Enter Confirmation Code
+page_offline_payment->lineEdit_promo_code->invalid,Confirmation Code Invalid
 page_offline_payment->msgBox_cancel->default,<p align=center><br><br><h1>Cancel Payment?</h1><br><br><span style="color: red;">Do not pay</span> cancelled orders if you scanned the QR code<br><br>It can take 30 seconds for dispensing to start after paying <br><br></p>
 page_offline_payment->msgBox_refund->default,<p align=center><br><br><h1>Cancel Payment?</h1></p><p align=left><br><br><ul><li><span style="color: red;">Do not pay</span> cancelled orders if you scanned the QR code</li><li>Refunds for cancelled/invalid orders will be issued within 48 hours</li></ul><br></p>
 

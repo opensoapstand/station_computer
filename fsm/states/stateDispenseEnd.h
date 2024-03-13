@@ -68,15 +68,16 @@ private:
     DF_ERROR dispenseEndUpdateDB(bool isValidTransaction);
     bool sendTransactionToCloud(double volume_remaining);
     void setup_and_print_receipt();
+    void sendEndTransactionMessageToUI();
     
     // std::string getMachineID();
-    std::string getProductID(int slot);
-
+    // std::string getProductID(int slot);
+    std::string mapToString(const std::map<std::string, std::vector<double>>& dictionary);
     double getFinalPrice();
 
     DF_ERROR handleTransactionPayment();
     DF_ERROR dispenseEndUpdateTransactionDB();
-    DF_ERROR databaseUpdateSql(string sqlStatement, string dbPath);
+    void databaseUpdateSql(string sqlStatement, string dbPath);
 
     // DF_ERROR print_text(std::string text);
 

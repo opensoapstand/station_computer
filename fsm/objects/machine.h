@@ -42,9 +42,9 @@ public:
         AP2,
         UNKNOWN
     };
-
     machine();
     void refresh();
+    std::string executeCommmandLineCommand(const char *cmd);
     void pcb24VPowerSwitch(bool enableElseDisable);
     bool getPcb24VPowerSwitchStatus();
 
@@ -152,6 +152,7 @@ private:
     string m_status_text;
     string m_payment;
     string m_size_unit;
+    // string m_portal_base_url;
 };
 
 #endif

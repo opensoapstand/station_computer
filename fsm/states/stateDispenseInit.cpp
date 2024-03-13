@@ -65,7 +65,7 @@ DF_ERROR stateDispenseInit::onEntry()
 
     debugOutput::sendMessage("Dispense init: Load selected product parameters. Slot: " + to_string(dispenser_index + 1) + " Product: " + to_string(g_machine.m_productDispensers[dispenser_index].getSelectedPNumber()), MSG_INFO);
     // debugOutput::sendMessage("Dispense init: Load selected product parameters66666. Slot: " + to_string(dispenser_index + 1) + " Product: " + to_string(g_machine.m_productDispensers[dispenser_index].getSelectedProduct()->getPNumber()), MSG_INFO);
-    bool success = g_machine.m_productDispensers[dispenser_index].getSelectedProduct()->loadParameters();
+    bool success = g_machine.m_productDispensers[dispenser_index].getSelectedProduct()->loadParameters(true);
 
     if (!success)
     {
@@ -92,7 +92,7 @@ DF_ERROR stateDispenseInit::onAction()
     debugOutput::sendMessage(std::string("Dispenser slot state: ") + g_machine.m_productDispensers[dispenser_index].getSlotStateAsString(),
                              MSG_INFO);
 
-    g_machine.m_productDispensers[dispenser_index].startSelectedProductDispense(
+    g_machine.m_productDispensers[dispenser_index].initSelectedProductDispense(
         size,
         g_machine.m_productDispensers[dispenser_index].getSelectedProduct()->getPrice(size)
         );

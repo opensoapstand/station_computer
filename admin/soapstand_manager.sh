@@ -11,7 +11,7 @@
 ./status_services.sh
 
 port_in_use=$(sudo ./rtunnel_print.sh 2>/dev/null)
-PS3="Choiiiiiiiose option(digit + enter) (rtunnel port=$port_in_use) :"
+PS3="Choose option(digit + enter) (rtunnel port=$port_in_use) :"
 options=("Quit" "Station info" "Status" "Start" "Stop" "Restart" "Screenshotbot execute" "Enable Autostart" "Disable Autostart" "Copy binary files to production folder" "Create and run production data copied from drinkfill folder (without db!)" "(Re)load services from production" "Setup aws port (rtunnel)" "Setup Ubuntu for drinkfill UI" "Deploy productionstatic.zip" "Screenshot: Take single shot" "Copy db from drinkfill to production folder DEPRECATED_DB (drinkfill-sqlite_newlayout.db)" "Copy configuration.db from git repo (station_computer) to production folder" "Copy usage.db from git repo(station_computer) to production folder")
 select opt in "${options[@]}"
 do
@@ -59,11 +59,17 @@ do
             sudo systemctl disable controller_soapstand.service
         ;;
         "Setup Ubuntu for drinkfill UI")
-            echo "Screen setup for Drinkfill UI: - disable window transition animations. - set window vertical"
+            echo "Screen setup for UI:"
+
             echo "     - disable window transition animations."
             gsettings set org.gnome.desktop.interface enable-animations false
+
+            echo "     - disable lock screen"
+            gsettings set org.gnome.desktop.screensaver lock-enabled false
+            gsettings set org.gnome.desktop.screensaver ubuntu-lock-on-suspend false
+
             echo "     - decrease reboot time."
-            user_question="Continue to decrease boot time? change: GRUB_TIMEOUT=1 add: GRUB_RECORDFAIL_TIMEOUT=\$GRUB_TIMEOUT, [y] to continu, other key to skip."
+            user_question="Continue to decrease boot time? Nano will open, change: GRUB_TIMEOUT=1 add: GRUB_RECORDFAIL_TIMEOUT=\$GRUB_TIMEOUT, [y] to continu, other key to skip."
             read -p "$user_question" -n 1 -r
             echo    # (optional) move to a new line
             if [[ $REPLY =~ ^[Yy]$ ]]
@@ -83,8 +89,11 @@ do
             sudo systemctl stop ui_soapstand
             sudo systemctl stop controller_soapstand
             
-            sudo scp /home/df-admin/station_computer/ui/DF_UI /home/df-admin/production/bin/DF_UI
-            sudo scp /home/df-admin/station_computer/fsm/controller /home/df-admin/production/bin/controller
+            UBUNTU_VERSION=$(lsb_release -rs)
+            CONTROLLER_VERSIONED="station_controller_ubuntu"$UBUNTU_VERSION 
+            UI_VERSIONED="station_ui_ubuntu"$UBUNTU_VERSION 
+            sudo scp /home/df-admin/station_computer/ui/$UI_VERSIONED /home/df-admin/production/bin
+            sudo scp /home/df-admin/station_computer/fsm/$CONTROLLER_VERSIONED /home/df-admin/production/bin
             
             sudo systemctl start ui_soapstand.service
             sudo systemctl start controller_soapstand.service

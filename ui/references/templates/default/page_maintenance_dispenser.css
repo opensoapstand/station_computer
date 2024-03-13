@@ -42,12 +42,12 @@
    border: none;
 }
 
-.pushButton_set_status_unavailable {
+.pushButton_set_status_slot_unavailable {
    /* background-color: #abe0a0; */
    font-size: 32px;
 }
 
-.pushButton_set_status_available {
+.pushButton_set_status_slot_available {
    /* background-color: #E0A0A0; */
    font-size: 32px;
 }
@@ -59,6 +59,14 @@
 
 .pump_enable {
    background-color: #a8a8a8;
+   font-size: 20px;
+}
+.active_slot {
+   background-color: #00ff11;
+   font-size: 20px;
+}
+.inactive_slot {
+   background-color: #aeaaaa;
    font-size: 20px;
 }
 .product_active {

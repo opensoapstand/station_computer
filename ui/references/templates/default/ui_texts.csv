@@ -15,8 +15,10 @@
 
 #################### page_init
 page_init->label_init_message,Wait for controller signal.
-page_init->label_fail_message->tap_payment,Waiting for payment...
-page_init->label_fail_message,Timeout. No Response from controller. Will start standalone mode. If controller becomes active, commands will be executed. If not, no commands will be executed.
+# page_init->label_fail_message->tap_payment,Waiting for payment...
+# page_init->label_fail_message,Timeout. No Response from controller. Will start standalone mode. If controller becomes active, commands will be executed. If not, no commands will be executed.
+page_init->pushButton_continue,Continue\nanyways
+page_init->pushButton_reboot,Reboot
 
 #################### page_idle
 page_idle->label_welcome_message->testargument,Refill %1 here!<br>Tap screen to start
@@ -24,7 +26,6 @@ page_idle->label_welcome_message,Refill soap here!<br>Tap screen to start
 page_idle->label_printer_status->offline,Assistance needed <br>Receipt Printer offline.
 page_idle->label_printer_status->nopaper,Assistance needed<br>Receipt Printer empty or improperly loaded.
 page_idle->label_temperature_warning->temperature_too_high,Temperature alert<br>Max %1
-page_product_overview->label_total->custom_volume,Price for maximum %1
 page_idle->label_reboot_nightly_title,NIGHTLY REBOOT
 page_idle->label_reboot_nightly_text,System will be rebooted in<br>%1 second(s)
 page_idle->pushButton_reboot_nightly,Cancel
@@ -34,9 +35,9 @@ page_idle->label_reboot_nightly_text->count_down,System will be rebooted in<br>%
 page_buyBottle->pushButton_to_idle,<- back
 page_buyBottle->label_buyBottle_title,Do you need a bottle?
 page_buyBottle->label_button_no_text_L,No
-page_buyBottle->label_button_no_text_S,I have one
-page_buyBottle->label_button_yes_text_S_1,I'll buy one
-page_buyBottle->label_button_yes_text_S_2,I'll buy one
+page_buyBottle->label_button_no_text_S,I brought one
+page_buyBottle->label_button_yes_text_S_1,I'll take one
+page_buyBottle->label_button_yes_text_S_2,I'll take one
 
 #################### page_idle_products
 #tap here to refill your soap
@@ -77,7 +78,8 @@ page_product_overview->lineEdit_promo_code->valid,Promo Code Valid
 page_product_overview->lineEdit_promo_code->invalid,Promo Code Invalid
 page_product_overview->lineEdit_promo_code->ineligible,Promo Code Not Eligible At This Station
 page_product_overview->lineEdit_promo_code->network_error,Network error, could not verify. Try again.
-page_product_overview->lineEdit_promo_code->invite,Tap here to enter Promo Code / Coupon
+page_product_overview->lineEdit_promo_code->invite,Tap here to enter your Coupon Code
+page_product_overview->lineEdit_promo_code->offline,Network Error: Coupon Code Temporary Unavailable
 page_product_overview->label_selected_volume->custom_volume,Custom Volume<br>(maximum: %1)
 page_product_overview->pushButton_continue->proceed_free,Proceed
 page_product_overview->pushButton_continue->proceed_pay,Continue
@@ -95,12 +97,13 @@ page_dispenser->label_finishTransactionMessage->display_price,Capturing payment:
 page_dispenser->label_dispense_message->priming,Please keep the button pressed.<br>for up to 15 seconds<br>before the product starts dispensing.
 page_dispenser->label_dispense_message->out_of_stock,It appears we're out of stock.
 page_dispenser->label_dispense_message->needs_attention,We can't get the dispensing started.<br>We're empty or the pump needs help to prime.<br>Tap the problem button for other issues.
-page_dispenser->label_volume_dispensed,Volume dispensed
+# page_dispenser->label_volume_dispensed,Volume dispensed
+page_dispenser->label_volume_dispensed,Hold button until dispensing stops
 page_dispenser->msgBox_problems->qr_tap,<p align=center><br><br>If the pump is working and you tried to dispense for more than 15s without success, the container is probably empty or the pump is not primed. Seek assistance or report the issue. <br> <br> If no green light is on at any dispenser buttons, please press no and check again as the software will attempt to repair the issue. <br> <br> Are you sure you want to stop dispensing and go to the report page?<br><br><br>You will only be charged for the dispensed amount<br></p>
 page_dispenser->msgBox_problems->default,<p align=center><br>If the pump is working and you tried to dispense for more than 15s without success, the container is probably empty or the pump is not primed. Seek assistance or report the issue. <br> <br> If no green light is on at any dispenser buttons, please press no and check again as the software will attempt to repair the issue. <br> <br> Are you sure you want to stop dispensing and go to the report page?<br><br><br>You will only be charged for the dispensed amount<br></p>
 page_dispenser->msgBox_problems->shopify,<p align=center><br>If the pump is working and you tried to dispense for more than 15s without success, the container is probably empty or the pump is not primed. Seek assistance or report the issue. <br> <br> If no green light is on at any dispenser buttons, please press no and check again as the software will attempt to repair the issue. <br> <br> Are you sure you want to stop dispensing and go to the report page?<br><br></p>
-page_dispenser->msgBox_abort->qr_tap,<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine. <br><br> If you press Yes, you will not be charged for the order.<br></p>
-page_dispenser->msgBox_abort->default,<p align=center><br><br>Are you sure, you want to cancel?<br><br>To dispense, please press the green lit button on the machine.<br></p>
+page_dispenser->msgBox_abort->qr_tap,<p align=center><br><br>Are you sure, you want to cancel?<br><br>To refill, please press the lit button on the station. <br><br> If you press Yes, you will not be charged for the order.<br></p>
+page_dispenser->msgBox_abort->default,<p align=center><br><br>Are you sure, you want to cancel?<br><br>To refill, please press the lit button on the station.<br></p>
 
 #################### page_end
 page_end->pushButton_contact,Provide Feedback
@@ -115,7 +118,7 @@ page_end->label_message->finish_transaction,Finishing<br>transaction
 #################### page_help
 page_help->pushButton_to_transactions,transaction history ->
 page_help->pushButton_to_maintenance,settings
-page_help->pushButton_to_feedback,contact Us
+page_help->pushButton_to_feedback,contact us
 page_help->pushButton_to_idle,<- back
 page_help->label_keyboardInfo,Provide maintainer or administrator password, followed by "Done". 
 
@@ -149,8 +152,25 @@ page_qr_payment->pushButton_previous_page,<- back
 page_qr_payment->label_product_price->fixed_size,$%1
 page_qr_payment->label_product_price->custom_size,Pre-authorize $%1
 page_qr_payment->label_product_information->volume_up_to, volume max 
-page_qr_payment->msgBox_cancel->default,<p align=center><br><br><h1>Cancel order?</h1><br><br><span style="color: red;">Do not pay</span> cancelled orders if you scanned the QR code<br><br>It can take 30 seconds for dispensing to start after paying <br><br></p>
-page_qr_payment->msgBox_refund->default,<p align=center><br><br><h1>Cancel order?</h1></p><p align=left><br><br><ul><li><span style="color: red;">Do not pay</span> cancelled orders if you scanned the QR code</li><li>Refunds for cancelled/invalid orders will be issued within 48 hours</li></ul><br></p>
+page_qr_payment->msgBox_cancel->default,<p align=center><br><br><h1>Cancel Payment?</h1><br><br><span style="color: red;">Do not pay</span> cancelled orders if you scanned the QR code<br><br>It can take 30 seconds for dispensing to start after paying <br><br></p>
+page_qr_payment->msgBox_refund->default,<p align=center><br><br><h1>Cancel Payment?</h1></p><p align=left><br><br><ul><li><span style="color: red;">Do not pay</span> cancelled orders if you scanned the QR code</li><li>Refunds for cancelled/invalid orders will be issued within 48 hours</li></ul><br></p>
+
+#################### page_offline_payment
+page_offline_payment->label_title->pay_by_phone,pay by phone
+page_offline_payment->label_scan->label_scan_1,Scan to Pay
+page_offline_payment->label_scan->finalize_transaction,\n Please follow the instructions in your <br> phone browser
+page_offline_payment->label_steps,1. Scan QR code with phone camera<br>2. Click to open the link that appears<br>3. Follow payment instructions on phone<br>4. Enter the 6 digit code received on phone<br>5. Enter the code below<br>6. Refill your soap!        </ol>      
+page_offline_payment->label_processing,Once paid, it may take a few moments <br> for the station to dispense
+page_offline_payment->label_title->almost_there,Payment Processing
+page_offline_payment->pushButton_previous_page,<- back
+# page_offline_payment->label_product_price->fixed_size,$%1
+# page_offline_payment->label_product_price->custom_size,Pre-authorize $%1
+# page_offline_payment->label_product_information->volume_up_to, volume max 
+page_offline_payment->label_promo_code_title, Enter Confirmation Code
+page_offline_payment->lineEdit_promo_code->initial,Tap to Enter Confirmation Code
+page_offline_payment->lineEdit_promo_code->invalid,Confirmation Code Invalid
+page_offline_payment->msgBox_cancel->default,<p align=center><br><br><h1>Cancel Payment?</h1><br><br><span style="color: red;">Do not pay</span> cancelled orders if you scanned the QR code<br><br>It can take 30 seconds for dispensing to start after paying <br><br></p>
+page_offline_payment->msgBox_refund->default,<p align=center><br><br><h1>Cancel Payment?</h1></p><p align=left><br><br><ul><li><span style="color: red;">Do not pay</span> cancelled orders if you scanned the QR code</li><li>Refunds for cancelled/invalid orders will be issued within 48 hours</li></ul><br></p>
 
 #################### page_error_wifi
 page_error_wifi->label_oops,oops..
@@ -194,10 +214,10 @@ page_maintenance->status_text->default,No status
 page_maintenance->label_title_maintenance_mode,Maintenance mode
 page_maintenance->pushButton_to_previous_page,<- back
 page_maintenance->pushButton_general_settings,general settings->
-page_maintenance->label_product_1_position,P1
-page_maintenance->label_product_2_position,P2
-page_maintenance->label_product_3_position,P3
-page_maintenance->label_product_4_position,P4
+page_maintenance->label_product_1_position,Dispenser 1
+page_maintenance->label_product_2_position,Dispenser 2
+page_maintenance->label_product_3_position,Dispenser 3
+page_maintenance->label_product_4_position,Dispenser 4
 page_maintenance->label_role->user,Logged in as User. Use the machine as a customer.
 page_maintenance->label_role->maintainer,Logged in as Maintainer: <br/>Swap out products and perform <br/> basic maintenance and tests.
 page_maintenance->label_role->admin,Logged in as Administrator: Full rights.
@@ -207,16 +227,17 @@ page_maintenance->label_qr_manual_description,Scan for user manual
 
 
 #################### page_maintenance_dispenser
+page_maintenance_dispenser->slot_shortcut,slot %1
 page_maintenance_dispenser->pushButton_to_previous_page,<- back
 page_maintenance_dispenser->label_calibration_instructions,Flowsensor calibration instructions:<br>1.Enable the pump<br>2.Take a measuring cup and dispense until the 1liter mark<br>3.Check the calibration value<br>4.Update the calibration value if different
 page_maintenance_dispenser->pushButton_set_restock_volume,Define restock volume
 page_maintenance_dispenser->pushButton_update_portal,Update Changes to Portal
 page_maintenance_dispenser->pushButton_keypad_cancel,CANCEL
 page_maintenance_dispenser->pushButton_keypad_done,DONE
-page_maintenance_dispenser->pushButton_enable_pump->enable_pump,ENABLE PUMP
-page_maintenance_dispenser->pushButton_enable_pump->disable_pump,DISABLE PUMP
-page_maintenance_dispenser->pushButton_set_status->unavailable,DISABLE\nproduct
-page_maintenance_dispenser->pushButton_set_status->available,ENABLE\nproduct
+page_maintenance_dispenser->pushButton_enable_pump->enable_pump,ENABLE TEST\nDISPENSE
+page_maintenance_dispenser->pushButton_enable_pump->disable_pump,DISABLE TEST\nDISPENSE
+page_maintenance_dispenser->pushButton_set_status_slot->unavailable,DISABLE\nproduct
+page_maintenance_dispenser->pushButton_set_status_slot->available,ENABLE\nproduct
 page_maintenance_dispenser->label_pump_enabled_status->pump_ready,Manual Pump ready. Press dispense button.
 page_maintenance_dispenser->label_pump_enabled_status->pump_off,Pump manual mode OFF.
 page_maintenance_dispenser->label_action_feedback->success,Refill Succesfull
@@ -238,6 +259,17 @@ page_maintenance_dispenser->label_status_dispenser->coming_soon,Coming soon
 page_maintenance_dispenser->label_status_dispenser->sold_out,Sold Out
 page_maintenance_dispenser->label_status_dispenser->default,No<br>Status
 
+page_maintenance_dispenser->label_status_selected_product->priming,Priming
+page_maintenance_dispenser->label_status_selected_product->auto_empty,Empty detected
+page_maintenance_dispenser->label_status_selected_product->almost_empty,Almost Empty
+page_maintenance_dispenser->label_status_selected_product->empty,Empty
+page_maintenance_dispenser->label_status_selected_product->available,In Service
+page_maintenance_dispenser->label_status_selected_product->not_enabled,Not enabled
+page_maintenance_dispenser->label_status_selected_product->assistance,Assistance Needed
+page_maintenance_dispenser->label_status_selected_product->coming_soon,Coming soon
+page_maintenance_dispenser->label_status_selected_product->sold_out,Sold Out
+page_maintenance_dispenser->label_status_selected_product->default,No<br>Status
+
 page_maintenance_dispenser->label_status_dispenser_elaborated->not_enabled,Enable manually with the button on top\nof this page.
 page_maintenance_dispenser->label_status_dispenser_elaborated->empty,No more product available.
 page_maintenance_dispenser->label_status_dispenser_elaborated->almost_empty,Little product left.
@@ -248,6 +280,9 @@ page_maintenance_dispenser->label_status_dispenser_elaborated->default,Not an id
 page_maintenance_dispenser->label_status_dispenser_elaborated->available,Product available and dispenser working normally.
 page_maintenance_dispenser->label_status_dispenser_elaborated->priming,If the pump is working: See procedure to use the\npriming syringe on the nozzle to guide the product into the pump.\nCheck stock volume, air leaks and pump,\nsolenoid, button and flow sensor in case of problems. 
 page_maintenance_dispenser->label_status_dispenser_elaborated->disabled,Enable the dispenser with the button on top\nof this page. 
+
+
+
 page_maintenance_dispenser->pushButton_clear_problem,Clear\nProblem
 
 #################### page_maintenance_general
@@ -267,23 +302,3 @@ page_maintenance_general->pushButton_shutdown,Shut Down
 page_maintenance_general->pushButton_reboot,Restart Station
 page_maintenance_general->label_feedback,Feedback
 page_maintenance_general->label_status_feedback,Command Feedback
-
-#################### page_product_freeSample
-page_product_freeSample->pushButton_select_product_page,<- back
-page_product_freeSample->label_discount_tag,Discount
-page_product_freeSample->pushButton_continue,Continue
-page_product_freeSample->pushButton_continue->proceed_pay_tap,Pay with TAP
-page_product_freeSample->pushButton_continue->proceed_pay_qr,Pay with QR
-page_product_freeSample->pushButton_continue_additional->proceed_pay_qr,Pay with QR
-page_product_freeSample->label_pay,efijaiefj
-page_product_freeSample->label_total->non_custom_volume,Total
-page_product_freeSample->label_total->custom_volume,Price for maximum %1
-page_product_freeSample->lineEdit_promo_code->valid,Promo Code Valid
-page_product_freeSample->lineEdit_promo_code->invalid,Promo Code Invalid
-page_product_freeSample->lineEdit_promo_code->ineligible,Promo Code Not Eligible At This Station
-page_product_freeSample->lineEdit_promo_code->network_error,Network error, could not verify. Try again.
-page_product_freeSample->lineEdit_promo_code->invite,Tap here to enter Promo Code / Coupon
-page_product_freeSample->label_selected_volume->custom_volume,Custom Volume<br>(maximum: %1)
-page_product_freeSample->pushButton_continue->proceed_free,Proceed
-page_product_freeSample->pushButton_continue->proceed_pay,Continue
-page_product_freeSample->label_total,Total Amount

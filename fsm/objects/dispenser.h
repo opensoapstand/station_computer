@@ -22,7 +22,8 @@
 // #include "machine.h"
 #include "product.h"
 #include <sqlite3.h>
-
+#include <map>
+#include <vector>
 // #include <stdint.h>
 // Total Number of Devices
 #define NUM_SOLENOID 3 // 12v for drink,water, and air
@@ -102,6 +103,11 @@ public:
       // DF_ERROR initButtonsShutdownAndMaintenance();
       DF_ERROR setSlot(int slot);
       int getSlot();
+
+      void setMixProductsDispenseInfo(std::string pNumber, double volumeDispensed, double volume_remaining);
+      std::map<std::string, std::vector<double>> getMixProductsDispenseInfo();
+      void resetMixProductsDispenseInfo();
+
 #ifdef INTERRUPT_DRIVE_FLOW_SENSOR_TICKS
       DF_ERROR initGlobalFlowsensorIO(int pinint);
 #endif
@@ -130,14 +136,16 @@ public:
       void updateSlotState();
       void analyseSlotState();
 
-      // DF_ERROR initActivePNumberDispense(double volume);
-      DF_ERROR startActivePNumberDispense();
-      DF_ERROR stopActivePNumberDispense();
+      DF_ERROR initActivePNumberDispense();
+      DF_ERROR finishActivePNumberDispense();
+      void startActiveDispensing();
+      void stopActiveDispensing();
 
       bool setNextActiveProductAsPartOfSelectedProduct();
-      DF_ERROR startSelectedProductDispense(char size, double nPrice);
-      // DF_ERROR startSelectedProductDispense();
-      DF_ERROR stopSelectedProductDispense();
+
+      DF_ERROR initSelectedProductDispense(char size, double nPrice);
+      // DF_ERROR initSelectedProductDispense();
+      DF_ERROR finishSelectedProductDispense();
       string getSelectedProductDispenseStartTime();
       string getSelectedProductDispenseEndTime();
 
@@ -219,10 +227,10 @@ private:
       int m_active_pnumber;
       int m_dispense_pnumbers[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
       int m_additive_pnumbers[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
-      int m_custom_mix_pnumbers[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
-      int m_custom_mix_pnumbers_count = 0;
-      double m_custom_mix_ratios[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
-      int m_custom_mix_ratios_count;
+      // int m_custom_mix_pnumbers[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
+      // int m_custom_mix_pnumbers_count = 0;
+      // double m_custom_mix_ratios[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
+      // int m_custom_mix_ratios_count;
 
       int m_mix_active_index; // index --> starts from 0
 
@@ -256,7 +264,7 @@ private:
       bool isStatusUpdateSendAndPrintAllowed;
       Dispense_behaviour previous_dispense_state;
       Dispense_behaviour dispense_state;
-      Slot_state slot_state;
+      Slot_state m_slot_state;
 
       Time_val flowRateBuffer[RUNNING_AVERAGE_WINDOW_LENGTH];
       int flowRateBufferIndex;
@@ -269,6 +277,8 @@ private:
       int rc;
 
       gpio *m_pFlowsensor;
+      std::map<std::string, std::vector<double>> m_dispenseInfoMixProducts;
+
 
       // gpio *m_pButtonPowerOff[1];
       // gpio *m_pButtonDisplayMaintenanceMode[1];

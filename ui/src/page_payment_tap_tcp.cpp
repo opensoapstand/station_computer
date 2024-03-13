@@ -181,7 +181,7 @@ void page_payment_tap_tcp::showEvent(QShowEvent *event)
     msgBox = nullptr;
 
     qDebug() << "Prepare tap order";
-    // tapPaymentHandler();
+    tapPaymentHandler();
 }
 
 void page_payment_tap_tcp::hideCurrentPageAndShowProvided(QWidget *pageToShow)

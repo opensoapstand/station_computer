@@ -294,7 +294,7 @@ void page_init::initiateTapPayment()
     case tap_usa:
     {
         page_payment_tap_tcp paymentObject;
-        // paymentObject.initiate_tap_setup();
+        paymentObject.initiate_tap_setup();
         break;
     }
     case tap_canada:

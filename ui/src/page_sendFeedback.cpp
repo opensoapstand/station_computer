@@ -29,7 +29,7 @@
 #include <regex>
 
 using json = nlohmann::json;
-#define TEXTBOX_INVITE_TEXT "Touch this field to input a text message"
+#define TEXTBOX_INVITE_TEXT "Touch this field to input your message"
 #define TEXTBOX_INVITE_TEXT_ALERT "Please enter a message or select an option above before submitting the feedback"
 #define TEXTBOX_EMAIL_TEXT "Touch this field to input your email"
 #define TEXTBOX_EMAIL_TEXT_ALERT "Please enter email before submitting the feedback"

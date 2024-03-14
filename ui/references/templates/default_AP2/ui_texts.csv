@@ -30,10 +30,10 @@ page_product_menu->label_product_menu_title,Discover Your Beverage
 page_product_menu->pushButton_to_idle,←BACK
 page_product_menu->label_base_products_section_title,1. Select Base
 page_product_menu->label_dispense_products_section_title,2. Choose Flavour
-page_product_menu->status_text->not_enabled,Solt Out
-page_product_menu->status_text->empty,Solt Out
+page_product_menu->status_text->not_enabled,Sold Out
+page_product_menu->status_text->empty,Sold Out
 page_product_menu->status_text->almost_empty,
-page_product_menu->status_text->sold_out,Solt Out
+page_product_menu->status_text->sold_out,Sold Out
 page_product_menu->status_text->assistance,Temporary Unavailable
 page_product_menu->status_text->coming_soon,Coming soon
 page_product_menu->status_text->default,. . .

@@ -1389,9 +1389,9 @@ void pcb::flowSensorsDisableAll()
     case (EN258_4SLOTS):
     case (EN258_8SLOTS):
     {
-        // enable of pins not needed for EN258 board.
         for (uint8_t slot = 1; slot <= getSlotCountByPcbType(); slot++)
         {
+            // enable of pins not needed for EN258 board.
             flow_sensor_pulses_since_enable[slot - 1] = 0;
         }
     };

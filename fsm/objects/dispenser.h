@@ -104,9 +104,9 @@ public:
       DF_ERROR setSlot(int slot);
       int getSlot();
 
-      void setMixProductsDispenseInfo(std::string pNumber, double volumeDispensed, double volume_remaining);
-      std::map<std::string, std::vector<double>> getMixProductsDispenseInfo();
-      void resetMixProductsDispenseInfo();
+      void setMixDispenseReport(std::string pNumber, double volumeDispensed, double volume_remaining);
+      std::map<std::string, std::vector<double>> getMixDispenseReport();
+      void resetMixDispenseReport();
 
 #ifdef INTERRUPT_DRIVE_FLOW_SENSOR_TICKS
       DF_ERROR initGlobalFlowsensorIO(int pinint);
@@ -133,7 +133,7 @@ public:
       Slot_state getSlotState();
       void setSlotState(Slot_state state);
       // void setSlotStateToEmpty();
-      void updateSlotState();
+      void updateActiveProductState();
       // void analyseSlotState();
       void setSlotStateFromString(string slotStateText);
 
@@ -263,8 +263,8 @@ private:
 
       uint64_t previous_status_update_allowed_epoch;
       bool isStatusUpdateSendAndPrintAllowed;
-      Dispense_behaviour previous_dispense_state;
-      Dispense_behaviour dispense_state;
+      Dispense_behaviour m_previous_dispense_state;
+      Dispense_behaviour m_dispense_state;
       Slot_state m_slot_state;
 
       Time_val flowRateBuffer[RUNNING_AVERAGE_WINDOW_LENGTH];
@@ -278,7 +278,7 @@ private:
       int rc;
 
       gpio *m_pFlowsensor;
-      std::map<std::string, std::vector<double>> m_dispenseInfoMixProducts;
+      std::map<std::string, std::vector<double>> m_mixDispenseReport;
 
 
       // gpio *m_pButtonPowerOff[1];

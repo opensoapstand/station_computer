@@ -57,8 +57,10 @@ public:
 
    // dispense command
    char getAction() { return m_requestedAction; }
+
+   
    void resetAction();
-   int getRequestedSlot() { return m_requested_slot; }
+   //int getRequestedSlot() { return m_requested_slot; }
    char getRequestedSize() { return m_requestedSize; }
    int getCommandValue() { return m_commandValue; }
    void setRequestedSize(char size);
@@ -95,7 +97,7 @@ private:
    static string m_processCommand;
    static bool m_bCommandStringReceived;
 
-   static int m_requested_slot;
+   // static int m_requested_slot;
    static int m_nSolenoid;
    static char m_requestedAction;
    static double m_nVolumeTarget;

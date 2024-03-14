@@ -96,7 +96,7 @@ DF_ERROR stateIdle::onAction()
 
       if (ACTION_DISPENSE == m_pMessaging->getAction() || ACTION_AUTOFILL == m_pMessaging->getAction())
       {
-         if (m_pMessaging->getRequestedSlot() == PRODUCT_SLOT_DUMMY || m_pMessaging->getRequestedSize() == SIZE_DUMMY)
+         if (g_machine.getSelectedDispenserNumber() == PRODUCT_SLOT_DUMMY || m_pMessaging->getRequestedSize() == SIZE_DUMMY)
          {
             debugOutput::sendMessage("Invalid dispenser command received. ", MSG_INFO);
          }

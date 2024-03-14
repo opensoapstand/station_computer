@@ -97,7 +97,10 @@ public:
     bool getPumpReversalEnabled();
     bool getEmptyContainerDetectionEnabled();
     bool getPumpSlowStartStopEnabled();
-    int getDispensersCount();
+    // int getDispensersCount();
+    void setSelectedDispenser(int setSelectedDispenser);
+    int getSelectedDispenserNumber();
+    dispenser getSelectedDispenser();
 
 private:
     product *m_pnumbers;
@@ -106,6 +109,8 @@ private:
     int m_button_animation_program;
     sqlite3 *db;
     int rc;
+
+    int m_active_slot;
 
     machine::HardwareVersion m_hardware_version;
 

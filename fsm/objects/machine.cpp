@@ -119,11 +119,23 @@ void machine::setup(product *pnumbers)
     loadGeneralProperties(true);
 }
 
-int machine::getDispensersCount()
+void machine::setSelectedDispenser(int setSelectedDispenser)
 {
-    // slots, dispensers, lines,... it's all the same
-    return 4;
+    m_active_slot = setSelectedDispenser;
 }
+
+int machine::getSelectedDispenserNumber(){
+    return m_active_slot;
+}
+
+dispenser machine::getSelectedDispenser(){
+ return m_productDispensers[m_active_slot - 1];
+}
+// int machine::getDispensersCount()
+// {
+//     // slots, dispensers, lines,... it's all the same
+//     return 4;
+// }
 
 double machine::convertVolumeMetricToDisplayUnits(double volume)
 {
@@ -148,7 +160,7 @@ double machine::convertVolumeMetricToDisplayUnits(double volume)
 
 void machine::initProductDispensers()
 {
-    for (int slot_index = 0; slot_index < getDispensersCount(); slot_index++)
+    for (int slot_index = 0; slot_index < getPcb()->getSlotCountByPcbType(); slot_index++)
     {
         debugOutput::sendMessage("Init dispenser " + to_string(slot_index + 1), MSG_INFO);
         // m_g_machine.m_productDispensers[slot_index].setup(&this, g_pnumbers);
@@ -168,7 +180,7 @@ void machine::loadGeneralProperties(bool loadDispenserParameters)
     usleep(20000);
     if (loadDispenserParameters)
     {
-        for (int slot_index = 0; slot_index < getDispensersCount(); slot_index++)
+        for (int slot_index = 0; slot_index < getPcb()->getSlotCountByPcbType(); slot_index++)
         {
             m_productDispensers[slot_index].loadGeneralProperties();
             //m_productDispensers[slot_index].setEmptyContainerDetectionEnabled(getEmptyContainerDetectionEnabled());

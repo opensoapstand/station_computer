@@ -108,8 +108,8 @@ dispenser::dispenser()
     // {
     //     m_pcb = new pcb();
     // }
-    dispense_state = FLOW_STATE_UNAVAILABLE;
-    previous_dispense_state = FLOW_STATE_UNAVAILABLE;
+    m_dispense_state = FLOW_STATE_UNAVAILABLE;
+    m_previous_dispense_state = FLOW_STATE_UNAVAILABLE;
     using namespace std::chrono;
     previous_status_update_allowed_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
@@ -717,8 +717,8 @@ DF_ERROR dispenser::initActivePNumberDispense()
     // this->m_pcb->resetFlowSensorPulsesForDispenser(m_slot);
 
     // init state
-    dispense_state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
-    previous_dispense_state = FLOW_STATE_UNAVAILABLE; // hack needed to create edge
+    m_dispense_state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
+    m_previous_dispense_state = FLOW_STATE_UNAVAILABLE; // hack needed to create edge
 
     initProductFlowRateCalculation();
 
@@ -1520,7 +1520,6 @@ DF_ERROR dispenser::updateActiveProductFlowRateRunningAverageWindow()
 //////////////////////////////////////////////////////////////
 //  Dispenser state
 
-
 const char *dispenser::getDispenseStatusAsString()
 {
     Dispense_behaviour behaviour = getDispenseStatus();
@@ -1569,28 +1568,22 @@ void dispenser::setSlotState(Slot_state state)
 
 Slot_state dispenser::getSlotState()
 {
-
     return m_slot_state;
-}
-
-void dispenser::updateSlotState()
-{
-    getActiveProduct()->updateProductState(getDispenseStatus(), m_isEmptyContainerDetectionEnabled);
 }
 
 Dispense_behaviour dispenser::getDispenseStatus()
 {
 
     // logUpdateIfAllowed("Button press time [ms]. Total:" + to_string(dispense_button_total_pressed_millis) + " Current:" + to_string(dispense_button_current_press_millis));
-    using namespace std::chrono;
-    uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    uint64_t dispense_time_millis = millis_since_epoch - dispense_start_timestamp_epoch;
-    Time_val avg = getAveragedProductFlowRate(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS);
+    // using namespace std::chrono;
+    // uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    // uint64_t dispense_time_millis = millis_since_epoch - dispense_start_timestamp_epoch;
+    // Time_val avg = getAveragedProductFlowRate(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS);
 
     // restricted status update
     // logUpdateIfAllowed("Dispense flowRate " + to_string(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS) + "ms avg [ml/s]: " + to_string(avg.value) + " Dispense state time: " + to_string(dispense_time_millis));
 
-    return dispense_state;
+    return m_dispense_state;
 }
 
 void dispenser::updateDispenseStatus()
@@ -1602,23 +1595,23 @@ void dispenser::updateDispenseStatus()
 
     if (!getDispenseButtonValue())
     {
-        dispense_state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
+        m_dispense_state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
     }
     else if ((getButtonPressedCurrentPressMillis() < EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS) &&
              (avg.value < getSelectedProduct()->getThresholdFlow() || avg.value >= getSelectedProduct()->getThresholdFlow_max_allowed()))
     {
         // flow rate needs to be ramped up until stable.  (or ramped down in situations I can't imagine)
-        dispense_state = FLOW_STATE_RAMP_UP;
+        m_dispense_state = FLOW_STATE_RAMP_UP;
     }
     // else if (avg.value >= getSelectedProduct()->getThresholdFlow() )
     else if (avg.value >= getSelectedProduct()->getThresholdFlow() && avg.value < getSelectedProduct()->getThresholdFlow_max_allowed())
     {
         // button pressed (aka pumping)
         // init time long enough for valid data
-        dispense_state = FLOW_STATE_DISPENSING;
+        m_dispense_state = FLOW_STATE_DISPENSING;
     }
 
-    else if (previous_dispense_state == FLOW_STATE_DISPENSING)
+    else if (m_previous_dispense_state == FLOW_STATE_DISPENSING)
     {
         // button pressed (aka pumping)
         // init time long enough for valid data
@@ -1639,7 +1632,7 @@ void dispenser::updateDispenseStatus()
         // once it was dispensing, empty dispenser is detected immediatly if no product flows.
         // bugfix: if the button was release and repressed, the average was not correct at restart
         //          --> take into account. at top level (FLOW_STATE_UNAVAILABLE)
-        dispense_state = FLOW_STATE_EMPTY;
+        m_dispense_state = FLOW_STATE_EMPTY;
     }
     else if (getButtonPressedTotalMillis() > EMPTY_CONTAINER_DETECTION_MAXIMUM_PRIME_TIME_MILLIS)
     {
@@ -1649,7 +1642,7 @@ void dispenser::updateDispenseStatus()
         // previous state was not dispensing
 
         // pump
-        dispense_state = FLOW_STATE_PRIME_FAIL_OR_EMPTY;
+        m_dispense_state = FLOW_STATE_PRIME_FAIL_OR_EMPTY;
     }
     else
     {
@@ -1659,23 +1652,28 @@ void dispenser::updateDispenseStatus()
         // previous state was not dispensing
         // pumping time has exceeded set value
 
-        dispense_state = FLOW_STATE_PRIMING_OR_EMPTY;
+        m_dispense_state = FLOW_STATE_PRIMING_OR_EMPTY;
     }
 
-    previous_dispense_state = dispense_state;
+    m_previous_dispense_state = m_dispense_state;
 }
 
-void dispenser::setMixProductsDispenseInfo(std::string pNumber, double volumeDispensed, double volume_remaining)
+void dispenser::updateActiveProductState()
 {
-    m_dispenseInfoMixProducts.insert({pNumber, {volumeDispensed, volume_remaining}});
+    getActiveProduct()->updateProductState(getDispenseStatus(), m_isEmptyContainerDetectionEnabled);
 }
 
-std::map<std::string, std::vector<double>> dispenser::getMixProductsDispenseInfo()
+void dispenser::setMixDispenseReport(std::string pNumber, double volumeDispensed, double volume_remaining)
 {
-    return m_dispenseInfoMixProducts;
+    m_mixDispenseReport.insert({pNumber, {volumeDispensed, volume_remaining}});
 }
 
-void dispenser::resetMixProductsDispenseInfo()
+std::map<std::string, std::vector<double>> dispenser::getMixDispenseReport()
 {
-    m_dispenseInfoMixProducts = {};
+    return m_mixDispenseReport;
+}
+
+void dispenser::resetMixDispenseReport()
+{
+    m_mixDispenseReport = {};
 }

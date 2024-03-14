@@ -318,6 +318,12 @@ void page_dispenser::updatelabel_volume_dispensed_ml(double dispensed)
     {
 
         double unitprice = (p_page_idle->thisMachine->getSelectedProduct()->getBasePrice(SIZE_CUSTOM_INDEX));
+        double max_custom_volume = p_page_idle->thisMachine->getSelectedProduct()->getVolumeOfSelectedSize();
+        //Hack: To authorize the maximum pre-authorized amount. If removing this condition, the price increases more from the initial pre-auth amount and user need to TAP card again
+        // Allowing a margin of extra 1 tick product dispense to user
+        if(dispensed >= max_custom_volume){
+            dispensed = max_custom_volume;
+        }
         current_price = p_page_idle->thisMachine->getPriceWithDiscount(dispensed * unitprice);
         ui->label_volume_dispensed_ml->setText(dispensedVolumeUnitsCorrected + " " + units + " ( $" + QString::number(current_price, 'f', 2) + " )");
     }
@@ -457,7 +463,7 @@ void page_dispenser::dispensing_end_admin()
                 qDebug() << "dispense end: tap payment No volume dispensed.";
                 if (tapPaymentObject.find("saf_num") != tapPaymentObject.end())
                 {
-                    std::cout << "Voiding transaction";
+                    qDebug() << "Voiding transaction";
                     qDebug() << "SAF_NUM" << QString::fromStdString(tapPaymentObject["saf_num"]);
                     tapPaymentObject["ctrout_saf"] = tapPaymentObject["saf_num"];
                     response = voidTransactionOffline(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["saf_num"]);
@@ -927,7 +933,7 @@ void page_dispenser::on_pushButton_problems_clicked()
 
     p_page_idle->thisMachine->addCssClassToObject(msgBox_problems, "msgBoxbutton msgBox", PAGE_DISPENSER_CSS);
 
-    msgBox_problems->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    msgBox_problems->setStandardButtons(QMessageBox::Retry | QMessageBox::Help);
 
     // Use a QTimer to hide and delete the message box after a timeout
     QTimer *timeoutTimer2 = new QTimer(msgBox_problems);
@@ -957,23 +963,22 @@ void page_dispenser::on_pushButton_problems_clicked()
     int ret = msgBox_problems->exec();
     switch (ret)
     {
-    case QMessageBox::Yes:
-    {
-
-        if (this->isDispensing)
-        {
-            askForFeedbackAtEnd = true;
-            force_finish_dispensing();
-        }
-        break;
-    }
-
-    case QMessageBox::No:
+    case QMessageBox::Retry:
     {
         // send repair command
         qDebug() << "Send repair command to fsm";
         p_page_idle->thisMachine->dfUtility->send_command_to_FSM(SEND_REPAIR_PCA, true);
         
+        break;
+    }
+
+    case QMessageBox::Help:
+    {
+        if (this->isDispensing)
+        {
+            askForFeedbackAtEnd = true;
+            force_finish_dispensing();
+        }
         break;
     }
     default:

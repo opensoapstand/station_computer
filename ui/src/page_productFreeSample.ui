@@ -52,7 +52,7 @@ line-height: 29px;</string>
    <property name="geometry">
     <rect>
      <x>146</x>
-     <y>1500</y>
+     <y>1344</y>
      <width>791</width>
      <height>70</height>
     </rect>
@@ -83,7 +83,7 @@ line-height: 29px;</string>
    <property name="geometry">
     <rect>
      <x>146</x>
-     <y>1500</y>
+     <y>1344</y>
      <width>791</width>
      <height>70</height>
     </rect>
@@ -198,10 +198,10 @@ text-align: center;</string>
   <widget class="QLabel" name="label_gif">
    <property name="geometry">
     <rect>
-     <x>440</x>
+     <x>365</x>
      <y>960</y>
-     <width>200</width>
-     <height>200</height>
+     <width>350</width>
+     <height>350</height>
     </rect>
    </property>
    <property name="accessibleName">
@@ -450,22 +450,6 @@ text-align: center;</string>
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_invoice_title">
-   <property name="geometry">
-    <rect>
-     <x>51</x>
-     <y>941</y>
-     <width>163</width>
-     <height>47</height>
-    </rect>
-   </property>
-   <property name="accessibleName">
-    <string/>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
   <zorder>pushButton_continue</zorder>
   <zorder>label_help</zorder>
   <zorder>label_invoice_box</zorder>
@@ -483,7 +467,6 @@ text-align: center;</string>
   <zorder>label_selected_volume</zorder>
   <zorder>label_steps</zorder>
   <zorder>label_web_url</zorder>
-  <zorder>label_invoice_title</zorder>
   <zorder>label_gif</zorder>
  </widget>
  <resources/>

@@ -24,6 +24,7 @@
 #include "page_help.h"
 #include "page_product.h"
 #include "page_product_mixing.h"
+#include "page_product_menu.h"
 #include <curl/curl.h>
 
 class statusbar;
@@ -37,6 +38,8 @@ class page_error_wifi;
 class page_help;
 class page_product;
 class page_end;
+class page_product_menu;
+
 namespace Ui
 {
     class page_sendFeedback;
@@ -53,7 +56,7 @@ public:
     QLabel *orderSizeBackgroundLabels[4];
 
     explicit page_sendFeedback(QWidget *parent = nullptr);
-    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_offline_payment *page_offline_payment,page_help *pageHelp, page_product *page_product, page_end *page_end, statusbar *p_statusbar, keyboard * keyboard);
+    void setPage(page_select_product *pageSelect, page_dispenser *page_dispenser, page_error_wifi *pageWifiError, page_idle *pageIdle, page_qr_payment *page_qr_payment, page_offline_payment *page_offline_payment,page_help *pageHelp, page_product *page_product, page_end *page_end, statusbar *p_statusbar, keyboard * keyboard, page_product_menu *p_page_product_menu);
     ~page_sendFeedback();
 
     void resizeEvent(QResizeEvent *event);
@@ -86,7 +89,7 @@ private:
     void reset_and_show_page_elements();
     void selectOnTick();
     void mainPage();
-    
+    bool feedbackSent = false;
     CURLcode res;
     std::string readBuffer;
     long http_code;
@@ -102,6 +105,7 @@ private:
     page_product *p_page_product;
     statusbar *p_statusbar;
     keyboard *p_keyboard;
+    page_product_menu *p_page_product_menu;
 
     QTimer *selectIdleTimer;
     int _selectIdleTimeoutSec;

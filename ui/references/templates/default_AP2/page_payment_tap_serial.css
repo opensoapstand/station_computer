@@ -1,13 +1,13 @@
 #pushButton_previous_page {
-   font-family: 'Lato';
-   font-style: normal;
-   font-weight: 400;
-   font-size: 24px;
-   color: #001810;
-   text-align: left;
-   qproperty-alignment: AlignCenter;
-   border: none;
-   background: transparent;
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 48px;
+  color: #895E25;
+  text-align: center;
+  border: 5px solid #895E25;
+  border-radius: 25px;
+  background: #FFFFFF;
 }
 
 .animated_Label{

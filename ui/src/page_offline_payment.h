@@ -90,6 +90,7 @@ private slots:
     void on_pushButton_refresh_clicked();
     QString generateCode(QString str);
     void on_lineEdit_promo_codeInput_clicked();
+    void keyboardButtonPressed(int);
 
 private:
     QMessageBox* msgBox;

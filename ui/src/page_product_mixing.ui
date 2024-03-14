@@ -461,8 +461,8 @@ text-align: center;</string>
     <rect>
      <x>495</x>
      <y>1250</y>
-     <width>423</width>
-     <height>47</height>
+     <width>280</width>
+     <height>45</height>
     </rect>
    </property>
    <property name="text">
@@ -2016,9 +2016,21 @@ text-align: center;
     <bool>true</bool>
    </property>
   </widget>
+  <widget class="QLabel" name="label_select_quantity_warning">
+   <property name="geometry">
+    <rect>
+     <x>765</x>
+     <y>1255</y>
+     <width>265</width>
+     <height>36</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
   <zorder>label_background_custom</zorder>
   <zorder>pushButton_order_sample</zorder>
-  <zorder>pushButton_order_custom</zorder>
   <zorder>label_help</zorder>
   <zorder>pushButton_continue</zorder>
   <zorder>label_product_title</zorder>
@@ -2095,6 +2107,8 @@ text-align: center;
   <zorder>label_additive_bar_low_5</zorder>
   <zorder>label_additive_bar_default_5</zorder>
   <zorder>label_additive_bar_high_5</zorder>
+  <zorder>pushButton_order_custom</zorder>
+  <zorder>label_select_quantity_warning</zorder>
  </widget>
  <resources/>
  <connections/>

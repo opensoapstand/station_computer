@@ -43,14 +43,13 @@ QPushButton {
    font-family: 'Lato';
    font-style: normal;
    font-weight: 400;
-   font-size: 24px;
-   color: #001810;
-   text-align: left;
-   qproperty-alignment: AlignCenter;
-   border: none;
-   background: transparent;
+   font-size: 48px;
+   color: #895E25;
+   text-align: center;
+   border: 5px solid #895E25;
+   border-radius: 25px;
+   background: #FFFFFF;
 }
-
 
 .invisible_button{
    background-color: transparent;
@@ -92,7 +91,7 @@ QPushButton {
 }
 
 #label_steps {
-   color: black;
+   color: #895E25;
    font-family: 'El Messiri';
    font-size: 30px;
    font-style: normal;
@@ -122,8 +121,8 @@ QMessageBox {
 
 QMessageBox.msgBoxbutton QPushButton{
    font-size: 24px;
-   min-width: 300px;
-   min-height: 300px;
+   min-width: 280px;
+   min-height: 200px;
 }
 
 QLabel {

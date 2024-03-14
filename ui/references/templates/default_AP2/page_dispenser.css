@@ -146,13 +146,22 @@ QPushButton {
 QMessageBox {
    min-width: 7000px;
    font-size: 24px;
-   font-weight: bold;
+   font-weight: 600;
    font-style: normal;
-   font-family: 'Montserrat';
+   font-family: 'Lato';
+   background: #FFF7ED;
+   border-radius: 25px;
 }
 
 QMessageBox.msgBoxbutton QPushButton{
    font-size: 24px;
-   min-width: 300px;
-   min-height: 300px;
+   min-width: 245px;
+   min-height: 100px;
+   margin: 10px;
+   background: #FFFFFF;
+   font-style: normal;
+   font-weight: 400;
+   font-family: 'Lato';
+   border: 5px solid #895E25;
+   border-radius: 25px;
 }

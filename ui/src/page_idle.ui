@@ -283,9 +283,9 @@ text-transform: lowercase;</string>
   <widget class="QLabel" name="label_welcome_message_small_top">
    <property name="geometry">
     <rect>
-     <x>414</x>
+     <x>390</x>
      <y>302</y>
-     <width>253</width>
+     <width>304</width>
      <height>47</height>
     </rect>
    </property>

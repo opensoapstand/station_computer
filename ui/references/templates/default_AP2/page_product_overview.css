@@ -132,12 +132,13 @@ QLabel {
 }
 
 #label_checkout_title{
-    color: #211403;
+    /* color: #211403;
     font-family: 'El Messiri';
     font-size: 30px;
     font-style: normal;
     font-weight: 700;
-    line-height: normal;
+    line-height: normal; */
+    color: transparent;
 }
 
 .labelOrderOverview{
@@ -209,7 +210,7 @@ QLabel {
     line-height: 40px;
     color: #FFF7ED;
     border-radius: 20px;
-    background-color: #BC8439;
+    /* background-color: #BC8439; */
     qproperty-alignment: AlignCenter;
 }
 #label_selected_volume{

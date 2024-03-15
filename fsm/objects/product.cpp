@@ -537,7 +537,8 @@ double product::getVolumeFromSize(char size)
     }
     else
     {
-        debugOutput::sendMessage("Unknown volume parameter: " + size, MSG_INFO);
+        std::string separate_string_to_be_able_to_concatenate_char = "Unknown volume parameter: ";
+        debugOutput::sendMessage( separate_string_to_be_able_to_concatenate_char + size, MSG_INFO);
     }
     return 666.0;
 }

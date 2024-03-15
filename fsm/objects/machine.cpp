@@ -31,6 +31,11 @@ machine::machine()
     // m_button_lights_behaviour = Button_lights_behaviour::IDLE_OFF;
     m_button_animation_program = 0;
 }
+machine::~machine()
+{
+    debugOutput::sendMessage("Machine: destructor.", MSG_INFO);
+}
+
 std::string machine::executeCommmandLineCommand(const char *cmd)
 {
     std::array<char, 128> buffer;
@@ -123,12 +128,13 @@ void machine::setup(product *pnumbers)
 
 void machine::setSelectedDispenser(int slotNumber)
 {
+    debugOutput::sendMessage("faiejfiase;ijf; slot number: : " + std::to_string(slotNumber), MSG_ERROR);
     if (slotNumber > getPcb()->getSlotCountByPcbType() || slotNumber < 0)
     {
         debugOutput::sendMessage("machine: ASSERT ERROR: dispenser number must be >0 and < than: " + std::to_string(getPcb()->getSlotCountByPcbType()) + "provided: " + std::to_string(slotNumber), MSG_ERROR);
     }
     m_active_slot = slotNumber;
-    getSelectedDispenser().reset();
+    getSelectedDispenser().resetDispenser();
 }
 
 int machine::getSelectedDispenserNumber()
@@ -136,15 +142,16 @@ int machine::getSelectedDispenserNumber()
     return m_active_slot;
 }
 
-dispenser machine::getSelectedDispenser()
+dispenser &machine::getSelectedDispenser()
 {
-    return m_productDispensers[m_active_slot - 1];
+    // provides a reference to the dispenser object! similar to pointer. but simpler to use.
+    return getDispenser(m_active_slot);
 }
-// int machine::getDispensersCount()
-// {
-//     // slots, dispensers, lines,... it's all the same
-//     return 4;
-// }
+dispenser &machine::getDispenser(int slot)
+{
+    // provides a reference to the dispenser object! similar to pointer. but simpler to use.
+    return m_productDispensers[slot - 1];
+}
 
 double machine::convertVolumeMetricToDisplayUnits(double volume)
 {
@@ -172,10 +179,10 @@ void machine::initProductDispensers()
     for (int slot_index = 0; slot_index < getPcb()->getSlotCountByPcbType(); slot_index++)
     {
         debugOutput::sendMessage("Init dispenser " + to_string(slot_index + 1), MSG_INFO);
-        m_productDispensers[slot_index].setup(slot_index + 1, control_pcb, m_pnumbers);
+        getDispenser(slot_index + 1).setup(slot_index + 1, control_pcb, m_pnumbers);
 
 #ifdef INTERRUPT_DRIVE_FLOW_SENSOR_TICKS
-        m_productDispensers[slot_index].initGlobalFlowsensorIO(IO_PIN_FLOW_SENSOR);
+        getDispenser(slot_index + 1).initGlobalFlowsensorIO(IO_PIN_FLOW_SENSOR);
 #endif
         setFlowSensorCallBack(slot_index + 1);
     }
@@ -190,7 +197,7 @@ void machine::loadGeneralMachineProperties(bool loadDispenserParameters)
         for (int slot_index = 0; slot_index < getPcb()->getSlotCountByPcbType(); slot_index++)
         {
             debugOutput::sendMessage("machine. load properties for slot:  " + std::to_string(slot_index + 1), MSG_INFO);
-            m_productDispensers[slot_index].loadGeneralProperties();
+            getDispenser(slot_index + 1).loadGeneralProperties();
         }
     }
 }
@@ -225,10 +232,6 @@ pcb *machine::getPcb()
 {
     return control_pcb;
 }
-// void machine::testtest(){
-// // nothing here.
-//     debugOutput::sendMessage("*** global machine test message", MSG_INFO);
-// }
 
 void machine::refresh()
 {
@@ -237,13 +240,13 @@ void machine::refresh()
     // the pcb inputs are not interrupt driven. So, periodical updates are required
     for (uint8_t slot_index = 0; slot_index < PRODUCT_DISPENSERS_MAX; slot_index++)
     {
-        m_productDispensers[slot_index].refresh();
+        getDispenser(slot_index + 1).refresh();
     }
 }
 
 void machine::setFlowSensorCallBack(int slot)
 {
-    m_productDispensers[slot - 1].linkDispenserFlowSensorTick();
+    getDispenser(slot).linkDispenserFlowSensorTick();
 }
 
 void machine::syncSoftwareVersionWithDb()

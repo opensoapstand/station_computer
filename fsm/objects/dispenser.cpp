@@ -129,7 +129,7 @@ void dispenser::setAutoDispense()
     m_auto_dispense = true;
 }
 
-void dispenser::reset()
+void dispenser::resetDispenser()
 {
     m_pcb->setPumpPWM(DEFAULT_PUMP_PWM);
     millisAtLastCheck = MILLIS_INIT_DUMMY;
@@ -141,10 +141,10 @@ void dispenser::reset()
 
     bool onlyOneProductPresent = m_dispense_pnumbers_count == 1 && m_additive_pnumbers_count == 0 && m_base_pnumber == m_dispense_pnumbers[0];
 
-    // debugOutput::sendMessage("Dispenser: m_dispense_pnumbers_count: " + std::to_string(m_dispense_pnumbers_count), MSG_INFO);
-    // debugOutput::sendMessage("Dispenser: m_additive_pnumbers_count: " + std::to_string(m_additive_pnumbers_count), MSG_INFO);
-    // debugOutput::sendMessage("Dispenser: m_base_pnumber: " + std::to_string(m_base_pnumber), MSG_INFO);
-    // debugOutput::sendMessage("Dispenser: m_base_pnumber: " + std::to_string( m_dispense_pnumbers[0]), MSG_INFO);
+    debugOutput::sendMessage("Dispenser: m_dispense_pnumbers_count: " + std::to_string(m_dispense_pnumbers_count), MSG_INFO);
+    debugOutput::sendMessage("Dispenser: m_additive_pnumbers_count: " + std::to_string(m_additive_pnumbers_count), MSG_INFO);
+    debugOutput::sendMessage("Dispenser: m_base_pnumber: " + std::to_string(m_base_pnumber), MSG_INFO);
+    debugOutput::sendMessage("Dispenser: m_base_pnumber: " + std::to_string( m_dispense_pnumbers[0]), MSG_INFO);
 
     if (onlyOneProductPresent)
     {
@@ -179,7 +179,7 @@ DF_ERROR dispenser::loadGeneralProperties()
     // usleep(20000);
     // setSlotStateFromString(string slotStateText);
     usleep(20000);
-    reset();
+    resetDispenser();
 
     DF_ERROR dfRet = OK;
     return dfRet;

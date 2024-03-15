@@ -64,7 +64,7 @@ public:
       DF_ERROR setup(int slot_number, pcb *pcb, product *pnumbers);
       // DF_ERROR setup(pcb* pcb, machine* machine);
       void refresh();
-      void reset();
+      void resetDispenser();
       DF_ERROR loadGeneralProperties();
       bool loadDispenserParametersFromDb();
       void sendToUiIfAllowed(string message);

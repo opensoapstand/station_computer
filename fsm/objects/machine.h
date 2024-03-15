@@ -43,6 +43,7 @@ public:
         UNKNOWN
     };
     machine();
+    ~machine();
     void refresh();
     std::string executeCommmandLineCommand(const char *cmd);
     void pcb24VPowerSwitch(bool enableElseDisable);
@@ -100,7 +101,8 @@ public:
     // int getDispensersCount();
     void setSelectedDispenser(int slotNumber);
     int getSelectedDispenserNumber();
-    dispenser getSelectedDispenser();
+    dispenser& getSelectedDispenser();
+    dispenser& getDispenser(int slot);
 
 private:
     product *m_pnumbers;

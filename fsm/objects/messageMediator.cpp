@@ -713,13 +713,11 @@ DF_ERROR messageMediator::parseCommandString()
    //  first_char == '2' ||
    //  first_char == '3' ||
    //  first_char == '4')
-
    {
       debugOutput::sendMessage("Received Message: " + sCommand, MSG_INFO);
       // length 3 command is always a dispense instruction. This is annoying, but it's grown organically like that.
       // check for dispensing command
       e_ret = parseDispenseCommand(sCommand);
-      debugOutput::sendMessage("aiaiaiaia: ", MSG_INFO);
    }
    else if (sCommand.find("Printer") != string::npos)
    {
@@ -1087,15 +1085,11 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
    }
    else
    {
+      m_requestedAction = ACTION_NO_ACTION;
       debugOutput::sendMessage("command will be set. .", MSG_INFO);
       m_machine->setSelectedDispenser(requested_slot);
-
       m_machine->getSelectedDispenser().getActiveProduct()->setTargetVolumeFromSize(requestedSize);
 
-
-
-
-      
       // debugOutput::sendMessage("command will be set. slot: " + std::to_string(m_machine->getSelectedDispenser().getSlot()), MSG_INFO);
       // debugOutput::sendMessage("command will be setsssssssssssssssssss. slot: " + std::to_string(m_machine->getSelectedDispenser().getSelectedPNumber()), MSG_INFO);
       // dispenser testd = m_machine->getSelectedDispenser();

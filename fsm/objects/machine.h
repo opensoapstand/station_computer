@@ -86,7 +86,7 @@ public:
     // void loadButtonPropertiesFromDb();
     bool getMultiDispenseButtonEnabled();
 
-    void loadGeneralProperties(bool loadDispenserParameters);
+    void loadGeneralMachineProperties(bool loadDispenserParameters);
     void loadMachineParametersFromDb();
     string getMachineId();
     string getSizeUnit();
@@ -98,7 +98,7 @@ public:
     bool getEmptyContainerDetectionEnabled();
     bool getPumpSlowStartStopEnabled();
     // int getDispensersCount();
-    void setSelectedDispenser(int setSelectedDispenser);
+    void setSelectedDispenser(int slotNumber);
     int getSelectedDispenserNumber();
     dispenser getSelectedDispenser();
 

@@ -45,10 +45,9 @@ DF_ERROR stateDispenseInit::onEntry()
     m_state_requested = STATE_DISPENSE_INIT;
     DF_ERROR e_ret = OK;
 
+    // size = m_pMessaging->getRequestedSize();
+    size = g_machine.getSelectedDispenser().getSelectedProduct()->getTargetVolumeAsChar();
 
-
-
-    size = m_pMessaging->getRequestedSize();
     if (size == SIZE_DUMMY){
         debugOutput::sendMessage("ASSERT ERROR: Size not set. Will not continue.",  MSG_ERROR);
         m_state_requested = STATE_IDLE;
@@ -63,7 +62,7 @@ DF_ERROR stateDispenseInit::onEntry()
 
     debugOutput::sendMessage("Dispense init: (re)load relevant parameters from database.", MSG_INFO);
 
-    g_machine.loadGeneralProperties(false);
+    g_machine.loadGeneralMachineProperties(false);
     g_machine.getSelectedDispenser().loadGeneralProperties();
 
     debugOutput::sendMessage("Dispense init: Load selected product parameters. Slot: " + to_string(g_machine.getSelectedDispenserNumber()) + " Product: " + to_string(g_machine.getSelectedDispenser().getSelectedPNumber()), MSG_INFO);
@@ -96,8 +95,7 @@ DF_ERROR stateDispenseInit::onAction()
                              MSG_INFO);
 
     g_machine.getSelectedDispenser().initSelectedProductDispense(
-        size,
-        g_machine.getSelectedDispenser().getSelectedProduct()->getPrice(size)
+        size
         );
 
     

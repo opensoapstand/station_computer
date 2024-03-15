@@ -61,15 +61,18 @@ public:
       ~dispenser();
 
       // DF_ERROR setup(machine *machine, product *pnumber);
-      DF_ERROR setup(pcb *pcb, product *pnumbers);
+      DF_ERROR setup(int slot_number, pcb *pcb, product *pnumbers);
       // DF_ERROR setup(pcb* pcb, machine* machine);
       void refresh();
+      void reset();
       DF_ERROR loadGeneralProperties();
       bool loadDispenserParametersFromDb();
       void sendToUiIfAllowed(string message);
       void logUpdateIfAllowed(string message);
       bool getIsStatusUpdateAllowed();
       bool isSlotEnabled();
+      bool getAutoDispense();
+      void setAutoDispense();
 
       // product setting
       // selected product
@@ -101,7 +104,7 @@ public:
       void registerFlowSensorTickFromPcb();
 
       // DF_ERROR initButtonsShutdownAndMaintenance();
-      DF_ERROR setSlot(int slot);
+
       int getSlot();
 
       void setMixDispenseReport(std::string pNumber, double volumeDispensed, double volume_remaining);
@@ -142,9 +145,9 @@ public:
       void startActiveDispensing();
       void stopActiveDispensing();
 
-      bool setNextActiveProductAsPartOfSelectedProduct();
+      bool handleMixComponentTargetVolumeReached();
 
-      DF_ERROR initSelectedProductDispense(char size, double nPrice);
+      DF_ERROR initSelectedProductDispense(char size);
       // DF_ERROR initSelectedProductDispense();
       DF_ERROR finishSelectedProductDispense();
       string getSelectedProductDispenseStartTime();
@@ -240,14 +243,14 @@ private:
       string dispense_numbers_str;
       string m_additive_pnumbers_str;
       bool m_is_slot_enabled;
-      // string m_status_text;
+      bool m_auto_dispense; // will not wait for user to press button to dispense
 
       double m_dispenser_volume_dispensed;
 
       char m_nStartTime[50];
       char m_nEndTime[50];
 
-      double m_price;
+      // double m_price;
 
       time_t rawtime;
       struct tm *timeinfo;

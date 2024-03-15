@@ -61,12 +61,13 @@ public:
         void updateProductState(Dispense_behaviour dispenseState, bool isEmptyContainerDetectionEnabled);
         void setProductStateToEmpty(bool isEmptyContainerDetectionEnabled);
         // void setProductStatusText(string statusText);
-        void setProductStateFromString(string slotStateText);
+        void setProductStateFromString(string productStateText);
         void setProductState(Product_state state);
         const char *getProductStateAsString();
         Product_state getProductState();
 
-        int getPWM();
+        int getPWM(); // deprecated...
+
         int getRetractionTimeMillis();
         double getPrice(char size);
         // string getDisplayUnits();

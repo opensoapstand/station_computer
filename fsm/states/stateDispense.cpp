@@ -48,12 +48,9 @@ string stateDispense::toString()
 DF_ERROR stateDispense::onEntry()
 {
    m_state_requested = STATE_DISPENSE;
-   // productDispensers = g_productDispensers;
    DF_ERROR e_ret = OK;
-   // slot = m_pMessaging->getRequestedSlot();
-   // slot_index = slot - 1;
 
-   if (m_pMessaging->getAction() == ACTION_AUTOFILL)
+   if (g_machine.getSelectedDispenser().getAutoDispense())
    {
       g_machine.getSelectedDispenser().startActiveDispensing(); // make part of dispenser.
    }
@@ -64,14 +61,9 @@ DF_ERROR stateDispense::onEntry()
 DF_ERROR stateDispense::onAction()
 {
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
-   
-   if (m_pMessaging->isCommandStringReadyToBeParsed())
-   {
-      m_pMessaging->parseCommandString();
-   }
 
    // button press behaviour
-   if (m_pMessaging->getAction() != ACTION_AUTOFILL)
+   if (!g_machine.getSelectedDispenser().getAutoDispense())
    {
       if (g_machine.getSelectedDispenser().getDispenseButtonEdgePositive())
       {
@@ -96,10 +88,48 @@ DF_ERROR stateDispense::onAction()
    g_machine.getSelectedDispenser().updateDispenseStatus();
    g_machine.getSelectedDispenser().updateActiveProductState();
 
+   // do logging
    statusUpdateLoggingAndOverIP(true);
+
+   // Is target volume reached?
+   if (g_machine.getSelectedDispenser().isActiveProductVolumeTargetReached())
+   {
+      std::string activePNumber = to_string(g_machine.getSelectedDispenser().getActivePNumber());
+      double activeProductVolumeDispensed = g_machine.getSelectedDispenser().getActiveProductVolumeDispensed();
+      double volume_remaining = g_machine.getSelectedDispenser().getActiveProduct()->getVolumeRemaining() - activeProductVolumeDispensed;
+      g_machine.getSelectedDispenser().setMixDispenseReport(activePNumber, activeProductVolumeDispensed, volume_remaining);
+
+      debugOutput::sendMessage("Active product. Requested volume reached. Stop and next.   P-" + activePNumber + ":  " +
+                                   to_string(activeProductVolumeDispensed) + "/" +
+                                   to_string(g_machine.getSelectedDispenser().getActiveProduct()->getTargetVolume()) + "ml",
+                               MSG_INFO);
+
+      bool isAllPartsOfDispenseProductDispensed = g_machine.getSelectedDispenser().handleMixComponentTargetVolumeReached();
+      if (isAllPartsOfDispenseProductDispensed)
+      {
+         // check for next mixing product to activate to dispense.   additive n -> .... ->  additive 1 -> base. (end with base)
+         m_state_requested = STATE_DISPENSE_END;
+         debugOutput::sendMessage("Stop dispensing selected product. Requested volume reached. Dispensed: " + to_string(g_machine.getSelectedDispenser().getSelectedProductVolumeDispensed()), MSG_INFO);
+      }
+      else
+      {
+         if (g_machine.getSelectedDispenser().getDispenseButtonValue())
+         {
+            debugOutput::sendMessage("Dispense button is pressed, so restart next phase automatically. ", MSG_INFO);
+            g_machine.getSelectedDispenser().startActiveDispensing();
+         }
+      }
+   }
+
+   // Check received commands from UI
+   if (m_pMessaging->isCommandStringReadyToBeParsed())
+   {
+      m_pMessaging->parseCommandString();
+   }
 
    if (m_pMessaging->getAction() == ACTION_RESET)
    {
+      debugOutput::sendMessage("Stop dispensing (stop command received)", MSG_INFO);
       m_state_requested = STATE_IDLE;
       g_machine.getSelectedDispenser().finishActivePNumberDispense();
 
@@ -107,12 +137,13 @@ DF_ERROR stateDispense::onAction()
       return e_ret = OK;
    }
 
-   // Check if UI has sent a ACTION_DISPENSE_END to finish the transaction, or, if dispensing is complete
    if (m_pMessaging->getAction() == ACTION_DISPENSE_END)
    {
       debugOutput::sendMessage("Stop dispensing (stop command received)", MSG_INFO);
       m_state_requested = STATE_DISPENSE_END;
+
       g_machine.getSelectedDispenser().finishActivePNumberDispense();
+
       std::string activePNumber = to_string(g_machine.getSelectedDispenser().getActivePNumber());
       double activeProductVolumeDispensed = g_machine.getSelectedDispenser().getActiveProductVolumeDispensed();
       double volume_remaining = g_machine.getSelectedDispenser().getActiveProduct()->getVolumeRemaining() - activeProductVolumeDispensed;
@@ -132,40 +163,7 @@ DF_ERROR stateDispense::onAction()
          g_machine.getPcb()->flowSensorEnable(g_machine.getSelectedDispenserNumber());
       }
    }
-
-   if (g_machine.getSelectedDispenser().isActiveProductVolumeTargetReached())
-   {
-
-      debugOutput::sendMessage("Active product. Requested volume reached. Stop and next.   P-" +
-                                   to_string(g_machine.getSelectedDispenser().getActivePNumber()) + ":  " +
-                                   to_string(g_machine.getSelectedDispenser().getActiveProductVolumeDispensed()) + "/" +
-                                   to_string(g_machine.getSelectedDispenser().getActiveProduct()->getTargetVolume()) + "ml",
-                               MSG_INFO);
-
-      std::string activePNumber = to_string(g_machine.getSelectedDispenser().getActivePNumber());
-      double activeProductVolumeDispensed = g_machine.getSelectedDispenser().getActiveProductVolumeDispensed();
-      double volume_remaining = g_machine.getSelectedDispenser().getActiveProduct()->getVolumeRemaining() - activeProductVolumeDispensed;
-      g_machine.getSelectedDispenser().setMixDispenseReport(activePNumber, activeProductVolumeDispensed, volume_remaining);
-
-      bool isAllPartsOfDispenseProductDispensed = g_machine.getSelectedDispenser().setNextActiveProductAsPartOfSelectedProduct();
-      if (isAllPartsOfDispenseProductDispensed)
-      {
-         // check for next mixing product to activate to dispense.   additive n -> .... ->  additive 1 -> base. (end with base)
-         m_state_requested = STATE_DISPENSE_END;
-         debugOutput::sendMessage("Stop dispensing selected product. Requested volume reached. Dispensed: " + to_string(g_machine.getSelectedDispenser().getSelectedProductVolumeDispensed()), MSG_INFO);
-      }
-      else
-      {
-         if (g_machine.getSelectedDispenser().getDispenseButtonValue())
-         {
-            debugOutput::sendMessage("Dispense button is pressed, so restart next phase automatically. ", MSG_INFO);
-            g_machine.getSelectedDispenser().startActiveDispensing();
-         }
-      }
-   }
-
    e_ret = OK;
-
    return e_ret;
 }
 

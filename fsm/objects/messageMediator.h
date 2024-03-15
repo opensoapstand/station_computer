@@ -58,12 +58,12 @@ public:
    // dispense command
    char getAction() { return m_requestedAction; }
 
-   
+
    void resetAction();
    //int getRequestedSlot() { return m_requested_slot; }
-   char getRequestedSize() { return m_requestedSize; }
+   // char getRequestedSize() { return m_requestedSize; }
    int getCommandValue() { return m_commandValue; }
-   void setRequestedSize(char size);
+   // void setRequestedSize(char size);
    void sendTemperatureData();
    double getRequestedPrice()
    {
@@ -101,7 +101,7 @@ private:
    static int m_nSolenoid;
    static char m_requestedAction;
    static double m_nVolumeTarget;
-   static char m_requestedSize;
+   // static char m_requestedSize;
    static int m_commandValue;
    static double m_requestedDiscountPrice;
    static string m_promoCode;

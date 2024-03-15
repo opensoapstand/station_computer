@@ -118,7 +118,10 @@ int main(int argc, char *argv[])
     if (OK != dfRet)return dfRet;
 
     dfRet = stateLoop();
-    if (OK != dfRet)return dfRet;
+    if (OK != dfRet){
+        debugOutput::sendMessage("Problem with the dfRet: " , MSG_INFO);
+        return dfRet;
+    }
 
     return dfRet;
 }
@@ -209,6 +212,9 @@ DF_ERROR stateLoop()
         }
 
         usleep(1000); // micros! 1 ms delay to slow down refresh rate
+
+        debugOutput::sendMessage("state loop page.....f.ef.e.f", MSG_INFO);
+        usleep(1000000); // micros! 1 ms delay to slow down refresh rate
     }
     debugOutput::sendMessage("State machine ENDED. ", MSG_INFO);
     return dfRet;

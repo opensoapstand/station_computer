@@ -66,7 +66,6 @@ DF_ERROR stateDispenseEnd::onAction()
     // usleep(100000); // send message delay
     // m_pMessaging->sendMessageOverIP(message, true); // send to UI
 
-    g_machine.getSelectedDispenser().finishSelectedProductDispense();
     g_machine.getPcb()->displayMCP23017IORegisters(g_machine.getSelectedDispenserNumber());
 
     // handle minimum dispensing
@@ -116,32 +115,32 @@ DF_ERROR stateDispenseEnd::onAction()
 
         dispenseEndUpdateDB(true);
 
-// #define ENABLE_TRANSACTION_TO_CLOUD
-// #ifdef ENABLE_TRANSACTION_TO_CLOUD
+        // #define ENABLE_TRANSACTION_TO_CLOUD
+        // #ifdef ENABLE_TRANSACTION_TO_CLOUD
 
-//         std::string paymentMethod = g_machine.getPaymentMethod();
+        //         std::string paymentMethod = g_machine.getPaymentMethod();
 
-//         if (paymentMethod == "qr" && price != 0.0)
-//         {
-//             // these transactions are dealt with in the UI
-//         }
-//         else
-//         {
-//             // bool success = false;
-//             // make sure to do this after dispenseEndUpdateDB
-//             // at that point remaining product volume is already updated in db, and in Product
-//             // success = sendTransactionToCloud(g_machine.getSelectedDispenser().getSelectedProductVolumeRemaining());
-//         }
-// #else
-//         debugOutput::sendMessage("NOT SENDING transaction to cloud.", MSG_INFO);
-// #endif
+        //         if (paymentMethod == "qr" && price != 0.0)
+        //         {
+        //             // these transactions are dealt with in the UI
+        //         }
+        //         else
+        //         {
+        //             // bool success = false;
+        //             // make sure to do this after dispenseEndUpdateDB
+        //             // at that point remaining product volume is already updated in db, and in Product
+        //             // success = sendTransactionToCloud(g_machine.getSelectedDispenser().getSelectedProductVolumeRemaining());
+        //         }
+        // #else
+        //         debugOutput::sendMessage("NOT SENDING transaction to cloud.", MSG_INFO);
+        // #endif
     }
 
     debugOutput::sendMessage("Post dispense final price: " + to_string(price), MSG_INFO);
 
     // send dispensed volume to ui (will be used to write to portal)
     m_state_requested = STATE_IDLE;
-    usleep(1000000); // give UI the chance to catch up (and display page end)
+    usleep(1000000);                                          // give UI the chance to catch up (and display page end)
     m_pMessaging->sendMessageOverIP("Transaction End", true); // send to UI
 
     return e_ret;
@@ -167,13 +166,15 @@ void stateDispenseEnd::adjustSizeToDispensedVolume()
 
         if (g_machine.getSelectedDispenser().getSelectedProduct()->getIsSizeEnabled(SIZE_CUSTOM_CHAR))
         {
-            m_pMessaging->setRequestedSize(SIZE_CUSTOM_CHAR);
+            // m_pMessaging->setRequestedSize(SIZE_CUSTOM_CHAR);
+            g_machine.getSelectedDispenser().getSelectedProduct()->setTargetVolumeFromSize(SIZE_CUSTOM_CHAR);
             debugOutput::sendMessage("Empty container detected, change to custom volume.", MSG_INFO);
         }
         else
         {
             char new_size = dispensedVolumeToSmallestFixedSize();
-            m_pMessaging->setRequestedSize(new_size);
+            g_machine.getSelectedDispenser().getSelectedProduct()->setTargetVolumeFromSize(new_size);
+            // m_pMessaging->setRequestedSize(new_size);
             debugOutput::sendMessage("Empty container detected, change to next lowest size: " + to_string(new_size), MSG_INFO);
         }
     }
@@ -188,7 +189,8 @@ void stateDispenseEnd::adjustSizeToDispensedVolume()
 #ifdef ENABLE_CUSTOMERS_CAN_PAY_FOR_LESS_THAN_THEY_DISPENSE
         debugOutput::sendMessage("Normal fixed price dispensing. Will take the lowest fixed size compared to the actual dispensed volume.", MSG_INFO);
         char new_size = dispensedVolumeToSmallestFixedSize();
-        m_pMessaging->setRequestedSize(new_size);
+        // m_pMessaging->setRequestedSize(new_size);
+        g_machine.getSelectedDispenser().getSelectedProduct()->setTargetVolumeFromSize(new_size);
 #endif
     }
 }
@@ -552,11 +554,10 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     updated_volume_remaining = volume_remaining - dispensed_volume;
     updated_volume_dispensed_since_restock = volume_dispensed_since_restock + dispensed_volume;
 
-
     // update product state
     if (g_machine.getSelectedDispenser().getSelectedProduct()->getProductState() == PRODUCT_STATE_PROBLEM_EMPTY)
     {
-         debugOutput::sendMessage("State of selected product is EMPTY. There are repercussions for other products. Is the base empty? Additives empty?... ", MSG_INFO);
+        debugOutput::sendMessage("State of selected product is EMPTY. There are repercussions for other products. Is the base empty? Additives empty?... ", MSG_INFO);
         updated_volume_remaining = 0;
     }
     // else if (g_machine.getSelectedDispenser().getSlotState() == SLOT_STATE_PROBLEM_NEEDS_ATTENTION)
@@ -579,7 +580,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
         //     debugOutput::sendMessage("State will not be set, as it's disabled", MSG_INFO);
         // }
         g_machine.getSelectedDispenser().getSelectedProduct()->setProductState(PRODUCT_STATE_AVAILABLE_LOW_STOCK);
-        
+
         debugOutput::sendMessage("Almost empty warning: " + to_string(updated_volume_remaining), MSG_INFO);
     }
 
@@ -590,7 +591,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     std::string slot_state_str = g_machine.getSelectedDispenser().getSlotStateAsString();
     int selectedPNumber = g_machine.getSelectedDispenser().getSelectedProduct()->getPNumber();
     std::string selected_product_state_str = g_machine.getSelectedDispenser().getSelectedProduct()->getProductStateAsString();
-    
+
     // std::string product_id = getProductID(slot);
     std::string product_id = g_machine.getSelectedDispenser().getSelectedProduct()->m_product_id_combined_with_location_for_backend;
     // Get mix product object to be used for updating local station database

@@ -155,35 +155,35 @@ void product::updateProductState(Dispense_behaviour dispenseState, bool isEmptyC
     }
 }
 
-void product::setProductStateFromString(string slotStateText)
+void product::setProductStateFromString(string productStateText)
 {
-    // string slotStateText = m_status_text;
+    // string productStateText = m_status_text;
 
-    if (slotStateText.find("PRODUCT_STATE_AVAILABLE") != string::npos)
+    if (productStateText.find("PRODUCT_STATE_AVAILABLE") != string::npos)
     {
         setProductState(PRODUCT_STATE_AVAILABLE);
     }
-    else if (slotStateText.find("PRODUCT_STATE_AVAILABLE_LOW_STOCK") != string::npos)
+    else if (productStateText.find("PRODUCT_STATE_AVAILABLE_LOW_STOCK") != string::npos)
     {
         setProductState(PRODUCT_STATE_AVAILABLE_LOW_STOCK);
     }
-    else if (slotStateText.find("PRODUCT_STATE_NOT_PRIMED") != string::npos)
+    else if (productStateText.find("PRODUCT_STATE_NOT_PRIMED") != string::npos)
     {
         setProductState(PRODUCT_STATE_NOT_PRIMED);
     }
-    else if (slotStateText.find("PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION") != string::npos)
+    else if (productStateText.find("PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION") != string::npos)
     {
         setProductState(PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION);
     }
-    else if (slotStateText.find("PRODUCT_STATE_PROBLEM_EMPTY") != string::npos)
+    else if (productStateText.find("PRODUCT_STATE_PROBLEM_EMPTY") != string::npos)
     {
         setProductState(PRODUCT_STATE_PROBLEM_EMPTY);
     }
-    else if (slotStateText.find("PRODUCT_STATE_DISABLED_COMING_SOON") != string::npos)
+    else if (productStateText.find("PRODUCT_STATE_DISABLED_COMING_SOON") != string::npos)
     {
         setProductState(PRODUCT_STATE_DISABLED_COMING_SOON);
     }
-    else if (slotStateText.find("PRODUCT_STATE_DISABLED") != string::npos)
+    else if (productStateText.find("PRODUCT_STATE_DISABLED") != string::npos)
     {
         setProductState(PRODUCT_STATE_DISABLED);
     }
@@ -191,7 +191,7 @@ void product::setProductStateFromString(string slotStateText)
     {
         setProductState(PRODUCT_STATE_INVALID);
     }
-    debugOutput::sendMessage("product: State for " + getPNumberAsPString() + ": " + getProductStateAsString() +  "(db value: " + std::string(slotStateText) + ")", MSG_INFO);
+    debugOutput::sendMessage("product: State for " + getPNumberAsPString() + ": " + getProductStateAsString() +  "(db value: " + std::string(productStateText) + ")", MSG_INFO);
 }
 
 void product::init(int pnumber)
@@ -324,7 +324,7 @@ int product::getAdditivePNumber(int position)
     if (position > getAdditivesCount())
     {
         debugOutput::sendMessage("ASSERT ERROR: Additives position provided is too high. Additive does not exist.", MSG_ERROR);
-        return PRODUCT_DUMMY;
+        return DUMMY_PNUMBER;
     }
     return getMixPNumber(position); // first position is base pnumber. but mix pnumbers start from 1.
 }
@@ -439,7 +439,7 @@ double product::getVolumeRemaining()
 }
 double product::getProductVolumeDispensedTotalEver()
 {
-    // total volume ever dispensed by this slot.
+    // total volume ever dispensed for this product 
     return m_nVolumeDispensedTotalEver;
 }
 
@@ -1220,9 +1220,7 @@ bool product::loadProductParametersFromDb()
 
         string status_text = product::dbFieldAsValidString(stmt, 38);
 
-
         setProductStateFromString(status_text);
-        
 
         m_nVolumeTarget_f = sqlite3_column_double(stmt, 40);
         status = sqlite3_step(stmt); // next record

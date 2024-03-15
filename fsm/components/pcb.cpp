@@ -1530,7 +1530,7 @@ void pcb::setFlowSensorType(uint8_t slot, FlowSensorType sensorType)
 
 void pcb::registerFlowSensorTickCallback(int slot, std::function<void()> callback)
 {
-    debugOutput::sendMessage("Flow sensor tick callback registered!", MSG_ERROR);
+    debugOutput::sendMessage("pcb: Flow sensor tick callback registered!", MSG_INFO);
     flowSensorTickCallbacks[slot - 1] = callback;
 }
 
@@ -1898,7 +1898,7 @@ void pcb::setPumpPWM(uint8_t pwm_val)
         f_value = floor(f_value / 2.55);
         unsigned char speed_percentage = 100 - (unsigned char)f_value; // invert speed. pwm is inverted.
         setPumpSpeedPercentage((uint8_t)speed_percentage);
-        debugOutput::sendMessage("speed percentage set =" + std::to_string(speed_percentage), MSG_ERROR);
+        debugOutput::sendMessage("Speed percentage set =" + std::to_string(speed_percentage), MSG_ERROR);
     };
     break;
     default:

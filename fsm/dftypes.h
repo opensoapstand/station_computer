@@ -159,7 +159,7 @@
 #define ACTION_UI_COMMAND_PRINTER_MENU 'p'
 #define ACTION_HELP 'h'
 
-#define PRODUCT_DUMMY 'x'
+#define PRODUCT_DUMMY_CHAR 'x'
 #define PRODUCT_SLOT_DUMMY 666
 
 #define PWM_CHAR 'P'

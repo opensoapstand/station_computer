@@ -348,7 +348,7 @@ void page_payment_tap_tcp::authorized_transaction(std::map<std::string, std::str
     else if (responseObj["RESULT"] == "APPROVED/STORED")
     {
         p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
-
+        qDebug() << "Authoruzed";
         tapPaymentObject["ctroutd"] = responseObj["CTROUTD"];
         tapPaymentObject["auth_code"] = responseObj["AUTH_CODE"];
         tapPaymentObject["saf_num"] = responseObj["SAF_NUM"];
@@ -489,30 +489,78 @@ void page_payment_tap_tcp::resetPaymentPage()
     qDebug() << "Reset Payment Page";
 }
 
-// void page_payment_tap_tcp::authorizeTestTransaction()
-// {
-//     std::map<std::string, std::string> configMap = readConfigFile();
-//     MAC_KEY = configMap["MAC_KEY"];
-//     MAC_LABEL = configMap["MAC_LABEL"];
-//     lastTransactionId = std::stoi(configMap["INVOICE"]);
+void page_payment_tap_tcp::authorizeTestTransaction()
+{
+    std::map<std::string, std::string> configMap = readConfigFile();
+    int socket = connectSocket();
+    std::string socketAddr = std::to_string(socket);
+    qDebug() << "Tap terminal Socket Connected to " <<  QString::fromStdString(socketAddr);
 
-//     startSession(socket, MAC_LABEL, MAC_KEY, lastTransactionId + 1);
-//     // tapPaymentObject["session_id"] = std::to_string(lastTransactionId+1);
-//     tapPaymentObject["mac_label"] = MAC_LABEL;
-//     double price = 1;
-//     std::ostringstream stream;
-//     stream << std::fixed << std::setprecision(2) << price;
-//     std::string authCommand = authorizationCommand(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, stream.str());
+    std::string MAC_KEY = configMap["MAC_KEY"];
+    std::string MAC_LABEL = configMap["MAC_LABEL"];
+    int lastTransactionId = std::stoi(configMap["INVOICE"]);
 
-//     std::string packetSent = sendPacket(authCommand, std::stoi(socketAddr), true);
-//     stop_tap_action_thread = false;
-//     stop_authorization_thread = false;
-//     cardTapThread = std::thread(receiveCardTapAction);
-//     cardTapThread.detach();
-//     checkCardTappedTimer->start();
+    startSession(socket, MAC_LABEL, MAC_KEY, lastTransactionId + 1);
 
-//     dataThread = std::thread(receiveAuthorizationThread, std::stoi(socketAddr));
-//     dataThread.detach();
-//     checkPacketReceivedTimer->start();
-    
-// }
+    std::string priceStr = "1.09"; // Assuming fixed price
+    std::string authCommand = authorizationCommand(socket, MAC_LABEL, MAC_KEY, priceStr);
+
+    std::string packetSent = sendPacket(authCommand, socket, true);
+
+    // Using lambda for detach to ensure resources are released correctly
+    auto cardTapThread = std::thread([]() { receiveCardTapAction(); });
+    cardTapThread.detach();
+
+    auto dataThread = std::thread([socket]() { receiveAuthorizationThread(socket); });
+    dataThread.detach();
+
+    qDebug() << "Started check packet received" ;
+    std::map<std::string, std::string> xmlPacketDict;
+    bool isPacketReceived = false;
+
+    // Simple polling loop, can be replaced with event-driven mechanism
+    while (!isPacketReceived) {
+        // Check if packet is received
+        // std::this_thread::sleep_for(std::chrono::seconds(1)); // Adjust as needed
+        // Assuming this function modifies isPacketReceived and xmlPacketDict
+        isPacketReceived = checkPacketReceived(true, &xmlPacketDict);
+    }
+    qDebug() << "Packet available";
+    tapPaymentObject["socketId"] = socketAddr;
+    tapPaymentObject["ctroutd"] = xmlPacketDict["CTROUTD"];
+    tapPaymentObject["auth_code"] = xmlPacketDict["AUTH_CODE"];
+    tapPaymentObject["amount"] = xmlPacketDict["TRANS_AMOUNT"];
+    tapPaymentObject["date"] = xmlPacketDict["TRANS_DATE"];
+    tapPaymentObject["time"] = xmlPacketDict["TRANS_TIME"];
+    tapPaymentObject["card_number"] = xmlPacketDict["ACCT_NUM"];
+    tapPaymentObject["card_type"] = xmlPacketDict["PAYMENT_MEDIA"];
+    tapPaymentObject["status"] = "Authorized";
+    stopPayTimers();
+
+}
+
+void page_payment_tap_tcp::voidingTestTransaction(){
+    std::map<std::string, std::string>  response;
+    std::map<std::string, std::string> configMap = readConfigFile();
+    MAC_KEY = configMap["MAC_KEY"];
+    MAC_LABEL = configMap["MAC_LABEL"];
+    qDebug() << "Mac label" << QString::fromStdString(MAC_LABEL);
+    qDebug() << "Mac Key" << QString::fromStdString(MAC_KEY);
+    qDebug() << QString::fromStdString(tapPaymentObject["socketId"]);
+    if (tapPaymentObject.find("saf_num") != tapPaymentObject.end())
+    {
+        qDebug() << "Voiding transaction";
+        qDebug() << "SAF_NUM" << QString::fromStdString(tapPaymentObject["saf_num"]);
+        tapPaymentObject["ctrout_saf"] = tapPaymentObject["saf_num"];
+        response = voidTransactionOffline(std::stoi(tapPaymentObject["socketId"]), MAC_LABEL, MAC_KEY, tapPaymentObject["saf_num"]);
+    }
+    else if (tapPaymentObject.find("ctroutd") != tapPaymentObject.end())
+    {
+        qDebug() << "CTROUTD" << QString::fromStdString(tapPaymentObject["ctroutd"]);
+        response = voidTransaction(std::stoi(tapPaymentObject["socketId"]), MAC_LABEL, MAC_KEY, tapPaymentObject["ctroutd"]);
+        tapPaymentObject["ctrout_saf"] = tapPaymentObject["ctroutd"];
+    }
+    tapPaymentObject["status"] = "Voided";
+    // p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
+    finishSession(std::stoi(tapPaymentObject["socketId"]), MAC_LABEL, MAC_KEY);
+}

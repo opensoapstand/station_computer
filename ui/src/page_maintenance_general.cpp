@@ -739,6 +739,8 @@ void page_maintenance_general::on_pushButton_tap_check_status_clicked()
 
 void page_maintenance_general::on_pushButton_tap_authorize_clicked()
 {
+    page_payment_tap_tcp paymentObject;
+    paymentObject.authorizeTestTransaction();
     qDebug() << "Maintenance general. Clicked Authorize Tap Payment";
     
 }
@@ -746,4 +748,6 @@ void page_maintenance_general::on_pushButton_tap_authorize_clicked()
 void page_maintenance_general::on_pushButton_tap_refund_clicked()
 {
     qDebug() << "Maintenance general. Clicked Refund Tap Payment";
+    page_payment_tap_tcp paymentObject;
+    paymentObject.voidingTestTransaction();
 }

@@ -50,6 +50,7 @@ std::map<std::string, std::string> getNextCounterMac(int socket, std::string MAC
     std::string encoded_counter = create_counter_mac(counter, MAC_KEY);
     std::map<std::string, std::string> responseObj;
     responseObj["COUNTER"] = std::to_string(counter);
+    qDebug() << "Counter" << counter;
     responseObj["COUNTER_ENCODED"] = encoded_counter;
     return responseObj;
 }
@@ -237,6 +238,7 @@ std::map<std::string, std::string> voidTransaction(int socket, std::string MAC_L
                 <PAYMENT_TYPE>CREDIT</PAYMENT_TYPE>\
             </TRANSACTION>";
         std::cout << command << std::endl;
+        qDebug()<< "In void transaction";
         std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
     return dataReceived;
 }

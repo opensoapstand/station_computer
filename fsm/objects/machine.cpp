@@ -128,24 +128,33 @@ void machine::setup(product *pnumbers)
 
 void machine::setSelectedDispenser(int slotNumber)
 {
-    debugOutput::sendMessage("faiejfiase;ijf; slot number: : " + std::to_string(slotNumber), MSG_ERROR);
+    m_selected_dispenser_number = slotNumber;
+    if (m_selected_dispenser_number == PRODUCT_SLOT_DUMMY)
+    {
+        debugOutput::sendMessage("machine: Selected Dispenser set to dummy", MSG_INFO);
+        return;
+    }
+
     if (slotNumber > getPcb()->getSlotCountByPcbType() || slotNumber < 0)
     {
         debugOutput::sendMessage("machine: ASSERT ERROR: dispenser number must be >0 and < than: " + std::to_string(getPcb()->getSlotCountByPcbType()) + "provided: " + std::to_string(slotNumber), MSG_ERROR);
     }
-    m_active_slot = slotNumber;
     getSelectedDispenser().resetDispenser();
 }
 
 int machine::getSelectedDispenserNumber()
 {
-    return m_active_slot;
+    if (m_selected_dispenser_number == PRODUCT_SLOT_DUMMY)
+    {
+        debugOutput::sendMessage("ASSERT ERROR: machine: Selected Dispenser is set to dummy", MSG_INFO);
+    }
+    return m_selected_dispenser_number;
 }
 
 dispenser &machine::getSelectedDispenser()
 {
     // provides a reference to the dispenser object! similar to pointer. but simpler to use.
-    return getDispenser(m_active_slot);
+    return getDispenser(getSelectedDispenserNumber());
 }
 dispenser &machine::getDispenser(int slot)
 {

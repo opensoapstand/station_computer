@@ -112,7 +112,7 @@ private:
     sqlite3 *db;
     int rc;
 
-    int m_active_slot;
+    int m_selected_dispenser_number;
 
     machine::HardwareVersion m_hardware_version;
 

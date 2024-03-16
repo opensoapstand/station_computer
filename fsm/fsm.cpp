@@ -213,8 +213,8 @@ DF_ERROR stateLoop()
 
         usleep(1000); // micros! 1 ms delay to slow down refresh rate
 
-        debugOutput::sendMessage("state loop page.....f.ef.e.f", MSG_INFO);
-        usleep(1000000); // micros! 1 ms delay to slow down refresh rate
+        // debugOutput::sendMessage("state loop page.....f.ef.e.f", MSG_INFO);
+        // usleep(1000000); // micros! 1 ms delay to slow down refresh rate
     }
     debugOutput::sendMessage("State machine ENDED. ", MSG_INFO);
     return dfRet;

@@ -604,9 +604,7 @@ DF_ERROR dispenser::initSelectedProductDispense(char size)
 
     DF_ERROR dfRet = OK;
     getSelectedProduct()->setTargetVolumeFromSize(size);
-
     resetSelectedProductVolumeDispensed();
-
     switch (m_pcb->get_pcb_version())
     {
 

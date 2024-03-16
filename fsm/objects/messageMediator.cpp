@@ -1085,7 +1085,6 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
    }
    else
    {
-      m_requestedAction = ACTION_NO_ACTION;
       debugOutput::sendMessage("command will be set. .", MSG_INFO);
       m_machine->setSelectedDispenser(requested_slot);
       m_machine->getSelectedDispenser().getActiveProduct()->setTargetVolumeFromSize(requestedSize);

@@ -14,7 +14,6 @@ echo 'fsm is the pcb controller program'
 echo 'soapstand_manager for more soapstand station functions'
 echo 'aws_operations for more aws backend functions'
 
-
 make_options () {
 
     if [[ $1 = "fsm" ]]; then
@@ -57,6 +56,22 @@ make_options () {
       echo 'Will not copy newly build binaries.'
     fi
 
+}
+
+
+set_screen_touch_controller () {
+    echo "WARNING: set screen here, because it doesn't work if done in script called from script..."
+    id=$(DISPLAY=:0 xinput | grep -E "ILITEK ILITEK-TP\s+id=" | awk -F"id=" '{print $2}' | awk '{print $1}')
+
+    echo $id
+    # WARNING ERROR: if id is more than 2 digits (e.g. 13), it will only take the first char: 1
+    if [ -z "$id" ]; then
+        echo "Not an ILITEK ILITEK-TP screen"
+    else
+        echo "ILITEK ILITEK-TP screen found. --> manually adjust touch controller coordinates. "
+        DISPLAY=:0 xinput set-prop "ILITEK ILITEK-TP" "Coordinate Transformation Matrix" 0 1 0 -1 0 1 0 0 1
+        DISPLAY=:0 xinput list-props "ILITEK ILITEK-TP" | grep Matrix
+    fi
 }
 
 port_in_use=$(sudo ./rtunnel_print.sh 2>/dev/null)
@@ -167,6 +182,7 @@ do
             ;;
         "Setup Ubuntu for Aelen UI")
            sudo ./setup_ubuntu.sh
+            set_screen_touch_controller
         ;;
         
         "Quit") 

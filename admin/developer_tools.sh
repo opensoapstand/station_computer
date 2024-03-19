@@ -61,7 +61,7 @@ make_options () {
 
 port_in_use=$(sudo ./rtunnel_print.sh 2>/dev/null)
 PS3="Choose option(digit + enter) (rtunnel port=$port_in_use) :"
-options=("Quit" "aws_operations" "AWS log in" "AWS run station operations" "soapstand_manager" "Station info" "Stop ui and controller" "(Re)start ui and controller" "run standalone controller" "Copy program binary files from station_software git folder to production folder and run" "Create and run production data copied from station_software git folder (without db!)" "Services: Soapstand (re)load from production (ui,controller,wificheck,transactioncheck)" "Setup aws port (rtunnel)" "make ui and fsm" "make ui and fsm and deploy binaries" "make ui" "make ui and deploy binaries" "make fsm" "make fsm and deploy binaries" "Production database operations" "check temperature" "Enable IP Forwarding (TAP USA)" "Disable IP Forwarding (TAP USA)")
+options=("Quit" "aws_operations" "AWS log in" "AWS run station operations" "soapstand_manager" "Station info" "Stop ui and controller" "(Re)start ui and controller" "run standalone controller" "Copy program binary files from station_software git folder to production folder and run" "Create and run production data copied from station_software git folder (without db!)" "Services: Soapstand (re)load from production (ui,controller,wificheck,transactioncheck)" "Setup aws port (rtunnel)" "make ui and fsm" "make ui and fsm and deploy binaries" "make ui" "make ui and deploy binaries" "make fsm" "make fsm and deploy binaries" "Setup Ubuntu for Aelen UI" "Production database operations" "check temperature" "Enable IP Forwarding (TAP USA)" "Disable IP Forwarding (TAP USA)")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -165,6 +165,9 @@ do
         "Setup aws port (rtunnel)")
             sudo ./set_aws_port.sh
             ;;
+        "Setup Ubuntu for Aelen UI")
+           sudo ./setup_ubuntu.sh
+        ;;
         
         "Quit") 
             break

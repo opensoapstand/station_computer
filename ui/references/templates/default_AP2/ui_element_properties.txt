@@ -97,23 +97,36 @@ page_qr_payment->label_steps,{"x": 240, "y": 1105, "width": 558, "height": 235}
 page_qr_payment->label_product_information,{"x": 240, "y": 1440, "width": 479, "height": 72}
 page_qr_payment->label_product_price,{"x": 730, "y": 1440, "width": 110, "height": 36}
 page_qr_payment->label_gif,{"x": 365, "y": 548, "width": 350, "height": 350}
-page_qr_payment->label_refresh_page,{"x": 326, "y": 1637, "width": 400, "height": 114}
+page_qr_payment->label_refresh_page,{"x": 326, "y": 1564, "width": 400, "height": 114}
+page_qr_payment->label_refresh_page_background,{"x": 290, "y": 1541, "width": 500, "height": 147}
+page_qr_payment->label_refresh_page_icon,{"x": 659, "y": 1565, "width": 106, "height": 100}
+page_qr_payment->pushButton_previous_page,{"x": 304, "y": 1740, "width": 472, "height": 100}
 
 page_offline_payment->label_title,{"x": 265, "y": 200, "width": 548, "height": 100}
-page_offline_payment->label_qrCode,{"x": 314, "y": 424, "width": 451, "height": 451}
-page_offline_payment->label_scan,{"x": 240, "y": 884, "width": 600, "height": 171}
+page_offline_payment->label_qrCode,{"x": 315, "y": 375, "width": 451, "height": 451}
+page_offline_payment->label_qr_background,{"x": 240, "y": 325, "width": 600, "height": 615}
+page_offline_payment->label_scan,{"x": 270, "y": 850, "width": 540, "height": 60}
 page_offline_payment->label_processing,{"x": 136, "y": 380, "width": 807, "height": 182}
-page_offline_payment->label_steps,{"x": 240, "y": 1105, "width": 558, "height": 235}
+page_offline_payment->label_steps,{"x": 240, "y": 965, "width": 600, "height": 235}
 page_offline_payment->label_product_information,{"x": 240, "y": 1440, "width": 479, "height": 72}
 page_offline_payment->label_product_price,{"x": 730, "y": 1440, "width": 110, "height": 36}
 page_offline_payment->label_gif,{"x": 365, "y": 548, "width": 350, "height": 350}
-page_offline_payment->label_refresh_page,{"x": 326, "y": 1637, "width": 400, "height": 114}
+page_offline_payment->pushButton_promo_input,{"x": 270, "y": 1346, "width": 540, "height": 70}
+page_offline_payment->lineEdit_promo_code,{"x": 270, "y": 1346, "width": 540, "height": 70}
+page_offline_payment->label_promo_code_title,{"x": 270, "y": 1285, "width": 440, "height": 36}
+page_offline_payment->label_promo_code_background,{"x": 240, "y": 1255, "width": 600, "height": 211}
+page_offline_payment->label_refresh_page,{"x": 326, "y": 1544, "width": 400, "height": 114}
+page_offline_payment->label_refresh_page_background,{"x": 290, "y": 1521, "width": 500, "height": 147}
+page_offline_payment->label_refresh_page_icon,{"x": 659, "y": 1545, "width": 106, "height": 100}
+page_offline_payment->pushButton_previous_page,{"x": 304, "y": 1740, "width": 472, "height": 100}
 
 page_payment_tap_serial->pushButton_to_idle,{"x": 980, "y": 50, "width": 50, "height": 50}
 page_payment_tap_serial->animated_Label,{"x": 139, "y": 668, "width": 801, "height": 365}
+page_payment_tap_serial->pushButton_previous_page,{"x": 304, "y": 1740, "width": 472, "height": 100}
 
 page_payment_tap_tcp->pushButton_to_idle,{"x": 980, "y": 50, "width": 50, "height": 50}
 page_payment_tap_tcp->animated_Label,{"x": 139, "y": 668, "width": 801, "height": 365}
+page_payment_tap_tcp->pushButton_previous_page,{"x": 304, "y": 1740, "width": 472, "height": 100}
 
 page_dispenser->label_background_during_dispense_animation,{"x": 0, "y": 0, "width": 1080, "height": 1920}
 page_dispenser->label_dispense_flowrate,{"x": 650, "y": 280, "width": 411, "height": 51}
@@ -147,7 +160,7 @@ page_help->pushButton_to_howTo,{"x": 397, "y": 1740, "width": 287, "height": 100
 page_help->pushButton_to_maintenance,{"x": 743, "y": 1740, "width": 287, "height": 100}
 
 page_end->label_message,{"x": 207, "y": 910, "width": 665, "height": 100}
-page_end->label_message_2,{"x": 311, "y": 1027, "width": 458, "height": 135}
+page_end->label_message_2,{"x": 247, "y": 1017, "width": 585, "height": 135}
 page_end->label_volume_dispensed,{"x": 311, "y": 1197, "width": 458, "height": 50}
 page_end->label_volume_dispensed_ml,{"x": 311, "y": 1247, "width": 458, "height": 85}
 page_end->pushButton_contact,{"x": 304, "y": 1452, "width": 472, "height": 100}

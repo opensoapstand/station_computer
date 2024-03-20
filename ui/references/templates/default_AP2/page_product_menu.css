@@ -26,7 +26,6 @@ QLabel {
 }
 
 #label_base_products_section_bg{
-    border-top-right-radius: 35px;
     background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(226, 185, 133, 0.20), stop:0.9 rgba(226, 185, 133, 0.00));
 }
 
@@ -41,8 +40,9 @@ QLabel {
 }
 
 .active{
-    background: #E2B985;
-    border-radius: 35px;
+    background: #F9EBD8;
+    border-top-left-radius: 35px;
+    border-bottom-left-radius: 35px;
 }
 
 .inactive{
@@ -71,6 +71,11 @@ QLabel {
     text-transform: capitalize;
     text-align: center;
     qproperty-alignment: AlignCenter;
+}
+
+#label_dispense_products_section_bg{
+    background: #F9EBD8;
+    border-top-right-radius: 35px;
 }
 
 #label_dispense_products_section_title{

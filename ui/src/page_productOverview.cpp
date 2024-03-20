@@ -104,10 +104,11 @@ void page_product_overview::showEvent(QShowEvent *event)
     // need CAPS button for keyboard widget T or F
     p_keyboard->resetKeyboard();
     statusbarLayout->removeWidget(p_keyboard);
+    ui->label_gif->hide();
 
-    qDebug() << "is Custom mix? : " << p_page_idle->thisMachine->getSelectedProduct()->isCustomMix();
+    // qDebug() << "is Custom mix? : " << p_page_idle->thisMachine->getSelectedProduct()->isCustomMix();
     QVector<double> customRatios = p_page_idle->thisMachine->getSelectedProduct()->getCustomMixRatios();
-    qDebug() << "Mixing products (includes base) ratios:";
+    // qDebug() << "Mixing products (includes base) ratios:";
 
     for (int i = 0; i < customRatios.size(); i++)
     {
@@ -125,7 +126,6 @@ void page_product_overview::showEvent(QShowEvent *event)
         p_keyboard->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
         p_keyboard->setContentsMargins(0, 0, 0, 0);
         p_keyboard->findChild<QWidget *>("keyboard_3")->setGeometry(21, 0, 1040, 495);
-
         p_statusbar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
         p_statusbar->setContentsMargins(0, 0, 0, 0); 
 
@@ -238,6 +238,14 @@ void page_product_overview::showEvent(QShowEvent *event)
 
     _selectIdleTimeoutSec = 400;
     selectIdleTimer->start(1000);
+
+    std::tie(res,readBuffer, http_code) =  p_page_idle->thisMachine->sendRequestToPortal(PORTAL_PING, "GET", "", "PAGE_PRODUCT_OVERVIEW");
+    if (res != CURLE_OK || http_code  > 300)
+    {
+        p_page_idle->thisMachine->setCouponState(disabled);
+    }else{
+        p_page_idle->thisMachine->setCouponState(enabled_not_set);
+    }
     reset_and_show_page_elements();
 
 
@@ -279,8 +287,8 @@ void page_product_overview::showEvent(QShowEvent *event)
     }
     else if (numberOfPaymentMethods == 2)
     {
-        ui->pushButton_continue->raise();
-        ui->pushButton_continue_additional->raise();
+        // ui->pushButton_continue->raise();
+        // ui->pushButton_continue_additional->raise();
         ui->pushButton_continue->setFixedSize(QSize(360, 100));
         ui->pushButton_continue->setProperty("activePaymentMethod", paymentMethods[0]);
         ui->pushButton_continue_additional->setFixedSize(QSize(360, 100));
@@ -405,7 +413,12 @@ void page_product_overview::reset_and_show_page_elements()
     break;
     case (disabled):
     {
-        qDebug() << "Coupon state: Disabled";
+        qDebug() << "Coupon state: Disabled due to network offline";
+        ui->pushButton_promo_input->hide();
+        ui->lineEdit_promo_code->show();
+        p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_promo_code, "promoCode", PAGE_PRODUCT_OVERVIEW_CSS);
+        QString promo_code_input_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "lineEdit_promo_code->offline");
+        ui->lineEdit_promo_code->setText(promo_code_input_text);
     }
     break;
     case (enabled_processing_input):

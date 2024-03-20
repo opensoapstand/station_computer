@@ -1278,7 +1278,7 @@ void page_maintenance_dispenser::sendRestockToCloud()
 void page_maintenance_dispenser::restockTransactionToFile(QString curl_params)
 {
     qDebug() << "Write Restock transaction to file ";
-    p_page_idle->thisMachine->dfUtility->write_to_file(TRANSACTIONS_RESTOCK_OFFINE_PATH, curl_params);
+    p_page_idle->thisMachine->dfUtility->write_to_file(TRANSACTIONS_RESTOCK_OFFLINE_PATH, curl_params);
 }
 
 void page_maintenance_dispenser::update_changes_to_portal()

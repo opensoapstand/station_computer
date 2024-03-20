@@ -1747,7 +1747,7 @@ std::tuple<CURLcode, std::string, long> machine::sendRequestToPortal(QString api
         QString failedTransactionParams = "PAGE: " + page_name + "; API_URL= " + api_url + " ; CURL_PARAMS= " + curl_params + "\n";
         qDebug() << "CURL failed to init. parameters:" + failedTransactionParams;
         // Write transaction to file
-        dfUtility->write_to_file(TRANSACTION_DISPENSE_END_OFFINE_PATH, failedTransactionParams);
+        dfUtility->write_to_file(TRANSACTION_DISPENSE_END_OFFLINE_PATH, failedTransactionParams);
         return {res, "Curl failed", 404};
     }
     curl_easy_setopt(curl, CURLOPT_URL, api_url.toUtf8().constData());

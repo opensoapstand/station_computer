@@ -360,7 +360,7 @@ text-align: center;</string>
    <property name="geometry">
     <rect>
      <x>90</x>
-     <y>326</y>
+     <y>300</y>
      <width>881</width>
      <height>131</height>
     </rect>
@@ -372,10 +372,14 @@ text-align: center;</string>
   <widget class="QLabel" name="label_product_description">
    <property name="geometry">
     <rect>
-     <x>88</x>
-     <y>461</y>
+     <x>90</x>
+     <y>430</y>
      <width>901</width>
+<<<<<<< HEAD
      <height>301</height>
+=======
+     <height>321</height>
+>>>>>>> develop-v3
     </rect>
    </property>
    <property name="font">
@@ -418,8 +422,8 @@ text-align: center;</string>
   <widget class="QLabel" name="label_product_photo">
    <property name="geometry">
     <rect>
-     <x>94</x>
-     <y>765</y>
+     <x>90</x>
+     <y>760</y>
      <width>450</width>
      <height>450</height>
     </rect>
@@ -437,8 +441,8 @@ text-align: center;</string>
   <widget class="QLabel" name="label_product_ingredients_title">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>1239</y>
+     <x>90</x>
+     <y>1230</y>
      <width>351</width>
      <height>50</height>
     </rect>

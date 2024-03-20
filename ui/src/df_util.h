@@ -9,7 +9,7 @@
 
 
 // TODO: Refactor to fit with dfuicommthread
-#define UI_VERSION "3.5"
+#define UI_VERSION "3.6"
 
 #define OPTION_SLOT_INVALID 0
 #define SELECT_PRODUCT_PAGE_SLOT_COUNT_MAX 4
@@ -65,8 +65,8 @@
 #define CSV_PRODUCT_COL_NOTES 20
 #define CSV_PRODUCT_COL_URL 21
 
-#define TRANSACTION_DISPENSE_END_OFFINE_PATH "/home/df-admin/production/logging/transactions/failed_curl_transaction_dispense_end.txt"
-#define TRANSACTIONS_RESTOCK_OFFINE_PATH "/home/df-admin/production/logging/transactions/failed_curl_transaction_restock.txt"
+#define TRANSACTION_DISPENSE_END_OFFLINE_PATH "/home/df-admin/production/logging/transactions/failed_curl_transaction_dispense_end.txt"
+#define TRANSACTIONS_RESTOCK_OFFLINE_PATH "/home/df-admin/production/logging/transactions/failed_curl_transaction_restock.txt"
 
 #define ML_TO_OZ 0.033814
 #define OZ_TO_ML 29.5735

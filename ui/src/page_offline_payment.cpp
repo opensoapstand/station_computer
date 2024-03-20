@@ -34,7 +34,7 @@ page_offline_payment::page_offline_payment(QWidget *parent) : QWidget(parent),
     paymentEndTimer = new QTimer(this);
     paymentEndTimer->setInterval(1000);
     connect(paymentEndTimer, SIGNAL(timeout()), this, SLOT(onTimeoutTick()));
-    
+    connect(ui->buttonGroup, SIGNAL(buttonPressed(int)), this, SLOT(keyboardButtonPressed(int)));
     connect(ui->pushButton_promo_input, SIGNAL(clicked()), this, SLOT(on_lineEdit_promo_codeInput_clicked()));
 
     statusbarLayout = new QVBoxLayout(this);
@@ -78,24 +78,33 @@ void page_offline_payment::showEvent(QShowEvent *event)
     // statusbarLayout->setContentsMargins(0, 1874, 0, 0);                                 // int left, int top, int right, int bottom);
     p_keyboard->resetKeyboard();
     statusbarLayout->removeWidget(p_keyboard);
+    ui->promoKeyboard->hide();
+    QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_OFFLINE_PAYMENT_CSS);
+    p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
 
-    p_keyboard->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
-    p_keyboard->setContentsMargins(0, 0, 0, 0);
-    p_keyboard->findChild<QWidget *>("keyboard_3")->setGeometry(21, 0, 1040, 495);
+    if (p_page_idle->thisMachine->hasMixing())
+    {
+        p_keyboard->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+        p_keyboard->setContentsMargins(0, 0, 0, 0);
+        p_keyboard->findChild<QWidget *>("keyboard_3")->setGeometry(21, 0, 1040, 495);
+        p_statusbar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+        p_statusbar->setContentsMargins(0, 0, 0, 0); 
 
-    p_statusbar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
-    p_statusbar->setContentsMargins(0, 0, 0, 0); 
+        statusbarLayout->setSpacing(0);
+        statusbarLayout->setContentsMargins(0, 0, 0, 0);
 
-    statusbarLayout->setSpacing(0);
-    statusbarLayout->setContentsMargins(0, 0, 0, 0);
+        statusbarLayout->addWidget(p_keyboard);   
+        statusbarLayout->addSpacing(15);
+        statusbarLayout->addWidget(p_statusbar);   
 
-    statusbarLayout->addWidget(p_keyboard);   
-    statusbarLayout->addWidget(p_statusbar);   
-
-    statusbarLayout->setAlignment(Qt::AlignBottom | Qt::AlignVCenter);
-    p_keyboard->registerCallBack(std::bind(&page_offline_payment::enterButtonPressed, this));
-
-    p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this);
+        statusbarLayout->setAlignment(Qt::AlignBottom | Qt::AlignVCenter);
+        QString picturePath = p_page_idle->thisMachine->getSelectedProduct()->getProductPicturePath();
+        styleSheet.replace("%IMAGE_PATH%", picturePath);
+        p_keyboard->registerCallBack(std::bind(&page_offline_payment::enterButtonPressed, this));
+    }else{
+        statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
+        statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
+    }
 
     // p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ox2, "button_problems_message");
     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_title, "pay_by_phone");
@@ -104,56 +113,60 @@ void page_offline_payment::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_processing);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_previous_page);
 
-    QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_OFFLINE_PAYMENT_CSS);
-
     ui->pushButton_refresh->setProperty("class", "invisible_button");
-
     ui->pushButton_previous_page->setStyleSheet(styleSheet);
-
     ui->pushButton_refresh->setStyleSheet(styleSheet);
     ui->label_title->setStyleSheet(styleSheet);
     ui->label_scan->setStyleSheet(styleSheet);
     ui->label_steps->setStyleSheet(styleSheet);
     ui->label_processing->setStyleSheet(styleSheet);
-    ui->label_product_price->setStyleSheet(styleSheet);
-    ui->label_product_information->setStyleSheet(styleSheet);
+    // ui->label_product_price->setStyleSheet(styleSheet);
+    // ui->label_product_information->setStyleSheet(styleSheet);
     ui->label_qr_background->setStyleSheet(styleSheet);
     ui->label_gif->setStyleSheet(styleSheet);
 
     ui->pushButton_promo_input->setStyleSheet(styleSheet);
     ui->lineEdit_promo_code->setProperty("class", "promoCode");
     ui->lineEdit_promo_code->setStyleSheet(styleSheet);
+    ui->label_promo_code_title->setStyleSheet(styleSheet);
+    ui->label_promo_code_background->setStyleSheet(styleSheet);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->label_promo_code_title);
 
-    ui->lineEdit_promo_code->clear();
+    QString promo_code_input_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "lineEdit_promo_code->initial");
+    ui->lineEdit_promo_code->setText(promo_code_input_text);
+
+    // ui->lineEdit_promo_code->clear();
     ui->lineEdit_promo_code->show();
     ui->pushButton_promo_input->show(); 
- 
+    ui->label_product_price->hide(); // currently not needed
+    ui->label_product_information->hide(); // currently not needed
 
     msgBox = nullptr;
 
     state_payment = s_init_offline;
 
-    int pnumber_selected = p_page_idle->thisMachine->getSelectedProduct()->getPNumber();
-    double price = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
+    // This section is for label_product_price and label_product_information; but both of these widgets are currently hidden because not needed for the current design
+    // int pnumber_selected = p_page_idle->thisMachine->getSelectedProduct()->getPNumber();
+    // double price = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
 
-    if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize() == SIZE_CUSTOM_INDEX)
-    {
-        ui->label_product_information->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductName() + p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_information, "volume_up_to") + p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(true, true));
-        QString base_text = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_price, "custom_size");
-        QString label_product_price_text = base_text.arg(price);
-        ui->label_product_price->setText(label_product_price_text);
-    }
-    else
-    {
-        ui->label_product_information->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductName() + " " + p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(true, true));
-        QString base_text = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_price, "fixed_size");
-        QString label_product_price_text = base_text.arg(price);
-        ui->label_product_price->setText(label_product_price_text);
-    }
+    // if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize() == SIZE_CUSTOM_INDEX)
+    // {
+    //     ui->label_product_information->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductName() + p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_information, "volume_up_to") + p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(true, true));
+    //     QString base_text = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_price, "custom_size");
+    //     QString label_product_price_text = base_text.arg(price);
+    //     ui->label_product_price->setText(label_product_price_text);
+    // }
+    // else
+    // {
+    //     ui->label_product_information->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductName() + " " + p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(true, true));
+    //     QString base_text = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_price, "fixed_size");
+    //     QString label_product_price_text = base_text.arg(price);
+    //     ui->label_product_price->setText(label_product_price_text);
+    // }
 
     ui->label_qrCode->show();
-    ui->label_product_information->show();
-    ui->label_product_price->show();
+    // ui->label_product_information->show();
+    // ui->label_product_price->show();
 
     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_QR_PAY_BACKGROUND_PATH);
 
@@ -162,9 +175,9 @@ void page_offline_payment::showEvent(QShowEvent *event)
     paymentEndTimer->start(1000);
     _pageTimeoutCounterSecondsLeft = QR_PAGE_TIMEOUT_SECONDS;
 
-    // ui->label_refresh_page->hide();
+    ui->label_refresh_page->hide();
     // ui->pushButton_refresh->raise(); // make sure refresh button is on top.
-    ui->pushButton_previous_page->raise();
+    // ui->pushButton_previous_page->raise();
     ui->label_gif->hide();
 
     if(p_page_idle->thisMachine->hasMixing()){
@@ -180,6 +193,9 @@ void page_offline_payment::showEvent(QShowEvent *event)
         ui->label_qr_background->hide();
         ui->label_refresh_page_background->hide();
         ui->label_refresh_page_icon->hide();
+        QString keyboard = KEYBOARD_IMAGE_PATH;
+        QString keyboard_picture_path = p_page_idle->thisMachine->getTemplatePathFromName(KEYBOARD_IMAGE_PATH);
+        p_page_idle->thisMachine->addPictureToLabel(ui->label_keyboard_background, keyboard_picture_path);
     }
 
     setupQrOrder();
@@ -192,9 +208,40 @@ void page_offline_payment::enterButtonPressed(){
         p_keyboard->resetKeyboard();
 }
 
+void page_offline_payment::keyboardButtonPressed(int buttonID)
+{
+    QAbstractButton *buttonpressed = ui->buttonGroup->button(buttonID);
+    QString buttonText = buttonpressed->objectName();
+
+    if (buttonText == "backspace")
+    {
+        ui->lineEdit_promo_code->backspace();
+    }
+    else if (buttonText == "done")
+    {
+        qDebug() << "Done clicked, initiated apply promo.";
+        apply_code(ui->lineEdit_promo_code->text());
+        ui->promoKeyboard->hide();
+    }
+    else if (buttonText.mid(0, 3) == "num")
+    {
+        ui->lineEdit_promo_code->setText(ui->lineEdit_promo_code->text() + buttonText.mid(3, 1));
+    }
+    else
+    {
+        ui->lineEdit_promo_code->setText(ui->lineEdit_promo_code->text() + buttonText);
+    }
+
+    qDebug() << "Promo code input field: " << ui->lineEdit_promo_code->text();
+}
+
 void page_offline_payment::apply_code(QString promocode){
     if(promocode == secretCode){
         hideCurrentPageAndShowProvided(p_page_dispense);
+    }else{
+        p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_promo_code, "promoCode_invalid", PAGE_OFFLINE_PAYMENT_CSS);
+        QString promo_code_input_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "lineEdit_promo_code->invalid");
+        ui->lineEdit_promo_code->setText(promo_code_input_text);
     }
 }
 
@@ -233,8 +280,8 @@ void page_offline_payment::setupQrOrder()
     // create qr code graphics
     p_page_idle->thisMachine->hasMixing() ? paintQR(painter, QSize(451, 451), qrdata, QColor("white")) : paintQR(painter, QSize(360, 360), qrdata, QColor("white"));
     ui->label_qrCode->setPixmap(map);
-    ui->label_product_information->show();
-    ui->label_product_price->show();
+    // ui->label_product_information->show();
+    // ui->label_product_price->show();
     ui->label_title->show();
     ui->label_scan->show();
     ui->label_steps->show();
@@ -470,8 +517,15 @@ QString page_offline_payment::generateCode(QString inputString) {
 
 void page_offline_payment::on_lineEdit_promo_codeInput_clicked()
 {
-    p_keyboard->registerCallBack(std::bind(&page_offline_payment::enterButtonPressed, this));
-    p_keyboard->setKeyboardVisibility(true, ui->lineEdit_promo_code);
-    ui->lineEdit_promo_code->clear();
-    ui->lineEdit_promo_code->show();
+    p_page_idle->thisMachine->addCssClassToObject(ui->lineEdit_promo_code, "promoCode", PAGE_OFFLINE_PAYMENT_CSS);
+    if(p_page_idle->thisMachine->hasMixing()){
+        p_keyboard->registerCallBack(std::bind(&page_offline_payment::enterButtonPressed, this));
+        p_keyboard->setKeyboardVisibility(true, ui->lineEdit_promo_code);
+        ui->lineEdit_promo_code->clear();
+        ui->lineEdit_promo_code->show();
+    }else{
+        ui->promoKeyboard->show();
+        ui->lineEdit_promo_code->clear();
+    }
+
 }

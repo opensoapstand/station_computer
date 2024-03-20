@@ -31,7 +31,7 @@
 #include <QMediaPlayer>
 #include <QGraphicsVideoItem>
 #include "page_payment_tap_serial.h"
-
+#include "page_payment_tap_tcp.h"
 
 class statusbar;
 class keyboard;
@@ -118,7 +118,7 @@ private slots:
 
     void on_pushButton_reboot_nightly_clicked();
     void pingTapDevice();
-    void rebootTapDevice();
+    void rebootTapDevice(QString paymentMethod);
 private:
     Ui::page_idle *ui;
     page_buyBottle *p_page_buyBottle;

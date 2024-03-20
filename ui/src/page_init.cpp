@@ -215,7 +215,7 @@ void page_init::onInitTimeoutTick()
         case tap_canada:
         case tap_usa:
         {
-            if(!m_tap_payment_ready && tap_init_responded){
+            if(!m_tap_payment_ready && m_tap_init_error){
                 ready = false;
                 m_label_init_status_text += "Load Tap payment. INIT Error<br>";
             }
@@ -303,9 +303,7 @@ void page_init::initiateTapPayment()
                 m_tap_payment_ready = true;
             }
             else{
-                // Set responded value to true to show that TAP value is not starting.
-                // Will use it to show Init error
-                tap_init_responded = true;
+                m_tap_init_error = true;
             }
             break;
         }
@@ -319,9 +317,7 @@ void page_init::initiateTapPayment()
                 m_tap_payment_ready = true;
             }
             else{
-                // Set responded value to true to show that TAP value is not starting.
-                // Will use it to show Init error
-                tap_init_responded = true;
+                m_tap_init_error = true;
             }
             break;
         }

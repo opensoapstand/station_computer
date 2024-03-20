@@ -63,7 +63,7 @@ page_payment_tap_tcp::page_payment_tap_tcp(QWidget *parent) : QWidget(parent),
     statusbarLayout = new QVBoxLayout(this);
 }
 
-void page_payment_tap_tcp::initiate_tap_setup()
+bool page_payment_tap_tcp::initiate_tap_setup()
 {
     qDebug() << "InitializingTap payment";
     std::map<std::string, std::string> configMap = readConfigFile();
@@ -93,6 +93,7 @@ void page_payment_tap_tcp::initiate_tap_setup()
         qDebug() << "No file config";
         registerDevice(connectSocket());
     }
+    return true;
 }
 void page_payment_tap_tcp::stopPayTimers()
 {

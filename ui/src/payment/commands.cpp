@@ -1,5 +1,7 @@
 #include "setup_Tap.h"
 #include "commands.h"
+#include <chrono>
+#include <ctime>
 #include <QDebug>
 #include <QString>
 
@@ -20,7 +22,11 @@ std::map<std::string, std::string> registerDevice(int socket){
     std::map<std::string, std::string> dataReceived = sendAndReceivePacket(registerCommand, socket, true);
     if(dataReceived["MAC_KEY"]!=""){
         qDebug() << "Mac Key received after registration";
-        createOrUpdateConfigFile(dataReceived["MAC_KEY"], dataReceived["MAC_LABEL"], "0");
+         auto currentTime = std::chrono::system_clock::now();
+        std::time_t currentTime_t = std::chrono::system_clock::to_time_t(currentTime);
+        long long currentTimeNumber = static_cast<long long>(currentTime_t);
+        std::string currentTimeString = std::to_string(currentTimeNumber);
+        createOrUpdateConfigFile(dataReceived["MAC_KEY"], dataReceived["MAC_LABEL"], currentTimeString);
         close(socket);
     }
     else{

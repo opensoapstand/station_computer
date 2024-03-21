@@ -15,6 +15,7 @@
 // all rights reserved
 //***************************************
 #include "page_product_mixing.h"
+#include "page_payment_tap_serial.h"
 #include "ui_page_product_mixing.h"
 #include "pnumberproduct.h"
 
@@ -181,25 +182,29 @@ void page_product_mixing::showEvent(QShowEvent *event)
     ui->label_product_photo->setStyleSheet(styleSheet);
     ui->label_customize_drink->setStyleSheet(styleSheet);
     ui->label_select_quantity->setStyleSheet(styleSheet);
+    ui->label_select_quantity_warning->setStyleSheet(styleSheet);
+    p_page_idle->thisMachine->setTemplateTextToObject(ui->label_select_quantity_warning);
     ui->label_product_ingredients->setStyleSheet(styleSheet);
     ui->label_product_ingredients_title->setStyleSheet(styleSheet);
     ui->label_additives_background->setStyleSheet(styleSheet);
     ui->label_additives_background->setWordWrap(true);
     ui->label_help->setStyleSheet(styleSheet);
     ui->pushButton_continue->setStyleSheet(styleSheet);
+    ui->pushButton_order_sample->setProperty("class", "pushButton_order_sample");
     ui->pushButton_order_sample->setStyleSheet(styleSheet);
     ui->pushButton_recommended->setStyleSheet(styleSheet);
     // ui->pushButton_previous_page->setStyleSheet(styleSheet);
     ui->pushButton_to_help->setProperty("class", "button_transparent");
     ui->pushButton_to_help->setStyleSheet(styleSheet);
 
+    orderButtonSelected = false;
+    ui->label_select_quantity_warning->hide();
     for (int i = 0; i < 4; i++)
     {
         orderSizeLabelsVolume[i]->setProperty("class", "orderSizeLabelsVolume");
         orderSizeLabelsPrice[i]->setProperty("class", "orderSizeLabelsPrice");
         orderSizeBackgroundLabels[i]->setProperty("class", "orderSizeBackgroundLabels");
         orderSizeButtons[i]->setProperty("class", "orderSizeButtons");
-        // orderSizeBackgroundLabels[i]->setProperty("class", "orderSizeBackgroundLabels1");
         orderSizeLabelsVolume[i]->setStyleSheet(styleSheet);
         orderSizeLabelsPrice[i]->setStyleSheet(styleSheet);
         orderSizeBackgroundLabels[i]->setStyleSheet(styleSheet);
@@ -231,8 +236,6 @@ void page_product_mixing::showEvent(QShowEvent *event)
             additiveBarsDefault[j]->setStyleSheet(styleSheet);
             additiveBarsHigh[j]->setStyleSheet(styleSheet);
         }
-        qDebug() << "DEFAULTTT" << p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosDefault();
-        qDebug() << "CUSTOM" << p_page_idle->thisMachine->getSelectedProduct()->getCustomMixRatios();
         checkMixRatiosLevel();
         updateMixRatiosLevel();
     }else{
@@ -242,6 +245,7 @@ void page_product_mixing::showEvent(QShowEvent *event)
         resetMixRatiosLevel();
         updateMixRatiosLevel();
     }
+    toggleResetButton();
     p_page_idle->thisMachine->resetTransactionLogging();
     // transactionLogging = "";
     reset_and_show_page_elements();
@@ -277,7 +281,6 @@ void page_product_mixing::reset_and_show_page_elements()
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_order_sample);
     // ui->label_product_description->setWordWrap(true);
     ui->label_product_ingredients->setWordWrap(true);
-    ui->pushButton_continue->hide();
 
     QString picturePath = p_page_idle->thisMachine->getSelectedProduct()->getProductPicturePath();
     ui->label_product_title->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductName());
@@ -490,14 +493,17 @@ void page_product_mixing::reset_and_show_page_elements()
     ui->label_price_custom->setAlignment(Qt::AlignCenter);
 
     // it was confusing for the people to chose a quantity if there was only one quantity available. So, add a continue button if they can't chose anyways.
-    if (sizes_available_count == 1)
-    {
-        ui->pushButton_continue->show();
-    }
-    else
-    {
-        ui->pushButton_continue->hide();
-    }
+    // 2024-03-01 new update: no matter how many quantity options available, always show pushButton_continue and highlight the quantity option that was selected by the user
+    // ui->pushButton_continue->hide();
+    // if (sizes_available_count == 1)
+    // {
+    //     ui->pushButton_continue->show();
+    // }
+    // else
+    // {
+    //     ui->pushButton_continue->hide();
+    // }
+    ui->pushButton_continue->show();
     if(p_page_idle->thisMachine->getSelectedProduct()->getSizeEnabled(SIZE_SAMPLE_INDEX))
     {
         ui->pushButton_order_sample->show();
@@ -554,14 +560,18 @@ void page_product_mixing::on_pushButton_order_custom_clicked()
 {
     qDebug() << "Button custom clicked ";
     p_page_idle->thisMachine->getSelectedProduct()->setSelectedSize(SIZE_CUSTOM_INDEX);
-    hideCurrentPageAndShowProvided(p_page_overview);
+    // hideCurrentPageAndShowProvided(p_page_overview);
+    toggleActiveInactiveOrderButtons(3, "inactiveSample"); // 3 = button size custom
+    toggleSelectQuantityWarning();
 }
 
 void page_product_mixing::on_pushButton_order_medium_clicked()
 {
     qDebug() << "Button medium clicked";
     p_page_idle->thisMachine->getSelectedProduct()->setSelectedSize(SIZE_MEDIUM_INDEX);
-    hideCurrentPageAndShowProvided(p_page_overview);
+    // hideCurrentPageAndShowProvided(p_page_overview);
+    toggleActiveInactiveOrderButtons(1, "inactiveSample"); // 1 = button size medium
+    toggleSelectQuantityWarning();
 }
 
 // on_Small_Order button listener
@@ -569,7 +579,9 @@ void page_product_mixing::on_pushButton_order_small_clicked()
 {
     qDebug() << "Button small clicked";
     p_page_idle->thisMachine->getSelectedProduct()->setSelectedSize(SIZE_SMALL_INDEX);
-    hideCurrentPageAndShowProvided(p_page_overview);
+    // hideCurrentPageAndShowProvided(p_page_overview);
+    toggleActiveInactiveOrderButtons(0, "inactiveSample"); // 0 = button size small
+    toggleSelectQuantityWarning();
 }
 
 // on_Large_Order button listener
@@ -577,14 +589,53 @@ void page_product_mixing::on_pushButton_order_big_clicked()
 {
     qDebug() << "Button big clicked";
     p_page_idle->thisMachine->getSelectedProduct()->setSelectedSize(SIZE_LARGE_INDEX);
-    hideCurrentPageAndShowProvided(p_page_overview);
+    // hideCurrentPageAndShowProvided(p_page_overview);
+    toggleActiveInactiveOrderButtons(2, "inactiveSample"); // 0 = button size large
+    toggleSelectQuantityWarning();
 }
 
 void page_product_mixing::on_pushButton_order_sample_clicked()
 {
     qDebug() << "Button sample clicked";
     p_page_idle->thisMachine->getSelectedProduct()->setSelectedSize(SIZE_SAMPLE_INDEX);
-    hideCurrentPageAndShowProvided(p_page_product_freeSample);
+    // hideCurrentPageAndShowProvided(p_page_product_freeSample);
+    toggleActiveInactiveOrderButtons(5, "activeSample"); // set to 5; so all size buttons styling will be set to inactive
+    toggleSelectQuantityWarning();
+}
+
+void page_product_mixing::toggleActiveInactiveOrderButtons(int targetButtonSize, QString sampleButtonState){
+    QString orderPriceActivity;
+    QString orderVolumeActivity;
+    QString orderBackgroundActivity;
+    orderButtonSelected = true;
+    for (int button_size = 0; button_size < 4; button_size++) // 4 sizes of volume buttons
+    {
+        QString activity;
+        if (button_size == targetButtonSize) // button size custom
+        {
+            orderPriceActivity = "orderPriceActive";
+            orderVolumeActivity = "orderVolumeActive";
+            orderBackgroundActivity = "orderBackgroundActive";
+        }
+        else
+        {
+            orderPriceActivity = "orderPriceInactive";
+            orderVolumeActivity = "orderVolumeInactive";
+            orderBackgroundActivity = "orderBackgroundInactive";
+        }
+        p_page_idle->thisMachine->addCssClassToObject(orderSizeLabelsPrice[button_size], orderPriceActivity, PAGE_PRODUCT_MIXING_CSS);
+        p_page_idle->thisMachine->addCssClassToObject(orderSizeLabelsVolume[button_size], orderVolumeActivity, PAGE_PRODUCT_MIXING_CSS);
+        p_page_idle->thisMachine->addCssClassToObject(orderSizeBackgroundLabels[button_size], orderBackgroundActivity, PAGE_PRODUCT_MIXING_CSS);
+    }
+    p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_order_sample, sampleButtonState, PAGE_PRODUCT_MIXING_CSS);
+}
+
+void page_product_mixing:: toggleSelectQuantityWarning(){
+    if(orderButtonSelected){
+        ui->label_select_quantity_warning->hide();
+    }else{
+        ui->label_select_quantity_warning->show();
+    }
 }
 
 size_t page_product_mixing::WriteCallback_coupon(char *contents, size_t size, size_t nmemb, void *userp)
@@ -600,9 +651,20 @@ size_t page_product_mixing::WriteCallback_coupon(char *contents, size_t size, si
 
 void page_product_mixing::on_pushButton_continue_clicked()
 {
-    // which size is enabled? select that size
-    p_page_idle->thisMachine->getSelectedProduct()->setSelectedSize(default_size);
-    hideCurrentPageAndShowProvided(p_page_overview);
+    // which size is enabled? select that size; New update: continue button will be based on what selected size was set
+    // p_page_idle->thisMachine->getSelectedProduct()->setSelectedSize(default_size);
+    if(orderButtonSelected){
+        if(p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize() == SIZE_SAMPLE_INDEX){
+            hideCurrentPageAndShowProvided(p_page_product_freeSample);
+        }else{
+            hideCurrentPageAndShowProvided(p_page_overview);
+        }
+    }else{
+        // show warning label to remind users to select an order button before pressing continue
+        qDebug() << "No order button selected; Please select an order size button";
+        toggleSelectQuantityWarning();
+    }
+
 }
 
 void page_product_mixing::on_pushButton_back_clicked()
@@ -631,7 +693,7 @@ void page_product_mixing::additiveMinusButtonsPressed(int index){
         }
     }
     updateMixRatiosLevel();
-
+    toggleResetButton();
     // !!!!!!!!! For displaying percentages - will probably need tweaking !!!!!!!!!!!!!!
     // double additiveRatioToPercentage = convertAdditivePRatioToPercentage(additivePRatio) - ADDITIVES_RATIO_INCREMENT;
     // if( additiveRatioToPercentage >= 0){
@@ -654,7 +716,7 @@ void page_product_mixing::additivePlusButtonsPressed(int index){
         }
     }
     updateMixRatiosLevel();
-
+    toggleResetButton();
     // !!!!!!!!! For displaying percentages - will probably need tweaking !!!!!!!!!
     // double additivePRatio = p_page_idle->thisMachine->getSelectedProduct()->getAdditivesRatioModifier(index - 1);
     // double additiveRatioToPercentage = convertAdditivePRatioToPercentage(additivePRatio) + ADDITIVES_RATIO_INCREMENT;
@@ -672,7 +734,7 @@ void page_product_mixing::on_pushButton_recommended_clicked(){
     resetMixRatiosLevel();
     p_page_idle->thisMachine->getSelectedProduct()->resetCustomMixRatioParameters();
     updateMixRatiosLevel();
-
+    toggleResetButton();
     // For displaying percentages - will probably need tweaking
     // p_page_idle->thisMachine->getSelectedProduct()->resetCustomMixRatioParameters();
     // for (int j = 0; j < 5; j++){
@@ -732,9 +794,9 @@ void page_product_mixing::resetMixRatiosLevel(){
 }
 
 void page_product_mixing::updateMixRatiosLevel(){
-    qDebug() << "DEFAULT" << p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosDefault();
-    qDebug() << "CUSTOM" << p_page_idle->thisMachine->getSelectedProduct()->getCustomMixRatios();
-    qDebug() << "LEVEL" << m_mixRatios_level;
+    // qDebug() << "DEFAULT" << p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosDefault();
+    // qDebug() << "CUSTOM" << p_page_idle->thisMachine->getSelectedProduct()->getCustomMixRatios();
+    // qDebug() << "LEVEL" << m_mixRatios_level;
     for (int i = 0; i < m_mixRatios_level.size(); i++){
         if(m_mixRatios_level[i] > 0){ 
             additiveTitles[i]->show();
@@ -772,6 +834,22 @@ void page_product_mixing::updateMixRatiosLevel(){
             additiveBarsDefault[i]->hide();
             additiveBarsHigh[i]->hide();
         }
+    }
+}
+
+void page_product_mixing::toggleResetButton(){
+    // qDebug() << "LEVEL" << m_mixRatios_level;
+    // if all additives level = 2 (default) or level = 0; hide Reset button
+    needResetButton = false;
+    for(int i = 0; i < m_mixRatios_level.size(); i++){
+        if(m_mixRatios_level[i] != 2 && m_mixRatios_level[i] != 0){
+            needResetButton = true;
+        }
+    }
+    if(needResetButton){
+        ui->pushButton_recommended->show();
+    }else{
+        ui->pushButton_recommended->hide();
     }
 }
 

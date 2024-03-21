@@ -244,7 +244,7 @@ int main(int argc, char *argv[])
 
     // Page pathing references to function calls.
     p_page_help->setPage(p_page_select_product, p_page_product, p_page_idle, p_page_payment_qr,p_page_payment_offline, p_page_transactions, p_page_maintenance, p_page_sendFeedback, p_page_howTo, p_statusbar, p_keyboard, p_input_widget);
-    p_page_howTo->setPage(p_page_help, p_page_idle, p_page_transactions, p_page_maintenance, p_page_sendFeedback, p_statusbar, p_keyboard, p_input_widget);
+    p_page_howTo->setPage(p_page_help, p_page_idle, p_page_transactions, p_page_maintenance, p_page_sendFeedback, p_statusbar, p_keyboard, p_input_widget, p_page_product_menu);
     p_page_transactions->setPage(p_page_idle, p_statusbar);
     initPage->setPage(p_page_idle);
     p_page_maintenance_dispenser->setPage(p_page_maintenance, p_page_idle, p_page_idle_products, p_statusbar);
@@ -267,7 +267,7 @@ int main(int argc, char *argv[])
 
     p_page_dispense->setPage(p_page_payment_qr,p_page_payment_offline, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_end, p_page_idle, p_page_sendFeedback, p_statusbar);
     p_page_product_overview->setPage(p_page_select_product, p_page_product_mixing, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr,p_page_payment_offline, p_page_payment_tap_serial, p_page_payment_tap_tcp, p_page_help, p_page_product, p_page_email, p_statusbar, p_keyboard);
-    p_page_sendFeedback->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr,p_page_payment_offline, p_page_help, p_page_product, p_page_end, p_statusbar, p_keyboard);
+    p_page_sendFeedback->setPage(p_page_select_product, p_page_dispense, p_page_wifi_error, p_page_idle, p_page_payment_qr,p_page_payment_offline, p_page_help, p_page_product, p_page_end, p_statusbar, p_keyboard, p_page_product_menu);
     p_page_end->setPage(p_page_dispense, p_page_idle, p_page_payment_qr,p_page_payment_offline, p_page_sendFeedback, p_statusbar);
     p_statusbar->setPage(p_page_idle);
     p_keyboard->setPage(p_page_idle, p_page_product_overview);

@@ -76,7 +76,7 @@ public:
     bool exitConfirm();
 
     // **** Control Functions ****
-    void initiate_tap_setup();
+    bool initiate_tap_setup();
     bool setpaymentProcess(bool status);
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void authorized_transaction(std::map<std::string, std::string> responseObj);

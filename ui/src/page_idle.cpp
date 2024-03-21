@@ -194,6 +194,8 @@ void page_idle::showEvent(QShowEvent *event)
 
     ui->label_show_temperature->hide(); // always hide by default
     ui->label_temperature_warning->hide();
+    ui->label_temperature_warning_background->hide(); // for default_AP2; always hide by default
+    ui->label_temperature_warning_icon->hide(); // for default_AP2; always hide by default
     if(thisMachine->hasMixing()){
         QString warning_icon_full_path = thisMachine->getTemplatePathFromName(PAGE_IDLE_WARNING_ICON);
 
@@ -496,8 +498,8 @@ void page_idle::onRebootNightlyTimeOutTimerTick()
         break;
         case triggered_wait_for_delay:
         {
-            // qDebug() << "================== TRIGGERED WAIT FOR DELAY =======================";
-            if (_millisecondsUntilSetTime <= 0)
+            qDebug() << "================== TRIGGERED WAIT FOR DELAY =======================";
+        if (_millisecondsUntilSetTime <=0 && _delaytime_seconds > 0)
             {
                 ui->label_reboot_nightly_text->show();
                 ui->label_reboot_nightly_title->show();
@@ -510,7 +512,7 @@ void page_idle::onRebootNightlyTimeOutTimerTick()
             }
             else
             {
-                // qDebug() << "================== REBOOT NIGHTLY - SYSTEM REBOOT ==================";
+                qDebug() << "================== REBOOT NIGHTLY - SYSTEM REBOOT ==================";
 
                 // Tap Canada or Moneris works on the serial connection and whenever the station reboots,
                 // the device loses communication. 
@@ -582,12 +584,11 @@ void page_idle::refreshTemperature()
         // Update temperature status label
         QString base = thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_temperature_warning, "temperature_too_high");
         ui->label_temperature_warning->setText(base.arg(temperatureStr));
-        ui->label_temperature_warning->show();
+        ui->label_temperature_warning->hide(); // hide temperature warning message from users; set to show if want to enable the temp warning message
         if(thisMachine->hasMixing()){
-            qDebug() << "########### ";
-            ui->label_temperature_warning_background->show();
+            ui->label_temperature_warning_background->hide(); // hide temperature warning message from users; set to show if want to enable the temp warning message
             ui->label_temperature_warning_background->raise();
-            ui->label_temperature_warning_icon->show();
+            ui->label_temperature_warning_icon->hide(); // hide temperature warning message from users; set to show if want to enable the temp warning message
             ui->label_temperature_warning_icon->raise();
             ui->label_temperature_warning->raise();
         }

@@ -934,7 +934,7 @@ void page_dispenser::on_pushButton_problems_clicked()
 
     p_page_idle->thisMachine->addCssClassToObject(msgBox_problems, "msgBoxbutton msgBox", PAGE_DISPENSER_CSS);
 
-    msgBox_problems->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    msgBox_problems->setStandardButtons(QMessageBox::Retry | QMessageBox::Help);
 
     // Use a QTimer to hide and delete the message box after a timeout
     QTimer *timeoutTimer2 = new QTimer(msgBox_problems);
@@ -964,23 +964,22 @@ void page_dispenser::on_pushButton_problems_clicked()
     int ret = msgBox_problems->exec();
     switch (ret)
     {
-    case QMessageBox::Yes:
-    {
-
-        if (this->isDispensing)
-        {
-            askForFeedbackAtEnd = true;
-            force_finish_dispensing();
-        }
-        break;
-    }
-
-    case QMessageBox::No:
+    case QMessageBox::Retry:
     {
         // send repair command
         qDebug() << "Send repair command to fsm";
         p_page_idle->thisMachine->dfUtility->send_command_to_FSM(SEND_REPAIR_PCA, true);
         
+        break;
+    }
+
+    case QMessageBox::Help:
+    {
+        if (this->isDispensing)
+        {
+            askForFeedbackAtEnd = true;
+            force_finish_dispensing();
+        }
         break;
     }
     default:

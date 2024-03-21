@@ -63,7 +63,7 @@ page_payment_tap_tcp::page_payment_tap_tcp(QWidget *parent) : QWidget(parent),
     statusbarLayout = new QVBoxLayout(this);
 }
 
-void page_payment_tap_tcp::initiate_tap_setup()
+bool page_payment_tap_tcp::initiate_tap_setup()
 {
     qDebug() << "InitializingTap payment";
     std::map<std::string, std::string> configMap = readConfigFile();
@@ -93,6 +93,7 @@ void page_payment_tap_tcp::initiate_tap_setup()
         qDebug() << "No file config";
         registerDevice(connectSocket());
     }
+    return true;
 }
 void page_payment_tap_tcp::stopPayTimers()
 {
@@ -246,6 +247,7 @@ void page_payment_tap_tcp::startPaymentProcess()
 
     if (numberOfTapAttempts < 3)
     {
+        qDebug() << "Attempt" << numberOfTapAttempts;
         numberOfTapAttempts += 1;
         
         std::ostringstream stream;
@@ -483,7 +485,7 @@ void page_payment_tap_tcp::idlePaymentTimeout()
 void page_payment_tap_tcp::resetPaymentPage()
 {
     ui->label_title->hide();
-
+    numberOfTapAttempts = 0;
     stopPayTimers();
     p_page_idle->thisMachine->resetTransactionLogging();
     qDebug() << "Reset Payment Page";

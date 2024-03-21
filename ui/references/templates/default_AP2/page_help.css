@@ -37,7 +37,7 @@ QPushButton {
    font-family: 'Lato';
    font-style: normal;
    font-weight: 400;
-   font-size: 48px;
+   font-size: 42px;
    background-color: #FEFCFA;
    border: 5px solid 895E25;
    border-radius: 25px;
@@ -50,7 +50,7 @@ QPushButton {
    color: #FEFCFA;
    text-align: center;
    qproperty-alignment: AlignVCenter;
-   font-size: 48px;
+   font-size: 42px;
    background: #895E25;
    border: 5px solid #895E25;
    border-radius: 25px;

@@ -1308,7 +1308,7 @@ unsigned short dispenser::getPumpSpeed()
 // I/O Flow Sensor
 
 // #define INTERRUPT_DRIVE_FLOW_SENSOR_TICKS   // WARNING: if enabled: check pin for ubuntu 22!!!!
-// ------->Also, in case the terminal window is floaded: did you reload all services (develooper tools 11)??
+// ------->Also, in case the terminal window is flooded: did you reload all services (developer tools 11)??
 #ifdef INTERRUPT_DRIVE_FLOW_SENSOR_TICKS
 // TODO: Call this function on Dispense onEntry()
 DF_ERROR dispenser::initGlobalFlowsensorIO(int pin)

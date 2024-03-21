@@ -60,6 +60,7 @@ void machine::setup(product *pnumbers)
     int pin_enable_3point3V;
     int pin_enable_24V;
     int pin_enable_5V;
+    int pin_global_flow_sensor;
 
     if (major <= 5 && minor <= 4)
     {

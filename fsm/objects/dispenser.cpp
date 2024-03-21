@@ -1596,16 +1596,6 @@ Slot_state dispenser::getSlotState()
 
 Dispense_behaviour dispenser::getDispenseStatus()
 {
-
-    // logUpdateIfAllowed("Button press time [ms]. Total:" + to_string(dispense_button_total_pressed_millis) + " Current:" + to_string(dispense_button_current_press_millis));
-    // using namespace std::chrono;
-    // uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    // uint64_t dispense_time_millis = millis_since_epoch - dispense_start_timestamp_epoch;
-    // Time_val avg = getAveragedProductFlowRate(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS);
-
-    // restricted status update
-    // logUpdateIfAllowed("Dispense flowRate " + to_string(EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS) + "ms avg [ml/s]: " + to_string(avg.value) + " Dispense state time: " + to_string(dispense_time_millis));
-
     return m_dispense_state;
 }
 

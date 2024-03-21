@@ -204,7 +204,7 @@ bool pnumberproduct::loadProductPropertiesFromDb()
                                                  m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
 
     m_product_state = ProductStateStringMap[status_text];
-    
+
     int pnumberFromDb = convertPStringToPInt(m_soapstand_product_serial);
 
     if (getPNumber() != pnumberFromDb)
@@ -225,12 +225,14 @@ void pnumberproduct::setIsProductEnabled(bool isEnabled)
     m_db->updateTableProductsWithInt(getPNumber(), "is_enabled", isEnabled);
 }
 
-void pnumberproduct::setProductState(ProductState state){
+void pnumberproduct::setProductState(ProductState state)
+{
     m_product_state = state;
     m_db->updateTableProductsWithText(getPNumber(), "status_text", getProductStateAsString());
 }
 
-ProductState pnumberproduct::getProductState(){
+ProductState pnumberproduct::getProductState()
+{
     return m_product_state;
 }
 
@@ -238,7 +240,6 @@ QString pnumberproduct::getProductStateAsString()
 {
     return df_util::convertProductStatusToString(m_product_state);
 }
-
 
 ///////////////////////////////////////////// SIZE
 /////////////////////////////////////////////
@@ -490,26 +491,25 @@ void pnumberproduct::configureVolumeToSizeForSlot(QString volumeInput, int size)
 
 void pnumberproduct::setVolumeRemainingUserInput(QString volumeRemainingAsUserText)
 {
+    qDebug() << "Open db: Manually adjust remaing volume (custom restock)";
     double vol_as_ml = inputTextToMlConvertUnits(volumeRemainingAsUserText);
     setVolumeRemaining(vol_as_ml);
 }
 
 bool pnumberproduct::restock()
 {
-    qDebug() << "Open db: restock";
+    qDebug() << "Open db: Standard restock";
 
-    bool success = true;
-    success &= m_db->updateTableProductsWithDouble(getPNumber(), "volume_remaining", m_volume_full, 0);
-    success &= m_db->updateTableProductsWithDouble(getPNumber(), "volume_dispensed_since_restock", 0, 0);
-    success &= m_db->updateTableProductsWithText(getPNumber(), "last_restock", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
-
-    return success;
+    return setVolumeRemaining(double m_volume_full)
 }
 
-void pnumberproduct::setVolumeRemaining(double volume_as_ml)
+bool pnumberproduct::setVolumeRemaining(double volume_as_ml)
 {
-    qDebug() << "Open db: set volume remaining";
-    m_db->updateTableProductsWithDouble(getPNumber(), "volume_remaining", volume_as_ml, 0);
+    bool success = true;
+    success &= m_db->updateTableProductsWithDouble(getPNumber(), "volume_remaining", volume_as_ml, 0);
+    success &= m_db->updateTableProductsWithDouble(getPNumber(), "volume_dispensed_since_restock", 0, 0);
+    success &= m_db->updateTableProductsWithText(getPNumber(), "last_restock", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
+    return success;
 }
 
 double pnumberproduct::getVolumeRemaining()

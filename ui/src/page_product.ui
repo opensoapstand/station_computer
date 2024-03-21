@@ -375,11 +375,7 @@ text-align: center;</string>
      <x>90</x>
      <y>430</y>
      <width>901</width>
-<<<<<<< HEAD
-     <height>301</height>
-=======
      <height>321</height>
->>>>>>> develop-v3
     </rect>
    </property>
    <property name="font">

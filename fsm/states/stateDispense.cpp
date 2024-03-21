@@ -174,8 +174,8 @@ DF_ERROR stateDispense::statusUpdateLoggingAndOverIP(bool onlyIfAllowed)
    {
       double volume = g_machine.getSelectedDispenser().getActiveProductVolumeDispensed();
 
-      Time_val avg_02s = g_machine.getSelectedDispenser().getAveragedProductFlowRate(1000);
-      double flowrate = avg_02s.value;
+      Time_val avg_01s = g_machine.getSelectedDispenser().getAveragedProductFlowRate(1000);
+      double flowrate = avg_01s.value;
       const char *statusStringChar = g_machine.getSelectedDispenser().getSlotStateAsString();
       std::string statusString(statusStringChar);
 
@@ -208,7 +208,7 @@ DF_ERROR stateDispense::onExit()
 {
    g_machine.getSelectedDispenser().setPumpsDisableAll();
    g_machine.getPcb()->setSingleDispenseButtonLight(g_machine.getSelectedDispenserNumber(), false);
-   statusUpdateLoggingAndOverIP(false); // final status update while dispensing
+   statusUpdateLoggingAndOverIP(false); // final status update of dispensing
 
    DF_ERROR e_ret = OK;
    return e_ret;

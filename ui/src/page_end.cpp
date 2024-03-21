@@ -293,7 +293,7 @@ void page_end::sendDispenseEndToCloud()
 
     QString units = p_page_idle->thisMachine->getSizeUnit();
     QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl(), units, false, false);
-    QString volume_remaining = p_page_idle->thisMachine->getSelectedProduct()->getVolumeRemainingCorrectUnits(false);
+    QString volume_remaining = QString::number(p_page_idle->thisMachine->getSelectedProduct()->getVolumeRemaining());
     QString soapstand_product_serial = p_page_idle->thisMachine->getSelectedProduct()->getPNumberAsPString();
     QString promoCode = this->p_page_idle->thisMachine->getCouponCode();
     QString volume_dispensed_mix_product = this->p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMixedProduct();
@@ -350,7 +350,7 @@ void page_end::sendCompleteOrderToCloud(QString paymentMethod)
     }
     QString dispensed_correct_units = df_util::getConvertedStringVolumeFromMl(p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl(), productUnits, false, false);
     QString dispensed_volume_ml = QString::number(p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl());
-    QString volume_remaining = p_page_idle->thisMachine->getSelectedProduct()->getVolumeRemainingCorrectUnits(false);
+    QString volume_remaining = QString::number(p_page_idle->thisMachine->getSelectedProduct()->getVolumeRemaining());
     QString soapstand_product_serial = p_page_idle->thisMachine->getSelectedProduct()->getPNumberAsPString();
     QString promoCode = this->p_page_idle->thisMachine->getCouponCode();
     QString startTime = this->p_page_idle->thisMachine->getSelectedSlot()->getDispenseStartTime();
@@ -395,5 +395,5 @@ void page_end::sendCompleteOrderToCloud(QString paymentMethod)
 
 void page_end::transactionToFile(QString curl_params)
 {
-    p_page_idle->thisMachine->dfUtility->write_to_file(TRANSACTION_DISPENSE_END_OFFINE_PATH, curl_params);
+    p_page_idle->thisMachine->dfUtility->write_to_file(TRANSACTION_DISPENSE_END_OFFLINE_PATH, curl_params);
 }

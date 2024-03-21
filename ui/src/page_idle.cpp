@@ -498,8 +498,8 @@ void page_idle::onRebootNightlyTimeOutTimerTick()
         break;
         case triggered_wait_for_delay:
         {
-            // qDebug() << "================== TRIGGERED WAIT FOR DELAY =======================";
-            if (_millisecondsUntilSetTime <= 0)
+            qDebug() << "================== TRIGGERED WAIT FOR DELAY =======================";
+        if (_millisecondsUntilSetTime <=0 && _delaytime_seconds > 0)
             {
                 ui->label_reboot_nightly_text->show();
                 ui->label_reboot_nightly_title->show();
@@ -512,7 +512,7 @@ void page_idle::onRebootNightlyTimeOutTimerTick()
             }
             else
             {
-                // qDebug() << "================== REBOOT NIGHTLY - SYSTEM REBOOT ==================";
+                qDebug() << "================== REBOOT NIGHTLY - SYSTEM REBOOT ==================";
 
                 // Tap Canada or Moneris works on the serial connection and whenever the station reboots,
                 // the device loses communication. 

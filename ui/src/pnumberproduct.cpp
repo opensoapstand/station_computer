@@ -500,7 +500,7 @@ bool pnumberproduct::restock()
 {
     qDebug() << "Open db: Standard restock";
 
-    return setVolumeRemaining(double m_volume_full)
+    return setVolumeRemaining(m_volume_full);
 }
 
 bool pnumberproduct::setVolumeRemaining(double volume_as_ml)

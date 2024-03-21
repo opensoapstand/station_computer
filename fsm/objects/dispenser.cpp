@@ -808,10 +808,13 @@ void dispenser::linkActiveProductVolumeUpdate()
     auto lambdaFunc = [active_product]()
     { active_product->registerFlowSensorTickFromPcb(); };
     m_pcb->registerFlowSensorTickCallback(getSlot(), lambdaFunc);
+    debugOutput::sendMessage("Dispenser: flow tick : deprecated", MSG_INFO);
+    
 }
 
 void dispenser::linkDispenserFlowSensorTick()
 {
+    debugOutput::sendMessage("Dispenser: flow tick : callback.", MSG_INFO);
     auto lambdaFunc = [this]()
     {
         this->registerFlowSensorTickFromPcb();
@@ -821,12 +824,12 @@ void dispenser::linkDispenserFlowSensorTick()
 
 void dispenser::registerFlowSensorTickFromPcb()
 {
-
     // the actual dispensed produce gets always registered
     getActiveProduct()->registerFlowSensorTickFromPcb();
 
     // #define MIX_PARTS_WITH_TICKS  // if mixes have their own calibration, it kindof makes sense, but better will be to just sum up the volumes of the parts
-
+    debugOutput::sendMessage("Dispenser: flow tick : " + std::to_string(getSlot()), MSG_INFO);
+    
     // #ifdef MIX_PARTS_WITH_TICKS
     if (getActivePNumber() != getSelectedPNumber())
     {

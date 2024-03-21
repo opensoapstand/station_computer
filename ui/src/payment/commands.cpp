@@ -2,6 +2,7 @@
 #include "commands.h"
 #include <chrono>
 #include <ctime>
+#include <string>
 #include <QDebug>
 #include <QString>
 

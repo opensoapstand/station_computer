@@ -286,10 +286,9 @@ bool page_payment_tap_serial::tap_serial_initiate()
         pktResponded.clear();
     }
     else{
-        rebootDevice();
-        sleep(45);
+        return false;
     }
-
+    
     com.flushSerial();
     cout << "-----------------------------------------------" << endl;
     
@@ -321,25 +320,14 @@ bool page_payment_tap_serial::tap_serial_initiate()
         merchantAddress = paymentPktInfo.dataField(readPacket.getPacket().data);
         std::cout << merchantAddress << endl;
         pktResponded.clear();
+    } 
+    else{
+        return false;
     }
-
+    
     com.flushSerial();
     cout << "-----------------------------------------------" << endl;
 
-    /*getConfiguration packet to send*/
-    cout << "Sending PTID query..." << endl;
-    pktToSend = paymentPacket.ppPosGetConfigPkt(CONFIG_ID::CON_TID);
-    if (sendToUX410())
-    {
-        cout << "Receiving PTID" << endl;
-        waitForUX410();
-        isInitTerminalID = true;
-        terminalID = paymentPktInfo.dataField(readPacket.getPacket().data).substr(2);
-        std::cout << terminalID << endl;
-        pktResponded.clear();
-    }
-  
-    com.flushSerial();
     /*Cancel any previous payment*/
     pktToSend = paymentPacket.purchaseCancelPacket();
 
@@ -348,13 +336,17 @@ bool page_payment_tap_serial::tap_serial_initiate()
         waitForUX410();
         pktResponded.clear();
     }
+    else{
+        return false;
+    }
+    
     com.flushSerial();
     qDebug() << "Cancel payment";
     tapSetupStarted = true;
     qDebug() << "tap init started " << tapSetupStarted;
     com.closeCom();
  
-    return true;
+    return tapSetupStarted;
 }
 
 bool page_payment_tap_serial::sendToUX410()

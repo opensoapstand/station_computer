@@ -46,6 +46,7 @@ sudo -u df-admin scp -r /home/df-admin/station_computer/ui/references /home/df-a
 # move scripts and other administrative stuff
 scp /home/df-admin/station_computer/admin/controller_soapstand.service /home/df-admin/production/admin/controller_soapstand.service
 scp /home/df-admin/station_computer/admin/rtunnel.service /home/df-admin/production/admin/rtunnel.service
+scp /home/df-admin/station_computer/admin/setup_ubuntu.sh /home/df-admin/production/admin/setup_ubuntu.sh
 scp /home/df-admin/station_computer/admin/set_aws_port.sh /home/df-admin/production/admin/set_aws_port.sh
 scp /home/df-admin/station_computer/admin/check_connectivity.service /home/df-admin/production/admin/check_connectivity.service
 scp /home/df-admin/station_computer/admin/controller_execute.sh /home/df-admin/production/admin/controller_execute.sh

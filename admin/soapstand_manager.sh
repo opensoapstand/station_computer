@@ -12,7 +12,7 @@
 
 port_in_use=$(sudo ./rtunnel_print.sh 2>/dev/null)
 PS3="Choose option(digit + enter) (rtunnel port=$port_in_use) :"
-options=("Quit" "Station info" "Status" "Start" "Stop" "Restart" "Screenshotbot execute" "Enable Autostart" "Disable Autostart" "Copy binary files to production folder" "Create and run production data copied from drinkfill folder (without db!)" "(Re)load services from production" "Setup aws port (rtunnel)" "Setup Ubuntu for drinkfill UI" "Deploy productionstatic.zip" "Screenshot: Take single shot" "Copy db from drinkfill to production folder DEPRECATED_DB (drinkfill-sqlite_newlayout.db)" "Copy configuration.db from git repo (station_computer) to production folder" "Copy usage.db from git repo(station_computer) to production folder")
+options=("Quit" "Station info" "Status" "Start" "Stop" "Restart" "Screenshotbot execute" "Enable Autostart" "Disable Autostart" "Copy binary files to production folder" "Create and run production data copied from drinkfill folder (without db!)" "(Re)load services from production" "Setup aws port (rtunnel)" "Setup Ubuntu for Aelen UI" "Deploy productionstatic.zip" "Screenshot: Take single shot" "Copy db from drinkfill to production folder DEPRECATED_DB (drinkfill-sqlite_newlayout.db)" "Copy configuration.db from git repo (station_computer) to production folder" "Copy usage.db from git repo(station_computer) to production folder")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -58,26 +58,8 @@ do
             sudo systemctl disable ui_soapstand.service
             sudo systemctl disable controller_soapstand.service
         ;;
-        "Setup Ubuntu for drinkfill UI")
-            echo "Screen setup for UI:"
-
-            echo "     - disable window transition animations."
-            gsettings set org.gnome.desktop.interface enable-animations false
-
-            echo "     - disable lock screen"
-            gsettings set org.gnome.desktop.screensaver lock-enabled false
-            gsettings set org.gnome.desktop.screensaver ubuntu-lock-on-suspend false
-
-            echo "     - decrease reboot time."
-            user_question="Continue to decrease boot time? Nano will open, change: GRUB_TIMEOUT=1 add: GRUB_RECORDFAIL_TIMEOUT=\$GRUB_TIMEOUT, [y] to continu, other key to skip."
-            read -p "$user_question" -n 1 -r
-            echo    # (optional) move to a new line
-            if [[ $REPLY =~ ^[Yy]$ ]]
-            then
-            sudo nano /etc/default/grub
-            sudo update-grub
-            fi
-
+        "Setup Ubuntu for Aelen UI")
+           sudo ./setup_ubuntu.sh
         ;;
         "Setup aws port (rtunnel)")
             

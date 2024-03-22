@@ -75,6 +75,8 @@ private:
 
     bool m_controller_ready=false;
     bool m_tap_payment_ready=false;
+    bool tap_init_responded = false;
+    bool m_tap_init_error = false;
     
 };
 

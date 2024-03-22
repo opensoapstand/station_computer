@@ -127,9 +127,21 @@ private:
         {495, 1505, 255, 158}, // L
         {775, 1505, 255, 158} // custom
     };
+    uint16_t orderSizeButtons_xywh_dynamic_ui_no_additives_all_sizes_available[4][4] = {
+        {495, 514, 255, 158}, // S
+        {775, 514, 255, 158}, // M
+        {495, 697, 255, 158}, // L
+        {775, 697, 255, 158} // custom
+    };
 
     uint16_t orderSizeButtons_xywh_dynamic_ui_small_available[4][4] = {
         {495, 1322, 255, 158}, // S
+        {1, 1, 1, 1},          // M
+        {1, 1, 1, 1},          // L
+        {1, 1, 1, 1}           // custom
+    };
+    uint16_t orderSizeButtons_xywh_dynamic_ui_no_additives_small_available[4][4] = {
+        {495, 514, 255, 158}, // S
         {1, 1, 1, 1},          // M
         {1, 1, 1, 1},          // L
         {1, 1, 1, 1}           // custom
@@ -141,6 +153,12 @@ private:
         {775, 1322, 255, 158}, // L
         {495, 1505, 255, 158} // custom
     };
+    uint16_t orderSizeButtons_xywh_dynamic_ui_no_additives_small_large_custom_available[4][4] = {
+        {495, 514, 255, 158}, // S
+        {1, 1, 1, 1},
+        {775, 514, 255, 158}, // L
+        {495, 697, 255, 158} // custom
+    };
 
     uint16_t orderSizeButtons_xywh_dynamic_ui_small_and_large_available[4][4] = {
         {495, 1322, 255, 158}, // S
@@ -148,6 +166,13 @@ private:
         {775, 1322, 255, 158}, // L
         {1, 1, 1, 1}           // custom
     };
+    uint16_t orderSizeButtons_xywh_dynamic_ui_no_additives_small_and_large_available[4][4] = {
+        {495, 514, 255, 158}, // S
+        {1, 1, 1, 1},          // M
+        {775, 514, 255, 158}, // L
+        {1, 1, 1, 1}           // custom
+    };
+
     uint16_t orderSizeButtons_xywh_dynamic_ui_custom_available[4][4] = {
         {1, 1, 1, 1},
         {1, 1, 1, 1}, // M
@@ -155,11 +180,25 @@ private:
         {495, 1322, 255, 158} // custom
         // {564, 1037, 424, 113} // custom
     };
+    uint16_t orderSizeButtons_xywh_dynamic_ui_no_additives_custom_available[4][4] = {
+        {1, 1, 1, 1},
+        {1, 1, 1, 1}, // M
+        {1, 1, 1, 1},
+        {495, 514, 255, 158} // custom
+        // {564, 1037, 424, 113} // custom
+    };
     uint16_t orderSizeButtons_xywh_dynamic_ui_small_custom_available[4][4] = {
         {495, 1322, 255, 158}, // S
         {1, 1, 1, 1},         // M
         {1, 1, 1, 1},
         {775, 1322, 255, 158} // custom
+        // {564, 1037, 424, 113} // custom
+    };
+    uint16_t orderSizeButtons_xywh_dynamic_ui_no_additives_small_custom_available[4][4] = {
+        {495, 514, 255, 158}, // S
+        {1, 1, 1, 1},         // M
+        {1, 1, 1, 1},
+        {775, 514, 255, 158} // custom
         // {564, 1037, 424, 113} // custom
     };
 
@@ -170,18 +209,38 @@ private:
         {775, 1322, 255, 158} // custom
         // {564, 1037, 424, 113} // custom
     };
-    
+    uint16_t orderSizeButtons_xywh_dynamic_ui_no_additives_large_custom_available[4][4] = {
+        {1, 1, 1, 1},         // S
+        {1, 1, 1, 1},         // M
+        {495, 514, 255, 158}, // L
+        {775, 514, 255, 158} // custom
+        // {564, 1037, 424, 113} // custom
+    };
+
     uint16_t orderSizeVolumeLabels_xy_dynamic_ui_all_sizes_available[4][2] = {
         {546, 1365}, // S vol
         {826, 1365}, // M vol
         {546, 1548}, // L vol
         {813, 1535}  // custom col
     };
+    uint16_t orderSizeVolumeLabels_xy_dynamic_ui_no_additives_all_sizes_available[4][2] = {
+        {546, 557}, // S vol
+        {826, 557}, // M vol
+        {546, 740}, // L vol
+        {813, 727}  // custom col
+    };
+
     uint16_t orderSizePriceLabels_xy_dynamic_ui_all_sizes_available[8][2] = {
         {546, 1401}, // S price
         {826, 1401}, // M price
         {546, 1584}, // L price
         {847, 1570}  // custom price
+    };
+    uint16_t orderSizePriceLabels_xy_dynamic_ui_no_additives_all_sizes_available[8][2] = {
+        {546, 593}, // S price
+        {826, 593}, // M price
+        {546, 776}, // L price
+        {847, 762}  // custom price
     };
 
     uint16_t orderSizeVolumeLabels_xy_dynamic_ui_small_large_custom_available[8][2] = {
@@ -190,11 +249,24 @@ private:
         {826, 1365}, // L vol
         {532, 1530}  // custom col
     };
+    uint16_t orderSizeVolumeLabels_xy_dynamic_ui_no_additives_small_large_custom_available[8][2] = {
+        {546, 557}, // S vol
+        {1, 1},      // M vol
+        {826, 557}, // L vol
+        {532, 727}  // custom col
+    };
+
     uint16_t orderSizePriceLabels_xy_dynamic_ui_small_large_custom_available[8][2] = {
         {546, 1401}, // S price
         {1, 1},      // M price
         {826, 1401}, // L price
         {566, 1565}  // custom price
+    };
+    uint16_t orderSizePriceLabels_xy_dynamic_ui_no_additives_small_large_custom_available[8][2] = {
+        {546, 593}, // S price
+        {1, 1},      // M price
+        {826, 593}, // L price
+        {566, 762}  // custom price
     };
 
     uint16_t orderSizeVolumeLabels_xy_dynamic_ui_custom_available[8][2] = {
@@ -203,64 +275,119 @@ private:
         {1, 1},     // L vol
         {532, 1347} // custom col
     };
+    uint16_t orderSizeVolumeLabels_xy_dynamic_ui_no_additives_custom_available[8][2] = {
+        {1, 1},     // S vol
+        {1, 1},     // M vol
+        {1, 1},     // L vol
+        {532, 544} // custom col
+    };
     uint16_t orderSizePriceLabels_xy_dynamic_ui_custom_available[8][2] = {
         {1, 1},     // S price
         {1, 1},     // M price
         {1, 1},     // L price
         {566, 1382} // custom price
     };
-
+    uint16_t orderSizePriceLabels_xy_dynamic_ui_no_additives_custom_available[8][2] = {
+        {1, 1},     // S price
+        {1, 1},     // M price
+        {1, 1},     // L price
+        {566, 579} // custom price
+    };
     uint16_t orderSizeVolumeLabels_xy_dynamic_ui_small_custom_available[8][2] = {
         {546, 1365}, // S vol
         {1, 1},      // M vol
         {1, 1},      // L vol
         {812, 1347}  // custom col
     };
-
+    uint16_t orderSizeVolumeLabels_xy_dynamic_ui_no_additives_small_custom_available[8][2] = {
+        {546, 557}, // S vol
+        {1, 1},      // M vol
+        {1, 1},      // L vol
+        {812, 544}  // custom col
+    };
     uint16_t orderSizePriceLabels_xy_dynamic_ui_small_custom_available[8][2] = {
         {546, 1401}, // S price
         {1, 1},      // M price
         {1, 1},      // L price
         {846, 1382}  // custom price
     };
-
+    uint16_t orderSizePriceLabels_xy_dynamic_ui_no_additives_small_custom_available[8][2] = {
+        {546, 593}, // S price
+        {1, 1},      // M price
+        {1, 1},      // L price
+        {846, 579}  // custom price
+    };
     uint16_t orderSizeVolumeLabels_xy_dynamic_ui_large_custom_available[8][2] = {
         {1, 1},      // S vol
         {1, 1},      // M vol
         {546, 1365}, // L vol
         {812, 1347}  // custom col
     };
-
+    uint16_t orderSizeVolumeLabels_xy_dynamic_ui_no_additives_large_custom_available[8][2] = {
+        {1, 1},      // S vol
+        {1, 1},      // M vol
+        {546, 557}, // L vol
+        {812, 544}  // custom col
+    };
     uint16_t orderSizePriceLabels_xy_dynamic_ui_large_custom_available[8][2] = {
         {1, 1},      // S price
         {1, 1},      // M price
         {546, 1401}, // L price
         {846, 1382}  // custom price
     };
-
+    uint16_t orderSizePriceLabels_xy_dynamic_ui_no_additives_large_custom_available[8][2] = {
+        {1, 1},      // S price
+        {1, 1},      // M price
+        {546, 593}, // L price
+        {846, 579}  // custom price
+    };
     uint16_t orderSizeVolumeLabels_xy_dynamic_ui_small_available[8][2] = {
         {546, 1365}, // S vol
         {1, 1},      // M vol
         {1, 1},      // L vol
         {1, 1}       // custom col
     };
+    uint16_t orderSizeVolumeLabels_xy_dynamic_ui_no_additives_small_available[8][2] = {
+        {546, 557}, // S vol
+        {1, 1},      // M vol
+        {1, 1},      // L vol
+        {1, 1}       // custom col
+    };
+
     uint16_t orderSizePriceLabels_xy_dynamic_ui_small_available[8][2] = {
         {546, 1401}, // S price
         {1, 1},      // M price
         {1, 1},      // L price
         {1, 1}       // custom price
     };
-
+    uint16_t orderSizePriceLabels_xy_dynamic_ui_no_additives_small_available[8][2] = {
+        {546, 593}, // S price
+        {1, 1},      // M price
+        {1, 1},      // L price
+        {1, 1}       // custom price
+    };
     uint16_t orderSizeVolumeLabels_xy_dynamic_ui_small_and_large_available[8][2] = {
         {546, 1365}, // S vol
         {1, 1},      // M vol
         {826, 1365}, // L vol
         {1, 1}       // custom col
     };
+    uint16_t orderSizeVolumeLabels_xy_dynamic_ui_no_additives_small_and_large_available[8][2] = {
+        {546, 557}, // S vol
+        {1, 1},      // M vol
+        {826, 557}, // L vol
+        {1, 1}       // custom col
+    };
     uint16_t orderSizePriceLabels_xy_dynamic_ui_small_and_large_available[8][2] = {
         {546, 1401}, // S price
         {1, 1},      // M price
         {826, 1401}, // L price
+        {1, 1}       // custom price
+    };
+    uint16_t orderSizePriceLabels_xy_dynamic_ui_no_additives_small_and_large_available[8][2] = {
+        {546, 593}, // S price
+        {1, 1},      // M price
+        {826, 593}, // L price
         {1, 1}       // custom price
     };
     int product_sizes[5] = {SIZE_SMALL_INDEX, SIZE_MEDIUM_INDEX, SIZE_LARGE_INDEX, SIZE_CUSTOM_INDEX, SIZE_SAMPLE_INDEX};
@@ -272,6 +399,7 @@ private:
     std::string readBuffer;
     Ui::page_product_mixing *ui;
     bool orderButtonSelected = false;
+    bool hasAdditives;
     QVector<int> m_mixRatios_level;
     page_product_menu *p_page_product_menu;
     page_select_product *p_page_select_product;

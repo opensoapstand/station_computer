@@ -675,7 +675,8 @@ double stateDispenseEnd::getFinalPrice()
         }
 
         price = price_per_ml * volume_dispensed;
-        std::cout << "final price" << price;
+        
+        debugOutput::sendMessage("Final price: " + std::to_string(price), MSG_INFO);
         if (size != SIZE_CUSTOM_CHAR)
         {
             price = std::min(price, m_pMessaging->getRequestedPrice());
@@ -853,7 +854,7 @@ void stateDispenseEnd::setup_and_print_receipt()
 
 void stateDispenseEnd::sendEndTransactionMessageToUI(bool isValid)
 {
-
+    usleep(100000);
     std::string status;
     if (isValid){
         status = "valid";

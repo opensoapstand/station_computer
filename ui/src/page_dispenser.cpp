@@ -401,7 +401,7 @@ void page_dispenser::dispensing_end_admin()
 
     std::ostringstream stream;
     stream << std::fixed << std::setprecision(2) << price;
-    qDebug() << "Minimum volume dispensed" << MINIMUM_DISPENSE_VOLUME_ML;
+    qDebug() << "Minimum volume needed to be recognized as valid dispense: " << MINIMUM_DISPENSE_VOLUME_ML;
     qDebug() << "volume dispensed" << p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl();
     if (p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl() < MINIMUM_DISPENSE_VOLUME_ML)
     {

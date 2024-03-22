@@ -100,17 +100,18 @@ DF_ERROR stateDispenseEnd::onAction()
     if (g_machine.getSelectedDispenser().getSelectedSizeAsChar() == SIZE_TEST_CHAR)
     {
         debugOutput::sendMessage("Not a transaction: Test dispensing. (" + to_string(volume_dispensed) + "ml).", MSG_INFO);
-        // dispenseEndUpdateDB(false); // update the db dispense statistics
+        sendEndTransactionMessageToUI(false);
     }
     else if (!is_valid_dispense)
     {
         debugOutput::sendMessage("Not a transaction: No minimum quantity of product dispensed (" + to_string(volume_dispensed) + "ml). ", MSG_INFO);
         dispenseEndUpdateDB(false); // update the db dispense statistics
+        sendEndTransactionMessageToUI(false);
     }
     else
     {
         debugOutput::sendMessage("Normal transaction.", MSG_INFO);
-        sendEndTransactionMessageToUI();
+        sendEndTransactionMessageToUI(true);
         e_ret = handleTransactionPayment();
 
         dispenseEndUpdateDB(true);
@@ -849,8 +850,16 @@ void stateDispenseEnd::setup_and_print_receipt()
 //     system(printer_command_string.c_str());
 // }
 
-void stateDispenseEnd::sendEndTransactionMessageToUI()
+
+void stateDispenseEnd::sendEndTransactionMessageToUI(bool isValid)
 {
+
+    std::string status;
+    if (isValid){
+        status = "valid";
+    }else{
+        status = "invalid";
+    }
     std::string start_time = g_machine.getSelectedDispenser().getSelectedProductDispenseStartTime();
     std::string end_time = g_machine.getSelectedDispenser().getSelectedProductDispenseEndTime();
     std::string button_press_duration = to_string(g_machine.getSelectedDispenser().getButtonPressedTotalMillis());
@@ -859,7 +868,7 @@ void stateDispenseEnd::sendEndTransactionMessageToUI()
     // Get mix product object as a string to pass to UI
     std::string pNumber_dispense_info_string = mapToString(g_machine.getSelectedDispenser().getMixDispenseReport());
 
-    std::string message = "finalTransactionMessage|start_time|" + start_time + "|end_time|" + end_time + "|button_press_duration|" + button_press_duration + "|button_press_count|" + button_press_count + "|volume_dispensed|" + volume_dispensed + "|pNumber_dispense_info|" + pNumber_dispense_info_string;
+    std::string message = "finalTransactionMessage|status|" + status + "|start_time|" + start_time + "|end_time|" + end_time + "|button_press_duration|" + button_press_duration + "|button_press_count|" + button_press_count + "|volume_dispensed|" + volume_dispensed + "|pNumber_dispense_info|" + pNumber_dispense_info_string;
     usleep(100000);                                 // send message delay
     m_pMessaging->sendMessageOverIP(message, true); // send to UI
 }

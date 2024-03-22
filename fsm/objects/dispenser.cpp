@@ -833,7 +833,7 @@ void dispenser::registerFlowSensorTickFromPcb()
     // #ifdef MIX_PARTS_WITH_TICKS
     if (getActivePNumber() != getSelectedPNumber())
     {
-        // if this is part of a mix, register the tick also for the mix volume
+        // if this is part of a mix, register the tick also for the mix volume (total volume)
         getSelectedProduct()->setVolumeDispensed(getActiveProduct()->getVolumePerTick(true) + getSelectedProduct()->getVolumeDispensed());
     }
 

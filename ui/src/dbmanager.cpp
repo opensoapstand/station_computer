@@ -573,7 +573,8 @@ bool DbManager::getAllMachineProperties(
     int *buy_bottle_1,
     int *buy_bottle_2,
     QString *portal_base_url,
-    int *enable_offline_payment)
+    int *enable_offline_payment,
+    int *page_init_timeout)
 {
     bool success;
     qDebug() << " db... all machine properties from: " << CONFIG_DB_PATH;
@@ -620,7 +621,8 @@ bool DbManager::getAllMachineProperties(
             "buy_bottle_1,"
             "buy_bottle_2,"
             "portal_base_url,"
-            "enable_offline_payment"
+            "enable_offline_payment,"
+            "page_init_timeout"
             " FROM machine"
 
         );
@@ -673,6 +675,7 @@ bool DbManager::getAllMachineProperties(
             *buy_bottle_2 = qry.value(34).toInt();
             *portal_base_url = qry.value(35).toString();
             *enable_offline_payment = qry.value(36).toInt();
+            *page_init_timeout = qry.value(37).toInt();
         }
         qry.finish();
 

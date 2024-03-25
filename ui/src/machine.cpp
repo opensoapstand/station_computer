@@ -1168,7 +1168,8 @@ bool machine::loadMachineParameterFromDb()
         &m_pNumber_bottle_1,
         &m_pNumber_bottle_2,
         &m_portal_base_url,
-        &m_enable_offline_payment);
+        &m_enable_offline_payment,
+        &m_page_init_timeout);
 
     qDebug() << "Machine ID as loaded from db: " << getMachineId();
     qDebug() << "Template folder: " << getTemplateFolder();
@@ -1733,6 +1734,10 @@ size_t WriteCallback2(char *contents, size_t size, size_t nmemb, void *userp)
 {
     ((std::string *)userp)->append((char *)contents, size * nmemb);
     return size * nmemb;
+}
+
+int machine::getPageInitTimeout(){
+    return m_page_init_timeout;
 }
 
 std::tuple<CURLcode, std::string, long> machine::sendRequestToPortal(QString api_url, QString request_type, QString curl_params, QString page_name){

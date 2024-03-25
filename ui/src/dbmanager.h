@@ -120,7 +120,8 @@ public:
                                  int *buy_bottle_1,
                                  int *buy_bottle_2,
                                  QString *portal_base_url,
-                                 int *enable_offline_payment);
+                                 int *enable_offline_payment,
+                                 int *page_init_timeout);
     QString getHardwareVersion();
 
     void setPaymentTransaction(const std::map<std::string, std::string> &paymentObject);

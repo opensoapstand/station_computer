@@ -270,6 +270,7 @@ private:
 
     // uint64_t flow_sensor_pulses_for_dispenser[MAX_SLOT_COUNT];
     uint64_t flow_sensor_pulses_since_enable[MAX_SLOT_COUNT];
+    bool flow_sensor_enabled[MAX_SLOT_COUNT];
 
     uint64_t button_[MAX_SLOT_COUNT];
 

@@ -758,12 +758,13 @@ DF_ERROR dispenser::finishActivePNumberDispense()
     setActiveProductSolenoid(false);
     m_pcb->flowSensorsDisableAll();
     DF_ERROR dfRet = OK;
+   
     return dfRet;
 }
 
 void dispenser::startActiveDispensing()
 {
-
+    //actual pumping start
     debugOutput::sendMessage("Dispenser: Start active product dispensing.", MSG_INFO);
     switch (m_pcb->get_pcb_version())
     {
@@ -789,6 +790,7 @@ void dispenser::startActiveDispensing()
 
 void dispenser::stopActiveDispensing()
 {
+    //actual pumping stop
     debugOutput::sendMessage("Dispenser: stop active product dispensing.", MSG_INFO);
     m_pcb->stopPump(getSlot());
     m_pcb->setSpoutSolenoid(getSlot(), false);
@@ -828,9 +830,9 @@ void dispenser::registerFlowSensorTickFromPcb()
     // the actual dispensed produce gets always registered
     getActiveProduct()->registerFlowSensorTickFromPcb();
 
-    // #define MIX_PARTS_WITH_TICKS  // if mixes have their own calibration, it kindof makes sense, but better will be to just sum up the volumes of the parts
-    debugOutput::sendMessage("Dispenser: flow tick : " + std::to_string(getSlot()), MSG_INFO);
+    //debugOutput::sendMessage("Dispenser: flow tick : " + std::to_string(getSlot()), MSG_INFO);
     
+    // #define MIX_PARTS_WITH_TICKS  // if mixes have their own calibration, it kindof makes sense, but better will be to just sum up the volumes of the parts
     // #ifdef MIX_PARTS_WITH_TICKS
     if (getActivePNumber() != getSelectedPNumber())
     {

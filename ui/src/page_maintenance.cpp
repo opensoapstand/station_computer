@@ -62,8 +62,8 @@ void page_maintenance::showEvent(QShowEvent *event)
 
     statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
     statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
-    
-    p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this); // this is the 'page', the central or main widget
+
+    p_page_idle->thisMachine->applyDynamicPropertiesFromTemplateToWidgetChildren(this);                       // this is the 'page', the central or main widget
     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_MAINTENANCE_BACKGROUND_PATH); // delays the page loading significantly.
 
     QString qr_manual_full_path = p_page_idle->thisMachine->getTemplatePathFromName(QR_MANUAL_PATH);
@@ -92,7 +92,7 @@ void page_maintenance::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_general_settings);
 
     ui->label_machine_id->setText("Machine ID: " + p_page_idle->thisMachine->getMachineId());
-    
+
     QString role_as_text = p_page_idle->thisMachine->getActiveRoleAsText();
     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_role, role_as_text);
 
@@ -100,7 +100,7 @@ void page_maintenance::showEvent(QShowEvent *event)
     ui->label_ui_version->setText(title);
 
     uint8_t slot_count;
-    
+
     // slot_count = p_page_idle->thisMachine->getSlotCount();
 
     // if (slot_count > MAINTENANCE_PAGE_SLOT_COUNT_MAX){
@@ -118,8 +118,7 @@ void page_maintenance::showEvent(QShowEvent *event)
         labels_product_position[slot_index]->setProperty("class", "label_product_position");
         labels_product_position[slot_index]->setStyleSheet(styleSheet);
 
-        
-        QString p = p_page_idle->thisMachine->getSlotBaseProduct(slot_index+1)->getProductPicturePath();
+        QString p = p_page_idle->thisMachine->getSlotBaseProduct(slot_index + 1)->getProductPicturePath();
         p_page_idle->thisMachine->dfUtility->pathExists(p);
         QPixmap im(p);
         QIcon qi(im);
@@ -130,48 +129,72 @@ void page_maintenance::showEvent(QShowEvent *event)
         pushButtons_products[slot_index]->setStyleSheet("background-color: transparent; border: 1px solid black;");
         pushButtons_products[slot_index]->raise();
 
-        labels_product_name[slot_index]->setText(p_page_idle->thisMachine->getSlotBaseProduct(slot_index+1)->getProductName());
-        int product_slot_enabled = p_page_idle->thisMachine->getSlotBaseProduct(slot_index+1)->getIsProductEnabled();
+        labels_product_name[slot_index]->setText(p_page_idle->thisMachine->getSlotBaseProduct(slot_index + 1)->getProductName());
+        int product_slot_enabled = p_page_idle->thisMachine->getSlotBaseProduct(slot_index + 1)->getIsProductEnabled();
 
-        QString product_status_text = p_page_idle->thisMachine->getSlotByPosition(slot_index+1)->getSlotStatusAsString();
+        SlotState slot_state = p_page_idle->thisMachine->getSlotByPosition(slot_index + 1)->getSlotStatus();
         QString status_display_text = "";
 
-        int pnumber = p_page_idle->thisMachine->getSlotBaseProduct(slot_index+1)->getPNumber();
-        if (!(p_page_idle->thisMachine->isProductVolumeInContainer(pnumber)))
+        switch (slot_state)
         {
-            status_display_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->auto_empty");
-        }
-        else if (!p_page_idle->thisMachine->getSlotByPosition(slot_index+1)->getIsSlotEnabled())
+        case (SLOT_STATE_DISABLED):
         {
             status_display_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled");
+            break;
         }
-        else if (product_status_text.compare("SLOT_STATE_AVAILABLE") == 0)
+        case (SLOT_STATE_AVAILABLE):
         {
             status_display_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->available");
+            break;
         }
-        else if (product_status_text.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
-        {
-            status_display_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->almost_empty");
-        }
-        else if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
-        {
-            status_display_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->coming_soon");
-        }
-        else if (product_status_text.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
+        case (SLOT_STATE_PROBLEM_NEEDS_ATTENTION):
         {
             status_display_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->assistance");
+            break;
         }
-        else if (product_status_text.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
-        {
-            status_display_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->empty");
-        }
-        else
+        default:
         {
             status_display_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->default");
+            break;
         }
+        }
+
+        // if (!(p_page_idle->thisMachine->isProductVolumeInContainer(pnumber)))
+        // {
+        //     status_display_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->auto_empty");
+        // }
+        // else if (!p_page_idle->thisMachine->getSlotByPosition(slot_index+1)->getIsSlotEnabled())
+        // {
+        //     status_display_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled");
+        // }
+        // else if (product_status_text.compare("SLOT_STATE_AVAILABLE") == 0)
+        // {
+        //     status_display_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->available");
+        // }
+        // else if (product_status_text.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
+        // {
+        //     status_display_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->almost_empty");
+        // }
+        // else if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
+        // {
+        //     status_display_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->coming_soon");
+        // }
+        // else if (product_status_text.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
+        // {
+        //     status_display_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->assistance");
+        // }
+        // else if (product_status_text.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
+        // {
+        //     status_display_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->empty");
+        // }
+        // else
+        // {
+        //     status_display_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->default");
+        // }
         labels_product_status[slot_index]->setText(status_display_text);
 
-        if(!p_page_idle->thisMachine->isSlotExisting(slot_index +1)){
+        if (!p_page_idle->thisMachine->isSlotExisting(slot_index + 1))
+        {
             labels_product_name[slot_index]->hide();
             labels_product_status[slot_index]->hide();
             pushButtons_products[slot_index]->hide();
@@ -192,7 +215,7 @@ void page_maintenance::setPage(page_idle *pageIdle, page_maintenance_dispenser *
     this->p_page_maintenance_dispenser = p_pageMaintenanceDispenser;
     this->p_page_maintenance_general = p_pageMaintenanceGeneral;
     this->p_pageSelectProduct = p_page_product;
-    this->p_page_product = pagePaySelect; 
+    this->p_page_product = pagePaySelect;
     this->p_statusbar = p_statusbar;
 }
 

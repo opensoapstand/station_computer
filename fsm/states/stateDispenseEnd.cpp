@@ -477,10 +477,12 @@ void stateDispenseEnd::databaseUpdateSql(string sqlStatement, string dbPath)
     char *zErrMsg = 0;
     if (dbPath == USAGE_DB_PATH)
     {
+        // USAGE DB
         rc = sqlite3_open(USAGE_DB_PATH, &db);
     }
     else
     {
+        // CONFIG DB
         rc = sqlite3_open(CONFIG_DB_PATH, &db);
     }
 

@@ -1085,9 +1085,11 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
    }
    else
    {
-      debugOutput::sendMessage("command will be set. .", MSG_INFO);
+      debugOutput::sendMessage("command will be set. 1 .  " +std::to_string(requestedSize), MSG_INFO);
       m_machine->setSelectedDispenser(requested_slot);
+      debugOutput::sendMessage("command will be set.  2.  " +std::to_string(requestedSize), MSG_INFO);
       m_machine->getSelectedDispenser().getActiveProduct()->setTargetVolumeFromSize(requestedSize);
+      debugOutput::sendMessage("command will be set.  3.  " +std::to_string( m_machine->getSelectedDispenser().getActiveProduct()->getTargetVolumeAsChar()), MSG_INFO);
 
       // debugOutput::sendMessage("command will be set. slot: " + std::to_string(m_machine->getSelectedDispenser().getSlot()), MSG_INFO);
       // debugOutput::sendMessage("command will be setsssssssssssssssssss. slot: " + std::to_string(m_machine->getSelectedDispenser().getSelectedPNumber()), MSG_INFO);

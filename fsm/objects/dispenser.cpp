@@ -39,7 +39,7 @@ const char *DISPENSE_BEHAVIOUR_STRINGS[] = {
 
 const char *SLOT_STATE_STRINGS[] = {
     "SLOT_STATE_AVAILABLE",
-    "SLOT_STATE_WARNING_PRIMING",
+    // "SLOT_STATE_WARNING_PRIMING",
     "SLOT_STATE_PROBLEM_NEEDS_ATTENTION",
     "SLOT_STATE_DISABLED",
     "SLOT_STATE_INVALID"};
@@ -153,6 +153,7 @@ void dispenser::resetDispenser()
     }
     else
     {
+         debugOutput::sendMessage("Dispenser: multiple products in dispenser. Set selected product to dummy for now.", MSG_INFO);
         setSelectedProduct(DUMMY_PNUMBER);
     }
 }
@@ -1676,7 +1677,126 @@ void dispenser::updateDispenseStatus()
 
 void dispenser::updateActiveProductState()
 {
-    getActiveProduct()->updateProductState(getDispenseStatus(), m_isEmptyContainerDetectionEnabled);
+    //getActiveProduct()->updateProductState(getDispenseStatus(), m_isEmptyContainerDetectionEnabled);
+
+     switch (getDispenseStatus())
+    {
+        case FLOW_STATE_UNAVAILABLE:
+        {
+            break;
+        }
+        case FLOW_STATE_RAMP_UP:
+        {
+            break;
+        }
+        case FLOW_STATE_DISPENSING:
+        {
+            break;
+        }
+        case FLOW_STATE_PUMPING_NOT_DISPENSING:
+        {
+            break;
+        }
+        case FLOW_STATE_NOT_PUMPING_NOT_DISPENSING:
+        {
+            break;
+        }
+        case FLOW_STATE_PRIMING_OR_EMPTY:
+        {
+            break;
+        }
+        case FLOW_STATE_PRIME_FAIL_OR_EMPTY:
+        {
+            break;
+        }
+        case FLOW_STATE_EMPTY:
+        {
+            break;
+        }
+
+    // case PRODUCT_STATE_NOT_PRIMED:
+    // {
+    //     if (dispenseState == FLOW_STATE_EMPTY)
+    //     {
+    //         setProductStateToEmpty(isEmptyContainerDetectionEnabled);
+    //     }
+    //     if (dispenseState == FLOW_STATE_PRIME_FAIL_OR_EMPTY)
+    //     {
+    //         setProductState(PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION);
+    //     }
+
+    //     if (dispenseState == FLOW_STATE_NOT_PUMPING_NOT_DISPENSING)
+    //     {
+    //         setProductState(PRODUCT_STATE_AVAILABLE);
+    //     }
+
+    //     if (dispenseState == FLOW_STATE_DISPENSING)
+    //     {
+    //         setProductState(PRODUCT_STATE_AVAILABLE);
+    //     }
+    //     break;
+    // }
+    // case PRODUCT_STATE_AVAILABLE:
+    // {
+
+    //     if (dispenseState == FLOW_STATE_PRIMING_OR_EMPTY)
+    //     {
+    //         setProductState(PRODUCT_STATE_NOT_PRIMED);
+    //     }
+    //     if (dispenseState == FLOW_STATE_EMPTY)
+    //     {
+    //         setProductStateToEmpty(isEmptyContainerDetectionEnabled);
+    //     }
+    //     if (dispenseState == FLOW_STATE_PRIME_FAIL_OR_EMPTY)
+    //     {
+    //         setProductState(PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION);
+    //     }
+
+    //     break;
+    // }
+    // case PRODUCT_STATE_AVAILABLE_LOW_STOCK:
+    // {
+    //     if (dispenseState == FLOW_STATE_EMPTY)
+    //     {
+    //         setProductStateToEmpty(isEmptyContainerDetectionEnabled);
+    //     }
+    //     if (dispenseState == FLOW_STATE_PRIME_FAIL_OR_EMPTY)
+    //     {
+    //         setProductState(PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION);
+    //     }
+    //     break;
+    // }
+    // case PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION:
+    // {
+    //     if (dispenseState == FLOW_STATE_DISPENSING)
+    //     {
+    //         setProductState(PRODUCT_STATE_AVAILABLE);
+    //     }
+    //     break;
+    // }
+    // case PRODUCT_STATE_PROBLEM_EMPTY:
+    // {
+    //     if (dispenseState == FLOW_STATE_DISPENSING)
+    //     {
+    //         setProductState(PRODUCT_STATE_AVAILABLE);
+    //     }
+    //     break;
+    // }
+    // case PRODUCT_STATE_DISABLED_COMING_SOON:
+    // {
+    //     break;
+    // }
+    // case PRODUCT_STATE_DISABLED:
+    // {
+    //     // do nothing can only be altered when set to enabled
+    //     break;
+    // }
+
+    default:
+    {
+        debugOutput::sendMessage("Dispenser: Erroneous dispenser state: ", MSG_INFO);  // std::string(getDispenseStatus())
+    }
+    }
 }
 
 void dispenser::setMixDispenseReport(std::string pNumber, double volumeDispensed, double volume_remaining)

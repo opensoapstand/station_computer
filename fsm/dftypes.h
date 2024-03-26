@@ -182,8 +182,10 @@ typedef enum Product_state
    PRODUCT_STATE_DISABLED_COMING_SOON,
    PRODUCT_STATE_DISABLED,
    PRODUCT_STATE_INVALID,
+   // PRODUCT_STATE_AVAILABLE = 0,
+   // PRODUCT_STATE_AVAILABLE_LOW_STOCK,
+   // PRODUCT_STATE_EMPTY
 } Product_state;
-
 
 // slot state basic states for the dispenser. 
 typedef enum SlotState
@@ -244,7 +246,7 @@ struct Time_val
 };
 typedef struct Time_val Time_val;
 
-#define TABLE_PRODUCTS_COLUMN_COUNT 55
+#define TABLE_PRODUCTS_COLUMN_COUNT 56
 
 typedef enum MIX_RATIO_SETTING
 {

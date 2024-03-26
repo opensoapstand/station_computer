@@ -362,6 +362,7 @@ bool DbManager::getAllProductProperties(int pnumber,
                                         double *size_custom_discount,
                                         double *price_custom_discount,
                                         bool *is_enabled,
+                                        bool *is_empty_or_has_problem,
                                         QString *status_text,
                                         bool *isSizeEnabled, double *prices, double *volumes, QString *PLUs, QString *PIDs)
 
@@ -433,9 +434,9 @@ bool DbManager::getAllProductProperties(int pnumber,
             "status_text," // 51
             "is_enabled_sample," 
             "size_sample,"
-            "price_sample "
-            "FROM products WHERE soapstand_product_serial=:pnumber"
-
+            "price_sample,"
+            "is_empty_or_has_problem"
+            " FROM products WHERE soapstand_product_serial=:pnumber"
         );
         qry.bindValue(":pnumber", pnumber);
         bool success;
@@ -503,6 +504,7 @@ bool DbManager::getAllProductProperties(int pnumber,
             *size_custom_discount = qry.value(48).toDouble();
             *price_custom_discount = qry.value(49).toDouble();
             *is_enabled = qry.value(50).toInt();
+            *is_empty_or_has_problem = qry.value(52).toInt();
             *status_text = qry.value(51).toString();
             // Sample size assignment
             isSizeEnabled[6] = qry.value(52).toInt();

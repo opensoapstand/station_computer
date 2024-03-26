@@ -831,12 +831,7 @@ void machine::checkForHighTemperatureAndDisableProducts()
 
         if (elapsedMinutes >= 60) // 60  Check if one hour has passed
         {
-            // for (uint8_t slot_index = 0; slot_index < getSlotCount(); slot_index++)
-            // {
-            //     qDebug() << "Temperature too high for one hour, block all slots.";
-            //     setSlotEnabled(slot_index + 1, true, "SLOT_STATE_DISABLED_COMING_SOON");
-            // }
-            setIsMachineEnabled(false, "SLOT_STATE_DISABLED_COMING_SOON");
+            setIsMachineEnabled(false, "MACHINE_DISABLED_TEMPERATURE_TOO_HIGH");
         }
     }
     else

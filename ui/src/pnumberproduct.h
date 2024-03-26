@@ -26,8 +26,8 @@ public:
     bool loadProductPropertiesFromProductsFile();
     void getProductProperties(QString *name, QString *name_ui, QString *product_type, QString *description_ui, QString *features_ui, QString *ingredients_ui);
 
-    bool loadProductPropertiesFromDb(); 
-    bool loadProductProperties();       
+    bool loadProductPropertiesFromDb();
+    bool loadProductProperties();
 
     QString convertPNumberToPNotation(int pnumber);
     int convertPStringToPInt(QString pnumberNotation);
@@ -38,82 +38,86 @@ public:
     QString getAwsProductId();
     QString getFullVolumeCorrectUnits(bool addUnits);
 
-    void setVolumeRemainingUserInput(QString volumeRemainingAsUserText); 
-    bool setVolumeRemaining(double volume_as_ml);                        
-    bool restock();                                                      
+    bool setVolumeRemainingUserInput(QString volumeRemainingAsUserText);
+    bool setVolumeRemaining(double volume_as_ml);
+    bool restock();
 
-    QString getVolumeRemainingCorrectUnits(bool addUnits); 
-    QString getTotalDispensedCorrectUnits();               
-    QString getVolumeDispensedSinceRestockCorrectUnits();  
+    QString getVolumeRemainingCorrectUnits(bool addUnits);
+    QString getTotalDispensedCorrectUnits();
+    QString getVolumeDispensedSinceRestockCorrectUnits();
 
-    double getVolumeDispensedMl();              
-    void setVolumeDispensedMl(double volumeMl); 
-    void resetVolumeDispensed();                
+    double getVolumeDispensedMl();
+    void setVolumeDispensedMl(double volumeMl);
+    void resetVolumeDispensed();
 
-    void setFullVolumeCorrectUnits(QString inputFullValue); 
+    void setFullVolumeCorrectUnits(QString inputFullValue);
 
-    QString getPlu(int sizeIndex);           
-    void setPlu(int sizeIndex, QString plu); 
-    bool is_valid_size_selected();           
+    QString getPlu(int sizeIndex);
+    void setPlu(int sizeIndex, QString plu);
+    bool is_valid_size_selected();
 
-    QString getProductName();      
-    QString getProductType();      
-    QString getPNumberAsPString(); 
+    QString getProductName();
+    QString getProductType();
+    QString getPNumberAsPString();
 
-    QString getProductDescription(); 
-    QString getProductIngredients(); 
-    QString getProductFeatures();    
-    QString getLastRestockDate();    
+    QString getProductDescription();
+    QString getProductIngredients();
+    QString getProductFeatures();
+    QString getLastRestockDate();
 
-    void setSelectedSize(int sizeIndex); 
-    int getSelectedSize();               
-    char getSelectedSizeAsChar();        
+    void setSelectedSize(int sizeIndex);
+    int getSelectedSize();
+    char getSelectedSizeAsChar();
 
-    bool toggleSizeEnabled(int size);            
-    bool getSizeEnabled(int size);               
-    bool setSizeEnabled(int size, bool enabled); 
-    int getBiggestEnabledSizeIndex();            
-    void setBiggestEnabledSizeIndex();           
+    bool toggleSizeEnabled(int size);
+    bool getSizeEnabled(int size);
+    bool setSizeEnabled(int size, bool enabled);
+    int getBiggestEnabledSizeIndex();
+    void setBiggestEnabledSizeIndex();
 
     QString getProductPicturePath();
 
     double getPriceOfSelectedBottle();
     double getVolumeOfSelectedBottle();
-    double getVolumeOfSelectedSize(); 
-    double getVolumeBySize(int size); 
+    double getVolumeOfSelectedSize();
+    double getVolumeBySize(int size);
 
-    double getRestockVolume(); 
+    double getRestockVolume();
 
-    void configureVolumeToSizeForSlot(QString volumeInput, int size); 
-    QString getVolumePerTickAsStringForSlot();                        
-    double getVolumePerTickForSlot();                                 
-    void setVolumePerTickForSlot(QString volumePerTickInput);         
+    void configureVolumeToSizeForSlot(QString volumeInput, int size);
+    QString getVolumePerTickAsStringForSlot();
+    double getVolumePerTickForSlot();
+    void setVolumePerTickForSlot(QString volumePerTickInput);
 
     void setSizeUnit(QString units);
-    QString getSizeUnit(); 
-    // QString getSizeAsVolume(QString units); 
+    QString getSizeUnit();
+    // QString getSizeAsVolume(QString units);
 
-    QString getSizeAsVolumeWithCorrectUnits(bool round, bool addUnits);                
-    QString getSizeAsVolumeWithCorrectUnits(int size, bool roundValue, bool addUnits); 
+    QString getSizeAsVolumeWithCorrectUnits(bool round, bool addUnits);
+    QString getSizeAsVolumeWithCorrectUnits(int size, bool roundValue, bool addUnits);
 
-    double getBasePrice(int sizeIndex);                                                                                                       
-    void setPrice(int size, double price);                                                                                                    
-                                                                                                                                              
-    double getPriceCustom();                                                                                                                  
-    double getBasePriceSelectedSize();                                                                                                        
-    void getCustomDiscountDetails(bool *large_volume_discount_is_enabled, double *min_volume_for_discount, double *discount_price_per_liter); 
+    double getBasePrice(int sizeIndex);
+    void setPrice(int size, double price);
 
-    int getDispenseSpeedPercentage();                
-    void setDispenseSpeedPercentage(int percentage); 
+    double getPriceCustom();
+    double getBasePriceSelectedSize();
+    void getCustomDiscountDetails(bool *large_volume_discount_is_enabled, double *min_volume_for_discount, double *discount_price_per_liter);
+
+    int getDispenseSpeedPercentage();
+    void setDispenseSpeedPercentage(int percentage);
 
     double getVolumeRemaining();
 
     bool getIsProductEnabled();
     void setIsProductEnabled(bool isEnabled);
+
+    bool getIsProductEmptyOrHasProblem();
+    void setIsProductEmptyOrHasProblem(bool isEmptyOrHasProblem);
+
     // QString getProductStatusText();
     // void setProductStatusText(QString statusText);
 
-    void setProductState(ProductState state);
+    // void setProductState();
     ProductState getProductState();
     QString getProductStateAsString();
 
@@ -147,6 +151,7 @@ private:
     QString m_product_type;
 
     bool m_is_enabled;
+    bool m_is_empty_or_has_problem;
     // QString m_status_text;
     ProductState m_product_state;
 

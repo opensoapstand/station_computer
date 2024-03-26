@@ -200,6 +200,7 @@ bool pnumberproduct::loadProductPropertiesFromDb()
                                                  &m_size_custom_discount,
                                                  &m_price_custom_discount,
                                                  &m_is_enabled,
+                                                 &m_is_empty_or_has_problem,
                                                  &status_text,
                                                  m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
 
@@ -215,6 +216,13 @@ bool pnumberproduct::loadProductPropertiesFromDb()
     return success;
 }
 
+bool pnumberproduct::getIsProductEmptyOrHasProblem(){
+    return m_is_empty_or_has_problem;
+}
+void pnumberproduct::setIsProductEmptyOrHasProblem(bool isEmptyOrHasProblem){
+    m_is_empty_or_has_problem = isEmptyOrHasProblem;
+}
+
 bool pnumberproduct::getIsProductEnabled()
 {
     return m_is_enabled;
@@ -225,20 +233,37 @@ void pnumberproduct::setIsProductEnabled(bool isEnabled)
     m_db->updateTableProductsWithInt(getPNumber(), "is_enabled", isEnabled);
 }
 
-void pnumberproduct::setProductState(ProductState state)
-{
-    m_product_state = state;
-    m_db->updateTableProductsWithText(getPNumber(), "status_text", getProductStateAsString());
-}
+// void pnumberproduct::setProductState()
+// {
+//     m_product_state = state;s
+
+//     if (low volume, set state to low VOLUME_
+//     if empty set to empty. no need for argument!!!!
+
+//     m_db->updateTableProductsWithText(getPNumber(), "status_text", getProductStateAsString());
+// }
 
 ProductState pnumberproduct::getProductState()
 {
-    return m_product_state;
+    // product state is derived on the spot:
+    if (!getIsProductEnabled()){
+        if (getIsProductEmptyOrHasProblem()){
+            return PRODUCT_STATE_PROBLEM_EMPTY;  // sold out
+        }else{
+            return PRODUCT_STATE_DISABLED; // sold out
+        }
+    }else{
+        if (getVolumeRemaining() < CONTAINER_EMPTY_THRESHOLD_ML){
+            return PRODUCT_STATE_AVAILABLE_LOW_STOCK;
+        }else {
+            return PRODUCT_STATE_AVAILABLE;
+       }
+    }
 }
 
 QString pnumberproduct::getProductStateAsString()
 {
-    return df_util::convertProductStatusToString(m_product_state);
+    return df_util::convertProductStatusToString(getProductState());
 }
 
 ///////////////////////////////////////////// SIZE
@@ -489,17 +514,17 @@ void pnumberproduct::configureVolumeToSizeForSlot(QString volumeInput, int size)
     m_db->updateTableProductsWithDouble(getPNumber(), column_name, volume, 2);
 }
 
-void pnumberproduct::setVolumeRemainingUserInput(QString volumeRemainingAsUserText)
+bool pnumberproduct::setVolumeRemainingUserInput(QString volumeRemainingAsUserText)
 {
     qDebug() << "Open db: Manually adjust remaing volume (custom restock)";
     double vol_as_ml = inputTextToMlConvertUnits(volumeRemainingAsUserText);
-    setVolumeRemaining(vol_as_ml);
+    return setVolumeRemaining(vol_as_ml);
 }
 
 bool pnumberproduct::restock()
 {
     qDebug() << "Open db: Standard restock";
-
+    
     return setVolumeRemaining(m_volume_full);
 }
 
@@ -509,6 +534,7 @@ bool pnumberproduct::setVolumeRemaining(double volume_as_ml)
     success &= m_db->updateTableProductsWithDouble(getPNumber(), "volume_remaining", volume_as_ml, 0);
     success &= m_db->updateTableProductsWithDouble(getPNumber(), "volume_dispensed_since_restock", 0, 0);
     success &= m_db->updateTableProductsWithText(getPNumber(), "last_restock", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
+    // setProductState();
     return success;
 }
 

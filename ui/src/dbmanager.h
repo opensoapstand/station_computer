@@ -76,6 +76,7 @@ public:
                                  double *size_custom_discount,
                                  double *price_custom_discount,
                                  bool *is_enabled,
+                                 bool *is_empty_or_has_problem,
                                  QString *status_text,
                                  bool *isSizeEnabled, double *prices, double *volumes, QString *PLUs, QString *PIDs);
 

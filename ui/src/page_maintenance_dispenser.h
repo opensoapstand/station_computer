@@ -165,7 +165,8 @@ private slots:
 
 private:
     void setSelectedProduct(int pnumber);
-    void setStatusTextLabel(QLabel* label, QString statusText, bool displayRawStatus);
+    void setProductStatusTextLabel(QLabel* label, ProductState state, bool displayRawStatus);
+    void setSlotStatusTextLabel(QLabel* label, SlotState state, bool displayRawStatus);
     void setButtonPressCountLabel(bool init);
     void setButtonPressCountLabel2(bool init);
     void setSizeIndex(int size_index);

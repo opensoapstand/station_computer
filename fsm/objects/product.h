@@ -105,8 +105,8 @@ public:
 
         bool loadParameters(bool onlyLoadFromDb);
         bool loadProductParametersFromDb();
-        bool isColumnInTable(string table, string column_name);
-        void executeSQLStatement(string sql_string);
+        // bool isColumnInTable(string table, string column_name);
+        // void executeSQLStatement(string sql_string);
         bool isDbValid();
         bool testParametersFromDb();
         static std::string dbFieldAsValidString(sqlite3_stmt *stmt, int column_index);
@@ -192,7 +192,8 @@ private:
         int m_pnumber;
         bool m_pnumber_loaded_from_db;
         bool m_is_enabled;
-        // string m_status_text;
+        bool m_is_empty_or_has_problem;
+        string m_status_text;
 
         Product_state m_product_state;
         double m_nThresholdFlow_maximum_allowed;

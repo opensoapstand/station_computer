@@ -279,6 +279,30 @@ static const QMap<QString, ProductState> ProductStateStringMap = {
     {"PRODUCT_STATE_INVALID", PRODUCT_STATE_INVALID}
 };
 
+typedef enum DispenseBehaviour
+{
+   FLOW_STATE_UNAVAILABLE = 0,
+   FLOW_STATE_RAMP_UP,
+   FLOW_STATE_DISPENSING,
+   FLOW_STATE_PUMPING_NOT_DISPENSING,
+   FLOW_STATE_NOT_PUMPING_NOT_DISPENSING,
+   FLOW_STATE_PRIMING_OR_EMPTY,
+   FLOW_STATE_PRIME_FAIL_OR_EMPTY,
+   FLOW_STATE_EMPTY
+} DispenseBehaviour;
+
+static const QMap<QString, DispenseBehaviour> DispenseBehaviourStringMap = {
+    {"FLOW_STATE_UNAVAILABLE", FLOW_STATE_UNAVAILABLE},
+    {"FLOW_STATE_RAMP_UP", FLOW_STATE_RAMP_UP},
+    {"FLOW_STATE_DISPENSING", FLOW_STATE_DISPENSING},
+    {"FLOW_STATE_PUMPING_NOT_DISPENSING", FLOW_STATE_PUMPING_NOT_DISPENSING},
+    {"FLOW_STATE_NOT_PUMPING_NOT_DISPENSING", FLOW_STATE_NOT_PUMPING_NOT_DISPENSING},
+    {"FLOW_STATE_PRIMING_OR_EMPTY", FLOW_STATE_PRIMING_OR_EMPTY},
+    {"FLOW_STATE_PRIME_FAIL_OR_EMPTY", FLOW_STATE_PRIME_FAIL_OR_EMPTY},
+    {"FLOW_STATE_EMPTY", FLOW_STATE_EMPTY}
+};
+
+
 typedef enum SlotState
 {
    SLOT_STATE_AVAILABLE = 0,
@@ -304,6 +328,7 @@ public:
 
     static QString convertSlotStatusToString(SlotState state);
     static QString convertProductStatusToString(ProductState state);
+    static QString convertDispenseStatusToString(DispenseBehaviour state);
 
     static void warnIfPathDoesNotExist(QString path);
     static bool pathExists(QString path);

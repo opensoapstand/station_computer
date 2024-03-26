@@ -504,7 +504,7 @@ bool DbManager::getAllProductProperties(int pnumber,
             *size_custom_discount = qry.value(48).toDouble();
             *price_custom_discount = qry.value(49).toDouble();
             *is_enabled = qry.value(50).toInt();
-            *is_empty_or_has_problem = qry.value(52).toInt();
+            *is_empty_or_has_problem = qry.value(55).toInt();
             *status_text = qry.value(51).toString();
             // Sample size assignment
             isSizeEnabled[6] = qry.value(52).toInt();

@@ -22,11 +22,11 @@ public:
     QVector<int> getAllPNumbers();
 
     int getBasePNumber();
-    
+
     int getDispenseProductsCount();
     int getDispensePNumber(int position);
     QVector<int> getDispensePNumbers();
-    
+
     int getAdditivePNumber(int position);
     int getAdditiveCount();
     QVector<int> getAdditivePNumbers();
@@ -54,8 +54,11 @@ public:
     void setDispenseEndTime(QString end_time);
     void setButtonPressDuration(double button_duration);
     void setButtonPressCount(double button_count);
-    
+    void setDispenseBehaviour(QString dispenseBehaviourString);
+    DispenseBehaviour getDispenseBehaviour();
+    QString getDispenseBehaviourAsString();
 
+    DispenseBehaviour m_dispense_behaviour;
     // void setBasePNumber(int);
     // void getBasePNumber(int);
     // int *getAdditivesPNumbers();
@@ -64,7 +67,6 @@ public:
     // bool getSlotEnabled();
     // void setSlotEnabled(bool isEnabled);
     // void setSlotEnabled(bool isEnabled, QString statusText);
-
 
 public slots:
 

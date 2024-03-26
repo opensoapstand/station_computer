@@ -148,7 +148,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     ui->pushButton_enable_pump->setProperty("class", "pump_enable");
     ui->pushButton_enable_pump->setStyleSheet(styleSheet);
     ui->label_action_feedback->setStyleSheet(styleSheet);
-    ui->label_status_dispenser->setStyleSheet(styleSheet);
+    //ui->label_status_dispenser->setStyleSheet(styleSheet);
     ui->pushButton_set_volume_remaining->setStyleSheet(styleSheet);
 
     ui->pushButton_active_pnumber_base->setProperty("class", "product_active");
@@ -343,11 +343,14 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
     ui->pushButton_plu_custom->setText(p_page_idle->thisMachine->getSelectedProduct()->getPlu(SIZE_CUSTOM_INDEX));
     ui->pushButton_plu_sample->setText(p_page_idle->thisMachine->getSelectedProduct()->getPlu(SIZE_SAMPLE_INDEX));
     SlotState slot_status = p_page_idle->thisMachine->getSelectedSlot()->getSlotStatus();
-    setSlotStatusTextLabel(ui->label_status_dispenser_elaborated, slot_status, true);
     setSlotStatusTextLabel(ui->label_status_dispenser, slot_status, true);
+    
+    
+    ui->label_status_dispense_flow->setText(p_page_idle->thisMachine->getSelectedSlot()->getDispenseBehaviourAsString());
 
-    ProductState product_state = p_page_idle->thisMachine->getSelectedProduct()->getProductState();
-    setProductStatusTextLabel(ui->label_status_selected_product, product_state, true);
+    // ProductState product_state = p_page_idle->thisMachine->getSelectedProduct()->getProductState();
+    // setProductStatusTextLabel(ui->label_status_selected_product, product_state, true);
+    ui->label_status_selected_product->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductStateAsString());
 
     if (p_page_idle->thisMachine->getSelectedSlot()->getIsSlotEnabled())
     {
@@ -376,13 +379,15 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
     }
 
     // if (slot_status == SLOT_STATE_PROBLEM_NEEDS_ATTENTION)
-    if (this->p_page_idle->thisMachine->getSelectedProduct()->getProductState() == PRODUCT_STATE_PROBLEM_EMPTY)
+    if (this->p_page_idle->thisMachine->getSelectedProduct()->getIsProductEmptyOrHasProblem())
     {
+        qDebug() << "Product has a problem. faejfiawejfijasiejf" << this->p_page_idle->thisMachine->getSelectedProduct()->getPNumberAsPString();
         // only show button if there is an issue.
         ui->pushButton_clear_problem->show();
     }
     else
     {
+        qDebug() << "Product has no problem. faejfiawejfijasiejf product: " << this->p_page_idle->thisMachine->getSelectedProduct()->getPNumberAsPString();
         ui->pushButton_clear_problem->hide();
     }
 }
@@ -718,11 +723,12 @@ void page_maintenance_dispenser::reset_all_dispense_stats()
 
     setButtonPressCountLabel(true);
     
-    SlotState slot_status = p_page_idle->thisMachine->getSelectedSlot()->getSlotStatus();
-    setSlotStatusTextLabel(ui->label_status_dispenser_elaborated, slot_status, true);
+    // SlotState slot_status = p_page_idle->thisMachine->getSelectedSlot()->getSlotStatus();
+    ui->label_status_dispense_flow->setText(p_page_idle->thisMachine->getSelectedSlot()->getDispenseBehaviourAsString());
     
-    ProductState product_state = p_page_idle->thisMachine->getSelectedProduct()->getProductState();
-    setProductStatusTextLabel(ui->label_status_selected_product, product_state, true);
+    // ProductState product_state = p_page_idle->thisMachine->getSelectedProduct()->getProductState();
+    // setProductStatusTextLabel(ui->label_status_selected_product, product_state, true);
+    ui->label_status_selected_product->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductStateAsString());
 
 }
 
@@ -775,8 +781,8 @@ void page_maintenance_dispenser::fsmReceiveDispenserStatus(QString status)
 {
     QString dispenseStatus = status;
     qDebug() << "Dispense status received from FSM: " << dispenseStatus;
-    //setStatusTextLabel(ui->label_status_dispenser_elaborated, dispenseStatus, true);
-    ui->label_status_dispenser_elaborated->setText(dispenseStatus);
+    //setStatusTextLabel(ui->label_status_dispense_flow, dispenseStatus, true);
+    ui->label_status_dispense_flow->setText(dispenseStatus);
 };
 
 void page_maintenance_dispenser::setButtonPressCountLabel(bool init)
@@ -818,13 +824,15 @@ void page_maintenance_dispenser::fsmReceiveNoFlowAbort()
 // ****************************************************************
 void page_maintenance_dispenser::on_pushButton_clear_problem_clicked()
 {
-    if (!isDispenserPumpEnabledWarningBox())
-    {
-        QString statusText = p_page_idle->thisMachine->getSelectedSlot()->getSlotStatusAsString();
-        qDebug() << "Clear problem button clicked. Will set to available. Status was: " + statusText;
-        p_page_idle->thisMachine->getSelectedSlot()->setSlotStatus(SLOT_STATE_AVAILABLE);
+    // if (!isDispenserPumpEnabledWarningBox())
+    // {
+        // QString statusText = p_page_idle->thisMachine->getSelectedSlot()->getSlotStatusAsString();
+        //p_page_idle->thisMachine->getSelectedSlot()->setSlotStatus(SLOT_STATE_AVAILABLE);
+
+        p_page_idle->thisMachine->getSelectedProduct()->setIsProductEmptyOrHasProblem(false);
+        qDebug() << "Clear problem button clicked. Will set Product to non issue state. ";
         updateProductLabelValues(true);
-    }
+    // }
 }
 
 void page_maintenance_dispenser::on_pushButton_restock_clicked()

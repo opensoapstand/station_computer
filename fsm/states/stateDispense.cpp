@@ -86,7 +86,7 @@ DF_ERROR stateDispense::onAction()
    // Send amount dispensed to UI (to show in Maintenance Mode, and/or animate filling)
    g_machine.getSelectedDispenser().updateActiveProductFlowRateRunningAverageWindow();
    g_machine.getSelectedDispenser().updateDispenseStatus();
-   g_machine.getSelectedDispenser().updateActiveProductState();
+   // g_machine.getSelectedDispenser().updateActiveProductState();
 
    // do logging
    statusUpdateLoggingAndOverIP(true);
@@ -176,7 +176,7 @@ DF_ERROR stateDispense::statusUpdateLoggingAndOverIP(bool onlyIfAllowed)
 
       Time_val avg_01s = g_machine.getSelectedDispenser().getAveragedProductFlowRate(1000);
       double flowrate = avg_01s.value;
-      const char *statusStringChar = g_machine.getSelectedDispenser().getSlotStateAsString();
+      const char *statusStringChar = g_machine.getSelectedDispenser().getDispenseStatusAsString();
       std::string statusString(statusStringChar);
 
       std::string message = "dispenseupdate|" + std::to_string(volume) + "|" + std::to_string(flowrate) + "|" + statusString;

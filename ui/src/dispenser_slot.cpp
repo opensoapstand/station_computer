@@ -155,6 +155,29 @@ QString dispenser_slot::getSlotStatusAsString(){
     return df_util::convertSlotStatusToString(m_slot_state);
 }
 
+QString dispenser_slot::getDispenseBehaviourAsString()
+{
+    return df_util::convertDispenseStatusToString(m_dispense_behaviour);
+}
+
+void dispenser_slot::setDispenseBehaviour(QString dispenseBehaviourString){
+    /////////////////////////////////////////////////////////
+     //     dispense status DOES NOT equal slot status.  ///
+      /////////////////////////////////////////////////////
+
+    if (DispenseBehaviourStringMap.contains(dispenseBehaviourString)) {
+        m_dispense_behaviour = DispenseBehaviourStringMap.value(dispenseBehaviourString);
+    } else {
+        // Handle the case where the string is not found. This could be an error or a default value.
+        // For example, returning FLOW_STATE_UNAVAILABLE as a default.
+        m_dispense_behaviour = FLOW_STATE_UNAVAILABLE;
+    }
+}
+
+DispenseBehaviour dispenser_slot::getDispenseBehaviour(){
+    return m_dispense_behaviour;
+}
+
 void dispenser_slot::setSlotEnabled(bool isEnabled, SlotState status)
 {
     setSlotEnabled(isEnabled);

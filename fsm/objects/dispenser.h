@@ -136,7 +136,7 @@ public:
       Slot_state getSlotState();
       void setSlotState(Slot_state state);
       // void setSlotStateToEmpty();
-      void updateActiveProductState();
+      // void updateActiveProductState();
       // void analyseSlotState();
       void setSlotStateFromString(string slotStateText);
 

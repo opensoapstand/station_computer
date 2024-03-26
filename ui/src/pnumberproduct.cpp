@@ -216,17 +216,31 @@ bool pnumberproduct::loadProductPropertiesFromDb()
     return success;
 }
 
-bool pnumberproduct::getIsProductEmptyOrHasProblem(){
+bool pnumberproduct::getIsProductEmptyOrHasProblem()
+{
     return m_is_empty_or_has_problem;
 }
-void pnumberproduct::setIsProductEmptyOrHasProblem(bool isEmptyOrHasProblem){
+
+void pnumberproduct::setIsProductEmptyOrHasProblem(bool isEmptyOrHasProblem)
+{
+
+    if (isEmptyOrHasProblem)
+    {
+        qDebug() << "Product " << getPNumber() << " : Set as empty or has problem. Check remaining volume or product status.";
+    }
+    else
+    {
+        qDebug() << "Product " << getPNumber() << " : Empty or has a problem state reset. ";
+    }
     m_is_empty_or_has_problem = isEmptyOrHasProblem;
+    m_db->updateTableProductsWithInt(getPNumber(), "is_empty_or_has_problem", m_is_empty_or_has_problem);
 }
 
 bool pnumberproduct::getIsProductEnabled()
 {
     return m_is_enabled;
 }
+
 void pnumberproduct::setIsProductEnabled(bool isEnabled)
 {
     m_is_enabled = isEnabled;
@@ -246,18 +260,27 @@ void pnumberproduct::setIsProductEnabled(bool isEnabled)
 ProductState pnumberproduct::getProductState()
 {
     // product state is derived on the spot:
-    if (!getIsProductEnabled()){
-        if (getIsProductEmptyOrHasProblem()){
-            return PRODUCT_STATE_PROBLEM_EMPTY;  // sold out
-        }else{
+    if (!getIsProductEnabled())
+    {
+        if (getIsProductEmptyOrHasProblem())
+        {
+            return PRODUCT_STATE_PROBLEM_EMPTY; // sold out
+        }
+        else
+        {
             return PRODUCT_STATE_DISABLED; // sold out
         }
-    }else{
-        if (getVolumeRemaining() < CONTAINER_EMPTY_THRESHOLD_ML){
+    }
+    else
+    {
+        if (getVolumeRemaining() < CONTAINER_EMPTY_THRESHOLD_ML)
+        {
             return PRODUCT_STATE_AVAILABLE_LOW_STOCK;
-        }else {
+        }
+        else
+        {
             return PRODUCT_STATE_AVAILABLE;
-       }
+        }
     }
 }
 
@@ -524,7 +547,7 @@ bool pnumberproduct::setVolumeRemainingUserInput(QString volumeRemainingAsUserTe
 bool pnumberproduct::restock()
 {
     qDebug() << "Open db: Standard restock";
-    
+
     return setVolumeRemaining(m_volume_full);
 }
 

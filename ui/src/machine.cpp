@@ -395,8 +395,8 @@ pnumberproduct *machine::getProductByPNumber(int pnumber)
 {
     //qDebug() << pnumber;
     return &m_pnumberproducts[pnumber];
-}
 
+}
 pnumberproduct *machine::getSelectedProduct()
 {
     return m_selectedProduct;

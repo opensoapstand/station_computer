@@ -129,7 +129,7 @@
    <property name="geometry">
     <rect>
      <x>340</x>
-     <y>210</y>
+     <y>200</y>
      <width>691</width>
      <height>81</height>
     </rect>
@@ -150,13 +150,13 @@
    <property name="geometry">
     <rect>
      <x>830</x>
-     <y>310</y>
+     <y>270</y>
      <width>201</width>
      <height>41</height>
     </rect>
    </property>
    <property name="text">
-    <string>Mark as Sold Out</string>
+    <string>Set slot status</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_set_restock_volume">
@@ -920,10 +920,10 @@
   <widget class="QLabel" name="label_status_dispenser">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>220</y>
-     <width>311</width>
-     <height>81</height>
+     <x>630</x>
+     <y>270</y>
+     <width>191</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="text">
@@ -1551,12 +1551,12 @@
     <string>Clear problem</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_status_dispenser_elaborated">
+  <widget class="QLabel" name="label_status_dispense_flow">
    <property name="geometry">
     <rect>
      <x>630</x>
      <y>310</y>
-     <width>201</width>
+     <width>381</width>
      <height>31</height>
     </rect>
    </property>
@@ -2130,7 +2130,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Dispenser Status</string>
+    <string>Dispense Status</string>
    </property>
   </widget>
   <widget class="QLabel" name="labelText_dispenser_status_2">
@@ -2157,6 +2157,19 @@
    </property>
    <property name="text">
     <string>Set Product Status</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelText_dispenser_status_3">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>280</y>
+     <width>241</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Slot Status</string>
    </property>
   </widget>
  </widget>

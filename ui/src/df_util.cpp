@@ -34,6 +34,17 @@ QString df_util::convertProductStatusToString(ProductState state){
     return "UNKNOWN_STATE";
 }
 
+QString df_util::convertDispenseStatusToString(DispenseBehaviour state){
+       // Iterate through the QMap to find the key for the given value
+    for (auto stateIt = DispenseBehaviourStringMap.begin(); stateIt != DispenseBehaviourStringMap.end(); ++stateIt) {
+        if (stateIt.value() == state) {
+            return stateIt.key();
+        }
+    }
+    // Return a default or error string if the state is not found
+    return "UNKNOWN_STATE";
+}
+
 void df_util::warnIfPathDoesNotExist(QString path)
 {
     if (!pathExists(path))

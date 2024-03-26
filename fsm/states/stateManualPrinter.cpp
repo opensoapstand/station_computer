@@ -436,7 +436,11 @@ DF_ERROR stateManualPrinter::setup_receipt_from_pnumber_and_dispense_data(int pn
    std::string name_receipt = g_pnumbers[pnumber].getProductName();
    //  std::string plu = g_machine.m_productDispensers[slot-1].getSelectedProduct()->getBasePLU( SIZE_CUSTOM_CHAR  );
 
-   char size = g_pnumbers[pnumber].getSizeCharFromTargetVolume(volume_requested);
+
+   // why do we need the requested volume as char for the receipt?! --> only to differentiate from custom volume?
+   // char size = g_pnumbers[pnumber].getTargetVolumeAsChar(); // do we even need the size as char? 
+   char size = g_pnumbers[pnumber].getSizeCharFromTargetVolume(volume_requested); // // this is a necessary evil as in transactions, the requested volume is not stored as char
+    
    string plu = g_pnumbers[pnumber].getFinalPLU(size, price, g_machine.getPaymentMethod());
 
    std::string units = g_machine.getSizeUnit();

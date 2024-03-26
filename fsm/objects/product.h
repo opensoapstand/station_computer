@@ -139,6 +139,7 @@ private:
         int m_nRetractionTimeMillis;
 
         double m_nVolumeTarget;
+        char m_nVolumeTargetAsChar;
 
         double m_price_small;
         double m_price_medium;

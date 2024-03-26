@@ -153,7 +153,7 @@ void dispenser::resetDispenser()
     }
     else
     {
-         debugOutput::sendMessage("Dispenser: multiple products in dispenser. Set selected product to dummy for now.", MSG_INFO);
+        debugOutput::sendMessage("Dispenser: multiple products in dispenser. Set selected product to dummy for now.", MSG_INFO);
         setSelectedProduct(DUMMY_PNUMBER);
     }
 }
@@ -371,7 +371,7 @@ bool dispenser::setSelectedProduct(int pnumber)
     {
         return false;
     }
-
+    debugOutput::sendMessage("Dispenser: Set Selected product to: P-" + to_string(pnumber) + "(can be single or mix) ", MSG_INFO);
     m_selected_pnumber = pnumber;
     getSelectedProduct()->resetVolumeDispensed();
     getSelectedProduct()->setTargetVolumeFromSize(SIZE_DUMMY); // reset target volume.
@@ -384,7 +384,7 @@ void dispenser::setActiveProduct(int pnumber)
     {
         debugOutput::sendMessage("Dispenser: ASSERT ERROR Attempt to set non dispensable product as Active product to: " + to_string(pnumber), MSG_ERROR);
     }
-    debugOutput::sendMessage("Dispenser: (product that will come out of spout=active product) Set Active product to: P-" + to_string(pnumber), MSG_INFO);
+    debugOutput::sendMessage("Dispenser: Set Active product to: P-" + to_string(pnumber) + "(product that will come out of spout=active product) ", MSG_INFO);
     m_active_pnumber = pnumber;
 }
 

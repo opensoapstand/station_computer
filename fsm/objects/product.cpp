@@ -454,7 +454,8 @@ double product::getProductVolumeDispensedSinceLastRestock()
 
 char product::getTargetVolumeAsChar()
 {
-    return getSizeCharFromTargetVolume(m_nVolumeTarget);
+    // return getSizeCharFromTargetVolume(m_nVolumeTarget);
+    return m_nVolumeTargetAsChar ;
 }
 
 char product::getSizeCharFromTargetVolume(double volume)
@@ -462,37 +463,44 @@ char product::getSizeCharFromTargetVolume(double volume)
     // this is a necessary evil as in transactions, the requested volume is not stored as char
     // #define VOLUME_MARGIN 0.1
     // Bug Alert: If the custom max size is same as any target volume size, it will take that size but the price will be taken from custom
+
+    debugOutput::sendMessage("Get closest char size for volume: " + to_string(volume), MSG_INFO);
     
-    if (volume == m_nVolumeTarget_c_max)
+    char volumeChar;
+    
+  
+    if (volume == m_nVolumeTarget_s)
     {
-        return 'c';
-    }
-    else if (volume == m_nVolumeTarget_s)
-    {
-        return 's';
+        volumeChar = 's';
     }
     else if (volume == m_nVolumeTarget_m)
     {
-        return 'm';
+        volumeChar = 'm';
     }
     else if (volume == m_nVolumeTarget_l)
     {
-        return 'l';
+        volumeChar = 'l';
     }
-    
+    else if (volume == m_nVolumeTarget_c_max)
+    {
+        // debugOutput::sendMessage("target c max", MSG_INFO);
+        volumeChar = 'c';
+    }
     else if (volume == m_nVolumeTarget_f)
     {
-        return 'f';
+        volumeChar = 'f';
     }
     else if (volume == TEST_DISPENSE_TARGET_VOLUME)
     {
-        return 't';
+        volumeChar = 't';
     }
     else
     {
         debugOutput::sendMessage("Get size from volume, not found, will default to custom dispense for volume " + to_string(volume), MSG_INFO);
-        return 'c';
+        volumeChar = 'c';
     }
+    debugOutput::sendMessage("target volume as char: " + to_string(volumeChar), MSG_INFO);
+    return volumeChar;
 }
 double product::getTargetVolume()
 {
@@ -507,6 +515,7 @@ void product::setTargetVolume(double volume)
 void product::setTargetVolumeFromSize(char size)
 {
     m_nVolumeTarget = getVolumeFromSize(size);
+    m_nVolumeTargetAsChar = size;
 }
 
 double product::getVolumeFromSize(char size)
@@ -542,7 +551,7 @@ double product::getVolumeFromSize(char size)
     else
     {
         std::string separate_string_to_be_able_to_concatenate_char = "Unknown volume parameter: ";
-        debugOutput::sendMessage( separate_string_to_be_able_to_concatenate_char + size, MSG_INFO);
+        debugOutput::sendMessage( separate_string_to_be_able_to_concatenate_char + size + " for product " + getPNumberAsPString(), MSG_INFO);
     }
     return 666.0;
 }

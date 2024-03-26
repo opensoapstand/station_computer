@@ -595,7 +595,7 @@ DF_ERROR messageMediator::parseCommandString()
 
       std::string dispenseCommand = sCommand.substr(found0 + 1, found1 - found0 - 1);
       debugOutput::sendMessage("Dispense command: " + dispenseCommand, MSG_INFO);
-      parseDispenseCommand(dispenseCommand);
+      parseAndApplyDispenseCommand(dispenseCommand);
 
       std::string pNumberDispenseProduct_str = sCommand.substr(found1 + 1, found2 - found1 - 1);
       debugOutput::sendMessage("Selected Dispense PNumber : " + pNumberDispenseProduct_str, MSG_INFO);
@@ -608,7 +608,7 @@ DF_ERROR messageMediator::parseCommandString()
       std::string ratios = sCommand.substr(found3 + 1, found4 - found3 - 1);
       debugOutput::sendMessage("Dispense Ratios : " + ratios, MSG_INFO);
 
-      m_machine->getSelectedDispenser().setSelectedProduct(pNumberDispenseProduct);
+      // m_machine->getSelectedDispenser().setSelectedProduct(pNumberDispenseProduct);
       m_machine->getSelectedDispenser().setCustomMixParametersToSelectedProduct(pnumbers, ratios);
       // int pnumber = m_machine->getSelectedDispenser().getCustomMixPNumberFromMixIndex(0);
       // m_machine->getSelectedDispenser().setPNumberAsSingleDispenseSelectedProduct(pnumber);
@@ -632,13 +632,13 @@ DF_ERROR messageMediator::parseCommandString()
 
       std::string dispenseCommand = sCommand.substr(found0 + 1, found1 - found0 - 1);
       debugOutput::sendMessage("Dispense command: " + dispenseCommand, MSG_INFO);
-      parseDispenseCommand(dispenseCommand);
+      parseAndApplyDispenseCommand(dispenseCommand);
 
       std::string pNumberDispenseProduct_str = sCommand.substr(found1 + 1, found2 - found1 - 1);
 
       int pNumberDispenseProduct = std::stoi(pNumberDispenseProduct_str);
 
-      m_machine->getSelectedDispenser().setSelectedProduct(pNumberDispenseProduct);
+      // m_machine->getSelectedDispenser().setSelectedProduct(pNumberDispenseProduct);
 
       debugOutput::sendMessage("Selected Dispense PNumber (for slot " + to_string(m_machine->getSelectedDispenserNumber()) + " ): " + to_string(m_machine->getSelectedDispenser().getSelectedPNumber()), MSG_INFO);
    }
@@ -691,7 +691,7 @@ DF_ERROR messageMediator::parseCommandString()
    //    // std::size_t found = str.find(str2);
    //    std::string dispenseCommand = sCommand.substr(found0 + 1, found1 - found0 - 1);
    //    debugOutput::sendMessage("Dispense command: " + dispenseCommand, MSG_INFO);
-   //    parseDispenseCommand(dispenseCommand);
+   //    parseAndApplyDispenseCommand(dispenseCommand);
 
    //    std::string pricestr = sCommand.substr(found1 + 1, found2 - found1 - 1);
    //    double price = std::stod(pricestr);
@@ -717,7 +717,7 @@ DF_ERROR messageMediator::parseCommandString()
       debugOutput::sendMessage("Received Message: " + sCommand, MSG_INFO);
       // length 3 command is always a dispense instruction. This is annoying, but it's grown organically like that.
       // check for dispensing command
-      e_ret = parseDispenseCommand(sCommand);
+      e_ret = parseAndApplyDispenseCommand(sCommand);
    }
    else if (sCommand.find("Printer") != string::npos)
    {
@@ -858,7 +858,7 @@ void messageMediator::setDispenseCommandToDummy()
    // m_machine->getSelectedDispenser()->setTargetVolumeFromSize
 }
 
-DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
+DF_ERROR messageMediator::parseAndApplyDispenseCommand(string sCommand)
 {
 
    DF_ERROR e_ret = ERROR_BAD_PARAMS;

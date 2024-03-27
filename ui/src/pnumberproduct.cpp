@@ -45,6 +45,16 @@ void pnumberproduct::getProductProperties(QString *name, QString *name_ui, QStri
     *ingredients_ui = m_ingredients_ui;
 }
 
+void pnumberproduct::setEmptyDetectionEnabledPointer(bool *enabled)
+{
+    // if enabled,we don't care about the remaining volume. Only if effectively out of soap is detected, we label the product as empty.
+    mp_emptyContainerDetectionEnabled = enabled;
+}
+bool pnumberproduct::getEmptyDetectionEnabled()
+{
+    return *mp_emptyContainerDetectionEnabled;
+}
+
 bool pnumberproduct::loadProductPropertiesFromProductsFile()
 {
     QFile file(PRODUCT_DETAILS_TSV_PATH);
@@ -259,8 +269,27 @@ void pnumberproduct::setIsProductEnabled(bool isEnabled)
 
 ProductState pnumberproduct::getProductState()
 {
-    // product state is derived on the spot:
-    if (!getIsProductEnabled())
+    if (getIsProductEnabled())
+    {
+        if (getVolumeRemaining() < CONTAINER_EMPTY_THRESHOLD_ML)
+        {
+            if (getEmptyDetectionEnabled())
+            {
+                // with empty detection, we go all the way to the end (aka when problems arise)
+                return PRODUCT_STATE_AVAILABLE_LOW_STOCK;
+            }
+            else
+            {
+                // without empty detection, the container is considered empty below the threshold
+                return PRODUCT_STATE_PROBLEM_EMPTY;
+            }
+        }
+        else
+        {
+            return PRODUCT_STATE_AVAILABLE;
+        }
+    }
+    else
     {
         if (getIsProductEmptyOrHasProblem())
         {
@@ -269,17 +298,6 @@ ProductState pnumberproduct::getProductState()
         else
         {
             return PRODUCT_STATE_DISABLED; // sold out
-        }
-    }
-    else
-    {
-        if (getVolumeRemaining() < CONTAINER_EMPTY_THRESHOLD_ML)
-        {
-            return PRODUCT_STATE_AVAILABLE_LOW_STOCK;
-        }
-        else
-        {
-            return PRODUCT_STATE_AVAILABLE;
         }
     }
 }
@@ -655,7 +673,7 @@ void pnumberproduct::setPlu(int sizeIndex, QString plu)
 
 QString pnumberproduct::getAwsProductIdSuffix()
 {
-    // The table value can absolutely be left empty. Only if for whatever reason (e.g. twice the same product in a machine) there needs to be a distinction, the column can have a value. Originally, all products linked to a specific machine had a unique 32bit number.(e.g. 81a3a30e-1283-4bef-bd16-d37e2fead410)
+    // The table value can absolutely be left empty. Only if for whatever reason (e.g. twice the same product in a machine) there needs to be a distinction, the column can have a value. Originally, productids (product slots linked to a specific machine) had a unique 128bit number.(e.g. 81a3a30e-1283-4bef-bd16-d37e2fead410)
     return m_aws_product_id;
 }
 

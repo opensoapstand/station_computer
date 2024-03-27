@@ -26,6 +26,8 @@ machine::machine()
     {
         m_pnumberproducts[pnumber_index].setPNumber(pnumber_index);
     }
+
+    m_has_empty_detection = false;
 }
 
 // Dtor
@@ -57,6 +59,7 @@ void machine::initMachine()
     for (int pnumber_index = 0; pnumber_index < all_pnumbers.size(); pnumber_index++)
     {
         m_pnumberproducts[all_pnumbers[pnumber_index]].setDb(m_db);
+        m_pnumberproducts[all_pnumbers[pnumber_index]].setEmptyDetectionEnabledPointer(getEmptyContainerDetectionPointer());
     }
 
     loadDynamicContent(); // part of it is redundant of what's been done here, but not everything. So, do it again.
@@ -167,16 +170,20 @@ QVector<int> machine::getAllUsedPNumbersFromSlots()
     return QVector<int>::fromList(uniquePNumbers.toList());
 }
 
-bool machine::isProductVolumeInContainer(int pnumber)
-{
-    bool retval = true;
+// bool machine::isProductVolumeInContainer(int pnumber)
+// {
+//     bool retval = true;
 
-    if (getEmptyContainerDetectionEnabled())
-    {
-        retval = getProductByPNumber(pnumber)->getVolumeRemaining() > CONTAINER_EMPTY_THRESHOLD_ML;
-    }
-    return retval;
-}
+//     if (getEmptyContainerDetectionEnabled())
+//     {
+//         // we don't care about the remaining volume. As long as it works, we consider it as having soap. We will display 'low volume' once below a treshold.
+//         retval = !getProductByPNumber(pnumber)->getIsProductEmptyOrHasProblem();
+//     }else{
+//         // no risks: once below a certain value, we consider the product as empty.
+//         retval = getProductByPNumber(pnumber)->getVolumeRemaining() > CONTAINER_EMPTY_THRESHOLD_ML;
+//     }
+//     return retval;
+// }
 
 DbManager *machine::getDb()
 {
@@ -900,11 +907,16 @@ void machine::setPumpRampingEnabled(bool isEnabled)
 void machine::setEmptyContainerDetectionEnabled(bool isEnabled)
 {
     m_db->updateTableMachineWithInt("has_empty_detection", isEnabled);
+    m_has_empty_detection = isEnabled;
+}
+
+bool* machine::getEmptyContainerDetectionPointer(){
+    return &m_has_empty_detection;
 }
 
 bool machine::getEmptyContainerDetectionEnabled()
 {
-    return m_has_empty_detection == 1;
+    return m_has_empty_detection;
 }
 bool machine::getShowTransactionHistory()
 {

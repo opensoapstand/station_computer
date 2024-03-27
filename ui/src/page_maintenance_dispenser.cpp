@@ -723,13 +723,13 @@ void page_maintenance_dispenser::reset_all_dispense_stats()
 
     setButtonPressCountLabel(true);
     
-    // SlotState slot_status = p_page_idle->thisMachine->getSelectedSlot()->getSlotStatus();
+    p_page_idle->thisMachine->getSelectedSlot()->setDispenseBehaviour(FLOW_STATE_UNAVAILABLE);
     ui->label_status_dispense_flow->setText(p_page_idle->thisMachine->getSelectedSlot()->getDispenseBehaviourAsString());
-    
-    // ProductState product_state = p_page_idle->thisMachine->getSelectedProduct()->getProductState();
-    // setProductStatusTextLabel(ui->label_status_selected_product, product_state, true);
     ui->label_status_selected_product->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductStateAsString());
 
+    qDebug() << "Is empty detection enabled? : " <<  p_page_idle->thisMachine->getSelectedProduct()->getEmptyDetectionEnabled();
+      
+   
 }
 
 void page_maintenance_dispenser::update_volume_received_dispense_stats(double dispensed)

@@ -113,6 +113,10 @@ public:
 
     bool getIsProductEmptyOrHasProblem();
     void setIsProductEmptyOrHasProblem(bool isEmptyOrHasProblem);
+    void setEmptyDetectionEnabledPointer(bool *enabled);
+    bool getEmptyDetectionEnabled();
+
+    bool* mp_emptyContainerDetectionEnabled;
 
     // QString getProductStatusText();
     // void setProductStatusText(QString statusText);

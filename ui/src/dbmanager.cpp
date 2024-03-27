@@ -382,10 +382,10 @@ bool DbManager::getAllProductProperties(int pnumber,
             "SELECT "
             "soapstand_product_serial," // 0
             "mix_pnumbers,"
-            "mix_ratios_low," // 2
+            "mix_ratios_low,"     // 2
             "mix_ratios_default," // 3
-            "mix_ratios_high," // 4
-            "productId," // 5
+            "mix_ratios_high,"    // 4
+            "productId,"          // 5
             "name,"
             "currency,"
             "name_receipt,"
@@ -432,12 +432,11 @@ bool DbManager::getAllProductProperties(int pnumber,
             "price_custom_discount," // 49
             "is_enabled,"
             "status_text," // 51
-            "is_enabled_sample," 
+            "is_enabled_sample,"
             "size_sample,"
             "price_sample,"
             "is_empty_or_has_problem"
-            " FROM products WHERE soapstand_product_serial=:pnumber"
-        );
+            " FROM products WHERE soapstand_product_serial=:pnumber");
         qry.bindValue(":pnumber", pnumber);
         bool success;
         success = qry.exec();
@@ -449,7 +448,7 @@ bool DbManager::getAllProductProperties(int pnumber,
                      << qry.lastError() << " | " << qry.lastQuery();
             return false;
         }
-        
+
         while (qry.next())
         {
             row_count++;
@@ -550,9 +549,8 @@ bool DbManager::getAllMachineProperties(
     QString *hardware_version,
     QString *software_version,
     int *aws_port,
-
     int *coupons_enabled,
-    int *has_empty_detection,
+    bool *has_empty_detection,
     int *enable_pump_ramping,
     int *enable_pump_reversal,
     int *dispense_buttons_count,
@@ -578,6 +576,7 @@ bool DbManager::getAllMachineProperties(
     int *enable_offline_payment)
 {
     bool success;
+    int emptyDetection;
     qDebug() << " db... all machine properties from: " << CONFIG_DB_PATH;
     {
         QSqlDatabase db = openDb(CONFIG_DB_PATH);
@@ -654,7 +653,24 @@ bool DbManager::getAllMachineProperties(
             *software_version = qry.value(13).toString();
             *aws_port = qry.value(14).toInt();
             *coupons_enabled = qry.value(15).toInt();
-            *has_empty_detection = qry.value(16).toInt();
+            emptyDetection = qry.value(16).toInt();
+            if (has_empty_detection) // Check if the pointer is not null
+            {
+                if (emptyDetection)
+                {
+                    *has_empty_detection = true;
+                }
+                else
+                {
+                    qDebug() << "aaeriiii";
+                    *has_empty_detection = false;
+                }
+            }
+            else
+            {
+                qDebug() << "has_empty_detection is null!";
+            }
+
             *enable_pump_ramping = qry.value(17).toInt();
             *enable_pump_reversal = qry.value(18).toInt();
             *dispense_buttons_count = qry.value(19).toInt();

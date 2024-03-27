@@ -55,6 +55,7 @@ public:
     void setButtonPressDuration(double button_duration);
     void setButtonPressCount(double button_count);
     void setDispenseBehaviour(QString dispenseBehaviourString);
+    void setDispenseBehaviour(DispenseBehaviour);
     DispenseBehaviour getDispenseBehaviour();
     QString getDispenseBehaviourAsString();
 

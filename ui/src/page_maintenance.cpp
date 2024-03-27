@@ -31,10 +31,10 @@ page_maintenance::page_maintenance(QWidget *parent) : QWidget(parent),
     pushButtons_products[2] = ui->pushButton_product_3;
     pushButtons_products[3] = ui->pushButton_product_4;
 
-    labels_product_status[0] = ui->label_product_1_status;
-    labels_product_status[1] = ui->label_product_2_status;
-    labels_product_status[2] = ui->label_product_3_status;
-    labels_product_status[3] = ui->label_product_4_status;
+    labels_slot_status[0] = ui->label_product_1_status;
+    labels_slot_status[1] = ui->label_product_2_status;
+    labels_slot_status[2] = ui->label_product_3_status;
+    labels_slot_status[3] = ui->label_product_4_status;
 
     labels_product_name[0] = ui->label_product_1_name;
     labels_product_name[1] = ui->label_product_2_name;
@@ -112,8 +112,8 @@ void page_maintenance::showEvent(QShowEvent *event)
 
         p_page_idle->thisMachine->setTemplateTextToObject(labels_product_position[slot_index]);
 
-        labels_product_status[slot_index]->setProperty("class", "label_product_status");
-        labels_product_status[slot_index]->setStyleSheet(styleSheet);
+        labels_slot_status[slot_index]->setProperty("class", "label_product_status");
+        labels_slot_status[slot_index]->setStyleSheet(styleSheet);
 
         labels_product_position[slot_index]->setProperty("class", "label_product_position");
         labels_product_position[slot_index]->setStyleSheet(styleSheet);
@@ -158,6 +158,7 @@ void page_maintenance::showEvent(QShowEvent *event)
             break;
         }
         }
+        labels_slot_status[slot_index]->setText(status_display_text);
 
         // if (!(p_page_idle->thisMachine->isProductVolumeInContainer(pnumber)))
         // {
@@ -191,12 +192,12 @@ void page_maintenance::showEvent(QShowEvent *event)
         // {
         //     status_display_text = p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->default");
         // }
-        labels_product_status[slot_index]->setText(status_display_text);
+       
 
         if (!p_page_idle->thisMachine->isSlotExisting(slot_index + 1))
         {
             labels_product_name[slot_index]->hide();
-            labels_product_status[slot_index]->hide();
+            labels_slot_status[slot_index]->hide();
             pushButtons_products[slot_index]->hide();
             labels_product_position[slot_index]->hide();
         }

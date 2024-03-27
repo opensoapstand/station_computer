@@ -154,7 +154,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     this->isDispensing = false;
     askForFeedbackAtEnd = false;
 
-    p_page_idle->thisMachine->getSelectedSlot()->setDispenseBehaviour("FLOW_STATE_UNAVAILABLE");
+    p_page_idle->thisMachine->getSelectedSlot()->setDispenseBehaviour(FLOW_STATE_UNAVAILABLE);
     m_previousRecentDispenseStatus = FLOW_STATE_RAMP_UP;
 
     // if (p_page_idle->thisMachine->getSlotCount() == 1)

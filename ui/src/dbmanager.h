@@ -97,7 +97,7 @@ public:
                                  int *aws_port,
 
                                  int *coupons_enabled,
-                                 int *has_empty_detection,
+                                 bool *has_empty_detection,
                                  int *enable_pump_ramping,
                                  int *enable_pump_reversal,
                                  int *dispense_buttons_count,

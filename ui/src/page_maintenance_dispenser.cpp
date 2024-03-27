@@ -1235,7 +1235,8 @@ void page_maintenance_dispenser::on_pushButton_set_restock_volume_clicked()
 
 void page_maintenance_dispenser::sendRestockToCloud()
 {
-    QString curl_params = "pid=" + p_page_idle->thisMachine->getSelectedProductAwsProductId() + "&volume_full=" + p_page_idle->thisMachine->getSelectedProduct()->getRestockVolume();
+    QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
+    QString curl_params = "pid=" + p_page_idle->thisMachine->getSelectedProductAwsProductId() + "&volume_full=" + p_page_idle->thisMachine->getSelectedProduct()->getRestockVolume() + "&time="+ time;
 
     std::tie(res, readBuffer, http_code) = p_page_idle->thisMachine->sendRequestToPortal(PORTAL_RESET_STOCK, "POST", curl_params, "PAGE_MAINTENANCE_DISPENSER");
     // error code 6 (cannot resolve host) showed up when not connected to wifi. Make distinct!

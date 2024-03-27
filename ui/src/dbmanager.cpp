@@ -627,7 +627,6 @@ bool DbManager::getAllMachineProperties(
             " FROM machine"
 
         );
-
         success = qry.exec();
         if (!success)
         {

@@ -31,6 +31,7 @@ machine::machine()
     }
 
     m_has_empty_detection = false;
+    m_page_init_timeout = DEFAULT_PAGE_INIT_TIMEOUT_SECONDS;
 }
 
 // Dtor

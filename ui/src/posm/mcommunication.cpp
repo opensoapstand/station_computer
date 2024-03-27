@@ -37,6 +37,7 @@ bool mCommunication::page_init(){
         return bRet;
     }
     else {
+        qDebug() << fd;
         //set the serial port setting for MONERIS h/w
         struct termios SerialPortSettings;	/* Create the structure                          */
 

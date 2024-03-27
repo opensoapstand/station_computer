@@ -1235,7 +1235,7 @@ void page_maintenance_dispenser::on_pushButton_set_restock_volume_clicked()
 
 void page_maintenance_dispenser::sendRestockToCloud()
 {
-    QString curl_params = "pid=" + p_page_idle->thisMachine->getSelectedProductAwsProductId() + "&volume_full=" + p_page_idle->thisMachine->getSelectedProduct()->getFullVolumeCorrectUnits(false);
+    QString curl_params = "pid=" + p_page_idle->thisMachine->getSelectedProductAwsProductId() + "&volume_full=" + p_page_idle->thisMachine->getSelectedProduct()->getRestockVolume();
 
     std::tie(res, readBuffer, http_code) = p_page_idle->thisMachine->sendRequestToPortal(PORTAL_RESET_STOCK, "POST", curl_params, "PAGE_MAINTENANCE_DISPENSER");
     // error code 6 (cannot resolve host) showed up when not connected to wifi. Make distinct!
@@ -1248,7 +1248,7 @@ void page_maintenance_dispenser::sendRestockToCloud()
     {
 
         QString feedback = QString::fromUtf8(readBuffer.c_str());
-        qDebug() << "ERROR: pagemaintenancedispenser cURL success. Server feedback readbuffer: " << feedback;
+        qDebug() << "Pagemaintenancedispenser cURL success. Server feedback readbuffer: " << feedback;
 
         // readbuffer is a string. "true" or "false"
         if (readBuffer == "true")

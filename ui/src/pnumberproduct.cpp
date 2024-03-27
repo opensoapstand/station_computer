@@ -18,6 +18,8 @@ bool pnumberproduct::loadProductProperties()
     qDebug() << "Load properties from db and csv for pnumer: " << getPNumber();
     success &= loadProductPropertiesFromDb();
     success &= loadProductPropertiesFromProductsFile();
+    
+    m_db->updateTableProductsWithText(getPNumber(), "status_text", getProductStateAsString()); // Writing state to db for the fun of it. The state string is not used in the program.
     return success;
 }
 
@@ -214,7 +216,7 @@ bool pnumberproduct::loadProductPropertiesFromDb()
                                                  &status_text,
                                                  m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
 
-    m_product_state = ProductStateStringMap[status_text];
+    //m_product_state = ProductStateStringMap[status_text];
 
     int pnumberFromDb = convertPStringToPInt(m_soapstand_product_serial);
 

@@ -56,9 +56,9 @@ void page_init::showEvent(QShowEvent *event)
 
     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_INIT_CSS);
     ui->pushButton_continue->setStyleSheet(styleSheet);
-    ui->pushButton_continue->hide();
+    // ui->pushButton_continue->hide();
     ui->pushButton_reboot->setStyleSheet(styleSheet);
-    ui->pushButton_reboot->hide();
+    // ui->pushButton_reboot->hide();
     if(p_page_idle->thisMachine->hasMixing()){
         ui->label_init_message->setStyleSheet(styleSheet);
     }
@@ -78,7 +78,7 @@ void page_init::showEvent(QShowEvent *event)
     qDebug() << "setting background in page init";
     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_INIT_BACKGROUND_IMAGE_PATH);
 
-    _initIdleTimeoutSec = PAGE_INIT_READY_TIMEOUT_SECONDS;
+    _initIdleTimeoutSec = p_page_idle->thisMachine->getPageInitTimeout();
     initIdleTimer->start(1000);
 
     _rebootTimeoutSec = PAGE_INIT_REBOOT_TIMEOUT_SECONDS;
@@ -215,14 +215,17 @@ void page_init::onInitTimeoutTick()
         case tap_canada:
         case tap_usa:
         {
-            if (!m_tap_payment_ready)
+            if(!m_tap_payment_ready && m_tap_init_error){
+                ready = false;
+                m_label_init_status_text += "Load Tap payment. INIT Error<br>";
+            }
+            else if (!m_tap_payment_ready)
             {
                 ready = false;
                 qDebug() << "init: Waiting for tap payment ready";
-                m_label_init_status_text += "Load Tap payment. INIT ERROR<br>";
+                m_label_init_status_text += "Load Tap payment. Initializing<br>";
             }
-            else
-            {
+            else{
                 m_label_init_status_text += "Load Tap payment. INIT OK<br>";
             }
             break;
@@ -291,21 +294,35 @@ void page_init::initiateTapPayment()
     // p_page_idle->thisMachine->setTextToObject(ui->label_fail_message, waitingForPayment);
     switch (activePaymentMethod)
     {
-    case tap_usa:
-    {
-        page_payment_tap_tcp paymentObject;
-        paymentObject.initiate_tap_setup();
-        break;
+        case tap_usa:
+        {
+            page_payment_tap_tcp paymentObject;
+            tap_init_responded = paymentObject.initiate_tap_setup();
+             if(tap_init_responded){
+                // If TAP init responded true, then TAP device is succesfully started
+                m_tap_payment_ready = true;
+            }
+            else{
+                m_tap_init_error = true;
+            }
+            break;
+        }
+        case tap_canada:
+        {
+            qDebug() << "In tap canada";
+            sleep(45);
+            page_payment_tap_serial paymentSerialObject;
+            tap_init_responded = paymentSerialObject.tap_serial_initiate();
+            if(tap_init_responded){
+                // If TAP init responded true, then TAP device is succesfully started
+                m_tap_payment_ready = true;
+            }
+            else{
+                m_tap_init_error = true;
+            }
+            break;
+        }
     }
-    case tap_canada:
-    {
-        qDebug() << "In tap canada";
-        page_payment_tap_serial paymentSerialObject;
-        paymentSerialObject.tap_serial_initiate();
-        break;
-    }
-    }
-    m_tap_payment_ready = true;
 }
 
 void page_init::on_pushButton_continue_clicked()

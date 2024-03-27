@@ -498,7 +498,7 @@ void page_idle::onRebootNightlyTimeOutTimerTick()
         break;
         case triggered_wait_for_delay:
         {
-            qDebug() << "================== TRIGGERED WAIT FOR DELAY =======================";
+            // qDebug() << "================== TRIGGERED WAIT FOR DELAY =======================";
         if (_millisecondsUntilSetTime <=0 && _delaytime_seconds > 0)
             {
                 ui->label_reboot_nightly_text->show();

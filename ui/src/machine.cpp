@@ -3,6 +3,9 @@
 #include "machine.h"
 #include "dispenser_slot.h"
 #include "pnumberproduct.h"
+#include "page_payment_tap_serial.h"
+#include "page_payment_tap_tcp.h"
+
 
 #include <map>
 #include <fstream>
@@ -104,6 +107,19 @@ bool machine::loadDynamicContent()
 
 void machine::reboot()
 {
+    QString paymentMethod = getPaymentOptions();
+    if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA)
+    {
+        // Tap Canada or Moneris works on the serial connection and whenever the station reboots, the device loses communication. 
+        //To keep both the devices communicated, Tap device needs to restart as the serial connection re-establishes after the restart of TAP device. 
+        //Rebooting TAP at the same time as the station will keep the communication in place
+        page_payment_tap_serial paymentSerialObject;
+        paymentSerialObject.rebootDevice();
+    }
+    else if(paymentMethod== PAYMENT_TAP_USA_QR || PAYMENT_TAP_USA){
+        page_payment_tap_tcp paymentTcpObject;
+        paymentTcpObject.rebootTapTcpDevice();
+    }
     qDebug() << "Will reboot machine now.";
     QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -r 0";
     system(qPrintable(command));
@@ -1174,7 +1190,8 @@ bool machine::loadMachineParameterFromDb()
         &m_pNumber_bottle_1,
         &m_pNumber_bottle_2,
         &m_portal_base_url,
-        &m_enable_offline_payment);
+        &m_enable_offline_payment,
+        &m_page_init_timeout);
 
     qDebug() << "Machine ID as loaded from db: " << getMachineId();
     qDebug() << "Template folder: " << getTemplateFolder();
@@ -1739,6 +1756,10 @@ size_t WriteCallback2(char *contents, size_t size, size_t nmemb, void *userp)
 {
     ((std::string *)userp)->append((char *)contents, size * nmemb);
     return size * nmemb;
+}
+
+int machine::getPageInitTimeout(){
+    return m_page_init_timeout;
 }
 
 std::tuple<CURLcode, std::string, long> machine::sendRequestToPortal(QString api_url, QString request_type, QString curl_params, QString page_name){

@@ -80,7 +80,7 @@
 // #define IO_PIN_BUTTON_MAINTENANCE 340 // connector pin 38
 // #define IO_PIN_BUTTON_SHUTDOWN 341 //  connector pin 40 deprecated 
 // #define IO_PIN_BUTTON_MAINTENANCE_SHUTDOWN_EDGE_DETECTOR 391 // connector pin 32 deprecated.
-#define IO_PIN_FLOW_SENSOR 364 // deprecated, try to get through i2c chip for consitency. connector pin 11
+#define IO_PIN_FLOW_SENSOR 364 // deprecated, try to get through i2c chip for consistency. connector pin 11
 
 #define FLOWSENSOR_DEJITTER_MICROS 700ULL  //digmesa flowsensor
 //#define FLOWSENSOR_DEJITTER_MICROS 10000ULL  // AICHI flow sensor

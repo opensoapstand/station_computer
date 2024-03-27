@@ -276,6 +276,7 @@ public:
     int m_pNumber_bottle_2 = 0;
     QString m_portal_base_url;
     int m_enable_offline_payment;
+    int m_page_init_timeout;
 
     QString m_freesample_end_url;
     int m_is_enabled;
@@ -314,7 +315,7 @@ public:
     bool hasMixing();
     QString getPortalBaseUrl();
     bool isEnabledOfflinePayment();
-
+    int getPageInitTimeout();
     void setFreeSampleEndURL(QString ending_url);
     QString getFreeSampleEndURL();
 public slots:

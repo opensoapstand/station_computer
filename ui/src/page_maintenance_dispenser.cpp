@@ -206,7 +206,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     }
 
     ui->label_action_feedback->setText("");
-    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+    renewPageTimeout();
 
     ui->numberEntry->hide();
     ui->label_title->setText("");
@@ -241,6 +241,9 @@ void page_maintenance_dispenser::resizeEvent(QResizeEvent *event)
 
 void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
 {
+
+    renewPageTimeout();
+
     if (reloadFromDb)
     {
         p_page_idle->thisMachine->loadDynamicContent();
@@ -495,13 +498,22 @@ void page_maintenance_dispenser::setSlotStatusTextLabel(QLabel *label, SlotState
 }
 void page_maintenance_dispenser::on_image_clicked()
 {
-    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+    renewPageTimeout();
 }
 
 void page_maintenance_dispenser::on_pushButton_set_max_temperature_clicked()
 {
     //    qDebug() << "Temperature button clicked" ;
-    _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+    renewPageTimeout();
+}
+
+void page_maintenance_dispenser::renewPageTimeout(){
+    if (p_page_idle->thisMachine->isAllowedAsAdmin())
+    {
+        _maintainProductPageTimeoutSec = 30 * PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+    }else{
+        _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+    }
 }
 
 void page_maintenance_dispenser::onDispenseTimerTick()
@@ -540,8 +552,8 @@ void page_maintenance_dispenser::onMaintainProductPageTimeoutTick()
     }
     else
     {
-        qDebug() << "Maintenance dispenser page timeout";
-        hideCurrentPageAndShowProvided(p_page_idle);
+            qDebug() << "Maintenance dispenser page timeout";
+            hideCurrentPageAndShowProvided(p_page_idle);
     }
 }
 
@@ -837,14 +849,14 @@ void page_maintenance_dispenser::on_pushButton_clear_problem_clicked()
 
 void page_maintenance_dispenser::on_pushButton_restock_clicked()
 {
+    
+    renewPageTimeout();
     if (!isDispenserPumpEnabledWarningBox())
     {
         // QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
 
         qDebug() << "refill clicked. slot: " << QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
         qDebug() << "refill clicked. size: " << QString::number(this->p_page_idle->thisMachine->getSelectedProduct()->getRestockVolume());
-
-        _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 
         // ARE YOU SURE YOU WANT TO COMPLETE?
         QMessageBox msgBox;
@@ -894,7 +906,7 @@ void page_maintenance_dispenser::on_pushButton_set_status_product_clicked()
     if (!isDispenserPumpEnabledWarningBox())
     {
 
-        _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
+        renewPageTimeout();
 
         bool isEnabled = p_page_idle->thisMachine->getSelectedProduct()->getIsProductEnabled();
         if (isEnabled)
@@ -1101,6 +1113,7 @@ void page_maintenance_dispenser::on_pushButton_cancel_clicked()
 
 void page_maintenance_dispenser::buttonGroup_edit_product_Pressed(int buttonId)
 {
+    renewPageTimeout();
     if (!isDispenserPumpEnabledWarningBox())
     {
 
@@ -1111,7 +1124,6 @@ void page_maintenance_dispenser::buttonGroup_edit_product_Pressed(int buttonId)
         activeEditField = buttonpressed->objectName();
         ui->label_title->setText(buttonTitle);
         ui->numberEntry->show();
-        _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
 
         ui->textEntry->selectAll();
 

@@ -501,6 +501,8 @@ void page_dispenser::dispensing_end_admin()
                 tapPaymentObject["status"] = "CAPTURED";
                 p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
                 finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
+                tapPaymentObject.clear();
+
             }
             break;
         }

@@ -827,7 +827,7 @@ bool DbManager::getRecentTransactions(QString values[][5], int count, int *count
     {
         QSqlDatabase db = openDb(USAGE_DB_PATH);
         QSqlQuery qry(db);
-        qry.prepare("SELECT id,end_time,quantity_dispensed,price,product_id FROM transactions ORDER BY id DESC LIMIT :count");
+        qry.prepare("SELECT id,end_time,quantity_dispensed,price,soapstand_product_serial FROM transactions ORDER BY id DESC LIMIT :count");
         qry.bindValue(":count", count);
 
         qDebug() << " db retreive transactions: " << count;

@@ -18,6 +18,18 @@
 #include "../objects/debugOutput.h"
 #include <fstream>
 
+
+const char *PRODUCT_STATE_STRINGS[] = {
+    "PRODUCT_STATE_AVAILABLE",
+    "PRODUCT_STATE_AVAILABLE_LOW_STOCK",
+    "PRODUCT_STATE_NOT_PRIMED",
+    "PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION",
+    "PRODUCT_STATE_PROBLEM_EMPTY",
+    "PRODUCT_STATE_DISABLED_COMING_SOON",
+    "PRODUCT_STATE_DISABLED",
+    "PRODUCT_STATE_INVALID"
+    };
+
 product::product()
 {
 }
@@ -25,6 +37,165 @@ product::product()
 product::~product()
 {
     debugOutput::sendMessage("product: ~product", MSG_INFO);
+}
+
+const char *product::getProductStateAsString()
+{
+    Product_state state = getProductState();
+    const char *state_str = PRODUCT_STATE_STRINGS[state];
+    return state_str;
+}
+
+void product::setProductState(Product_state state){
+    m_product_state = state;
+}
+
+Product_state product::getProductState(){
+    return m_product_state;
+}
+
+
+
+void product::setProductStateToEmpty(bool isEmptyContainerDetectionEnabled){
+    
+    if (isEmptyContainerDetectionEnabled)
+    {
+
+        // setProductState(PRODUCT_STATE_PROBLEM_EMPTY);
+
+    }
+    else
+    {
+        debugOutput::sendMessage("Empty container detection disabled. But, there is no alternative yet. It detected an empty container, so we'll set it to empty.", MSG_INFO);
+        setProductState(PRODUCT_STATE_PROBLEM_EMPTY);
+    }
+}
+
+void product::updateProductState(Dispense_behaviour dispenseState, bool isEmptyContainerDetectionEnabled){
+    // switch (getProductState())
+    // {
+    // case PRODUCT_STATE_NOT_PRIMED:
+    // {
+    //     if (dispenseState == FLOW_STATE_EMPTY)
+    //     {
+    //         setProductStateToEmpty(isEmptyContainerDetectionEnabled);
+    //     }
+    //     if (dispenseState == FLOW_STATE_PRIME_FAIL_OR_EMPTY)
+    //     {
+    //         setProductState(PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION);
+    //     }
+
+    //     if (dispenseState == FLOW_STATE_NOT_PUMPING_NOT_DISPENSING)
+    //     {
+    //         setProductState(PRODUCT_STATE_AVAILABLE);
+    //     }
+
+    //     if (dispenseState == FLOW_STATE_DISPENSING)
+    //     {
+    //         setProductState(PRODUCT_STATE_AVAILABLE);
+    //     }
+    //     break;
+    // }
+    // case PRODUCT_STATE_AVAILABLE:
+    // {
+
+    //     if (dispenseState == FLOW_STATE_PRIMING_OR_EMPTY)
+    //     {
+    //         setProductState(PRODUCT_STATE_NOT_PRIMED);
+    //     }
+    //     if (dispenseState == FLOW_STATE_EMPTY)
+    //     {
+    //         setProductStateToEmpty(isEmptyContainerDetectionEnabled);
+    //     }
+    //     if (dispenseState == FLOW_STATE_PRIME_FAIL_OR_EMPTY)
+    //     {
+    //         setProductState(PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION);
+    //     }
+
+    //     break;
+    // }
+    // case PRODUCT_STATE_AVAILABLE_LOW_STOCK:
+    // {
+    //     if (dispenseState == FLOW_STATE_EMPTY)
+    //     {
+    //         setProductStateToEmpty(isEmptyContainerDetectionEnabled);
+    //     }
+    //     if (dispenseState == FLOW_STATE_PRIME_FAIL_OR_EMPTY)
+    //     {
+    //         setProductState(PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION);
+    //     }
+    //     break;
+    // }
+    // case PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION:
+    // {
+    //     if (dispenseState == FLOW_STATE_DISPENSING)
+    //     {
+    //         setProductState(PRODUCT_STATE_AVAILABLE);
+    //     }
+    //     break;
+    // }
+    // case PRODUCT_STATE_PROBLEM_EMPTY:
+    // {
+    //     if (dispenseState == FLOW_STATE_DISPENSING)
+    //     {
+    //         setProductState(PRODUCT_STATE_AVAILABLE);
+    //     }
+    //     break;
+    // }
+    // case PRODUCT_STATE_DISABLED_COMING_SOON:
+    // {
+    //     break;
+    // }
+    // case PRODUCT_STATE_DISABLED:
+    // {
+    //     // do nothing can only be altered when set to enabled
+    //     break;
+    // }
+
+    // default:
+    // {
+    //     debugOutput::sendMessage("Dispenser: Erroneous dispenser state: " + std::string(getProductStateAsString()), MSG_INFO);
+    // }
+    // }
+}
+
+void product::setProductStateFromString(string productStateText)
+{
+    // // string productStateText = m_status_text;
+
+    // if (productStateText.find("PRODUCT_STATE_AVAILABLE") != string::npos)
+    // {
+    //     setProductState(PRODUCT_STATE_AVAILABLE);
+    // }
+    // else if (productStateText.find("PRODUCT_STATE_AVAILABLE_LOW_STOCK") != string::npos)
+    // {
+    //     setProductState(PRODUCT_STATE_AVAILABLE_LOW_STOCK);
+    // }
+    // else if (productStateText.find("PRODUCT_STATE_NOT_PRIMED") != string::npos)
+    // {
+    //     setProductState(PRODUCT_STATE_NOT_PRIMED);
+    // }
+    // else if (productStateText.find("PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION") != string::npos)
+    // {
+    //     setProductState(PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION);
+    // }
+    // else if (productStateText.find("PRODUCT_STATE_PROBLEM_EMPTY") != string::npos)
+    // {
+    //     setProductState(PRODUCT_STATE_PROBLEM_EMPTY);
+    // }
+    // else if (productStateText.find("PRODUCT_STATE_DISABLED_COMING_SOON") != string::npos)
+    // {
+    //     setProductState(PRODUCT_STATE_DISABLED_COMING_SOON);
+    // }
+    // else if (productStateText.find("PRODUCT_STATE_DISABLED") != string::npos)
+    // {
+    //     setProductState(PRODUCT_STATE_DISABLED);
+    // }
+    // else
+    // {
+    //     setProductState(PRODUCT_STATE_INVALID);
+    // }
+    // debugOutput::sendMessage("product: State for " + getPNumberAsPString() + ": " + getProductStateAsString() +  "(db value: " + std::string(productStateText) + ")", MSG_INFO);
 }
 
 void product::init(int pnumber)
@@ -157,7 +328,7 @@ int product::getAdditivePNumber(int position)
     if (position > getAdditivesCount())
     {
         debugOutput::sendMessage("ASSERT ERROR: Additives position provided is too high. Additive does not exist.", MSG_ERROR);
-        return PRODUCT_DUMMY;
+        return DUMMY_PNUMBER;
     }
     return getMixPNumber(position); // first position is base pnumber. but mix pnumbers start from 1.
 }
@@ -272,7 +443,7 @@ double product::getVolumeRemaining()
 }
 double product::getProductVolumeDispensedTotalEver()
 {
-    // total volume ever dispensed by this slot.
+    // total volume ever dispensed for this product 
     return m_nVolumeDispensedTotalEver;
 }
 
@@ -283,7 +454,8 @@ double product::getProductVolumeDispensedSinceLastRestock()
 
 char product::getTargetVolumeAsChar()
 {
-    return getSizeCharFromTargetVolume(m_nVolumeTarget);
+    // return getSizeCharFromTargetVolume(m_nVolumeTarget);
+    return m_nVolumeTargetAsChar ;
 }
 
 char product::getSizeCharFromTargetVolume(double volume)
@@ -291,37 +463,44 @@ char product::getSizeCharFromTargetVolume(double volume)
     // this is a necessary evil as in transactions, the requested volume is not stored as char
     // #define VOLUME_MARGIN 0.1
     // Bug Alert: If the custom max size is same as any target volume size, it will take that size but the price will be taken from custom
+
+    debugOutput::sendMessage("Get closest char size for volume: " + to_string(volume), MSG_INFO);
     
-    if (volume == m_nVolumeTarget_c_max)
+    char volumeChar;
+    
+  
+    if (volume == m_nVolumeTarget_s)
     {
-        return 'c';
-    }
-    else if (volume == m_nVolumeTarget_s)
-    {
-        return 's';
+        volumeChar = 's';
     }
     else if (volume == m_nVolumeTarget_m)
     {
-        return 'm';
+        volumeChar = 'm';
     }
     else if (volume == m_nVolumeTarget_l)
     {
-        return 'l';
+        volumeChar = 'l';
     }
-    
+    else if (volume == m_nVolumeTarget_c_max)
+    {
+        // debugOutput::sendMessage("target c max", MSG_INFO);
+        volumeChar = 'c';
+    }
     else if (volume == m_nVolumeTarget_f)
     {
-        return 'f';
+        volumeChar = 'f';
     }
     else if (volume == TEST_DISPENSE_TARGET_VOLUME)
     {
-        return 't';
+        volumeChar = 't';
     }
     else
     {
         debugOutput::sendMessage("Get size from volume, not found, will default to custom dispense for volume " + to_string(volume), MSG_INFO);
-        return 'c';
+        volumeChar = 'c';
     }
+    debugOutput::sendMessage("target volume as char: " + to_string(volumeChar), MSG_INFO);
+    return volumeChar;
 }
 double product::getTargetVolume()
 {
@@ -336,6 +515,7 @@ void product::setTargetVolume(double volume)
 void product::setTargetVolumeFromSize(char size)
 {
     m_nVolumeTarget = getVolumeFromSize(size);
+    m_nVolumeTargetAsChar = size;
 }
 
 double product::getVolumeFromSize(char size)
@@ -370,7 +550,8 @@ double product::getVolumeFromSize(char size)
     }
     else
     {
-        debugOutput::sendMessage("Unknown volume parameter: " + size, MSG_INFO);
+        std::string separate_string_to_be_able_to_concatenate_char = "Unknown volume parameter: ";
+        debugOutput::sendMessage( separate_string_to_be_able_to_concatenate_char + size + " for product " + getPNumberAsPString(), MSG_INFO);
     }
     return 666.0;
 }
@@ -450,14 +631,14 @@ void product::setIsEnabled(bool isEnabled)
     this->m_is_enabled = isEnabled;
 }
 
-string product::getProductStatusText()
-{
-    return m_status_text;
-}
-void product::setProductStatusText(string statusText)
-{
-    this->m_status_text = statusText;
-}
+// string product::getProductStatusText()
+// {
+//     return m_status_text;
+// }
+// void product::setProductStatusText(string statusText)
+// {
+//     this->m_status_text = statusText;
+// }
 
 bool product::getIsSizeEnabled(char size)
 {
@@ -650,73 +831,73 @@ string product::getBasePLU(char size)
     }
     return "fake plu ";
 }
-// example of adding columns to table
-// void product::addColumnExample()
+// // example of adding columns to table
+// // void product::addColumnExample()
+// // {
+// //     executeSQLStatement("ALTER TABLE products ADD price_custom_discount REAL");
+// //     // executeSQLStatement("ALTER TABLE products ADD price_custom_discount REAL AFTER price_custom");
+// //     executeSQLStatement("UPDATE products SET price_custom_discount=0.01;");
+// // }
+// void product::executeSQLStatement(string sql_string)
 // {
-//     executeSQLStatement("ALTER TABLE products ADD price_custom_discount REAL");
-//     // executeSQLStatement("ALTER TABLE products ADD price_custom_discount REAL AFTER price_custom");
-//     executeSQLStatement("UPDATE products SET price_custom_discount=0.01;");
+//     // In fsm, we're only reading the db. Avoid writing. All results are sent to UI for updating db. This was a necessary transition...
+
+//     int rc = sqlite3_open(CONFIG_DB_PATH, &db);
+//     sqlite3_stmt *stmt;
+//     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+//     int status;
+//     status = sqlite3_step(stmt);
+//     sqlite3_finalize(stmt);
+//     sqlite3_close(db);
 // }
-void product::executeSQLStatement(string sql_string)
-{
-    // In fsm, we're only reading the db. Avoid writing. All results are sent to UI for updating db. This was a necessary transition...
 
-    int rc = sqlite3_open(CONFIG_DB_PATH, &db);
-    sqlite3_stmt *stmt;
-    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
-    int status;
-    status = sqlite3_step(stmt);
-    sqlite3_finalize(stmt);
-    sqlite3_close(db);
-}
+// bool product::isColumnInTable(string table, string column_name_to_find)
+// {
+//     bool contains_column_maintenance_pwd = false;
+//     // debugOutput::sendMessage("dcolumn nameee to seach e" + column_name_to_find, MSG_INFO);
 
-bool product::isColumnInTable(string table, string column_name_to_find)
-{
-    bool contains_column_maintenance_pwd = false;
-    // debugOutput::sendMessage("dcolumn nameee to seach e" + column_name_to_find, MSG_INFO);
+//     int rc = sqlite3_open(CONFIG_DB_PATH, &db);
+//     sqlite3_stmt *stmt;
+//     string sql_string = "PRAGMA table_info(" + table + ");";
 
-    int rc = sqlite3_open(CONFIG_DB_PATH, &db);
-    sqlite3_stmt *stmt;
-    string sql_string = "PRAGMA table_info(" + table + ");";
+//     sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
+//     int status;
+//     status = sqlite3_step(stmt);
+//     int row = 0;
+//     while (status == SQLITE_ROW)
+//     {
+//         int columns_count = 3;
+//         for (int column_index = 0; column_index < columns_count; column_index++)
+//         {
+//             // for every row, go over all the the items (0=cid, 1=name, 2=type,3=notnull,...)
+//             switch (column_index)
+//             {
+//             case (1):
+//             {
+//                 string column_name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
+//                 if (!column_name.compare(column_name_to_find))
+//                 {
+//                     // FOUND returns 0
+//                     contains_column_maintenance_pwd = true;
+//                 }
 
-    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
-    int status;
-    status = sqlite3_step(stmt);
-    int row = 0;
-    while (status == SQLITE_ROW)
-    {
-        int columns_count = 3;
-        for (int column_index = 0; column_index < columns_count; column_index++)
-        {
-            // for every row, go over all the the items (0=cid, 1=name, 2=type,3=notnull,...)
-            switch (column_index)
-            {
-            case (1):
-            {
-                string column_name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, column_index)));
-                if (!column_name.compare(column_name_to_find))
-                {
-                    // FOUND returns 0
-                    contains_column_maintenance_pwd = true;
-                }
+//                 break;
+//             }
+//             default:
+//             {
+//             }
+//             break;
+//             }
+//         }
 
-                break;
-            }
-            default:
-            {
-            }
-            break;
-            }
-        }
+//         status = sqlite3_step(stmt); // next record, every sqlite3_step returns a row. if it returns 0, it's run over all the rows.
+//         row++;
+//     };
+//     sqlite3_finalize(stmt);
 
-        status = sqlite3_step(stmt); // next record, every sqlite3_step returns a row. if it returns 0, it's run over all the rows.
-        row++;
-    };
-    sqlite3_finalize(stmt);
-
-    sqlite3_close(db);
-    return contains_column_maintenance_pwd;
-}
+//     sqlite3_close(db);
+//     return contains_column_maintenance_pwd;
+// }
 
 bool product::isDbValid()
 {
@@ -772,6 +953,7 @@ bool product::isDbValid()
         "size_custom_discount",
         "price_custom_discount",
         "is_enabled",
+        "is_empty_or_has_problem",
         "status_text",
         "is_enabled_sample",
         "size_sample",
@@ -988,7 +1170,8 @@ bool product::loadProductParametersFromDb()
                         "status_text,"           // 38
                         "is_enabled_sample,"
                         "size_sample,"
-                        "price_sample"
+                        "price_sample,"
+                         "is_empty_or_has_problem"
                         " FROM products WHERE soapstand_product_serial='" +
                         std::to_string(m_pnumber) + "';";
 
@@ -1048,10 +1231,14 @@ bool product::loadProductParametersFromDb()
         m_nPLU_large = product::dbFieldAsValidString(stmt, 33);
         m_nPLU_custom = product::dbFieldAsValidString(stmt, 34);
         m_is_enabled_custom_discount = sqlite3_column_int(stmt, 35);
+        m_is_empty_or_has_problem = sqlite3_column_int(stmt, 42);
         m_nVolumeTarget_custom_discount = sqlite3_column_double(stmt, 36);
         m_price_custom_discount_per_liter = sqlite3_column_double(stmt, 37);
 
-        m_status_text = product::dbFieldAsValidString(stmt, 38);
+        string status_text = product::dbFieldAsValidString(stmt, 38);
+
+        setProductStateFromString(status_text);
+
         m_nVolumeTarget_f = sqlite3_column_double(stmt, 40);
         status = sqlite3_step(stmt); // next record
         // every sqlite3_step returns a row. if status is 101=SQLITE_DONE, it's run over all the rows.
@@ -1060,6 +1247,9 @@ bool product::loadProductParametersFromDb()
     // parseMixPNumbersAndRatiosCsv(m_mix_pnumbers_str, m_mix_ratios_low_str, m_mix_ratios_default_str,m_mix_ratios_high_str);
 
     m_pnumber_loaded_from_db = false;
+    
+    
+
     if (numberOfRecordsFound == 1)
     {
         debugOutput::sendMessage("DB loading ok. Found one match. status: " + to_string(status), MSG_INFO);

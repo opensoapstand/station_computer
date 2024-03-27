@@ -53,7 +53,7 @@ page_dispenser::page_dispenser(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference to Payment page and completed payment
  */
-void page_dispenser::setPage(page_qr_payment *page_qr_payment,page_offline_payment *page_offline_payment, page_payment_tap_serial *page_payment_tap_serial, page_payment_tap_tcp *page_payment_tap_tcp, page_end *page_end, page_idle *pageIdle, page_sendFeedback *pageFeedback, statusbar *p_statusbar)
+void page_dispenser::setPage(page_qr_payment *page_qr_payment, page_offline_payment *page_offline_payment, page_payment_tap_serial *page_payment_tap_serial, page_payment_tap_tcp *page_payment_tap_tcp, page_end *page_end, page_idle *pageIdle, page_sendFeedback *pageFeedback, statusbar *p_statusbar)
 {
     this->thanksPage = page_end;
     this->paymentPage = page_qr_payment;
@@ -154,9 +154,8 @@ void page_dispenser::showEvent(QShowEvent *event)
     this->isDispensing = false;
     askForFeedbackAtEnd = false;
 
-
-
-    previousDispenseStatus = "NO STATE";
+    p_page_idle->thisMachine->getSelectedSlot()->setDispenseBehaviour(FLOW_STATE_UNAVAILABLE);
+    m_previousRecentDispenseStatus = FLOW_STATE_RAMP_UP;
 
     // if (p_page_idle->thisMachine->getSlotCount() == 1)
     // {
@@ -165,7 +164,7 @@ void page_dispenser::showEvent(QShowEvent *event)
     // }
     // else
     // {
-        p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
+    p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_DISPENSE_INSTRUCTIONS_BACKGROUND_PATH);
     // }
 
     // p_page_idle->thisMachine->addPictureToLabel(ui->label_indicate_active_spout, p_page_idle->thisMachine->getTemplatePathFromName(PAGE_DISPENSE_INSTRUCTIONS_SPOUT_INDICATOR_DOWN));
@@ -193,9 +192,12 @@ void page_dispenser::showEvent(QShowEvent *event)
             x = 880;
             break;
         }
-        if(p_page_idle->thisMachine->hasMixing()){
+        if (p_page_idle->thisMachine->hasMixing())
+        {
             ui->label_indicate_active_spout->move(x, 1700);
-        }else{
+        }
+        else
+        {
             ui->label_indicate_active_spout->move(x, 1600);
             // ui->label_indicate_active_spout->move(x, ui->label_indicate_active_spout->y());
         }
@@ -225,7 +227,8 @@ void page_dispenser::showEvent(QShowEvent *event)
     ui->label_dispense_message->hide();
     ui->pushButton_problems->show();
 
-    if(p_page_idle->thisMachine->hasMixing()){
+    if (p_page_idle->thisMachine->hasMixing())
+    {
         ui->label_moving_bottle_fill_effect->move(296, 663);
         // not needed
         ui->label_press->hide();
@@ -240,7 +243,8 @@ void page_dispenser::showEvent(QShowEvent *event)
         QString selected_volume = p_page_idle->thisMachine->getSelectedProduct()->getSizeAsVolumeWithCorrectUnits(p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize(), true, true);
         double selectedPrice = p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize();
         double selectedPriceCorrected;
-        if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize() == SIZE_CUSTOM_INDEX){
+        if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize() == SIZE_CUSTOM_INDEX)
+        {
             double discountFraction = p_page_idle->thisMachine->getDiscountPercentageFraction();
             QString units = p_page_idle->thisMachine->getSizeUnit();
             if (units == "ml")
@@ -268,8 +272,10 @@ void page_dispenser::showEvent(QShowEvent *event)
             }
             selectedPriceCorrected = selectedPrice * (1 - discountFraction);
             QString base = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_product_selected, "custom_volume");
-            ui->label_product_selected->setText(base.arg(selected_volume)+ "<br>$" + QString::number(selectedPriceCorrected, 'f', 2) + "/" + units);
-        }else{
+            ui->label_product_selected->setText(base.arg(selected_volume) + "<br>$" + QString::number(selectedPriceCorrected, 'f', 2) + "/" + units);
+        }
+        else
+        {
             selectedPriceCorrected = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
             ui->label_product_selected->setText(selected_volume + " ($" + QString::number(selectedPriceCorrected, 'f', 2) + ")");
         }
@@ -277,7 +283,9 @@ void page_dispenser::showEvent(QShowEvent *event)
         p_page_idle->thisMachine->addPictureToLabel(ui->label_dispense_message_icon, p_page_idle->thisMachine->getTemplatePathFromName(PAGE_DISPENSE_ALERT_ICON));
         ui->label_dispense_message_background->hide();
         ui->label_dispense_message_icon->hide();
-    }else{
+    }
+    else
+    {
         ui->label_moving_bottle_fill_effect->move(380, 889);
         ui->pushButton_problems->move(120, 40);
         ui->label_product_summary_background->hide();
@@ -319,9 +327,10 @@ void page_dispenser::updatelabel_volume_dispensed_ml(double dispensed)
 
         double unitprice = (p_page_idle->thisMachine->getSelectedProduct()->getBasePrice(SIZE_CUSTOM_INDEX));
         double max_custom_volume = p_page_idle->thisMachine->getSelectedProduct()->getVolumeOfSelectedSize();
-        //Hack: To authorize the maximum pre-authorized amount. If removing this condition, the price increases more from the initial pre-auth amount and user need to TAP card again
-        // Allowing a margin of extra 1 tick product dispense to user
-        if(dispensed >= max_custom_volume){
+        // Hack: To authorize the maximum pre-authorized amount. If removing this condition, the price increases more from the initial pre-auth amount and user need to TAP card again
+        //  Allowing a margin of extra 1 tick product dispense to user
+        if (dispensed >= max_custom_volume)
+        {
             dispensed = max_custom_volume;
         }
         current_price = p_page_idle->thisMachine->getPriceWithDiscount(dispensed * unitprice);
@@ -401,7 +410,7 @@ void page_dispenser::dispensing_end_admin()
 
     std::ostringstream stream;
     stream << std::fixed << std::setprecision(2) << price;
-    qDebug() << "Minimum volume dispensed" << MINIMUM_DISPENSE_VOLUME_ML;
+    qDebug() << "Minimum volume needed to be recognized as valid dispense: " << MINIMUM_DISPENSE_VOLUME_ML;
     qDebug() << "volume dispensed" << p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl();
     if (p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl() < MINIMUM_DISPENSE_VOLUME_ML)
     {
@@ -510,7 +519,7 @@ void page_dispenser::dispensing_end_admin()
         }
         }
     }
-    
+
     qDebug() << "Finished dispense admin handling";
     current_price = 0.0;
     if (askForFeedbackAtEnd)
@@ -561,7 +570,7 @@ void page_dispenser::fsmSendStartDispensing()
         command = "dispensePNumber|" + dispenseCommand + "|" + QString::number(pNumberSelectedProduct) + "|"; // dispensePNumber|slot|dispensePNumber
     }
     p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
-    
+
     this->isDispensing = true;
     qDebug() << "Dispensing started.";
 }
@@ -576,7 +585,6 @@ void page_dispenser::fsmSendStopDispensing()
     // command.append(SEND_DISPENSE_STOP);
     QString command = "stopDispense";
     p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
-    
 }
 
 void page_dispenser::onArrowAnimationStepTimerTick()
@@ -604,7 +612,7 @@ void page_dispenser::onDispenseIdleTick()
 {
     if (--_dispenseIdleTimeoutSec >= 0)
     {
-        // qDebug() << "Tick Down: " << _dispenseIdleTimeoutSec;  
+        // qDebug() << "Tick Down: " << _dispenseIdleTimeoutSec;
     }
     else
     {
@@ -641,67 +649,147 @@ void page_dispenser::fsmReceiveDispenseRate(double flowrate)
 
 void page_dispenser::fsmReceiveDispenserStatus(QString status)
 {
-    QString dispenseStatus = status;
-    ui->label_dispense_status->setText(dispenseStatus);
-    ui->label_dispense_status->hide();
+    ui->label_dispense_status->setText(status);
+    // ui->label_dispense_status->hide();
+    p_page_idle->thisMachine->getSelectedSlot()->setDispenseBehaviour(status);
 
-    if (dispenseStatus != previousDispenseStatus)
+    // getDispenseBehaviourAsString
+
+    if (p_page_idle->thisMachine->getSelectedSlot()->getDispenseBehaviour() != m_previousRecentDispenseStatus)
     {
-        qDebug() << "Dispense status received from FSM: " << dispenseStatus;
-
-        if (dispenseStatus == "SLOT_STATE_WARNING_PRIMING")
-        {
-            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "priming");
-            p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
-            ui->label_dispense_message->show();
-            if(p_page_idle->thisMachine->hasMixing()){
-                ui->label_dispense_message_background->show();
-                ui->label_dispense_message_icon->show();
-                ui->label_dispense_message->raise();
-            }
-        }
-        else if (dispenseStatus == "SLOT_STATE_PROBLEM_EMPTY")
-        {
-            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "out_of_stock");
-            p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
-            p_page_idle->thisMachine->getSelectedSlot()->setSlotEnabled(false);
-            ui->label_dispense_message->show();
-            if(p_page_idle->thisMachine->hasMixing()){
-                ui->label_dispense_message_background->show();
-                ui->label_dispense_message_icon->show();
-                ui->label_dispense_message->raise();
-            }
-        }
-        else if (dispenseStatus == "SLOT_STATE_PROBLEM_NEEDS_ATTENTION")
-        {
-            p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "needs_attention");
-            p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
-            ui->label_dispense_message->show();
-            if(p_page_idle->thisMachine->hasMixing()){
-                ui->label_dispense_message_background->show();
-                ui->label_dispense_message_icon->show();
-                ui->label_dispense_message->raise();
-            }
-        }
-        else if (dispenseStatus == "SLOT_STATE_AVAILABLE")
-        {
-            p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_problems, "normal", PAGE_DISPENSER_CSS);
-            // normal status
-            // ui->pushButton_problems->hide();
-            ui->label_dispense_message->hide();
-            if(p_page_idle->thisMachine->hasMixing()){
-                ui->label_dispense_message_background->hide();
-                ui->label_dispense_message_icon->hide();
-            }
-            p_page_idle->thisMachine->getSelectedSlot()->setSlotEnabled(true);
-        }
-        else
-        {
-        }
+        qDebug() << "New dispense status received from FSM: " << status;
+        processDispenserUpdate();
     }
 
-    previousDispenseStatus = dispenseStatus;
-};
+    m_previousRecentDispenseStatus = p_page_idle->thisMachine->getSelectedSlot()->getDispenseBehaviour();
+}
+
+void page_dispenser::processDispenserUpdate()
+{
+
+    switch (p_page_idle->thisMachine->getSelectedSlot()->getDispenseBehaviour())
+    {
+    case FLOW_STATE_UNAVAILABLE:
+    case FLOW_STATE_NOT_PUMPING_NOT_DISPENSING:
+    case FLOW_STATE_RAMP_UP:
+    case FLOW_STATE_DISPENSING:
+    {
+        p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_problems, "normal", PAGE_DISPENSER_CSS);
+        // normal status
+        // ui->pushButton_problems->hide();
+        ui->label_dispense_message->hide();
+        if (p_page_idle->thisMachine->hasMixing())
+        {
+            ui->label_dispense_message_background->hide();
+            ui->label_dispense_message_icon->hide();
+        }
+        p_page_idle->thisMachine->getSelectedSlot()->setSlotEnabled(true);
+
+        break;
+    }
+
+    case FLOW_STATE_PUMPING_NOT_DISPENSING:
+    {
+        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "needs_attention");
+        p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
+        ui->label_dispense_message->show();
+        if (p_page_idle->thisMachine->hasMixing())
+        {
+            ui->label_dispense_message_background->show();
+            ui->label_dispense_message_icon->show();
+            ui->label_dispense_message->raise();
+        }
+        break;
+    }
+
+    case FLOW_STATE_PRIMING_OR_EMPTY:
+    {
+        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "priming");
+        p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
+        ui->label_dispense_message->show();
+        if (p_page_idle->thisMachine->hasMixing())
+        {
+            ui->label_dispense_message_background->show();
+            ui->label_dispense_message_icon->show();
+            ui->label_dispense_message->raise();
+        }
+
+        break;
+    }
+
+    case FLOW_STATE_PRIME_FAIL_OR_EMPTY:
+    case FLOW_STATE_EMPTY:
+    {
+        p_page_idle->thisMachine->getSelectedProduct()->setIsProductEmptyOrHasProblem(true);
+        p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "out_of_stock");
+        p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
+        p_page_idle->thisMachine->getSelectedSlot()->setSlotEnabled(false);
+        ui->label_dispense_message->show();
+        if (p_page_idle->thisMachine->hasMixing())
+        {
+            ui->label_dispense_message_background->show();
+            ui->label_dispense_message_icon->show();
+            ui->label_dispense_message->raise();
+        }
+        break;
+    }
+    default:
+    {
+        break;
+    }
+    }
+
+    // if (dispenseStatus == "SLOT_STATE_WARNING_PRIMING")
+    // {
+    //     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "priming");
+    //     p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
+    //     ui->label_dispense_message->show();
+    //     if(p_page_idle->thisMachine->hasMixing()){
+    //         ui->label_dispense_message_background->show();
+    //         ui->label_dispense_message_icon->show();
+    //         ui->label_dispense_message->raise();
+    //     }
+    // }
+    // else if (dispenseStatus == "SLOT_STATE_PROBLEM_EMPTY")
+    // {
+    //     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "out_of_stock");
+    //     p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
+    //     p_page_idle->thisMachine->getSelectedSlot()->setSlotEnabled(false);
+    //     ui->label_dispense_message->show();
+    //     if(p_page_idle->thisMachine->hasMixing()){
+    //         ui->label_dispense_message_background->show();
+    //         ui->label_dispense_message_icon->show();
+    //         ui->label_dispense_message->raise();
+    //     }
+    // }
+    // else if (dispenseStatus == "SLOT_STATE_PROBLEM_NEEDS_ATTENTION")
+    // {
+    //     p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "needs_attention");
+    //     p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
+    //     ui->label_dispense_message->show();
+    //     if(p_page_idle->thisMachine->hasMixing()){
+    //         ui->label_dispense_message_background->show();
+    //         ui->label_dispense_message_icon->show();
+    //         ui->label_dispense_message->raise();
+    //     }
+    // }
+    // else if (dispenseStatus == "SLOT_STATE_AVAILABLE")
+    // {
+    //     p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_problems, "normal", PAGE_DISPENSER_CSS);
+    //     // normal status
+    //     // ui->pushButton_problems->hide();
+    //     ui->label_dispense_message->hide();
+    //     if(p_page_idle->thisMachine->hasMixing()){
+    //         ui->label_dispense_message_background->hide();
+    //         ui->label_dispense_message_icon->hide();
+    //     }
+    //     p_page_idle->thisMachine->getSelectedSlot()->setSlotEnabled(true);
+    // }
+    // else
+    // {
+    // }
+
+}
 
 void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
 {
@@ -731,7 +819,8 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
         // ui->pushButton_problems->move(120, 450);
         // transition from instructions to dispensing at first receival of volume.
         ui->label_background_during_dispense_animation->show();
-        if(p_page_idle->thisMachine->hasMixing() && ui->label_background_during_dispense_animation->isVisible()){
+        if (p_page_idle->thisMachine->hasMixing() && ui->label_background_during_dispense_animation->isVisible())
+        {
             this->ui->label_moving_bottle_fill_effect->move(296, 663 - 4.93 * percentage);
             ui->label_product_summary_background->move(316, 1245);
             ui->label_product_name->move(377, 1275);
@@ -756,7 +845,9 @@ void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
             ui->label_dispense_message_background->raise();
             ui->label_dispense_message_icon->raise();
             ui->label_dispense_message->raise();
-        }else{
+        }
+        else
+        {
             this->ui->label_moving_bottle_fill_effect->move(380, 900 - 3 * percentage);
         }
 
@@ -791,7 +882,7 @@ void page_dispenser::fsmReceiveTargetVolumeReached()
         this->isDispensing = false;
 
         // The idea is to show the target number, but Lode believes it should show the real number dispensed.
-        //updateVolumeDisplayed(p_page_idle->thisMachine->getSelectedProduct()->getVolumeOfSelectedSize(), true); // make sure the fill bottle graphics are completed
+        // updateVolumeDisplayed(p_page_idle->thisMachine->getSelectedProduct()->getVolumeOfSelectedSize(), true); // make sure the fill bottle graphics are completed
         p_page_idle->thisMachine->addToTransactionLogging("\n 8: Target Reached - True");
         dispensing_end_admin();
     }
@@ -841,7 +932,7 @@ void page_dispenser::on_pushButton_abort_clicked()
     {
         msgBox_abort = new QMessageBox();
         msgBox_abort->setObjectName("msgBox_abort");
-        msgBox_abort->setWindowFlags(Qt::FramelessWindowHint| Qt::Dialog); // do not show messagebox header with program name
+        msgBox_abort->setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog); // do not show messagebox header with program name
         switch (paymentMethod)
         {
         case qr:
@@ -905,7 +996,7 @@ void page_dispenser::on_pushButton_problems_clicked()
     qDebug() << "Clicked on msgBox_problems  ";
     msgBox_problems = new QMessageBox();
     msgBox_problems->setObjectName("msgBox_problems");
-    msgBox_problems->setWindowFlags(Qt::FramelessWindowHint| Qt::Dialog); // do not show messagebox header with program name
+    msgBox_problems->setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog); // do not show messagebox header with program name
 
     QString client_id = p_page_idle->thisMachine->getClientId();
     if (client_id == "C-1") // good-filling
@@ -968,7 +1059,7 @@ void page_dispenser::on_pushButton_problems_clicked()
         // send repair command
         qDebug() << "Send repair command to fsm";
         p_page_idle->thisMachine->dfUtility->send_command_to_FSM(SEND_REPAIR_PCA, true);
-        
+
         break;
     }
 

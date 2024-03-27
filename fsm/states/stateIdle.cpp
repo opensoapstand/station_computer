@@ -94,16 +94,10 @@ DF_ERROR stateIdle::onAction()
       DF_ERROR ret_msg;
       ret_msg = m_pMessaging->parseCommandString();
 
-      if (ACTION_DISPENSE == m_pMessaging->getAction() || ACTION_AUTOFILL == m_pMessaging->getAction())
+      if (ACTION_DISPENSE == m_pMessaging->getAction()) // || ACTION_AUTOFILL == m_pMessaging->getAction()
       {
-         if (m_pMessaging->getRequestedSlot() == PRODUCT_SLOT_DUMMY || m_pMessaging->getRequestedSize() == SIZE_DUMMY)
-         {
-            debugOutput::sendMessage("Invalid dispenser command received. ", MSG_INFO);
-         }
-         else
-         {
-            m_state_requested = STATE_DISPENSE_INIT;
-         }
+         m_state_requested = STATE_DISPENSE_INIT;
+         
       }
       else if (m_pMessaging->getAction() == ACTION_NO_ACTION)
       {
@@ -140,7 +134,7 @@ DF_ERROR stateIdle::onAction()
 
          debugOutput::sendMessage("Before reload parameters from product", MSG_INFO);
          bool success = g_machine.m_productDispensers[0].getSelectedProduct()->loadParameters(true);
-         g_machine.loadGeneralProperties(false);
+         g_machine.loadGeneralMachineProperties(false);
          g_machine.m_productDispensers[0].loadGeneralProperties();
 
          debugOutput::sendMessage("After" + to_string(success), MSG_INFO);
@@ -172,7 +166,8 @@ DF_ERROR stateIdle::onAction()
    }
    e_ret = OK;
    // }
-   // usleep(1000000);
+
+   usleep(1000000);
    return e_ret;
 }
 

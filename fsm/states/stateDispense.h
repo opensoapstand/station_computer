@@ -39,11 +39,11 @@ public:
     DF_ERROR statusUpdateLoggingAndOverIP(bool onlyIfAllowed);
 
 private:
-    int slot;
-    int slot_index;
+    // int slot;
+    // int slot_index;
 
     // dispenser *productDispensers;
-    bool flushCommand;
+    // bool flushCommand;
     char size;
 };
 #endif

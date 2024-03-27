@@ -78,7 +78,7 @@ void page_init::showEvent(QShowEvent *event)
     qDebug() << "setting background in page init";
     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_INIT_BACKGROUND_IMAGE_PATH);
 
-    _initIdleTimeoutSec = PAGE_INIT_READY_TIMEOUT_SECONDS;
+    _initIdleTimeoutSec = p_page_idle->thisMachine->getPageInitTimeout();
     initIdleTimer->start(1000);
 
     _rebootTimeoutSec = PAGE_INIT_REBOOT_TIMEOUT_SECONDS;
@@ -310,6 +310,7 @@ void page_init::initiateTapPayment()
         case tap_canada:
         {
             qDebug() << "In tap canada";
+            sleep(45);
             page_payment_tap_serial paymentSerialObject;
             tap_init_responded = paymentSerialObject.tap_serial_initiate();
             if(tap_init_responded){

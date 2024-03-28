@@ -236,8 +236,10 @@ page_maintenance_dispenser->pushButton_keypad_cancel,CANCEL
 page_maintenance_dispenser->pushButton_keypad_done,DONE
 page_maintenance_dispenser->pushButton_enable_pump->enable_pump,ENABLE TEST\nDISPENSE
 page_maintenance_dispenser->pushButton_enable_pump->disable_pump,DISABLE TEST\nDISPENSE
-page_maintenance_dispenser->pushButton_set_status_slot->unavailable,DISABLE\nproduct
-page_maintenance_dispenser->pushButton_set_status_slot->available,ENABLE\nproduct
+page_maintenance_dispenser->pushButton_set_status_slot->unavailable,disable slot
+page_maintenance_dispenser->pushButton_set_status_slot->available,enable slot
+page_maintenance_dispenser->pushButton_set_status_product->unavailable,DISABLE\nproduct
+page_maintenance_dispenser->pushButton_set_status_product->available,ENABLE\nproduct
 page_maintenance_dispenser->label_pump_enabled_status->pump_ready,Manual Pump ready. Press dispense button.
 page_maintenance_dispenser->label_pump_enabled_status->pump_off,Pump manual mode OFF.
 page_maintenance_dispenser->label_action_feedback->success,Refill Succesfull

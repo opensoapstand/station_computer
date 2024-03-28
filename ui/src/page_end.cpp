@@ -149,57 +149,66 @@ void page_end::showEvent(QShowEvent *event)
     updateDispensedVolumeLabel();
 }
 
-void page_end::controllerReceivedDispenseAftermath(QString start_time, QString end_time, double button_press_duration, double button_press_count, double volume_dispensed, QString volumeDispensedMixProduct)
+void page_end::controllerReceivedDispenseAftermath(QString status, QString start_time, QString end_time, double button_press_duration, double button_press_count, double volume_dispensed, QString volumeDispensedMixProduct)
 {
     qDebug() << "Received final transaction details from controller. In page end?:" << is_in_page_end;
 
-    p_page_idle->thisMachine->getSelectedSlot()->setDispenseStartTime(start_time);
-    p_page_idle->thisMachine->getSelectedSlot()->setDispenseEndTime(end_time);
-    p_page_idle->thisMachine->getSelectedSlot()->setButtonPressDuration(button_press_duration);
-    p_page_idle->thisMachine->getSelectedSlot()->setButtonPressCount(button_press_count);
-    p_page_idle->thisMachine->getSelectedProduct()->setVolumeDispensedMl(volume_dispensed);
-    p_page_idle->thisMachine->getSelectedProduct()->setVolumeDispensedMixedProduct(volumeDispensedMixProduct);
-    // maintenance mode dispenses also get processed here... Make sure never to trigger page_end end.
-    if (is_in_page_end)
+    if (status == "invalid")
     {
-        ActivePaymentMethod paymentMethod = p_page_idle->thisMachine->getSelectedPaymentMethod();
-        switch (paymentMethod)
+    }
+    else if (status == "valid")
+    {
+
+        // maintenance mode dispenses also gets processed here... Make sure never to trigger page_end end if in maintenance mode
+        p_page_idle->thisMachine->getSelectedSlot()->setDispenseStartTime(start_time);
+        p_page_idle->thisMachine->getSelectedSlot()->setDispenseEndTime(end_time);
+        p_page_idle->thisMachine->getSelectedSlot()->setButtonPressDuration(button_press_duration);
+        p_page_idle->thisMachine->getSelectedSlot()->setButtonPressCount(button_press_count);
+        p_page_idle->thisMachine->getSelectedProduct()->setVolumeDispensedMl(volume_dispensed);
+        p_page_idle->thisMachine->getSelectedProduct()->setVolumeDispensedMixedProduct(volumeDispensedMixProduct);
+
+        // maintenance mode dispenses also gets processed here... Make sure never to trigger page_end end.
+        if (is_in_page_end)
         {
-        case qr:
-        {
-            // QR Payment - Payment Method
-            sendDispenseEndToCloud();
+            ActivePaymentMethod paymentMethod = p_page_idle->thisMachine->getSelectedPaymentMethod();
+            switch (paymentMethod)
+            {
+            case qr:
+            {
+                // QR Payment - Payment Method
+                sendDispenseEndToCloud();
+            }
+            case tap_canada:
+            {
+                // Tap Canada Payment - Payment Method
+                sendCompleteOrderToCloud(PAYMENT_TAP_CANADA);
+                break;
+            }
+            case tap_usa:
+            {
+                // Tap USA Payment - Payment Method
+                sendCompleteOrderToCloud(PAYMENT_TAP_USA);
+                break;
+            }
+            case receipt_printer:
+            {
+                sendCompleteOrderToCloud(p_page_idle->thisMachine->getPaymentOptions());
+                break;
+            }
+            case none:
+            {
+                sendCompleteOrderToCloud("none");
+                break;
+            }
+            default:
+            {
+                sendCompleteOrderToCloud(p_page_idle->thisMachine->getPaymentOptions());
+                break;
+            }
+            }
+            _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
+            updateDispensedVolumeLabel();
         }
-        case tap_canada:
-        {
-            // Tap Canada Payment - Payment Method
-            sendCompleteOrderToCloud(PAYMENT_TAP_CANADA);
-            break;
-        }
-        case tap_usa:
-        {
-            // Tap USA Payment - Payment Method
-            sendCompleteOrderToCloud(PAYMENT_TAP_USA);
-            break;
-        }
-        case receipt_printer:
-        {
-            sendCompleteOrderToCloud(p_page_idle->thisMachine->getPaymentOptions());
-            break;
-        }
-        case none:
-        {
-            sendCompleteOrderToCloud("none");
-            break;
-        }
-        default:
-        {
-            sendCompleteOrderToCloud(p_page_idle->thisMachine->getPaymentOptions());
-            break;
-        }
-        }
-        _thankYouTimeoutSec = PAGE_THANK_YOU_TIMEOUT_SECONDS;
-        updateDispensedVolumeLabel();
     }
     is_dispense_aftermath_complete = true;
 }

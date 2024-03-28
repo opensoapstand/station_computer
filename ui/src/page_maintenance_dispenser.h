@@ -102,78 +102,49 @@ private slots:
     void buttonGroup_edit_product_Pressed(int buttonId);
     void buttonGroup_keypad_Pressed(int buttonId);
     
-
     void on_pushButton_clear_problem_clicked();
-
     void on_checkBox_enable_small_clicked();
-
     void on_checkBox_enable_medium_clicked();
-
     void on_checkBox_enable_large_clicked();
-
     void on_checkBox_enable_custom_clicked();
-
     void on_checkBox_enable_sample_clicked();
-
     void on_pushButton_active_pnumber_base_clicked();
-
     void on_pushButton_active_pnumber_additive_1_clicked();
-
     void on_pushButton_active_pnumber_additive_2_clicked();
-
     void on_pushButton_active_pnumber_additive_3_clicked();
-
     void on_pushButton_active_pnumber_additive_4_clicked();
-
     void on_pushButton_active_pnumber_additive_5_clicked();
-
     void on_pushButton_dispense_pnumber_1_clicked();
-
     void on_pushButton_dispense_pnumber_2_clicked();
-
     void on_pushButton_dispense_pnumber_3_clicked();
-
     void on_pushButton_dispense_pnumber_4_clicked();
-
     void on_pushButton_dispense_pnumber_5_clicked();
-
     void on_pushButton_dispense_pnumber_6_clicked();
-
     void on_pushButton_activate_slot_1_clicked();
-
     void on_pushButton_activate_slot_2_clicked();
-
     void on_pushButton_activate_slot_3_clicked();
-
     void on_pushButton_activate_slot_4_clicked();
-
     void on_pushButton_activate_slot_5_clicked();
-
     void on_pushButton_set_quantity_small_clicked();
-
     void on_pushButton_set_quantity_medium_clicked();
-
     void on_pushButton_set_quantity_large_clicked();
-
     void on_pushButton_set_quantity_custom_clicked();
-
     void on_pushButton_set_quantity_test_clicked();
-
     void on_pushButton_set_quantity_sample_clicked();
-
     void on_pushButton_set_status_product_clicked();
 
 private:
     void setSelectedProduct(int pnumber);
-    void setStatusTextLabel(QLabel* label, QString statusText, bool displayRawStatus);
+    void setProductStatusTextLabel(QLabel* label, ProductState state, bool displayRawStatus);
+    void setSlotStatusTextLabel(QLabel* label, SlotState state, bool displayRawStatus);
     void setButtonPressCountLabel(bool init);
     void setButtonPressCountLabel2(bool init);
     void setSizeIndex(int size_index);
+    void renewPageTimeout();
 
     int m_activePNumber;
     int m_selected_size_index;
-
-
+    
     QPushButton *buttons_select_additive[ADDITIVES_PER_SLOT_COUNT_MAX];
     QPushButton *buttons_slot_shortcuts[BASE_LINE_COUNT_MAX];
 

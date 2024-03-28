@@ -362,6 +362,7 @@ bool DbManager::getAllProductProperties(int pnumber,
                                         double *size_custom_discount,
                                         double *price_custom_discount,
                                         bool *is_enabled,
+                                        bool *is_empty_or_has_problem,
                                         QString *status_text,
                                         bool *isSizeEnabled, double *prices, double *volumes, QString *PLUs, QString *PIDs)
 
@@ -381,10 +382,10 @@ bool DbManager::getAllProductProperties(int pnumber,
             "SELECT "
             "soapstand_product_serial," // 0
             "mix_pnumbers,"
-            "mix_ratios_low," // 2
+            "mix_ratios_low,"     // 2
             "mix_ratios_default," // 3
-            "mix_ratios_high," // 4
-            "productId," // 5
+            "mix_ratios_high,"    // 4
+            "productId,"          // 5
             "name,"
             "currency,"
             "name_receipt,"
@@ -431,12 +432,11 @@ bool DbManager::getAllProductProperties(int pnumber,
             "price_custom_discount," // 49
             "is_enabled,"
             "status_text," // 51
-            "is_enabled_sample," 
+            "is_enabled_sample,"
             "size_sample,"
-            "price_sample "
-            "FROM products WHERE soapstand_product_serial=:pnumber"
-
-        );
+            "price_sample,"
+            "is_empty_or_has_problem"
+            " FROM products WHERE soapstand_product_serial=:pnumber");
         qry.bindValue(":pnumber", pnumber);
         bool success;
         success = qry.exec();
@@ -444,11 +444,11 @@ bool DbManager::getAllProductProperties(int pnumber,
         if (!success)
         {
             qDebug() << "Open db: Attempted to load all product properties for pnumber: " << pnumber;
-            qDebug() << "Did not execute sql. "
+            qDebug() << "Did not execute sql (replace 'pnumber' for actual number when testing sql command manually). "
                      << qry.lastError() << " | " << qry.lastQuery();
             return false;
         }
-        
+
         while (qry.next())
         {
             row_count++;
@@ -503,6 +503,7 @@ bool DbManager::getAllProductProperties(int pnumber,
             *size_custom_discount = qry.value(48).toDouble();
             *price_custom_discount = qry.value(49).toDouble();
             *is_enabled = qry.value(50).toInt();
+            *is_empty_or_has_problem = qry.value(55).toInt();
             *status_text = qry.value(51).toString();
             // Sample size assignment
             isSizeEnabled[6] = qry.value(52).toInt();
@@ -548,9 +549,8 @@ bool DbManager::getAllMachineProperties(
     QString *hardware_version,
     QString *software_version,
     int *aws_port,
-
     int *coupons_enabled,
-    int *has_empty_detection,
+    bool *has_empty_detection,
     int *enable_pump_ramping,
     int *enable_pump_reversal,
     int *dispense_buttons_count,
@@ -577,6 +577,7 @@ bool DbManager::getAllMachineProperties(
     int *page_init_timeout)
 {
     bool success;
+    int emptyDetection;
     qDebug() << " db... all machine properties from: " << CONFIG_DB_PATH;
     {
         QSqlDatabase db = openDb(CONFIG_DB_PATH);
@@ -626,7 +627,6 @@ bool DbManager::getAllMachineProperties(
             " FROM machine"
 
         );
-
         success = qry.exec();
         if (!success)
         {
@@ -654,7 +654,24 @@ bool DbManager::getAllMachineProperties(
             *software_version = qry.value(13).toString();
             *aws_port = qry.value(14).toInt();
             *coupons_enabled = qry.value(15).toInt();
-            *has_empty_detection = qry.value(16).toInt();
+            emptyDetection = qry.value(16).toInt();
+            if (has_empty_detection) // Check if the pointer is not null
+            {
+                if (emptyDetection)
+                {
+                    *has_empty_detection = true;
+                }
+                else
+                {
+                    qDebug() << "aaeriiii";
+                    *has_empty_detection = false;
+                }
+            }
+            else
+            {
+                qDebug() << "has_empty_detection is null!";
+            }
+
             *enable_pump_ramping = qry.value(17).toInt();
             *enable_pump_reversal = qry.value(18).toInt();
             *dispense_buttons_count = qry.value(19).toInt();
@@ -810,7 +827,7 @@ bool DbManager::getRecentTransactions(QString values[][5], int count, int *count
     {
         QSqlDatabase db = openDb(USAGE_DB_PATH);
         QSqlQuery qry(db);
-        qry.prepare("SELECT id,end_time,quantity_dispensed,price,product_id FROM transactions ORDER BY id DESC LIMIT :count");
+        qry.prepare("SELECT id,end_time,quantity_dispensed,price,soapstand_product_serial FROM transactions ORDER BY id DESC LIMIT :count");
         qry.bindValue(":count", count);
 
         qDebug() << " db retreive transactions: " << count;

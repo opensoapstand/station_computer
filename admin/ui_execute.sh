@@ -11,6 +11,17 @@ gsettings set org.gnome.desktop.interface enable-animations false  # instant tra
 echo 
 while true
 	do
+
+		# set vertical screen touch coordinate transformation right for the ILITEK screens. Ubuntu looses the setting (at least) at reboot. (see also: setup Ubuntu script) 
+		id=$(DISPLAY=:0 xinput | grep -E "ILITEK ILITEK-TP\s+id=" | awk -F"id=" '{print $2}' | awk '{print $1}')
+		if [ -z "$id" ]; then
+			echo "Not an ILITEK ILITEK-TP screen"
+		else
+			echo "ILITEK ILITEK-TP screen found. --> manually adjust touch controller coordinates. "
+			DISPLAY=:0 xinput set-prop "ILITEK ILITEK-TP" "Coordinate Transformation Matrix" 0 1 0 -1 0 1 0 0 1
+			DISPLAY=:0 xinput list-props "ILITEK ILITEK-TP" | grep Matrix
+		fi
+
 		UBUNTU_VERSION=$(lsb_release -rs)
 		CONTROLLER_VERSIONED="station_controller_ubuntu"$UBUNTU_VERSION 
 		UI_VERSIONED="station_ui_ubuntu"$UBUNTU_VERSION 

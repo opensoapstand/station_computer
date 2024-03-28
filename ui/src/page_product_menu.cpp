@@ -135,7 +135,7 @@ void page_product_menu::showEvent(QShowEvent *event)
         labels_base_product_bg[slot_index]->setStyleSheet(styleSheet);
         pushButtons_base_product[slot_index]->setProperty("class", "pushButton_base_product");
         pushButtons_base_product[slot_index]->setStyleSheet(styleSheet);
-        
+
         p_page_idle->thisMachine->addPictureToLabelCircle(labels_base_product_picture[slot_index], p_page_idle->thisMachine->getSlotBaseProduct(slot_index + 1)->getProductPicturePath());
         labels_base_product_picture[slot_index]->setProperty("class", "label_base_product_picture");
         labels_base_product_picture[slot_index]->setStyleSheet(styleSheet);
@@ -171,7 +171,7 @@ void page_product_menu::resizeEvent(QResizeEvent *event)
 void page_product_menu::displayDispenseProductsMenu()
 {
     QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_PRODUCT_MENU_CSS);
-    QString product_status_text;
+    // QString product_status_text;
     for (int sub_menu_index = 0; sub_menu_index < DISPENSE_PRODUCTS_PER_BASE_LINE_MAX; sub_menu_index++)
     {
         int option_index = m_selectedBaseProductIndex * DISPENSE_PRODUCTS_PER_BASE_LINE_MAX + sub_menu_index;
@@ -184,7 +184,6 @@ void page_product_menu::displayDispenseProductsMenu()
             QString increment_text = "%IMAGE_PATH%1%";
             QString image_path_for_position = increment_text.arg(sub_menu_index);
             styleSheet.replace(image_path_for_position, picturePath);
-
 
             qDebug() << "Set up sub menu for item: " << sub_menu_index + 1 << " which is option: " << option_index + 1 << " which has pnumber; " << p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getPNumber();
 
@@ -205,14 +204,17 @@ void page_product_menu::displayDispenseProductsMenu()
 
             QString unavailable_increment_text = "label_overlay_unavailable_increment%1";
             QString label_overlay_unavailable_increment = unavailable_increment_text.arg(sub_menu_index);
-            if (!p_page_idle->thisMachine->getIsOptionAvailable(option_index + 1)){
+            if (!p_page_idle->thisMachine->getIsOptionAvailable(option_index + 1))
+            {
                 p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[sub_menu_index], label_overlay_unavailable_increment, PAGE_PRODUCT_MENU_CSS);
-
-            }else{
+            }
+            else
+            {
                 p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[sub_menu_index], "label_product_overlay_available", PAGE_PRODUCT_MENU_CSS);
             }
-
-        }else{
+        }
+        else
+        {
             qDebug() << "Set up sub menu for item: " << sub_menu_index + 1 << "Invalid pnumber product. Will hide option. ";
             pushButtons_dispense_product[sub_menu_index]->hide();
             labels_dispense_product_picture[sub_menu_index]->hide();
@@ -224,45 +226,77 @@ void page_product_menu::displayDispenseProductsMenu()
 
         QString available_increment_text = "label_product_overlay_available_with_status%1";
         QString label_overlay_available_with_status_increment = available_increment_text.arg(sub_menu_index);
-        product_status_text = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductStatusText();
-        if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
+        // product_status_text = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductStateAsString();
+
+        ProductState base_product_state = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductState();
+        switch (base_product_state)
+        {
+        case (PRODUCT_STATE_AVAILABLE):
+        {
+            labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->available"));
+            break;
+        }
+        case (PRODUCT_STATE_AVAILABLE_LOW_STOCK):
+        {
+             labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->almost_empty"));
+            break;
+        }
+        case (PRODUCT_STATE_PROBLEM_EMPTY):
+        {
+            labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->empty"));
+            break;
+        }
+        case (PRODUCT_STATE_DISABLED):
         {
             labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->coming_soon"));
             p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[sub_menu_index], label_overlay_available_with_status_increment, PAGE_PRODUCT_MENU_CSS);
+            break;
         }
-        else if (product_status_text.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
-        {
-            labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->assistance"));
-            p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[sub_menu_index], label_overlay_available_with_status_increment, PAGE_PRODUCT_MENU_CSS);
-        }
-        else if (product_status_text.compare("SLOT_STATE_DISABLED") == 0)
-        {
-            labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
-        }
-        else if (!p_page_idle->thisMachine->getIsOptionAvailable(option_index + 1))
-        {
-            labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
-        }
-        else if (!(p_page_idle->thisMachine->isProductVolumeInContainer(p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getPNumber())))
-        {
-            labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->empty"));
-        }
-        else if (product_status_text.compare("SLOT_STATE_AVAILABLE") == 0)
-        {
-            labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->available"));
-        }
-        else if (product_status_text.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
-        {
-            labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->almost_empty"));
-        }
-        else if (product_status_text.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
-        {
-            labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->empty"));
-        }
-        else
+        case (PRODUCT_STATE_INVALID):
         {
             labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->default"));
+            break;
         }
+        default:
+        {
+            labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->default"));
+            break;
+        }
+        }
+
+        // if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
+        // {
+        // }
+        // else if (product_status_text.compare("SLOT_STATE_PROBLEM_NEEDS_ATTENTION") == 0)
+        // {
+        //     labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->assistance"));
+        //     p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[sub_menu_index], label_overlay_available_with_status_increment, PAGE_PRODUCT_MENU_CSS);
+        // }
+        // else if (product_status_text.compare("SLOT_STATE_DISABLED") == 0)
+        // {
+        //     labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
+        // }
+        // else if (!p_page_idle->thisMachine->getIsOptionAvailable(option_index + 1))
+        // {
+        //     labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
+        // }
+        // else if (!(p_page_idle->thisMachine->isProductVolumeInContainer(p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getPNumber())))
+        // {
+        // }
+        // else if (product_status_text.compare("SLOT_STATE_AVAILABLE") == 0)
+        // {
+        // }
+        // else if (product_status_text.compare("SLOT_STATE_AVAILABLE_LOW_STOCK") == 0)
+        // {
+           
+        // }
+        // else if (product_status_text.compare("SLOT_STATE_PROBLEM_EMPTY") == 0)
+        // {
+        //     labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->empty"));
+        // }
+        // else
+        // {
+        // }
     }
 }
 

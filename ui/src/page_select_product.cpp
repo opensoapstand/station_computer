@@ -154,12 +154,7 @@ void page_select_product::displayProducts()
     for (uint8_t slot_index = 0; slot_index < SELECT_PRODUCT_PAGE_SLOT_COUNT_MAX; slot_index++)
     // for (uint8_t option_index = 0; option_index < p_page_idle->thisMachine->getOptionCount(); option_index++)
     {
-        pushButtons_product_select[slot_index]->show();
-        labels_product_picture[slot_index]->show();
-        labels_product_icon[slot_index]->show();
-        labels_product_type[slot_index]->show();
-        labels_product_name[slot_index]->show();
-        labels_product_overlay_text[slot_index]->show();
+      
 
         int option_index = (DISPENSE_PRODUCTS_PER_BASE_LINE_MAX * slot_index); // option menu has more products per slot, we need to take that into account for this 1 product per slot select product page.
         qDebug() << "Page select. Set up option: " << option_index + 1;
@@ -167,6 +162,13 @@ void page_select_product::displayProducts()
 
         if (p_page_idle->thisMachine->getSlotByPosition(slot_index + 1)->getIsSlotEnabled())
         {
+            pushButtons_product_select[slot_index]->show();
+            labels_product_picture[slot_index]->show();
+            labels_product_icon[slot_index]->show();
+            labels_product_type[slot_index]->show();
+            labels_product_name[slot_index]->show();
+            labels_product_overlay_text[slot_index]->show();
+            
             // display product picture
             p_page_idle->thisMachine->addPictureToLabel(labels_product_picture[slot_index], p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductPicturePath());
             product_type = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductType();

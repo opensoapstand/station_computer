@@ -41,7 +41,7 @@ public:
     void setPage(page_dispenser* page_dispenser, page_idle* pageIdle, page_qr_payment* page_qr_payment,page_offline_payment* page_offline_payment, page_sendFeedback *page_sendFeedback, statusbar *p_statusbar);
     ~page_end();
 
-    void controllerReceivedDispenseAftermath(QString start_time, QString end_time, double button_press_duration, double button_press_count, double volume_dispensed,QString volumeDispensedMixProduct);
+    void controllerReceivedDispenseAftermath(QString status, QString start_time, QString end_time, double button_press_duration, double button_press_count, double volume_dispensed,QString volumeDispensedMixProduct);
     void controllerReceivedFinishedTransaction();
     
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);

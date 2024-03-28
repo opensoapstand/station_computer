@@ -1316,6 +1316,7 @@ void pcb::flowSensorEnable(uint8_t slot)
         flowSensorsDisableAll(); // reset flow sensor pulse count
         // enable only the active slot flow sensor
         setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_FLOW_SENSOR_ENABLE, true);
+        flow_sensor_enabled[slot - 1] = true;
     };
     break;
     case (EN258_4SLOTS):
@@ -1323,6 +1324,7 @@ void pcb::flowSensorEnable(uint8_t slot)
     {
         flowSensorsDisableAll(); // reset flow sensor pulse count
         // enable not needed for EN258 board.
+        flow_sensor_enabled[slot - 1] = true;
     };
     break;
     default:
@@ -1382,6 +1384,7 @@ void pcb::flowSensorsDisableAll()
         {
             setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_FLOW_SENSOR_ENABLE, false);
             flow_sensor_pulses_since_enable[slot - 1] = 0;
+            flow_sensor_enabled[slot - 1] = false;
         }
     }
     break;
@@ -1389,10 +1392,11 @@ void pcb::flowSensorsDisableAll()
     case (EN258_4SLOTS):
     case (EN258_8SLOTS):
     {
-        // enable of pins not needed for EN258 board.
         for (uint8_t slot = 1; slot <= getSlotCountByPcbType(); slot++)
         {
+            // enable of pins not needed for EN258 board.
             flow_sensor_pulses_since_enable[slot - 1] = 0;
+            flow_sensor_enabled[slot - 1] = false;
         }
     };
     break;
@@ -1419,7 +1423,10 @@ void pcb::refreshFlowSensors()
     {
         for (uint8_t slot = 1; slot <= getSlotCountByPcbType(); slot++)
         {
-            pollFlowSensor(slot);
+            if (flow_sensor_enabled[slot - 1])
+            {
+                pollFlowSensor(slot);
+            }
         }
     };
     break;
@@ -1530,7 +1537,7 @@ void pcb::setFlowSensorType(uint8_t slot, FlowSensorType sensorType)
 
 void pcb::registerFlowSensorTickCallback(int slot, std::function<void()> callback)
 {
-    debugOutput::sendMessage("Flow sensor tick callback registered!", MSG_ERROR);
+    debugOutput::sendMessage("pcb: Flow sensor tick callback registered!", MSG_INFO);
     flowSensorTickCallbacks[slot - 1] = callback;
 }
 
@@ -1898,7 +1905,7 @@ void pcb::setPumpPWM(uint8_t pwm_val)
         f_value = floor(f_value / 2.55);
         unsigned char speed_percentage = 100 - (unsigned char)f_value; // invert speed. pwm is inverted.
         setPumpSpeedPercentage((uint8_t)speed_percentage);
-        debugOutput::sendMessage("speed percentage set =" + std::to_string(speed_percentage), MSG_ERROR);
+        debugOutput::sendMessage("Speed percentage set =" + std::to_string(speed_percentage), MSG_ERROR);
     };
     break;
     default:

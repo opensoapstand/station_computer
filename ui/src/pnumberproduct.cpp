@@ -18,6 +18,8 @@ bool pnumberproduct::loadProductProperties()
     qDebug() << "Load properties from db and csv for pnumer: " << getPNumber();
     success &= loadProductPropertiesFromDb();
     success &= loadProductPropertiesFromProductsFile();
+    
+    m_db->updateTableProductsWithText(getPNumber(), "status_text", getProductStateAsString()); // Writing state to db for the fun of it. The state string is not used in the program.
     return success;
 }
 
@@ -43,6 +45,16 @@ void pnumberproduct::getProductProperties(QString *name, QString *name_ui, QStri
     *product_type = m_product_type;
     *description_ui = m_description_ui;
     *ingredients_ui = m_ingredients_ui;
+}
+
+void pnumberproduct::setEmptyDetectionEnabledPointer(bool *enabled)
+{
+    // if enabled,we don't care about the remaining volume. Only if effectively out of soap is detected, we label the product as empty.
+    mp_emptyContainerDetectionEnabled = enabled;
+}
+bool pnumberproduct::getEmptyDetectionEnabled()
+{
+    return *mp_emptyContainerDetectionEnabled;
 }
 
 bool pnumberproduct::loadProductPropertiesFromProductsFile()
@@ -81,14 +93,13 @@ bool pnumberproduct::loadProductPropertiesFromProductsFile()
             mix_ratios_low_str = fields[CSV_PRODUCT_COL_MIX_RATIOS_LOW];
             mix_ratios_default_str = fields[CSV_PRODUCT_COL_MIX_RATIOS_DEFAULT];
             mix_ratios_high_str = fields[CSV_PRODUCT_COL_MIX_RATIOS_HIGH];
-            
+
             df_util::csvQStringToQVectorInt(mix_pnumbers_str, m_mixPNumbers);
             df_util::csvQStringToQVectorDouble(mix_ratios_low_str, m_mixRatiosLow);
             df_util::csvQStringToQVectorDouble(mix_ratios_default_str, m_mixRatiosDefault);
             df_util::csvQStringToQVectorDouble(mix_ratios_high_str, m_mixRatiosHigh);
             break;
         }
-
     }
     file.close();
     return true;
@@ -175,32 +186,37 @@ QVector<double> pnumberproduct::getMixRatiosHigh()
 
 bool pnumberproduct::loadProductPropertiesFromDb()
 {
+
+    QString status_text;
     qDebug() << "Open db: db load pnumberproduct properties for pnumberproduct for pnumber: " << getPNumber();
     bool success = m_db->getAllProductProperties(getPNumber(),
-                                  &m_aws_product_id,
-                                  &m_soapstand_product_serial,
-                                //   m_mixPNumbers,
-                                //   m_mixRatiosLow,
-                                //   m_mixRatiosDefault,
-                                //   m_mixRatiosHigh,
-                                  &m_name_receipt,
-                                  &m_concentrate_multiplier,
-                                  &m_dispense_speed,
-                                  &m_threshold_flow,
-                                  &m_retraction_time,
-                                  &m_calibration_const,
-                                  &m_volume_per_tick,
-                                  &m_lastRestockDate,
-                                  &m_volume_full,
-                                  &m_volume_remaining,
-                                  &m_volume_dispensed_since_restock,
-                                  &m_volume_dispensed_total,
-                                  &m_is_enabled_custom_discount,
-                                  &m_size_custom_discount,
-                                  &m_price_custom_discount,
-                                  &m_is_enabled,
-                                  &m_status_text,
-                                  m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
+                                                 &m_aws_product_id,
+                                                 &m_soapstand_product_serial,
+                                                 //   m_mixPNumbers,
+                                                 //   m_mixRatiosLow,
+                                                 //   m_mixRatiosDefault,
+                                                 //   m_mixRatiosHigh,
+                                                 &m_name_receipt,
+                                                 &m_concentrate_multiplier,
+                                                 &m_dispense_speed,
+                                                 &m_threshold_flow,
+                                                 &m_retraction_time,
+                                                 &m_calibration_const,
+                                                 &m_volume_per_tick,
+                                                 &m_lastRestockDate,
+                                                 &m_volume_full,
+                                                 &m_volume_remaining,
+                                                 &m_volume_dispensed_since_restock,
+                                                 &m_volume_dispensed_total,
+                                                 &m_is_enabled_custom_discount,
+                                                 &m_size_custom_discount,
+                                                 &m_price_custom_discount,
+                                                 &m_is_enabled,
+                                                 &m_is_empty_or_has_problem,
+                                                 &status_text,
+                                                 m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
+
+    //m_product_state = ProductStateStringMap[status_text];
 
     int pnumberFromDb = convertPStringToPInt(m_soapstand_product_serial);
 
@@ -212,24 +228,85 @@ bool pnumberproduct::loadProductPropertiesFromDb()
     return success;
 }
 
+bool pnumberproduct::getIsProductEmptyOrHasProblem()
+{
+    return m_is_empty_or_has_problem;
+}
+
+void pnumberproduct::setIsProductEmptyOrHasProblem(bool isEmptyOrHasProblem)
+{
+
+    if (isEmptyOrHasProblem)
+    {
+        qDebug() << "Product " << getPNumber() << " : Set as empty or has problem. Check remaining volume or product status.";
+    }
+    else
+    {
+        qDebug() << "Product " << getPNumber() << " : Empty or has a problem state reset. ";
+    }
+    m_is_empty_or_has_problem = isEmptyOrHasProblem;
+    m_db->updateTableProductsWithInt(getPNumber(), "is_empty_or_has_problem", m_is_empty_or_has_problem);
+}
+
 bool pnumberproduct::getIsProductEnabled()
 {
     return m_is_enabled;
 }
+
 void pnumberproduct::setIsProductEnabled(bool isEnabled)
 {
     m_is_enabled = isEnabled;
     m_db->updateTableProductsWithInt(getPNumber(), "is_enabled", isEnabled);
 }
 
-QString pnumberproduct::getProductStatusText()
+// void pnumberproduct::setProductState()
+// {
+//     m_product_state = state;s
+
+//     if (low volume, set state to low VOLUME_
+//     if empty set to empty. no need for argument!!!!
+
+//     m_db->updateTableProductsWithText(getPNumber(), "status_text", getProductStateAsString());
+// }
+
+ProductState pnumberproduct::getProductState()
 {
-    return m_status_text;
+    if (getIsProductEnabled())
+    {
+        if (getVolumeRemaining() < CONTAINER_EMPTY_THRESHOLD_ML)
+        {
+            if (getEmptyDetectionEnabled())
+            {
+                // with empty detection, we go all the way to the end (aka when problems arise)
+                return PRODUCT_STATE_AVAILABLE_LOW_STOCK;
+            }
+            else
+            {
+                // without empty detection, the container is considered empty below the threshold
+                return PRODUCT_STATE_PROBLEM_EMPTY;
+            }
+        }
+        else
+        {
+            return PRODUCT_STATE_AVAILABLE;
+        }
+    }
+    else
+    {
+        if (getIsProductEmptyOrHasProblem())
+        {
+            return PRODUCT_STATE_PROBLEM_EMPTY; // sold out
+        }
+        else
+        {
+            return PRODUCT_STATE_DISABLED; // sold out
+        }
+    }
 }
-void pnumberproduct::setProductStatusText(QString statusText)
+
+QString pnumberproduct::getProductStateAsString()
 {
-    m_status_text = statusText;
-    m_db->updateTableProductsWithText(getPNumber(), "status_text", statusText);
+    return df_util::convertProductStatusToString(getProductState());
 }
 
 ///////////////////////////////////////////// SIZE
@@ -316,14 +393,15 @@ bool pnumberproduct::is_valid_size_selected()
     return true;
 }
 
-double pnumberproduct::getPriceOfSelectedBottle(){
-    //size: 1 for default bottle size
+double pnumberproduct::getPriceOfSelectedBottle()
+{
+    // size: 1 for default bottle size
     return getBasePrice(1);
 }
 
 double pnumberproduct::getVolumeOfSelectedBottle()
 {
-    //size: 1 for default bottle size
+    // size: 1 for default bottle size
     return getVolumeBySize(1);
 }
 
@@ -370,7 +448,6 @@ double pnumberproduct::getBasePriceSelectedSize()
 {
     return getBasePrice(getSelectedSize());
 }
-
 
 ///////////////////////////////////////////// DISPENSE
 /////////////////////////////////////////////
@@ -480,28 +557,28 @@ void pnumberproduct::configureVolumeToSizeForSlot(QString volumeInput, int size)
     m_db->updateTableProductsWithDouble(getPNumber(), column_name, volume, 2);
 }
 
-void pnumberproduct::setVolumeRemainingUserInput(QString volumeRemainingAsUserText)
+bool pnumberproduct::setVolumeRemainingUserInput(QString volumeRemainingAsUserText)
 {
+    qDebug() << "Open db: Manually adjust remaing volume (custom restock)";
     double vol_as_ml = inputTextToMlConvertUnits(volumeRemainingAsUserText);
-    setVolumeRemaining(vol_as_ml);
+    return setVolumeRemaining(vol_as_ml);
 }
 
 bool pnumberproduct::restock()
 {
-    qDebug() << "Open db: restock";
+    qDebug() << "Open db: Standard restock";
 
-    bool success = true;
-    success &= m_db->updateTableProductsWithDouble(getPNumber(), "volume_remaining", m_volume_full, 0);
-    success &= m_db->updateTableProductsWithDouble(getPNumber(), "volume_dispensed_since_restock", 0, 0);
-    success &= m_db->updateTableProductsWithText(getPNumber(), "last_restock", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
-
-    return success;
+    return setVolumeRemaining(m_volume_full);
 }
 
-void pnumberproduct::setVolumeRemaining(double volume_as_ml)
+bool pnumberproduct::setVolumeRemaining(double volume_as_ml)
 {
-    qDebug() << "Open db: set volume remaining";
-    m_db->updateTableProductsWithDouble(getPNumber(), "volume_remaining", volume_as_ml, 0);
+    bool success = true;
+    success &= m_db->updateTableProductsWithDouble(getPNumber(), "volume_remaining", volume_as_ml, 0);
+    success &= m_db->updateTableProductsWithDouble(getPNumber(), "volume_dispensed_since_restock", 0, 0);
+    success &= m_db->updateTableProductsWithText(getPNumber(), "last_restock", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss"));
+    // setProductState();
+    return success;
 }
 
 double pnumberproduct::getVolumeRemaining()
@@ -598,7 +675,7 @@ void pnumberproduct::setPlu(int sizeIndex, QString plu)
 
 QString pnumberproduct::getAwsProductIdSuffix()
 {
-    // The table value can absolutely be left empty. Only if for whatever reason (e.g. twice the same product in a machine) there needs to be a distinction, the column can have a value. Originally, all products linked to a specific machine had a unique 32bit number.(e.g. 81a3a30e-1283-4bef-bd16-d37e2fead410)
+    // The table value can absolutely be left empty. Only if for whatever reason (e.g. twice the same product in a machine) there needs to be a distinction, the column can have a value. Originally, productids (product slots linked to a specific machine) had a unique 128bit number.(e.g. 81a3a30e-1283-4bef-bd16-d37e2fead410)
     return m_aws_product_id;
 }
 
@@ -659,7 +736,8 @@ double pnumberproduct::getCustomMixRatios(int index)
     return m_customMixRatios[index];
 }
 
-void pnumberproduct::resetCustomMixRatioParameters(){
+void pnumberproduct::resetCustomMixRatioParameters()
+{
     m_customMixRatios.clear();
     for (int i = 0; i < getMixRatiosDefault().size(); i++)
     {
@@ -668,28 +746,44 @@ void pnumberproduct::resetCustomMixRatioParameters(){
     }
 }
 
-void pnumberproduct::setCustomMixRatios(int index, QString plusOrMinus){
+void pnumberproduct::setCustomMixRatios(int index, QString plusOrMinus)
+{
     double custom_ratios_total = 0;
     // m_customMixRatios.append(getMixRatiosDefault()[0]); // add base product ratio
     // minus
-    if(plusOrMinus == "-"){
-        if(m_customMixRatios[index] == getMixRatiosLow()[index]){
+    if (plusOrMinus == "-")
+    {
+        if (m_customMixRatios[index] == getMixRatiosLow()[index])
+        {
             // dont do anything
-        }else{
-            if(m_customMixRatios[index] == getMixRatiosDefault()[index]){
+        }
+        else
+        {
+            if (m_customMixRatios[index] == getMixRatiosDefault()[index])
+            {
                 m_customMixRatios[index] = getMixRatiosLow()[index];
-            }else{
+            }
+            else
+            {
                 m_customMixRatios[index] = getMixRatiosDefault()[index];
             }
         }
-    }else{
+    }
+    else
+    {
         // plus
-        if(m_customMixRatios[index] == getMixRatiosHigh()[index]){
+        if (m_customMixRatios[index] == getMixRatiosHigh()[index])
+        {
             // dont do anything
-        }else{
-            if(m_customMixRatios[index] == getMixRatiosDefault()[index]){
+        }
+        else
+        {
+            if (m_customMixRatios[index] == getMixRatiosDefault()[index])
+            {
                 m_customMixRatios[index] = getMixRatiosHigh()[index];
-            }else{
+            }
+            else
+            {
                 m_customMixRatios[index] = getMixRatiosDefault()[index];
             }
         }

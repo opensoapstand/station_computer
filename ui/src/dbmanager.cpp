@@ -444,7 +444,7 @@ bool DbManager::getAllProductProperties(int pnumber,
         if (!success)
         {
             qDebug() << "Open db: Attempted to load all product properties for pnumber: " << pnumber;
-            qDebug() << "Did not execute sql. "
+            qDebug() << "Did not execute sql (replace 'pnumber' for actual number when testing sql command manually). "
                      << qry.lastError() << " | " << qry.lastQuery();
             return false;
         }

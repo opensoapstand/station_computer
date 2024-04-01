@@ -168,7 +168,6 @@ void page_init::controllerReadySlot(void)
 
 void page_init::onInitTimeoutTick()
 {
-    qDebug() << "ticktick";
     if (--_initIdleTimeoutSec >= 0)
     {
         m_label_init_status_text = "";

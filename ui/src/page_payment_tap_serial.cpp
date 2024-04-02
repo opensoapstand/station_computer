@@ -274,6 +274,20 @@ bool page_payment_tap_serial::tap_serial_initiate()
         paymentConnected = com.page_init();
         sleep(1);
     }
+    /*Cancel any previous payment*/
+    pktToSend = paymentPacket.purchaseCancelPacket();
+
+    if (sendToUX410())
+    {
+        waitForUX410();
+        pktResponded.clear();
+    }
+    else{
+        return false;
+    }
+    
+    com.flushSerial();
+    qDebug() << "Cancel payment";
    
     /*logon packet to send*/
     cout << "Sending Logon packet..." << endl;

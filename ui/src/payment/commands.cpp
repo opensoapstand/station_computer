@@ -82,7 +82,7 @@ std::map<std::string, std::string> startSession(int socket, std::string MAC_LABE
                     <MAC_LABEL>"+MAC_LABEL+"</MAC_LABEL>\
                     <POS_IP>192.168.1.2</POS_IP>\
                     <POS_PORT>5017</POS_PORT>\
-                    <NOTIFY_SCA_EVENTS>FALSE</NOTIFY_SCA_EVENTS>\
+                    <NOTIFY_SCA_EVENTS>TRUE</NOTIFY_SCA_EVENTS>\
                     </TRANSACTION>";
     std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
     updateInvoiceValueInConfig(std::to_string(invoice));

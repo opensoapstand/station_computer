@@ -24,6 +24,10 @@ sudo iptables -t nat -A POSTROUTING -o wlo2 -j MASQUERADE
 sudo iptables -A FORWARD -o "${ETHERNET_PORT_ACTIVE}" -s 192.168.0.0/16 -j ACCEPT
 sudo iptables -A INPUT -s 192.168.0.0/16 -j ACCEPT
 
+# Allow incoming traffic on port 5017
+sudo iptables -A INPUT -p tcp --dport 5017 -i enp3s0 -j ACCEPT
+
+
 # Create directory if it doesn't exist
 sudo mkdir -p /etc/iptables
 

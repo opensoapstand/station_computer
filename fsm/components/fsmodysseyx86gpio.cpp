@@ -296,7 +296,8 @@ void FSModdyseyx86GPIO::monitorGPIO_Flowsensor(bool *abortLoop)
                 }
                 else
                 {
-                        debugOutput::sendMessage("gpio PROBLEM (timeout?!)", MSG_ERROR);
+                        debugOutput::sendMessage("gpio PROBLEM (timeout?!)" + std::to_string(fd), MSG_ERROR);
+                        usleep(1000000);
                 }
 
                 using namespace std::chrono;

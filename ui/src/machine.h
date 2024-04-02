@@ -114,6 +114,7 @@ public:
     QString getTemplatePathFromName(QString fileName);
     // QString getDefaultTemplatePathFromName(QString fileName);
 
+    bool *getEmptyContainerDetectionPointer();
     bool getEmptyContainerDetectionEnabled();
     void setEmptyContainerDetectionEnabled(bool isEnabled);
     void setPumpRampingEnabled(bool isEnabled);
@@ -164,7 +165,7 @@ public:
 
     QString getSelectedProductAwsProductId();
     QString getAwsProductId(int pnumber);
-    
+
     bool hasReceiptPrinter();
     void getPrinterStatusFromDb(bool *isOnline, bool *hasPaper);
     void getTemperatureFromController();
@@ -232,9 +233,8 @@ public:
     void applyPropertiesToQWidget(QWidget *widget);
     void applyDynamicPropertiesFromTemplateToWidgetChildren(QWidget *widget);
 
-    bool isProductVolumeInContainer(int pnumber);
-    std::tuple<CURLcode, std::string, long> sendRequestToPortal(QString api_url, QString request_type, QString curl_params,QString page_name);
-
+    // bool isProductVolumeInContainer(int pnumber);
+    std::tuple<CURLcode, std::string, long> sendRequestToPortal(QString api_url, QString request_type, QString curl_params, QString page_name);
 
     // void activateKeyboard(QWidget *page);
 
@@ -254,7 +254,7 @@ public:
     QString m_software_version;
     int m_aws_port;
     int m_coupons_enabled;
-    int m_has_empty_detection;
+    bool m_has_empty_detection;
     int m_enable_pump_ramping;
     int m_enable_pump_reversal;
     int m_dispense_buttons_count;
@@ -272,10 +272,11 @@ public:
     QString m_paymentOptions;
     int m_screen_sleep_time24h;
     int m_screen_wakeup_time24h;
-    int m_pNumber_bottle_1=0;
-    int m_pNumber_bottle_2=0;
+    int m_pNumber_bottle_1 = 0;
+    int m_pNumber_bottle_2 = 0;
     QString m_portal_base_url;
     int m_enable_offline_payment;
+    int m_page_init_timeout;
 
     QString m_freesample_end_url;
     int m_is_enabled;
@@ -314,7 +315,7 @@ public:
     bool hasMixing();
     QString getPortalBaseUrl();
     bool isEnabledOfflinePayment();
-
+    int getPageInitTimeout();
     void setFreeSampleEndURL(QString ending_url);
     QString getFreeSampleEndURL();
 public slots:

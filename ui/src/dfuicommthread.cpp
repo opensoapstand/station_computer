@@ -130,9 +130,9 @@ QByteArray DfUiCommThread::readyRead()
         // qDebug() << "volume: " << QString::number(volumeDispensed, 'f', 2);
         // qDebug() << "flowrate: " << QString::number(flowrate, 'f', 2);
         // qDebug() << "dispenseStatus: " << dispenseStatusString;
-        emit updateVolumeSignal(volumeDispensed); // induced crash at cancel dispense.
         emit dispenseRateSignal(flowrate);
         emit dispenseStatusSignal(dispenseStatusString);
+        emit updateVolumeSignal(volumeDispensed); // induced crash at cancel dispense.
     }
     // else if (Data.contains("finalVolumeDispensed|"))
     // {
@@ -151,13 +151,14 @@ QByteArray DfUiCommThread::readyRead()
     {
         qDebug() << "Process received message : " << Data; // not every message gets a debug acknowledgement.
         QStringList dataObjectList = QString(Data).split('|');
-        QString start_time = dataObjectList[2]; 
-        QString end_time = dataObjectList[4];
-        double button_press_duration = dataObjectList[6].toDouble();
-        double button_press_count = dataObjectList[8].toDouble();
-        double volume_dispensed = dataObjectList[10].toDouble();
-        QString volumeDispensedMixProduct = dataObjectList[12];
-        emit finalTransactionMessageSignal(start_time, end_time,button_press_duration, button_press_count,volume_dispensed,volumeDispensedMixProduct);
+        QString status = dataObjectList[2]; 
+        QString start_time = dataObjectList[4]; 
+        QString end_time = dataObjectList[6];
+        double button_press_duration = dataObjectList[8].toDouble();
+        double button_press_count = dataObjectList[10].toDouble();
+        double volume_dispensed = dataObjectList[12].toDouble();
+        QString volumeDispensedMixProduct = dataObjectList[14];
+        emit finalTransactionMessageSignal(status, start_time, end_time,button_press_duration, button_press_count,volume_dispensed,volumeDispensedMixProduct);
     }
     else
     {

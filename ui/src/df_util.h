@@ -9,7 +9,7 @@
 
 
 // TODO: Refactor to fit with dfuicommthread
-#define UI_VERSION "3.6"
+#define UI_VERSION "3.7"
 
 #define OPTION_SLOT_INVALID 0
 #define SELECT_PRODUCT_PAGE_SLOT_COUNT_MAX 4
@@ -32,6 +32,7 @@
 #define DISPENSE_PRODUCTS_PER_BASE_LINE_MAX 6   // drinks per base line  (not dynamic, redo ui elements in qt creator when changing... )
 #define MENU_PRODUCT_SELECTION_OPTIONS_MAX BASE_LINE_COUNT_MAX * DISPENSE_PRODUCTS_PER_BASE_LINE_MAX // the offered selection of product to the user
 #define DUMMY_PNUMBER 2
+#define DEFAULT_PAGE_INIT_TIMEOUT_SECONDS 120
 
 #define HIGHEST_PNUMBER_COUNT 1000 // WARNING: this is not the amount of pnumber loaded in the machine, but the amount of pnumbers existing. in this array, even if we only have 10 pnumbers loaded, P-88 will reside at index 88
 
@@ -75,7 +76,7 @@
 using namespace std;
 
 
-#define PAGE_INIT_READY_TIMEOUT_SECONDS 30
+#define PAGE_INIT_READY_TIMEOUT_SECONDS 120
 #define PAGE_INIT_REBOOT_TIMEOUT_SECONDS 3600
 #define PAGE_IDLE_DELAY_BEFORE_ENTERING_IDLE_PRODUCTS 15
 #define PAGE_IDLE_DELAY_BEFORE_ENTERING_IDLE_PRODUCTS 15
@@ -242,13 +243,93 @@ using namespace std;
 #define PORTAL_RESET_STOCK                              "api/machine_data/resetStock"
 #define PORTAL_UPDATE_PRODUCT_FROM_STATION              "api/product/update_product_from_station"
 
+// typedef enum ProductState
+// {
+//    PRODUCT_STATE_AVAILABLE = 0,
+//    PRODUCT_STATE_AVAILABLE_LOW_STOCK,
+//    PRODUCT_STATE_EMPTY
+// } ProductState;
 
+// static const QMap<QString, ProductState> ProductStateStringMap = {
+//     {"PRODUCT_STATE_AVAILABLE", PRODUCT_STATE_AVAILABLE},
+//     {"PRODUCT_STATE_AVAILABLE_LOW_STOCK", PRODUCT_STATE_AVAILABLE_LOW_STOCK},
+//     {"PRODUCT_STATE_PROBLEM_EMPTY", PRODUCT_STATE_EMPTY}
+
+//     // only consider the state of the product when enabled. Otherwise, it's a mix of enabled status and product level statuses.
+
+//     // {"PRODUCT_STATE_NOT_PRIMED", PRODUCT_STATE_NOT_PRIMED},
+//     // {"PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION", PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION},
+//     // {"PRODUCT_STATE_DISABLED", PRODUCT_STATE_DISABLED},
+//     // {"PRODUCT_STATE_INVALID", PRODUCT_STATE_INVALID}
+// };
+
+typedef enum ProductState
+{
+   PRODUCT_STATE_AVAILABLE = 0,
+   PRODUCT_STATE_AVAILABLE_LOW_STOCK,
+   PRODUCT_STATE_PROBLEM_EMPTY,
+   PRODUCT_STATE_DISABLED,
+   PRODUCT_STATE_INVALID
+} ProductState;
+
+static const QMap<QString, ProductState> ProductStateStringMap = {
+    {"PRODUCT_STATE_AVAILABLE", PRODUCT_STATE_AVAILABLE},
+    {"PRODUCT_STATE_AVAILABLE_LOW_STOCK", PRODUCT_STATE_AVAILABLE_LOW_STOCK},
+    {"PRODUCT_STATE_PROBLEM_EMPTY", PRODUCT_STATE_PROBLEM_EMPTY},
+    {"PRODUCT_STATE_DISABLED", PRODUCT_STATE_DISABLED},
+    {"PRODUCT_STATE_INVALID", PRODUCT_STATE_INVALID}
+};
+
+typedef enum DispenseBehaviour
+{
+   FLOW_STATE_UNAVAILABLE = 0,
+   FLOW_STATE_RAMP_UP,
+   FLOW_STATE_DISPENSING,
+   FLOW_STATE_PUMPING_NOT_DISPENSING,
+   FLOW_STATE_NOT_PUMPING_NOT_DISPENSING,
+   FLOW_STATE_PRIMING_OR_EMPTY,
+   FLOW_STATE_PRIME_FAIL_OR_EMPTY,
+   FLOW_STATE_EMPTY
+} DispenseBehaviour;
+
+static const QMap<QString, DispenseBehaviour> DispenseBehaviourStringMap = {
+    {"FLOW_STATE_UNAVAILABLE", FLOW_STATE_UNAVAILABLE},
+    {"FLOW_STATE_RAMP_UP", FLOW_STATE_RAMP_UP},
+    {"FLOW_STATE_DISPENSING", FLOW_STATE_DISPENSING},
+    {"FLOW_STATE_PUMPING_NOT_DISPENSING", FLOW_STATE_PUMPING_NOT_DISPENSING},
+    {"FLOW_STATE_NOT_PUMPING_NOT_DISPENSING", FLOW_STATE_NOT_PUMPING_NOT_DISPENSING},
+    {"FLOW_STATE_PRIMING_OR_EMPTY", FLOW_STATE_PRIMING_OR_EMPTY},
+    {"FLOW_STATE_PRIME_FAIL_OR_EMPTY", FLOW_STATE_PRIME_FAIL_OR_EMPTY},
+    {"FLOW_STATE_EMPTY", FLOW_STATE_EMPTY}
+};
+
+
+typedef enum SlotState
+{
+   SLOT_STATE_AVAILABLE = 0,
+//    SLOT_STATE_WARNING_PRIMING,
+   SLOT_STATE_PROBLEM_NEEDS_ATTENTION,
+   SLOT_STATE_DISABLED,
+   SLOT_STATE_INVALID
+} SlotState;
+
+static const QMap<QString, SlotState> SlotStateStringMap = {
+    {"SLOT_STATE_AVAILABLE", SLOT_STATE_AVAILABLE},
+    // {"SLOT_STATE_WARNING_PRIMING", SLOT_STATE_WARNING_PRIMING},
+    {"SLOT_STATE_PROBLEM_NEEDS_ATTENTION", SLOT_STATE_PROBLEM_NEEDS_ATTENTION},
+    {"SLOT_STATE_DISABLED", SLOT_STATE_DISABLED},
+    {"SLOT_STATE_INVALID", SLOT_STATE_INVALID}
+};
 
 class df_util : public QWidget
 {
     Q_OBJECT
 public:
     explicit df_util(QWidget *parent = nullptr);
+
+    static QString convertSlotStatusToString(SlotState state);
+    static QString convertProductStatusToString(ProductState state);
+    static QString convertDispenseStatusToString(DispenseBehaviour state);
 
     static void warnIfPathDoesNotExist(QString path);
     static bool pathExists(QString path);

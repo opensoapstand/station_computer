@@ -76,8 +76,9 @@ public:
     // QString getCouponCodeUsed();
     // void startDispensing();
     void force_finish_dispensing();
+    void processDispenserUpdate();
 
-    QString previousDispenseStatus;
+
 
 
 
@@ -121,6 +122,8 @@ private:
     bool animationStepForwardElseBackward;
 
     dispenser_slot* selectedSlot;
+    
+    DispenseBehaviour m_previousRecentDispenseStatus;
 
     // XXX: Remove when interrupts and flowsensors work.
 

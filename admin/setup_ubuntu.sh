@@ -46,7 +46,7 @@ else
     fi
 fi
 
-
+# WARNING: This code is also executed from ui_execute.sh  Please consider this when making changes.  
 echo "WARNING: will not work if script is called from another script over ssh."
 #id=$(DISPLAY=:0 xinput | grep -o -E "ILITEK ILITEK-TP\s+id=." |  awk '{print substr($0, length($0))}')
 id=$(DISPLAY=:0 xinput | grep -E "ILITEK ILITEK-TP\s+id=" | awk -F"id=" '{print $2}' | awk '{print $1}')

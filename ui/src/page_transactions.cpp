@@ -102,8 +102,10 @@ void page_transactions::populateTransactionsTable()
         transaction_count = TRANSACTION_HISTORY_COUNT;
         int retrieved_count;
         p_page_idle->thisMachine->getDb()->getRecentTransactions(recent_transactions, transaction_count, &retrieved_count);
+
         transaction_count = retrieved_count;
         populateList();
+        qDebug() << " end of populate list";
 }
 
 void page_transactions::deleteAllListItems()
@@ -129,8 +131,8 @@ void page_transactions::populateList()
                 QString ingredients_ui;
                 QString rowItem;
 
+                qDebug() << "Transaction index: " << i << ", id " << recent_transactions[i][0] << ", endtime " << recent_transactions[i][1] << ", quantity[ml] " << recent_transactions[i][2] << ", price " << recent_transactions[i][3] << ", P-number" << recent_transactions[i][4];
                 int pnumber = p_page_idle->thisMachine->getProductByPNumber(0)->convertPStringToPInt(recent_transactions[i][4]);
-
                 p_page_idle->thisMachine->getProductByPNumber(pnumber)->getProductProperties(
                     &name,
                     &name_ui,
@@ -188,10 +190,8 @@ void page_transactions::on_pushButton_print_clicked(bool checked)
                         // usleep(50000);
                         // p_page_idle->thisMachine->dfUtility->send_command_to_FSM("q", true);
 
-
                         QString command = "thermalprinterPrintTransaction|" + transactionIndex + "|";
                         p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
-                        
                 }
         }
         else

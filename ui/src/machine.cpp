@@ -3,6 +3,9 @@
 #include "machine.h"
 #include "dispenser_slot.h"
 #include "pnumberproduct.h"
+#include "page_payment_tap_serial.h"
+#include "page_payment_tap_tcp.h"
+
 
 #include <map>
 #include <fstream>
@@ -26,6 +29,9 @@ machine::machine()
     {
         m_pnumberproducts[pnumber_index].setPNumber(pnumber_index);
     }
+
+    m_has_empty_detection = false;
+    m_page_init_timeout = DEFAULT_PAGE_INIT_TIMEOUT_SECONDS;
 }
 
 // Dtor
@@ -57,6 +63,7 @@ void machine::initMachine()
     for (int pnumber_index = 0; pnumber_index < all_pnumbers.size(); pnumber_index++)
     {
         m_pnumberproducts[all_pnumbers[pnumber_index]].setDb(m_db);
+        m_pnumberproducts[all_pnumbers[pnumber_index]].setEmptyDetectionEnabledPointer(getEmptyContainerDetectionPointer());
     }
 
     loadDynamicContent(); // part of it is redundant of what's been done here, but not everything. So, do it again.
@@ -101,6 +108,19 @@ bool machine::loadDynamicContent()
 
 void machine::reboot()
 {
+    QString paymentMethod = getPaymentOptions();
+    if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA)
+    {
+        // Tap Canada or Moneris works on the serial connection and whenever the station reboots, the device loses communication. 
+        //To keep both the devices communicated, Tap device needs to restart as the serial connection re-establishes after the restart of TAP device. 
+        //Rebooting TAP at the same time as the station will keep the communication in place
+        page_payment_tap_serial paymentSerialObject;
+        paymentSerialObject.rebootDevice();
+    }
+    else if(paymentMethod== PAYMENT_TAP_USA_QR || PAYMENT_TAP_USA){
+        page_payment_tap_tcp paymentTcpObject;
+        paymentTcpObject.rebootTapTcpDevice();
+    }
     qDebug() << "Will reboot machine now.";
     QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -r 0";
     system(qPrintable(command));
@@ -167,16 +187,20 @@ QVector<int> machine::getAllUsedPNumbersFromSlots()
     return QVector<int>::fromList(uniquePNumbers.toList());
 }
 
-bool machine::isProductVolumeInContainer(int pnumber)
-{
-    bool retval = true;
+// bool machine::isProductVolumeInContainer(int pnumber)
+// {
+//     bool retval = true;
 
-    if (getEmptyContainerDetectionEnabled())
-    {
-        retval = getProductByPNumber(pnumber)->getVolumeRemaining() > CONTAINER_EMPTY_THRESHOLD_ML;
-    }
-    return retval;
-}
+//     if (getEmptyContainerDetectionEnabled())
+//     {
+//         // we don't care about the remaining volume. As long as it works, we consider it as having soap. We will display 'low volume' once below a treshold.
+//         retval = !getProductByPNumber(pnumber)->getIsProductEmptyOrHasProblem();
+//     }else{
+//         // no risks: once below a certain value, we consider the product as empty.
+//         retval = getProductByPNumber(pnumber)->getVolumeRemaining() > CONTAINER_EMPTY_THRESHOLD_ML;
+//     }
+//     return retval;
+// }
 
 DbManager *machine::getDb()
 {
@@ -279,8 +303,9 @@ bool machine::getIsOptionAvailable(int productOption)
 
     // check if slot for option is valid
     // check if all pnumbers for options are valid
-
-    return true;
+    int pnumber = dispenseProductsMenuOptions[productOption - 1];
+    pnumberproduct *  product = getProductByPNumber(pnumber);
+    return product->getIsProductEnabled();
 }
 
 int machine::getOptionCount()
@@ -395,8 +420,8 @@ pnumberproduct *machine::getProductByPNumber(int pnumber)
 {
     //qDebug() << pnumber;
     return &m_pnumberproducts[pnumber];
-}
 
+}
 pnumberproduct *machine::getSelectedProduct()
 {
     return m_selectedProduct;
@@ -831,12 +856,7 @@ void machine::checkForHighTemperatureAndDisableProducts()
 
         if (elapsedMinutes >= 60) // 60  Check if one hour has passed
         {
-            // for (uint8_t slot_index = 0; slot_index < getSlotCount(); slot_index++)
-            // {
-            //     qDebug() << "Temperature too high for one hour, block all slots.";
-            //     setSlotEnabled(slot_index + 1, true, "SLOT_STATE_DISABLED_COMING_SOON");
-            // }
-            setIsMachineEnabled(false, "SLOT_STATE_DISABLED_COMING_SOON");
+            setIsMachineEnabled(false, "MACHINE_DISABLED_TEMPERATURE_TOO_HIGH");
         }
     }
     else
@@ -905,11 +925,16 @@ void machine::setPumpRampingEnabled(bool isEnabled)
 void machine::setEmptyContainerDetectionEnabled(bool isEnabled)
 {
     m_db->updateTableMachineWithInt("has_empty_detection", isEnabled);
+    m_has_empty_detection = isEnabled;
+}
+
+bool* machine::getEmptyContainerDetectionPointer(){
+    return &m_has_empty_detection;
 }
 
 bool machine::getEmptyContainerDetectionEnabled()
 {
-    return m_has_empty_detection == 1;
+    return m_has_empty_detection;
 }
 bool machine::getShowTransactionHistory()
 {
@@ -1037,7 +1062,6 @@ bool machine::getIsMachineEnabled()
 void machine::setIsMachineEnabled(bool isEnabled, QString statusText)
 {
     setIsMachineEnabled(isEnabled);
-
     //  m_slots[slot-1].setSlotStatusText();
     //  m_slots[slot-1].setSlotEnabled();
 }
@@ -1168,7 +1192,8 @@ bool machine::loadMachineParameterFromDb()
         &m_pNumber_bottle_1,
         &m_pNumber_bottle_2,
         &m_portal_base_url,
-        &m_enable_offline_payment);
+        &m_enable_offline_payment,
+        &m_page_init_timeout);
 
     qDebug() << "Machine ID as loaded from db: " << getMachineId();
     qDebug() << "Template folder: " << getTemplateFolder();
@@ -1733,6 +1758,10 @@ size_t WriteCallback2(char *contents, size_t size, size_t nmemb, void *userp)
 {
     ((std::string *)userp)->append((char *)contents, size * nmemb);
     return size * nmemb;
+}
+
+int machine::getPageInitTimeout(){
+    return m_page_init_timeout;
 }
 
 std::tuple<CURLcode, std::string, long> machine::sendRequestToPortal(QString api_url, QString request_type, QString curl_params, QString page_name){

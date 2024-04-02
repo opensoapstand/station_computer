@@ -133,7 +133,7 @@ public:
       void updateDispenseStatus();
       const char *getSlotStateAsString();
       Dispense_behaviour getDispenseStatus();
-      Slot_state getSlotState();
+      // Slot_state getSlotState();
       void setSlotState(Slot_state state);
       // void setSlotStateToEmpty();
       // void updateActiveProductState();

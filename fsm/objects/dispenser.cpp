@@ -207,7 +207,6 @@ void dispenser::refresh()
 
 void dispenser::setSlotStateFromString(string slotStateText)
 {
-    debugOutput::sendMessage("TODO: SET SLOT STATE from status text. :" + slotStateText, MSG_INFO);
     m_slot_state = SLOT_STATE_AVAILABLE;
 }
 
@@ -1581,23 +1580,23 @@ string dispenser::getDispenseUpdateString()
     return message;
 }
 
-const char *dispenser::getSlotStateAsString()
-{
-    Slot_state state = getSlotState();
-    const char *state_str = SLOT_STATE_STRINGS[state];
-    return state_str;
-}
+// const char *dispenser::getSlotStateAsString()
+// {
+//     Slot_state state = getSlotState();
+//     const char *state_str = SLOT_STATE_STRINGS[state];
+//     return state_str;
+// }
 
-void dispenser::setSlotState(Slot_state state)
-{
-    m_slot_state = state;
-    debugOutput::sendMessage("Slot state set to  : " + std::string(getSlotStateAsString()), MSG_INFO);
-}
+// void dispenser::setSlotState(Slot_state state)
+// {
+//     m_slot_state = state;
+//     debugOutput::sendMessage("Slot state set to  : " + std::string(getSlotStateAsString()), MSG_INFO);
+// }
 
-Slot_state dispenser::getSlotState()
-{
-    return m_slot_state;
-}
+// Slot_state dispenser::getSlotState()
+// {
+//     return m_slot_state;
+// }
 
 Dispense_behaviour dispenser::getDispenseStatus()
 {

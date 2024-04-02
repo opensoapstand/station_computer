@@ -148,7 +148,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     ui->pushButton_enable_pump->setProperty("class", "pump_enable");
     ui->pushButton_enable_pump->setStyleSheet(styleSheet);
     ui->label_action_feedback->setStyleSheet(styleSheet);
-    //ui->label_status_dispenser->setStyleSheet(styleSheet);
+    // ui->label_status_dispenser->setStyleSheet(styleSheet);
     ui->pushButton_set_volume_remaining->setStyleSheet(styleSheet);
 
     ui->pushButton_active_pnumber_base->setProperty("class", "product_active");
@@ -170,7 +170,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     {
         buttons_select_mix[dispense_product_position - 1]->setProperty("class", "product_not_available");
         buttons_select_mix[dispense_product_position - 1]->setStyleSheet(styleSheet);
-        buttons_select_mix[dispense_product_position - 1]->setText("Dispense Product " + QString::number(dispense_product_position) + "\nN/A");
+        buttons_select_mix[dispense_product_position - 1]->setText("Position " + QString::number(dispense_product_position) + "\nN/A");
         buttons_select_mix[dispense_product_position - 1]->setEnabled(false);
         // buttons_select_mix[dispense_product_position - 1]->hide();
     }
@@ -180,7 +180,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     {
         buttons_select_mix[dispense_product_position - 1]->setEnabled(true);
         int pnumber = this->p_page_idle->thisMachine->getSelectedSlot()->getDispensePNumber(dispense_product_position);
-        buttons_select_mix[dispense_product_position - 1]->setText("Dispense Product " + QString::number(dispense_product_position) + "\nP-" + QString::number(pnumber));
+        buttons_select_mix[dispense_product_position - 1]->setText("Position " + QString::number(dispense_product_position) + "\nP-" + QString::number(pnumber));
         buttons_select_mix[dispense_product_position - 1]->show();
         dispense_product_position++;
     }
@@ -347,8 +347,7 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
     ui->pushButton_plu_sample->setText(p_page_idle->thisMachine->getSelectedProduct()->getPlu(SIZE_SAMPLE_INDEX));
     SlotState slot_status = p_page_idle->thisMachine->getSelectedSlot()->getSlotStatus();
     setSlotStatusTextLabel(ui->label_status_dispenser, slot_status, true);
-    
-    
+
     ui->label_status_dispense_flow->setText(p_page_idle->thisMachine->getSelectedSlot()->getDispenseBehaviourAsString());
 
     // ProductState product_state = p_page_idle->thisMachine->getSelectedProduct()->getProductState();
@@ -401,7 +400,6 @@ void page_maintenance_dispenser::setProductStatusTextLabel(QLabel *label, Produc
 
     QString element_name = label->objectName();
 
-   
     switch (state)
     {
     case (PRODUCT_STATE_AVAILABLE):
@@ -440,7 +438,6 @@ void page_maintenance_dispenser::setProductStatusTextLabel(QLabel *label, Produc
     {
         // label->setText(statusText + ": " + status_display_text);
         label->setText(df_util::convertProductStatusToString(state));
-        
     }
     else
     {
@@ -448,14 +445,12 @@ void page_maintenance_dispenser::setProductStatusTextLabel(QLabel *label, Produc
     }
 }
 
-
 void page_maintenance_dispenser::setSlotStatusTextLabel(QLabel *label, SlotState state, bool displayRawStatus)
 {
     QString status_display_text = "";
 
     QString element_name = label->objectName();
 
-   
     switch (state)
     {
     case (SLOT_STATE_AVAILABLE):
@@ -489,7 +484,6 @@ void page_maintenance_dispenser::setSlotStatusTextLabel(QLabel *label, SlotState
     {
         // label->setText(statusText + ": " + status_display_text);
         label->setText(df_util::convertSlotStatusToString(state));
-        
     }
     else
     {
@@ -507,11 +501,14 @@ void page_maintenance_dispenser::on_pushButton_set_max_temperature_clicked()
     renewPageTimeout();
 }
 
-void page_maintenance_dispenser::renewPageTimeout(){
+void page_maintenance_dispenser::renewPageTimeout()
+{
     if (p_page_idle->thisMachine->isAllowedAsAdmin())
     {
         _maintainProductPageTimeoutSec = 30 * PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
-    }else{
+    }
+    else
+    {
         _maintainProductPageTimeoutSec = PAGE_MAINTENANCE_DISPENSER_TIMEOUT_SECONDS;
     }
 }
@@ -552,8 +549,8 @@ void page_maintenance_dispenser::onMaintainProductPageTimeoutTick()
     }
     else
     {
-            qDebug() << "Maintenance dispenser page timeout";
-            hideCurrentPageAndShowProvided(p_page_idle);
+        qDebug() << "Maintenance dispenser page timeout";
+        hideCurrentPageAndShowProvided(p_page_idle);
     }
 }
 
@@ -678,6 +675,9 @@ void page_maintenance_dispenser::dispense_test_end(bool sendStopToController)
     {
         qDebug() << "Active Dispense stop.";
         dispenseTimer->stop();
+        p_page_idle->thisMachine->getSelectedSlot()->setDispenseBehaviour(FLOW_STATE_UNAVAILABLE);
+        ui->label_status_dispense_flow->setText(p_page_idle->thisMachine->getSelectedSlot()->getDispenseBehaviourAsString());
+
         is_pump_enabled_for_dispense = false;
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_pump_enabled_status, "pump_off");
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_enable_pump, "enable_pump");
@@ -734,14 +734,11 @@ void page_maintenance_dispenser::reset_all_dispense_stats()
     ui->label_calibration_result->setText("-"); // calibration constant
 
     setButtonPressCountLabel(true);
-    
+
     p_page_idle->thisMachine->getSelectedSlot()->setDispenseBehaviour(FLOW_STATE_UNAVAILABLE);
     ui->label_status_dispense_flow->setText(p_page_idle->thisMachine->getSelectedSlot()->getDispenseBehaviourAsString());
     ui->label_status_selected_product->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductStateAsString());
-
-    qDebug() << "Is empty detection enabled? : " <<  p_page_idle->thisMachine->getSelectedProduct()->getEmptyDetectionEnabled();
-      
-   
+    qDebug() << "Is empty detection enabled? : " << p_page_idle->thisMachine->getSelectedProduct()->getEmptyDetectionEnabled();
 }
 
 void page_maintenance_dispenser::update_volume_received_dispense_stats(double dispensed)
@@ -773,6 +770,8 @@ void page_maintenance_dispenser::update_volume_received_dispense_stats(double di
             ui->label_calibration_result->setText(vol_per_tick_for_1000ml + "ml/tick"); // calibration constant if 1000ml were dispensed.
         }
     }
+
+    ui->label_status_dispense_flow->setText(p_page_idle->thisMachine->getSelectedSlot()->getDispenseBehaviourAsString());
 }
 
 void page_maintenance_dispenser::fsmReceivedVolumeDispensed(double dispensed, bool isFull)
@@ -793,8 +792,10 @@ void page_maintenance_dispenser::fsmReceiveDispenserStatus(QString status)
 {
     QString dispenseStatus = status;
     qDebug() << "Dispense status received from FSM: " << dispenseStatus;
-    //setStatusTextLabel(ui->label_status_dispense_flow, dispenseStatus, true);
-    ui->label_status_dispense_flow->setText(dispenseStatus);
+    // setStatusTextLabel(ui->label_status_dispense_flow, dispenseStatus, true);
+    p_page_idle->thisMachine->getSelectedSlot()->setDispenseBehaviour(dispenseStatus);
+
+    // ui->label_status_dispense_flow->setText(dispenseStatus);
 };
 
 void page_maintenance_dispenser::setButtonPressCountLabel(bool init)
@@ -838,18 +839,18 @@ void page_maintenance_dispenser::on_pushButton_clear_problem_clicked()
 {
     // if (!isDispenserPumpEnabledWarningBox())
     // {
-        // QString statusText = p_page_idle->thisMachine->getSelectedSlot()->getSlotStatusAsString();
-        //p_page_idle->thisMachine->getSelectedSlot()->setSlotStatus(SLOT_STATE_AVAILABLE);
+    // QString statusText = p_page_idle->thisMachine->getSelectedSlot()->getSlotStatusAsString();
+    // p_page_idle->thisMachine->getSelectedSlot()->setSlotStatus(SLOT_STATE_AVAILABLE);
 
-        p_page_idle->thisMachine->getSelectedProduct()->setIsProductEmptyOrHasProblem(false);
-        qDebug() << "Clear problem button clicked. Will set Product to non issue state. ";
-        updateProductLabelValues(true);
+    p_page_idle->thisMachine->getSelectedProduct()->setIsProductEmptyOrHasProblem(false);
+    qDebug() << "Clear problem button clicked. Will set Product to non issue state. ";
+    updateProductLabelValues(true);
     // }
 }
 
 void page_maintenance_dispenser::on_pushButton_restock_clicked()
 {
-    
+
     renewPageTimeout();
     if (!isDispenserPumpEnabledWarningBox())
     {
@@ -1305,7 +1306,7 @@ void page_maintenance_dispenser::on_pushButton_set_restock_volume_clicked()
 void page_maintenance_dispenser::sendRestockToCloud()
 {
     QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss");
-    QString curl_params = "pid=" + p_page_idle->thisMachine->getSelectedProductAwsProductId() + "&volume_full=" + p_page_idle->thisMachine->getSelectedProduct()->getRestockVolume() + "&time="+ time;
+    QString curl_params = "pid=" + p_page_idle->thisMachine->getSelectedProductAwsProductId() + "&volume_full=" + p_page_idle->thisMachine->getSelectedProduct()->getRestockVolume() + "&time=" + time;
 
     std::tie(res, readBuffer, http_code) = p_page_idle->thisMachine->sendRequestToPortal(PORTAL_RESET_STOCK, "POST", curl_params, "PAGE_MAINTENANCE_DISPENSER");
     // error code 6 (cannot resolve host) showed up when not connected to wifi. Make distinct!

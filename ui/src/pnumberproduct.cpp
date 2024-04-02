@@ -18,7 +18,7 @@ bool pnumberproduct::loadProductProperties()
     qDebug() << "Load properties from db and csv for pnumer: " << getPNumber();
     success &= loadProductPropertiesFromDb();
     success &= loadProductPropertiesFromProductsFile();
-    
+
     m_db->updateTableProductsWithText(getPNumber(), "status_text", getProductStateAsString()); // Writing state to db for the fun of it. The state string is not used in the program.
     return success;
 }
@@ -216,7 +216,7 @@ bool pnumberproduct::loadProductPropertiesFromDb()
                                                  &status_text,
                                                  m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
 
-    //m_product_state = ProductStateStringMap[status_text];
+    // m_product_state = ProductStateStringMap[status_text];
 
     int pnumberFromDb = convertPStringToPInt(m_soapstand_product_serial);
 
@@ -271,36 +271,38 @@ void pnumberproduct::setIsProductEnabled(bool isEnabled)
 
 ProductState pnumberproduct::getProductState()
 {
-    if (getIsProductEnabled())
+    if (getIsProductEnabled()) // enabled (manually settabled)
     {
-        if (getVolumeRemaining() < CONTAINER_EMPTY_THRESHOLD_ML)
-        {
-            if (getEmptyDetectionEnabled())
-            {
-                // with empty detection, we go all the way to the end (aka when problems arise)
-                return PRODUCT_STATE_AVAILABLE_LOW_STOCK;
-            }
-            else
-            {
-                // without empty detection, the container is considered empty below the threshold
-                return PRODUCT_STATE_PROBLEM_EMPTY;
-            }
-        }
-        else
-        {
-            return PRODUCT_STATE_AVAILABLE;
-        }
-    }
-    else
-    {
-        if (getIsProductEmptyOrHasProblem())
+
+        if (getIsProductEmptyOrHasProblem()) // problem detected? 
         {
             return PRODUCT_STATE_PROBLEM_EMPTY; // sold out
         }
         else
         {
-            return PRODUCT_STATE_DISABLED; // sold out
+            if (getVolumeRemaining() < CONTAINER_EMPTY_THRESHOLD_ML)
+            {
+                if (getEmptyDetectionEnabled())
+                {
+                    // with empty detection, we go all the way to the end (aka when problems arise)
+                    return PRODUCT_STATE_AVAILABLE_LOW_STOCK;
+                }
+                else
+                {
+                    // without empty detection, the container is considered empty below the threshold
+                    return PRODUCT_STATE_PROBLEM_EMPTY;
+                }
+            }
+            else
+            {
+                return PRODUCT_STATE_AVAILABLE;
+            }
         }
+    }
+    else
+    {
+
+        return PRODUCT_STATE_DISABLED; // sold out
     }
 }
 

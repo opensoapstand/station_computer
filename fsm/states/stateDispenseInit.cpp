@@ -91,8 +91,6 @@ DF_ERROR stateDispenseInit::onAction()
                                  " target volume: " +
                                  std::to_string(g_machine.getSelectedDispenser().getSelectedProduct()->getTargetVolume()),
                              MSG_INFO);
-    debugOutput::sendMessage(std::string("Dispenser slot state: ") + g_machine.getSelectedDispenser().getSlotStateAsString(),
-                             MSG_INFO);
 
     g_machine.getSelectedDispenser().initSelectedProductDispense(
         size

@@ -131,10 +131,10 @@ public:
 
       const char *getDispenseStatusAsString();
       void updateDispenseStatus();
-      const char *getSlotStateAsString();
+      // const char *getSlotStateAsString();
       Dispense_behaviour getDispenseStatus();
       // Slot_state getSlotState();
-      void setSlotState(Slot_state state);
+      // void setSlotState(Slot_state state);
       // void setSlotStateToEmpty();
       // void updateActiveProductState();
       // void analyseSlotState();

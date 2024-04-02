@@ -37,7 +37,6 @@ public:
         ~product();
         // void init(int pnumber, string size_unit, string paymentMethod);
         void init(int pnumber);
-
         int getPNumber();
         string getPNumberAsPString();
 
@@ -59,9 +58,16 @@ public:
         bool getIsEnabled();
         void setIsEnabled(bool isEnabled);
         string getProductStatusText();
-        void setProductStatusText(string statusText);
+        void updateProductState(Dispense_behaviour dispenseState, bool isEmptyContainerDetectionEnabled);
+        void setProductStateToEmpty(bool isEmptyContainerDetectionEnabled);
+        // void setProductStatusText(string statusText);
+        void setProductStateFromString(string productStateText);
+        void setProductState(Product_state state);
+        const char *getProductStateAsString();
+        Product_state getProductState();
 
-        int getPWM();
+        int getPWM(); // deprecated...
+
         int getRetractionTimeMillis();
         double getPrice(char size);
         // string getDisplayUnits();
@@ -99,8 +105,8 @@ public:
 
         bool loadParameters(bool onlyLoadFromDb);
         bool loadProductParametersFromDb();
-        bool isColumnInTable(string table, string column_name);
-        void executeSQLStatement(string sql_string);
+        // bool isColumnInTable(string table, string column_name);
+        // void executeSQLStatement(string sql_string);
         bool isDbValid();
         bool testParametersFromDb();
         static std::string dbFieldAsValidString(sqlite3_stmt *stmt, int column_index);
@@ -133,6 +139,7 @@ private:
         int m_nRetractionTimeMillis;
 
         double m_nVolumeTarget;
+        char m_nVolumeTargetAsChar;
 
         double m_price_small;
         double m_price_medium;
@@ -186,8 +193,10 @@ private:
         int m_pnumber;
         bool m_pnumber_loaded_from_db;
         bool m_is_enabled;
+        bool m_is_empty_or_has_problem;
         string m_status_text;
 
+        Product_state m_product_state;
         double m_nThresholdFlow_maximum_allowed;
 
         sqlite3 *db;

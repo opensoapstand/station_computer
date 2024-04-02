@@ -31,6 +31,11 @@ machine::machine()
     // m_button_lights_behaviour = Button_lights_behaviour::IDLE_OFF;
     m_button_animation_program = 0;
 }
+machine::~machine()
+{
+    debugOutput::sendMessage("Machine: destructor.", MSG_INFO);
+}
+
 std::string machine::executeCommmandLineCommand(const char *cmd)
 {
     std::array<char, 128> buffer;
@@ -60,6 +65,7 @@ void machine::setup(product *pnumbers)
     int pin_enable_3point3V;
     int pin_enable_24V;
     int pin_enable_5V;
+    int pin_global_flow_sensor;
 
     if (major <= 5 && minor <= 4)
     {
@@ -111,18 +117,50 @@ void machine::setup(product *pnumbers)
     m_pnumbers = pnumbers;
 
     receipt_printer = new Adafruit_Thermal();
-
     control_pcb->setPumpPWM(DEFAULT_PUMP_PWM);
 
     syncSoftwareVersionWithDb();
+
+    debugOutput::sendMessage("Machine: set up product dispensers. ", MSG_INFO);
+
     initProductDispensers();
-    loadGeneralProperties(true);
+    loadGeneralMachineProperties(true);
 }
 
-int machine::getDispensersCount()
+void machine::setSelectedDispenser(int slotNumber)
 {
-    // slots, dispensers, lines,... it's all the same
-    return 4;
+    m_selected_dispenser_number = slotNumber;
+    if (m_selected_dispenser_number == PRODUCT_SLOT_DUMMY)
+    {
+        debugOutput::sendMessage("machine: Selected Dispenser set to dummy", MSG_INFO);
+        return;
+    }
+
+    if (slotNumber > getPcb()->getSlotCountByPcbType() || slotNumber < 0)
+    {
+        debugOutput::sendMessage("machine: ASSERT ERROR: dispenser number must be >0 and < than: " + std::to_string(getPcb()->getSlotCountByPcbType()) + "provided: " + std::to_string(slotNumber), MSG_ERROR);
+    }
+    getSelectedDispenser().resetDispenser();
+}
+
+int machine::getSelectedDispenserNumber()
+{
+    if (m_selected_dispenser_number == PRODUCT_SLOT_DUMMY)
+    {
+        debugOutput::sendMessage("ASSERT ERROR: machine: Selected Dispenser is set to dummy", MSG_INFO);
+    }
+    return m_selected_dispenser_number;
+}
+
+dispenser &machine::getSelectedDispenser()
+{
+    // provides a reference to the dispenser object! similar to pointer. but simpler to use.
+    return getDispenser(getSelectedDispenserNumber());
+}
+dispenser &machine::getDispenser(int slot)
+{
+    // provides a reference to the dispenser object! similar to pointer. but simpler to use.
+    return m_productDispensers[slot - 1];
 }
 
 double machine::convertVolumeMetricToDisplayUnits(double volume)
@@ -148,30 +186,28 @@ double machine::convertVolumeMetricToDisplayUnits(double volume)
 
 void machine::initProductDispensers()
 {
-    for (int slot_index = 0; slot_index < getDispensersCount(); slot_index++)
+    for (int slot_index = 0; slot_index < getPcb()->getSlotCountByPcbType(); slot_index++)
     {
         debugOutput::sendMessage("Init dispenser " + to_string(slot_index + 1), MSG_INFO);
-        // m_g_machine.m_productDispensers[slot_index].setup(&this, g_pnumbers);
-        m_productDispensers[slot_index].setup(control_pcb, m_pnumbers);
-        m_productDispensers[slot_index].setSlot(slot_index + 1);
+        getDispenser(slot_index + 1).setup(slot_index + 1, control_pcb, m_pnumbers);
 
 #ifdef INTERRUPT_DRIVE_FLOW_SENSOR_TICKS
-        m_productDispensers[slot_index].initGlobalFlowsensorIO(IO_PIN_FLOW_SENSOR);
+        getDispenser(slot_index + 1).initGlobalFlowsensorIO(IO_PIN_FLOW_SENSOR);
 #endif
         setFlowSensorCallBack(slot_index + 1);
     }
 }
 
-void machine::loadGeneralProperties(bool loadDispenserParameters)
+void machine::loadGeneralMachineProperties(bool loadDispenserParameters)
 {
     loadMachineParametersFromDb();
     usleep(20000);
     if (loadDispenserParameters)
     {
-        for (int slot_index = 0; slot_index < getDispensersCount(); slot_index++)
+        for (int slot_index = 0; slot_index < getPcb()->getSlotCountByPcbType(); slot_index++)
         {
-            m_productDispensers[slot_index].loadGeneralProperties();
-            m_productDispensers[slot_index].setEmptyContainerDetectionEnabled(getEmptyContainerDetectionEnabled());
+            debugOutput::sendMessage("machine. load properties for slot:  " + std::to_string(slot_index + 1), MSG_INFO);
+            getDispenser(slot_index + 1).loadGeneralProperties();
         }
     }
 }
@@ -206,10 +242,6 @@ pcb *machine::getPcb()
 {
     return control_pcb;
 }
-// void machine::testtest(){
-// // nothing here.
-//     debugOutput::sendMessage("*** global machine test message", MSG_INFO);
-// }
 
 void machine::refresh()
 {
@@ -218,18 +250,13 @@ void machine::refresh()
     // the pcb inputs are not interrupt driven. So, periodical updates are required
     for (uint8_t slot_index = 0; slot_index < PRODUCT_DISPENSERS_MAX; slot_index++)
     {
-        m_productDispensers[slot_index].refresh();
+        getDispenser(slot_index + 1).refresh();
     }
 }
 
 void machine::setFlowSensorCallBack(int slot)
 {
-
-    int slot_index = slot - 1;
-    // control_pcb->registerFlowSensorTickCallback(std::bind(&dispenser::registerFlowSensorTickCallback, &m_productDispensers[slot_index]));
-    // m_productDispensers[slot_index].linkActiveProductVolumeUpdate(); // CALL THIS FOR EVERY ACTIVE PRODUCT CHANGE during a mixing dispense.
-
-    m_productDispensers[slot_index].linkDispenserFlowSensorTick();
+    getDispenser(slot).linkDispenserFlowSensorTick();
 }
 
 void machine::syncSoftwareVersionWithDb()

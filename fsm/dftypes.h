@@ -80,7 +80,7 @@
 // #define IO_PIN_BUTTON_MAINTENANCE 340 // connector pin 38
 // #define IO_PIN_BUTTON_SHUTDOWN 341 //  connector pin 40 deprecated 
 // #define IO_PIN_BUTTON_MAINTENANCE_SHUTDOWN_EDGE_DETECTOR 391 // connector pin 32 deprecated.
-#define IO_PIN_FLOW_SENSOR 364 // deprecated, try to get through i2c chip for consitency. connector pin 11
+#define IO_PIN_FLOW_SENSOR 364 // deprecated, try to get through i2c chip for consistency. connector pin 11
 
 #define FLOWSENSOR_DEJITTER_MICROS 700ULL  //digmesa flowsensor
 //#define FLOWSENSOR_DEJITTER_MICROS 10000ULL  // AICHI flow sensor
@@ -159,7 +159,7 @@
 #define ACTION_UI_COMMAND_PRINTER_MENU 'p'
 #define ACTION_HELP 'h'
 
-#define PRODUCT_DUMMY 'x'
+#define PRODUCT_DUMMY_CHAR 'x'
 #define PRODUCT_SLOT_DUMMY 666
 
 #define PWM_CHAR 'P'
@@ -169,6 +169,33 @@
    {                                                                       \
       SIZE_SMALL_CHAR, SIZE_MEDIUM_CHAR, SIZE_LARGE_CHAR, SIZE_CUSTOM_CHAR \
    }
+
+
+
+typedef enum Product_state
+{
+   PRODUCT_STATE_AVAILABLE = 0,
+   PRODUCT_STATE_AVAILABLE_LOW_STOCK,
+   PRODUCT_STATE_NOT_PRIMED,
+   PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION,
+   PRODUCT_STATE_PROBLEM_EMPTY,
+   PRODUCT_STATE_DISABLED_COMING_SOON,
+   PRODUCT_STATE_DISABLED,
+   PRODUCT_STATE_INVALID,
+   // PRODUCT_STATE_AVAILABLE = 0,
+   // PRODUCT_STATE_AVAILABLE_LOW_STOCK,
+   // PRODUCT_STATE_EMPTY
+} Product_state;
+
+// slot state basic states for the dispenser. 
+typedef enum SlotState
+{
+   SLOT_STATE_AVAILABLE = 0,
+   SLOT_STATE_NOT_PRIMED,
+   SLOT_STATE_PROBLEM_NEEDS_ATTENTION,
+   SLOT_STATE_DISABLED,
+   SLOT_STATE_INVALID
+}Slot_state;
 
 typedef enum Dispense_behaviour
 {
@@ -189,17 +216,17 @@ struct product_order
 };
 typedef struct product_order product_order;
 
-typedef enum Slot_state
-{
-   SLOT_STATE_AVAILABLE = 0,
-   SLOT_STATE_AVAILABLE_LOW_STOCK,
-   SLOT_STATE_WARNING_PRIMING,
-   SLOT_STATE_PROBLEM_NEEDS_ATTENTION,
-   SLOT_STATE_PROBLEM_EMPTY,
-   SLOT_STATE_DISABLED_COMING_SOON,
-   SLOT_STATE_DISABLED
 
-} Slot_state;
+
+// typedef enum ProductState
+// {
+//    PRODUCT_STATE_AVAILABLE = 0,
+//    PRODUCT_STATE_AVAILABLE_LOW_STOCK,
+//    PRODUCT_STATE_PROBLEM_NEEDS_ATTENTION,
+//    PRODUCT_STATE_PROBLEM_EMPTY,
+//    PRODUCT_STATE_DISABLED,
+//    PRODUCT_STATE_INVALID,
+// } ProductState;
 
 typedef enum Button_lights_behaviour
 {
@@ -219,7 +246,7 @@ struct Time_val
 };
 typedef struct Time_val Time_val;
 
-#define TABLE_PRODUCTS_COLUMN_COUNT 55
+#define TABLE_PRODUCTS_COLUMN_COUNT 56
 
 typedef enum MIX_RATIO_SETTING
 {

@@ -88,7 +88,7 @@ private:
 
     // QResizeEvent *productSelection;
     QPushButton* pushButtons_products[MAX_SLOT_COUNT];
-    QLabel* labels_product_status[MAX_SLOT_COUNT];
+    QLabel* labels_slot_status[MAX_SLOT_COUNT];
     QLabel* labels_product_name[MAX_SLOT_COUNT];
     QLabel* labels_product_position[MAX_SLOT_COUNT];
 

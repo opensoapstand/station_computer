@@ -35,11 +35,10 @@ bool messageMediator::m_fExitThreads = false;
 bool messageMediator::m_bCommandStringReceived = false;
 string messageMediator::m_receiveStringBuffer;
 string messageMediator::m_processCommand;
-int messageMediator::m_requested_slot;
 int messageMediator::m_nSolenoid;
 char messageMediator::m_requestedAction;
 int messageMediator::m_commandValue;
-char messageMediator::m_requestedSize;
+// char messageMediator::m_requestedSize;
 double messageMediator::m_nVolumeTarget;
 double messageMediator::m_requestedDiscountPrice;
 string messageMediator::m_promoCode;
@@ -153,10 +152,11 @@ DF_ERROR messageMediator::sendMessageOverIP(string msg, bool isLoggingMessage)
       catch (SocketException &e)
       {
          //  std::cout << "Connection Exception was caught:" << e.description() << "\n";
-         if (attempts%10 == 0){
+         if (attempts % 10 == 0)
+         {
             debugOutput::sendMessage("UI server not reachable (UI not running? or Still processing previous message?).  " + e.description() + " Attempts left: " + to_string(attempts), MSG_ERROR);
          }
-         usleep(100000); //0.1 seconds
+         usleep(100000); // 0.1 seconds
          attempts--;
       }
    }
@@ -193,8 +193,7 @@ void messageMediator::setMachine(machine *machine)
 
 void messageMediator::sendPrinterStatus()
 {
-   debugOutput::sendMessage("af;ldoeofoeflodleodloelodeolode.", MSG_INFO);
-   if (!m_machine->getPcb24VPowerSwitchStatus())
+   if (!m_machine->getPcb24VPowerSwitchStatus())   
    {
       m_machine->pcb24VPowerSwitch(true); // printers take their power from the 24V converted to 5V (because of the high current)
       // usleep(1200000);                   // wait for printer to come online.
@@ -203,7 +202,6 @@ void messageMediator::sendPrinterStatus()
 
    bool isOnline;
    bool hasPaper;
-   debugOutput::sendMessage("af;eja;fuaeijfaesiofj.", MSG_INFO);
    getPrinterStatus(&isOnline, &hasPaper);
 
    string statusString;
@@ -344,7 +342,7 @@ DF_ERROR messageMediator::updateCmdString(char key)
       // ; is the command finished char
       m_receiveStringBuffer.clear();
       m_bCommandStringReceived = true;
-      //debugOutput::sendMessage("Received message (unparsed, finished): " + m_processCommand, MSG_INFO);
+      // debugOutput::sendMessage("Received message (unparsed, finished): " + m_processCommand, MSG_INFO);
    }
 
    return df_ret;
@@ -355,7 +353,7 @@ DF_ERROR messageMediator::updateCmdString(char key)
 DF_ERROR messageMediator::updateCmdString()
 {
    DF_ERROR df_ret = ERROR_BAD_PARAMS;
-   //debugOutput::sendMessage("Process received message: " + m_receiveStringBuffer, MSG_INFO);
+   // debugOutput::sendMessage("Process received message: " + m_receiveStringBuffer, MSG_INFO);
 
    if (!m_processCommand.empty())
    {
@@ -490,10 +488,10 @@ void messageMediator::clearCommandString()
    m_bCommandStringReceived = false;
 }
 
-void messageMediator::setRequestedSize(char size)
-{
-   m_requestedSize = size;
-}
+// void messageMediator::setRequestedSize(char size)
+// {
+//    m_requestedSize = size;
+// }
 
 DF_ERROR messageMediator::parseCommandString()
 {
@@ -595,7 +593,7 @@ DF_ERROR messageMediator::parseCommandString()
 
       std::string dispenseCommand = sCommand.substr(found0 + 1, found1 - found0 - 1);
       debugOutput::sendMessage("Dispense command: " + dispenseCommand, MSG_INFO);
-      parseDispenseCommand(dispenseCommand);
+      parseAndApplyDispenseCommand(dispenseCommand);
 
       std::string pNumberDispenseProduct_str = sCommand.substr(found1 + 1, found2 - found1 - 1);
       debugOutput::sendMessage("Selected Dispense PNumber : " + pNumberDispenseProduct_str, MSG_INFO);
@@ -608,10 +606,10 @@ DF_ERROR messageMediator::parseCommandString()
       std::string ratios = sCommand.substr(found3 + 1, found4 - found3 - 1);
       debugOutput::sendMessage("Dispense Ratios : " + ratios, MSG_INFO);
 
-      m_machine->m_productDispensers[getRequestedSlot() - 1].setSelectedProduct(pNumberDispenseProduct);
-      m_machine->m_productDispensers[getRequestedSlot() - 1].setCustomMixParametersToSelectedProduct(pnumbers, ratios);
-      // int pnumber = m_machine->m_productDispensers[getRequestedSlot() - 1].getCustomMixPNumberFromMixIndex(0);
-      // m_machine->m_productDispensers[getRequestedSlot() - 1].setPNumberAsSingleDispenseSelectedProduct(pnumber);
+      // m_machine->getSelectedDispenser().setSelectedProduct(pNumberDispenseProduct);
+      m_machine->getSelectedDispenser().setCustomMixParametersToSelectedProduct(pnumbers, ratios);
+      // int pnumber = m_machine->getSelectedDispenser().getCustomMixPNumberFromMixIndex(0);
+      // m_machine->getSelectedDispenser().setPNumberAsSingleDispenseSelectedProduct(pnumber);
    }
    else if (sCommand.find("dispensePNumber") != string::npos)
    {
@@ -632,14 +630,15 @@ DF_ERROR messageMediator::parseCommandString()
 
       std::string dispenseCommand = sCommand.substr(found0 + 1, found1 - found0 - 1);
       debugOutput::sendMessage("Dispense command: " + dispenseCommand, MSG_INFO);
-      parseDispenseCommand(dispenseCommand);
+      parseAndApplyDispenseCommand(dispenseCommand);
 
       std::string pNumberDispenseProduct_str = sCommand.substr(found1 + 1, found2 - found1 - 1);
 
       int pNumberDispenseProduct = std::stoi(pNumberDispenseProduct_str);
 
-      m_machine->m_productDispensers[getRequestedSlot() - 1].setSelectedProduct(pNumberDispenseProduct);
-      debugOutput::sendMessage("Selected Dispense PNumber (for slot " + to_string(getRequestedSlot()) + " ): " + to_string(m_machine->m_productDispensers[getRequestedSlot() - 1].getSelectedPNumber()), MSG_INFO);
+      // m_machine->getSelectedDispenser().setSelectedProduct(pNumberDispenseProduct);
+
+      debugOutput::sendMessage("Selected Dispense PNumber (for slot " + to_string(m_machine->getSelectedDispenserNumber()) + " ): " + to_string(m_machine->getSelectedDispenser().getSelectedPNumber()), MSG_INFO);
    }
    else if (sCommand.find("orderDetails") != string::npos)
    {
@@ -690,7 +689,7 @@ DF_ERROR messageMediator::parseCommandString()
    //    // std::size_t found = str.find(str2);
    //    std::string dispenseCommand = sCommand.substr(found0 + 1, found1 - found0 - 1);
    //    debugOutput::sendMessage("Dispense command: " + dispenseCommand, MSG_INFO);
-   //    parseDispenseCommand(dispenseCommand);
+   //    parseAndApplyDispenseCommand(dispenseCommand);
 
    //    std::string pricestr = sCommand.substr(found1 + 1, found2 - found1 - 1);
    //    double price = std::stod(pricestr);
@@ -705,19 +704,18 @@ DF_ERROR messageMediator::parseCommandString()
    //    m_promoCode = promoCode;
    //    debugOutput::sendMessage("Promo code" + m_promoCode, MSG_INFO);
 
-   //    m_machine->m_productDispensers[getRequestedSlot() - 1].setBasePNumberAsSingleDispenseSelectedProduct();
+   //    m_machine->getSelectedDispenser().setBasePNumberAsSingleDispenseSelectedProduct();
    // }
    else if (sCommand.length() == 3)
    //  first_char == '1' ||
    //  first_char == '2' ||
    //  first_char == '3' ||
    //  first_char == '4')
-
    {
       debugOutput::sendMessage("Received Message: " + sCommand, MSG_INFO);
       // length 3 command is always a dispense instruction. This is annoying, but it's grown organically like that.
       // check for dispensing command
-      e_ret = parseDispenseCommand(sCommand);
+      e_ret = parseAndApplyDispenseCommand(sCommand);
    }
    else if (sCommand.find("Printer") != string::npos)
    {
@@ -851,27 +849,31 @@ void messageMediator::resetAction()
 
 void messageMediator::setDispenseCommandToDummy()
 {
+   m_machine->setSelectedDispenser(PRODUCT_SLOT_DUMMY);
    m_requestedAction = ACTION_DUMMY;
-   m_requested_slot = PRODUCT_SLOT_DUMMY;
-   m_requestedSize = SIZE_DUMMY;
+
+   // m_requestedSize = SIZE_DUMMY;
+   // m_machine->getSelectedDispenser()->setTargetVolumeFromSize
 }
 
-DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
+DF_ERROR messageMediator::parseAndApplyDispenseCommand(string sCommand)
 {
 
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
    debugOutput::sendMessage("parseDispenseCommand", MSG_INFO);
    char temp[10];
 
-   char productChar = PRODUCT_DUMMY;
+   char productChar = PRODUCT_DUMMY_CHAR;
    char actionChar = ACTION_DUMMY;
    char volumeChar = SIZE_DUMMY;
+   bool autodispense = false;
 
    m_requestedAction = ACTION_DUMMY;
-   m_requested_slot = PRODUCT_SLOT_DUMMY;
-   m_requestedSize = SIZE_DUMMY;
+   int requested_slot = PRODUCT_SLOT_DUMMY;
 
-   // if (isdigit(sCommand[0]))
+   // m_requestedSize = SIZE_DUMMY;
+   char requestedSize = SIZE_DUMMY;
+
    if (isdigit(sCommand[0]))
    {
       productChar = sCommand[0];
@@ -898,72 +900,73 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
 
    switch (productChar)
    {
-   case PRODUCT_DUMMY:
+   case PRODUCT_DUMMY_CHAR:
    {
-      m_requested_slot = PRODUCT_SLOT_DUMMY;
+      requested_slot = PRODUCT_SLOT_DUMMY;
       debugOutput::sendMessage("Invalid product char.", MSG_INFO);
       e_ret = OK;
       break;
    }
    case '1':
    {
-      m_requested_slot = 1;
+      requested_slot = 1;
       debugOutput::sendMessage("Product from slot 1 requested", MSG_INFO);
       e_ret = OK;
       break;
    }
    case '2':
    {
-      m_requested_slot = 2;
+      requested_slot = 2;
       debugOutput::sendMessage("Product from slot 2 requested", MSG_INFO);
       e_ret = OK;
       break;
    }
    case '3':
    {
-      m_requested_slot = 3;
+      requested_slot = 3;
       debugOutput::sendMessage("Product from slot 3 requested", MSG_INFO);
       e_ret = OK;
       break;
    }
    case '4':
    {
-      m_requested_slot = 4;
+      requested_slot = 4;
       debugOutput::sendMessage("Product from slot 4 requested", MSG_INFO);
       e_ret = OK;
       break;
    }
    case '5':
    {
-      m_requested_slot = 5;
+      requested_slot = 5;
       debugOutput::sendMessage("Product from slot 5 requested", MSG_INFO);
       e_ret = OK;
       break;
    }
    case '6':
    {
-      m_requested_slot = 6;
+      requested_slot = 6;
       debugOutput::sendMessage("Product from slot 6 requested", MSG_INFO);
       e_ret = OK;
       break;
    }
    case '7':
    {
-      m_requested_slot = 7;
+      requested_slot = 7;
       debugOutput::sendMessage("Product from slot 7 requested", MSG_INFO);
       e_ret = OK;
       break;
    }
    case '8':
    {
-      m_requested_slot = 8;
+      requested_slot = 8;
       debugOutput::sendMessage("Product from slot 8 requested", MSG_INFO);
       e_ret = OK;
       break;
    }
    default:
    {
-      debugOutput::sendMessage("No product requested [1..8] required", MSG_INFO);
+      requested_slot = PRODUCT_SLOT_DUMMY;
+      debugOutput::sendMessage("No slot selected. [1..8] required. Will discard command. ", MSG_INFO);
       break;
    }
    }
@@ -971,10 +974,11 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
    if (!isalpha(volumeChar))
    {
       // e_ret = ERROR_NETW_NO_POSITION;
+      volumeChar = SIZE_DUMMY;
    }
    else if (volumeChar == SIZE_DUMMY)
    {
-      debugOutput::sendMessage("No Requested volume provided", MSG_INFO);
+      debugOutput::sendMessage("No Requested volume provided. Will discard command.", MSG_INFO);
    }
    else
    {
@@ -982,41 +986,42 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
       {
       case SIZE_SMALL_CHAR:
          debugOutput::sendMessage("Requested volume 1, Small Size", MSG_INFO);
-         m_requestedSize = SIZE_SMALL_CHAR;
+         requestedSize = SIZE_SMALL_CHAR;
          e_ret = OK;
          break;
 
       case SIZE_MEDIUM_CHAR:
          debugOutput::sendMessage("Requested volume 2, Medium Size", MSG_INFO);
-         m_requestedSize = SIZE_MEDIUM_CHAR;
+         requestedSize = SIZE_MEDIUM_CHAR;
          e_ret = OK;
          break;
       case SIZE_LARGE_CHAR:
          debugOutput::sendMessage("Requested volume 3, Large Size", MSG_INFO);
-         m_requestedSize = SIZE_LARGE_CHAR;
+         requestedSize = SIZE_LARGE_CHAR;
          e_ret = OK;
          break;
 
       case SIZE_CUSTOM_CHAR:
          debugOutput::sendMessage("Requested volume custom Size", MSG_INFO);
-         m_requestedSize = SIZE_CUSTOM_CHAR;
+         requestedSize = SIZE_CUSTOM_CHAR;
          e_ret = OK;
          break;
 
       case SIZE_TEST_CHAR:
          debugOutput::sendMessage("Requested volume test", MSG_INFO);
-         m_requestedSize = SIZE_TEST_CHAR;
+         requestedSize = SIZE_TEST_CHAR;
          e_ret = OK;
          break;
 
       case SIZE_SAMPLE_CHAR:
          debugOutput::sendMessage("Requested volume sample", MSG_INFO);
-         m_requestedSize = SIZE_SAMPLE_CHAR;
+         requestedSize = SIZE_SAMPLE_CHAR;
          e_ret = OK;
          break;
 
       default:
-         debugOutput::sendMessage("Unknown volume received.... " + to_string(volumeChar), MSG_INFO);
+         volumeChar = SIZE_DUMMY;
+         debugOutput::sendMessage("Unknown volume received.... Will discard command " + to_string(volumeChar), MSG_ERROR);
          break;
       }
    }
@@ -1045,8 +1050,10 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
          break;
       case ACTION_AUTOFILL:
          debugOutput::sendMessage("Action: Auto fill", MSG_INFO);
-         // m_nSolenoid = PRODUCT;
-         m_requestedAction = ACTION_AUTOFILL;
+
+         m_requestedAction = ACTION_DISPENSE;
+
+         autodispense = true;
          e_ret = OK;
          break;
 
@@ -1064,11 +1071,40 @@ DF_ERROR messageMediator::parseDispenseCommand(string sCommand)
 
       default:
          m_requestedAction = ACTION_DUMMY;
+         debugOutput::sendMessage("Unknown action received.... Will discard command " + to_string(volumeChar), MSG_ERROR);
          break;
       }
    }
 
+   if (m_requestedAction == ACTION_DUMMY || volumeChar == SIZE_DUMMY || requested_slot == PRODUCT_SLOT_DUMMY)
+   {
+      debugOutput::sendMessage("Invalid command. Will discard message.", MSG_ERROR);
+      m_requestedAction = ACTION_NO_ACTION;
+   }
+   else
+   {
+      debugOutput::sendMessage("command will be set. 1 .  " +std::to_string(requestedSize), MSG_INFO);
+      m_machine->setSelectedDispenser(requested_slot);
+      debugOutput::sendMessage("command will be set.  2.  " +std::to_string(requestedSize), MSG_INFO);
+      m_machine->getSelectedDispenser().getActiveProduct()->setTargetVolumeFromSize(requestedSize);
+      debugOutput::sendMessage("command will be set.  3.  " +std::to_string( m_machine->getSelectedDispenser().getActiveProduct()->getTargetVolumeAsChar()), MSG_INFO);
+
+      // debugOutput::sendMessage("command will be set. slot: " + std::to_string(m_machine->getSelectedDispenser().getSlot()), MSG_INFO);
+      // debugOutput::sendMessage("command will be setsssssssssssssssssss. slot: " + std::to_string(m_machine->getSelectedDispenser().getSelectedPNumber()), MSG_INFO);
+      // dispenser testd = m_machine->getSelectedDispenser();
+      // debugOutput::sendMessage("command will be fieieieieiieef. .", MSG_INFO);
+      // product *lode = testd.getProductFromPNumber(53);
+      // debugOutput::sendMessage("command will be set. for active product: " + std::to_string(lode->getPNumber()), MSG_INFO);
+      // debugOutput::sendMessage("command will be set. for active product: " + std::to_string(m_machine->getSelectedDispenser().getActiveProduct()->getPNumber()), MSG_INFO);
+
+      if (autodispense)
+      {
+         m_machine->getSelectedDispenser().setAutoDispense();
+      }
+   }
+   // debugOutput::sendMessage("command will be setefasefaefasef. .", MSG_INFO);
+   
+   e_ret = OK;
+
    return e_ret;
 }
-
-

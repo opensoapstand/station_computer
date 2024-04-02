@@ -133,18 +133,65 @@ QVector<int> dispenser_slot::getAllPNumbers()
 bool dispenser_slot::loadSlotParametersFromDb()
 {
     bool success = m_db->getAllSlotProperties(getSlotId(),
-                                                                           m_dispensePNumbers,
-                                                                           m_basePNumber,
-                                                                           m_additivePNumbers,
-                                                                           m_is_enabled,
-                                                                           m_status_text);
+                                              m_dispensePNumbers,
+                                              m_basePNumber,
+                                              m_additivePNumbers,
+                                              m_is_enabled,
+                                              m_status_text);
+
+    m_slot_state = SlotStateStringMap[m_status_text];
     return success;
 }
+void dispenser_slot::setSlotStatus(SlotState state)
+{
+    m_slot_state = state;
+    m_db->updateTableSlotsWithText(getSlotId(), "status_text", getSlotStatusAsString());
+}
 
-void dispenser_slot::setSlotEnabled(bool isEnabled, QString statusText)
+SlotState dispenser_slot::getSlotStatus()
+{
+    return m_slot_state;
+}
+
+QString dispenser_slot::getSlotStatusAsString()
+{
+    return df_util::convertSlotStatusToString(m_slot_state);
+}
+
+QString dispenser_slot::getDispenseBehaviourAsString()
+{
+    return df_util::convertDispenseStatusToString(m_dispense_behaviour);
+}
+
+void dispenser_slot::setDispenseBehaviour(DispenseBehaviour dispenseBehaviour)
+{
+
+    m_dispense_behaviour = dispenseBehaviour;
+}
+
+void dispenser_slot::setDispenseBehaviour(QString dispenseBehaviourString)
+{
+    /////////////////////////////////////////////////////////
+    //     dispense status DOES NOT equal slot status.  ///
+    /////////////////////////////////////////////////////
+    DispenseBehaviour dispenseBehaviour = FLOW_STATE_UNAVAILABLE;
+    if (DispenseBehaviourStringMap.contains(dispenseBehaviourString))
+    {
+        dispenseBehaviour = DispenseBehaviourStringMap.value(dispenseBehaviourString);
+    }
+    setDispenseBehaviour(dispenseBehaviour);
+}
+
+DispenseBehaviour dispenser_slot::getDispenseBehaviour()
+{
+    return m_dispense_behaviour;
+}
+
+void dispenser_slot::setSlotEnabled(bool isEnabled, SlotState status)
 {
     setSlotEnabled(isEnabled);
-    setSlotStatusText(statusText);
+    // setSlotStatusText(status);
+    setSlotStatus(status);
 }
 
 void dispenser_slot::setSlotEnabled(bool isEnabled)
@@ -159,17 +206,11 @@ bool dispenser_slot::getIsSlotEnabled()
     return m_is_enabled;
 }
 
-void dispenser_slot::setSlotStatusText(QString status)
-{
-    m_status_text = status;
-    m_db->updateTableSlotsWithText(getSlotId(), "status_text", m_status_text);
-}
-
-QString dispenser_slot::getSlotStatusText()
-{
-    return m_status_text;
-    // return thisMachine->getSlotStatusText(getSlotId());
-}
+// void dispenser_slot::setSlotStatusText(QString status)
+// {
+//     m_status_text = status;
+//     m_db->updateTableSlotsWithText(getSlotId(), "status_text", m_status_text);
+// }
 
 int dispenser_slot::getSlotId()
 {
@@ -189,34 +230,42 @@ void dispenser_slot::setSlot(int slot)
     m_dispenser_slot = slot;
 }
 
-void dispenser_slot::setDispenseStartTime(QString start_time){
+void dispenser_slot::setDispenseStartTime(QString start_time)
+{
     m_dispense_start_time = start_time;
 }
 
-void dispenser_slot::setDispenseEndTime(QString end_time){
+void dispenser_slot::setDispenseEndTime(QString end_time)
+{
     m_dispense_end_time = end_time;
 }
 
-QString dispenser_slot::getDispenseStartTime(){
+QString dispenser_slot::getDispenseStartTime()
+{
     return m_dispense_start_time;
 }
 
-QString dispenser_slot::getDispenseEndTime(){
+QString dispenser_slot::getDispenseEndTime()
+{
     return m_dispense_end_time;
 }
 
-void dispenser_slot::setButtonPressDuration(double button_duration){
+void dispenser_slot::setButtonPressDuration(double button_duration)
+{
     m_button_press_duration = button_duration;
 }
 
-void dispenser_slot::setButtonPressCount(double button_count){
+void dispenser_slot::setButtonPressCount(double button_count)
+{
     m_button_press_count = button_count;
 }
 
-double dispenser_slot::getButtonPressDuration(){
+double dispenser_slot::getButtonPressDuration()
+{
     return m_button_press_duration;
 }
 
-double dispenser_slot::getButtonPressCount(){
+double dispenser_slot::getButtonPressCount()
+{
     return m_button_press_count;
 }

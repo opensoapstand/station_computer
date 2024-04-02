@@ -129,7 +129,7 @@ void page_maintenance_general::showEvent(QShowEvent *event)
     }
 
     updateLabelValues();
-    _maintenanceGeneralPageTimeoutSec = PAGE_MAINTENANCE_GENERAL_TIMEOUT_SECONDS;
+    
     maintenanceGeneralPageEndTimer->start();
 }
 
@@ -169,6 +169,7 @@ void page_maintenance_general::resizeEvent(QResizeEvent *event)
 
 void page_maintenance_general::updateLabelValues()
 {
+    _maintenanceGeneralPageTimeoutSec = PAGE_MAINTENANCE_GENERAL_TIMEOUT_SECONDS;
     p_page_idle->thisMachine->loadDynamicContent();
     ui->checkBox_enable_empty_container->setChecked(p_page_idle->thisMachine->getEmptyContainerDetectionEnabled());
     ui->checkBox_enable_pump_ramping->setChecked(p_page_idle->thisMachine->getPumpRampingEnabled());

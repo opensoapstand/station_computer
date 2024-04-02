@@ -26,13 +26,15 @@ gpio::gpio()
 // DTOR
 gpio::~gpio()
 {
+        #ifdef INTERRUPT_DRIVE_FLOW_SENSOR_TICKS
         // kill thread!
         this->stopListener_flowsensor();
+        #endif
 }
 // void gpio::setPinNumber(int pinNumber){
 
 // }
-
+#ifdef INTERRUPT_DRIVE_FLOW_SENSOR_TICKS
 // kick off a listener_flowsensor
 void gpio::startListener_flowsensor()
 {
@@ -50,7 +52,7 @@ void gpio::startListener_flowsensor()
                 debugOutput::sendMessage("Did not pass null check", MSG_INFO);
         }
 }
-
+#endif
 // void gpio::startListener_buttons_powerAndMaintenance()
 // {
 //         debugOutput::sendMessage("Thread init: Maintenance Button and Shutdown Button listener", MSG_INFO);
@@ -81,6 +83,7 @@ void gpio::startListener_flowsensor()
 // call this with code that looks like
 // std::thread tGPIOListener tgpio = <gpioinstance>->listener();
 // std::thread gpio::listener()
+#ifdef INTERRUPT_DRIVE_FLOW_SENSOR_TICKS
 void gpio::listener_flowsensor()
 {
         // cout << "Spin up GPIO Thread" << endl;
@@ -96,7 +99,7 @@ void gpio::listener_flowsensor()
         m_stop = true; // reset
                        //  return;
 }
-
+#endif
 // void gpio::listener_buttons_powerAndMaintenance()
 // {
 //         // cout << "Spin up GPIO Thread" << endl;

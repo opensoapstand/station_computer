@@ -40,12 +40,14 @@ public:
 	// Functions for Threaded GPIO Interrupts
 	void registerProduct(product *pDispenser) { m_pDispenser = pDispenser; } 
 
+	#ifdef INTERRUPT_DRIVE_FLOW_SENSOR_TICKS
 	void startListener_flowsensor();
 	// void startListener_buttons_powerAndMaintenance();
 	// void startButtonListener();
 	void listener_flowsensor();
 	// void listener_buttons_powerAndMaintenance();
 	void stopListener_flowsensor() { m_stop = true; }
+	#endif
 
 protected:
 	int m_nPin;

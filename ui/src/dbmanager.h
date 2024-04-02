@@ -76,6 +76,7 @@ public:
                                  double *size_custom_discount,
                                  double *price_custom_discount,
                                  bool *is_enabled,
+                                 bool *is_empty_or_has_problem,
                                  QString *status_text,
                                  bool *isSizeEnabled, double *prices, double *volumes, QString *PLUs, QString *PIDs);
 
@@ -96,7 +97,7 @@ public:
                                  int *aws_port,
 
                                  int *coupons_enabled,
-                                 int *has_empty_detection,
+                                 bool *has_empty_detection,
                                  int *enable_pump_ramping,
                                  int *enable_pump_reversal,
                                  int *dispense_buttons_count,
@@ -120,7 +121,8 @@ public:
                                  int *buy_bottle_1,
                                  int *buy_bottle_2,
                                  QString *portal_base_url,
-                                 int *enable_offline_payment);
+                                 int *enable_offline_payment,
+                                 int *page_init_timeout);
     QString getHardwareVersion();
 
     void setPaymentTransaction(const std::map<std::string, std::string> &paymentObject);

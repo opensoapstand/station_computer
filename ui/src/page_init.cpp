@@ -217,7 +217,7 @@ void page_init::onInitTimeoutTick()
         {
             if(!m_tap_payment_ready && m_tap_init_error){
                 ready = false;
-                m_label_init_status_text += "Load Tap payment. INIT Error<br> Please unplug and re-plug the station";
+                m_label_init_status_text += "Load Tap payment. INIT Error<br> Please unplug and re-plug the station<br>";
             }
             else if (!m_tap_payment_ready)
             {

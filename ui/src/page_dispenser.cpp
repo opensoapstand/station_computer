@@ -145,6 +145,8 @@ void page_dispenser::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->addToTransactionLogging("\n 6: Station Unlocked - True");
     // transactionLogging += "\n 6: Station Unlocked - True";
 
+    ui->label_dispense_status->hide(); // plain text only for debugging.
+
     animationStepForwardElseBackward = true;
 
     // important to set to nullptr, to check at timeout if it was initialized (displayed...) or not.
@@ -493,14 +495,14 @@ void page_dispenser::dispensing_end_admin()
                 QString base_text = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_finishTransactionMessage, "display_price");
                 ui->label_finishTransactionMessage->setText(base_text.arg(QString::number(current_price, 'f', 2))); // will replace %1 character in string by the provide text
                 p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
-                if (tapPaymentObject.find("ctroutd") != tapPaymentObject.end())
+                if (tapPaymentObject.find("ctroutd") != tapPaymentObject.end() && !tapPaymentObject["ctroutd"].empty())
                 {
                     qDebug() << "CTROUTD" << QString::fromStdString(tapPaymentObject["ctroutd"]);
                     tapPaymentObject["ctrout_saf"] = tapPaymentObject["ctroutd"];
                     std::map<std::string, std::string> testResponse = capture(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["ctroutd"], stream.str());
                     tapPaymentObject["amount"] = stream.str();
                 }
-                else if (tapPaymentObject.find("saf_num") != tapPaymentObject.end())
+                else if (tapPaymentObject.find("saf_num") != tapPaymentObject.end() & !tapPaymentObject["saf_num"].empty())
                 {
                     qDebug() << "SAF_NUM" << QString::fromStdString(tapPaymentObject["saf_num"]);
                     tapPaymentObject["ctrout_saf"] = tapPaymentObject["saf_num"];
@@ -511,7 +513,6 @@ void page_dispenser::dispensing_end_admin()
                 p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
                 finishSession(std::stoi(socketAddr), MAC_LABEL, MAC_KEY);
                 tapPaymentObject.clear();
-
             }
             break;
         }
@@ -652,7 +653,7 @@ void page_dispenser::fsmReceiveDispenseRate(double flowrate)
 void page_dispenser::fsmReceiveDispenserStatus(QString status)
 {
     ui->label_dispense_status->setText(status);
-    // ui->label_dispense_status->hide();
+
     p_page_idle->thisMachine->getSelectedSlot()->setDispenseBehaviour(status);
 
     // getDispenseBehaviourAsString
@@ -668,7 +669,6 @@ void page_dispenser::fsmReceiveDispenserStatus(QString status)
 
 void page_dispenser::processDispenserUpdate()
 {
-
     switch (p_page_idle->thisMachine->getSelectedSlot()->getDispenseBehaviour())
     {
     case FLOW_STATE_UNAVAILABLE:
@@ -790,7 +790,6 @@ void page_dispenser::processDispenserUpdate()
     // else
     // {
     // }
-
 }
 
 void page_dispenser::updateVolumeDisplayed(double dispensed, bool isFull)
@@ -923,6 +922,7 @@ void page_dispenser::on_pushButton_debug_Button_clicked()
 {
     qDebug() << "WARNING: ========= Debug button pressed. Fake dispensing of 100ml ==============";
     updateVolumeDisplayed(750.0, false); // make sure the fill bottle graphics are completed
+    ui->label_dispense_status->hide();
 }
 
 void page_dispenser::on_pushButton_abort_clicked()

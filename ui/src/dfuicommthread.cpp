@@ -130,9 +130,9 @@ QByteArray DfUiCommThread::readyRead()
         // qDebug() << "volume: " << QString::number(volumeDispensed, 'f', 2);
         // qDebug() << "flowrate: " << QString::number(flowrate, 'f', 2);
         // qDebug() << "dispenseStatus: " << dispenseStatusString;
-        emit updateVolumeSignal(volumeDispensed); // induced crash at cancel dispense.
         emit dispenseRateSignal(flowrate);
         emit dispenseStatusSignal(dispenseStatusString);
+        emit updateVolumeSignal(volumeDispensed); // induced crash at cancel dispense.
     }
     // else if (Data.contains("finalVolumeDispensed|"))
     // {

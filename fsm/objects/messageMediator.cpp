@@ -193,8 +193,7 @@ void messageMediator::setMachine(machine *machine)
 
 void messageMediator::sendPrinterStatus()
 {
-   debugOutput::sendMessage("af;ldoeofoeflodleodloelodeolode.", MSG_INFO);
-   if (!m_machine->getPcb24VPowerSwitchStatus())
+   if (!m_machine->getPcb24VPowerSwitchStatus())   
    {
       m_machine->pcb24VPowerSwitch(true); // printers take their power from the 24V converted to 5V (because of the high current)
       // usleep(1200000);                   // wait for printer to come online.
@@ -203,7 +202,6 @@ void messageMediator::sendPrinterStatus()
 
    bool isOnline;
    bool hasPaper;
-   debugOutput::sendMessage("af;eja;fuaeijfaesiofj.", MSG_INFO);
    getPrinterStatus(&isOnline, &hasPaper);
 
    string statusString;

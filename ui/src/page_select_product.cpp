@@ -154,7 +154,6 @@ void page_select_product::displayProducts()
     for (uint8_t slot_index = 0; slot_index < SELECT_PRODUCT_PAGE_SLOT_COUNT_MAX; slot_index++)
     // for (uint8_t option_index = 0; option_index < p_page_idle->thisMachine->getOptionCount(); option_index++)
     {
-      
 
         int option_index = (DISPENSE_PRODUCTS_PER_BASE_LINE_MAX * slot_index); // option menu has more products per slot, we need to take that into account for this 1 product per slot select product page.
         qDebug() << "Page select. Set up option: " << option_index + 1;
@@ -168,7 +167,7 @@ void page_select_product::displayProducts()
             labels_product_type[slot_index]->show();
             labels_product_name[slot_index]->show();
             labels_product_overlay_text[slot_index]->show();
-            
+
             // display product picture
             p_page_idle->thisMachine->addPictureToLabel(labels_product_picture[slot_index], p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductPicturePath());
             product_type = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductType();
@@ -266,12 +265,12 @@ void page_select_product::displayProducts()
             }
             case PRODUCT_STATE_PROBLEM_EMPTY:
             {
-
                 p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[slot_index], "label_product_overlay_unavailable", PAGE_SELECT_PRODUCT_CSS);
                 labels_product_overlay_text[slot_index]->setProperty("class", "label_product_overlay_unavailable"); // apply class BEFORE setStyleSheet!!
                 labels_product_overlay_text[slot_index]->setStyleSheet(styleSheet);
 
                 labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->empty"));
+                pushButtons_product_select[slot_index]->hide();
                 break;
             }
             case PRODUCT_STATE_DISABLED:
@@ -281,6 +280,7 @@ void page_select_product::displayProducts()
                 labels_product_overlay_text[slot_index]->setStyleSheet(styleSheet);
 
                 labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->coming_soon"));
+                pushButtons_product_select[slot_index]->hide();
 
                 break;
             }
@@ -291,7 +291,7 @@ void page_select_product::displayProducts()
                 labels_product_overlay_text[slot_index]->setStyleSheet(styleSheet);
 
                 labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
-
+                pushButtons_product_select[slot_index]->hide();
                 break;
             }
             default:
@@ -300,11 +300,11 @@ void page_select_product::displayProducts()
                 labels_product_overlay_text[slot_index]->setProperty("class", "label_product_overlay_unavailable"); // apply class BEFORE setStyleSheet!!
                 labels_product_overlay_text[slot_index]->setStyleSheet(styleSheet);
                 labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->default"));
+                pushButtons_product_select[slot_index]->hide();
                 break;
             }
             }
 
-            
             // if (p_page_idle->thisMachine->getSlotByPosition(slot_index + 1)->getIsSlotEnabled())
             // {
             //     p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[slot_index], "label_product_overlay_available", PAGE_SELECT_PRODUCT_CSS);

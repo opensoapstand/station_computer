@@ -591,7 +591,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     std::string updated_volume_remaining_str = to_string(updated_volume_remaining);
     std::string updated_volume_dispensed_total_ever_str = to_string(updated_volume_dispensed_total_ever);
     std::string updated_volume_dispensed_since_restock_str = to_string(updated_volume_dispensed_since_restock);
-    std::string slot_state_str = g_machine.getSelectedDispenser().getSlotStateAsString();
+    // std::string slot_state_str = g_machine.getSelectedDispenser().getSlotStateAsString();
     int selectedPNumber = g_machine.getSelectedDispenser().getSelectedProduct()->getPNumber();
     std::string selected_product_state_str = g_machine.getSelectedDispenser().getSelectedProduct()->getProductStateAsString();
 
@@ -628,9 +628,9 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     }
 
     // update dipenser table
-    std::string sql3;
-    sql3 = ("UPDATE slots SET status_text='" + slot_state_str + "' WHERE slot_id=" + to_string(g_machine.getSelectedDispenserNumber()) + ";");
-    databaseUpdateSql(sql3, CONFIG_DB_PATH);
+    // std::string sql3;
+    // sql3 = ("UPDATE slots SET status_text='" + slot_state_str + "' WHERE slot_id=" + to_string(g_machine.getSelectedDispenserNumber()) + ";");
+    // databaseUpdateSql(sql3, CONFIG_DB_PATH);
 
     std::string sql4;
     sql4 = ("UPDATE products SET status_text='" + selected_product_state_str + "' WHERE soapstand_product_serial=" + to_string(selectedPNumber) + ";");

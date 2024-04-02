@@ -167,7 +167,7 @@ DF_ERROR stateIdle::onAction()
    e_ret = OK;
    // }
 
-   usleep(1000000);
+   // usleep(1000000); // super delay for debugging. 
    return e_ret;
 }
 

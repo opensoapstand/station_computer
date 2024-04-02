@@ -493,14 +493,14 @@ void page_dispenser::dispensing_end_admin()
                 QString base_text = p_page_idle->thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_finishTransactionMessage, "display_price");
                 ui->label_finishTransactionMessage->setText(base_text.arg(QString::number(current_price, 'f', 2))); // will replace %1 character in string by the provide text
                 p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_GENERIC);
-                if (tapPaymentObject.find("ctroutd") != tapPaymentObject.end())
+                if (tapPaymentObject.find("ctroutd") != tapPaymentObject.end() && !tapPaymentObject["ctroutd"].empty())
                 {
                     qDebug() << "CTROUTD" << QString::fromStdString(tapPaymentObject["ctroutd"]);
                     tapPaymentObject["ctrout_saf"] = tapPaymentObject["ctroutd"];
                     std::map<std::string, std::string> testResponse = capture(std::stoi(socketAddr), MAC_LABEL, MAC_KEY, tapPaymentObject["ctroutd"], stream.str());
                     tapPaymentObject["amount"] = stream.str();
                 }
-                else if (tapPaymentObject.find("saf_num") != tapPaymentObject.end())
+                else if (tapPaymentObject.find("saf_num") != tapPaymentObject.end() & !tapPaymentObject["saf_num"].empty())
                 {
                     qDebug() << "SAF_NUM" << QString::fromStdString(tapPaymentObject["saf_num"]);
                     tapPaymentObject["ctrout_saf"] = tapPaymentObject["saf_num"];

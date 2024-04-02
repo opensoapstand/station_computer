@@ -36,6 +36,7 @@ void page_buyBottle::setPage(page_idle *pageIdle, page_select_product *p_page_se
 
 void page_buyBottle::showEvent(QShowEvent *event)
 {
+    p_page_idle->thisMachine->registerUserInteraction(this);
     p_statusbar->refresh();
 
     statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
@@ -199,6 +200,7 @@ void page_buyBottle::hideCurrentPageAndShowProvided(QWidget *pageToShow)
 
 void page_buyBottle::on_pushButton_no_clicked()
 {
+    qDebug() << "NO button pressed for page_buyBottle";
     if(p_page_idle->thisMachine->hasSelectedBottle()){
         p_page_idle->thisMachine->resetSelectedBottle();
     }
@@ -207,6 +209,7 @@ void page_buyBottle::on_pushButton_no_clicked()
 
 void page_buyBottle::on_pushButton_yes_1_clicked()
 {
+    qDebug() << "YES button size 1 pressed for page_buyBottle";
     p_page_idle->thisMachine->setSelectedBottle(p_page_idle->thisMachine->m_pNumber_bottle_1);
     if(p_page_idle->thisMachine->hasSelectedBottle()){
         hideCurrentPageAndShowProvided(p_page_select_product);
@@ -215,6 +218,7 @@ void page_buyBottle::on_pushButton_yes_1_clicked()
 
 void page_buyBottle::on_pushButton_yes_2_clicked()
 {
+    qDebug() << "YES button size 2 pressed for page_buyBottle";
     p_page_idle->thisMachine->setSelectedBottle(p_page_idle->thisMachine->m_pNumber_bottle_2);
     if(p_page_idle->thisMachine->hasSelectedBottle()){
         hideCurrentPageAndShowProvided(p_page_select_product);

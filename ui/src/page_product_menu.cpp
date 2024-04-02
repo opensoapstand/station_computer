@@ -227,8 +227,8 @@ void page_product_menu::displayDispenseProductsMenu()
         labels_product_overlay_text[sub_menu_index]->raise();
         pushButtons_dispense_product[sub_menu_index]->raise();
 
-        QString available_increment_text = "label_product_overlay_available_with_status%1";
-        QString label_overlay_available_with_status_increment = available_increment_text.arg(sub_menu_index);
+        // QString available_increment_text = "label_product_overlay_available_with_status%1";
+        // QString label_overlay_available_with_status_increment = available_increment_text.arg(sub_menu_index);
         // product_status_text = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductStateAsString();
 
         ProductState base_product_state = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductState();
@@ -252,7 +252,7 @@ void page_product_menu::displayDispenseProductsMenu()
         case (PRODUCT_STATE_DISABLED):
         {
             labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
-            p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[sub_menu_index], label_overlay_available_with_status_increment, PAGE_PRODUCT_MENU_CSS);
+            // p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[sub_menu_index], label_overlay_available_with_status_increment, PAGE_PRODUCT_MENU_CSS);
             break;
         }
         case (PRODUCT_STATE_INVALID):
@@ -267,7 +267,7 @@ void page_product_menu::displayDispenseProductsMenu()
         }
         }
         if(!p_page_idle->thisMachine->getSelectedSlot()->getIsSlotEnabled()) {
-            labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->coming_soon"));
+            labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
         }
         // if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
         // {

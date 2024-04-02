@@ -65,10 +65,11 @@ page_idle_products::page_idle_products(QWidget *parent) : QWidget(parent),
 /*
  * Page Tracking reference
  */
-void page_idle_products::setPage(page_idle *pageIdle, page_select_product *page_select_product)
+void page_idle_products::setPage(page_idle *pageIdle, page_select_product *page_select_product, page_buyBottle *p_page_buyBottle)
 {
     this->p_page_idle = pageIdle;
     this->p_page_select_product = page_select_product;
+    this->p_page_buyBottle = p_page_buyBottle;
 }
 
 // DTOR
@@ -314,5 +315,10 @@ void page_idle_products::onBackgroundChangeTimerTick()
 void page_idle_products::on_pushButton_to_select_product_page_clicked()
 {
     qDebug() << "To idle page press";
-    this->hideCurrentPageAndShowProvided(p_page_select_product, true);
+    if (p_page_idle->thisMachine->hasBuyBottleOption())
+    {
+        this->hideCurrentPageAndShowProvided(p_page_buyBottle, true);
+    }else{
+        this->hideCurrentPageAndShowProvided(p_page_select_product, true);
+    }
 }

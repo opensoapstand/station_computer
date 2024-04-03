@@ -94,7 +94,8 @@ void page_idle_products::showEvent(QShowEvent *event)
     ui->pushButton_to_select_product_page->setStyleSheet(styleSheet);
     ui->label_title->setStyleSheet(styleSheet);
 
-    for (int slot_index = 0; slot_index < p_page_idle->thisMachine->getSlotCount(); slot_index++)
+    for (uint8_t slot_index = 0; slot_index < SELECT_PRODUCT_PAGE_SLOT_COUNT_MAX; slot_index++)
+    // for (uint8_t option_index = 0; option_index < p_page_idle->thisMachine->getOptionCount(); option_index++)
     {
         labels_product_picture[slot_index]->setProperty("class", "labels_product_picture");
         labels_product_type[slot_index]->setProperty("class", "labels_product_type");
@@ -134,13 +135,16 @@ void page_idle_products::displayProducts()
     QString product_name;
     // QString product_status_text;
 
-    for (uint8_t slot_index = 0; slot_index < p_page_idle->thisMachine->getSlotCount(); slot_index++)
+    for (uint8_t slot_index = 0; slot_index < SELECT_PRODUCT_PAGE_SLOT_COUNT_MAX; slot_index++)
+    // for (uint8_t option_index = 0; option_index < p_page_idle->thisMachine->getOptionCount(); option_index++)
     {
+        int option_index = (DISPENSE_PRODUCTS_PER_BASE_LINE_MAX * slot_index); // option menu has more products per slot, we need to take that into account for this 1 product per slot select product page.
+        
         // display product picture
-        p_page_idle->thisMachine->addPictureToLabel(labels_product_picture[slot_index], p_page_idle->thisMachine->getProductFromMenuOption(slot_index + 1)->getProductPicturePath());
+        p_page_idle->thisMachine->addPictureToLabel(labels_product_picture[slot_index], p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductPicturePath());
 
-        product_type = p_page_idle->thisMachine->getProductFromMenuOption(slot_index + 1)->getProductType();
-        product_name = p_page_idle->thisMachine->getProductFromMenuOption(slot_index + 1)->getProductName();
+        product_type = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductType();
+        product_name = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductName();
 
         labels_selectProductOverlay[slot_index]->raise();
         labels_product_overlay_text[slot_index]->raise();

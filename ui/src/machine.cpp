@@ -303,8 +303,9 @@ bool machine::getIsOptionAvailable(int productOption)
 
     // check if slot for option is valid
     // check if all pnumbers for options are valid
-
-    return true;
+    int pnumber = dispenseProductsMenuOptions[productOption - 1];
+    pnumberproduct *  product = getProductByPNumber(pnumber);
+    return product->getIsProductEnabled();
 }
 
 int machine::getOptionCount()

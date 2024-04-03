@@ -155,6 +155,9 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     ui->pushButton_active_pnumber_base->setStyleSheet(styleSheet);
     ui->pushButton_active_pnumber_base->setText("Base\nP-" + QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getBasePNumber()));
 
+    ui->pushButton_auto_dispense_large->hide();
+    ui->pushButton_auto_dispense_medium->hide();
+
     setSizeIndex(SIZE_SMALL_INDEX); // default selected size for dispensing
 
     // first, pretend like there is no selected size

@@ -531,7 +531,7 @@ void page_idle::onRebootNightlyTimeOutTimerTick()
                     //Rebooting TAP at the same time as the station will keep the communication in place
                     rebootTapDevice(PAYMENT_TAP_CANADA);
                 }
-                else if(paymentMethod== PAYMENT_TAP_USA_QR || PAYMENT_TAP_USA){
+                else if(paymentMethod== PAYMENT_TAP_USA_QR || paymentMethod==PAYMENT_TAP_USA){
                     rebootTapDevice(PAYMENT_TAP_USA);
                 }
                 QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -r 0";

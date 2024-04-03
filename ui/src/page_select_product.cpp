@@ -369,6 +369,7 @@ void page_select_product::select_product(int option)
     if (p_page_idle->thisMachine->getSlotFromOption(option)->getIsSlotEnabled())
     {
         p_page_idle->thisMachine->setSelectedProductByOption(option);
+         qDebug() << "seleletliejlitjelijtlieitjjjjavailable: " << option;
         p_page_idle->thisMachine->setSelectedSlotFromSelectedProduct();
 
         hideCurrentPageAndShowProvided(p_page_product);

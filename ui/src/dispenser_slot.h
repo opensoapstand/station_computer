@@ -24,6 +24,7 @@ public:
     int getBasePNumber();
 
     int getDispenseProductsCount();
+    bool isOnlyOneProductAvailable();
     int getDispensePNumber(int position);
     QVector<int> getDispensePNumbers();
 

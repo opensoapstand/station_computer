@@ -88,7 +88,7 @@ bool machine::loadDynamicContent()
     m_products_loaded_successfully = true;
     for (int pnumber_index = 0; pnumber_index < all_pnumbers.size(); pnumber_index++)
     {
-        // qDebug() << "machine: load product properties for pnumber:" << (all_pnumbers[pnumber_index]);
+        qDebug() << "machine: load product properties for pnumber:" << (QString::number(all_pnumbers[pnumber_index])) << ". Product " << QString::number(pnumber_index) << " out of " << QString::number(all_pnumbers.size());
         m_products_loaded_successfully &= m_pnumberproducts[all_pnumbers[pnumber_index]].loadProductProperties();
         m_pnumberproducts[all_pnumbers[pnumber_index]].setSizeUnit(getSizeUnit()); // volumeUnit is a machine wide parameter
     }
@@ -102,7 +102,6 @@ bool machine::loadDynamicContent()
     loadElementDynamicPropertiesFromTemplate();                // dynamic elements (position, visibility)
     loadElementDynamicPropertiesFromDefaultHardwareTemplate(); // dynamic elements (position, visibility)
     loadElementDynamicPropertiesFromDefaultTemplate();         // dynamic elements (position, visibility)
-
     return success;
 }
 
@@ -134,7 +133,7 @@ void machine::loadBottle()
         getProductByPNumber(m_pNumber_bottle_1)->loadProductProperties();
         getProductByPNumber(m_pNumber_bottle_1)->setSizeUnit(getSizeUnit());
     }
-    if (m_pNumber_bottle_2)
+    if (m_pNumber_bottle_2 != DUMMY_PNUMBER)
     {
         getProductByPNumber(m_pNumber_bottle_2)->loadProductProperties();
         getProductByPNumber(m_pNumber_bottle_2)->setSizeUnit(getSizeUnit());
@@ -389,7 +388,7 @@ bool machine::hasSelectedBottle()
 
 bool machine::hasBuyBottleOption()
 {
-    if (m_pNumber_bottle_1 || m_pNumber_bottle_2)
+    if  ((m_pNumber_bottle_1 != DUMMY_PNUMBER) || (m_pNumber_bottle_2 != DUMMY_PNUMBER) )
     {
         return true;
     }

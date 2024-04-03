@@ -272,8 +272,8 @@ public:
     QString m_paymentOptions;
     int m_screen_sleep_time24h;
     int m_screen_wakeup_time24h;
-    int m_pNumber_bottle_1 = 0;
-    int m_pNumber_bottle_2 = 0;
+    int m_pNumber_bottle_1 = DUMMY_PNUMBER;
+    int m_pNumber_bottle_2 = DUMMY_PNUMBER;
     QString m_portal_base_url;
     int m_enable_offline_payment;
     int m_page_init_timeout;

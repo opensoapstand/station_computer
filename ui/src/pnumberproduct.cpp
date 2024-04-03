@@ -119,6 +119,7 @@ int pnumberproduct::getPNumber()
 int pnumberproduct::getFirstMixPNumberOrPNumberAsBasePNumber()
 {
     // base p-number return the pnumber if no mixing set, or else returns the first mixpnumber of the list.
+    qDebug()<< " mix pnumbers length: "<< QString::number(m_mixPNumbers.size());
     if (m_mixPNumbers.size() > 0)
     {
         return m_mixPNumbers[0];

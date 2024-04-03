@@ -207,6 +207,8 @@ page_maintenance->status_text->almost_empty,Almost Empty
 page_maintenance->status_text->empty,Empty
 page_maintenance->status_text->available,In Service
 page_maintenance->status_text->not_enabled,Not enabled
+page_maintenance->status_text->slot_not_enabled,Slot disabled
+page_maintenance->status_text->slot_assistance,Slot problem
 page_maintenance->status_text->assistance,Assistance Needed
 page_maintenance->status_text->coming_soon,Coming soon
 page_maintenance->status_text->sold_out,Sold Out

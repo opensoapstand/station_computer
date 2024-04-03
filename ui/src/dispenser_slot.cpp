@@ -130,6 +130,11 @@ QVector<int> dispenser_slot::getAllPNumbers()
     return QVector<int>::fromList(pnumbers.toList());
 }
 
+bool dispenser_slot::isOnlyOneProductAvailable()
+{
+    return (getDispenseProductsCount()==1 && (getDispensePNumbers()[0] == getBasePNumber()));
+}
+
 bool dispenser_slot::loadSlotParametersFromDb()
 {
     bool success = m_db->getAllSlotProperties(getSlotId(),

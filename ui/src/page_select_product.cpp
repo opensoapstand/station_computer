@@ -279,7 +279,7 @@ void page_select_product::displayProducts()
                 labels_product_overlay_text[slot_index]->setProperty("class", "label_product_overlay_unavailable"); // apply class BEFORE setStyleSheet!!
                 labels_product_overlay_text[slot_index]->setStyleSheet(styleSheet);
 
-                labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->coming_soon"));
+                labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
                 pushButtons_product_select[slot_index]->hide();
 
                 break;

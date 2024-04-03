@@ -559,8 +559,8 @@ void page_dispenser::fsmSendStartDispensing()
     p_page_idle->thisMachine->dfUtility->send_command_to_FSM(order_command, true);
     QThread::msleep(50); // Sleep for 50 milliseconds
 
-    bool isCustomMix = p_page_idle->thisMachine->getSelectedProduct()->isCustomMix();
     int pNumberSelectedProduct = p_page_idle->thisMachine->getSelectedProduct()->getPNumber();
+    bool isCustomMix = p_page_idle->thisMachine->getSelectedProduct()->isCustomMix();
     QString command;
     if (isCustomMix)
     {

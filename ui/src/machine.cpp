@@ -292,7 +292,7 @@ pnumberproduct *machine::getSlotBaseProduct(int slot)
 void machine::setSelectedProductByOption(int productOption)
 {
     int pnumber = dispenseProductsMenuOptions[productOption - 1];
-    m_selectedProduct = getProductByPNumber(pnumber);
+    setSelectedProduct(pnumber);
 }
 
 bool machine::getIsOptionAvailable(int productOption)
@@ -430,6 +430,7 @@ void machine::setSelectedProduct(int pnumber)
 {
     // pnumber is the index. Clever... until you have one million options....
     m_selectedProduct = getProductByPNumber(pnumber);
+    getSelectedProduct()->resetCustomMixRatioParameters(); // reset custom options when selecting.
 }
 
 dispenser_slot *machine::getSlotByPosition(int slotPosition)

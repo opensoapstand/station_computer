@@ -318,6 +318,8 @@ public:
     int getPageInitTimeout();
     void setFreeSampleEndURL(QString ending_url);
     QString getFreeSampleEndURL();
+
+    DbManager *m_db;
 public slots:
 
 signals:
@@ -348,7 +350,7 @@ private:
     StateReboot m_stateReboot;
     ActivePaymentMethod m_selectedPaymentMethod;
     std::vector<ActivePaymentMethod> allowedPaymentMethods;
-    DbManager *m_db;
+    
     UserRole active_role;
 
     QString m_pump_id_slots[MAX_SLOT_COUNT];

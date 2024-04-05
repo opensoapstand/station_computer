@@ -25,50 +25,6 @@
 #include <typeinfo>
 #include <cxxabi.h>
 
-//Helper function to decoding or demangle the compiled type name
-// If demangle fails, then original type name is returned
-std::string demangle(const char* name) {
-    int status;
-    char* demangled = abi::__cxa_demangle(name, nullptr, nullptr, &status);
-    std::string result(demangled ? demangled : name);
-    std::free(demangled);
-    return result;
-}
-
-// Helper function to get the parameter type name
-// Uses template and typename to enable flexibility in type resolution
-template <typename T>
-std::string getTypeName() {
-    char* demangled = abi::__cxa_demangle(typeid(T).name(), nullptr, nullptr, nullptr);
-    std::string result(demangled);
-    free(demangled);
-    return result;
-}
-
-// Helper function to append datatype and column name to string
-// Uses template and typename to enable flexibility in type resolution
-template <typename T>
-void printParam(std::ostringstream& oss, int& index, T* param, QStringList tableColumns) {
-    oss << (index++ ? ", " : "");    
-    oss << getTypeName<T>();
-    oss << " " << tableColumns[index - 1].toStdString(); 
-}
-
-// Function to create a string representation of the parameters
-// Uses template and typename to enable flexibility in type resolution. Function of any return type or class type is allowed
-// typename... Args allows the function to accept any number of parameters 
-template <typename ReturnType, typename ClassType, typename... Args>
-QString getParamString(ReturnType(ClassType::*func)(Args...), QStringList tableColumns) {
-    std::ostringstream oss;
-    oss << "(";
-    int index = 0;
-    // Iterate over the parameter types and print them
-    int dummy[] = {0, (printParam<Args>(oss, index, nullptr, tableColumns), 0)...};
-    static_cast<void>(dummy); // Suppress unused variable warning
-    oss << ")";
-    return QString::fromStdString(oss.str());
-}
-
 DbManager::DbManager(const std::string &path) {
 }
 
@@ -326,7 +282,10 @@ bool DbManager::getAllSlotProperties(int slot,
             qDebug() << "Open db: Attempted to load all slot properties for slot: " << slot;
             qDebug() << "Did not execute sql. "
                      << qry.lastError() << " | " << qry.lastQuery();
-            return false;
+                     
+            // If the existing database schema does not match with the expected schema, alter the database with updated columns
+            // Pass the productsTable tuple from dbManager.h file and the table name from the database that needs to be updated
+            modifyDatabaseSchemaWithUpdatedColumns(slotsTable, "slots");
         }
 
         QString additivesAsString;
@@ -482,20 +441,16 @@ bool DbManager::getAllProductProperties(int pnumber,
         qry.bindValue(":pnumber", pnumber);
         bool success;
         success = qry.exec();
-
         if (!success)
         {
             qDebug() << "Open db: Attempted to load all product properties for pnumber: " << pnumber;
             qDebug() << "Did not execute sql (replace 'pnumber' for actual number when testing sql command manually). "
                      << qry.lastError() << " | " << qry.lastQuery();
-
-            //Create methodSignature variable which is same as method signature of the function
-            //Retrieve the method signature of calling function in the form of key-value pair of Datatype:variable_name
-            // Parameters: Pointer to the calling function, variable name list for specific table
-            QString methodSignature = getParamString(&DbManager::getAllProductProperties, productTableColumns);
-            // Alter products table in database with the updated method signature
-            alterDatabaseSchema(methodSignature, "products");
-            return false;
+            qry.finish();
+            db.close();
+            // If the existing database schema does not match with the expected schema, alter the database with updated columns
+            // Pass the productsTable tuple from dbManager.h file and the table name from the database that needs to be updated
+            modifyDatabaseSchemaWithUpdatedColumns(productsTable, "products");
         }
 
         while (qry.next())
@@ -582,37 +537,31 @@ bool DbManager::getAllProductProperties(int pnumber,
     return true;
 }
 
-QMap<QString, QString> parseMethodSignature(const QString& methodSignature) {
-    QMap<QString, QString> columns;
-    //Split the comma seperated method signature to a list
-    QStringList parameters = methodSignature.split(',');
-    for (const QString& param : parameters) {
-        QStringList parts = param.split(' ');
-        if (parts.size() >= 2) {
-            //Remove special chracters other than underscore
-            QString type = parts.first().remove(QRegExp("[^a-zA-Z0-9_]")).trimmed();
-            QString name = parts.last().remove(QRegExp("[^a-zA-Z0-9_]")).trimmed();
-            //Check for datatype assigned in cpp and convert it to SQLite datatype
-            QVariant::Type columnType = QVariant::Invalid;
-            QString sqlType;
-            if (type == "int") {
-                columnType = QVariant::Int;
-                sqlType = "INTEGER";
-            } else if (type == "double") {
-                columnType = QVariant::Double;
-                sqlType = "REAL";
-            } else if (type == "QString" || type == "string") {
-                columnType = QVariant::String;
-                sqlType = "TEXT";
-            }
-            //If the data type is valid, append the key-value pair to columns map
-            if (columnType != QVariant::Invalid) {
-                columns.insert(name, sqlType);
-            }
-        }
-    }
-    return columns;
-}
+// QMap<QString, QString,QString> getColumnDataForSqlDb(const std::vector<std::tuple<QString, QString, QString>>& tableInfo) {
+//     QMap<QString, QString,QString> columns;
+    
+//     for (const auto& info : tableInfo) {
+//         QString columnName = std::get<2>(info);
+//         QString dataType = std::get<0>(info);
+//         QString defaultValue = std::get<1>(info);
+//         QString sqlType;
+//         if (type == "int") {
+//             columnType = QVariant::Int;
+//             sqlType = "INTEGER";
+//         } else if (type == "double") {
+//             columnType = QVariant::Double;
+//             sqlType = "REAL";
+//         } else if (type == "QString" || type == "string") {
+//             columnType = QVariant::String;
+//             sqlType = "TEXT";
+//         }
+//             //If the data type is valid, append the key-value pair to columns map
+//             if (columnType != QVariant::Invalid) {
+//                 columns.insert(name, sqlType, defaultValue);
+//             }
+//     }  
+//     return columns;
+// }
 
 bool DbManager::getAllMachineProperties(QString* machine_id,
                                     QString* soapstand_customer_id,
@@ -662,7 +611,6 @@ bool DbManager::getAllMachineProperties(QString* machine_id,
     {
         QSqlDatabase db = openDb(CONFIG_DB_PATH);
         QSqlQuery qry(db);
-
         qry.prepare(
             "SELECT "
             "machine_id," // 0
@@ -715,16 +663,12 @@ bool DbManager::getAllMachineProperties(QString* machine_id,
         // Close the previous connection and query object
         qry.finish();
         db.close();
+        // If the existing database schema does not match with the expected schema, alter the database with updated columns
+        // Pass the machineTable tuple from dbManager.h file and the table name from the database that needs to be updated
+        modifyDatabaseSchemaWithUpdatedColumns(machineTable, "machine");
 
         // Create a new connection and query object
         db = openDb(CONFIG_DB_PATH);
-
-        //Create methodSignature variable which is same as method signature of the function
-        //Retrieve the method signature of calling function in the form of key-value pair of Datatype:variable_name
-        // Parameters: Pointer to the calling function, variable name list for specific table
-        QString methodSignature = getParamString(&DbManager::getAllMachineProperties, machineTableColumns);
-        // Alter machine table in database with the updated method signature
-        alterDatabaseSchema(methodSignature, "machine");
         }
 
         int row_count = 0;
@@ -1008,29 +952,42 @@ void DbManager::setPaymentTransaction(const std::map<std::string, std::string> &
     closeDb();
 }
 
-void DbManager::alterDatabaseSchema(QString methodSignature, QString tableName){
+// Generalized function to alter the database schema with the expected schema defined in dbManager.h file
+void DbManager::modifyDatabaseSchemaWithUpdatedColumns(const std::vector<std::tuple<QString, QString, QString>>& tableInfo, QString tableName){
     QSqlDatabase db = openDb(CONFIG_DB_PATH);
     QSqlQuery qry(db);
-    //Get expected columns according to defined method signature
-    QMap<QString,QString> expectedColumns = parseMethodSignature(methodSignature);
     
     // Get the existing columns in the table
     QStringList existingColumns;
+    // Refer to the tableName passed in the function call. e.g. machine, products, slots
     QString getSchema = QString("PRAGMA table_info(%1)").arg(tableName);
     qry.exec(getSchema);
     while (qry.next()) {
         existingColumns << qry.value(1).toString();
     }
-    // Check for missing columns and create them if needed
-    // Iterating over the expected columns using variable it (iterator) from start to end
-    for (auto it = expectedColumns.constBegin(); it != expectedColumns.constEnd(); ++it) {
-        // Extract key and value for iterator object
-        const QString& columnName = it.key();
-        const QString& columnType = it.value();
+
+    // Iterate over the expected table schema
+    for (const auto& info : tableInfo) {
+        //Store the values in the variables for each record
+        QString columnType = std::get<0>(info);
+        QString columnName = std::get<1>(info);
+        QString defaultValue = std::get<2>(info);
+        //Convert cpp datatype to SQLite datatype
+        QString sqlType;
+        if (columnType == "int") {
+            sqlType = "INTEGER";
+        } else if (columnType == "double") {
+            sqlType = "REAL";
+        } else if (columnType == "bool") {
+            sqlType = "INTEGER";
+        }else if (columnType == "QString" || columnType == "string") {
+            sqlType = "TEXT";
+        }
+        
         // If column does not exist in existing columns, alter the table to add column
         if (!existingColumns.contains(columnName)) {
-            QString sql = QString("ALTER TABLE %1 ADD COLUMN %2 %3 DEFAULT ''")
-                    .arg(tableName,columnName, columnType);
+            QString sql = QString("ALTER TABLE %1 ADD COLUMN %2 %3 DEFAULT '%4'")
+                    .arg(tableName, columnName, sqlType, defaultValue);
             if (!qry.exec(sql)) {
                 qDebug() << "Failed to create column" << columnName << ":" << qry.lastError().text();
                 qry.finish();

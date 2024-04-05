@@ -575,9 +575,9 @@ bool DbManager::getAllProductProperties(int pnumber,
 QMap<QString, QString> parseMethodSignature(const QString& methodSignature) {
     QMap<QString, QString> columns;
     //Split the comma seperated method signature to a list
-    QStringList parameters = methodSignature.split(',', Qt::SkipEmptyParts);
+    QStringList parameters = methodSignature.split(',');
     for (const QString& param : parameters) {
-        QStringList parts = param.split(' ', Qt::SkipEmptyParts);
+        QStringList parts = param.split(' ');
         if (parts.size() >= 2) {
             //Remove special chracters other than underscore
             QString type = parts.first().remove(QRegExp("[^a-zA-Z0-9_]")).trimmed();

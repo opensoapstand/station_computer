@@ -488,7 +488,12 @@ bool DbManager::getAllProductProperties(int pnumber,
             qDebug() << "Open db: Attempted to load all product properties for pnumber: " << pnumber;
             qDebug() << "Did not execute sql (replace 'pnumber' for actual number when testing sql command manually). "
                      << qry.lastError() << " | " << qry.lastQuery();
+
+            //Create methodSignature variable which is same as method signature of the function
+            //Retrieve the method signature of calling function in the form of key-value pair of Datatype:variable_name
+            // Parameters: Pointer to the calling function, variable name list for specific table
             QString methodSignature = getParamString(&DbManager::getAllProductProperties, productTableColumns);
+            // Alter products table in database with the updated method signature
             alterDatabaseSchema(methodSignature, "products");
             return false;
         }
@@ -713,8 +718,12 @@ bool DbManager::getAllMachineProperties(QString* machine_id,
 
         // Create a new connection and query object
         db = openDb(CONFIG_DB_PATH);
+
         //Create methodSignature variable which is same as method signature of the function
+        //Retrieve the method signature of calling function in the form of key-value pair of Datatype:variable_name
+        // Parameters: Pointer to the calling function, variable name list for specific table
         QString methodSignature = getParamString(&DbManager::getAllMachineProperties, machineTableColumns);
+        // Alter machine table in database with the updated method signature
         alterDatabaseSchema(methodSignature, "machine");
         }
 

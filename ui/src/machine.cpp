@@ -6,7 +6,6 @@
 #include "page_payment_tap_serial.h"
 #include "page_payment_tap_tcp.h"
 
-
 #include <map>
 #include <fstream>
 
@@ -88,7 +87,7 @@ bool machine::loadDynamicContent()
     m_products_loaded_successfully = true;
     for (int pnumber_index = 0; pnumber_index < all_pnumbers.size(); pnumber_index++)
     {
-        // qDebug() << "machine: load product properties for pnumber:" << (all_pnumbers[pnumber_index]);
+        qDebug() << "machine: load product properties for pnumber:" << (QString::number(all_pnumbers[pnumber_index])) << ". Product " << QString::number(pnumber_index) << " out of " << QString::number(all_pnumbers.size());
         m_products_loaded_successfully &= m_pnumberproducts[all_pnumbers[pnumber_index]].loadProductProperties();
         m_pnumberproducts[all_pnumbers[pnumber_index]].setSizeUnit(getSizeUnit()); // volumeUnit is a machine wide parameter
     }
@@ -102,7 +101,6 @@ bool machine::loadDynamicContent()
     loadElementDynamicPropertiesFromTemplate();                // dynamic elements (position, visibility)
     loadElementDynamicPropertiesFromDefaultHardwareTemplate(); // dynamic elements (position, visibility)
     loadElementDynamicPropertiesFromDefaultTemplate();         // dynamic elements (position, visibility)
-
     return success;
 }
 
@@ -111,13 +109,14 @@ void machine::reboot()
     QString paymentMethod = getPaymentOptions();
     if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA)
     {
-        // Tap Canada or Moneris works on the serial connection and whenever the station reboots, the device loses communication. 
-        //To keep both the devices communicated, Tap device needs to restart as the serial connection re-establishes after the restart of TAP device. 
-        //Rebooting TAP at the same time as the station will keep the communication in place
+        // Tap Canada or Moneris works on the serial connection and whenever the station reboots, the device loses communication.
+        // To keep both the devices communicated, Tap device needs to restart as the serial connection re-establishes after the restart of TAP device.
+        // Rebooting TAP at the same time as the station will keep the communication in place
         page_payment_tap_serial paymentSerialObject;
         paymentSerialObject.rebootDevice();
     }
-    else if(paymentMethod== PAYMENT_TAP_USA_QR || PAYMENT_TAP_USA){
+    else if (paymentMethod == PAYMENT_TAP_USA_QR || PAYMENT_TAP_USA)
+    {
         page_payment_tap_tcp paymentTcpObject;
         paymentTcpObject.rebootTapTcpDevice();
     }
@@ -134,7 +133,7 @@ void machine::loadBottle()
         getProductByPNumber(m_pNumber_bottle_1)->loadProductProperties();
         getProductByPNumber(m_pNumber_bottle_1)->setSizeUnit(getSizeUnit());
     }
-    if (m_pNumber_bottle_2)
+    if (m_pNumber_bottle_2 != DUMMY_PNUMBER)
     {
         getProductByPNumber(m_pNumber_bottle_2)->loadProductProperties();
         getProductByPNumber(m_pNumber_bottle_2)->setSizeUnit(getSizeUnit());
@@ -292,7 +291,7 @@ pnumberproduct *machine::getSlotBaseProduct(int slot)
 void machine::setSelectedProductByOption(int productOption)
 {
     int pnumber = dispenseProductsMenuOptions[productOption - 1];
-    m_selectedProduct = getProductByPNumber(pnumber);
+    setSelectedProduct(pnumber);
 }
 
 bool machine::getIsOptionAvailable(int productOption)
@@ -304,7 +303,7 @@ bool machine::getIsOptionAvailable(int productOption)
     // check if slot for option is valid
     // check if all pnumbers for options are valid
     int pnumber = dispenseProductsMenuOptions[productOption - 1];
-    pnumberproduct *  product = getProductByPNumber(pnumber);
+    pnumberproduct *product = getProductByPNumber(pnumber);
     return product->getIsProductEnabled();
 }
 
@@ -390,7 +389,7 @@ bool machine::hasSelectedBottle()
 
 bool machine::hasBuyBottleOption()
 {
-    if (m_pNumber_bottle_1 || m_pNumber_bottle_2)
+    if ((m_pNumber_bottle_1 != DUMMY_PNUMBER) || (m_pNumber_bottle_2 != DUMMY_PNUMBER))
     {
         return true;
     }
@@ -400,27 +399,29 @@ bool machine::hasBuyBottleOption()
     }
 }
 
-QString machine::getSelectedProductAwsProductId(){
+QString machine::getSelectedProductAwsProductId()
+{
     return getAwsProductId(getSelectedProduct()->getPNumber());
 }
 
-QString machine::getAwsProductId(int pnumber){
-    
+QString machine::getAwsProductId(int pnumber)
+{
+
     QString productId = getMachineId() + "_" + QString::number(pnumber);
     QString suffix = getProductByPNumber(pnumber)->getAwsProductIdSuffix();
 
-    if (!suffix.isEmpty()){
+    if (!suffix.isEmpty())
+    {
         productId += "_" + suffix;
     }
-    qDebug()<< "Product Id for P-" + QString::number(pnumber) + QString(": ") + productId;
+    qDebug() << "Product Id for P-" + QString::number(pnumber) + QString(": ") + productId;
     return productId;
 }
 
 pnumberproduct *machine::getProductByPNumber(int pnumber)
 {
-    //qDebug() << pnumber;
+    // qDebug() << pnumber;
     return &m_pnumberproducts[pnumber];
-
 }
 pnumberproduct *machine::getSelectedProduct()
 {
@@ -431,6 +432,7 @@ void machine::setSelectedProduct(int pnumber)
 {
     // pnumber is the index. Clever... until you have one million options....
     m_selectedProduct = getProductByPNumber(pnumber);
+    getSelectedProduct()->resetCustomMixRatioParameters(); // reset custom options when selecting.
 }
 
 dispenser_slot *machine::getSlotByPosition(int slotPosition)
@@ -568,7 +570,7 @@ int machine::getSlotCount()
     {
         slot_count = MAX_SLOT_COUNT;
     }
- 
+
     return slot_count;
     // dispensers is the same as slots.
 
@@ -602,11 +604,11 @@ void machine::dispenseButtonLightsAnimateState(bool animateElseOff)
     }
 }
 
-void machine::resetUserState()
+void machine::resetUserState(bool resetSessionIdAndCoupons)
 {
     setRole(UserRole::user);
     resetSessionId();  // fixme! bug! if manually exited, will not reset session id.
-    initCouponState(); // everything coupon is reset when idle page is reached.
+    initCouponState(); // everything coupon is reset when user state is reset
 }
 
 void machine::setCouponState(StateCoupon state)
@@ -928,7 +930,8 @@ void machine::setEmptyContainerDetectionEnabled(bool isEnabled)
     m_has_empty_detection = isEnabled;
 }
 
-bool* machine::getEmptyContainerDetectionPointer(){
+bool *machine::getEmptyContainerDetectionPointer()
+{
     return &m_has_empty_detection;
 }
 
@@ -983,6 +986,7 @@ bool machine::isSessionLocked()
 
 void machine::resetSessionId()
 {
+    qDebug() << "Reset Session id";
     m_session_id = "";
 }
 
@@ -1209,7 +1213,51 @@ QString machine::getIdlePageType()
 bool machine::getCouponsEnabled()
 {
 
-    return m_coupons_enabled==1;
+    return m_coupons_enabled == 1;
+}
+
+bool machine::isStandaloneVendingMachine()
+{
+    // if at least one method is 
+    bool ret = false;
+    for (const auto &paymentMethod : getPaymentOptions())
+    {
+                // Check if the payment method is one of the standalone methods
+        if (paymentMethod == PAYMENT_QR ||
+            paymentMethod == PAYMENT_QR_EMAILFREE ||
+            paymentMethod == PAYMENT_TAP_CANADA ||
+            paymentMethod == PAYMENT_TAP_USA ||
+            paymentMethod == PAYMENT_TAP_CANADA_QR ||
+            paymentMethod == PAYMENT_TAP_USA_QR)
+        {
+            ret = true;
+            break; // No need to continue checking once a standalone method is found
+        }
+        // switch (paymentMethod)
+        // {
+        // case PAYMENT_QR:
+        // case PAYMENT_QR_EMAILFREE:
+        // case PAYMENT_TAP_CANADA:
+        // case PAYMENT_TAP_USA:
+        // case PAYMENT_TAP_CANADA_QR:
+        // case PAYMENT_TAP_USA_QR:
+        // {
+        //     ret = true;
+        //     break;
+        // }
+        // case PAYMENT_RECEIPT_PRINTER_BARCODE_EAN13:
+        // case PAYMENT_RECEIPT_PRINTER_BARCODE_EAN2:
+        // case PAYMENT_RECEIPT_PRINTER_BARCODE:
+        // case PAYMENT_RECEIPT_PRINTER_PLU:
+        // case PAYMENT_NONE:
+        // default:
+        // {
+
+        //     break;
+        // }
+        // }
+    }
+    return ret;
 }
 
 QString machine::getPaymentOptions()
@@ -1226,7 +1274,7 @@ void machine::setPaymentOptionsInDb(QString paymentMethod)
 
 ActivePaymentMethod machine::getSelectedPaymentMethod()
 {
-    // selected payment method for the current session. 
+    // selected payment method for the current session.
     return m_selectedPaymentMethod;
 }
 
@@ -1392,9 +1440,12 @@ void machine::setBackgroundPictureToQWidget(QWidget *p_widget, QString image_pat
 {
     QPixmap background(image_path);
 
-    if (background.isNull()) {
+    if (background.isNull())
+    {
         qDebug() << "Failed to load image. Check if the file exists and the path is correct.";
-    } else {
+    }
+    else
+    {
         QPalette palette;
         palette.setBrush(QPalette::Background, background);
         p_widget->setPalette(palette);
@@ -1402,7 +1453,6 @@ void machine::setBackgroundPictureToQWidget(QWidget *p_widget, QString image_pat
         p_widget->repaint();
         p_widget->update();
     }
-
 }
 
 void machine::setTemplateTextWithIdentifierToObject(QWidget *p_element, QString identifier)
@@ -1739,19 +1789,23 @@ bool machine::hasMixing()
     }
 }
 
-QString machine::getPortalBaseUrl(){
+QString machine::getPortalBaseUrl()
+{
     return m_portal_base_url;
 }
 
-bool machine::isEnabledOfflinePayment(){
+bool machine::isEnabledOfflinePayment()
+{
     return m_enable_offline_payment;
 }
 
-void machine::setFreeSampleEndURL(QString ending_url){
+void machine::setFreeSampleEndURL(QString ending_url)
+{
     m_freesample_end_url = ending_url;
 }
 
-QString machine::getFreeSampleEndURL(){
+QString machine::getFreeSampleEndURL()
+{
     return m_freesample_end_url;
 }
 
@@ -1761,14 +1815,16 @@ size_t WriteCallback2(char *contents, size_t size, size_t nmemb, void *userp)
     return size * nmemb;
 }
 
-int machine::getPageInitTimeout(){
+int machine::getPageInitTimeout()
+{
     return m_page_init_timeout;
 }
 
-std::tuple<CURLcode, std::string, long> machine::sendRequestToPortal(QString api_url, QString request_type, QString curl_params, QString page_name){
+std::tuple<CURLcode, std::string, long> machine::sendRequestToPortal(QString api_url, QString request_type, QString curl_params, QString page_name)
+{
 
     api_url = m_portal_base_url + api_url;
-    
+
     curl_param_array = curl_params.toLocal8Bit();
     curl_data = curl_param_array.data();
 
@@ -1782,7 +1838,8 @@ std::tuple<CURLcode, std::string, long> machine::sendRequestToPortal(QString api
         return {res, "Curl failed", 404};
     }
     curl_easy_setopt(curl, CURLOPT_URL, api_url.toUtf8().constData());
-    if(request_type=="POST"){
+    if (request_type == "POST")
+    {
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, curl_param_array.data());
     }
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback2);
@@ -1790,8 +1847,8 @@ std::tuple<CURLcode, std::string, long> machine::sendRequestToPortal(QString api
     curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
     res = curl_easy_perform(curl);
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
-    
-    std::tuple<CURLcode, std::string, long> returnObject = {res,readBuffer, http_code};
+
+    std::tuple<CURLcode, std::string, long> returnObject = {res, readBuffer, http_code};
 
     curl_easy_cleanup(curl);
     readBuffer = "";

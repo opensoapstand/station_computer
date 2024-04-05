@@ -443,7 +443,7 @@ void page_idle::onUserRoleTimeOutTimerTick()
     {
         userRoleTimeOutTimer->stop();
         p_statusbar->setRoleTimeOutTrailingText("");
-        thisMachine->resetUserState();
+        thisMachine->resetUserState(true);
         p_statusbar->refresh();
 
         _userRoleTimeOutTimerSec = PAGE_IDLE_USER_ROLE_TIMEOUT_SECONDS;

@@ -769,6 +769,15 @@ bool DbManager::getAllMachineProperties(QString* machine_id,
         }
         qry.finish();
 
+        if (*buy_bottle_1 < 1)
+        {
+            *buy_bottle_1 = DUMMY_PNUMBER;
+        }
+        if (*buy_bottle_2 < 1)
+        {
+            *buy_bottle_2 = DUMMY_PNUMBER;
+        }
+
         if (row_count == 0)
         {
             qDebug() << "ERROR: No record in db table machine ";

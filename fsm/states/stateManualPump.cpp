@@ -114,6 +114,7 @@ DF_ERROR stateManualPump::onAction()
       {
          debugOutput::sendMessage("Disable dispenser pump " + to_string(m_active_pump_index + 1), MSG_INFO);
 
+         g_machine.m_productDispensers[m_active_pump_index].finishActivePNumberDispense();
          g_machine.m_productDispensers[m_active_pump_index].finishSelectedProductDispense();
       }
 

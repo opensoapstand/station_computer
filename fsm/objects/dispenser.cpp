@@ -574,6 +574,7 @@ bool dispenser::handleMixComponentTargetVolumeReached()
 
         if (m_mix_active_index < 0)
         {
+            finishActivePNumberDispense();
             finishSelectedProductDispense();
             return true;
         }
@@ -589,6 +590,7 @@ bool dispenser::handleMixComponentTargetVolumeReached()
     }
     else
     {
+        finishActivePNumberDispense();
         finishSelectedProductDispense();
         return true;
     }
@@ -673,7 +675,7 @@ DF_ERROR dispenser::initSelectedProductDispense(char size)
 
 DF_ERROR dispenser::finishSelectedProductDispense()
 {
-    finishActivePNumberDispense();
+    
     debugOutput::sendMessage("Dispenser: Stop selected PNumber dispense ", MSG_INFO);
     // Set End time
     time(&rawtime);

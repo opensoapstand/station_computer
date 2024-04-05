@@ -25,7 +25,8 @@
 #include <typeinfo>
 #include <cxxabi.h>
 
-//Helper function to demangle the type name
+//Helper function to decoding or demangle the compiled type name
+// If demangle fails, then original type name is returned
 std::string demangle(const char* name) {
     int status;
     char* demangled = abi::__cxa_demangle(name, nullptr, nullptr, &status);
@@ -35,6 +36,7 @@ std::string demangle(const char* name) {
 }
 
 // Helper function to get the parameter type name
+// Uses template and typename to enable flexibility in type resolution
 template <typename T>
 std::string getTypeName() {
     char* demangled = abi::__cxa_demangle(typeid(T).name(), nullptr, nullptr, nullptr);
@@ -44,6 +46,7 @@ std::string getTypeName() {
 }
 
 // Helper function to append datatype and column name to string
+// Uses template and typename to enable flexibility in type resolution
 template <typename T>
 void printParam(std::ostringstream& oss, int& index, T* param, QStringList tableColumns) {
     oss << (index++ ? ", " : "");    
@@ -52,6 +55,8 @@ void printParam(std::ostringstream& oss, int& index, T* param, QStringList table
 }
 
 // Function to create a string representation of the parameters
+// Uses template and typename to enable flexibility in type resolution. Function of any return type or class type is allowed
+// typename... Args allows the function to accept any number of parameters 
 template <typename ReturnType, typename ClassType, typename... Args>
 QString getParamString(ReturnType(ClassType::*func)(Args...), QStringList tableColumns) {
     std::ostringstream oss;
@@ -1000,7 +1005,7 @@ void DbManager::alterDatabaseSchema(QString methodSignature, QString tableName){
     //Get expected columns according to defined method signature
     QMap<QString,QString> expectedColumns = parseMethodSignature(methodSignature);
     
-    // Get the existing columns in the 'machine' table
+    // Get the existing columns in the table
     QStringList existingColumns;
     QString getSchema = QString("PRAGMA table_info(%1)").arg(tableName);
     qry.exec(getSchema);
@@ -1008,10 +1013,12 @@ void DbManager::alterDatabaseSchema(QString methodSignature, QString tableName){
         existingColumns << qry.value(1).toString();
     }
     // Check for missing columns and create them if needed
+    // Iterating over the expected columns using variable it (iterator) from start to end
     for (auto it = expectedColumns.constBegin(); it != expectedColumns.constEnd(); ++it) {
+        // Extract key and value for iterator object
         const QString& columnName = it.key();
         const QString& columnType = it.value();
-
+        // If column does not exist in existing columns, alter the table to add column
         if (!existingColumns.contains(columnName)) {
             QString sql = QString("ALTER TABLE %1 ADD COLUMN %2 %3 DEFAULT ''")
                     .arg(tableName,columnName, columnType);

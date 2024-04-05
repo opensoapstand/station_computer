@@ -26,6 +26,7 @@ public:
 
     bool executeQuery(QString sql);
 
+    void checkAndRepairConfigurationDb();
     bool updateTableMachineWithInt(QString column, int value);
     bool updateTableMachineWithDouble(QString column, double value, int precision);
     bool updateTableMachineWithText(QString column, QString value);
@@ -50,10 +51,10 @@ public:
     void addTemperature(QString machine_id, double temperature_1, double temperature_2, QString alert);
     void addUserInteraction(QString session_id, QString role, QString page, QString event);
     void addUserInteraction(QString session_id, QString role, QString page, QString event, QString data);
-    void modifyDatabaseSchemaWithUpdatedColumns(const std::vector<std::tuple<QString, QString, QString> >&, QString);
+    void checkAndRepairTableInConfigDb(const std::vector<std::tuple<QString, QString, QString> >&, QString);
     // Slots table schema as tuple 
     // Datatype as first value, column name as second value, default value as third value
-    std::vector<std::tuple<QString, QString, QString>> slotsTable = {
+    std::vector<std::tuple<QString, QString, QString>> slotsTableLayout = {
                         {"QString", "dispense_pnumbers","55"},
                         {"QString", "base_pnumber", ""},
                         {"QString",  "additive_pnumbers",""},
@@ -70,7 +71,7 @@ public:
                               
     // Product table schema as tuple 
     // Datatype as first value, column name as second value, default value as third value
-    std::vector<std::tuple<QString, QString, QString>> productsTable = {
+    std::vector<std::tuple<QString, QString, QString>> productsTableLayout = {
                         //Using random soapstand_product_serial number as 55.
                         {"QString", "soapstand_product_serial","55"},
                         {"QString", "mix_pnumbers", ""},
@@ -161,7 +162,7 @@ public:
 
     // Machine Table schema
     // Datatype as first value, column name as second value, default value as third value
-    std::vector<std::tuple<QString, QString, QString>> machineTable = {
+    std::vector<std::tuple<QString, QString, QString>> machineTableLayout = {
                         {"QString", "machine_id","SS-DEV-003"},
                         {"QString", "soapstand_customer_id", "C-0"},
                         {"QString",  "template","default"},

@@ -40,6 +40,9 @@ machine::~machine()
 
 void machine::initMachine()
 {
+    
+    m_db->checkAndRepairConfigurationDb(); // auto repairing database.
+
     loadMachineParameterFromDb(); // load here because we need parameters already at init
 
     // ASSUMES that there is always slot_id's starting from 1 to the set slot count.
@@ -48,11 +51,8 @@ void machine::initMachine()
         m_slots[slot_index].setSlot(slot_index + 1);
         m_slots[slot_index].setDb(m_db);
         m_slots[slot_index].loadSlotParametersFromDb();
-        // m_slots[slot_index].setEmptyContainerDetectionEnabled(getEmptyContainerDetectionEnabled());
     }
 
-    // QVector<int> all_dispense_pnumbers = getAllUniqueDispensePNumbers();
-    // initProductOptions(getAllUniqueDispensePNumbers());
     initProductOptions();
 
     // TODO: For now, the index of a product in an array is its P-number.  e.g. P-6 is tangerine dish saop. Its object resides in m_pnumberproducts[6], that will only work for less than a million something p-numbers...

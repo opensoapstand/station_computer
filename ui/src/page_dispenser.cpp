@@ -674,6 +674,16 @@ void page_dispenser::processDispenserUpdate()
     case FLOW_STATE_UNAVAILABLE:
     case FLOW_STATE_NOT_PUMPING_NOT_DISPENSING:
     case FLOW_STATE_RAMP_UP:
+    {
+        p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_problems, "normal", PAGE_DISPENSER_CSS);
+        ui->label_dispense_message->hide();
+        if (p_page_idle->thisMachine->hasMixing())
+        {
+            ui->label_dispense_message_background->hide();
+            ui->label_dispense_message_icon->hide();
+        }
+        break;
+    }
     case FLOW_STATE_DISPENSING:
     {
         p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_problems, "normal", PAGE_DISPENSER_CSS);

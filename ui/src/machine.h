@@ -84,8 +84,7 @@ public:
 
     QString getMachineId();
     QString getMachineLocation();
-    QString getPaymentOptions();
-    void setPaymentOptionsInDb(QString paymentMethod);
+
     bool getCouponsEnabled();
     bool getShowTransactionHistory();
 
@@ -185,9 +184,11 @@ public:
     StateReboot getRebootState();
     void setRebootState(StateReboot state);
 
+    QString getPaymentOptions();
+    void setPaymentOptionsInDb(QString paymentMethod);
     ActivePaymentMethod getSelectedPaymentMethod();
     void setSelectedPaymentMethod(ActivePaymentMethod paymentMethod);
-
+    bool isStandaloneVendingMachine();
     std::vector<ActivePaymentMethod> getAllowedPaymentMethods();
     void setAllowedPaymentMethods(ActivePaymentMethod paymentMethod);
 

@@ -270,7 +270,17 @@ void page_select_product::displayProducts()
                 labels_product_overlay_text[slot_index]->setStyleSheet(styleSheet);
 
                 labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->assistance"));
-                pushButtons_product_select[slot_index]->hide();
+
+                if (p_page_idle->thisMachine->isStandaloneVendingMachine())
+                {
+                    // for a standalone machine, we will be firm: a problem detect means: not clickable.
+                    pushButtons_product_select[slot_index]->hide();
+                }
+                else
+                {
+                    // for a managed machine, we can be lenient
+                    pushButtons_product_select[slot_index]->show();
+                }
                 break;
             }
             case PRODUCT_STATE_DISABLED:

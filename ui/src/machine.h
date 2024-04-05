@@ -277,6 +277,7 @@ public:
     QString m_portal_base_url;
     int m_enable_offline_payment;
     int m_page_init_timeout;
+    QString m_test_field;
 
     QString m_freesample_end_url;
     int m_is_enabled;

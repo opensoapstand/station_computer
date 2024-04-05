@@ -20,20 +20,57 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <QStringList>
+#include <sstream>
+#include <typeinfo>
+#include <cxxabi.h>
 
-DbManager::DbManager(const QString &path)
-{
-    // m_dbPath2 = CONFIG_DB_PATH;
-    // setPath(path);
-}
-DbManager::DbManager()
-{
+//Helper function to demangle the type name
+std::string demangle(const char* name) {
+    int status;
+    char* demangled = abi::__cxa_demangle(name, nullptr, nullptr, &status);
+    std::string result(demangled ? demangled : name);
+    std::free(demangled);
+    return result;
 }
 
-// DTOR
-DbManager::~DbManager()
-{
+// Helper function to get the parameter type name
+template <typename T>
+std::string getTypeName() {
+    char* demangled = abi::__cxa_demangle(typeid(T).name(), nullptr, nullptr, nullptr);
+    std::string result(demangled);
+    free(demangled);
+    return result;
 }
+
+// Helper function to append datatype and column name to string
+template <typename T>
+void printParam(std::ostringstream& oss, int& index, T* param, QStringList tableColumns) {
+    oss << (index++ ? ", " : "");    
+    oss << getTypeName<T>();
+    oss << " " << tableColumns[index - 1].toStdString(); 
+}
+
+// Function to create a string representation of the parameters
+template <typename ReturnType, typename ClassType, typename... Args>
+QString getParamString(ReturnType(ClassType::*func)(Args...), QStringList tableColumns) {
+    std::ostringstream oss;
+    oss << "(";
+    int index = 0;
+    // Iterate over the parameter types and print them
+    int dummy[] = {0, (printParam<Args>(oss, index, nullptr, tableColumns), 0)...};
+    static_cast<void>(dummy); // Suppress unused variable warning
+    oss << ")";
+    return QString::fromStdString(oss.str());
+}
+
+DbManager::DbManager(const std::string &path) {
+}
+
+DbManager::DbManager() {}
+
+DbManager::~DbManager() {}
+
 
 void DbManager::closeDb()
 {
@@ -446,6 +483,8 @@ bool DbManager::getAllProductProperties(int pnumber,
             qDebug() << "Open db: Attempted to load all product properties for pnumber: " << pnumber;
             qDebug() << "Did not execute sql (replace 'pnumber' for actual number when testing sql command manually). "
                      << qry.lastError() << " | " << qry.lastQuery();
+            QString methodSignature = getParamString(&DbManager::getAllProductProperties, productTableColumns);
+            alterDatabaseSchema(methodSignature, "products");
             return false;
         }
 
@@ -533,48 +572,79 @@ bool DbManager::getAllProductProperties(int pnumber,
     return true;
 }
 
-bool DbManager::getAllMachineProperties(
-    QString *machine_id,
-    QString *soapstand_customer_id,
-    QString *ttttemplate,
-    QString *location,
-    QString *controller_type,
-    QString *controller_id,
-    QString *screen_type,
-    QString *screen_id,
-    int *has_receipt_printer,
-    int *receipt_printer_is_online,
-    int *receipt_printer_has_paper,
-    int *has_tap_payment,
-    QString *hardware_version,
-    QString *software_version,
-    int *aws_port,
-    int *coupons_enabled,
-    bool *has_empty_detection,
-    int *enable_pump_ramping,
-    int *enable_pump_reversal,
-    int *dispense_buttons_count,
-    QString *maintenance_pwd,
-    int *show_transactions,
-    QString *help_text_html,
-    QString *idle_page_type,
-    QString *admin_pwd,
-    QString *pump_id_slots,
-    int *is_enabled_slots,
-    QString *status_text_slots,
-    double *alert_temperature,
-    QString *software_version_controller,
-    int *is_enabled,
-    QString *status_text,
-    QString *payment,
-    QString *size_unit,
-    int *screen_sleep_time24h,
-    int *screen_wakeup_time24h,
-    int *buy_bottle_1,
-    int *buy_bottle_2,
-    QString *portal_base_url,
-    int *enable_offline_payment,
-    int *page_init_timeout)
+QMap<QString, QString> parseMethodSignature(const QString& methodSignature) {
+    QMap<QString, QString> columns;
+    //Split the comma seperated method signature to a list
+    QStringList parameters = methodSignature.split(',', Qt::SkipEmptyParts);
+    for (const QString& param : parameters) {
+        QStringList parts = param.split(' ', Qt::SkipEmptyParts);
+        if (parts.size() >= 2) {
+            //Remove special chracters other than underscore
+            QString type = parts.first().remove(QRegExp("[^a-zA-Z0-9_]")).trimmed();
+            QString name = parts.last().remove(QRegExp("[^a-zA-Z0-9_]")).trimmed();
+            //Check for datatype assigned in cpp and convert it to SQLite datatype
+            QVariant::Type columnType = QVariant::Invalid;
+            QString sqlType;
+            if (type == "int") {
+                columnType = QVariant::Int;
+                sqlType = "INTEGER";
+            } else if (type == "double") {
+                columnType = QVariant::Double;
+                sqlType = "REAL";
+            } else if (type == "QString" || type == "string") {
+                columnType = QVariant::String;
+                sqlType = "TEXT";
+            }
+            //If the data type is valid, append the key-value pair to columns map
+            if (columnType != QVariant::Invalid) {
+                columns.insert(name, sqlType);
+            }
+        }
+    }
+    return columns;
+}
+
+bool DbManager::getAllMachineProperties(QString* machine_id,
+                                    QString* soapstand_customer_id,
+                                    QString* ui_template,
+                                    QString* location,
+                                    QString* controller_type,
+                                    QString* controller_id,
+                                    QString* screen_type,
+                                    QString* screen_id,
+                                    int* has_receipt_printer,
+                                    int* receipt_printer_is_online,
+                                    int* receipt_printer_has_paper,
+                                    int* has_tap_payment,
+                                    QString* hardware_version,
+                                    QString* software_version,
+                                    int* aws_port,
+                                    int* coupons_enabled,
+                                    bool* has_empty_detection,
+                                    int* enable_pump_ramping,
+                                    int* enable_pump_reversal,
+                                    int* dispense_buttons_count,
+                                    QString* maintenance_pwd,
+                                    int* show_transactions,
+                                    QString* help_text_html,
+                                    QString* idle_page_type,
+                                    QString* admin_pwd,
+                                    QString* pump_id_slots,
+                                    int* is_enabled_slots,
+                                    QString* status_text_slots,
+                                    double* alert_temperature,
+                                    QString* software_version_controller,
+                                    int* is_enabled,
+                                    QString* status_text,
+                                    QString* payment,
+                                    QString* size_unit,
+                                    int* screen_sleep_time24h,
+                                    int* screen_wakeup_time24h,
+                                    int* buy_bottle_1,
+                                    int* buy_bottle_2,
+                                    QString* portal_base_url,
+                                    int* enable_offline_payment,
+                                    int* page_init_timeout)
 {
     bool success;
     int emptyDetection;
@@ -584,7 +654,6 @@ bool DbManager::getAllMachineProperties(
         QSqlQuery qry(db);
 
         qry.prepare(
-
             "SELECT "
             "machine_id," // 0
             "soapstand_customer_id,"
@@ -625,22 +694,32 @@ bool DbManager::getAllMachineProperties(
             "enable_offline_payment,"
             "page_init_timeout"
             " FROM machine"
-
         );
+
         success = qry.exec();
-        if (!success)
-        {
-            qDebug() << "Open db: Attempted to load machine properties";
-            qDebug() << "Did not execute sql. "
-                     << qry.lastError() << " | " << qry.lastQuery();
+        if (!success) {
+        qDebug() << "Open db: Attempted to load machine properties";
+        qDebug() << "Did not execute sql. "
+                 << qry.lastError() << " | " << qry.lastQuery();
+
+        // Close the previous connection and query object
+        qry.finish();
+        db.close();
+
+        // Create a new connection and query object
+        db = openDb(CONFIG_DB_PATH);
+        //Create methodSignature variable which is same as method signature of the function
+        QString methodSignature = getParamString(&DbManager::getAllMachineProperties, machineTableColumns);
+        alterDatabaseSchema(methodSignature, "machine");
         }
+
         int row_count = 0;
         while (qry.next())
         {
             row_count++;
             *machine_id = qry.value(0).toString();
             *soapstand_customer_id = qry.value(1).toString();
-            *ttttemplate = qry.value(2).toString();
+            *ui_template = qry.value(2).toString();
             *location = qry.value(3).toString();
             *controller_type = qry.value(4).toString();
             *controller_id = qry.value(5).toString();
@@ -655,20 +734,14 @@ bool DbManager::getAllMachineProperties(
             *aws_port = qry.value(14).toInt();
             *coupons_enabled = qry.value(15).toInt();
             emptyDetection = qry.value(16).toInt();
-            if (has_empty_detection) // Check if the pointer is not null
-            {
-                if (emptyDetection)
-                {
+            if (has_empty_detection) { // Check if the pointer is not null
+                if (emptyDetection) {
                     *has_empty_detection = true;
-                }
-                else
-                {
+                } else {
                     qDebug() << "aaeriiii";
                     *has_empty_detection = false;
                 }
-            }
-            else
-            {
+            } else {
                 qDebug() << "has_empty_detection is null!";
             }
 
@@ -910,4 +983,34 @@ void DbManager::setPaymentTransaction(const std::map<std::string, std::string> &
     }
     qDebug() << "Payment database write";
     closeDb();
+}
+
+void DbManager::alterDatabaseSchema(QString methodSignature, QString tableName){
+    QSqlDatabase db = openDb(CONFIG_DB_PATH);
+    QSqlQuery qry(db);
+    //Get expected columns according to defined method signature
+    QMap<QString,QString> expectedColumns = parseMethodSignature(methodSignature);
+    
+    // Get the existing columns in the 'machine' table
+    QStringList existingColumns;
+    QString getSchema = QString("PRAGMA table_info(%1)").arg(tableName);
+    qry.exec(getSchema);
+    while (qry.next()) {
+        existingColumns << qry.value(1).toString();
+    }
+    // Check for missing columns and create them if needed
+    for (auto it = expectedColumns.constBegin(); it != expectedColumns.constEnd(); ++it) {
+        const QString& columnName = it.key();
+        const QString& columnType = it.value();
+
+        if (!existingColumns.contains(columnName)) {
+            QString sql = QString("ALTER TABLE %1 ADD COLUMN %2 %3 DEFAULT ''")
+                    .arg(tableName,columnName, columnType);
+            if (!qry.exec(sql)) {
+                qDebug() << "Failed to create column" << columnName << ":" << qry.lastError().text();
+                qry.finish();
+                db.close();
+            }
+        }
+    }
 }

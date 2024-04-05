@@ -100,7 +100,7 @@ public:
     bool isAllowedAsAdmin();
     bool isAllowedAsMaintainer();
 
-    void resetUserState();
+    void resetUserState(bool resetSessionIdAndCoupons);
     void createSessionId();
     void resetSessionId();
     QString getSessionId();

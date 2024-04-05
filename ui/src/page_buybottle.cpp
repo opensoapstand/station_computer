@@ -9,9 +9,9 @@ page_buyBottle::page_buyBottle(QWidget *parent) : QWidget(parent),
 {
     ui->setupUi(this);
 
-    userRoleTimeOutTimer = new QTimer(this);
-    userRoleTimeOutTimer->setInterval(1000);
-    connect(userRoleTimeOutTimer, SIGNAL(timeout()), this, SLOT(onUserRoleTimeOutTimerTick()));
+    // userRoleTimeOutTimer = new QTimer(this);
+    // userRoleTimeOutTimer->setInterval(1000);
+    // connect(userRoleTimeOutTimer, SIGNAL(timeout()), this, SLOT(onUserRoleTimeOutTimerTick()));
 
     bottlePageEndTimer = new QTimer(this);
     bottlePageEndTimer->setInterval(1000);
@@ -41,8 +41,8 @@ void page_buyBottle::showEvent(QShowEvent *event)
     statusbarLayout->addWidget(p_statusbar);            // Only one instance can be shown. So, has to be added/removed per page.
     statusbarLayout->setContentsMargins(0, 1874, 0, 0); // int left, int top, int right, int bottom);
 
-    userRoleTimeOutTimer->start(1000);
-    _userRoleTimeOutTimerSec = PAGE_IDLE_USER_ROLE_TIMEOUT_SECONDS;
+    // userRoleTimeOutTimer->start(1000);
+    // _userRoleTimeOutTimerSec = PAGE_IDLE_USER_ROLE_TIMEOUT_SECONDS;
 
     bottlePageEndTimer->start(1000);
     _bottlePageTimeoutSec = PAGE_BOTTLE_PAGE_TIMEOUT_SECONDS;
@@ -124,27 +124,21 @@ void page_buyBottle::showEvent(QShowEvent *event)
     }
 }
 
-void page_buyBottle::onUserRoleTimeOutTimerTick()
-{
-    _userRoleTimeOutTimerSec--;
-    if (_userRoleTimeOutTimerSec >= 0)
-    {
-        // set colour in red
-        p_statusbar->setRoleTimeOutTrailingText("(" + QString::number(_userRoleTimeOutTimerSec) + "s)");
-        p_statusbar->refresh();
+// void page_buyBottle::onUserRoleTimeOutTimerTick()
+// {
+//     _userRoleTimeOutTimerSec--;
+//     if (_userRoleTimeOutTimerSec >= 0)
+//     {
+//     }
+//     else
+//     {
+//         userRoleTimeOutTimer->stop();
+//         p_statusbar->setRoleTimeOutTrailingText("");
+//         p_statusbar->refresh();
 
-        return;
-    }
-    else
-    {
-        userRoleTimeOutTimer->stop();
-        p_statusbar->setRoleTimeOutTrailingText("");
-        p_page_idle->thisMachine->resetUserState();
-        p_statusbar->refresh();
-
-        _userRoleTimeOutTimerSec = PAGE_IDLE_USER_ROLE_TIMEOUT_SECONDS;
-    }
-}
+//         _userRoleTimeOutTimerSec = PAGE_IDLE_USER_ROLE_TIMEOUT_SECONDS;
+//     }
+// }
 
 void page_buyBottle::onbottlePageTimeoutTick()
 {

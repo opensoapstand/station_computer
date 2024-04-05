@@ -269,7 +269,7 @@ void page_select_product::displayProducts()
                 labels_product_overlay_text[slot_index]->setProperty("class", "label_product_overlay_unavailable"); // apply class BEFORE setStyleSheet!!
                 labels_product_overlay_text[slot_index]->setStyleSheet(styleSheet);
 
-                labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->empty"));
+                labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->assistance"));
                 pushButtons_product_select[slot_index]->hide();
                 break;
             }
@@ -369,9 +369,7 @@ void page_select_product::select_product(int option)
     if (p_page_idle->thisMachine->getSlotFromOption(option)->getIsSlotEnabled())
     {
         p_page_idle->thisMachine->setSelectedProductByOption(option);
-         qDebug() << "seleletliejlitjelijtlieitjjjjavailable: " << option;
         p_page_idle->thisMachine->setSelectedSlotFromSelectedProduct();
-
         hideCurrentPageAndShowProvided(p_page_product);
     }
     else

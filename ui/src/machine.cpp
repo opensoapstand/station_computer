@@ -602,11 +602,11 @@ void machine::dispenseButtonLightsAnimateState(bool animateElseOff)
     }
 }
 
-void machine::resetUserState()
+void machine::resetUserState(bool resetSessionIdAndCoupons)
 {
     setRole(UserRole::user);
     resetSessionId();  // fixme! bug! if manually exited, will not reset session id.
-    initCouponState(); // everything coupon is reset when idle page is reached.
+    initCouponState(); // everything coupon is reset when user state is reset
 }
 
 void machine::setCouponState(StateCoupon state)
@@ -983,6 +983,7 @@ bool machine::isSessionLocked()
 
 void machine::resetSessionId()
 {
+    qDebug() << "Reset Session id";
     m_session_id = "";
 }
 

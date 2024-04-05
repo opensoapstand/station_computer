@@ -677,16 +677,14 @@ void page_dispenser::processDispenserUpdate()
     case FLOW_STATE_DISPENSING:
     {
         p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_problems, "normal", PAGE_DISPENSER_CSS);
-        // normal status
-        // ui->pushButton_problems->hide();
         ui->label_dispense_message->hide();
         if (p_page_idle->thisMachine->hasMixing())
         {
             ui->label_dispense_message_background->hide();
             ui->label_dispense_message_icon->hide();
         }
-        p_page_idle->thisMachine->getSelectedSlot()->setSlotEnabled(true);
-
+        p_page_idle->thisMachine->getSelectedProduct()->setIsProductEmptyOrHasProblem(false);
+        
         break;
     }
 
@@ -725,7 +723,6 @@ void page_dispenser::processDispenserUpdate()
         p_page_idle->thisMachine->getSelectedProduct()->setIsProductEmptyOrHasProblem(true);
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_dispense_message, "out_of_stock");
         p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_problems, "alert", PAGE_DISPENSER_CSS);
-        p_page_idle->thisMachine->getSelectedSlot()->setSlotEnabled(false);
         ui->label_dispense_message->show();
         if (p_page_idle->thisMachine->hasMixing())
         {

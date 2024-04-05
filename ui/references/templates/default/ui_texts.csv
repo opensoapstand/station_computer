@@ -95,8 +95,8 @@ page_dispenser->pushButton_abort->complete,Complete
 page_dispenser->label_finishTransactionMessage->no_pay,Please wait for some moments we are working on your refund
 page_dispenser->label_finishTransactionMessage->display_price,Capturing payment: $%1
 page_dispenser->label_dispense_message->priming,Please keep the button pressed.<br>for up to 15 seconds<br>before the product starts dispensing.
-page_dispenser->label_dispense_message->out_of_stock,It appears we're out of stock.
-page_dispenser->label_dispense_message->needs_attention,We can't get the dispensing started.<br>We're empty or the pump needs help to prime.<br>Tap the problem button for other issues.
+page_dispenser->label_dispense_message->out_of_stock,None or very slow dispense detected.<br>This product is out of stock or needs assistance.
+page_dispenser->label_dispense_message->needs_attention,None or very slow dispense detected<br>We might be empty or the pump needs help to prime.<br>Tap the problem button for other issues.
 # page_dispenser->label_volume_dispensed,Volume dispensed
 page_dispenser->label_volume_dispensed,Hold button until dispensing stops
 page_dispenser->msgBox_problems->qr_tap,<p align=center><br><br>If the pump is working and you tried to dispense for more than 15s without success, the container is probably empty or the pump is not primed. Seek assistance or report the issue. <br> <br> If no green light is on at any dispenser buttons, please press no and check again as the software will attempt to repair the issue. <br> <br> Are you sure you want to stop dispensing and go to the report page?<br><br><br>You will only be charged for the dispensed amount<br></p>

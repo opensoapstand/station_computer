@@ -698,7 +698,6 @@ bool DbManager::getAllMachineProperties(QString *machine_id,
                 }
                 else
                 {
-                    qDebug() << "aaeriiii";
                     *has_empty_detection = false;
                 }
             }
@@ -956,7 +955,7 @@ void DbManager::setPaymentTransaction(const std::map<std::string, std::string> &
     closeDb();
 }
 
-// Generalized function to alter the database schema with the expected schema defined in dbManager.h file
+// Compare existing table layout with provided layout
 void DbManager::checkAndRepairTableInConfigDb(const std::vector<std::tuple<QString, QString, QString>> &tableInfo, QString tableName)
 {
     QSqlDatabase db = openDb(CONFIG_DB_PATH);
@@ -1004,8 +1003,8 @@ void DbManager::checkAndRepairTableInConfigDb(const std::vector<std::tuple<QStri
             qDebug() << "ASSERT ERROR: configuration.db table: " << tableName << "lacked column " << columnName << ". Will add and set to default value";
 
             QSqlQuery qry2(db);
-            QString sql = QString("ALTER TABLE %1 ADD COLUMN %2 %3 DEFAULT '%4'")
-                              .arg(tableName, columnName, sqlType, defaultValue);
+            QString sql = QString("ALTER TABLE %1 ADD COLUMN %2 %3")
+                              .arg(tableName, columnName, sqlType);
             if (!qry2.exec(sql))
             {
                 qDebug() << "Failed to create column" << columnName << ":" << qry2.lastError().text();
@@ -1013,6 +1012,13 @@ void DbManager::checkAndRepairTableInConfigDb(const std::vector<std::tuple<QStri
             }else{
                 qDebug() << "Success: Created column" << columnName;
 
+            }
+            QSqlQuery qry3(db);
+            sql = QString("UPDATE %1 SET %2 = '%3'").arg(tableName).arg(columnName).arg(defaultValue);
+            if (!qry3.exec(sql))
+            {
+                qDebug() << "Failed to assign the value" << columnName << ":" << qry3.lastError().text();
+                qry3.finish();  
             }
         }
     }

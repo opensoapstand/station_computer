@@ -1118,13 +1118,13 @@ bool product::loadProductParametersFromDb()
         isEnabledSizes[i] = false;
     }
 
-    bool valid = isDbValid();
-
-    if (!valid)
-    {
-        debugOutput::sendMessage("ABORT: Unexpected database layout.", MSG_ERROR);
-        return false;
-    }
+    // bool valid = isDbValid(); // DEPRECATED, we do this in the UI.
+    // if (!valid)
+    // {
+    //     debugOutput::sendMessage("ABORT: Unexpected database layout.", MSG_ERROR);
+    //     return false;
+    // }
+    debugOutput::sendMessage("Warning: database layout is expected to be valid. Is checked and repaired in the UI.", MSG_INFO);
 
     int rc = sqlite3_open(CONFIG_DB_PATH, &db);
     sqlite3_stmt *stmt;

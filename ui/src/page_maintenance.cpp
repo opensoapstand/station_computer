@@ -112,6 +112,8 @@ void page_maintenance::showEvent(QShowEvent *event)
 
         p_page_idle->thisMachine->setTemplateTextToObject(labels_product_position[slot_index]);
 
+        labels_product_name[slot_index]->setProperty("class", "label_product_name");
+        labels_product_name[slot_index]->setStyleSheet(styleSheet);
         labels_slot_status[slot_index]->setProperty("class", "label_product_status");
         labels_slot_status[slot_index]->setStyleSheet(styleSheet);
 

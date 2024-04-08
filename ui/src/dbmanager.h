@@ -55,11 +55,11 @@ public:
     // Slots table schema as tuple 
     // Datatype as first value, column name as second value, default value as third value
     std::vector<std::tuple<QString, QString, QString>> slotsTableLayout = {
-                        {"QString", "dispense_pnumbers","55"},
-                        {"QString", "base_pnumber", ""},
+                        {"QString", "dispense_pnumbers","2"},
+                        {"QString", "base_pnumber", "2"},
                         {"QString",  "additive_pnumbers",""},
-                        {"bool",  "is_enabled","1"},
-                        {"QString",  "status_text",""}
+                        {"bool",  "is_enabled","0"},
+                        {"QString",  "status_text","SLOT_STATE_DISABLED"}
                         };
 
     bool getAllSlotProperties(int slot,
@@ -73,14 +73,14 @@ public:
     // Datatype as first value, column name as second value, default value as third value
     std::vector<std::tuple<QString, QString, QString>> productsTableLayout = {
                         //Using random soapstand_product_serial number as 55.
-                        {"QString", "soapstand_product_serial","55"},
+                        {"QString", "soapstand_product_serial","2"},
                         {"QString", "mix_pnumbers", ""},
                         {"QString",  "mix_ratios_low",""},
                         {"QString",  "mix_ratios_default",""},
                         {"QString",  "mix_ratios_high",""},
                         {"QString",  "productId",""},
                         {"QString",  "name",""},
-                        {"double",  "currency","0.0"},
+                        {"QString",  "currency","CAD"},
                         {"QString",  "name_receipt",""},
                         {"int",  "concentrate_multiplier",""},
                         {"int",  "dispense_speed","127"},
@@ -123,9 +123,9 @@ public:
                         {"int",  "is_enabled_custom_discount","0"},
                         {"double",  "size_custom_discount","0"},
                         {"double",  "price_custom_discount","0"},
-                        {"int",  "is_enabled","1"},
+                        {"int",  "is_enabled","0"},
                         {"int",  "is_empty_or_has_problem","0"},
-                        {"QString",  "status_text",""},
+                        {"QString",  "status_text","PRODUCT_STATE_DISABLED"},
                         {"bool",  "is_enabled_sample","0"},
                         {"double",  "size_sample","0"},
                         {"double",  "price_sample","0"}
@@ -164,15 +164,15 @@ public:
     // Datatype as first value, column name as second value, default value as third value
     std::vector<std::tuple<QString, QString, QString>> machineTableLayout = {
                         {"QString", "machine_id","SS-DEV-003"},
-                        {"QString", "soapstand_customer_id", "C-0"},
+                        {"int", "soapstand_customer_id", "0"},
                         {"QString",  "template","default"},
                         {"QString",  "controller_type",""},
                         {"QString",  "controller_id",""},
                         {"QString",  "screen_type","touchscreen"},
-                        {"bool",  "screen_id",""},
-                        {"bool",  "has_receipt_printer","0"},
-                        {"bool",  "receipt_printer_is_online","0"},
-                        {"bool",  "receipt_printer_has_paper","0"},
+                        {"QString",  "screen_id",""},
+                        {"QString",  "has_receipt_printer","0"},
+                        {"QString",  "receipt_printer_is_online","0"},
+                        {"QString",  "receipt_printer_has_paper","0"},
                         {"bool",  "has_tap_payment","0"},
                         {"QString",  "hardware_version",""},
                         {"QString",  "software_version",""},
@@ -180,18 +180,18 @@ public:
                         {"bool",  "coupons_enabled","0"},
                         {"bool",  "has_empty_detection","0"},
                         {"int",  "enable_pump_ramping","0"},
-                        {"int",  "enable_pump_reversal",""},
+                        {"int",  "enable_pump_reversal","0"},
                         {"int",  "dispense_buttons_count","4"},
-                        {"QString",  "maintenance_pwd",""},
+                        {"QString",  "maintenance_pwd","soap"},
                         {"int",  "show_transactions","0"},
                         {"QString",  "help_text_html",""},
                         {"QString",  "idle_page_type",""},
-                        {"QString",  "admin_pwd",""},
+                        {"QString",  "admin_pwd","soap"},
                         {"double",  "alert_temperature","666"},
                         {"QString",  "software_version_controller",""},
-                        {"int",  "is_enabled",""},
-                        {"QString", "status_text",""},
-                        {"QString",  "payment","plu"},
+                        {"int",  "is_enabled","1"},
+                        {"QString", "status_text","MACHINE_STATE_AVAILABLE"},
+                        {"QString",  "payment",""},
                         {"QString",  "size_unit",""},
                         {"int",  "screen_sleep_time24h",""},
                         {"int",  "screen_wakeup_time24h",""},

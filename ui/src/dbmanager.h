@@ -72,7 +72,7 @@ public:
     // Product table schema as tuple 
     // Datatype as first value, column name as second value, default value as third value
     std::vector<std::tuple<QString, QString, QString>> productsTableLayout = {
-                        //Using random soapstand_product_serial number as 55.
+                        //Using random soapstand_product_serial number as 2.
                         {"QString", "soapstand_product_serial","2"},
                         {"QString", "mix_pnumbers", ""},
                         {"QString",  "mix_ratios_low",""},

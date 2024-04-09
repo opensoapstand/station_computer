@@ -204,13 +204,16 @@ void page_product_menu::displayDispenseProductsMenu()
 
             QString unavailable_increment_text = "label_overlay_unavailable_increment%1";
             QString label_overlay_unavailable_increment = unavailable_increment_text.arg(sub_menu_index);
-            if (!p_page_idle->thisMachine->getIsOptionAvailable(option_index + 1))
-            {
+
+            p_page_idle->thisMachine->setSelectedProductByOption(option_index+1);
+            if (!p_page_idle->thisMachine->getSelectedSlot()->getIsSlotEnabled()){ //slot disabled = all products disabled as well
                 p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[sub_menu_index], label_overlay_unavailable_increment, PAGE_PRODUCT_MENU_CSS);
-            }
-            else
-            {
+            }else{
                 p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[sub_menu_index], "label_product_overlay_available", PAGE_PRODUCT_MENU_CSS);
+                if (!p_page_idle->thisMachine->getIsOptionAvailable(option_index + 1)) // if slot is available, check if product option is available 
+                {
+                    p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[sub_menu_index], label_overlay_unavailable_increment, PAGE_PRODUCT_MENU_CSS);
+                }
             }
         }
         else
@@ -224,8 +227,8 @@ void page_product_menu::displayDispenseProductsMenu()
         labels_product_overlay_text[sub_menu_index]->raise();
         pushButtons_dispense_product[sub_menu_index]->raise();
 
-        QString available_increment_text = "label_product_overlay_available_with_status%1";
-        QString label_overlay_available_with_status_increment = available_increment_text.arg(sub_menu_index);
+        // QString available_increment_text = "label_product_overlay_available_with_status%1";
+        // QString label_overlay_available_with_status_increment = available_increment_text.arg(sub_menu_index);
         // product_status_text = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductStateAsString();
 
         ProductState base_product_state = p_page_idle->thisMachine->getProductFromMenuOption(option_index + 1)->getProductState();
@@ -243,13 +246,13 @@ void page_product_menu::displayDispenseProductsMenu()
         }
         case (PRODUCT_STATE_PROBLEM_EMPTY):
         {
-            labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->empty"));
+            labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->assistance"));
             break;
         }
         case (PRODUCT_STATE_DISABLED):
         {
-            labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->coming_soon"));
-            p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[sub_menu_index], label_overlay_available_with_status_increment, PAGE_PRODUCT_MENU_CSS);
+            labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
+            // p_page_idle->thisMachine->addCssClassToObject(labels_product_overlay_text[sub_menu_index], label_overlay_available_with_status_increment, PAGE_PRODUCT_MENU_CSS);
             break;
         }
         case (PRODUCT_STATE_INVALID):
@@ -263,7 +266,9 @@ void page_product_menu::displayDispenseProductsMenu()
             break;
         }
         }
-
+        if(!p_page_idle->thisMachine->getSelectedSlot()->getIsSlotEnabled()) {
+            labels_product_overlay_text[sub_menu_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->not_enabled"));
+        }
         // if (product_status_text.compare("SLOT_STATE_DISABLED_COMING_SOON") == 0)
         // {
         // }
@@ -319,24 +324,37 @@ void page_product_menu::select_base_product_in_menu(int base_product_index)
         }
         p_page_idle->thisMachine->addCssClassToObject(labels_base_product_bg[slot_index], activity, PAGE_PRODUCT_MENU_CSS);
     }
-
+    p_page_idle->thisMachine->setSelectedSlot(base_product_index+1);
     displayDispenseProductsMenu();
 }
 
 void page_product_menu::select_submenu_option(int position)
 {
     int option = m_selectedBaseProductIndex * DISPENSE_PRODUCTS_PER_BASE_LINE_MAX + position;
-    if (p_page_idle->thisMachine->getIsOptionAvailable(option))
-    {
-        p_page_idle->thisMachine->setSelectedProductByOption(option);
-        p_page_idle->thisMachine->setSelectedSlotFromSelectedProduct();
-        p_page_idle->thisMachine->getSelectedProduct()->resetCustomMixRatioParameters();
-        p_page_idle->thisMachine->hasMixing() ? hideCurrentPageAndShowProvided(p_page_product_mixing) : hideCurrentPageAndShowProvided(p_page_product);
-    }
-    else
-    {
+    if(p_page_idle->thisMachine->getSelectedSlot()->getIsSlotEnabled()){
+        if (p_page_idle->thisMachine->getIsOptionAvailable(option)) // if slot is available, check if product option is available 
+        {
+            p_page_idle->thisMachine->setSelectedProductByOption(option);
+            p_page_idle->thisMachine->setSelectedSlotFromSelectedProduct();
+            p_page_idle->thisMachine->getSelectedProduct()->resetCustomMixRatioParameters();
+            p_page_idle->thisMachine->hasMixing() ? hideCurrentPageAndShowProvided(p_page_product_mixing) : hideCurrentPageAndShowProvided(p_page_product);
+        }else{
+            qDebug() << "Invalid choice. Option not available: " << option;
+        }
+    }else{
         qDebug() << "Invalid choice. Option not available: " << option;
     }
+    // if (p_page_idle->thisMachine->getIsOptionAvailable(option))
+    // {
+    //     p_page_idle->thisMachine->setSelectedProductByOption(option);
+    //     p_page_idle->thisMachine->setSelectedSlotFromSelectedProduct();
+    //     p_page_idle->thisMachine->getSelectedProduct()->resetCustomMixRatioParameters();
+    //     p_page_idle->thisMachine->hasMixing() ? hideCurrentPageAndShowProvided(p_page_product_mixing) : hideCurrentPageAndShowProvided(p_page_product);
+    // }
+    // else
+    // {
+    //     qDebug() << "Invalid choice. Option not available: " << option;
+    // }
 }
 
 void page_product_menu::on_pushButton_base_product_1_clicked()

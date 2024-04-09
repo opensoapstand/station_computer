@@ -25,13 +25,13 @@ public:
     ~page_buyBottle();
     void setPage(page_idle *pageIdle, page_select_product *p_page_select_product, page_help *pageHelp, statusbar *p_statusbar);
     
-    QTimer *userRoleTimeOutTimer;
-    int _userRoleTimeOutTimerSec;
+    // QTimer *userRoleTimeOutTimer;
+    // int _userRoleTimeOutTimerSec;
     bool areBothBottleButtonsActivated();
     bool isBottleButtonActivated(int bottlePNumber);
     QString getBottleVolumeText(int bottlOption);
 private slots:
-    void onUserRoleTimeOutTimerTick();
+    // void onUserRoleTimeOutTimerTick();
     void onbottlePageTimeoutTick();
     void on_pushButton_to_idle_clicked();
     void on_pushButton_help_page_clicked();

@@ -132,6 +132,7 @@ DF_ERROR stateDispense::onAction()
       debugOutput::sendMessage("Stop dispensing (stop command received)", MSG_INFO);
       m_state_requested = STATE_IDLE;
       g_machine.getSelectedDispenser().finishActivePNumberDispense();
+      g_machine.getSelectedDispenser().finishSelectedProductDispense();
 
       m_pMessaging->sendMessageOverIP("Init Ready", true); // send to UI
       return e_ret = OK;
@@ -143,6 +144,7 @@ DF_ERROR stateDispense::onAction()
       m_state_requested = STATE_DISPENSE_END;
 
       g_machine.getSelectedDispenser().finishActivePNumberDispense();
+      g_machine.getSelectedDispenser().finishSelectedProductDispense();
 
       std::string activePNumber = to_string(g_machine.getSelectedDispenser().getActivePNumber());
       double activeProductVolumeDispensed = g_machine.getSelectedDispenser().getActiveProductVolumeDispensed();
@@ -196,12 +198,12 @@ DF_ERROR stateDispense::statusUpdateLoggingAndOverIP(bool onlyIfAllowed)
    return e_ret;
 }
 
-DF_ERROR stateDispense::rectractProductBlocking()
-{
-   DF_ERROR e_ret = OK;
-   g_machine.getSelectedDispenser().reversePumpForSetTimeMillis(g_machine.getSelectedDispenser().getSelectedProduct()->getRetractionTimeMillis());
-   return e_ret;
-}
+// DF_ERROR stateDispense::rectractProductBlocking()
+// {
+//    DF_ERROR e_ret = OK;
+//    g_machine.getSelectedDispenser().reversePumpForSetTimeMillis(g_machine.getSelectedDispenser().getSelectedProduct()->getRetractionTimeMillis());
+//    return e_ret;
+// }
 
 // Actions on leaving Dispense state
 DF_ERROR stateDispense::onExit()
@@ -209,6 +211,7 @@ DF_ERROR stateDispense::onExit()
    g_machine.getSelectedDispenser().setPumpsDisableAll();
    g_machine.getPcb()->setSingleDispenseButtonLight(g_machine.getSelectedDispenserNumber(), false);
    statusUpdateLoggingAndOverIP(false); // final status update of dispensing
+   
 
    DF_ERROR e_ret = OK;
    return e_ret;

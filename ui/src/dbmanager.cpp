@@ -20,20 +20,18 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <QStringList>
+#include <sstream>
+#include <typeinfo>
+#include <cxxabi.h>
 
-DbManager::DbManager(const QString &path)
-{
-    // m_dbPath2 = CONFIG_DB_PATH;
-    // setPath(path);
-}
-DbManager::DbManager()
+DbManager::DbManager(const std::string &path)
 {
 }
 
-// DTOR
-DbManager::~DbManager()
-{
-}
+DbManager::DbManager() {}
+
+DbManager::~DbManager() {}
 
 void DbManager::closeDb()
 {
@@ -206,6 +204,14 @@ bool DbManager::executeQuery(QString sql)
     return success;
 }
 
+void DbManager::checkAndRepairConfigurationDb()
+{
+    // Ensure that the database is not corrupt. And if it is, repair with the default values.
+    checkAndRepairTableInConfigDb(productsTableLayout, "products");
+    checkAndRepairTableInConfigDb(slotsTableLayout, "slots");
+    checkAndRepairTableInConfigDb(machineTableLayout, "machine");
+}
+
 bool DbManager::updateTableMachineWithInt(QString column, int value)
 {
     updateTableMachineWithText(column, QString::number(value));
@@ -284,7 +290,6 @@ bool DbManager::getAllSlotProperties(int slot,
             qDebug() << "Open db: Attempted to load all slot properties for slot: " << slot;
             qDebug() << "Did not execute sql. "
                      << qry.lastError() << " | " << qry.lastQuery();
-            return false;
         }
 
         QString additivesAsString;
@@ -440,13 +445,13 @@ bool DbManager::getAllProductProperties(int pnumber,
         qry.bindValue(":pnumber", pnumber);
         bool success;
         success = qry.exec();
-
         if (!success)
         {
             qDebug() << "Open db: Attempted to load all product properties for pnumber: " << pnumber;
             qDebug() << "Did not execute sql (replace 'pnumber' for actual number when testing sql command manually). "
                      << qry.lastError() << " | " << qry.lastQuery();
-            return false;
+            qry.finish();
+            db.close();
         }
 
         while (qry.next())
@@ -533,48 +538,73 @@ bool DbManager::getAllProductProperties(int pnumber,
     return true;
 }
 
-bool DbManager::getAllMachineProperties(
-    QString *machine_id,
-    QString *soapstand_customer_id,
-    QString *ttttemplate,
-    QString *location,
-    QString *controller_type,
-    QString *controller_id,
-    QString *screen_type,
-    QString *screen_id,
-    int *has_receipt_printer,
-    int *receipt_printer_is_online,
-    int *receipt_printer_has_paper,
-    int *has_tap_payment,
-    QString *hardware_version,
-    QString *software_version,
-    int *aws_port,
-    int *coupons_enabled,
-    bool *has_empty_detection,
-    int *enable_pump_ramping,
-    int *enable_pump_reversal,
-    int *dispense_buttons_count,
-    QString *maintenance_pwd,
-    int *show_transactions,
-    QString *help_text_html,
-    QString *idle_page_type,
-    QString *admin_pwd,
-    QString *pump_id_slots,
-    int *is_enabled_slots,
-    QString *status_text_slots,
-    double *alert_temperature,
-    QString *software_version_controller,
-    int *is_enabled,
-    QString *status_text,
-    QString *payment,
-    QString *size_unit,
-    int *screen_sleep_time24h,
-    int *screen_wakeup_time24h,
-    int *buy_bottle_1,
-    int *buy_bottle_2,
-    QString *portal_base_url,
-    int *enable_offline_payment,
-    int *page_init_timeout)
+// QMap<QString, QString,QString> getColumnDataForSqlDb(const std::vector<std::tuple<QString, QString, QString>>& tableInfo) {
+//     QMap<QString, QString,QString> columns;
+
+//     for (const auto& info : tableInfo) {
+//         QString columnName = std::get<2>(info);
+//         QString dataType = std::get<0>(info);
+//         QString defaultValue = std::get<1>(info);
+//         QString sqlType;
+//         if (type == "int") {
+//             columnType = QVariant::Int;
+//             sqlType = "INTEGER";
+//         } else if (type == "double") {
+//             columnType = QVariant::Double;
+//             sqlType = "REAL";
+//         } else if (type == "QString" || type == "string") {
+//             columnType = QVariant::String;
+//             sqlType = "TEXT";
+//         }
+//             //If the data type is valid, append the key-value pair to columns map
+//             if (columnType != QVariant::Invalid) {
+//                 columns.insert(name, sqlType, defaultValue);
+//             }
+//     }
+//     return columns;
+// }
+
+bool DbManager::getAllMachineProperties(QString *machine_id,
+                                        QString *soapstand_customer_id,
+                                        QString *ui_template,
+                                        QString *location,
+                                        QString *controller_type,
+                                        QString *controller_id,
+                                        QString *screen_type,
+                                        QString *screen_id,
+                                        int *has_receipt_printer,
+                                        int *receipt_printer_is_online,
+                                        int *receipt_printer_has_paper,
+                                        int *has_tap_payment,
+                                        QString *hardware_version,
+                                        QString *software_version,
+                                        int *aws_port,
+                                        int *coupons_enabled,
+                                        bool *has_empty_detection,
+                                        int *enable_pump_ramping,
+                                        int *enable_pump_reversal,
+                                        int *dispense_buttons_count,
+                                        QString *maintenance_pwd,
+                                        int *show_transactions,
+                                        QString *help_text_html,
+                                        QString *idle_page_type,
+                                        QString *admin_pwd,
+                                        QString *pump_id_slots,
+                                        int *is_enabled_slots,
+                                        QString *status_text_slots,
+                                        double *alert_temperature,
+                                        QString *software_version_controller,
+                                        int *is_enabled,
+                                        QString *status_text,
+                                        QString *payment,
+                                        QString *size_unit,
+                                        int *screen_sleep_time24h,
+                                        int *screen_wakeup_time24h,
+                                        int *buy_bottle_1,
+                                        int *buy_bottle_2,
+                                        QString *portal_base_url,
+                                        int *enable_offline_payment,
+                                        int *page_init_timeout)
 {
     bool success;
     int emptyDetection;
@@ -582,9 +612,7 @@ bool DbManager::getAllMachineProperties(
     {
         QSqlDatabase db = openDb(CONFIG_DB_PATH);
         QSqlQuery qry(db);
-
         qry.prepare(
-
             "SELECT "
             "machine_id," // 0
             "soapstand_customer_id,"
@@ -624,23 +652,30 @@ bool DbManager::getAllMachineProperties(
             "portal_base_url,"
             "enable_offline_payment,"
             "page_init_timeout"
-            " FROM machine"
+            " FROM machine");
 
-        );
         success = qry.exec();
         if (!success)
         {
             qDebug() << "Open db: Attempted to load machine properties";
             qDebug() << "Did not execute sql. "
                      << qry.lastError() << " | " << qry.lastQuery();
+
+            // Close the previous connection and query object
+            qry.finish();
+            db.close();
+
+            // Create a new connection and query object
+            db = openDb(CONFIG_DB_PATH);
         }
+
         int row_count = 0;
         while (qry.next())
         {
             row_count++;
             *machine_id = qry.value(0).toString();
             *soapstand_customer_id = qry.value(1).toString();
-            *ttttemplate = qry.value(2).toString();
+            *ui_template = qry.value(2).toString();
             *location = qry.value(3).toString();
             *controller_type = qry.value(4).toString();
             *controller_id = qry.value(5).toString();
@@ -655,15 +690,14 @@ bool DbManager::getAllMachineProperties(
             *aws_port = qry.value(14).toInt();
             *coupons_enabled = qry.value(15).toInt();
             emptyDetection = qry.value(16).toInt();
-            if (has_empty_detection) // Check if the pointer is not null
-            {
+            if (has_empty_detection)
+            { // Check if the pointer is not null
                 if (emptyDetection)
                 {
                     *has_empty_detection = true;
                 }
                 else
                 {
-                    qDebug() << "aaeriiii";
                     *has_empty_detection = false;
                 }
             }
@@ -695,6 +729,15 @@ bool DbManager::getAllMachineProperties(
             *page_init_timeout = qry.value(37).toInt();
         }
         qry.finish();
+
+        if (*buy_bottle_1 < 1)
+        {
+            *buy_bottle_1 = DUMMY_PNUMBER;
+        }
+        if (*buy_bottle_2 < 1)
+        {
+            *buy_bottle_2 = DUMMY_PNUMBER;
+        }
 
         if (row_count == 0)
         {
@@ -910,4 +953,76 @@ void DbManager::setPaymentTransaction(const std::map<std::string, std::string> &
     }
     qDebug() << "Payment database write";
     closeDb();
+}
+
+// Compare existing table layout with provided layout
+void DbManager::checkAndRepairTableInConfigDb(const std::vector<std::tuple<QString, QString, QString>> &tableInfo, QString tableName)
+{
+    QSqlDatabase db = openDb(CONFIG_DB_PATH);
+    QSqlQuery qry(db);
+
+    // Get the existing columns in the table
+    QStringList existingColumns;
+    // Refer to the tableName passed in the function call. e.g. machine, products, slots
+    QString getSchema = QString("PRAGMA table_info(%1)").arg(tableName);
+    qry.exec(getSchema);
+    while (qry.next())
+    {
+        existingColumns << qry.value(1).toString();
+    }
+
+    // Iterate over the expected table schema
+    for (const auto &info : tableInfo)
+    {
+        // Store the values in the variables for each record
+        QString columnType = std::get<0>(info);
+        QString columnName = std::get<1>(info);
+        QString defaultValue = std::get<2>(info);
+        // Convert cpp datatype to SQLite datatype
+        QString sqlType;
+        if (columnType == "int")
+        {
+            sqlType = "INTEGER";
+        }
+        else if (columnType == "double")
+        {
+            sqlType = "REAL";
+        }
+        else if (columnType == "bool")
+        {
+            sqlType = "INTEGER";
+        }
+        else if (columnType == "QString" || columnType == "string")
+        {
+            sqlType = "TEXT";
+        }
+
+        // If column does not exist in existing columns, alter the table to add column
+        if (!existingColumns.contains(columnName))
+        {
+            qDebug() << "ASSERT ERROR: configuration.db table: " << tableName << "lacked column " << columnName << ". Will add and set to default value";
+
+            QSqlQuery qry2(db);
+            QString sql = QString("ALTER TABLE %1 ADD COLUMN %2 %3")
+                              .arg(tableName, columnName, sqlType);
+            if (!qry2.exec(sql))
+            {
+                qDebug() << "Failed to create column" << columnName << ":" << qry2.lastError().text();
+                qry2.finish();  
+            }else{
+                qDebug() << "Success: Created column" << columnName;
+
+            }
+            QSqlQuery qry3(db);
+            sql = QString("UPDATE %1 SET %2 = '%3'").arg(tableName).arg(columnName).arg(defaultValue);
+            if (!qry3.exec(sql))
+            {
+                qDebug() << "Failed to assign the value" << columnName << ":" << qry3.lastError().text();
+                qry3.finish();  
+            }
+        }
+    }
+
+    db.close();
+
 }

@@ -1,8 +1,6 @@
 #include "page_maintenance_dispenser.h"
 #include "ui_page_maintenance_dispenser.h"
 #include "page_idle.h"
-// #include "/home/df-admin/station_computer/fsm/components/pcb.cpp"
-//  #include "/home/df-admin/station_computer/fsm/components/pcb.h"
 
 #include <QInputDialog>
 #include <QCoreApplication>
@@ -148,12 +146,14 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
     ui->pushButton_enable_pump->setProperty("class", "pump_enable");
     ui->pushButton_enable_pump->setStyleSheet(styleSheet);
     ui->label_action_feedback->setStyleSheet(styleSheet);
-    // ui->label_status_dispenser->setStyleSheet(styleSheet);
     ui->pushButton_set_volume_remaining->setStyleSheet(styleSheet);
 
     ui->pushButton_active_pnumber_base->setProperty("class", "product_active");
     ui->pushButton_active_pnumber_base->setStyleSheet(styleSheet);
     ui->pushButton_active_pnumber_base->setText("Base\nP-" + QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getBasePNumber()));
+
+    ui->pushButton_auto_dispense_large->hide();
+    ui->pushButton_auto_dispense_medium->hide();
 
     setSizeIndex(SIZE_SMALL_INDEX); // default selected size for dispensing
 
@@ -192,7 +192,6 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
         buttons_select_additive[additive_position - 1]->setStyleSheet(styleSheet);
         buttons_select_additive[additive_position - 1]->setText("Additive " + QString::number(additive_position) + "\nN/A");
         buttons_select_additive[additive_position - 1]->setEnabled(false);
-        // buttons_select_additive[additive_position - 1]->hide();
     }
     // set up for all available additives
     int additive_position = 1;
@@ -241,7 +240,6 @@ void page_maintenance_dispenser::resizeEvent(QResizeEvent *event)
 
 void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
 {
-
     renewPageTimeout();
 
     if (reloadFromDb)
@@ -350,21 +348,17 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
 
     ui->label_status_dispense_flow->setText(p_page_idle->thisMachine->getSelectedSlot()->getDispenseBehaviourAsString());
 
-    // ProductState product_state = p_page_idle->thisMachine->getSelectedProduct()->getProductState();
-    // setProductStatusTextLabel(ui->label_status_selected_product, product_state, true);
     ui->label_status_selected_product->setText(p_page_idle->thisMachine->getSelectedProduct()->getProductStateAsString());
 
     if (p_page_idle->thisMachine->getSelectedSlot()->getIsSlotEnabled())
     {
         // if slot is enabled, set button text to "make unavailable"
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_set_status_slot, "unavailable");
-        // p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_set_status_slot, "pushButton_set_status_unavailable", PAGE_MAINTENANCE_DISPENSER_CSS);
     }
     else
     {
         // if slot is disabled
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->pushButton_set_status_slot, "available");
-        // p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_set_status_slot, "pushButton_set_status_available", PAGE_MAINTENANCE_DISPENSER_CSS);
     }
 
     if (p_page_idle->thisMachine->getSelectedProduct()->getIsProductEnabled())
@@ -436,7 +430,6 @@ void page_maintenance_dispenser::setProductStatusTextLabel(QLabel *label, Produc
 
     if (displayRawStatus)
     {
-        // label->setText(statusText + ": " + status_display_text);
         label->setText(df_util::convertProductStatusToString(state));
     }
     else
@@ -482,7 +475,6 @@ void page_maintenance_dispenser::setSlotStatusTextLabel(QLabel *label, SlotState
 
     if (displayRawStatus)
     {
-        // label->setText(statusText + ": " + status_display_text);
         label->setText(df_util::convertSlotStatusToString(state));
     }
     else
@@ -580,12 +572,13 @@ void page_maintenance_dispenser::on_pushButton_enable_pump_clicked()
 
 void page_maintenance_dispenser::on_pushButton_auto_dispense_large_clicked()
 {
+    qDebug() << "Button autodispense large not available!!!";
     // autoDispenseStart(SIZE_LARGE_INDEX);
 }
 
 void page_maintenance_dispenser::on_pushButton_auto_dispense_medium_clicked()
 {
-    qDebug() << "Button not available!!!";
+    qDebug() << "Button autodispense medium not available!!!";
     // autoDispenseStart(SIZE_MEDIUM_INDEX);
 }
 
@@ -611,8 +604,6 @@ void page_maintenance_dispenser::autoDispenseStart(int size)
         dispenseTimer->start(100);
         update_volume_received_dispense_stats(0);
 
-        // p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
-
         int pNumberSelectedProduct = this->p_page_idle->thisMachine->getSelectedProduct()->getPNumber();
 
         QString command = "dispensePNumber|" + dispenseCommand + "|" + QString::number(pNumberSelectedProduct) + "|"; // dispensePNumber|slot|dispensePNumber
@@ -620,9 +611,6 @@ void page_maintenance_dispenser::autoDispenseStart(int size)
         p_page_idle->thisMachine->dfUtility->send_command_to_FSM(command, true);
 
         is_pump_enabled_for_dispense = true;
-    }
-    else
-    {
     }
 }
 
@@ -634,9 +622,6 @@ void page_maintenance_dispenser::dispense_test_start()
     qDebug() << "Autofill quantity pressed.";
 
     dispenseCommand.append(df_util::sizeIndexToChar(m_selected_size_index));
-
-    // dispenseCommand.append("t");
-    // dispenseCommand.append("t");
     dispenseCommand.append(SEND_DISPENSE_START);
 
     // #define DISPENSE_CUSTOM_MIX
@@ -792,10 +777,7 @@ void page_maintenance_dispenser::fsmReceiveDispenserStatus(QString status)
 {
     QString dispenseStatus = status;
     qDebug() << "Dispense status received from FSM: " << dispenseStatus;
-    // setStatusTextLabel(ui->label_status_dispense_flow, dispenseStatus, true);
     p_page_idle->thisMachine->getSelectedSlot()->setDispenseBehaviour(dispenseStatus);
-
-    // ui->label_status_dispense_flow->setText(dispenseStatus);
 };
 
 void page_maintenance_dispenser::setButtonPressCountLabel(bool init)
@@ -837,15 +819,9 @@ void page_maintenance_dispenser::fsmReceiveNoFlowAbort()
 // ****************************************************************
 void page_maintenance_dispenser::on_pushButton_clear_problem_clicked()
 {
-    // if (!isDispenserPumpEnabledWarningBox())
-    // {
-    // QString statusText = p_page_idle->thisMachine->getSelectedSlot()->getSlotStatusAsString();
-    // p_page_idle->thisMachine->getSelectedSlot()->setSlotStatus(SLOT_STATE_AVAILABLE);
-
     p_page_idle->thisMachine->getSelectedProduct()->setIsProductEmptyOrHasProblem(false);
     qDebug() << "Clear problem button clicked. Will set Product to non issue state. ";
     updateProductLabelValues(true);
-    // }
 }
 
 void page_maintenance_dispenser::on_pushButton_restock_clicked()
@@ -854,10 +830,7 @@ void page_maintenance_dispenser::on_pushButton_restock_clicked()
     renewPageTimeout();
     if (!isDispenserPumpEnabledWarningBox())
     {
-        // QString styleSheet = p_page_idle->thisMachine->getCSS(PAGE_MAINTENANCE_DISPENSER_CSS);
-
-        qDebug() << "refill clicked. slot: " << QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
-        qDebug() << "refill clicked. size: " << QString::number(this->p_page_idle->thisMachine->getSelectedProduct()->getRestockVolume());
+        qDebug() << "refill clicked. slot: " << QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getSlotId()) << " size: " << QString::number(this->p_page_idle->thisMachine->getSelectedProduct()->getRestockVolume());
 
         // ARE YOU SURE YOU WANT TO COMPLETE?
         QMessageBox msgBox;
@@ -865,9 +838,6 @@ void page_maintenance_dispenser::on_pushButton_restock_clicked()
         msgBox.setText("<p align=center>Are you sure you want to restock the product?</p>");
 
         p_page_idle->thisMachine->addCssClassToObject(&msgBox, "msgBoxbutton msgBox", PAGE_MAINTENANCE_DISPENSER_CSS);
-
-        // msgBox.setProperty("class", "msgBoxbutton msgBox"); // set property goes first!!
-        // msgBox.setStyleSheet(styleSheet);
 
         msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         int ret = msgBox.exec();
@@ -1091,7 +1061,6 @@ void page_maintenance_dispenser::on_pushButton_done_clicked()
 
         ui->textEntry->setText("");
         ui->label_title->setText("");
-        // ui->errorLabel->setText("");
     }
 }
 
@@ -1100,12 +1069,8 @@ void page_maintenance_dispenser::on_pushButton_cancel_clicked()
     ui->buttonPeriod->show();
     ui->numberEntry->hide();
     ui->textEntry->setText("");
-    // ui->errorLabel->setText("");
-    // text_entered = "";
     activeEditField = "";
     ui->pushButton_cancel->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "pushButton_keypad_cancel"));
-
-    //    p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_cancel);
 }
 
 // ****************************************************************
@@ -1357,12 +1322,12 @@ void page_maintenance_dispenser::update_changes_to_portal()
     }
     else
     {
+        // readbuffer is a string. "true" or "false"
         QString feedback = QString::fromUtf8(readBuffer.c_str());
         qDebug() << "Pagemaintenancedispenser cURL success. Server feedback readbuffer: " << feedback;
         // ui->label_action_feedback->setText("Portal Update Succesfull");
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_action_feedback, "portal_success");
 
-        // readbuffer is a string. "true" or "false"
         if (readBuffer == "true")
         {
             // return data

@@ -443,7 +443,7 @@ void page_idle::onUserRoleTimeOutTimerTick()
     {
         userRoleTimeOutTimer->stop();
         p_statusbar->setRoleTimeOutTrailingText("");
-        thisMachine->resetUserState();
+        thisMachine->resetUserState(true);
         p_statusbar->refresh();
 
         _userRoleTimeOutTimerSec = PAGE_IDLE_USER_ROLE_TIMEOUT_SECONDS;
@@ -531,7 +531,7 @@ void page_idle::onRebootNightlyTimeOutTimerTick()
                     //Rebooting TAP at the same time as the station will keep the communication in place
                     rebootTapDevice(PAYMENT_TAP_CANADA);
                 }
-                else if(paymentMethod== PAYMENT_TAP_USA_QR || PAYMENT_TAP_USA){
+                else if(paymentMethod== PAYMENT_TAP_USA_QR || paymentMethod==PAYMENT_TAP_USA){
                     rebootTapDevice(PAYMENT_TAP_USA);
                 }
                 QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -r 0";

@@ -129,7 +129,7 @@
    <property name="geometry">
     <rect>
      <x>330</x>
-     <y>1810</y>
+     <y>1780</y>
      <width>691</width>
      <height>41</height>
     </rect>
@@ -598,7 +598,7 @@
    <property name="geometry">
     <rect>
      <x>330</x>
-     <y>1870</y>
+     <y>1750</y>
      <width>501</width>
      <height>20</height>
     </rect>
@@ -1192,19 +1192,6 @@
     <rect>
      <x>330</x>
      <y>960</y>
-     <width>691</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
-  <widget class="Line" name="line_11">
-   <property name="geometry">
-    <rect>
-     <x>330</x>
-     <y>1000</y>
      <width>691</width>
      <height>20</height>
     </rect>
@@ -2008,6 +1995,9 @@
    <property name="text">
     <string>Sample Price</string>
    </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_edit_product</string>
+   </attribute>
   </widget>
   <widget class="QPushButton" name="pushButton_target_volume_sample">
    <property name="geometry">
@@ -2025,6 +2015,9 @@
     <string>Sample
  Target Volume</string>
    </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_edit_product</string>
+   </attribute>
   </widget>
   <widget class="QPushButton" name="pushButton_plu_sample">
    <property name="geometry">
@@ -2041,6 +2034,9 @@
    <property name="text">
     <string>Sample PLU</string>
    </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_edit_product</string>
+   </attribute>
   </widget>
   <widget class="Line" name="line_25">
    <property name="geometry">
@@ -2205,7 +2201,7 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_keypad"/>
   <buttongroup name="buttonGroup_edit_product"/>
+  <buttongroup name="buttonGroup_keypad"/>
  </buttongroups>
 </ui>

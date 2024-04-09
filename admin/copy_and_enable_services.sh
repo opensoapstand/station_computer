@@ -16,7 +16,6 @@ echo "Copy soapstand services from production"
 sudo scp /home/df-admin/production/admin/controller_soapstand.service /etc/systemd/system
 sudo scp /home/df-admin/production/admin/ui_soapstand.service /etc/systemd/system
 sudo scp /home/df-admin/production/admin/check_connectivity.service /etc/systemd/system
-sudo scp /home/df-admin/production/admin/enableIPForward.service /etc/systemd/system
 sudo scp /home/df-admin/production/admin/ssh_monitor.service /etc/systemd/system
 
 

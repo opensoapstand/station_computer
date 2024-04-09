@@ -33,6 +33,7 @@
 // class page_maintenance;
 class page_select_product;
 class page_idle;
+class page_buyBottle;
 // class page_maintenance_general;
 // class page_product;
 // class page_maintenance;
@@ -49,7 +50,7 @@ class page_idle_products : public QWidget
 
 public:
     explicit page_idle_products(QWidget *parent = nullptr);
-    void setPage(page_idle *pageIdle, page_select_product *page_select_product);
+    void setPage(page_idle *pageIdle, page_select_product *page_select_product, page_buyBottle *p_page_buyBottle);
 
     // function body
     ~page_idle_products();
@@ -92,6 +93,7 @@ private:
     page_idle *p_page_idle;
     page_select_product *p_page_select_product;
     page_idle_products *p_page_idle_products;
+    page_buyBottle *p_page_buyBottle;
 
     int _backgroundChangeTimeLeftTenthsOfSec;
     int active_background_index;

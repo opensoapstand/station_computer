@@ -740,9 +740,18 @@ void page_maintenance_general::on_pushButton_tap_check_status_clicked()
 
 void page_maintenance_general::on_pushButton_tap_authorize_clicked()
 {
-    page_payment_tap_tcp paymentObject;
-    paymentObject.authorizeTestTransaction();
-    qDebug() << "Maintenance general. Clicked Authorize Tap Payment";
+    QString paymentMethod= p_page_idle->thisMachine->getPaymentOptions();
+    if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA){
+        page_payment_tap_serial paymentSerialObject;
+        QString result = paymentSerialObject.authorizeTestTransaction();
+        ui->tap_is_working->setText(result);
+    }
+    else if(paymentMethod== PAYMENT_TAP_USA_QR || paymentMethod== PAYMENT_TAP_USA){
+        page_payment_tap_tcp paymentObject;
+        paymentObject.authorizeTestTransaction();
+        qDebug() << "Maintenance general. Clicked Authorize Tap Payment";
+    }
+    
     
 }
 

@@ -36,6 +36,8 @@ page_payment_tap_serial::page_payment_tap_serial(QWidget *parent) : QWidget(pare
     // Payment Tap Ready
     readTimer = new QTimer(this);
     connect(readTimer, SIGNAL(timeout()), this, SLOT(readTimer_loop()));
+    readTestTimer = new QTimer(this);
+    connect(readTestTimer, SIGNAL(timeout()), this, SLOT(readTestTimer_loop()));
     ui->pushButton_payment_bypass->setEnabled(false);
     ui->label_title->hide();
     ui->order_total_amount->hide();
@@ -532,5 +534,103 @@ void page_payment_tap_serial::onPaymentSerialPageTimeoutTick()
         _paymentSerialPageTimeoutSec = PAGE_PAYMENT_TAP_SERIAL_PAGE_TIMEOUT_SECONDS;
         // qDebug() << "Timer Done!" << _paymentSerialPageTimeoutSec;
         p_page_idle->thisMachine->hasMixing() ? hideCurrentPageAndShowProvided(p_page_product_mixing,true) : hideCurrentPageAndShowProvided(p_page_product,true);
+    }
+}
+
+QString page_payment_tap_serial::authorizeTestTransaction(){
+    readTestTimer_loop();
+    return "1";
+
+}
+
+void page_payment_tap_serial::readTestTimer_loop()
+{
+    pktToSend = paymentPacket.purchasePacket("1.00");
+    qDebug() << "Packet sent for payment";
+    if (sendToUX410())
+    {   
+        qDebug() << "Tap reader activated";
+        waitForUX410();
+        while (!response)
+        {
+            response = getResponse();
+            
+            QCoreApplication::processEvents();
+            if (pktResponded[0] != 0x02)
+            {
+                pktResponded.clear();
+                pktResponded = com.readPacket();
+                response = getResponse();
+                // readTimer->start(1000);
+            }
+            else if (pktResponded[10] == 0x33)
+            {
+                pktResponded.clear();
+                pktResponded = com.readPacket();
+                usleep(100);
+                response = getResponse();
+            }
+            else
+            {
+                if (!response)
+                {
+                    cout << "HIT: pktResponded: " << to_string(pktResponded[0]) << endl;
+                    readPacket.packetReadFromUX(pktResponded);
+                    std::cout << readPacket;
+                    com.sendAck();
+
+                    if (pktResponded[19] == 0x41)
+                    { // Host Response 41 = A "Approved"
+                        p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
+                        qDebug() << "Payment Approved";
+                        purchaseEnable = true;
+                        approved = true;
+                        cout << "Approval Packet 41" << endl;
+                        paymentPktInfo.transactionID(readPacket.getPacket().data);
+                        paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
+                        tapPaymentObject = paymentPktInfo.getTapPaymentObject(getTerminalID(), getMerchantName(), getMerchantAddress());
+                        response = true;
+                    }
+                    else if (pktResponded[19] == 0x44)
+                    { // Host Response 44 = D "Declined"
+                        p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_FAIL);
+
+                        purchaseEnable = true;
+                        approved = false;
+                        cout << "Declined Packet 44" << endl;
+                        qDebug() << "Payment declined";
+                        paymentPktInfo.transactionID(readPacket.getPacket().data);
+                        paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
+                        pktResponded.clear();
+                        QCoreApplication::processEvents();
+                        sleep(3);
+                        pktResponded.clear();
+                        pktResponded = com.readPacket();
+                        usleep(100);
+                        response = getResponse();
+                    }
+
+                    else if (pktResponded[19] == 0x4e)
+                    {
+                        purchaseEnable = false;
+                        cout << "No Approval Packet!" << endl;
+                        qDebug() << "Payment not approved";
+                        // this->ui->payment_countdownLabel->setText("Not Approved");
+                        paymentPktInfo.transactionID(readPacket.getPacket().data);
+                        paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
+                        pktResponded.clear();
+                        QCoreApplication::processEvents();
+                        sleep(1);
+                    }
+                    else
+                    {
+                        pktResponded.clear();
+                        pktResponded = com.readPacket();
+                        usleep(100);
+                        response = getResponse();
+                    }
+                }
+            }
+}
     }
 }

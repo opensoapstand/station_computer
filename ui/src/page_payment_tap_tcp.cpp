@@ -504,7 +504,7 @@ void page_payment_tap_tcp::authorizeTestTransaction()
 
     startSession(socket, MAC_LABEL, MAC_KEY, lastTransactionId + 1);
 
-    std::string priceStr = "1.09"; // Assuming fixed price
+    std::string priceStr = "1.00"; // Assuming fixed price
     std::string authCommand = authorizationCommand(socket, MAC_LABEL, MAC_KEY, priceStr);
 
     std::string packetSent = sendPacket(authCommand, socket, true);

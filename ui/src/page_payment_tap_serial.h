@@ -98,8 +98,9 @@ public:
     bool tap_serial_initiate();
     void getLanInfo();
     void rebootDevice();
-
+    QString authorizeTestTransaction();
     QTimer *readTimer;
+    QTimer *readTestTimer;
     StatePaymentSerial state_payment;
 
 private slots:
@@ -111,6 +112,7 @@ private slots:
     void onPaymentSerialPageTimeoutTick();
 
     void readTimer_loop();
+    void readTestTimer_loop();
     void idlePaymentTimeout();
 
 private:

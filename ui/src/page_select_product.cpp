@@ -269,8 +269,18 @@ void page_select_product::displayProducts()
                 labels_product_overlay_text[slot_index]->setProperty("class", "label_product_overlay_unavailable"); // apply class BEFORE setStyleSheet!!
                 labels_product_overlay_text[slot_index]->setStyleSheet(styleSheet);
 
-                labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->empty"));
-                pushButtons_product_select[slot_index]->hide();
+                labels_product_overlay_text[slot_index]->setText(p_page_idle->thisMachine->getTemplateTextByPage(this, "status_text->assistance"));
+
+                if (p_page_idle->thisMachine->isStandaloneVendingMachine())
+                {
+                    // for a standalone machine, we will be firm: a problem detect means: not clickable.
+                    pushButtons_product_select[slot_index]->hide();
+                }
+                else
+                {
+                    // for a managed machine, we can be lenient
+                    pushButtons_product_select[slot_index]->show();
+                }
                 break;
             }
             case PRODUCT_STATE_DISABLED:
@@ -370,7 +380,6 @@ void page_select_product::select_product(int option)
     {
         p_page_idle->thisMachine->setSelectedProductByOption(option);
         p_page_idle->thisMachine->setSelectedSlotFromSelectedProduct();
-
         hideCurrentPageAndShowProvided(p_page_product);
     }
     else

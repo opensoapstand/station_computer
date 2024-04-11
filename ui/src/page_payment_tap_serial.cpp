@@ -36,8 +36,6 @@ page_payment_tap_serial::page_payment_tap_serial(QWidget *parent) : QWidget(pare
     // Payment Tap Ready
     readTimer = new QTimer(this);
     connect(readTimer, SIGNAL(timeout()), this, SLOT(readTimer_loop()));
-    // readTestTimer = new QTimer(this);
-    // connect(readTestTimer, SIGNAL(timeout()), this, SLOT(readTestTimer_loop()));
     ui->pushButton_payment_bypass->setEnabled(false);
     ui->label_title->hide();
     ui->order_total_amount->hide();
@@ -83,7 +81,7 @@ void page_payment_tap_serial::on_pushButton_payment_bypass_clicked()
 void page_payment_tap_serial::cancelPayment()
 {
     com.flushSerial();
-    /*Cancel any previous payment*/
+    /*Create packet to cancel the payment*/
     pktToSend = paymentPacket.purchaseCancelPacket();
     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_CANCEL);
     ui->animated_Label->show();
@@ -173,25 +171,20 @@ void page_payment_tap_serial::showEvent(QShowEvent *event)
     ui->pushButton_payment_bypass->setEnabled(false);
    
     qDebug() << "Prepare tap order";
+    // Init the tap device to confirm if the communication is established or not
     paymentConnected = com.page_init();
 
+    // Keep on checking till the device have a successful handshake for communication. Sometimes it take couple of seconds to start
     while (!paymentConnected)
     {
         paymentConnected = com.page_init();
         sleep(1);
     }
     pktResponded = com.readForAck();
-
     readPacket.packetReadFromUX(pktResponded);
     pktResponded.clear();
     response = false;
-    qDebug() << "Acknowledgement received";
-    if (readPacket.getAckOrNak() == communicationPacketField::ACK)
-    {
-
-        timerEnabled = true;
-    }
-
+    // Start the read timer which will initiate the Purchase on TAP
     readTimer->start(1000);
     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY);
     ui->productLabel->hide();
@@ -268,6 +261,7 @@ void page_payment_tap_serial::resetPaymentPage(bool cancelTapPayment)
         cancelPayment();
     }
 }
+
 
 bool page_payment_tap_serial::tap_serial_initiate()
 {
@@ -506,7 +500,6 @@ void page_payment_tap_serial::readTimer_loop()
                         pktResponded = com.readPacket();
                         usleep(100);
                         response = getResponse();
-                        // readTimer->start(10);
                     }
                 }
             }
@@ -529,13 +522,8 @@ void page_payment_tap_serial::onPaymentSerialPageTimeoutTick()
     }
 }
 
-// QString page_payment_tap_serial::authorizeTestTransaction(){
-//     readTestTimer->start(1000);
-//     return "";
 
-// }
-
-QString page_payment_tap_serial::readTestTimer_loop()
+QString page_payment_tap_serial::authorizeTestTransaction()
 {
     while (!paymentConnected)
     {

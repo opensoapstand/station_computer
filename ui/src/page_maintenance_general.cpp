@@ -768,9 +768,9 @@ void page_maintenance_general::on_pushButton_tap_authorize_clicked()
 {
     QString paymentMethod= p_page_idle->thisMachine->getPaymentOptions();
     if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA){
-        page_payment_tap_serial *tapSerial = new page_payment_tap_serial(); // Assuming page_payment_tap_serial is the class containing readTestTimer_loop()
+        page_payment_tap_serial *tapSerial = new page_payment_tap_serial(); 
         QTimer *timer = new QTimer(this); // Create a QTimer object
-        connect(timer, SIGNAL(timeout()), tapSerial, SLOT(readTestTimer_loop())); // Connect the QTimer's timeout signal to the slot in page_payment_tap_serial
+        connect(timer, SIGNAL(timeout()), tapSerial, SLOT(authorizeTestTransaction())); // Connect the QTimer's timeout signal to the slot in page_payment_tap_serial
         timer->start(1000); 
 
     }

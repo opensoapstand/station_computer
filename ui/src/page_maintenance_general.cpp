@@ -74,6 +74,8 @@ void page_maintenance_general::showEvent(QShowEvent *event)
     ui->label_aws_port->setText("AWS backend port: " + QString::number(p_page_idle->thisMachine->m_aws_port));
     ui->label_machine_id->setText("Station id: " + p_page_idle->thisMachine->getMachineId());
 
+    checkSoapstandPortal();
+
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_back);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_connectivity);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_wifi_networks);
@@ -718,5 +720,53 @@ void page_maintenance_general::onPage_maintenance_general_TimeoutTick()
     }
 }
 
+size_t page_maintenance_general::write_callback(void *contents, size_t size, size_t nmemb, void *userp) {
+    ((std::string*)userp)->append((char*)contents, size * nmemb);
+    return size * nmemb;
+}
 
+bool page_maintenance_general::ping_url(const std::string& url) {
+    CURL *curl;
+    CURLcode res;
+    std::string readBuffer;
+
+    curl = curl_easy_init();
+    if(curl) {
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L); // Follow redirects
+
+        // Perform the request, res will get the return code
+        res = curl_easy_perform(curl);
+
+        // Check for errors
+        if(res != CURLE_OK)
+            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+        else
+            std::cout << "Received response from " << url << std::endl;
+
+        // always cleanup
+        curl_easy_cleanup(curl);
+
+        return (res == CURLE_OK);
+    }
+    return false;
+}
+
+void page_maintenance_general::checkSoapstandPortal(){
+    std::string url = SOAPSTAND_URL; // Change URL as needed
+    if(ping_url(url)){
+        qDebug() << "Soapstand Portal Reachable";
+        ui->label_soapstand_portal->setText("Soapstand Portal: Online");
+    }else{
+        qDebug() << "Soapstand Portal Unreachable";
+        ui->label_soapstand_portal->setText("Soapstand Portal: Offnline");
+    }
+}
+
+void page_maintenance_general::on_pushButton_check_portal_clicked(){
+    qDebug() << "pushButton check portal url clicked";
+    checkSoapstandPortal();
+}
 

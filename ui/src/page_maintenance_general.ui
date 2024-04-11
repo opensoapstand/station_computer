@@ -33,7 +33,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>970</y>
+     <y>1040</y>
      <width>221</width>
      <height>61</height>
     </rect>
@@ -46,7 +46,7 @@
    <property name="geometry">
     <rect>
      <x>290</x>
-     <y>970</y>
+     <y>1040</y>
      <width>221</width>
      <height>61</height>
     </rect>
@@ -59,7 +59,7 @@
    <property name="geometry">
     <rect>
      <x>290</x>
-     <y>1040</y>
+     <y>1110</y>
      <width>221</width>
      <height>61</height>
     </rect>
@@ -81,7 +81,7 @@
    <property name="geometry">
     <rect>
      <x>310</x>
-     <y>690</y>
+     <y>760</y>
      <width>151</width>
      <height>17</height>
     </rect>
@@ -94,7 +94,7 @@
    <property name="geometry">
     <rect>
      <x>310</x>
-     <y>650</y>
+     <y>720</y>
      <width>201</width>
      <height>17</height>
     </rect>
@@ -107,7 +107,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>620</y>
+     <y>690</y>
      <width>111</width>
      <height>17</height>
     </rect>
@@ -126,7 +126,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>810</y>
+     <y>880</y>
      <width>911</width>
      <height>23</height>
     </rect>
@@ -139,7 +139,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>780</y>
+     <y>850</y>
      <width>911</width>
      <height>23</height>
     </rect>
@@ -224,8 +224,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>-10</x>
-     <y>1170</y>
+     <x>0</x>
+     <y>1250</y>
      <width>1051</width>
      <height>441</height>
     </rect>
@@ -1313,7 +1313,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>760</y>
+     <y>830</y>
      <width>111</width>
      <height>17</height>
     </rect>
@@ -1351,7 +1351,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>880</y>
+     <y>950</y>
      <width>111</width>
      <height>17</height>
     </rect>
@@ -1370,7 +1370,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>640</y>
+     <y>710</y>
      <width>221</width>
      <height>41</height>
     </rect>
@@ -1383,7 +1383,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>690</y>
+     <y>760</y>
      <width>221</width>
      <height>41</height>
     </rect>
@@ -1396,7 +1396,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>530</y>
+     <y>600</y>
      <width>221</width>
      <height>61</height>
     </rect>
@@ -1409,7 +1409,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>1140</y>
+     <y>1210</y>
      <width>661</width>
      <height>471</height>
     </rect>
@@ -1425,7 +1425,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>1100</y>
+     <y>1170</y>
      <width>111</width>
      <height>17</height>
     </rect>
@@ -1457,7 +1457,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>900</y>
+     <y>970</y>
      <width>221</width>
      <height>61</height>
     </rect>
@@ -1470,7 +1470,7 @@
    <property name="geometry">
     <rect>
      <x>290</x>
-     <y>900</y>
+     <y>970</y>
      <width>221</width>
      <height>61</height>
     </rect>
@@ -1483,7 +1483,7 @@
    <property name="geometry">
     <rect>
      <x>310</x>
-     <y>510</y>
+     <y>540</y>
      <width>711</width>
      <height>17</height>
     </rect>
@@ -1496,7 +1496,7 @@
    <property name="geometry">
     <rect>
      <x>310</x>
-     <y>540</y>
+     <y>570</y>
      <width>711</width>
      <height>17</height>
     </rect>
@@ -1522,7 +1522,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>840</y>
+     <y>910</y>
      <width>911</width>
      <height>23</height>
     </rect>
@@ -1535,6 +1535,32 @@
    </property>
    <property name="tristate">
     <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_soapstand_portal">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>510</y>
+     <width>711</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>soapstand portal</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_check_portal">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>524</y>
+     <width>221</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Check Portal Connection</string>
    </property>
   </widget>
   <zorder>pushButton_back</zorder>
@@ -1567,6 +1593,8 @@
   <zorder>label_machine_id</zorder>
   <zorder>label_wifi_name</zorder>
   <zorder>checkBox_enable_pcb_3point3V</zorder>
+  <zorder>label_soapstand_portal</zorder>
+  <zorder>pushButton_check_portal</zorder>
  </widget>
  <resources/>
  <connections/>

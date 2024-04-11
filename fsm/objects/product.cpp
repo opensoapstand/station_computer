@@ -397,7 +397,7 @@ double product::getThresholdFlow_max_allowed()
 
     if (m_nThresholdFlow_maximum_allowed < getThresholdFlow())
     {
-        // 2023-11: in the db, column "calibration_const" was reused to hold this variable, for AP. if not set, set it to an arbitray high value
+        // 2023-11: in the db, column "threshold_flow_maximum" was reused to hold this variable, for AP. if not set, set it to an arbitray high value
         return 1000.0; // 1L per second. magic number
     }
     else
@@ -915,7 +915,7 @@ bool product::isDbValid()
         "dispense_speed",
         "threshold_flow",
         "retraction_time",
-        "calibration_const",
+        "threshold_flow_maximum",
         "volume_per_tick",
         "last_restock",
         "volume_full",
@@ -1141,7 +1141,7 @@ bool product::loadProductParametersFromDb()
                         "dispense_speed," // 9
                         "threshold_flow,"
                         "retraction_time," // 11
-                        "calibration_const,"
+                        "threshold_flow_maximum,"
                         "volume_per_tick,"
                         "volume_full,"
                         "volume_remaining,"

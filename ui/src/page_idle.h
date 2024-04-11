@@ -106,6 +106,7 @@ public:
 
     bool eventFilter(QObject *object, QEvent *event);
 
+
 private slots:
     void on_pushButton_to_select_product_page_clicked();
     void onIdlePageTypeSelectorTimerTick();

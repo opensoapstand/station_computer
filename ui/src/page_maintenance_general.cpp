@@ -92,6 +92,11 @@ void page_maintenance_general::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_status_feedback);
     ui->pushButton_tap_authorize->hide();
     ui->pushButton_tap_refund->hide();
+    ui->label_device_id->hide();
+    ui->label_merchant_id->hide();
+    ui->tap_device_id->hide();
+    ui->tap_merchant_id->hide();
+    
     if(p_page_idle->thisMachine->hasMixing()){
         p_keyboard->resetKeyboard();
         p_input_widget->toggleInputWidget(false);
@@ -726,15 +731,32 @@ void page_maintenance_general::on_pushButton_tap_check_status_clicked()
     qDebug() << "Maintenance general. Clicked check TAP Device status.";
     QString paymentMethod= p_page_idle->thisMachine->getPaymentOptions();
 
-    if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA || paymentMethod== PAYMENT_TAP_USA_QR || paymentMethod== PAYMENT_TAP_USA)
+    if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA)
     {
         ui->pushButton_tap_authorize->show();
         ui->pushButton_tap_refund->show();
+        ui->label_device_id->show();
+        ui->label_merchant_id->show();
+        ui->tap_device_id->show();
+        ui->tap_merchant_id->show();
+        page_payment_tap_serial paymentSerialObject;
+        QPair<QString, QString> tapConfigValues= paymentSerialObject.readTapCanadaConfigFile();
+        ui->tap_device_id->setText(tapConfigValues.first);
+        ui->tap_merchant_id->setText(tapConfigValues.second);
+
+    }
+    else if(paymentMethod== PAYMENT_TAP_USA_QR || paymentMethod== PAYMENT_TAP_USA){
+        ui->pushButton_tap_authorize->show();
+        ui->pushButton_tap_refund->show();
+        ui->tap_device_id->show();
+        page_payment_tap_tcp paymentObject;
+        QString deviceSerialNumber = paymentObject.returnDeviceSerialNumberFromConfig();
+        ui->tap_device_id->setText(deviceSerialNumber);
     }
     else{
         ui->tap_is_working->setText("Tap not enabled");
     }
-    ui->pushButton_tap_check_status->hide();
+    // ui->pushButton_tap_check_status->hide();
 }
 
 
@@ -742,9 +764,13 @@ void page_maintenance_general::on_pushButton_tap_authorize_clicked()
 {
     QString paymentMethod= p_page_idle->thisMachine->getPaymentOptions();
     if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA){
-        page_payment_tap_serial paymentSerialObject;
-        QString result = paymentSerialObject.authorizeTestTransaction();
-        ui->tap_is_working->setText(result);
+        page_payment_tap_serial *tapSerial = new page_payment_tap_serial(); // Assuming page_payment_tap_serial is the class containing readTestTimer_loop()
+        QTimer *timer = new QTimer(this); // Create a QTimer object
+        connect(timer, SIGNAL(timeout()), tapSerial, SLOT(readTestTimer_loop())); // Connect the QTimer's timeout signal to the slot in page_payment_tap_serial
+        timer->start(1000); 
+        // page_payment_tap_serial paymentSerialObject;
+        // QString result = paymentSerialObject.authorizeTestTransaction();
+        // ui->tap_is_working->setText(result);
     }
     else if(paymentMethod== PAYMENT_TAP_USA_QR || paymentMethod== PAYMENT_TAP_USA){
         page_payment_tap_tcp paymentObject;
@@ -757,7 +783,16 @@ void page_maintenance_general::on_pushButton_tap_authorize_clicked()
 
 void page_maintenance_general::on_pushButton_tap_refund_clicked()
 {
-    qDebug() << "Maintenance general. Clicked Refund Tap Payment";
-    page_payment_tap_tcp paymentObject;
-    paymentObject.voidingTestTransaction();
+    QString paymentMethod= p_page_idle->thisMachine->getPaymentOptions();
+    if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA){
+        page_payment_tap_serial paymentSerialObject;
+        QString result = paymentSerialObject.reverseTestPayment();
+        ui->tap_is_working->setText(result);
+    }
+    else if(paymentMethod== PAYMENT_TAP_USA_QR || paymentMethod== PAYMENT_TAP_USA){
+         qDebug() << "Maintenance general. Clicked Refund Tap Payment";
+        page_payment_tap_tcp paymentObject;
+        paymentObject.voidingTestTransaction();
+    }
+   
 }

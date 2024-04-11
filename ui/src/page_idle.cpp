@@ -792,3 +792,4 @@ void page_idle::rebootTapDevice(QString paymentMethod)
     }
     
 }
+

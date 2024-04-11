@@ -209,7 +209,7 @@
    <property name="geometry">
     <rect>
      <x>310</x>
-     <y>470</y>
+     <y>490</y>
      <width>711</width>
      <height>31</height>
     </rect>
@@ -1540,8 +1540,8 @@
   <widget class="QPushButton" name="pushButton_tap_check_status">
    <property name="geometry">
     <rect>
-     <x>610</x>
-     <y>620</y>
+     <x>600</x>
+     <y>510</y>
      <width>221</width>
      <height>41</height>
     </rect>
@@ -1553,8 +1553,8 @@
   <widget class="QLabel" name="tap_is_working">
    <property name="geometry">
     <rect>
-     <x>870</x>
-     <y>630</y>
+     <x>860</x>
+     <y>520</y>
      <width>201</width>
      <height>17</height>
     </rect>
@@ -1567,7 +1567,7 @@
    <property name="geometry">
     <rect>
      <x>610</x>
-     <y>690</y>
+     <y>710</y>
      <width>221</width>
      <height>71</height>
     </rect>
@@ -1580,13 +1580,65 @@
    <property name="geometry">
     <rect>
      <x>860</x>
-     <y>690</y>
+     <y>710</y>
      <width>221</width>
      <height>71</height>
     </rect>
    </property>
    <property name="text">
     <string>Refund </string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_device_id">
+   <property name="geometry">
+    <rect>
+     <x>630</x>
+     <y>590</y>
+     <width>201</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Device Id</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="tap_device_id">
+   <property name="geometry">
+    <rect>
+     <x>860</x>
+     <y>590</y>
+     <width>201</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="tap_merchant_id">
+   <property name="geometry">
+    <rect>
+     <x>860</x>
+     <y>650</y>
+     <width>201</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_merchant_id">
+   <property name="geometry">
+    <rect>
+     <x>630</x>
+     <y>650</y>
+     <width>201</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Merchant Id</string>
    </property>
   </widget>
   <zorder>pushButton_back</zorder>
@@ -1623,6 +1675,10 @@
   <zorder>tap_is_working</zorder>
   <zorder>pushButton_tap_authorize</zorder>
   <zorder>pushButton_tap_refund</zorder>
+  <zorder>label_device_id</zorder>
+  <zorder>tap_device_id</zorder>
+  <zorder>tap_merchant_id</zorder>
+  <zorder>label_merchant_id</zorder>
  </widget>
  <resources/>
  <connections/>

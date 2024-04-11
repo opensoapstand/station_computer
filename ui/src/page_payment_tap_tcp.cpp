@@ -566,3 +566,24 @@ void page_payment_tap_tcp::voidingTestTransaction(){
     // p_page_idle->thisMachine->getDb()->setPaymentTransaction(tapPaymentObject);
     finishSession(std::stoi(tapPaymentObject["socketId"]), MAC_LABEL, MAC_KEY);
 }
+
+QString page_payment_tap_tcp::returnDeviceSerialNumberFromConfig() {
+    std::ifstream configFile("/home/df-admin/production/admin/tap_payment/config.txt");
+    QString serialNumber;
+    qDebug() << "Reading config file";
+    if (configFile.is_open()) {
+        std::string line;
+        while (std::getline(configFile, line)) {
+            std::istringstream iss(line);
+            std::string key, value;
+            if (std::getline(iss, key, '=') && std::getline(iss, value)) {
+                if (key == "SERIALNUMBER") {
+                    serialNumber = QString::fromStdString(value);
+                    break;
+                }
+            }
+        }
+        configFile.close();
+    }
+    return serialNumber;
+}

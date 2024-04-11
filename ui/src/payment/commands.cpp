@@ -27,7 +27,7 @@ std::map<std::string, std::string> registerDevice(int socket){
         std::time_t currentTime_t = std::chrono::system_clock::to_time_t(currentTime);
         long long currentTimeNumber = static_cast<long long>(currentTime_t);
         std::string currentTimeString = std::to_string(currentTimeNumber);
-        createOrUpdateConfigFile(dataReceived["MAC_KEY"], dataReceived["MAC_LABEL"], currentTimeString);
+        createOrUpdateConfigFile(dataReceived["MAC_KEY"], dataReceived["MAC_LABEL"], currentTimeString, dataReceived["SERIALNUMBER"]);
         close(socket);
     }
     else{
@@ -282,7 +282,7 @@ std::map<std::string, std::string> testMac(int socket, std::string MAC_KEY, std:
     return dataReceived;
 }
 
-int createOrUpdateConfigFile (std::string macKey,std::string macLabel,std::string invoiceNumber){
+int createOrUpdateConfigFile (std::string macKey,std::string macLabel,std::string invoiceNumber, std::string deviceSerialNumber){
     std::ofstream configFile("/home/df-admin/production/admin/tap_payment/config.txt");
     std::ofstream configHistoryFile("/home/df-admin/production/admin/tap_payment/configHistory.txt", std::ios::app);
     qDebug() << "Creating or updating config file";
@@ -328,6 +328,7 @@ std::map<std::string, std::string> readConfigFile(){
     }
     return configMap;
 }
+
 
 std::string updateInvoiceValueInConfig(std::string invoiceNumber){
     

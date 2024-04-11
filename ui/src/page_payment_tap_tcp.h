@@ -83,6 +83,7 @@ public:
     void rebootTapTcpDevice();
     void authorizeTestTransaction();
     void voidingTestTransaction();
+    QString returnDeviceSerialNumberFromConfig();
     StateTapPayment state_tap_payment; 
 
 

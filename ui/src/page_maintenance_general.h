@@ -97,6 +97,7 @@ private slots:
 
 private:
     void showEvent(QShowEvent *event);
+    std::string readBuffer;
     Ui::page_maintenance_general *ui;
     page_maintenance *p_page_maintenance;
     page_idle *p_page_idle;

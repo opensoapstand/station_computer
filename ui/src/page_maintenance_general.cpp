@@ -756,12 +756,31 @@ bool page_maintenance_general::ping_url(const std::string& url) {
 
 void page_maintenance_general::checkSoapstandPortal(){
     std::string url = SOAPSTAND_URL; // Change URL as needed
+
+    CURL *curl;
+    CURLcode res;
+    long http_code = 0;
+    readBuffer.clear();
+ 
+    QString api_url = "api/role/find/stationViewer"; //testing database connection by fetching data
+    std::tie(res,readBuffer, http_code) =  p_page_idle->thisMachine->sendRequestToPortal(api_url, "GET", "", "PAGE_MAINTENANCE_GENERAL");
+
     if(ping_url(url)){
         qDebug() << "Soapstand Portal Reachable";
         ui->label_soapstand_portal->setText("Soapstand Portal: Online");
+        if (res != CURLE_OK)
+        {
+            qDebug() << "Backend connection issue: Potential issue with Database";
+            ui->label_soapstand_portal->setText("Soapstand Portal: Online \nDatabase Connection: Offline");
+        }
+        else
+        {
+            qDebug() << "Backend connection database valid";
+            ui->label_soapstand_portal->setText("Soapstand Portal: Online \nDatabase Connection: Online");
+        }
     }else{
         qDebug() << "Soapstand Portal Unreachable";
-        ui->label_soapstand_portal->setText("Soapstand Portal: Offnline");
+        ui->label_soapstand_portal->setText("Soapstand Portal: Offnline - Transactions will be synchronized when the portal is back online");
     }
 }
 

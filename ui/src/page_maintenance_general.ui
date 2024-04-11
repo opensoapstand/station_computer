@@ -1540,8 +1540,8 @@
   <widget class="QPushButton" name="pushButton_tap_check_status">
    <property name="geometry">
     <rect>
-     <x>600</x>
-     <y>510</y>
+     <x>580</x>
+     <y>880</y>
      <width>221</width>
      <height>41</height>
     </rect>
@@ -1553,8 +1553,8 @@
   <widget class="QLabel" name="tap_is_working">
    <property name="geometry">
     <rect>
-     <x>860</x>
-     <y>520</y>
+     <x>840</x>
+     <y>890</y>
      <width>201</width>
      <height>17</height>
     </rect>
@@ -1566,34 +1566,34 @@
   <widget class="QPushButton" name="pushButton_tap_authorize">
    <property name="geometry">
     <rect>
-     <x>610</x>
-     <y>710</y>
+     <x>590</x>
+     <y>1080</y>
      <width>221</width>
      <height>71</height>
     </rect>
    </property>
    <property name="text">
-    <string>Authorize Transaction</string>
+    <string>Test $1 transaction</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_tap_refund">
+  <widget class="QPushButton" name="pushButton_tap_cancel">
    <property name="geometry">
     <rect>
-     <x>860</x>
-     <y>710</y>
+     <x>840</x>
+     <y>1080</y>
      <width>221</width>
      <height>71</height>
     </rect>
    </property>
    <property name="text">
-    <string>Refund </string>
+    <string>Cancel </string>
    </property>
   </widget>
   <widget class="QLabel" name="label_device_id">
    <property name="geometry">
     <rect>
-     <x>630</x>
-     <y>590</y>
+     <x>580</x>
+     <y>940</y>
      <width>201</width>
      <height>17</height>
     </rect>
@@ -1605,8 +1605,8 @@
   <widget class="QLabel" name="tap_device_id">
    <property name="geometry">
     <rect>
-     <x>860</x>
-     <y>590</y>
+     <x>810</x>
+     <y>940</y>
      <width>201</width>
      <height>17</height>
     </rect>
@@ -1618,8 +1618,8 @@
   <widget class="QLabel" name="tap_merchant_id">
    <property name="geometry">
     <rect>
-     <x>860</x>
-     <y>650</y>
+     <x>810</x>
+     <y>970</y>
      <width>201</width>
      <height>17</height>
     </rect>
@@ -1631,14 +1631,27 @@
   <widget class="QLabel" name="label_merchant_id">
    <property name="geometry">
     <rect>
-     <x>630</x>
-     <y>650</y>
+     <x>580</x>
+     <y>970</y>
      <width>201</width>
      <height>17</height>
     </rect>
    </property>
    <property name="text">
     <string>Merchant Id</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="instructions_tap_testing">
+   <property name="geometry">
+    <rect>
+     <x>590</x>
+     <y>1000</y>
+     <width>401</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
   <zorder>pushButton_back</zorder>
@@ -1674,11 +1687,12 @@
   <zorder>pushButton_tap_check_status</zorder>
   <zorder>tap_is_working</zorder>
   <zorder>pushButton_tap_authorize</zorder>
-  <zorder>pushButton_tap_refund</zorder>
+  <zorder>pushButton_tap_cancel</zorder>
   <zorder>label_device_id</zorder>
   <zorder>tap_device_id</zorder>
   <zorder>tap_merchant_id</zorder>
   <zorder>label_merchant_id</zorder>
+  <zorder>instructions_tap_testing</zorder>
  </widget>
  <resources/>
  <connections/>

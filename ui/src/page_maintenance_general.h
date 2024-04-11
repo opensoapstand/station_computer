@@ -83,7 +83,7 @@ private slots:
 
     void on_pushButton_tap_check_status_clicked();
     void on_pushButton_tap_authorize_clicked();
-    void on_pushButton_tap_refund_clicked();
+    void on_pushButton_tap_cancel_clicked();
     void on_pushButton_wifi_networks_clicked();
 
     void on_pushButton_rtunnel_restart_clicked();

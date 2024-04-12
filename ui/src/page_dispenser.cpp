@@ -22,6 +22,7 @@
 #include "page_product.h"
 #include "page_product_mixing.h"
 #include "payment/commands.h"
+
 extern bool isFreeEmailOrder;
 extern QString transactionLogging;
 extern std::string MAC_KEY;

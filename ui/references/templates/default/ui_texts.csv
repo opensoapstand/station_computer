@@ -306,3 +306,4 @@ page_maintenance_general->pushButton_shutdown,Shut Down
 page_maintenance_general->pushButton_reboot,Restart Station
 page_maintenance_general->label_feedback,Feedback
 page_maintenance_general->label_status_feedback,Command Feedback
+page_maintenance_general->instructions_tap_testing,<b>Instructions to Test TAP device: </b><br/>1. Press Test $1 transaction. <br/> 2. When tap antenna light is solid, TAP the card<br/> 3. Press Cancel button to cancel the purchase

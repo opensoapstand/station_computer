@@ -203,7 +203,7 @@ bool pnumberproduct::loadProductPropertiesFromDb()
                                                  &m_dispense_speed,
                                                  &m_threshold_flow,
                                                  &m_retraction_time,
-                                                 &m_calibration_const,
+                                                 &m_threshold_flow_maximum,
                                                  &m_volume_per_tick,
                                                  &m_lastRestockDate,
                                                  &m_volume_full,

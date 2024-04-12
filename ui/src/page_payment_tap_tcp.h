@@ -81,6 +81,9 @@ public:
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void authorized_transaction(std::map<std::string, std::string> responseObj);
     void rebootTapTcpDevice();
+    void authorizeTestTransaction();
+    void voidingTestTransaction();
+    QString returnDeviceSerialNumberFromConfig();
     StateTapPayment state_tap_payment; 
 
 

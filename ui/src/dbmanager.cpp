@@ -356,7 +356,7 @@ bool DbManager::getAllProductProperties(int pnumber,
                                         int *dispense_speed,
                                         double *threshold_flow,
                                         int *retraction_time,
-                                        double *calibration_const,
+                                        double *threshold_flow_maximum,
                                         double *volume_per_tick,
                                         QString *last_restock,
                                         double *volume_full,
@@ -398,7 +398,7 @@ bool DbManager::getAllProductProperties(int pnumber,
             "dispense_speed," // 10
             "threshold_flow,"
             "retraction_time," // 12
-            "calibration_const,"
+            "threshold_flow_maximum,"
             "volume_per_tick,"
             "last_restock,"
             "volume_full,"
@@ -470,7 +470,7 @@ bool DbManager::getAllProductProperties(int pnumber,
             *dispense_speed = qry.value(10).toInt();
             *threshold_flow = qry.value(11).toDouble();
             *retraction_time = qry.value(12).toInt();
-            *calibration_const = qry.value(13).toDouble();
+            *threshold_flow_maximum = qry.value(13).toDouble();
             *volume_per_tick = qry.value(14).toDouble();
             *last_restock = qry.value(15).toString();
             *volume_full = qry.value(16).toDouble();

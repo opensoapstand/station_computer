@@ -27,7 +27,7 @@ std::map<std::string, std::string> registerDevice(int socket){
         std::time_t currentTime_t = std::chrono::system_clock::to_time_t(currentTime);
         long long currentTimeNumber = static_cast<long long>(currentTime_t);
         std::string currentTimeString = std::to_string(currentTimeNumber);
-        createOrUpdateConfigFile(dataReceived["MAC_KEY"], dataReceived["MAC_LABEL"], currentTimeString);
+        createOrUpdateConfigFile(dataReceived["MAC_KEY"], dataReceived["MAC_LABEL"], currentTimeString, dataReceived["SERIALNUMBER"]);
         close(socket);
     }
     else{
@@ -57,6 +57,7 @@ std::map<std::string, std::string> getNextCounterMac(int socket, std::string MAC
     std::string encoded_counter = create_counter_mac(counter, MAC_KEY);
     std::map<std::string, std::string> responseObj;
     responseObj["COUNTER"] = std::to_string(counter);
+    qDebug() << "Counter" << counter;
     responseObj["COUNTER_ENCODED"] = encoded_counter;
     return responseObj;
 }
@@ -244,6 +245,7 @@ std::map<std::string, std::string> voidTransaction(int socket, std::string MAC_L
                 <PAYMENT_TYPE>CREDIT</PAYMENT_TYPE>\
             </TRANSACTION>";
         std::cout << command << std::endl;
+        qDebug()<< "In void transaction";
         std::map<std::string, std::string> dataReceived = sendAndReceivePacket(command, socket, true);
     return dataReceived;
 }
@@ -280,7 +282,7 @@ std::map<std::string, std::string> testMac(int socket, std::string MAC_KEY, std:
     return dataReceived;
 }
 
-int createOrUpdateConfigFile (std::string macKey,std::string macLabel,std::string invoiceNumber){
+int createOrUpdateConfigFile (std::string macKey,std::string macLabel,std::string invoiceNumber, std::string deviceSerialNumber){
     std::ofstream configFile("/home/df-admin/production/admin/tap_payment/config.txt");
     std::ofstream configHistoryFile("/home/df-admin/production/admin/tap_payment/configHistory.txt", std::ios::app);
     qDebug() << "Creating or updating config file";
@@ -326,6 +328,7 @@ std::map<std::string, std::string> readConfigFile(){
     }
     return configMap;
 }
+
 
 std::string updateInvoiceValueInConfig(std::string invoiceNumber){
     

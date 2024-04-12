@@ -98,8 +98,12 @@ public:
     bool tap_serial_initiate();
     void getLanInfo();
     void rebootDevice();
+    QString reverseTestPayment();
+    int createOrUpdateTapCanadaConfigFile(QString merchantId, QString deviceId);
+    QPair<QString, QString> readTapCanadaConfigFile();
 
     QTimer *readTimer;
+    QTimer *readTestTimer;
     StatePaymentSerial state_payment;
 
 private slots:
@@ -111,6 +115,7 @@ private slots:
     void onPaymentSerialPageTimeoutTick();
 
     void readTimer_loop();
+    QString authorizeTestTransaction();
     void idlePaymentTimeout();
 
 private:
@@ -137,6 +142,7 @@ private:
     string merchantName;
     string merchantAddress;
     string terminalID;
+    string merchantId;
     mCommunication com;
     packetFromECR sendPacket;
     packetFromUX410 readPacket;

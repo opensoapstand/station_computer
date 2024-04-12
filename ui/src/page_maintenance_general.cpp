@@ -92,7 +92,15 @@ void page_maintenance_general::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_reboot);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_feedback);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_status_feedback);
-
+    ui->pushButton_tap_authorize->hide();
+    ui->pushButton_tap_cancel->hide();
+    ui->label_device_id->hide();
+    ui->label_merchant_id->hide();
+    ui->tap_device_id->hide();
+    ui->tap_merchant_id->hide();
+    ui->tap_is_working->setText("");
+    ui->instructions_tap_testing->setText("");
+    
     if(p_page_idle->thisMachine->hasMixing()){
         p_keyboard->resetKeyboard();
         p_input_widget->toggleInputWidget(false);
@@ -218,6 +226,7 @@ void page_maintenance_general::on_pushButton_printer_check_status_clicked()
     send_check_printer_status_command();
     ui->pushButton_printer_check_status->hide();
 }
+
 
 void page_maintenance_general::on_pushButton_printer_test_print_clicked()
 {
@@ -788,4 +797,73 @@ void page_maintenance_general::on_pushButton_check_portal_clicked(){
     qDebug() << "pushButton check portal url clicked";
     checkSoapstandPortal();
 }
+void page_maintenance_general::on_pushButton_tap_check_status_clicked()
+{
+    qDebug() << "Maintenance general. Clicked check TAP Device status.";
+    QString paymentMethod= p_page_idle->thisMachine->getPaymentOptions();
 
+    if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA)
+    {
+        ui->pushButton_tap_authorize->show();
+        ui->pushButton_tap_cancel->show();
+        ui->label_device_id->show();
+        ui->label_merchant_id->show();
+        ui->tap_device_id->show();
+        ui->tap_merchant_id->show();
+        page_payment_tap_serial paymentSerialObject;
+        QPair<QString, QString> tapConfigValues= paymentSerialObject.readTapCanadaConfigFile();
+        ui->tap_device_id->setText(tapConfigValues.first);
+        ui->tap_merchant_id->setText(tapConfigValues.second);
+        p_page_idle->thisMachine->setTemplateTextToObject(ui->instructions_tap_testing);
+
+    }
+    else if(paymentMethod== PAYMENT_TAP_USA_QR || paymentMethod== PAYMENT_TAP_USA){
+        ui->pushButton_tap_authorize->show();
+        ui->pushButton_tap_cancel->show();
+        ui->tap_device_id->show();
+        page_payment_tap_tcp paymentObject;
+        QString deviceSerialNumber = paymentObject.returnDeviceSerialNumberFromConfig();
+        ui->tap_device_id->setText(deviceSerialNumber);
+        p_page_idle->thisMachine->setTemplateTextToObject(ui->instructions_tap_testing);
+    }
+    else{
+        ui->tap_is_working->setText("Tap not enabled");
+    }
+    // ui->pushButton_tap_check_status->hide();
+}
+
+
+void page_maintenance_general::on_pushButton_tap_authorize_clicked()
+{
+    QString paymentMethod= p_page_idle->thisMachine->getPaymentOptions();
+    if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA){
+        page_payment_tap_serial *tapSerial = new page_payment_tap_serial(); 
+        QTimer *timer = new QTimer(this); // Create a QTimer object
+        connect(timer, SIGNAL(timeout()), tapSerial, SLOT(authorizeTestTransaction())); // Connect the QTimer's timeout signal to the slot in page_payment_tap_serial
+        timer->start(1000); 
+
+    }
+    else if(paymentMethod== PAYMENT_TAP_USA_QR || paymentMethod== PAYMENT_TAP_USA){
+        page_payment_tap_tcp paymentObject;
+        paymentObject.authorizeTestTransaction();
+        qDebug() << "Maintenance general. Clicked Authorize Tap Payment";
+    }
+    
+    
+}
+
+void page_maintenance_general::on_pushButton_tap_cancel_clicked()
+{
+    QString paymentMethod= p_page_idle->thisMachine->getPaymentOptions();
+    if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA){
+        page_payment_tap_serial paymentSerialObject;
+        QString result = paymentSerialObject.reverseTestPayment();
+        ui->tap_is_working->setText(result);
+    }
+    else if(paymentMethod== PAYMENT_TAP_USA_QR || paymentMethod== PAYMENT_TAP_USA){
+         qDebug() << "Maintenance general. Clicked Refund Tap Payment";
+        page_payment_tap_tcp paymentObject;
+        paymentObject.voidingTestTransaction();
+    }
+   
+}

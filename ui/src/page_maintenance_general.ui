@@ -33,7 +33,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>970</y>
+     <y>1150</y>
      <width>221</width>
      <height>61</height>
     </rect>
@@ -46,7 +46,7 @@
    <property name="geometry">
     <rect>
      <x>290</x>
-     <y>970</y>
+     <y>1150</y>
      <width>221</width>
      <height>61</height>
     </rect>
@@ -59,7 +59,7 @@
    <property name="geometry">
     <rect>
      <x>290</x>
-     <y>1040</y>
+     <y>1220</y>
      <width>221</width>
      <height>61</height>
     </rect>
@@ -81,7 +81,7 @@
    <property name="geometry">
     <rect>
      <x>310</x>
-     <y>690</y>
+     <y>870</y>
      <width>151</width>
      <height>17</height>
     </rect>
@@ -94,7 +94,7 @@
    <property name="geometry">
     <rect>
      <x>310</x>
-     <y>650</y>
+     <y>830</y>
      <width>201</width>
      <height>17</height>
     </rect>
@@ -107,7 +107,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>620</y>
+     <y>800</y>
      <width>111</width>
      <height>17</height>
     </rect>
@@ -126,7 +126,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>810</y>
+     <y>990</y>
      <width>911</width>
      <height>23</height>
     </rect>
@@ -139,7 +139,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>780</y>
+     <y>960</y>
      <width>911</width>
      <height>23</height>
     </rect>
@@ -166,8 +166,8 @@
     <rect>
      <x>60</x>
      <y>370</y>
-     <width>221</width>
-     <height>71</height>
+     <width>220</width>
+     <height>60</height>
     </rect>
    </property>
    <property name="text">
@@ -224,8 +224,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>-10</x>
-     <y>1170</y>
+     <x>0</x>
+     <y>1400</y>
      <width>1051</width>
      <height>441</height>
     </rect>
@@ -1313,7 +1313,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>760</y>
+     <y>940</y>
      <width>111</width>
      <height>17</height>
     </rect>
@@ -1351,7 +1351,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>880</y>
+     <y>1060</y>
      <width>111</width>
      <height>17</height>
     </rect>
@@ -1370,7 +1370,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>640</y>
+     <y>820</y>
      <width>221</width>
      <height>41</height>
     </rect>
@@ -1383,7 +1383,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>690</y>
+     <y>870</y>
      <width>221</width>
      <height>41</height>
     </rect>
@@ -1396,9 +1396,9 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>530</y>
-     <width>221</width>
-     <height>61</height>
+     <y>600</y>
+     <width>220</width>
+     <height>60</height>
     </rect>
    </property>
    <property name="text">
@@ -1409,7 +1409,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>1140</y>
+     <y>1320</y>
      <width>661</width>
      <height>471</height>
     </rect>
@@ -1425,7 +1425,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>1100</y>
+     <y>1280</y>
      <width>111</width>
      <height>17</height>
     </rect>
@@ -1445,8 +1445,8 @@
     <rect>
      <x>60</x>
      <y>450</y>
-     <width>221</width>
-     <height>61</height>
+     <width>220</width>
+     <height>60</height>
     </rect>
    </property>
    <property name="text">
@@ -1457,7 +1457,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>900</y>
+     <y>1080</y>
      <width>221</width>
      <height>61</height>
     </rect>
@@ -1470,7 +1470,7 @@
    <property name="geometry">
     <rect>
      <x>290</x>
-     <y>900</y>
+     <y>1080</y>
      <width>221</width>
      <height>61</height>
     </rect>
@@ -1483,7 +1483,7 @@
    <property name="geometry">
     <rect>
      <x>310</x>
-     <y>510</y>
+     <y>610</y>
      <width>711</width>
      <height>17</height>
     </rect>
@@ -1496,7 +1496,7 @@
    <property name="geometry">
     <rect>
      <x>310</x>
-     <y>540</y>
+     <y>640</y>
      <width>711</width>
      <height>17</height>
     </rect>
@@ -1522,7 +1522,7 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>840</y>
+     <y>1020</y>
      <width>911</width>
      <height>23</height>
     </rect>
@@ -1535,6 +1535,149 @@
    </property>
    <property name="tristate">
     <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_soapstand_portal">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>540</y>
+     <width>711</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>soapstand portal</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_check_portal">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>524</y>
+     <width>220</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Check Portal Connection</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_tap_check_status">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>680</y>
+     <width>220</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Check TAP Status</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="tap_is_working">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>700</y>
+     <width>201</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>tap device status</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_tap_authorize">
+   <property name="geometry">
+    <rect>
+     <x>530</x>
+     <y>1080</y>
+     <width>221</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Test $1 transaction</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_tap_cancel">
+   <property name="geometry">
+    <rect>
+     <x>780</x>
+     <y>1080</y>
+     <width>221</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Cancel </string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_device_id">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>740</y>
+     <width>201</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Device Id</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="tap_device_id">
+   <property name="geometry">
+    <rect>
+     <x>810</x>
+     <y>940</y>
+     <width>201</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="tap_merchant_id">
+   <property name="geometry">
+    <rect>
+     <x>810</x>
+     <y>970</y>
+     <width>201</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_merchant_id">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>770</y>
+     <width>201</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Merchant Id</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="instructions_tap_testing">
+   <property name="geometry">
+    <rect>
+     <x>590</x>
+     <y>1000</y>
+     <width>401</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
   <zorder>pushButton_back</zorder>
@@ -1567,6 +1710,17 @@
   <zorder>label_machine_id</zorder>
   <zorder>label_wifi_name</zorder>
   <zorder>checkBox_enable_pcb_3point3V</zorder>
+  <zorder>label_soapstand_portal</zorder>
+  <zorder>pushButton_check_portal</zorder>
+  <zorder>pushButton_tap_check_status</zorder>
+  <zorder>tap_is_working</zorder>
+  <zorder>pushButton_tap_authorize</zorder>
+  <zorder>pushButton_tap_cancel</zorder>
+  <zorder>label_device_id</zorder>
+  <zorder>tap_device_id</zorder>
+  <zorder>tap_merchant_id</zorder>
+  <zorder>label_merchant_id</zorder>
+  <zorder>instructions_tap_testing</zorder>
  </widget>
  <resources/>
  <connections/>

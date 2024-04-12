@@ -84,8 +84,7 @@ public:
 
     QString getMachineId();
     QString getMachineLocation();
-    QString getPaymentOptions();
-    void setPaymentOptionsInDb(QString paymentMethod);
+
     bool getCouponsEnabled();
     bool getShowTransactionHistory();
 
@@ -100,7 +99,7 @@ public:
     bool isAllowedAsAdmin();
     bool isAllowedAsMaintainer();
 
-    void resetUserState();
+    void resetUserState(bool resetSessionIdAndCoupons);
     void createSessionId();
     void resetSessionId();
     QString getSessionId();
@@ -185,9 +184,11 @@ public:
     StateReboot getRebootState();
     void setRebootState(StateReboot state);
 
+    QString getPaymentOptions();
+    void setPaymentOptionsInDb(QString paymentMethod);
     ActivePaymentMethod getSelectedPaymentMethod();
     void setSelectedPaymentMethod(ActivePaymentMethod paymentMethod);
-
+    bool isStandaloneVendingMachine();
     std::vector<ActivePaymentMethod> getAllowedPaymentMethods();
     void setAllowedPaymentMethods(ActivePaymentMethod paymentMethod);
 
@@ -272,11 +273,12 @@ public:
     QString m_paymentOptions;
     int m_screen_sleep_time24h;
     int m_screen_wakeup_time24h;
-    int m_pNumber_bottle_1 = 0;
-    int m_pNumber_bottle_2 = 0;
+    int m_pNumber_bottle_1 = DUMMY_PNUMBER;
+    int m_pNumber_bottle_2 = DUMMY_PNUMBER;
     QString m_portal_base_url;
     int m_enable_offline_payment;
     int m_page_init_timeout;
+    QString m_test_field;
 
     QString m_freesample_end_url;
     int m_is_enabled;
@@ -318,6 +320,8 @@ public:
     int getPageInitTimeout();
     void setFreeSampleEndURL(QString ending_url);
     QString getFreeSampleEndURL();
+
+    DbManager *m_db;
 public slots:
 
 signals:
@@ -348,7 +352,7 @@ private:
     StateReboot m_stateReboot;
     ActivePaymentMethod m_selectedPaymentMethod;
     std::vector<ActivePaymentMethod> allowedPaymentMethods;
-    DbManager *m_db;
+    
     UserRole active_role;
 
     QString m_pump_id_slots[MAX_SLOT_COUNT];

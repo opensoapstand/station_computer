@@ -243,6 +243,8 @@ using namespace std;
 #define PORTAL_RESET_STOCK                              "api/machine_data/resetStock"
 #define PORTAL_UPDATE_PRODUCT_FROM_STATION              "api/product/update_product_from_station"
 
+#define SOAPSTAND_URL                                   "http://soapstandportal.com"
+
 // typedef enum ProductState
 // {
 //    PRODUCT_STATE_AVAILABLE = 0,

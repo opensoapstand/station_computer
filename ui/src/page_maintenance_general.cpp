@@ -74,6 +74,8 @@ void page_maintenance_general::showEvent(QShowEvent *event)
     ui->label_aws_port->setText("AWS backend port: " + QString::number(p_page_idle->thisMachine->m_aws_port));
     ui->label_machine_id->setText("Station id: " + p_page_idle->thisMachine->getMachineId());
 
+    checkSoapstandPortal();
+
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_back);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_connectivity);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_wifi_networks);
@@ -90,7 +92,15 @@ void page_maintenance_general::showEvent(QShowEvent *event)
     p_page_idle->thisMachine->setTemplateTextToObject(ui->pushButton_reboot);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_feedback);
     p_page_idle->thisMachine->setTemplateTextToObject(ui->label_status_feedback);
-
+    ui->pushButton_tap_authorize->hide();
+    ui->pushButton_tap_cancel->hide();
+    ui->label_device_id->hide();
+    ui->label_merchant_id->hide();
+    ui->tap_device_id->hide();
+    ui->tap_merchant_id->hide();
+    ui->tap_is_working->setText("");
+    ui->instructions_tap_testing->setText("");
+    
     if(p_page_idle->thisMachine->hasMixing()){
         p_keyboard->resetKeyboard();
         p_input_widget->toggleInputWidget(false);
@@ -216,6 +226,7 @@ void page_maintenance_general::on_pushButton_printer_check_status_clicked()
     send_check_printer_status_command();
     ui->pushButton_printer_check_status->hide();
 }
+
 
 void page_maintenance_general::on_pushButton_printer_test_print_clicked()
 {
@@ -718,5 +729,141 @@ void page_maintenance_general::onPage_maintenance_general_TimeoutTick()
     }
 }
 
+size_t page_maintenance_general::write_callback(void *contents, size_t size, size_t nmemb, void *userp) {
+    ((std::string*)userp)->append((char*)contents, size * nmemb);
+    return size * nmemb;
+}
+
+bool page_maintenance_general::ping_url(const std::string& url) {
+    CURL *curl;
+    CURLcode res;
+    std::string readBuffer;
+
+    curl = curl_easy_init();
+    if(curl) {
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L); // Follow redirects
+
+        // Perform the request, res will get the return code
+        res = curl_easy_perform(curl);
+
+        // Check for errors
+        if(res != CURLE_OK)
+            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+        else
+            std::cout << "Received response from " << url << std::endl;
+
+        // always cleanup
+        curl_easy_cleanup(curl);
+
+        return (res == CURLE_OK);
+    }
+    return false;
+}
+
+void page_maintenance_general::checkSoapstandPortal(){
+    std::string url = SOAPSTAND_URL; // Change URL as needed
+
+    CURL *curl;
+    CURLcode res;
+    long http_code = 0;
+    readBuffer.clear();
+ 
+    QString api_url = "api/role/find/stationViewer"; //testing database connection by fetching data
+    std::tie(res,readBuffer, http_code) =  p_page_idle->thisMachine->sendRequestToPortal(api_url, "GET", "", "PAGE_MAINTENANCE_GENERAL");
+
+    if(ping_url(url)){
+        qDebug() << "Soapstand Portal Reachable";
+        ui->label_soapstand_portal->setText("Soapstand Portal: Online");
+        if (res != CURLE_OK)
+        {
+            qDebug() << "Backend connection issue: Potential issue with Database";
+            ui->label_soapstand_portal->setText("Soapstand Portal: Online \nDatabase Connection: Offline");
+        }
+        else
+        {
+            qDebug() << "Backend connection database valid";
+            ui->label_soapstand_portal->setText("Soapstand Portal: Online \nDatabase Connection: Online");
+        }
+    }else{
+        qDebug() << "Soapstand Portal Unreachable";
+        ui->label_soapstand_portal->setText("Soapstand Portal: Offnline - Transactions will be synchronized when the portal is back online");
+    }
+}
+
+void page_maintenance_general::on_pushButton_check_portal_clicked(){
+    qDebug() << "pushButton check portal url clicked";
+    checkSoapstandPortal();
+}
+void page_maintenance_general::on_pushButton_tap_check_status_clicked()
+{
+    qDebug() << "Maintenance general. Clicked check TAP Device status.";
+    QString paymentMethod= p_page_idle->thisMachine->getPaymentOptions();
+
+    if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA)
+    {
+        ui->pushButton_tap_authorize->show();
+        ui->pushButton_tap_cancel->show();
+        ui->label_device_id->show();
+        ui->label_merchant_id->show();
+        ui->tap_device_id->show();
+        ui->tap_merchant_id->show();
+        page_payment_tap_serial paymentSerialObject;
+        QPair<QString, QString> tapConfigValues= paymentSerialObject.readTapCanadaConfigFile();
+        ui->tap_device_id->setText(tapConfigValues.first);
+        ui->tap_merchant_id->setText(tapConfigValues.second);
+        p_page_idle->thisMachine->setTemplateTextToObject(ui->instructions_tap_testing);
+
+    }
+    else if(paymentMethod== PAYMENT_TAP_USA_QR || paymentMethod== PAYMENT_TAP_USA){
+        ui->pushButton_tap_authorize->show();
+        ui->pushButton_tap_cancel->show();
+        ui->tap_device_id->show();
+        page_payment_tap_tcp paymentObject;
+        QString deviceSerialNumber = paymentObject.returnDeviceSerialNumberFromConfig();
+        ui->tap_device_id->setText(deviceSerialNumber);
+        p_page_idle->thisMachine->setTemplateTextToObject(ui->instructions_tap_testing);
+    }
+    else{
+        ui->tap_is_working->setText("Tap not enabled");
+    }
+    // ui->pushButton_tap_check_status->hide();
+}
 
 
+void page_maintenance_general::on_pushButton_tap_authorize_clicked()
+{
+    QString paymentMethod= p_page_idle->thisMachine->getPaymentOptions();
+    if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA){
+        page_payment_tap_serial *tapSerial = new page_payment_tap_serial(); 
+        QTimer *timer = new QTimer(this); // Create a QTimer object
+        connect(timer, SIGNAL(timeout()), tapSerial, SLOT(authorizeTestTransaction())); // Connect the QTimer's timeout signal to the slot in page_payment_tap_serial
+        timer->start(1000); 
+
+    }
+    else if(paymentMethod== PAYMENT_TAP_USA_QR || paymentMethod== PAYMENT_TAP_USA){
+        page_payment_tap_tcp paymentObject;
+        paymentObject.authorizeTestTransaction();
+        qDebug() << "Maintenance general. Clicked Authorize Tap Payment";
+    }
+    
+    
+}
+
+void page_maintenance_general::on_pushButton_tap_cancel_clicked()
+{
+    QString paymentMethod= p_page_idle->thisMachine->getPaymentOptions();
+    if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA){
+        page_payment_tap_serial paymentSerialObject;
+        QString result = paymentSerialObject.reverseTestPayment();
+        ui->tap_is_working->setText(result);
+    }
+    else if(paymentMethod== PAYMENT_TAP_USA_QR || paymentMethod== PAYMENT_TAP_USA){
+         qDebug() << "Maintenance general. Clicked Refund Tap Payment";
+        page_payment_tap_tcp paymentObject;
+        paymentObject.voidingTestTransaction();
+    }
+   
+}

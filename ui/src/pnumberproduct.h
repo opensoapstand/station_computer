@@ -172,7 +172,7 @@ private:
     int m_dispense_speed;
     double m_threshold_flow;
     int m_retraction_time;
-    double m_calibration_const;
+    double m_threshold_flow_maximum;
     double m_volume_per_tick;
     QString m_last_restock;
     double m_volume_full;

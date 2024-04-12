@@ -62,7 +62,6 @@ scp /home/df-admin/station_computer/admin/rtunnel_print.sh /home/df-admin/produc
 scp /home/df-admin/station_computer/admin/deploy_production_from_zip.sh /home/df-admin/production/admin/deploy_production_from_zip.sh
 scp /home/df-admin/station_computer/admin/create_production_data.sh /home/df-admin/production/admin/create_production_data.sh
 scp /home/df-admin/station_computer/admin/db_operations.sh /home/df-admin/production/admin/db_operations.sh
-scp /home/df-admin/station_computer/admin/enableIPForward.service /home/df-admin/production/admin/enableIPForward.service
 scp /home/df-admin/station_computer/admin/ssh_monitor.sh /home/df-admin/production/admin/ssh_monitor.sh
 scp /home/df-admin/station_computer/admin/ssh_monitor.service /home/df-admin/production/admin/ssh_monitor.service
 

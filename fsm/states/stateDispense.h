@@ -30,7 +30,7 @@ public:
 
     // void startActiveDispensing();
     // void stopActiveDispensing();
-    DF_ERROR rectractProductBlocking();
+    // DF_ERROR rectractProductBlocking();
 
     DF_ERROR onEntry();
     DF_ERROR onAction();

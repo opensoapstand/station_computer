@@ -81,7 +81,7 @@ void page_payment_tap_serial::on_pushButton_payment_bypass_clicked()
 void page_payment_tap_serial::cancelPayment()
 {
     com.flushSerial();
-    /*Cancel any previous payment*/
+    /*Create packet to cancel the payment*/
     pktToSend = paymentPacket.purchaseCancelPacket();
     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_CANCEL);
     ui->animated_Label->show();
@@ -171,25 +171,20 @@ void page_payment_tap_serial::showEvent(QShowEvent *event)
     ui->pushButton_payment_bypass->setEnabled(false);
    
     qDebug() << "Prepare tap order";
+    // Init the tap device to confirm if the communication is established or not
     paymentConnected = com.page_init();
 
+    // Keep on checking till the device have a successful handshake for communication. Sometimes it take couple of seconds to start
     while (!paymentConnected)
     {
         paymentConnected = com.page_init();
         sleep(1);
     }
     pktResponded = com.readForAck();
-
     readPacket.packetReadFromUX(pktResponded);
     pktResponded.clear();
     response = false;
-    qDebug() << "Acknowledgement received";
-    if (readPacket.getAckOrNak() == communicationPacketField::ACK)
-    {
-
-        timerEnabled = true;
-    }
-
+    // Start the read timer which will initiate the Purchase on TAP
     readTimer->start(1000);
     p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY);
     ui->productLabel->hide();
@@ -267,28 +262,16 @@ void page_payment_tap_serial::resetPaymentPage(bool cancelTapPayment)
     }
 }
 
+
 bool page_payment_tap_serial::tap_serial_initiate()
 {
+    QMap<QString, QString> tapConfigObject;
     while (!paymentConnected)
     {
         paymentConnected = com.page_init();
         sleep(1);
     }
-    /*Cancel any previous payment*/
-    pktToSend = paymentPacket.purchaseCancelPacket();
 
-    if (sendToUX410())
-    {
-        waitForUX410();
-        pktResponded.clear();
-    }
-    else{
-        return false;
-    }
-    
-    com.flushSerial();
-    qDebug() << "Cancel payment";
-   
     /*logon packet to send*/
     cout << "Sending Logon packet..." << endl;
     pktToSend = paymentPacket.logonPacket();
@@ -304,44 +287,48 @@ bool page_payment_tap_serial::tap_serial_initiate()
     }
     
     com.flushSerial();
-    cout << "-----------------------------------------------" << endl;
-    
-    
-    /*getConfiguration packet to send*/
-    cout << "Sending Lan Info query..." << endl;
-    pktToSend = paymentPacket.ppPosStatusCheckPkt(StatusType::GetLanInfo);
-    if (sendToUX410())
-    {
-        cout << "Receiving Lan Info" << endl;
-        waitForUX410();
-        isInitMerchant = true;
-        merchantName = paymentPktInfo.dataField(readPacket.getPacket().data).substr(2);
-        cout << merchantName << endl;
-        pktResponded.clear();
-    }
-
-    com.flushSerial();
-    cout << "-----------------------------------------------" << endl;
 
     /*getConfiguration packet to send*/
-    cout << "Sending Merchant Address query..." << endl;
-    pktToSend = paymentPacket.ppPosGetConfigPkt(CONFIG_ID::MERCH_ADDR);
+    cout << "Sending Merchant ID query..." << endl;
+    pktToSend = paymentPacket.ppPosGetConfigPkt(CONFIG_ID::CON_MID);
     if (sendToUX410())
     {
-        cout << "Receiving Merchant Address" << endl;
+        cout << "Receiving Merchant ID" << endl;
         waitForUX410();
         isInitAddress = true;
-        merchantAddress = paymentPktInfo.dataField(readPacket.getPacket().data);
-        std::cout << merchantAddress << endl;
+        merchantId = paymentPktInfo.dataField(readPacket.getPacket().data);
+        std::string cleanedMerchantId;
+        for (char c : merchantId) {
+            if (c != '\0' && c != '\r') {
+                cleanedMerchantId += c;
+            }
+        }
+        tapConfigObject["Merchant Id"] = QString::fromStdString(cleanedMerchantId);
         pktResponded.clear();
-    } 
+    }
     else{
         return false;
     }
     
     com.flushSerial();
-    cout << "-----------------------------------------------" << endl;
 
+    /*getConfiguration packet to send*/
+    cout << "Sending PTID query..." << endl;
+    pktToSend = paymentPacket.ppPosGetConfigPkt(CONFIG_ID::CON_TID);
+    if (sendToUX410())
+    {
+        cout << "Receiving PTID" << endl;
+        waitForUX410();
+        isInitTerminalID = true;
+        terminalID = paymentPktInfo.dataField(readPacket.getPacket().data).substr(2);
+        tapConfigObject["Device Id"] = QString::fromStdString(terminalID);
+        pktResponded.clear();
+    }
+    else{
+        return false;
+    }
+    
+    com.flushSerial();
     /*Cancel any previous payment*/
     pktToSend = paymentPacket.purchaseCancelPacket();
 
@@ -355,10 +342,12 @@ bool page_payment_tap_serial::tap_serial_initiate()
     }
     
     com.flushSerial();
+
     qDebug() << "Cancel payment";
     tapSetupStarted = true;
     qDebug() << "tap init started " << tapSetupStarted;
     com.closeCom();
+    createOrUpdateTapCanadaConfigFile(tapConfigObject["Merchant Id"], tapConfigObject["Device Id"]);
  
     return tapSetupStarted;
 }
@@ -382,7 +371,6 @@ bool page_payment_tap_serial::sendToUX410()
             return true;
         }
     }
-    // rebootDevice();
     return false;
 }
 bool page_payment_tap_serial::waitForUX410()
@@ -512,7 +500,6 @@ void page_payment_tap_serial::readTimer_loop()
                         pktResponded = com.readPacket();
                         usleep(100);
                         response = getResponse();
-                        // readTimer->start(10);
                     }
                 }
             }
@@ -533,4 +520,164 @@ void page_payment_tap_serial::onPaymentSerialPageTimeoutTick()
         // qDebug() << "Timer Done!" << _paymentSerialPageTimeoutSec;
         p_page_idle->thisMachine->hasMixing() ? hideCurrentPageAndShowProvided(p_page_product_mixing,true) : hideCurrentPageAndShowProvided(p_page_product,true);
     }
+}
+
+
+QString page_payment_tap_serial::authorizeTestTransaction()
+{
+    while (!paymentConnected)
+    {
+        paymentConnected = com.page_init();
+        sleep(1);
+    }
+    pktToSend = paymentPacket.purchasePacket("2.00");
+    qDebug() << "Test Packet sent for payment";
+    if (sendToUX410())
+    {   
+        qDebug() << "Tap reader activated";
+        waitForUX410();
+        while (!response)
+        {
+            response = getResponse();
+            QCoreApplication::processEvents();
+            if (pktResponded[0] != 0x02)
+            {
+                pktResponded.clear();
+                pktResponded = com.readPacket();
+                response = getResponse();
+                // readTimer->start(1000);
+            }
+            else if (pktResponded[10] == 0x33)
+            {
+                pktResponded.clear();
+                pktResponded = com.readPacket();
+                usleep(100);
+                response = getResponse();
+            }
+            else
+            {
+                if (!response)
+                {
+                    cout << "HIT: pktResponded: " << to_string(pktResponded[0]) << endl;
+                    readPacket.packetReadFromUX(pktResponded);
+                    std::cout << readPacket;
+                    com.sendAck();
+
+                    if (pktResponded[19] == 0x41)
+                    { // Host Response 41 = A "Approved"
+                        p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_SUCCESS);
+                        qDebug() << "Payment Approved";
+                        purchaseEnable = true;
+                        approved = true;
+                        cout << "Approval Packet 41" << endl;
+                        paymentPktInfo.transactionID(readPacket.getPacket().data);
+                        paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
+                        tapPaymentObject = paymentPktInfo.getTapPaymentObject(getTerminalID(), getMerchantName(), getMerchantAddress());
+                        response = true;
+                        return "Approved";
+                    }
+                    else if (pktResponded[19] == 0x44)
+                    { // Host Response 44 = D "Declined"
+                        p_page_idle->thisMachine->setBackgroundPictureFromTemplateToPage(this, PAGE_TAP_PAY_FAIL);
+
+                        purchaseEnable = true;
+                        approved = false;
+                        cout << "Declined Packet 44" << endl;
+                        qDebug() << "Payment declined";
+                        paymentPktInfo.transactionID(readPacket.getPacket().data);
+                        paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
+                        pktResponded.clear();
+                        QCoreApplication::processEvents();
+                        sleep(3);
+                        pktResponded.clear();
+                        pktResponded = com.readPacket();
+                        usleep(100);
+                        response = getResponse();
+                        return "Declined";
+                    }
+
+                    else if (pktResponded[19] == 0x4e)
+                    {
+                        purchaseEnable = false;
+                        cout << "No Approval Packet!" << endl;
+                        qDebug() << "Payment not approved";
+                        // this->ui->payment_countdownLabel->setText("Not Approved");
+                        paymentPktInfo.transactionID(readPacket.getPacket().data);
+                        paymentPktInfo.makeReceipt(getTerminalID(), getMerchantName(), getMerchantAddress());
+                        pktResponded.clear();
+                        QCoreApplication::processEvents();
+                        sleep(1);
+                        return "Not approved";
+                    }
+                    else
+                    {
+                        qDebug() << "Waiting";
+                        pktResponded.clear();
+                        pktResponded = com.readPacket();
+                        usleep(100);
+                        response = getResponse();
+                    }
+                }
+            }
+}
+    }
+}
+
+QString page_payment_tap_serial::reverseTestPayment(){
+    com.page_init();
+    pktToSend = paymentPacket.reversePurchasePacket();
+    if (sendToUX410())
+    {
+        waitForUX410();
+        qDebug() << "Payment Reversed";
+        pktResponded.clear();
+        com.flushSerial();
+    }
+    return "Voided";
+}
+
+int page_payment_tap_serial::createOrUpdateTapCanadaConfigFile(QString merchantId, QString deviceId) {
+    QFile configFile("/home/df-admin/production/admin/tap_payment/config_canada.json");
+    qDebug() << "Creating or updating config file";
+    if (configFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        // Create JSON object
+        QJsonObject jsonObject;
+        jsonObject["merchantId"] = merchantId;
+        jsonObject["deviceId"] = deviceId;
+        
+        // Convert JSON object to QByteArray
+        QJsonDocument jsonDoc(jsonObject);
+        QByteArray jsonData = jsonDoc.toJson();
+        
+        // Write JSON data to the file
+        configFile.write(jsonData);  
+        configFile.close();
+        return 0; // Success
+    }
+    else {
+        qDebug() << "Unable to open file";
+        return -1; // Error
+    }
+}
+
+QPair<QString, QString> page_payment_tap_serial::readTapCanadaConfigFile() {
+    QFile configFile("/home/df-admin/production/admin/tap_payment/config_canada.json");
+    qDebug() << "Reading config file";
+
+    if (!configFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug() << "Unable to open file";
+        //Return empty value
+        return QPair<QString, QString>("", "");
+    }
+    // Read all data from the file
+    QByteArray jsonData = configFile.readAll();
+    configFile.close();
+    // Parse JSON data
+    QJsonParseError parseError;
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonData, &parseError);
+
+    QJsonObject jsonObject = jsonDoc.object();
+    QString merchantId = jsonObject.value("merchantId").toString();
+    QString deviceId = jsonObject.value("deviceId").toString();
+    return QPair<QString, QString>(merchantId, deviceId);
 }

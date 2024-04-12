@@ -115,7 +115,7 @@ dispenser::dispenser()
 dispenser::~dispenser()
 {
     debugOutput::sendMessage("Dispenser: destructor  " + to_string(getSlot()) + "(destroyed)", MSG_INFO);
-    //delete m_pcb;
+    // delete m_pcb;
     m_pcb = nullptr;
 }
 
@@ -144,7 +144,7 @@ void dispenser::resetDispenser()
     debugOutput::sendMessage("Dispenser: m_dispense_pnumbers_count: " + std::to_string(m_dispense_pnumbers_count), MSG_INFO);
     debugOutput::sendMessage("Dispenser: m_additive_pnumbers_count: " + std::to_string(m_additive_pnumbers_count), MSG_INFO);
     debugOutput::sendMessage("Dispenser: m_base_pnumber: " + std::to_string(m_base_pnumber), MSG_INFO);
-    debugOutput::sendMessage("Dispenser: m_base_pnumber: " + std::to_string( m_dispense_pnumbers[0]), MSG_INFO);
+    debugOutput::sendMessage("Dispenser: m_base_pnumber: " + std::to_string(m_dispense_pnumbers[0]), MSG_INFO);
 
     if (onlyOneProductPresent)
     {
@@ -356,7 +356,9 @@ bool dispenser::isPNumberValidInThisDispenser(int pnumber, bool mustBeAdditiveOr
 
     if (!isValid)
     {
-        debugOutput::sendMessage("ASSERT ERROR: invalid pnumber as selected pnumber (" + std::to_string(pnumber) + ") in dispenser: " + std::to_string(getSlot()) + " (must be additive or base?: " + std::to_string(mustBeAdditiveOrBase) + ")", MSG_ERROR);
+        debugOutput::sendMessage("ASSERT ERROR (unless dummy product is used (" +
+                                     std::to_string(DUMMY_PNUMBER) + "): invalid pnumber as selected pnumber (" + std::to_string(pnumber) + ") in dispenser: " + std::to_string(getSlot()) + " (must be additive or base?: " + std::to_string(mustBeAdditiveOrBase) + ")",
+                                 MSG_ERROR);
     }
     return isValid;
 }
@@ -364,7 +366,6 @@ bool dispenser::isPNumberValidInThisDispenser(int pnumber, bool mustBeAdditiveOr
 bool dispenser::setSelectedProduct(int pnumber)
 {
     // WARNING: this is about dispensePNumbers! use active PNumber for the pnumber that's actually being dispensed.
-
     // to do check if number is available.
     if (!isPNumberValidInThisDispenser(pnumber, false))
     {
@@ -652,15 +653,20 @@ DF_ERROR dispenser::initSelectedProductDispense(char size)
             debugOutput::sendMessage("Dispenser: Dispense Product: P-" + std::to_string(getSelectedPNumber()) + " (part " + std::to_string(getSelectedProduct()->getMixProductsCount() - mix_position) + "/" + std::to_string(getSelectedProduct()->getMixProductsCount()) + ") : P-" + std::to_string(mixPnumber) + " target volume: " + std::to_string(getProductTargetVolume(mixPnumber)) + "ml", MSG_INFO);
         }
 
+#ifndef ENABLE_PARALLEL_MIX
         m_mix_active_index = getSelectedProduct()->getMixProductsCount() - 1; // works with indexes (indexes start from 0)
         setActiveProduct(getSelectedProduct()->getMixPNumber(m_mix_active_index));
         debugOutput::sendMessage("Dispenser: Mix product at position: " + std::to_string(m_mix_active_index) + " . Pnumber: " + std::to_string(getActivePNumber()), MSG_INFO);
+#else
+        setActiveProduct(getSelectedProduct()->getBasePNumber());
+        debugOutput::sendMessage("Dispenser: Parallel mixing. Which means: base pnumber is always enabled. base pnumber: " + std::to_string(getSelectedProduct()->getBasePNumber()), MSG_INFO);
+
+#endif
     }
     else
     {
         debugOutput::sendMessage("Dispenser: Dispense product is not a mix. ", MSG_INFO);
         setActiveProduct(getSelectedPNumber());
-        // initActivePNumberDispense(getSelectedProduct()->getTargetVolume());
     }
 
     dispenseButtonTimingreset();
@@ -675,7 +681,7 @@ DF_ERROR dispenser::initSelectedProductDispense(char size)
 
 DF_ERROR dispenser::finishSelectedProductDispense()
 {
-    
+
     debugOutput::sendMessage("Dispenser: Stop selected PNumber dispense ", MSG_INFO);
     // Set End time
     time(&rawtime);
@@ -757,13 +763,13 @@ DF_ERROR dispenser::finishActivePNumberDispense()
     setActiveProductSolenoid(false);
     m_pcb->flowSensorsDisableAll();
     DF_ERROR dfRet = OK;
-   
+
     return dfRet;
 }
 
 void dispenser::startActiveDispensing()
 {
-    //actual pumping start
+    // actual pumping start
     debugOutput::sendMessage("Dispenser: Start active product dispensing.", MSG_INFO);
     switch (m_pcb->get_pcb_version())
     {
@@ -779,25 +785,63 @@ void dispenser::startActiveDispensing()
     }
 
     m_pcb->startPump(getSlot());
+
     m_pcb->setSpoutSolenoid(getSlot(), true);
-    //    case (machine::HardwareVersion::SS09):
-    //    {
-    //       debugOutput::sendMessage("start pumping SS09.", MSG_INFO);
-    //       g_machine.m_productDispensers[slot_index].pumpSlowStart(true);
-    //    }
 }
+
+#ifdef ENABLE_PARALLEL_MIX
+
+#define BASE_START_DISPENSE_OFFSET_MILLILITERS 50 // amount to be dispensed before additives get mixed in.
+void dispenser::setParallelSolenoids()
+{
+
+    // double baseVolumeDispensed = getProductFromPNumber(getBasePNumber())->getVolumeDispensed();
+    double selectedProductVolumeDispensed = getSelectedProduct()->getVolumeDispensed();
+
+    debugOutput::sendMessage("Dispenser: check solenoids. volume: " + std::to_string(selectedProductVolumeDispensed), MSG_INFO);
+    for (int8_t mix_position = getSelectedProduct()->getMixProductsCount() - 1; mix_position >= 0; mix_position--)
+    {
+        int mixPnumber = getSelectedProduct()->getMixPNumber(mix_position);
+
+        if (mixPnumber != getBasePNumber())
+        { // basePNumber is dealt with separately
+            double mix_position_targetVolume = getSelectedProduct()->getTargetVolume() * getSelectedProduct()->getMixRatio(mix_position);
+
+            // getProductFromPNumber(mixPnumber)->setTargetVolume(mix_position_targetVolume);
+
+            if (selectedProductVolumeDispensed > BASE_START_DISPENSE_OFFSET_MILLILITERS && selectedProductVolumeDispensed - BASE_START_DISPENSE_OFFSET_MILLILITERS < mix_position_targetVolume)
+            {
+                debugOutput::sendMessage("Dispenser:mixPNumber " + std::to_string(mixPnumber) + " target volume: "+std::to_string(mix_position_targetVolume) + "solenoid on ", MSG_INFO);
+    
+                // open solenoid and add additive to mix
+                setProductSolenoid(mixPnumber, true);
+            }
+            else
+            {
+                debugOutput::sendMessage("Dispenser:mixPNumber " + std::to_string(mixPnumber) + " target volume: "+std::to_string(mix_position_targetVolume) + "solenoid OFF ", MSG_INFO);
+                // close solenoid and do not add to mix
+                setProductSolenoid(mixPnumber, false);
+            }
+        }
+    }
+}
+
+bool dispenser::isAdditiveNeeded(int additive)
+{
+    // there is no flowsensor for the additives, only for base product. So, we look a the total amount of the base product. e.g.
+    // e.g. when base product is between 50 and 200ml, additive should be enabled.
+
+    // if ()
+}
+
+#endif
 
 void dispenser::stopActiveDispensing()
 {
-    //actual pumping stop
+    // actual pumping stop
     debugOutput::sendMessage("Dispenser: stop active product dispensing.", MSG_INFO);
     m_pcb->stopPump(getSlot());
     m_pcb->setSpoutSolenoid(getSlot(), false);
-    //    case (machine::HardwareVersion::SS09):
-    //    {
-    //       g_machine.m_productDispensers[slot_index].pumpSlowStopBlocking();
-    //       rectractProductBlocking();
-    //    }
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -811,7 +855,6 @@ void dispenser::linkActiveProductVolumeUpdate()
     { active_product->registerFlowSensorTickFromPcb(); };
     m_pcb->registerFlowSensorTickCallback(getSlot(), lambdaFunc);
     debugOutput::sendMessage("Dispenser: flow tick : deprecated", MSG_INFO);
-    
 }
 
 void dispenser::linkDispenserFlowSensorTick()
@@ -829,8 +872,8 @@ void dispenser::registerFlowSensorTickFromPcb()
     // the actual dispensed produce gets always registered
     getActiveProduct()->registerFlowSensorTickFromPcb();
 
-    //debugOutput::sendMessage("Dispenser: flow tick : " + std::to_string(getSlot()), MSG_INFO);
-    
+    // debugOutput::sendMessage("Dispenser: flow tick : " + std::to_string(getSlot()), MSG_INFO);
+
     // #define MIX_PARTS_WITH_TICKS  // if mixes have their own calibration, it kindof makes sense, but better will be to just sum up the volumes of the parts
     // #ifdef MIX_PARTS_WITH_TICKS
     if (getActivePNumber() != getSelectedPNumber())
@@ -1566,11 +1609,18 @@ string dispenser::getDispenseUpdateString()
 
     if (getSelectedProduct()->isMixingProduct())
     {
+#ifndef ENABLE_PARALLEL_MIX
         message +=
             "(mix part " + std::to_string(getSelectedProduct()->getMixProductsCount() - m_mix_active_index) + "/" + std::to_string(getSelectedProduct()->getMixProductsCount()) +
             " : P-" + std::to_string(getActivePNumber()) + " volume: " + std::to_string(getActiveProduct()->getVolumeDispensed()) + "/" + std::to_string(getProductTargetVolume(getActivePNumber())) + "ml )";
 
         ;
+#else
+        message +=
+            "all parts mixed simultaneously.";
+
+        ;
+#endif
     }
     else
     {

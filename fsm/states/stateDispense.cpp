@@ -72,6 +72,9 @@ DF_ERROR stateDispense::onAction()
 
          g_machine.getSelectedDispenser().startActiveDispensing();
          g_machine.getSelectedDispenser().addDispenseButtonPress();
+#ifdef ENABLE_PARALLEL_MIX
+         g_machine.getSelectedDispenser().startParallelMixDispensing();
+#endif
       }
 
       if (g_machine.getSelectedDispenser().getDispenseButtonEdgeNegative())
@@ -80,6 +83,10 @@ DF_ERROR stateDispense::onAction()
          m_pMessaging->sendMessageOverIP("Dispense Button Neg Edge", true); // send to UI
 
          g_machine.getSelectedDispenser().stopActiveDispensing();
+
+#ifdef ENABLE_PARALLEL_MIX
+         g_machine.getSelectedDispenser().stopParallelMixDispensing();
+#endif
       }
    }
 
@@ -93,7 +100,7 @@ DF_ERROR stateDispense::onAction()
 #ifdef ENABLE_PARALLEL_MIX
 
    // parallel mixing, we only look at the base and mix in additives as we go.
-   if (g_machine.getSelectedDispenser().getIsStatusUpdateAllowed())
+   if (g_machine.getSelectedDispenser().getIsStatusUpdateAllowed() && g_machine.getSelectedDispenser().getDispenseButtonValue())
    {
       g_machine.getSelectedDispenser().setParallelSolenoids();
    }

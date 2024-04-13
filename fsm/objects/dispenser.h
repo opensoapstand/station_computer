@@ -135,7 +135,10 @@ public:
       Dispense_behaviour getDispenseStatus();
 
       void setParallelSolenoids();
-      bool isAdditiveNeeded(int additive);
+      void startParallelMixDispensing();
+      void stopParallelMixDispensing();
+
+      // bool isAdditiveNeeded(int additive);
 
       // Slot_state getSlotState();
       // void setSlotState(Slot_state state);

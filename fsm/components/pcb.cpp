@@ -254,10 +254,28 @@ uint8_t pcb::get_PCA9534_address_from_slot(uint8_t slot)
 
 ///////////////////////////
 
-void pcb::setMCP23017Register(uint8_t slot, uint8_t reg, uint8_t value)
+void pcb::setMCP23017Register(uint8_t slot, uint8_t reg, uint8_t value, bool reportIfModified)
 {
+    int attempt = 10;
+    uint8_t readVal = getMCP23017Register(slot, reg);
+    while (readVal != value)
+    {
+        if (attempt < 0)
+        {
+            debugOutput::sendMessage("Too many attempts. Could not set register " + to_string(reg ) + " of MCP23017 for slot " + to_string(slot) + " value of reg: " + to_string(readVal) + "attempted to writevalue: " + to_string(value), MSG_ERROR);
+            break;
+        }
+        attempt--;
+        SendByte(get_MCP23017_address_from_slot(slot), reg, value);
+        
 
-    SendByte(get_MCP23017_address_from_slot(slot), reg, value);
+        if (reportIfModified)
+        {
+            debugOutput::sendMessage("MCP23017 register " + to_string(reg) + " of slot: " + to_string(slot) + ": was:" + to_string(readVal) + ". Set to: " + to_string(value), MSG_INFO);
+            debugOutput::sendMessage("WARNING: This register was changed. Was this a glitch?", MSG_WARNING);
+        }
+        readVal = getMCP23017Register(slot, reg);
+    }
 }
 
 uint8_t pcb::getMCP23017Register(uint8_t slot, uint8_t reg)
@@ -296,7 +314,7 @@ void pcb::displayMCP23017IORegisters(uint8_t slot)
     }
 }
 
-void pcb::setMCP23017Output(uint8_t slot, int posIndex, bool onElseOff, uint8_t GPIORegister)
+void pcb::setMCP23017OutputBit(uint8_t slot, int posIndex, bool onElseOff, uint8_t GPIORegister)
 {
     // slot starts at 1!
 
@@ -306,17 +324,18 @@ void pcb::setMCP23017Output(uint8_t slot, int posIndex, bool onElseOff, uint8_t 
 
     int attempt = attempts;
 
-    // check if set correctly.
-    while (onElseOff != getMCP23017GPIOState(slot, posIndex, GPIORegister) && attempt > 0)
+    // only write if needed. While not set, try again...
+    bool isBitDifferent = (onElseOff != getMCP23017GPIOState(slot, posIndex, GPIORegister));
+    while ( isBitDifferent && attempt > 0)
     {
         if (attempt != attempts)
         {
-            debugOutput::sendMessage("Warning: retrying to set MCP23017 to requested output", MSG_WARNING);
+            debugOutput::sendMessage("Warning: retrying to set MCP23017 to requested output. Re-Attempt: " + std::to_string(attempts-attempt), MSG_WARNING);
         }
         attempt--;
 
         unsigned char reg_value;
-
+        
         reg_value = ReadByte(get_MCP23017_address_from_slot(slot), GPIORegister);
 
         if (onElseOff)
@@ -705,6 +724,16 @@ bool pcb::define_pcb_version(void)
     return config_valid;
 }
 
+void pcb::sendEN258DefaultConfigurationToMCP23017(uint8_t slot, bool reportIfModified)
+{
+    uint8_t GPIOA_value = 0x00;
+    uint8_t GPIOB_value = 0x02;
+
+    setMCP23017Register(slot, MCP23017_REGISTER_GPA, GPIOA_value,true);
+    setMCP23017Register(slot, MCP23017_REGISTER_GPB, GPIOB_value,true);
+
+    debugOutput::sendMessage("Default config sent to PCA9534 for slot: " + to_string(slot), MSG_INFO);
+}
 void pcb::sendEN134DefaultConfigurationToPCA9534(uint8_t slot, bool reportIfModified)
 {
     // sendByteToPCA9534SlotIfNotSet(slot, 0x01, 0b00100000, reportIfModified); // BAD load!!!  Use this to emulate a glitch in the chip
@@ -806,19 +835,17 @@ void pcb::initialize_pcb()
             // IOCON_value |= 0x02;                          // INTPOL...
             IOCON_value |= 0x80;                          // BANK disable.
                                                           // IOCON_value |= 0x80; // BANK enable.
-            setMCP23017Register(slot, 0x0A, IOCON_value); // IOCON (IOCON.bank = 0)
-            setMCP23017Register(slot, 0x00, 0xC0);        // IODIRA (IOCON.bank = 1)
-            setMCP23017Register(slot, 0x10, 0x01);        // IODIRB (IOCON.bank = 1
-                                                          // sendEN134DefaultConfigurationToPCA9534(slot, true);
+            setMCP23017Register(slot, 0x0A, IOCON_value, false); // IOCON (IOCON.bank = 0)
+            setMCP23017Register(slot, 0x00, 0xC0,false);        // IODIRA (IOCON.bank = 1)
+            setMCP23017Register(slot, 0x10, 0x01,false);        // IODIRB (IOCON.bank = 1
 
             uint8_t GPIOA_value = 0x00;
             uint8_t GPIOB_value = 0x00;
 
-            // GPIOB_value |= 0x01 << MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON; // switch off button light
-
-            setMCP23017Register(slot, MCP23017_REGISTER_GPA, GPIOA_value); // GPIOA (IOCON.bank = 1 // button off (0 for ON)
-            setMCP23017Register(slot, MCP23017_REGISTER_GPB, GPIOB_value); // GPIOB (IOCON.bank = 1 // button off (0 for ON)
+            setMCP23017Register(slot, MCP23017_REGISTER_GPA, GPIOA_value,false); // GPIOA (IOCON.bank = 1 // button off (0 for ON)
+            setMCP23017Register(slot, MCP23017_REGISTER_GPB, GPIOB_value, false); // GPIOB (IOCON.bank = 1 // button off (0 for ON)
         }
+
 
         setPumpsDisableAll();
         for (uint8_t slot = 1; slot <= 4; slot++)
@@ -1023,12 +1050,12 @@ void pcb::setSingleDispenseButtonLight(uint8_t slot, bool onElseOff)
         if (onElseOff)
         {
             // debugOutput::sendMessage("Pcb: slot " + to_string(slot) + ": Button light ON " , MSG_INFO);
-            setMCP23017Output(slot, MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON, false, MCP23017_REGISTER_GPB);
+            setMCP23017OutputBit(slot, MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON, false, MCP23017_REGISTER_GPB);
         }
         else
         {
             // debugOutput::sendMessage("Pcb: slot " + to_string(slot) + ": Button light OFF " , MSG_INFO);
-            setMCP23017Output(slot, MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON, true, MCP23017_REGISTER_GPB);
+            setMCP23017OutputBit(slot, MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON, true, MCP23017_REGISTER_GPB);
         }
     };
     break;
@@ -2075,7 +2102,7 @@ void pcb::startPump(uint8_t slot)
         if (slotEnabled[slot - 1])
         {
             debugOutput::sendMessage("Pcb: Start pump " + to_string(slot), MSG_INFO);
-            setMCP23017Output(slot, MCP23017_EN258_GPB2_PIN_OUT_PUMP, true, MCP23017_REGISTER_GPB); // stop pump
+            setMCP23017OutputBit(slot, MCP23017_EN258_GPB2_PIN_OUT_PUMP, true, MCP23017_REGISTER_GPB); // stop pump
         }
         else
         {
@@ -2109,7 +2136,7 @@ void pcb::stopPump(uint8_t slot)
     case (EN258_8SLOTS):
     {
         debugOutput::sendMessage("Pcb: Stop pump " + to_string(slot), MSG_INFO);
-        setMCP23017Output(slot, MCP23017_EN258_GPB2_PIN_OUT_PUMP, false, MCP23017_REGISTER_GPB); // stop pump
+        setMCP23017OutputBit(slot, MCP23017_EN258_GPB2_PIN_OUT_PUMP, false, MCP23017_REGISTER_GPB); // stop pump
     };
     break;
     default:
@@ -2204,7 +2231,7 @@ void pcb::setSolenoidFromArray(uint8_t slot, uint8_t position, bool onElseOff)
 
     if (isValid)
     {
-        setMCP23017Output(slot, solenoid_positions[position - 1], onElseOff, solenoid_positions_register[position - 1]);
+        setMCP23017OutputBit(slot, solenoid_positions[position - 1], onElseOff, solenoid_positions_register[position - 1]);
         debugOutput::sendMessage("Pcb: Array Solenoid# : " + std::to_string(position) + ". Slot: " + std::to_string(slot) + ". Enabled: " + std::to_string(onElseOff), MSG_INFO);
     }
 }

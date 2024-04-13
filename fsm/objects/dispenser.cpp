@@ -604,6 +604,7 @@ DF_ERROR dispenser::initSelectedProductDispense(char size)
     dispense_start_timestamp_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
     DF_ERROR dfRet = OK;
+    m_pcb->sendEN258DefaultConfigurationToMCP23017(getSlot(),true);
     getSelectedProduct()->setTargetVolumeFromSize(size);
     resetSelectedProductVolumeDispensed();
     switch (m_pcb->get_pcb_version())
@@ -661,6 +662,9 @@ DF_ERROR dispenser::initSelectedProductDispense(char size)
         setActiveProduct(getSelectedProduct()->getBasePNumber());
         debugOutput::sendMessage("Dispenser: Parallel mixing. Which means: base pnumber is always enabled. base pnumber: " + std::to_string(getSelectedProduct()->getBasePNumber()), MSG_INFO);
 
+        // spout solenoid always open during dispense cycle.
+        m_pcb->setSpoutSolenoid(getSlot(), true);
+
 #endif
     }
     else
@@ -689,7 +693,20 @@ DF_ERROR dispenser::finishSelectedProductDispense()
     strftime(m_nEndTime, 50, "%F %T", timeinfo);
 
     m_pcb->setDispenseButtonLightsAllOff();
+
+#ifdef ENABLE_PARALLEL_MIX
+    stopParallelMixDispensing();
+    usleep(250000); // delay before shutting off spout solenoid. (prevent pressure built up (is ballooning flex duct in front of spout solenoid otherwise))
+    m_pcb->setSpoutSolenoid(getSlot(), false);
+#else
+
+#endif
+
+    // safety, to make sure all are off.
     m_pcb->disableAllSolenoidsOfSlot(getSlot());
+
+    debugOutput::sendMessage("Dispenser: registers after disablingall solenoids. ", MSG_INFO);
+    m_pcb->displayMCP23017IORegisters(getSlot());
     DF_ERROR dfRet = OK;
     return dfRet;
 }
@@ -742,7 +759,9 @@ DF_ERROR dispenser::initActivePNumberDispense()
 
     this->m_pcb->flowSensorEnable(m_slot);
 
+#ifndef ENABLE_PARALLEL_MIX
     setActiveProductSolenoid(true);
+#endif
     // this->m_pcb->resetFlowSensorPulsesForDispenser(m_slot);
 
     // init state
@@ -760,7 +779,9 @@ DF_ERROR dispenser::finishActivePNumberDispense()
     debugOutput::sendMessage("Dispenser: Stop Active PNumber dispense " + to_string(getActivePNumber()), MSG_INFO);
 
     stopActiveDispensing();
+#ifndef ENABLE_PARALLEL_MIX
     setActiveProductSolenoid(false);
+#endif
     m_pcb->flowSensorsDisableAll();
     DF_ERROR dfRet = OK;
 
@@ -783,13 +804,63 @@ void dispenser::startActiveDispensing()
     }
     break;
     }
-
     m_pcb->startPump(getSlot());
 
+#ifndef ENABLE_PARALLEL_MIX
     m_pcb->setSpoutSolenoid(getSlot(), true);
+#else
+    if (!getSelectedProduct()->isMixingProduct())
+    {
+        m_pcb->setSpoutSolenoid(getSlot(), true);
+    }
+    else
+    {
+        setActiveProductSolenoid(true);
+    }
+#endif
 }
 
+void dispenser::stopActiveDispensing()
+{
+    // actual pumping stop
+    debugOutput::sendMessage("Dispenser: stop active product dispensing.", MSG_INFO);
+    m_pcb->stopPump(getSlot());
+#ifndef ENABLE_PARALLEL_MIX
+    m_pcb->setSpoutSolenoid(getSlot(), false);
+#else
+    if (!getSelectedProduct()->isMixingProduct())
+    {
+        m_pcb->setSpoutSolenoid(getSlot(), false);
+    }
+    else
+    {
+        setActiveProductSolenoid(false);
+    }
+
+#endif
+}
+
+/////////////////////////////////////////////////////////////////////////
+// parallel mixing
 #ifdef ENABLE_PARALLEL_MIX
+void dispenser::startParallelMixDispensing()
+{
+    setParallelSolenoids();
+}
+
+void dispenser::stopParallelMixDispensing()
+{
+    for (int8_t mix_position = getSelectedProduct()->getMixProductsCount() - 1; mix_position >= 0; mix_position--)
+    {
+        int mixPnumber = getSelectedProduct()->getMixPNumber(mix_position);
+
+        if (mixPnumber != getBasePNumber())
+        {
+
+            setProductSolenoid(mixPnumber, false);
+        }
+    }
+}
 
 #define BASE_START_DISPENSE_OFFSET_MILLILITERS 50 // amount to be dispensed before additives get mixed in.
 void dispenser::setParallelSolenoids()
@@ -811,14 +882,13 @@ void dispenser::setParallelSolenoids()
 
             if (selectedProductVolumeDispensed > BASE_START_DISPENSE_OFFSET_MILLILITERS && selectedProductVolumeDispensed - BASE_START_DISPENSE_OFFSET_MILLILITERS < mix_position_targetVolume)
             {
-                debugOutput::sendMessage("Dispenser:mixPNumber " + std::to_string(mixPnumber) + " target volume: "+std::to_string(mix_position_targetVolume) + "solenoid on ", MSG_INFO);
-    
+                debugOutput::sendMessage("Dispenser:mixPNumber " + std::to_string(mixPnumber) + " target volume: " + std::to_string(mix_position_targetVolume) + "solenoid on ", MSG_INFO);
                 // open solenoid and add additive to mix
                 setProductSolenoid(mixPnumber, true);
             }
             else
             {
-                debugOutput::sendMessage("Dispenser:mixPNumber " + std::to_string(mixPnumber) + " target volume: "+std::to_string(mix_position_targetVolume) + "solenoid OFF ", MSG_INFO);
+                debugOutput::sendMessage("Dispenser:mixPNumber " + std::to_string(mixPnumber) + " target volume: " + std::to_string(mix_position_targetVolume) + "solenoid OFF ", MSG_INFO);
                 // close solenoid and do not add to mix
                 setProductSolenoid(mixPnumber, false);
             }
@@ -826,23 +896,15 @@ void dispenser::setParallelSolenoids()
     }
 }
 
-bool dispenser::isAdditiveNeeded(int additive)
-{
-    // there is no flowsensor for the additives, only for base product. So, we look a the total amount of the base product. e.g.
-    // e.g. when base product is between 50 and 200ml, additive should be enabled.
+// bool dispenser::isAdditiveNeeded(int additive)
+// {
+//     // there is no flowsensor for the additives, only for base product. So, we look a the total amount of the base product. e.g.
+//     // e.g. when base product is between 50 and 200ml, additive should be enabled.
 
-    // if ()
-}
+//     // if ()
+// }
 
 #endif
-
-void dispenser::stopActiveDispensing()
-{
-    // actual pumping stop
-    debugOutput::sendMessage("Dispenser: stop active product dispensing.", MSG_INFO);
-    m_pcb->stopPump(getSlot());
-    m_pcb->setSpoutSolenoid(getSlot(), false);
-}
 
 /////////////////////////////////////////////////////////////////////////
 // dispenser volume

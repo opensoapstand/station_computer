@@ -512,30 +512,30 @@ void page_idle::onRebootNightlyTimeOutTimerTick()
             }
             else
             {
-                qDebug() << "================== REBOOT NIGHTLY - SYSTEM REBOOT ==================";
+                // qDebug() << "================== REBOOT NIGHTLY - SYSTEM REBOOT ==================";
 
-                // Tap Canada or Moneris works on the serial connection and whenever the station reboots,
-                // the device loses communication. 
-                // To keep both the devices communicated,
-                // Tap device needs to restart as the serial connection re-establishes after the restart of TAP device.
-                // Rebooting TAP at the same time as the station will keep the communication in place
+                // // Tap Canada or Moneris works on the serial connection and whenever the station reboots,
+                // // the device loses communication. 
+                // // To keep both the devices communicated,
+                // // Tap device needs to restart as the serial connection re-establishes after the restart of TAP device.
+                // // Rebooting TAP at the same time as the station will keep the communication in place
 
-                thisMachine->setRebootState(wait_for_trigger);
-                _delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
-                stateScreenCheck = state_screen_check_not_initiated;
-                QString paymentMethod = thisMachine->getPaymentOptions();
-                if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA)
-                {
-                    // Tap Canada or Moneris works on the serial connection and whenever the station reboots, the device loses communication. 
-                    //To keep both the devices communicated, Tap device needs to restart as the serial connection re-establishes after the restart of TAP device. 
-                    //Rebooting TAP at the same time as the station will keep the communication in place
-                    rebootTapDevice(PAYMENT_TAP_CANADA);
-                }
-                else if(paymentMethod== PAYMENT_TAP_USA_QR || paymentMethod==PAYMENT_TAP_USA){
-                    rebootTapDevice(PAYMENT_TAP_USA);
-                }
-                QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -r 0";
-                system(qPrintable(command));
+                // thisMachine->setRebootState(wait_for_trigger);
+                // _delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
+                // stateScreenCheck = state_screen_check_not_initiated;
+                // QString paymentMethod = thisMachine->getPaymentOptions();
+                // if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA)
+                // {
+                //     // Tap Canada or Moneris works on the serial connection and whenever the station reboots, the device loses communication. 
+                //     //To keep both the devices communicated, Tap device needs to restart as the serial connection re-establishes after the restart of TAP device. 
+                //     //Rebooting TAP at the same time as the station will keep the communication in place
+                //     rebootTapDevice(PAYMENT_TAP_CANADA);
+                // }
+                // else if(paymentMethod== PAYMENT_TAP_USA_QR || paymentMethod==PAYMENT_TAP_USA){
+                //     rebootTapDevice(PAYMENT_TAP_USA);
+                // }
+                // QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -r 0";
+                // system(qPrintable(command));
             }
         }
         break;

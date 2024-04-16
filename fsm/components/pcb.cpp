@@ -254,11 +254,46 @@ uint8_t pcb::get_PCA9534_address_from_slot(uint8_t slot)
 
 ///////////////////////////
 
+bool pcb::isOutputByteEqual(uint8_t reg, uint8_t readVal, uint8_t writeVal){
+        uint8_t readValOutputs; 
+    uint8_t writeValOutputs;
+    bool outputValuesAreEqual = false;
+        switch(reg){
+            case MCP23017_REGISTER_GPA:
+            {
+                readValOutputs = readVal & 0b00000111; // only preserve output bits, all input bit set to zero
+                writeValOutputs = writeVal & 0b00000111;
+                break;
+            }
+            case MCP23017_REGISTER_GPB:
+            {
+                readValOutputs = readVal & 0b11111110; // only preserve output bits, all input bit set to zero
+                writeValOutputs = writeVal & 0b11111110;
+                break;
+            }
+            default:
+            {
+                debugOutput::sendMessage("WARNING: no distinction between input and output for comparison. Will return ok. ", MSG_ERROR);
+                readValOutputs = 1;
+                writeValOutputs = 1;
+                break;
+            }
+        }
+
+    return readValOutputs == writeValOutputs;
+}
+
 void pcb::setMCP23017Register(uint8_t slot, uint8_t reg, uint8_t value, bool reportIfModified)
 {
     int attempt = 10;
     uint8_t readVal = getMCP23017Register(slot, reg);
-    while (readVal != value)
+
+    // we'll check the value after writing. Only output values need to be checked. The input ones can change during that time. 
+    // for the ease of it, set the input bits to zero from 'read' and 'to write' value
+
+
+    
+    while (!isOutputByteEqual(reg, getMCP23017Register(slot, reg), value))
     {
         if (attempt < 0)
         {
@@ -267,7 +302,6 @@ void pcb::setMCP23017Register(uint8_t slot, uint8_t reg, uint8_t value, bool rep
         }
         attempt--;
         SendByte(get_MCP23017_address_from_slot(slot), reg, value);
-        
 
         if (reportIfModified)
         {
@@ -320,19 +354,24 @@ void pcb::setMCP23017OutputBit(uint8_t slot, int posIndex, bool onElseOff, uint8
 
     // GPIORegister --> gpioA or gpioB register value
 
-    int attempts = 3;
+    // int attempts = 3;
 
-    int attempt = attempts;
+    // int attempt = attempts;
 
     // only write if needed. While not set, try again...
-    bool isBitDifferent = (onElseOff != getMCP23017GPIOState(slot, posIndex, GPIORegister));
-    while ( isBitDifferent && attempt > 0)
-    {
-        if (attempt != attempts)
-        {
-            debugOutput::sendMessage("Warning: retrying to set MCP23017 to requested output. Re-Attempt: " + std::to_string(attempts-attempt), MSG_WARNING);
-        }
-        attempt--;
+    // bool isBitDifferent = (onElseOff != getMCP23017GPIOState(slot, posIndex, GPIORegister));
+
+    // while ( isBitDifferent && attempt > 0)
+
+
+    
+    // {
+    //     if (attempt != attempts)
+    //     {
+    //         debugOutput::sendMessage("Warning: retrying to set MCP23017 to requested output. Re-Attempt: " + std::to_string(1 + attempts-attempt) + " of " + std::to_string(attempts), MSG_WARNING);
+            
+    //     }
+    //     attempt--;
 
         unsigned char reg_value;
         
@@ -347,14 +386,18 @@ void pcb::setMCP23017OutputBit(uint8_t slot, int posIndex, bool onElseOff, uint8
             reg_value = reg_value & ~(1UL << posIndex); // modify bit to zero in the byte
         }
         // debugOutput::sendMessage("value to be sent: " + to_string(reg_value) + " to address: " + to_string(get_PCA9534_address_from_slot(slot)), MSG_INFO);
-        SendByte(get_MCP23017_address_from_slot(slot), GPIORegister, reg_value);
-    }
+        //SendByte(get_MCP23017_address_from_slot(slot), GPIORegister, reg_value);
+        setMCP23017Register(slot,GPIORegister,reg_value,false);
 
-    if (attempt <= 0)
-    {
-        debugOutput::sendMessage("ASSERT ERROR: Failed to set output! Desired: slot: " + to_string(slot) + ", posIndex: " + to_string(posIndex) + ", register: " + to_string(GPIORegister) + ", onElseOff: " + to_string(onElseOff), MSG_ERROR);
-        displayMCP23017IORegisters(slot);
-    }
+        //isOutputByteEqual(GPIORegister, getMCP23017Register(slot, GPIORegister), reg_value);
+    // }
+
+    // if (attempt <= 0)
+    // {
+    //     debugOutput::sendMessage("ASSERT ERROR: Failed to set output! Desired: slot: " + to_string(slot) + ", posIndex: " + to_string(posIndex) + ", register: " + to_string(GPIORegister) + ", onElseOff: " + to_string(onElseOff), MSG_ERROR);
+    //     debugOutput::sendMessage("readvalue of register is:  " + std::to_string(getMCP23017GPIOState(slot, posIndex, GPIORegister)), MSG_WARNING);
+    //     displayMCP23017IORegisters(slot);
+    // }
 }
 
 uint8_t pcb::get_MCP23017_address_from_slot(uint8_t slot)
@@ -2315,6 +2358,11 @@ void pcb::setAdditiveSolenoid(uint8_t slot, int additivePosition, bool onElseOff
         case (5):
         {
             setSolenoidFromArray(slot, EN258_SOLENOID_ADDITIVE_5, onElseOff);
+        }
+        break;
+        case (6):
+        {
+            setSolenoidFromArray(slot, EN258_SOLENOID_ADDITIVE_6, onElseOff);
         }
         break;
         default:

@@ -696,7 +696,7 @@ DF_ERROR dispenser::finishSelectedProductDispense()
 
 #ifdef ENABLE_PARALLEL_MIX
     stopParallelMixDispensing();
-    usleep(250000); // delay before shutting off spout solenoid. (prevent pressure built up (is ballooning flex duct in front of spout solenoid otherwise))
+    usleep(END_OF_DISPENSE_SPOUT_SHUTOFF_DELAY_MICROS); // delay before shutting off spout solenoid. (prevent pressure built up (is ballooning flex duct in front of spout solenoid otherwise))
     m_pcb->setSpoutSolenoid(getSlot(), false);
 #else
 
@@ -869,7 +869,7 @@ void dispenser::setParallelSolenoids()
     // double baseVolumeDispensed = getProductFromPNumber(getBasePNumber())->getVolumeDispensed();
     double selectedProductVolumeDispensed = getSelectedProduct()->getVolumeDispensed();
 
-    debugOutput::sendMessage("Dispenser: check solenoids. volume: " + std::to_string(selectedProductVolumeDispensed), MSG_INFO);
+    debugOutput::sendMessage("Dispenser: Set Mixing solenoids. volume: " + std::to_string(selectedProductVolumeDispensed), MSG_INFO);
     for (int8_t mix_position = getSelectedProduct()->getMixProductsCount() - 1; mix_position >= 0; mix_position--)
     {
         int mixPnumber = getSelectedProduct()->getMixPNumber(mix_position);
@@ -882,7 +882,7 @@ void dispenser::setParallelSolenoids()
 
             if (selectedProductVolumeDispensed > BASE_START_DISPENSE_OFFSET_MILLILITERS && selectedProductVolumeDispensed - BASE_START_DISPENSE_OFFSET_MILLILITERS < mix_position_targetVolume)
             {
-                debugOutput::sendMessage("Dispenser:mixPNumber " + std::to_string(mixPnumber) + " target volume: " + std::to_string(mix_position_targetVolume) + "solenoid on ", MSG_INFO);
+                debugOutput::sendMessage("Dispenser:mixPNumber " + std::to_string(mixPnumber) + " target volume: " + std::to_string(mix_position_targetVolume) + "solenoid ON ", MSG_INFO);
                 // open solenoid and add additive to mix
                 setProductSolenoid(mixPnumber, true);
             }

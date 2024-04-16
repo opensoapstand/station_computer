@@ -473,90 +473,90 @@ void page_idle::onReceiptPrinterFeedBackTimerTick()
 
 void page_idle::onRebootNightlyTimeOutTimerTick()
 {
-    _rebootNightlyTimeOutTimerSec--;
-    if (_rebootNightlyTimeOutTimerSec >= 0)
-    {
-        return;
-    }
-    else
-    {
-        _rebootNightlyTimeOutTimerSec = PAGE_IDLE_REBOOT_NIGHTLY_TIMEOUT_SECONDS;
-        QTime currentTime = QTime::currentTime();
-        _millisecondsUntilSetTime = currentTime.msecsTo(QTime(23, 55));
-        // _millisecondsUntilSetTime = QTime(23, 55).msecsTo(QTime(23, 55));
-        // qDebug() << "!!!!!!!!!!!!!!!! milli seconds until midnight:" << _millisecondsUntilSetTime;
-        switch (thisMachine->getRebootState())
-        {
-        case wait_for_trigger:
-        {
-            if (_millisecondsUntilSetTime <= 0)
-            {
-                thisMachine->setRebootState(triggered_wait_for_delay);
-                stateScreenCheck = state_screen_check_deactivated;
-            }
-        }
-        break;
-        case triggered_wait_for_delay:
-        {
-            // qDebug() << "================== TRIGGERED WAIT FOR DELAY =======================";
-        if (_millisecondsUntilSetTime <=0 && _delaytime_seconds > 0)
-            {
-                ui->label_reboot_nightly_text->show();
-                ui->label_reboot_nightly_title->show();
-                ui->label_reboot_nightly_bg->show();
-                ui->label_reboot_nightly_icon->show();
-                ui->pushButton_reboot_nightly->show();
-                QString base = thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_reboot_nightly_text, "count_down");
-                ui->label_reboot_nightly_text->setText(base.arg(QString::number(_delaytime_seconds)));
-                _delaytime_seconds--;
-            }
-            else
-            {
-                // qDebug() << "================== REBOOT NIGHTLY - SYSTEM REBOOT ==================";
+    // _rebootNightlyTimeOutTimerSec--;
+    // if (_rebootNightlyTimeOutTimerSec >= 0)
+    // {
+    //     return;
+    // }
+    // else
+    // {
+    //     _rebootNightlyTimeOutTimerSec = PAGE_IDLE_REBOOT_NIGHTLY_TIMEOUT_SECONDS;
+    //     QTime currentTime = QTime::currentTime();
+    //     _millisecondsUntilSetTime = currentTime.msecsTo(QTime(23, 55));
+    //     // _millisecondsUntilSetTime = QTime(23, 55).msecsTo(QTime(23, 55));
+    //     // qDebug() << "!!!!!!!!!!!!!!!! milli seconds until midnight:" << _millisecondsUntilSetTime;
+    //     switch (thisMachine->getRebootState())
+    //     {
+    //     case wait_for_trigger:
+    //     {
+    //         if (_millisecondsUntilSetTime <= 0)
+    //         {
+    //             thisMachine->setRebootState(triggered_wait_for_delay);
+    //             stateScreenCheck = state_screen_check_deactivated;
+    //         }
+    //     }
+    //     break;
+    //     case triggered_wait_for_delay:
+    //     {
+    //         // qDebug() << "================== TRIGGERED WAIT FOR DELAY =======================";
+    //     if (_millisecondsUntilSetTime <=0 && _delaytime_seconds > 0)
+    //         {
+    //             ui->label_reboot_nightly_text->show();
+    //             ui->label_reboot_nightly_title->show();
+    //             ui->label_reboot_nightly_bg->show();
+    //             ui->label_reboot_nightly_icon->show();
+    //             ui->pushButton_reboot_nightly->show();
+    //             QString base = thisMachine->getTemplateTextByElementNameAndPageAndIdentifier(ui->label_reboot_nightly_text, "count_down");
+    //             ui->label_reboot_nightly_text->setText(base.arg(QString::number(_delaytime_seconds)));
+    //             _delaytime_seconds--;
+    //         }
+    //         else
+    //         {
+    //             qDebug() << "================== REBOOT NIGHTLY - SYSTEM REBOOT ==================";
 
-                // // Tap Canada or Moneris works on the serial connection and whenever the station reboots,
-                // // the device loses communication. 
-                // // To keep both the devices communicated,
-                // // Tap device needs to restart as the serial connection re-establishes after the restart of TAP device.
-                // // Rebooting TAP at the same time as the station will keep the communication in place
+    //             // Tap Canada or Moneris works on the serial connection and whenever the station reboots,
+    //             // the device loses communication. 
+    //             // To keep both the devices communicated,
+    //             // Tap device needs to restart as the serial connection re-establishes after the restart of TAP device.
+    //             // Rebooting TAP at the same time as the station will keep the communication in place
 
-                // thisMachine->setRebootState(wait_for_trigger);
-                // _delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
-                // stateScreenCheck = state_screen_check_not_initiated;
-                // QString paymentMethod = thisMachine->getPaymentOptions();
-                // if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA)
-                // {
-                //     // Tap Canada or Moneris works on the serial connection and whenever the station reboots, the device loses communication. 
-                //     //To keep both the devices communicated, Tap device needs to restart as the serial connection re-establishes after the restart of TAP device. 
-                //     //Rebooting TAP at the same time as the station will keep the communication in place
-                //     rebootTapDevice(PAYMENT_TAP_CANADA);
-                // }
-                // else if(paymentMethod== PAYMENT_TAP_USA_QR || paymentMethod==PAYMENT_TAP_USA){
-                //     rebootTapDevice(PAYMENT_TAP_USA);
-                // }
-                // QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -r 0";
-                // system(qPrintable(command));
-            }
-        }
-        break;
-        case user_cancelled_reboot:
-        {
-            // qDebug() << "================== USER CANCELLED REBOOT =======================";
-            ui->label_reboot_nightly_text->hide();
-            ui->label_reboot_nightly_title->hide();
-            ui->label_reboot_nightly_bg->hide();
-            ui->label_reboot_nightly_icon->hide();
-            ui->pushButton_reboot_nightly->hide();
-            stateScreenCheck = state_screen_check_not_initiated;
-            _delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
-            if (_millisecondsUntilSetTime > 0)
-            {
-                thisMachine->setRebootState(wait_for_trigger);
-            }
-        }
-        break;
-        }
-    }
+    //             thisMachine->setRebootState(wait_for_trigger);
+    //             _delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
+    //             stateScreenCheck = state_screen_check_not_initiated;
+    //             QString paymentMethod = thisMachine->getPaymentOptions();
+    //             if (paymentMethod == PAYMENT_TAP_CANADA_QR || paymentMethod == PAYMENT_TAP_CANADA)
+    //             {
+    //                 // Tap Canada or Moneris works on the serial connection and whenever the station reboots, the device loses communication. 
+    //                 //To keep both the devices communicated, Tap device needs to restart as the serial connection re-establishes after the restart of TAP device. 
+    //                 //Rebooting TAP at the same time as the station will keep the communication in place
+    //                 rebootTapDevice(PAYMENT_TAP_CANADA);
+    //             }
+    //             else if(paymentMethod== PAYMENT_TAP_USA_QR || paymentMethod==PAYMENT_TAP_USA){
+    //                 rebootTapDevice(PAYMENT_TAP_USA);
+    //             }
+    //             QString command = "echo 'D@nkF1ll$' | sudo -S shutdown -r 0";
+    //             system(qPrintable(command));
+    //         }
+    //     }
+    //     break;
+    //     case user_cancelled_reboot:
+    //     {
+    //         // qDebug() << "================== USER CANCELLED REBOOT =======================";
+    //         ui->label_reboot_nightly_text->hide();
+    //         ui->label_reboot_nightly_title->hide();
+    //         ui->label_reboot_nightly_bg->hide();
+    //         ui->label_reboot_nightly_icon->hide();
+    //         ui->pushButton_reboot_nightly->hide();
+    //         stateScreenCheck = state_screen_check_not_initiated;
+    //         _delaytime_seconds = PAGE_IDLE_REBOOT_NIGHTLY_TIMER_COUNT_DOWN;
+    //         if (_millisecondsUntilSetTime > 0)
+    //         {
+    //             thisMachine->setRebootState(wait_for_trigger);
+    //         }
+    //     }
+    //     break;
+    //     }
+    // }
 }
 
 void page_idle::refreshTemperature()

@@ -17,6 +17,7 @@
 #include "page_idle.h"
 #include "page_dispenser.h"
 #include "page_sendFeedback.h"
+#include "dbmanager.h"
 #include <curl/curl.h>
 #include <ctime>
 
@@ -46,6 +47,8 @@ public:
     
     void hideCurrentPageAndShowProvided(QWidget *pageToShow);
     void updateDispensedVolumeLabel();
+    void updateTransactionInDb(bool processed_by_backend,QString volume_dispensed_mix_product);
+
     bool is_controller_finished;
     bool is_dispense_aftermath_complete;
 
@@ -64,6 +67,7 @@ private:
     page_offline_payment *paymentOfflinePage;
     page_sendFeedback* p_page_sendFeedback;
     statusbar *p_statusbar;
+    DbManager* db;
 
     QDialog *popup;
     

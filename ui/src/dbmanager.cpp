@@ -178,12 +178,12 @@ QSqlDatabase DbManager::openDb(QString dbname)
     return m_db;
 }
 
-bool DbManager::executeQuery(QString sql)
+bool DbManager::executeQuery(QString sql,QString db_path)
 {
     bool success = false;
 
     {
-        QSqlDatabase db = openDb(CONFIG_DB_PATH);
+        QSqlDatabase db = openDb(db_path);
         QSqlQuery qry(db);
         qry.prepare(sql);
 
@@ -225,7 +225,7 @@ bool DbManager::updateTableMachineWithDouble(QString column, double value, int p
 bool DbManager::updateTableMachineWithText(QString column, QString value)
 {
     QString sql_text = QString("UPDATE machine SET %1='%2'").arg(column, value);
-    return executeQuery(sql_text);
+    return executeQuery(sql_text, CONFIG_DB_PATH);
 }
 
 bool DbManager::updateTableProductsWithInt(int pnumber, QString column, int value)
@@ -241,7 +241,7 @@ bool DbManager::updateTableProductsWithDouble(int pnumber, QString column, doubl
 bool DbManager::updateTableProductsWithText(int pnumber, QString column, QString value)
 {
     QString sql_text = QString("UPDATE products SET %1='%2' WHERE soapstand_product_serial=%3").arg(column, value, QString::number(pnumber));
-    return executeQuery(sql_text);
+    return executeQuery(sql_text,CONFIG_DB_PATH);
 }
 
 bool DbManager::updateTableSlotsWithInt(int slot, QString column, int value)
@@ -257,7 +257,7 @@ bool DbManager::updateTableSlotsWithDouble(int slot, QString column, double valu
 bool DbManager::updateTableSlotsWithText(int slot, QString column, QString value)
 {
     QString sql_text = QString("UPDATE slots SET %1='%2' WHERE slot_id=%3").arg(column, value, QString::number(slot));
-    return executeQuery(sql_text);
+    return executeQuery(sql_text,CONFIG_DB_PATH);
 }
 
 bool DbManager::addPageClick(const QString &page)

@@ -133,6 +133,13 @@ public:
       void updateDispenseStatus();
       // const char *getSlotStateAsString();
       Dispense_behaviour getDispenseStatus();
+
+      void setParallelSolenoids();
+      void startParallelMixDispensing();
+      void stopParallelMixDispensing();
+
+      // bool isAdditiveNeeded(int additive);
+
       // Slot_state getSlotState();
       // void setSlotState(Slot_state state);
       // void setSlotStateToEmpty();
@@ -282,7 +289,6 @@ private:
 
       gpio *m_pFlowsensor;
       std::map<std::string, std::vector<double>> m_mixDispenseReport;
-
 
       // gpio *m_pButtonPowerOff[1];
       // gpio *m_pButtonDisplayMaintenanceMode[1];

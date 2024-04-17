@@ -103,7 +103,7 @@ public:
         char sizeIndexToSizeChar(int sizeIndex);
         bool getIsSizeEnabled(char size);
 
-        bool loadParameters(bool onlyLoadFromDb);
+        bool loadParameters(bool alsoLoadCsv);
         bool loadProductParametersFromDb();
         // bool isColumnInTable(string table, string column_name);
         // void executeSQLStatement(string sql_string);

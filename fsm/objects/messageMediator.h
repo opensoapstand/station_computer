@@ -100,8 +100,9 @@ private:
    // static int m_requested_slot;
    static int m_nSolenoid;
    static char m_requestedAction;
-   static double m_nVolumeTarget;
+   // static double m_nVolumeTarget;
    // static char m_requestedSize;
+   double m_requestedDispenseVolumeAsChar;
    static int m_commandValue;
    static double m_requestedDiscountPrice;
    static string m_promoCode;

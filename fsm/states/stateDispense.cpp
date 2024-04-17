@@ -72,6 +72,9 @@ DF_ERROR stateDispense::onAction()
 
          g_machine.getSelectedDispenser().startActiveDispensing();
          g_machine.getSelectedDispenser().addDispenseButtonPress();
+#ifdef ENABLE_PARALLEL_MIX
+         g_machine.getSelectedDispenser().startParallelMixDispensing();
+#endif
       }
 
       if (g_machine.getSelectedDispenser().getDispenseButtonEdgeNegative())
@@ -80,6 +83,10 @@ DF_ERROR stateDispense::onAction()
          m_pMessaging->sendMessageOverIP("Dispense Button Neg Edge", true); // send to UI
 
          g_machine.getSelectedDispenser().stopActiveDispensing();
+
+#ifdef ENABLE_PARALLEL_MIX
+         g_machine.getSelectedDispenser().stopParallelMixDispensing();
+#endif
       }
    }
 
@@ -90,6 +97,25 @@ DF_ERROR stateDispense::onAction()
 
    // do logging
    statusUpdateLoggingAndOverIP(true);
+#ifdef ENABLE_PARALLEL_MIX
+
+   // parallel mixing, we only look at the base and mix in additives as we go.
+   if (g_machine.getSelectedDispenser().getIsStatusUpdateAllowed() && g_machine.getSelectedDispenser().getDispenseButtonValue())
+   {
+      g_machine.getSelectedDispenser().setParallelSolenoids();
+   }
+
+   // Is target volume reached?
+   if (g_machine.getSelectedDispenser().isSelectedProductVolumeTargetReached())
+   {
+      g_machine.getSelectedDispenser().finishActivePNumberDispense();
+      g_machine.getSelectedDispenser().finishSelectedProductDispense();
+      m_state_requested = STATE_DISPENSE_END;
+      debugOutput::sendMessage("Stop dispensing selected product. Requested volume reached. Dispensed: " + to_string(g_machine.getSelectedDispenser().getSelectedProductVolumeDispensed()), MSG_INFO);
+   }
+
+#else
+   // sequential mixing: first additives than base
 
    // Is target volume reached?
    if (g_machine.getSelectedDispenser().isActiveProductVolumeTargetReached())
@@ -120,6 +146,8 @@ DF_ERROR stateDispense::onAction()
          }
       }
    }
+
+#endif
 
    // Check received commands from UI
    if (m_pMessaging->isCommandStringReadyToBeParsed())
@@ -211,7 +239,6 @@ DF_ERROR stateDispense::onExit()
    g_machine.getSelectedDispenser().setPumpsDisableAll();
    g_machine.getPcb()->setSingleDispenseButtonLight(g_machine.getSelectedDispenserNumber(), false);
    statusUpdateLoggingAndOverIP(false); // final status update of dispensing
-   
 
    DF_ERROR e_ret = OK;
    return e_ret;

@@ -18,7 +18,6 @@
 #include "../objects/debugOutput.h"
 #include <fstream>
 
-
 const char *PRODUCT_STATE_STRINGS[] = {
     "PRODUCT_STATE_AVAILABLE",
     "PRODUCT_STATE_AVAILABLE_LOW_STOCK",
@@ -27,8 +26,7 @@ const char *PRODUCT_STATE_STRINGS[] = {
     "PRODUCT_STATE_PROBLEM_EMPTY",
     "PRODUCT_STATE_DISABLED_COMING_SOON",
     "PRODUCT_STATE_DISABLED",
-    "PRODUCT_STATE_INVALID"
-    };
+    "PRODUCT_STATE_INVALID"};
 
 product::product()
 {
@@ -46,23 +44,23 @@ const char *product::getProductStateAsString()
     return state_str;
 }
 
-void product::setProductState(Product_state state){
+void product::setProductState(Product_state state)
+{
     m_product_state = state;
 }
 
-Product_state product::getProductState(){
+Product_state product::getProductState()
+{
     return m_product_state;
 }
 
+void product::setProductStateToEmpty(bool isEmptyContainerDetectionEnabled)
+{
 
-
-void product::setProductStateToEmpty(bool isEmptyContainerDetectionEnabled){
-    
     if (isEmptyContainerDetectionEnabled)
     {
 
         // setProductState(PRODUCT_STATE_PROBLEM_EMPTY);
-
     }
     else
     {
@@ -71,7 +69,8 @@ void product::setProductStateToEmpty(bool isEmptyContainerDetectionEnabled){
     }
 }
 
-void product::updateProductState(Dispense_behaviour dispenseState, bool isEmptyContainerDetectionEnabled){
+void product::updateProductState(Dispense_behaviour dispenseState, bool isEmptyContainerDetectionEnabled)
+{
     // switch (getProductState())
     // {
     // case PRODUCT_STATE_NOT_PRIMED:
@@ -203,7 +202,7 @@ void product::init(int pnumber)
     m_pnumber = pnumber;
     // m_display_unit = size_unit;
     // m_paymentMethod = paymentMethod;
-    this->loadParameters(false);
+    this->loadParameters(true);
 }
 
 int product::getPNumber()
@@ -225,7 +224,7 @@ int product::getBasePNumber()
 {
     if (!isMixingProduct())
     {
-        if (m_mix_pnumbers_count == 1) // if exactly one mix_pnumber, we consider it the base
+        if (getMixProductsCount() == 1) // if exactly one mix_pnumber, we consider it the base
         {
             return m_mix_pnumbers[0];
         }
@@ -250,7 +249,7 @@ int product::getAdditivesCount()
 {
     if (isMixingProduct())
     {
-        return m_mix_pnumbers_count - 1; // subtract base product
+        return getMixProductsCount() - 1; // subtract base product
     }
     else
     {
@@ -346,15 +345,15 @@ bool product::isMixingProduct()
 {
     // the implications are big: mixing products have a lot less properties than actual products (i.e. no calibration parameter)
     bool isMix = false;
-    if (m_mix_pnumbers_count <= 0)
+    if (getMixProductsCount() <= 0)
     {
         isMix = false;
     }
-    else if (m_mix_pnumbers_count == 1)
+    else if (getMixProductsCount() == 1)
     {
         isMix = false;
     }
-    else if (m_mix_pnumbers_count > 1)
+    else if (getMixProductsCount() > 1)
     {
         isMix = true;
     }
@@ -364,12 +363,12 @@ bool product::isMixingProduct()
 void product::getMixRatiosDefault(double *&mixRatios, int &count)
 {
     mixRatios = m_mix_ratios_default;
-    count = m_mix_pnumbers_count;
+    count = getMixProductsCount();
 }
 void product::getMixPNumbers(int *&pnumbers, int &count)
 {
     pnumbers = m_mix_pnumbers;
-    count = m_mix_pnumbers_count;
+    count = getMixProductsCount();
 }
 
 double product::getVolumeDispensed()
@@ -443,7 +442,7 @@ double product::getVolumeRemaining()
 }
 double product::getProductVolumeDispensedTotalEver()
 {
-    // total volume ever dispensed for this product 
+    // total volume ever dispensed for this product
     return m_nVolumeDispensedTotalEver;
 }
 
@@ -455,7 +454,7 @@ double product::getProductVolumeDispensedSinceLastRestock()
 char product::getTargetVolumeAsChar()
 {
     // return getSizeCharFromTargetVolume(m_nVolumeTarget);
-    return m_nVolumeTargetAsChar ;
+    return m_nVolumeTargetAsChar;
 }
 
 char product::getSizeCharFromTargetVolume(double volume)
@@ -465,10 +464,9 @@ char product::getSizeCharFromTargetVolume(double volume)
     // Bug Alert: If the custom max size is same as any target volume size, it will take that size but the price will be taken from custom
 
     debugOutput::sendMessage("Get closest char size for volume: " + to_string(volume), MSG_INFO);
-    
+
     char volumeChar;
-    
-  
+
     if (volume == m_nVolumeTarget_s)
     {
         volumeChar = 's';
@@ -522,36 +520,43 @@ double product::getVolumeFromSize(char size)
 {
     if (size == 's')
     {
+        debugOutput::sendMessage("volume s", MSG_INFO);
         return m_nVolumeTarget_s;
     }
     else if (size == 'm')
     {
+        debugOutput::sendMessage("volume m", MSG_INFO);
         return m_nVolumeTarget_m;
     }
     else if (size == 'l')
     {
+        debugOutput::sendMessage("volume l", MSG_INFO);
         return m_nVolumeTarget_l;
     }
     else if (size == 'c')
     {
+        debugOutput::sendMessage("volume c", MSG_INFO);
         return m_nVolumeTarget_c_max;
     }
     else if (size == 'f')
     {
+        debugOutput::sendMessage("volume f", MSG_INFO);
         return m_nVolumeTarget_f;
     }
     else if (size == 't')
     {
+        debugOutput::sendMessage("volume t", MSG_INFO);
         return TEST_DISPENSE_TARGET_VOLUME;
     }
     else if (size == SIZE_EMPTY_CONTAINER_DETECTED_CHAR)
     {
+        debugOutput::sendMessage("volume empty", MSG_INFO);
         return 666.0;
     }
     else
     {
         std::string separate_string_to_be_able_to_concatenate_char = "Unknown volume parameter: ";
-        debugOutput::sendMessage( separate_string_to_be_able_to_concatenate_char + size + " for product " + getPNumberAsPString(), MSG_INFO);
+        debugOutput::sendMessage(separate_string_to_be_able_to_concatenate_char + size + " for product " + getPNumberAsPString(), MSG_INFO);
     }
     return 666.0;
 }
@@ -1046,14 +1051,15 @@ std::string product::dbFieldAsValidString(sqlite3_stmt *stmt, int column_index)
     }
 }
 
-bool product::loadParameters(bool onlyLoadFromDb)
+bool product::loadParameters(bool alsoLoadCsv)
 {
     bool success = true;
     if (getPNumber() != CUSTOM_MIX_PNUMBER)
     {
         debugOutput::sendMessage("Product: Load data from db for product: " + to_string(getPNumber()), MSG_INFO);
         success &= loadProductParametersFromDb();
-        if (onlyLoadFromDb){
+        if (alsoLoadCsv)
+        {
             debugOutput::sendMessage("Product: Load data from .tsv file for product: " + to_string(getPNumber()), MSG_INFO);
             loadProductPropertiesFromCsv();
         }
@@ -1067,6 +1073,7 @@ bool product::loadParameters(bool onlyLoadFromDb)
 
 void product::loadProductPropertiesFromCsv()
 {
+    bool success = false;
     // Create an input filestream
     std::ifstream products_file(PRODUCT_DETAILS_TSV_PATH);
 
@@ -1094,20 +1101,24 @@ void product::loadProductPropertiesFromCsv()
 
         bool stringsAreDifferent;
         stringsAreDifferent = m_product_properties[CSV_PRODUCT_COL_ID].compare(getPNumberAsPString());
+
         if (!(stringsAreDifferent))
         {
             debugOutput::sendMessage("Product found in products file and loaded: " + m_product_properties[CSV_PRODUCT_COL_ID] + " " + m_product_properties[CSV_PRODUCT_COL_NAME], MSG_INFO);
-            return;
+            success = true;
         }
     }
 
-    parseMixPNumbersAndRatiosCsv(
-        m_product_properties[CSV_PRODUCT_COL_MIX_PNUMBERS],
-        m_product_properties[CSV_PRODUCT_COL_MIX_RATIOS_LOW],
-        m_product_properties[CSV_PRODUCT_COL_MIX_RATIOS_DEFAULT],
-        m_product_properties[CSV_PRODUCT_COL_MIX_RATIOS_HIGH]);
-
-    debugOutput::sendMessage("Could not load product from products file (not found). Pnumber " + std::to_string(m_pnumber), MSG_ERROR);
+    debugOutput::sendMessage("WARNING: normally, mix ratios are taken from the csv file. For now, use the db for easy of editing. ", MSG_INFO);
+    // parseMixPNumbersAndRatiosCsv(
+    //     m_product_properties[CSV_PRODUCT_COL_MIX_PNUMBERS],
+    //     m_product_properties[CSV_PRODUCT_COL_MIX_RATIOS_LOW],
+    //     m_product_properties[CSV_PRODUCT_COL_MIX_RATIOS_DEFAULT],
+    //     m_product_properties[CSV_PRODUCT_COL_MIX_RATIOS_HIGH]);
+    if (!success)
+    {
+        debugOutput::sendMessage("Could not load product from products file (not found). Pnumber " + std::to_string(m_pnumber), MSG_ERROR);
+    }
 }
 
 bool product::loadProductParametersFromDb()
@@ -1171,7 +1182,7 @@ bool product::loadProductParametersFromDb()
                         "is_enabled_sample,"
                         "size_sample,"
                         "price_sample,"
-                         "is_empty_or_has_problem"
+                        "is_empty_or_has_problem"
                         " FROM products WHERE soapstand_product_serial='" +
                         std::to_string(m_pnumber) + "';";
 
@@ -1244,11 +1255,10 @@ bool product::loadProductParametersFromDb()
         // every sqlite3_step returns a row. if status is 101=SQLITE_DONE, it's run over all the rows.
     }
 
-    // parseMixPNumbersAndRatiosCsv(m_mix_pnumbers_str, m_mix_ratios_low_str, m_mix_ratios_default_str,m_mix_ratios_high_str);
+    debugOutput::sendMessage("WARNING: normally, mix ratios are taken from the csv file. For now, use the db for easy of editing. ", MSG_INFO);
+    parseMixPNumbersAndRatiosCsv(m_mix_pnumbers_str, m_mix_ratios_low_str, m_mix_ratios_default_str,m_mix_ratios_high_str);
 
     m_pnumber_loaded_from_db = false;
-    
-    
 
     if (numberOfRecordsFound == 1)
     {
@@ -1340,7 +1350,7 @@ void product::parseAndSetCustomMixRatios(const std::string &mixPNumbersCsvString
     product::parseIntCsvString(mixPNumbersCsvString, m_mix_pnumbers_custom, m_mix_pnumbers_custom_count);
 
     // check for equal length
-    if (m_mix_pnumbers_custom_count != m_mix_pnumbers_count)
+    if (m_mix_pnumbers_custom_count != getMixProductsCount())
     {
         debugOutput::sendMessage("DB mixing ASSERT ERROR: mixing P-numbers count should be equal for default or custom. Custom count: " + to_string(m_mix_pnumbers_custom_count), MSG_ERROR);
     }
@@ -1354,10 +1364,10 @@ void product::parseAndSetCustomMixRatios(const std::string &mixPNumbersCsvString
         }
     }
 
-    // set custom ratios 
+    // set custom ratios
     int ratios_count;
     product::parseDoubleCsvString(mixRatiosCsvString, m_mix_ratios_custom, ratios_count);
-    if (m_mix_pnumbers_count != ratios_count)
+    if (getMixProductsCount() != ratios_count)
     {
         debugOutput::sendMessage("DB mixing ASSERT ERROR: Amount of mixing pnumber and their ratios is not equal!!! pnumbers:" + mixPNumbersCsvString + " mixing ratios low: " + mixRatiosCsvString, MSG_ERROR);
     }
@@ -1372,31 +1382,30 @@ void product::parseMixPNumbersAndRatiosCsv(const std::string &mixPNumbersCsvStri
 
     // FOR NOW ONLY DEFAULT RATIOS ARE USED!
 
-
+    debugOutput::sendMessage("parsing mix pnumbers and ratios from csv strings", MSG_INFO);
     product::parseIntCsvString(mixPNumbersCsvString, m_mix_pnumbers, m_mix_pnumbers_count);
 
     int ratios_count;
 
     product::parseDoubleCsvString(mixRatiosLowCsvString, m_mix_ratios_low, ratios_count);
-    if (m_mix_pnumbers_count != ratios_count)
+    if (getMixProductsCount() != ratios_count)
     {
         debugOutput::sendMessage("DB mixing ASSERT ERROR: Amount of mixing pnumber and their ratios is not equal!!! pnumbers:" + mixPNumbersCsvString + " mixing ratios low: " + mixRatiosLowCsvString, MSG_ERROR);
     }
 
     product::parseDoubleCsvString(mixRatiosDefaultCsvString, m_mix_ratios_default, ratios_count);
-    if (m_mix_pnumbers_count != ratios_count)
+    if (getMixProductsCount() != ratios_count)
     {
         debugOutput::sendMessage("DB mixing ASSERT ERROR: Amount of mixing pnumber and their ratios is not equal!!! pnumbers:" + mixPNumbersCsvString + " mixing ratios default: " + mixRatiosDefaultCsvString, MSG_ERROR);
     }
     product::parseDoubleCsvString(mixRatiosHighCsvString, m_mix_ratios_high, ratios_count);
-    if (m_mix_pnumbers_count != ratios_count)
+    if (getMixProductsCount() != ratios_count)
     {
         debugOutput::sendMessage("DB mixing ASSERT ERROR: Amount of mixing pnumber and their ratios is not equal!!! pnumbers:" + mixPNumbersCsvString + " mixing ratios high: " + mixRatiosHighCsvString, MSG_ERROR);
     }
 
     // m_mix_pnumbers_used = m_mix_pnumbers;
     m_mix_ratios_used = m_mix_ratios_default;
-    // m_mix_pnumbers_used_count = &m_mix_pnumbers_count;
 }
 
 void product::parseIntCsvString(const std::string &csvString, int *intArray, int &size)

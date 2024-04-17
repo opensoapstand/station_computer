@@ -798,9 +798,9 @@ void runMainTest()
         // pcb_to_test->setMCP23017Register(1, 0x05, 0x3E);
 
         // pcb_to_test->setMCP23017Register(1, MCP23017_REGISTER_GPB, GPIOB_value); // GPIOB (IOCON.bank = 1 // button off (0 for ON)
-        // pcb_to_test->setMCP23017Output(1, MCP23017_EN258_GPB4_PIN_OUT_SOLENOID_2, false, MCP23017_REGISTER_GPB);
-        // pcb_to_test->setMCP23017Output(1, MCP23017_EN258_GPB2_PIN_OUT_PUMP, false, MCP23017_REGISTER_GPB);
-        // pcb_to_test->setMCP23017Output(1, MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON, true, MCP23017_REGISTER_GPB);
+        // pcb_to_test->setMCP23017OutputBit(1, MCP23017_EN258_GPB4_PIN_OUT_SOLENOID_2, false, MCP23017_REGISTER_GPB);
+        // pcb_to_test->setMCP23017OutputBit(1, MCP23017_EN258_GPB2_PIN_OUT_PUMP, false, MCP23017_REGISTER_GPB);
+        // pcb_to_test->setMCP23017OutputBit(1, MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON, true, MCP23017_REGISTER_GPB);
 
         // for (uint8_t i = 0; i < 1000; i++)
         // {
@@ -858,9 +858,9 @@ void runMainTest()
         //     }
 
         //     // pcb_to_test->setMCP23017Register(1, MCP23017_REGISTER_GPB, GPIOB_value); // GPIOB (IOCON.bank = 1 // button off (0 for ON)
-        //     // pcb_to_test->setMCP23017Output(1, MCP23017_EN258_GPB4_PIN_OUT_SOLENOID_2, light, MCP23017_REGISTER_GPB);
-        //     // pcb_to_test->setMCP23017Output(1, MCP23017_EN258_GPB2_PIN_OUT_PUMP, light, MCP23017_REGISTER_GPB);
-        //     // pcb_to_test->setMCP23017Output(1, MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON, !light, MCP23017_REGISTER_GPB);
+        //     // pcb_to_test->setMCP23017OutputBit(1, MCP23017_EN258_GPB4_PIN_OUT_SOLENOID_2, light, MCP23017_REGISTER_GPB);
+        //     // pcb_to_test->setMCP23017OutputBit(1, MCP23017_EN258_GPB2_PIN_OUT_PUMP, light, MCP23017_REGISTER_GPB);
+        //     // pcb_to_test->setMCP23017OutputBit(1, MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON, !light, MCP23017_REGISTER_GPB);
         // }
 
         pcb_to_test->flowSensorsDisableAll();

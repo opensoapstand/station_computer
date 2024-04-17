@@ -24,7 +24,7 @@ public:
 
     bool isDatabaseLocked(const QSqlDatabase &db);
 
-    bool executeQuery(QString sql);
+    bool executeQuery(QString sql, QString db_path);
 
     void checkAndRepairConfigurationDb();
     bool updateTableMachineWithInt(QString column, int value);

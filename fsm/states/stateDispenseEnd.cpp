@@ -606,35 +606,35 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     // std::string s = std::format("{:.2f}", 3.14159265359); // s == "3.14"
 
     // update transactions table
-    if (isValidTransaction)
-    {
-        std::string sql1;
-        sql1 = ("INSERT INTO transactions (product,quantity_requested,price,start_time,quantity_dispensed,end_time,volume_remaining,slot,button_duration,button_times,processed_by_backend,product_id, soapstand_product_serial) VALUES ('" + product_name + "'," + target_volume + "," + price_string + ",'" + start_time + "'," + dispensed_volume_str + ",'" + end_time + "'," + updated_volume_remaining_str + "," + to_string(g_machine.getSelectedDispenserNumber()) + "," + button_press_duration + "," + dispense_button_count + "," + to_string(false) + ",'" + product_id + "','" + pnumberPString + "');");
-        databaseUpdateSql(sql1, USAGE_DB_PATH);
-    }
+    // if (isValidTransaction)
+    // {
+    //     std::string sql1;
+    //     sql1 = ("INSERT INTO transactions (product,quantity_requested,price,start_time,quantity_dispensed,end_time,volume_remaining,slot,button_duration,button_times,processed_by_backend,product_id, soapstand_product_serial) VALUES ('" + product_name + "'," + target_volume + "," + price_string + ",'" + start_time + "'," + dispensed_volume_str + ",'" + end_time + "'," + updated_volume_remaining_str + "," + to_string(g_machine.getSelectedDispenserNumber()) + "," + button_press_duration + "," + dispense_button_count + "," + to_string(false) + ",'" + product_id + "','" + pnumberPString + "');");
+    //     databaseUpdateSql(sql1, USAGE_DB_PATH);
+    // }
 
     // update product table with p Number
-    std::string sql2;
-    // Iterate over the mix product dispense object to get individual values for each product
-    for (const auto &entry : mixProductDispenseObject)
-    {
+    // std::string sql2;
+    // // Iterate over the mix product dispense object to get individual values for each product
+    // for (const auto &entry : mixProductDispenseObject)
+    // {
 
-        volume_dispensed_total_ever = ceil(g_machine.getSelectedDispenser().getProductFromPNumber(std::stoi(entry.first))->getProductVolumeDispensedTotalEver());
-        volume_dispensed_since_restock = ceil(g_machine.getSelectedDispenser().getProductFromPNumber(std::stoi(entry.first))->getProductVolumeDispensedSinceLastRestock());
-        updated_volume_dispensed_total_ever_str = to_string(volume_dispensed_total_ever + entry.second[0]);
-        updated_volume_dispensed_since_restock_str = to_string(volume_dispensed_since_restock + entry.second[0]);
-        sql2 = ("UPDATE products SET volume_dispensed_total=" + updated_volume_dispensed_total_ever_str + ", volume_remaining=" + std::to_string(entry.second[1]) + ", volume_dispensed_since_restock=" + updated_volume_dispensed_since_restock_str + " WHERE soapstand_product_serial='" + entry.first + "';");
-        databaseUpdateSql(sql2, CONFIG_DB_PATH);
-    }
+    //     volume_dispensed_total_ever = ceil(g_machine.getSelectedDispenser().getProductFromPNumber(std::stoi(entry.first))->getProductVolumeDispensedTotalEver());
+    //     volume_dispensed_since_restock = ceil(g_machine.getSelectedDispenser().getProductFromPNumber(std::stoi(entry.first))->getProductVolumeDispensedSinceLastRestock());
+    //     updated_volume_dispensed_total_ever_str = to_string(volume_dispensed_total_ever + entry.second[0]);
+    //     updated_volume_dispensed_since_restock_str = to_string(volume_dispensed_since_restock + entry.second[0]);
+    //     sql2 = ("UPDATE products SET volume_dispensed_total=" + updated_volume_dispensed_total_ever_str + ", volume_remaining=" + std::to_string(entry.second[1]) + ", volume_dispensed_since_restock=" + updated_volume_dispensed_since_restock_str + " WHERE soapstand_product_serial='" + entry.first + "';");
+    //     databaseUpdateSql(sql2, CONFIG_DB_PATH);
+    // }
 
-    // update dipenser table
-    // std::string sql3;
-    // sql3 = ("UPDATE slots SET status_text='" + slot_state_str + "' WHERE slot_id=" + to_string(g_machine.getSelectedDispenserNumber()) + ";");
-    // databaseUpdateSql(sql3, CONFIG_DB_PATH);
+    // // update dipenser table
+    // // std::string sql3;
+    // // sql3 = ("UPDATE slots SET status_text='" + slot_state_str + "' WHERE slot_id=" + to_string(g_machine.getSelectedDispenserNumber()) + ";");
+    // // databaseUpdateSql(sql3, CONFIG_DB_PATH);
 
-    std::string sql4;
-    sql4 = ("UPDATE products SET status_text='" + selected_product_state_str + "' WHERE soapstand_product_serial=" + to_string(selectedPNumber) + ";");
-    databaseUpdateSql(sql4, CONFIG_DB_PATH);
+    // std::string sql4;
+    // sql4 = ("UPDATE products SET status_text='" + selected_product_state_str + "' WHERE soapstand_product_serial=" + to_string(selectedPNumber) + ";");
+    // databaseUpdateSql(sql4, CONFIG_DB_PATH);
 
     // reload (changed) db values
     g_machine.getSelectedDispenser().getSelectedProduct()->loadParameters(false);

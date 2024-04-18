@@ -122,19 +122,6 @@
     <string>Receipt Printer</string>
    </property>
   </widget>
-  <widget class="QCheckBox" name="checkBox_enable_pump_ramping">
-   <property name="geometry">
-    <rect>
-     <x>60</x>
-     <y>990</y>
-     <width>911</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Enable pump ramp up / ramp down</string>
-   </property>
-  </widget>
   <widget class="QCheckBox" name="checkBox_enable_empty_container">
    <property name="geometry">
     <rect>
@@ -1522,13 +1509,13 @@
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>1020</y>
+     <y>1000</y>
      <width>911</width>
      <height>23</height>
     </rect>
    </property>
    <property name="text">
-    <string>PCB 3.3V system power (experimental. No feedback from fsm. Toggle a few times, check with 3.3V light on pcb)</string>
+    <string>PCB 3.3V system power (experimental for EN-258. No feedback from fsm. Toggle a few times, check with 3.3V light on pcb)</string>
    </property>
    <property name="checked">
     <bool>true</bool>
@@ -1680,47 +1667,6 @@
     <string/>
    </property>
   </widget>
-  <zorder>pushButton_back</zorder>
-  <zorder>pushButton_minimize</zorder>
-  <zorder>pushButton_reboot</zorder>
-  <zorder>pushButton_shutdown</zorder>
-  <zorder>printer_hasPaper_label</zorder>
-  <zorder>printer_isOnline_label</zorder>
-  <zorder>label_receipt_printer</zorder>
-  <zorder>checkBox_enable_empty_container</zorder>
-  <zorder>label_wifi_internet</zorder>
-  <zorder>pushButton_wifi_networks</zorder>
-  <zorder>table_wifi_networks</zorder>
-  <zorder>label_wifi_status</zorder>
-  <zorder>label_wifi_ip_address</zorder>
-  <zorder>keyboard_2</zorder>
-  <zorder>label_settings</zorder>
-  <zorder>label_connectivity</zorder>
-  <zorder>label_4</zorder>
-  <zorder>pushButton_printer_check_status</zorder>
-  <zorder>pushButton_printer_test_print</zorder>
-  <zorder>pushButton_rtunnel_restart</zorder>
-  <zorder>label_status_feedback</zorder>
-  <zorder>label_feedback</zorder>
-  <zorder>pushButton_network_status</zorder>
-  <zorder>pushButton_restart_electronics</zorder>
-  <zorder>pushButton_restart_UI</zorder>
-  <zorder>checkBox_enable_pump_ramping</zorder>
-  <zorder>label_aws_port</zorder>
-  <zorder>label_machine_id</zorder>
-  <zorder>label_wifi_name</zorder>
-  <zorder>checkBox_enable_pcb_3point3V</zorder>
-  <zorder>label_soapstand_portal</zorder>
-  <zorder>pushButton_check_portal</zorder>
-  <zorder>pushButton_tap_check_status</zorder>
-  <zorder>tap_is_working</zorder>
-  <zorder>pushButton_tap_authorize</zorder>
-  <zorder>pushButton_tap_cancel</zorder>
-  <zorder>label_device_id</zorder>
-  <zorder>tap_device_id</zorder>
-  <zorder>tap_merchant_id</zorder>
-  <zorder>label_merchant_id</zorder>
-  <zorder>instructions_tap_testing</zorder>
  </widget>
  <resources/>
  <connections/>

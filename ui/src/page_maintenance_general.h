@@ -69,7 +69,7 @@ private slots:
 
     void on_pushButton_shutdown_clicked();
     void on_pushButton_check_portal_clicked();
-    void on_checkBox_enable_pump_ramping_clicked(bool checked);
+    
     void on_checkBox_enable_empty_container_clicked(bool checked);
 
     void on_test_lineEdit_textChanged(const QString &arg1);

@@ -1860,3 +1860,87 @@ std::tuple<CURLcode, std::string, long> machine::sendRequestToPortal(QString api
     readBuffer = "";
     return returnObject;
 }
+
+QMap<int, QPair<double, double>> extractValues(const QString& data) {
+    
+    QMap<int, QPair<double, double>> resultMap;
+    // Split the string to multiple key value pairs with delimiter - "],"
+    QStringList pairs = data.split("],");
+    for (const QString& pair : pairs) {
+        QString keyValuePair = pair.trimmed();
+        // Extracting the product number
+        int startIdx = keyValuePair.indexOf("P-");
+        startIdx += 2; // Index after "P-"
+        int endIdx = keyValuePair.indexOf(":", startIdx);
+        int productNumber = keyValuePair.mid(startIdx, endIdx - startIdx).toInt();
+
+        // Extracting volume dispensed and volume remaining
+        int bracketStart = keyValuePair.indexOf("[");
+        int commaIndex = keyValuePair.indexOf(",", bracketStart);
+        double volumeDispensed = keyValuePair.mid(bracketStart + 1, commaIndex - bracketStart - 1).trimmed().toDouble();
+        
+        int endIndex = keyValuePair.indexOf("]", commaIndex);
+        double volumeRemaining = keyValuePair.mid(commaIndex + 1, endIndex - commaIndex - 1).trimmed().toDouble();
+        // Add key-value pair to result map
+        resultMap.insert(productNumber, qMakePair(volumeDispensed, volumeRemaining));
+    }
+    return resultMap;
+}
+
+void machine::updateTransactionInDb(bool processed_by_backend, QString volume_dispensed_mix_product){
+    QString productId = getSelectedProductAwsProductId();
+    QString contents = getSelectedProduct()->getProductName();
+    QString quantity_requested = QString::number(getSelectedProduct()->getVolumeOfSelectedSize());
+    QString originalPrice;
+    if (getSelectedProduct()->getSelectedSize() == SIZE_CUSTOM_INDEX)
+    {
+        originalPrice = QString::number(getSelectedProduct()->getBasePriceSelectedSize() * getSelectedProduct()->getVolumeDispensedMl());
+    }
+    else
+    {
+        originalPrice = QString::number(getSelectedProduct()->getBasePriceSelectedSize());
+    }
+    QString dispensed_volume_ml = QString::number(getSelectedProduct()->getVolumeDispensedMl());
+    QString volume_remaining = QString::number(getSelectedProduct()->getVolumeRemaining());
+    QString soapstand_product_serial = getSelectedProduct()->getPNumberAsPString();
+    QString startTime = this->getSelectedSlot()->getDispenseStartTime();
+    QString endTime = this->getSelectedSlot()->getDispenseEndTime();
+    QString button_press_duration = QString::number(this->getSelectedSlot()->getButtonPressDuration());
+    QString button_press_count = QString::number(this->getSelectedSlot()->getButtonPressCount());
+    int slot = getSelectedSlot()->getSlotId();
+    QString sqlQuery = QString("INSERT INTO transactions (product,quantity_requested,price,start_time,quantity_dispensed,end_time,volume_remaining,button_duration,button_times,processed_by_backend,product_id, soapstand_product_serial,slot) VALUES ('%1', %2, %3, '%4', %5, '%6', %7, %8, %9, %10, '%11', '%12', %13)")
+                .arg(contents)
+                .arg(quantity_requested)
+                .arg(originalPrice)
+                .arg(startTime)
+                .arg(dispensed_volume_ml)
+                .arg(endTime)
+                .arg(volume_remaining)
+                .arg(button_press_duration)
+                .arg(button_press_count)
+                .arg(processed_by_backend)
+                .arg(productId)
+                .arg(soapstand_product_serial)
+                .arg(slot);
+    m_db->executeQuery(sqlQuery, USAGE_DB_PATH);
+    // Clean the string by removing escape chracters
+    volume_dispensed_mix_product = volume_dispensed_mix_product.replace("\\\"", "\"").replace("\"", "");
+    QMap<int, QPair<double, double>> resultMap = extractValues(volume_dispensed_mix_product);
+
+    // update product table with p Number
+    for (auto it = resultMap.begin(); it != resultMap.end(); ++it) {
+        int pNumber = it.key();
+        double volume_dispensed = it.value().first;
+        double volume_remaining = it.value().second; 
+        setSelectedProduct(pNumber);
+        QString selected_product_state_str = getSelectedProduct()->getProductStateAsString();
+        QString sqlQueryProductUpdate = QString("UPDATE products SET volume_dispensed_total=volume_dispensed_total + %1, volume_remaining=%2, volume_dispensed_since_restock=volume_dispensed_since_restock+%3,status_text='%4' WHERE soapstand_product_serial='%5';")
+               .arg(volume_dispensed)
+               .arg(volume_remaining)
+               .arg(volume_dispensed)
+               .arg(selected_product_state_str)
+               .arg(pNumber);        
+        m_db->executeQuery(sqlQueryProductUpdate, CONFIG_DB_PATH);
+    }
+
+}

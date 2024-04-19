@@ -306,6 +306,7 @@ void page_end::sendDispenseEndToCloud()
     QString soapstand_product_serial = p_page_idle->thisMachine->getSelectedProduct()->getPNumberAsPString();
     QString promoCode = this->p_page_idle->thisMachine->getCouponCode();
     QString volume_dispensed_mix_product = this->p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMixedProduct();
+    bool processed_by_backend = false;
     qDebug() << "Send data at finish of order : " << order_id << ". Total dispensed: " << dispensed_correct_units << "corrected units send to soapstandportal: " << dispensed_correct_units + "&mixProductInfo=" + volume_dispensed_mix_product;
     if (dispensed_correct_units == 0)
     {
@@ -330,10 +331,12 @@ void page_end::sendDispenseEndToCloud()
         // readbuffer is a string. "true" or "false"
         if (readBuffer == "true" || "Order Completed")
         {
+            processed_by_backend = true;
             // return data
             // is_dispense_aftermath_complete = true;
         }
     }
+    p_page_idle->thisMachine->updateTransactionInDb(processed_by_backend,volume_dispensed_mix_product);
 }
 
 // Push the complete order information to cloud
@@ -403,7 +406,7 @@ void page_end::sendCompleteOrderToCloudAndWriteToDatabase(QString paymentMethod)
             // is_dispense_aftermath_complete = true;
         }
     }
-    updateTransactionInDb(processed_by_backend, volume_dispensed_mix_product);
+    p_page_idle->thisMachine->updateTransactionInDb(processed_by_backend, volume_dispensed_mix_product);
 }
 
 void page_end::transactionToFile(QString curl_params)
@@ -411,32 +414,33 @@ void page_end::transactionToFile(QString curl_params)
     p_page_idle->thisMachine->dfUtility->write_to_file(TRANSACTION_DISPENSE_END_OFFLINE_PATH, curl_params);
 }
 
-QMap<int, QPair<double, double>> extractValues(const QString& data) {
+// QMap<int, QPair<double, double>> extractValues(const QString& data) {
     
-    QMap<int, QPair<double, double>> resultMap;
-    // Split the string to multiple key value pairs with delimiter - "],"
-    QStringList pairs = data.split("],");
-    for (const QString& pair : pairs) {
-        QString keyValuePair = pair.trimmed();
-        // Extracting the product number
-        int startIdx = keyValuePair.indexOf("P-");
-        startIdx += 2; // Index after "P-"
-        int endIdx = keyValuePair.indexOf(":", startIdx);
-        int productNumber = keyValuePair.mid(startIdx, endIdx - startIdx).toInt();
+//     QMap<int, QPair<double, double>> resultMap;
+//     // Split the string to multiple key value pairs with delimiter - "],"
+//     QStringList pairs = data.split("],");
+//     for (const QString& pair : pairs) {
+//         QString keyValuePair = pair.trimmed();
+//         // Extracting the product number
+//         int startIdx = keyValuePair.indexOf("P-");
+//         startIdx += 2; // Index after "P-"
+//         int endIdx = keyValuePair.indexOf(":", startIdx);
+//         int productNumber = keyValuePair.mid(startIdx, endIdx - startIdx).toInt();
 
-        // Extracting volume dispensed and volume remaining
-        int bracketStart = keyValuePair.indexOf("[");
-        int commaIndex = keyValuePair.indexOf(",", bracketStart);
-        double volumeDispensed = keyValuePair.mid(bracketStart + 1, commaIndex - bracketStart - 1).trimmed().toDouble();
+//         // Extracting volume dispensed and volume remaining
+//         int bracketStart = keyValuePair.indexOf("[");
+//         int commaIndex = keyValuePair.indexOf(",", bracketStart);
+//         double volumeDispensed = keyValuePair.mid(bracketStart + 1, commaIndex - bracketStart - 1).trimmed().toDouble();
         
-        int endIndex = keyValuePair.indexOf("]", commaIndex);
-        double volumeRemaining = keyValuePair.mid(commaIndex + 1, endIndex - commaIndex - 1).trimmed().toDouble();
-        // Add key-value pair to result map
-        resultMap.insert(productNumber, qMakePair(volumeDispensed, volumeRemaining));
-    }
-    return resultMap;
-}
+//         int endIndex = keyValuePair.indexOf("]", commaIndex);
+//         double volumeRemaining = keyValuePair.mid(commaIndex + 1, endIndex - commaIndex - 1).trimmed().toDouble();
+//         // Add key-value pair to result map
+//         resultMap.insert(productNumber, qMakePair(volumeDispensed, volumeRemaining));
+//     }
+//     return resultMap;
+// }
 
+<<<<<<< HEAD
 void page_end::updateTransactionInDb(bool processed_by_backend, QString volume_dispensed_mix_product){
 
     QString productId = p_page_idle->thisMachine->getSelectedProductAwsProductId();
@@ -477,22 +481,63 @@ void page_end::updateTransactionInDb(bool processed_by_backend, QString volume_d
     // Clean the string by removing escape chracters
     volume_dispensed_mix_product = volume_dispensed_mix_product.replace("\\\"", "\"").replace("\"", "");
     QMap<int, QPair<double, double>> resultMap = extractValues(volume_dispensed_mix_product);
+=======
+// void page_end::updateTransactionInDb(bool processed_by_backend, QString volume_dispensed_mix_product){
+//     QString productId = p_page_idle->thisMachine->getSelectedProductAwsProductId();
+//     QString contents = p_page_idle->thisMachine->getSelectedProduct()->getProductName();
+//     QString quantity_requested = QString::number(p_page_idle->thisMachine->getSelectedProduct()->getVolumeOfSelectedSize());
+//     QString originalPrice;
+//     if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize() == SIZE_CUSTOM_INDEX)
+//     {
+//         originalPrice = QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize() * p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl());
+//     }
+//     else
+//     {
+//         originalPrice = QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize());
+//     }
+//     QString dispensed_volume_ml = QString::number(p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl());
+//     QString volume_remaining = QString::number(p_page_idle->thisMachine->getSelectedProduct()->getVolumeRemaining());
+//     QString soapstand_product_serial = p_page_idle->thisMachine->getSelectedProduct()->getPNumberAsPString();
+//     QString startTime = this->p_page_idle->thisMachine->getSelectedSlot()->getDispenseStartTime();
+//     QString endTime = this->p_page_idle->thisMachine->getSelectedSlot()->getDispenseEndTime();
+//     QString button_press_duration = QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getButtonPressDuration());
+//     QString button_press_count = QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getButtonPressCount());
+//     int slot = p_page_idle->thisMachine->getSelectedSlot()->getSlotId();
+//     QString sqlQuery = QString("INSERT INTO transactions (product,quantity_requested,price,start_time,quantity_dispensed,end_time,volume_remaining,button_duration,button_times,processed_by_backend,product_id, soapstand_product_serial,slot) VALUES ('%1', %2, %3, '%4', %5, '%6', %7, %8, %9, %10, '%11', '%12', %13)")
+//                 .arg(contents)
+//                 .arg(quantity_requested)
+//                 .arg(originalPrice)
+//                 .arg(startTime)
+//                 .arg(dispensed_volume_ml)
+//                 .arg(endTime)
+//                 .arg(volume_remaining)
+//                 .arg(button_press_duration)
+//                 .arg(button_press_count)
+//                 .arg(processed_by_backend)
+//                 .arg(productId)
+//                 .arg(soapstand_product_serial)
+//                 .arg(slot);
+//     db->executeQuery(sqlQuery, USAGE_DB_PATH);
+//     // Clean the string by removing escape chracters
+//     volume_dispensed_mix_product = volume_dispensed_mix_product.replace("\\\"", "\"").replace("\"", "");
+//     QMap<int, QPair<double, double>> resultMap = extractValues(volume_dispensed_mix_product);
+>>>>>>> refs/remotes/origin/develop-v3
 
-    // update product table with p Number
-    for (auto it = resultMap.begin(); it != resultMap.end(); ++it) {
-        int pNumber = it.key();
-        double volume_dispensed = it.value().first;
-        double volume_remaining = it.value().second; 
-        p_page_idle->thisMachine->setSelectedProduct(pNumber);
-        QString selected_product_state_str = p_page_idle->thisMachine->getSelectedProduct()->getProductStateAsString();
-        QString sqlQueryProductUpdate = QString("UPDATE products SET volume_dispensed_total=volume_dispensed_total + %1, volume_remaining=%2, volume_dispensed_since_restock=volume_dispensed_since_restock+%3,status_text='%4' WHERE soapstand_product_serial='%5';")
-               .arg(volume_dispensed)
-               .arg(volume_remaining)
-               .arg(volume_dispensed)
-               .arg(selected_product_state_str)
-               .arg(pNumber);        
-        db->executeQuery(sqlQueryProductUpdate, CONFIG_DB_PATH);
-    }
+//     // update product table with p Number
+//     for (auto it = resultMap.begin(); it != resultMap.end(); ++it) {
+//         int pNumber = it.key();
+//         double volume_dispensed = it.value().first;
+//         double volume_remaining = it.value().second; 
+//         p_page_idle->thisMachine->setSelectedProduct(pNumber);
+//         QString selected_product_state_str = p_page_idle->thisMachine->getSelectedProduct()->getProductStateAsString();
+//         QString sqlQueryProductUpdate = QString("UPDATE products SET volume_dispensed_total=volume_dispensed_total + %1, volume_remaining=%2, volume_dispensed_since_restock=volume_dispensed_since_restock+%3,status_text='%4' WHERE soapstand_product_serial='%5';")
+//                .arg(volume_dispensed)
+//                .arg(volume_remaining)
+//                .arg(volume_dispensed)
+//                .arg(selected_product_state_str)
+//                .arg(pNumber);        
+//         db->executeQuery(sqlQueryProductUpdate, CONFIG_DB_PATH);
+//     }
 
-}
+// }
 

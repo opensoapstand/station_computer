@@ -233,6 +233,7 @@ public:
     void pageTransition(QWidget *pageToHide, QWidget *pageToShow);
     void applyPropertiesToQWidget(QWidget *widget);
     void applyDynamicPropertiesFromTemplateToWidgetChildren(QWidget *widget);
+    void updateTransactionInDb(bool processed_by_backend, QString volume_dispensed_mix_product);
 
     // bool isProductVolumeInContainer(int pnumber);
     std::tuple<CURLcode, std::string, long> sendRequestToPortal(QString api_url, QString request_type, QString curl_params, QString page_name);

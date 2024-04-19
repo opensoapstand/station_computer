@@ -67,7 +67,7 @@ private:
     page_offline_payment *paymentOfflinePage;
     page_sendFeedback* p_page_sendFeedback;
     statusbar *p_statusbar;
-    DbManager* db;
+    // DbManager* db;
 
     QDialog *popup;
     

@@ -11,6 +11,8 @@
 // TODO: Refactor to fit with dfuicommthread
 #define UI_VERSION "3.7"
 
+// #define GET_MIX_INFO_FROM_DB_INSTEAD_OF_TSV // normally, all pnumber info comes from the tsv file. However, for quick testing and changing, the db is easier. 
+
 #define OPTION_SLOT_INVALID 0
 #define SELECT_PRODUCT_PAGE_SLOT_COUNT_MAX 4
 #define MAINTENANCE_PAGE_SLOT_COUNT_MAX 4
@@ -25,6 +27,7 @@
 #define SIZE_TEST_INDEX 5
 #define SIZE_SAMPLE_INDEX 6
 #define ADDITIVES_RATIO_INCREMENT 10
+
 
 #define ADDITIVES_PER_SLOT_COUNT_MAX 5
 #define BASE_LINE_COUNT_MAX 5 // maximum amount of base lines

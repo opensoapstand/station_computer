@@ -178,7 +178,7 @@ QSqlDatabase DbManager::openDb(QString dbname)
     return m_db;
 }
 
-bool DbManager::executeQuery(QString sql,QString db_path)
+bool DbManager::executeQuery(QString sql, QString db_path)
 {
     bool success = false;
 
@@ -241,7 +241,7 @@ bool DbManager::updateTableProductsWithDouble(int pnumber, QString column, doubl
 bool DbManager::updateTableProductsWithText(int pnumber, QString column, QString value)
 {
     QString sql_text = QString("UPDATE products SET %1='%2' WHERE soapstand_product_serial=%3").arg(column, value, QString::number(pnumber));
-    return executeQuery(sql_text,CONFIG_DB_PATH);
+    return executeQuery(sql_text, CONFIG_DB_PATH);
 }
 
 bool DbManager::updateTableSlotsWithInt(int slot, QString column, int value)
@@ -257,7 +257,7 @@ bool DbManager::updateTableSlotsWithDouble(int slot, QString column, double valu
 bool DbManager::updateTableSlotsWithText(int slot, QString column, QString value)
 {
     QString sql_text = QString("UPDATE slots SET %1='%2' WHERE slot_id=%3").arg(column, value, QString::number(slot));
-    return executeQuery(sql_text,CONFIG_DB_PATH);
+    return executeQuery(sql_text, CONFIG_DB_PATH);
 }
 
 bool DbManager::addPageClick(const QString &page)
@@ -344,6 +344,10 @@ bool DbManager::getAllSlotProperties(int slot,
 bool DbManager::getAllProductProperties(int pnumber,
                                         QString *productId,
                                         QString *soapstand_product_serial,
+                                        QString *mix_pnumbers_str,
+                                        QString *mix_ratios_low_str,
+                                        QString *mix_ratios_default_str,
+                                        QString *mix_ratios_high_str,
                                         // QVector<int> &mixPNumbers,
                                         // QVector<double> &mixRatiosLow,
                                         // QVector<double> &mixRatiosDefault,
@@ -372,10 +376,7 @@ bool DbManager::getAllProductProperties(int pnumber,
                                         bool *isSizeEnabled, double *prices, double *volumes, QString *PLUs, QString *PIDs)
 
 {
-    QString mix_pnumbers_str;
-    QString mix_ratios_low_str;
-    QString mix_ratios_default_str;
-    QString mix_ratios_high_str;
+
     int row_count = 0;
 
     qDebug() << "Open db: load all product properties for pnumber: " << pnumber << "From: " << CONFIG_DB_PATH;
@@ -459,10 +460,10 @@ bool DbManager::getAllProductProperties(int pnumber,
             row_count++;
 
             *soapstand_product_serial = qry.value(0).toString();
-            mix_pnumbers_str = qry.value(1).toString();
-            mix_ratios_low_str = qry.value(2).toString();
-            mix_ratios_default_str = qry.value(3).toString();
-            mix_ratios_high_str = qry.value(4).toString();
+            *mix_pnumbers_str = qry.value(1).toString();
+            *mix_ratios_low_str = qry.value(2).toString();
+            *mix_ratios_default_str = qry.value(3).toString();
+            *mix_ratios_high_str = qry.value(4).toString();
             *productId = qry.value(5).toString();
 
             *name_receipt = qry.value(8).toString();
@@ -1008,21 +1009,21 @@ void DbManager::checkAndRepairTableInConfigDb(const std::vector<std::tuple<QStri
             if (!qry2.exec(sql))
             {
                 qDebug() << "Failed to create column" << columnName << ":" << qry2.lastError().text();
-                qry2.finish();  
-            }else{
+                qry2.finish();
+            }
+            else
+            {
                 qDebug() << "Success: Created column" << columnName;
-
             }
             QSqlQuery qry3(db);
             sql = QString("UPDATE %1 SET %2 = '%3'").arg(tableName).arg(columnName).arg(defaultValue);
             if (!qry3.exec(sql))
             {
                 qDebug() << "Failed to assign the value" << columnName << ":" << qry3.lastError().text();
-                qry3.finish();  
+                qry3.finish();
             }
         }
     }
 
     db.close();
-
 }

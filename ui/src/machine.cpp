@@ -278,7 +278,7 @@ pnumberproduct *machine::getProductFromMenuOption(int productOption)
     }
 
     int pnumber = dispenseProductsMenuOptions[productOption - 1];
-    qDebug() << "Get product with pnumber " << pnumber << "from product option:  " << productOption;
+    // qDebug() << "Get product with pnumber " << pnumber << "from product option:  " << productOption;
     return getProductByPNumber(pnumber);
 }
 
@@ -462,6 +462,12 @@ dispenser_slot *machine::getSelectedSlot()
 
 void machine::setSelectedSlot(int slot)
 {
+    if (slot == 0){
+    qDebug() << "ASSERT ERROR: Slot counting starts from 1. Slot: " << slot ;
+
+    }
+    
+    qDebug() << "seafjasief;ij selected slot: " << slot ;
     m_selectedSlot = &m_slots[slot - 1];
 }
 void machine::setSelectedSlotFromSelectedProduct()
@@ -557,8 +563,8 @@ int machine::getSlotCount()
         }
         else if (m_hardware_version.startsWith("SS2"))
         {
-            slot_count = 3;
-            qDebug() << " ss2   slot count 3";
+            slot_count = 4;
+            qDebug() << " ss2   slot count 4 --> manually disable slot in maintenance mode if not active";
         }
         else
         {

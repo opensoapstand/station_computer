@@ -88,7 +88,7 @@ private:
     struct tm *timeinfo;
 
     void sendDispenseEndToCloud();
-    void sendCompleteOrderToCloud(QString paymentMethod);
+    void sendCompleteOrderToCloudAndWriteToDatabase(QString paymentMethod);
     void transactionToFile(QString curl_params);
 
 

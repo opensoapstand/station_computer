@@ -181,28 +181,28 @@ void page_end::controllerReceivedDispenseAftermath(QString status, QString start
             case tap_canada:
             {
                 // Tap Canada Payment - Payment Method
-                sendCompleteOrderToCloud(PAYMENT_TAP_CANADA);
+                sendCompleteOrderToCloudAndWriteToDatabase(PAYMENT_TAP_CANADA);
                 break;
             }
             case tap_usa:
             {
                 // Tap USA Payment - Payment Method
-                sendCompleteOrderToCloud(PAYMENT_TAP_USA);
+                sendCompleteOrderToCloudAndWriteToDatabase(PAYMENT_TAP_USA);
                 break;
             }
             case receipt_printer:
             {
-                sendCompleteOrderToCloud(p_page_idle->thisMachine->getPaymentOptions());
+                sendCompleteOrderToCloudAndWriteToDatabase(p_page_idle->thisMachine->getPaymentOptions());
                 break;
             }
             case none:
             {
-                sendCompleteOrderToCloud("none");
+                sendCompleteOrderToCloudAndWriteToDatabase("none");
                 break;
             }
             default:
             {
-                sendCompleteOrderToCloud(p_page_idle->thisMachine->getPaymentOptions());
+                sendCompleteOrderToCloudAndWriteToDatabase(p_page_idle->thisMachine->getPaymentOptions());
                 break;
             }
             }
@@ -337,7 +337,7 @@ void page_end::sendDispenseEndToCloud()
 }
 
 // Push the complete order information to cloud
-void page_end::sendCompleteOrderToCloud(QString paymentMethod)
+void page_end::sendCompleteOrderToCloudAndWriteToDatabase(QString paymentMethod)
 {
     QString MachineSerialNumber = p_page_idle->thisMachine->getMachineId();
     QString productUnits = p_page_idle->thisMachine->getSizeUnit();
@@ -438,6 +438,7 @@ QMap<int, QPair<double, double>> extractValues(const QString& data) {
 }
 
 void page_end::updateTransactionInDb(bool processed_by_backend, QString volume_dispensed_mix_product){
+
     QString productId = p_page_idle->thisMachine->getSelectedProductAwsProductId();
     QString contents = p_page_idle->thisMachine->getSelectedProduct()->getProductName();
     QString quantity_requested = QString::number(p_page_idle->thisMachine->getSelectedProduct()->getVolumeOfSelectedSize());

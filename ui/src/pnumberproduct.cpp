@@ -20,7 +20,7 @@ bool pnumberproduct::loadProductProperties()
     success &= loadProductPropertiesFromProductsFile();
 
     m_db->updateTableProductsWithText(getPNumber(), "status_text", getProductStateAsString()); // Writing state to db for the fun of it. The state string is not used in the program.
-    resetCustomMixRatioParameters(); // needs to also be done at a "reset product" otherwise it will crash for non mixes.
+    resetCustomMixRatioParameters();                                                           // needs to also be done at a "reset product" otherwise it will crash for non mixes.
     return success;
 }
 
@@ -94,11 +94,13 @@ bool pnumberproduct::loadProductPropertiesFromProductsFile()
             mix_ratios_low_str = fields[CSV_PRODUCT_COL_MIX_RATIOS_LOW];
             mix_ratios_default_str = fields[CSV_PRODUCT_COL_MIX_RATIOS_DEFAULT];
             mix_ratios_high_str = fields[CSV_PRODUCT_COL_MIX_RATIOS_HIGH];
-
+#ifndef GET_MIX_INFO_FROM_DB_INSTEAD_OF_TSV
             df_util::csvQStringToQVectorInt(mix_pnumbers_str, m_mixPNumbers);
             df_util::csvQStringToQVectorDouble(mix_ratios_low_str, m_mixRatiosLow);
             df_util::csvQStringToQVectorDouble(mix_ratios_default_str, m_mixRatiosDefault);
             df_util::csvQStringToQVectorDouble(mix_ratios_high_str, m_mixRatiosHigh);
+
+#endif
             break;
         }
     }
@@ -119,7 +121,7 @@ int pnumberproduct::getPNumber()
 int pnumberproduct::getFirstMixPNumberOrPNumberAsBasePNumber()
 {
     // base p-number return the pnumber if no mixing set, or else returns the first mixpnumber of the list.
-    qDebug()<< " mix pnumbers length: "<< QString::number(m_mixPNumbers.size());
+    qDebug() << " mix pnumbers length: " << QString::number(m_mixPNumbers.size());
     if (m_mixPNumbers.size() > 0)
     {
         return m_mixPNumbers[0];
@@ -188,16 +190,25 @@ QVector<double> pnumberproduct::getMixRatiosHigh()
 
 bool pnumberproduct::loadProductPropertiesFromDb()
 {
+    QString mix_pnumbers_str;
+    QString mix_ratios_low_str;
+    QString mix_ratios_default_str;
+    QString mix_ratios_high_str;
 
     QString status_text;
     qDebug() << "Open db: db load pnumberproduct properties for pnumberproduct for pnumber: " << getPNumber();
     bool success = m_db->getAllProductProperties(getPNumber(),
                                                  &m_aws_product_id,
                                                  &m_soapstand_product_serial,
+                                                 &mix_pnumbers_str,
+                                                 &mix_ratios_low_str,
+                                                 &mix_ratios_default_str,
+                                                 &mix_ratios_high_str,
                                                  //   m_mixPNumbers,
                                                  //   m_mixRatiosLow,
                                                  //   m_mixRatiosDefault,
                                                  //   m_mixRatiosHigh,
+
                                                  &m_name_receipt,
                                                  &m_concentrate_multiplier,
                                                  &m_dispense_speed,
@@ -219,6 +230,13 @@ bool pnumberproduct::loadProductPropertiesFromDb()
                                                  m_sizeIndexIsEnabled, m_sizeIndexPrices, m_sizeIndexVolumes, m_sizeIndexPLUs, m_sizeIndexPIDs);
 
     // m_product_state = ProductStateStringMap[status_text];
+
+#ifdef GET_MIX_INFO_FROM_DB_INSTEAD_OF_TSV
+    df_util::csvQStringToQVectorInt(mix_pnumbers_str, m_mixPNumbers);
+    df_util::csvQStringToQVectorDouble(mix_ratios_low_str, m_mixRatiosLow);
+    df_util::csvQStringToQVectorDouble(mix_ratios_default_str, m_mixRatiosDefault);
+    df_util::csvQStringToQVectorDouble(mix_ratios_high_str, m_mixRatiosHigh);
+#endif
 
     int pnumberFromDb = convertPStringToPInt(m_soapstand_product_serial);
 
@@ -276,7 +294,7 @@ ProductState pnumberproduct::getProductState()
     if (getIsProductEnabled()) // enabled (manually settabled)
     {
 
-        if (getIsProductEmptyOrHasProblem()) // problem detected? 
+        if (getIsProductEmptyOrHasProblem()) // problem detected?
         {
             return PRODUCT_STATE_PROBLEM_EMPTY; // sold out
         }

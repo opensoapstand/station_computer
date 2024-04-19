@@ -335,7 +335,7 @@ void page_product_menu::select_submenu_option(int position)
         if (p_page_idle->thisMachine->getIsOptionAvailable(option)) // if slot is available, check if product option is available 
         {
             p_page_idle->thisMachine->setSelectedProductByOption(option);
-            p_page_idle->thisMachine->setSelectedSlotFromSelectedProduct();
+            //p_page_idle->thisMachine->setSelectedSlotFromSelectedProduct();
             p_page_idle->thisMachine->getSelectedProduct()->resetCustomMixRatioParameters();
             p_page_idle->thisMachine->hasMixing() ? hideCurrentPageAndShowProvided(p_page_product_mixing) : hideCurrentPageAndShowProvided(p_page_product);
         }else{

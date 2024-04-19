@@ -637,7 +637,7 @@ DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
     // databaseUpdateSql(sql4, CONFIG_DB_PATH);
 
     // reload (changed) db values
-    g_machine.getSelectedDispenser().getSelectedProduct()->loadParameters(true);
+    g_machine.getSelectedDispenser().getSelectedProduct()->loadParameters(false);
     g_machine.getSelectedDispenser().resetMixDispenseReport();
     DF_ERROR dfRet = OK;
     return dfRet;

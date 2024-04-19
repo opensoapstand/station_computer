@@ -181,7 +181,7 @@ void page_maintenance_general::updateLabelValues()
     _maintenanceGeneralPageTimeoutSec = PAGE_MAINTENANCE_GENERAL_TIMEOUT_SECONDS;
     p_page_idle->thisMachine->loadDynamicContent();
     ui->checkBox_enable_empty_container->setChecked(p_page_idle->thisMachine->getEmptyContainerDetectionEnabled());
-    ui->checkBox_enable_pump_ramping->setChecked(p_page_idle->thisMachine->getPumpRampingEnabled());
+    
 }
 
 void page_maintenance_general::printerStatusFeedback(bool isOnline, bool hasPaper)
@@ -239,20 +239,7 @@ void page_maintenance_general::on_pushButton_printer_test_print_clicked()
     p_page_idle->thisMachine->dfUtility->send_command_to_FSM("thermalprinterPrintTest", true);
 }
 
-void page_maintenance_general::on_checkBox_enable_pump_ramping_clicked(bool checked)
-{
-    if (!p_page_idle->thisMachine->isAllowedAsAdmin())
-    {
-        QMessageBox::information(this, "Admininstrator role required", "You do not have the rights to change these values. Please enter maintenance mode with the admin password.", QMessageBox::Ok);
-        return;
-    }
 
-    if (checked != p_page_idle->thisMachine->getPumpRampingEnabled())
-    {
-        p_page_idle->thisMachine->setPumpRampingEnabled(checked);
-        updateLabelValues();
-    }
-}
 
 void page_maintenance_general::on_checkBox_enable_empty_container_clicked(bool checked)
 {

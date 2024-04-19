@@ -11,7 +11,7 @@
 // TODO: Refactor to fit with dfuicommthread
 #define UI_VERSION "3.7"
 
-// #define GET_MIX_INFO_FROM_DB_INSTEAD_OF_TSV // normally, all pnumber info comes from the tsv file. However, for quick testing and changing, the db is easier. 
+#define GET_MIX_INFO_FROM_DB_INSTEAD_OF_TSV // normally, all pnumber info comes from the tsv file. However, for quick testing and changing, the db is easier. 
 
 #define OPTION_SLOT_INVALID 0
 #define SELECT_PRODUCT_PAGE_SLOT_COUNT_MAX 4

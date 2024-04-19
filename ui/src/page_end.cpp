@@ -440,48 +440,6 @@ void page_end::transactionToFile(QString curl_params)
 //     return resultMap;
 // }
 
-<<<<<<< HEAD
-void page_end::updateTransactionInDb(bool processed_by_backend, QString volume_dispensed_mix_product){
-
-    QString productId = p_page_idle->thisMachine->getSelectedProductAwsProductId();
-    QString contents = p_page_idle->thisMachine->getSelectedProduct()->getProductName();
-    QString quantity_requested = QString::number(p_page_idle->thisMachine->getSelectedProduct()->getVolumeOfSelectedSize());
-    QString originalPrice;
-    if (p_page_idle->thisMachine->getSelectedProduct()->getSelectedSize() == SIZE_CUSTOM_INDEX)
-    {
-        originalPrice = QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize() * p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl());
-    }
-    else
-    {
-        originalPrice = QString::number(p_page_idle->thisMachine->getSelectedProduct()->getBasePriceSelectedSize());
-    }
-    QString dispensed_volume_ml = QString::number(p_page_idle->thisMachine->getSelectedProduct()->getVolumeDispensedMl());
-    QString volume_remaining = QString::number(p_page_idle->thisMachine->getSelectedProduct()->getVolumeRemaining());
-    QString soapstand_product_serial = p_page_idle->thisMachine->getSelectedProduct()->getPNumberAsPString();
-    QString startTime = this->p_page_idle->thisMachine->getSelectedSlot()->getDispenseStartTime();
-    QString endTime = this->p_page_idle->thisMachine->getSelectedSlot()->getDispenseEndTime();
-    QString button_press_duration = QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getButtonPressDuration());
-    QString button_press_count = QString::number(this->p_page_idle->thisMachine->getSelectedSlot()->getButtonPressCount());
-    int slot = p_page_idle->thisMachine->getSelectedSlot()->getSlotId();
-    QString sqlQuery = QString("INSERT INTO transactions (product,quantity_requested,price,start_time,quantity_dispensed,end_time,volume_remaining,button_duration,button_times,processed_by_backend,product_id, soapstand_product_serial,slot) VALUES ('%1', %2, %3, '%4', %5, '%6', %7, %8, %9, %10, '%11', '%12', %13)")
-                .arg(contents)
-                .arg(quantity_requested)
-                .arg(originalPrice)
-                .arg(startTime)
-                .arg(dispensed_volume_ml)
-                .arg(endTime)
-                .arg(volume_remaining)
-                .arg(button_press_duration)
-                .arg(button_press_count)
-                .arg(processed_by_backend)
-                .arg(productId)
-                .arg(soapstand_product_serial)
-                .arg(slot);
-    db->executeQuery(sqlQuery, USAGE_DB_PATH);
-    // Clean the string by removing escape chracters
-    volume_dispensed_mix_product = volume_dispensed_mix_product.replace("\\\"", "\"").replace("\"", "");
-    QMap<int, QPair<double, double>> resultMap = extractValues(volume_dispensed_mix_product);
-=======
 // void page_end::updateTransactionInDb(bool processed_by_backend, QString volume_dispensed_mix_product){
 //     QString productId = p_page_idle->thisMachine->getSelectedProductAwsProductId();
 //     QString contents = p_page_idle->thisMachine->getSelectedProduct()->getProductName();
@@ -521,7 +479,6 @@ void page_end::updateTransactionInDb(bool processed_by_backend, QString volume_d
 //     // Clean the string by removing escape chracters
 //     volume_dispensed_mix_product = volume_dispensed_mix_product.replace("\\\"", "\"").replace("\"", "");
 //     QMap<int, QPair<double, double>> resultMap = extractValues(volume_dispensed_mix_product);
->>>>>>> refs/remotes/origin/develop-v3
 
 //     // update product table with p Number
 //     for (auto it = resultMap.begin(); it != resultMap.end(); ++it) {

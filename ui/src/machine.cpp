@@ -466,8 +466,6 @@ void machine::setSelectedSlot(int slot)
     qDebug() << "ASSERT ERROR: Slot counting starts from 1. Slot: " << slot ;
 
     }
-    
-    qDebug() << "seafjasief;ij selected slot: " << slot ;
     m_selectedSlot = &m_slots[slot - 1];
 }
 void machine::setSelectedSlotFromSelectedProduct()

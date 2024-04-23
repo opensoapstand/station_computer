@@ -83,7 +83,7 @@ public:
         {"int", "dispense_speed", "127"},
         {"double", "threshold_flow", "1"},
         {"int", "retraction_time", "0"},
-        {"double", "threshold_flow_maximum", "1.3"},
+        {"double", "threshold_flow_maximum", "0"},
         {"double", "volume_per_tick", "6.0"},
         {"QString", "last_restock", ""},
         {"double", "volume_full", "18000"},

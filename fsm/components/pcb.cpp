@@ -1666,7 +1666,7 @@ void pcb::pollFlowSensor(uint8_t slot)
     if (now_epoch_millis > (flowSensorTickReceivedEpoch[slot_index] + FLOW_SENSOR_DEBOUNCE_MILLIS))
     {
 
-        if (flowSensorStateMemory[slot_index] != state)
+        if (flowSensorStateMemory[slot_index] != state && flowSensorStateMemory[slot_index]) // only regard positive edges.
         {
             // flow_sensor_pulses_for_dispenser[slot_index]++;
 

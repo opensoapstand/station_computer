@@ -934,17 +934,14 @@ void dispenser::registerFlowSensorTickFromPcb()
     // the actual dispensed produce gets always registered
     getActiveProduct()->registerFlowSensorTickFromPcb();
 
-    // debugOutput::sendMessage("Dispenser: flow tick : " + std::to_string(getSlot()), MSG_INFO);
+    // debugOutput::sendMessage("Dispenser: active flow tick : " + std::to_string(getSlot()) + " Active pnumber: " + getActiveProduct()->getPNumberAsPString() , MSG_INFO);
 
-    // #define MIX_PARTS_WITH_TICKS  // if mixes have their own calibration, it kindof makes sense, but better will be to just sum up the volumes of the parts
-    // #ifdef MIX_PARTS_WITH_TICKS
     if (getActivePNumber() != getSelectedPNumber())
     {
+        // debugOutput::sendMessage("Dispenser: selected flow tick : " + std::to_string(getSlot()) + " Selected pnumber: " + getSelectedProduct()->getPNumberAsPString() , MSG_INFO);
         // if this is part of a mix, register the tick also for the mix volume (total volume)
         getSelectedProduct()->setVolumeDispensed(getActiveProduct()->getVolumePerTick(true) + getSelectedProduct()->getVolumeDispensed());
     }
-
-    // #endif
 }
 
 // double dispenser::getDispenserVolumeDispensed()
@@ -1456,7 +1453,7 @@ unsigned short dispenser::getPumpSpeed()
 ////////////////////////////////////////////////////////////
 // I/O Flow Sensor
 
-// #define INTERRUPT_DRIVE_FLOW_SENSOR_TICKS   // WARNING: if enabled: check pin for ubuntu 22!!!!
+
 // ------->Also, in case the terminal window is flooded: did you reload all services (developer tools 11)??
 #ifdef INTERRUPT_DRIVE_FLOW_SENSOR_TICKS
 // TODO: Call this function on Dispense onEntry()

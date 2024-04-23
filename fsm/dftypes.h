@@ -98,6 +98,7 @@
 #define IO_PIN_ENABLE_5V_AFTER_SYSFS_DEPRECATED 850       // connector pin 12 for EN258 pcb
 #define IO_PIN_ENABLE_24V_AFTER_SYSFS_DEPRECATED 922 // connector pin 36 for EN-134 pcb
 
+// #define INTERRUPT_DRIVE_FLOW_SENSOR_TICKS   // WARNING: if enabled: check pin for ubuntu 22 and up!!!!  (deprecated. We're using polling now)
 #define power_cycle_attempt_AT_INVALID_PCB 10
 
 // #define PIC_PROGRAMMER_PIN_VPP 337
@@ -122,6 +123,7 @@
 
 #define END_OF_DISPENSE_SPOUT_SHUTOFF_DELAY_MICROS 250000 // only applies to parallel mixing
 #define TEST_DISPENSE_TARGET_VOLUME 5000
+
 
 #define ML_TO_OZ 0.033814
 

@@ -81,9 +81,9 @@ public:
         {"QString", "name_receipt", ""},
         {"int", "concentrate_multiplier", ""},
         {"int", "dispense_speed", "127"},
-        {"double", "threshold_flow", "1"},
+        {"double", "threshold_flow", "10"},
         {"int", "retraction_time", "0"},
-        {"double", "threshold_flow_maximum", "0"},
+        {"double", "threshold_flow_maximum", "0"}, // make higher than threshold_flow to enable.
         {"double", "volume_per_tick", "6.0"},
         {"QString", "last_restock", ""},
         {"double", "volume_full", "18000"},

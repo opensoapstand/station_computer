@@ -38,7 +38,7 @@ public:
 
 private:
     int m_active_pump_index;
-    dispenser *productDispensers;
+    // dispenser *productDispensers;
 };
 
 #endif

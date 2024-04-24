@@ -27,7 +27,8 @@
 #include "states/stateManualPump.h"
 #include "states/stateEnd.h"
 
-#include "objects/dispenser.h"
+// #include "objects/product.h"
+// #include "objects/dispenser.h"
 #include "objects/messageMediator.h"
 
 #include "objects/machine.h"
@@ -49,8 +50,11 @@ std::string stateStrings[FSM_MAX + 1] = {
 messageMediator *g_pMessaging;           // debug through local network
 stateVirtual *g_stateArray[FSM_MAX + 1]; // an object for every state
 
-dispenser g_productDispensers[PRODUCT_DISPENSERS_MAX];
+// dispenser m_productDispensers[PRODUCT_DISPENSERS_MAX];
+product g_pnumbers[PNUMBERS_COUNT];
 machine g_machine;
+
+bool g_connect_to_ui = true;
 
 DF_ERROR initObjects();
 DF_ERROR createStateArray();
@@ -82,7 +86,7 @@ DF_ERROR createStateArray()
     return dfRet;
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     pthread_t ipThread, kbThread;
 
@@ -93,28 +97,70 @@ int main()
     std::string version = CONTROLLER_VERSION;
     debugOutput::sendMessage("***************************************************************************", MSG_INFO);
     debugOutput::sendMessage("****** SOAPSTAND CONTROLLER v" + version + " ***********************************", MSG_INFO);
+    debugOutput::sendMessage("*      If not connected to UI, run:  ./controller standalone               *", MSG_INFO);
     debugOutput::sendMessage("***************************************************************************", MSG_INFO);
 
-    // machine test;
-    // test.testtest();
-
-    if (OK == initObjects())
+    // process program arguments
+    for (int i = 1; i < argc; i++)
     {
-        debugOutput::sendMessage("Init objects done", MSG_INFO);
-        dfRet = g_pMessaging->createThreads(kbThread, ipThread);
-
-        if (OK == dfRet)
+        debugOutput::sendMessage("Process argument: " + std::string(argv[i]), MSG_INFO);
+        if (std::string(argv[i]) == "standalone")
         {
-            dfRet = stateLoop();
+            g_connect_to_ui = false;
+            debugOutput::sendMessage("Running in standalone mode", MSG_INFO);
         }
+    }
+
+    dfRet = initObjects();
+    if (OK != dfRet)return dfRet;
+    
+    dfRet = g_pMessaging->createThreads(kbThread, ipThread);
+    if (OK != dfRet)return dfRet;
+
+    dfRet = stateLoop();
+    if (OK != dfRet){
+        debugOutput::sendMessage("Problem with the dfRet: " , MSG_INFO);
+        return dfRet;
     }
 
     return dfRet;
 }
 
-/*
- * Poll for State changes: States outlined in DF_FSM
- */
+DF_ERROR initObjects()
+{
+    DF_ERROR dfRet = OK;
+
+    g_pMessaging = new messageMediator();
+
+    if (g_pMessaging == nullptr)
+    {
+        debugOutput::sendMessage("**************Failed to allocate messageMediator", MSG_ERROR);
+    }
+    g_pMessaging->setSendingBehaviour(g_connect_to_ui);
+
+    debugOutput::sendMessage("message mediator set up.", MSG_INFO);
+
+    for (int pnumber = 0; pnumber < PNUMBERS_COUNT; pnumber++)
+    {
+        debugOutput::sendMessage("Load pnumber " + to_string(pnumber), MSG_INFO);
+        g_pnumbers[pnumber].init(pnumber);
+        // g_pnumbers[pnumber].init(pnumber, g_machine.getSizeUnit(), g_machine.getPaymentMethod());
+    }
+    
+    g_machine.setup(g_pnumbers);
+    g_pMessaging->setMachine(&g_machine);
+
+    debugOutput::sendMessage("Machine set up.", MSG_INFO);
+
+
+    dfRet = createStateArray();
+    if (OK != dfRet)
+    {
+        debugOutput::sendMessage("Error at set up.", MSG_ERROR);
+    }
+    debugOutput::sendMessage("Init objects done", MSG_INFO);
+    return dfRet;
+}
 
 DF_ERROR stateLoop()
 {
@@ -122,14 +168,12 @@ DF_ERROR stateLoop()
     DF_FSM fsmState = STATE_INIT;
     DF_FSM previousState = STATE_DUMMY;
 
+    // g_machine.getPcb()->get_pcb_version();
+
     while (OK == dfRet) // while no error has occurred
     {
-        // the pcb inputs are not interrupt driven. So, periodical updates are required
-        for (uint8_t slot_index = 0; slot_index < PRODUCT_DISPENSERS_MAX; slot_index++)
-        {
-            g_productDispensers[slot_index].refresh();
-        }
-
+       
+        g_machine.refresh();
         if (fsmState == STATE_DUMMY)
         {
             debugOutput::sendMessage("ERROR STATE " + fsmState, MSG_STATE);
@@ -138,7 +182,8 @@ DF_ERROR stateLoop()
         // state change, deal with new state
         if (fsmState != previousState)
         {
-            debugOutput::sendMessage("Enter state: " + stateStrings[fsmState], MSG_STATE);
+            debugOutput::sendMessage("Enter state: ===============================  " + stateStrings[fsmState] + "  =====================================", MSG_STATE);
+            // debugOutput::sendMessage("Enter state: " + stateStrings[fsmState], MSG_STATE);
             dfRet = g_stateArray[fsmState]->onEntry();
         }
         previousState = fsmState;
@@ -167,45 +212,10 @@ DF_ERROR stateLoop()
         }
 
         usleep(1000); // micros! 1 ms delay to slow down refresh rate
+
+        // debugOutput::sendMessage("state loop page.....f.ef.e.f", MSG_INFO);
+        // usleep(1000000); // micros! 1 ms delay to slow down refresh rate
     }
     debugOutput::sendMessage("State machine ENDED. ", MSG_INFO);
-    return dfRet;
-}
-
-/*
- * Mutex Setting; Spin up Threads
- */
-DF_ERROR initObjects()
-{
-    DF_ERROR dfRet = OK;
-
-    // g_pMessaging = NULL;
-    g_pMessaging = new messageMediator();
-
-    if (g_pMessaging == nullptr)
-    {
-        debugOutput::sendMessage("**************Failed to allocate messageMediator", MSG_ERROR);
-    }
-
-    //    g_machine = new machine();
-    debugOutput::sendMessage("message mediator set up.", MSG_INFO);
-    g_machine.setup();
-    g_pMessaging->setMachine(&g_machine);
-    debugOutput::sendMessage("Machine set up.", MSG_INFO);
-
-    for (int i = 0; i < PRODUCT_DISPENSERS_MAX; i++)
-    {
-        g_productDispensers[i].setup(&g_machine);
-    }
-
-    debugOutput::sendMessage("Dispensers set up. ", MSG_INFO);
-
-    dfRet = createStateArray();
-    if (OK != dfRet)
-    {
-        debugOutput::sendMessage("Error at set up.", MSG_ERROR);
-        // TODO: DB function to check/create DB
-        // next
-    }
     return dfRet;
 }

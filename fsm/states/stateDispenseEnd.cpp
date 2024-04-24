@@ -29,6 +29,7 @@ stateDispenseEnd::stateDispenseEnd(messageMediator *message)
 // DTOR
 stateDispenseEnd::~stateDispenseEnd()
 {
+    debugOutput::sendMessage("stateDispenseEnd: ~stateDispenseEnd", MSG_INFO);
 }
 
 // Overload for Debugger output
@@ -46,102 +47,101 @@ DF_ERROR stateDispenseEnd::onEntry()
     m_state_requested = STATE_DISPENSE_END;
     DF_ERROR e_ret = OK;
 
-    productDispensers = g_productDispensers;
-    slot = m_pMessaging->getRequestedSlot();
-    slot_index = slot - 1;
+    // productDispensers = g_productDispensers;
+    // m_slot = m_pMessaging->getRequestedSlot();
+    // m_slot_index = m_slot - 1;
 
     return e_ret;
 }
 
 DF_ERROR stateDispenseEnd::onAction()
 {
-    debugOutput::sendMessage("onAction Dispense End...", MSG_STATE);
-
     DF_ERROR e_ret = OK;
+    debugOutput::sendMessage("onAction Dispense End...", MSG_STATE);
+    double price = getFinalPrice();
+    double volume_dispensed = g_machine.getSelectedDispenser().getSelectedProductVolumeDispensed();
 
-    productDispensers[slot_index].stopDispense();
+    //
+    // replaced by sendEndTransactionMessageToUI! std::string message = "finalVolumeDispensed|" + std::to_string(volume_dispensed) + "|";
+    // usleep(100000); // send message delay
+    // m_pMessaging->sendMessageOverIP(message, true); // send to UI
+
+    g_machine.getPcb()->displayMCP23017IORegisters(g_machine.getSelectedDispenserNumber());
 
     // handle minimum dispensing
-    bool is_valid_dispense = productDispensers[slot_index].getVolumeDispensed() >= MINIMUM_DISPENSE_VOLUME_ML;
+    bool is_valid_dispense = volume_dispensed >= MINIMUM_DISPENSE_VOLUME_ML;
 
     if (!is_valid_dispense)
     {
-        productDispensers[slot_index].resetVolumeDispensed();
+        g_machine.getSelectedDispenser().resetSelectedProductVolumeDispensed();
 
-        debugOutput::sendMessage("Not a valid dispense. Volume set to zero. " + std::to_string(productDispensers[slot_index].getVolumeDispensed()), MSG_STATE);
+        debugOutput::sendMessage("Not a valid dispense. Volume set to zero. " + std::to_string(volume_dispensed), MSG_STATE);
     }
 
     // send dispensed volume to ui (will be used to write to portal)
-    usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
 
-    if (productDispensers[slot_index].getIsDispenseTargetReached())
+    if (g_machine.getSelectedDispenser().isSelectedProductVolumeTargetReached())
     {
         usleep(100000);                                      // send message delay (pause from previous message) desperate attempt to prevent crashes
         m_pMessaging->sendMessageOverIP("Target Hit", true); // send to UI
     }
-    // send dispensed volume to ui (will be used to write to portal)
-    usleep(100000); // send message delay (pause from previous message) desperate attempt to prevent crashes
 
     // bool empty_stock_detected = false;
     // // handle empty container detection
-    // if (m_pMessaging->getRequestedSize() == SIZE_EMPTY_CONTAINER_DETECTED_CHAR)
+    // if (size == SIZE_EMPTY_CONTAINER_DETECTED_CHAR)
     // {
     //     empty_stock_detected = true;
     //     debugOutput::sendMessage("WARNING: Empty container detected. Will set remaining volume to zero.", MSG_INFO);
     // }
-
     // adjust to nearest lower fixed volume if less dispensed than requested
     adjustSizeToDispensedVolume();
 
     // SIZE_TEST_CHAR is sent during Maintenance Mode dispenses - we do not want to record these in the transaction database, or print receipts...
-    if (m_pMessaging->getRequestedSize() == SIZE_TEST_CHAR)
+    if (g_machine.getSelectedDispenser().getSelectedSizeAsChar() == SIZE_TEST_CHAR)
     {
-        debugOutput::sendMessage("Not a transaction: Test dispensing. (" + to_string(productDispensers[slot_index].getVolumeDispensed()) + "ml).", MSG_INFO);
-        dispenseEndUpdateDB(false); // update the db dispense statistics
+        debugOutput::sendMessage("Not a transaction: Test dispensing. (" + to_string(volume_dispensed) + "ml).", MSG_INFO);
+        sendEndTransactionMessageToUI(false);
     }
     else if (!is_valid_dispense)
     {
-        debugOutput::sendMessage("Not a transaction: No minimum quantity of product dispensed (" + to_string(productDispensers[slot_index].getVolumeDispensed()) + "ml). ", MSG_INFO);
-
-        // check for technical problems
-        dispenseEndUpdateDB(false); // update the db dispense statistics
+        debugOutput::sendMessage("Not a transaction: No minimum quantity of product dispensed (" + to_string(volume_dispensed) + "ml). ", MSG_INFO);
+        // dispenseEndUpdateDB(false); // update the db dispense statistics
+        sendEndTransactionMessageToUI(false);
     }
     else
     {
+        debugOutput::sendMessage("Normal transaction.", MSG_INFO);
+        sendEndTransactionMessageToUI(true);
         e_ret = handleTransactionPayment();
 
-        debugOutput::sendMessage("Normal transaction.", MSG_INFO);
-        dispenseEndUpdateDB(true);
+        // dispenseEndUpdateDB(true);
 
-        bool success = false;
-#ifdef ENABLE_TRANSACTION_TO_CLOUD
+        // #define ENABLE_TRANSACTION_TO_CLOUD
+        // #ifdef ENABLE_TRANSACTION_TO_CLOUD
 
-        std::string paymentMethod = productDispensers[slot_index].getProduct()->getPaymentMethod();
-        double price = getFinalPrice();
-        if (paymentMethod == "qr" && price!= 0.0)
-        {
-            // these transactions are dealt with in the UI
-        }
-        else
-        {
-            // make sure to do this after dispenseEndUpdateDB
-            // at that point remaining product volume is already updated in db, and in Product
-            success = sendTransactionToCloud(productDispensers[slot_index].getProduct()->getVolumeRemaining());
-        }
-#else
-        debugOutput::sendMessage("NOT SENDING transaction to cloud.", MSG_INFO);
-#endif
+        //         std::string paymentMethod = g_machine.getPaymentMethod();
+
+        //         if (paymentMethod == "qr" && price != 0.0)
+        //         {
+        //             // these transactions are dealt with in the UI
+        //         }
+        //         else
+        //         {
+        //             // bool success = false;
+        //             // make sure to do this after dispenseEndUpdateDB
+        //             // at that point remaining product volume is already updated in db, and in Product
+        //             // success = sendTransactionToCloud(g_machine.getSelectedDispenser().getSelectedProductVolumeRemaining());
+        //         }
+        // #else
+        //         debugOutput::sendMessage("NOT SENDING transaction to cloud.", MSG_INFO);
+        // #endif
     }
 
-    double price = getFinalPrice();
     debugOutput::sendMessage("Post dispense final price: " + to_string(price), MSG_INFO);
-    double volume = productDispensers[slot_index].getVolumeDispensed();
-    std::string message = "finalVolumeDispensed|" + std::to_string(volume) + "|";
-    m_pMessaging->sendMessageOverIP(message, true); // send to UI
 
     // send dispensed volume to ui (will be used to write to portal)
-    usleep(1000000); // send message delay (pause from previous message) desperate attempt to prevent crashes
     m_state_requested = STATE_IDLE;
+    usleep(1000000);                                          // give UI the chance to catch up (and display page end)
     m_pMessaging->sendMessageOverIP("Transaction End", true); // send to UI
 
     return e_ret;
@@ -150,30 +150,32 @@ DF_ERROR stateDispenseEnd::onAction()
 void stateDispenseEnd::adjustSizeToDispensedVolume()
 {
     if (
-        (m_pMessaging->getRequestedSize() == SIZE_SMALL_CHAR ||
-         m_pMessaging->getRequestedSize() == SIZE_MEDIUM_CHAR ||
-         m_pMessaging->getRequestedSize() == SIZE_LARGE_CHAR) &&
-        productDispensers[slot_index].getProduct()->getIsSizeEnabled(SIZE_CUSTOM_CHAR))
+        (g_machine.getSelectedDispenser().getSelectedSizeAsChar() == SIZE_SMALL_CHAR ||
+         g_machine.getSelectedDispenser().getSelectedSizeAsChar() == SIZE_MEDIUM_CHAR ||
+         g_machine.getSelectedDispenser().getSelectedSizeAsChar() == SIZE_LARGE_CHAR) &&
+        g_machine.getSelectedDispenser().getSelectedProduct()->getIsSizeEnabled(SIZE_CUSTOM_CHAR))
     {
         // if custom volume is enabled, always revert back to the actual volume that's dispensed.
         // Bug alert: If setting the size to custom, quantity_requested also change to custom size and database transaction shows that customer chose custom size
         // m_pMessaging->setRequestedSize(SIZE_CUSTOM_CHAR);
         debugOutput::sendMessage("Custom volume is enabled, so we will always revert to it to calculate actual price.", MSG_INFO);
     }
-    else if (m_pMessaging->getRequestedSize() == SIZE_EMPTY_CONTAINER_DETECTED_CHAR)
+    else if (g_machine.getSelectedDispenser().getSelectedSizeAsChar() == SIZE_EMPTY_CONTAINER_DETECTED_CHAR)
     {
         // check requested volume versus dispensed volume.
         // go down to next next allowed volume
 
-        if (productDispensers[slot_index].getProduct()->getIsSizeEnabled(SIZE_CUSTOM_CHAR))
+        if (g_machine.getSelectedDispenser().getSelectedProduct()->getIsSizeEnabled(SIZE_CUSTOM_CHAR))
         {
-            m_pMessaging->setRequestedSize(SIZE_CUSTOM_CHAR);
+            // m_pMessaging->setRequestedSize(SIZE_CUSTOM_CHAR);
+            g_machine.getSelectedDispenser().getSelectedProduct()->setTargetVolumeFromSize(SIZE_CUSTOM_CHAR);
             debugOutput::sendMessage("Empty container detected, change to custom volume.", MSG_INFO);
         }
         else
         {
             char new_size = dispensedVolumeToSmallestFixedSize();
-            m_pMessaging->setRequestedSize(new_size);
+            g_machine.getSelectedDispenser().getSelectedProduct()->setTargetVolumeFromSize(new_size);
+            // m_pMessaging->setRequestedSize(new_size);
             debugOutput::sendMessage("Empty container detected, change to next lowest size: " + to_string(new_size), MSG_INFO);
         }
     }
@@ -188,7 +190,8 @@ void stateDispenseEnd::adjustSizeToDispensedVolume()
 #ifdef ENABLE_CUSTOMERS_CAN_PAY_FOR_LESS_THAN_THEY_DISPENSE
         debugOutput::sendMessage("Normal fixed price dispensing. Will take the lowest fixed size compared to the actual dispensed volume.", MSG_INFO);
         char new_size = dispensedVolumeToSmallestFixedSize();
-        m_pMessaging->setRequestedSize(new_size);
+        // m_pMessaging->setRequestedSize(new_size);
+        g_machine.getSelectedDispenser().getSelectedProduct()->setTargetVolumeFromSize(new_size);
 #endif
     }
 }
@@ -198,7 +201,7 @@ char stateDispenseEnd::dispensedVolumeToSmallestFixedSize()
     // check real dispensed volume compared to available fixed sizes.
     // if dispensed volume is lower than small size, will return "SIZE_SMALLER_THAN_SMALL"
 
-    double dispensed_volume = productDispensers[slot_index].getVolumeDispensed();
+    double dispensed_volume = g_machine.getSelectedDispenser().getSelectedProductVolumeDispensed();
 
     char sizes_big_to_small[3] = {SIZE_LARGE_CHAR, SIZE_MEDIUM_CHAR, SIZE_SMALL_CHAR};
     char fixed_size;
@@ -207,11 +210,11 @@ char stateDispenseEnd::dispensedVolumeToSmallestFixedSize()
     for (int i = 0; i < 3; i++)
     {
         fixed_size = sizes_big_to_small[i];
-        if (productDispensers[slot_index].getProduct()->getIsSizeEnabled(fixed_size))
+        if (g_machine.getSelectedDispenser().getSelectedProduct()->getIsSizeEnabled(fixed_size))
         {
             // debugOutput::sendMessage("check volume (dispensed vs target volume)" + to_string(fixed_size), MSG_INFO);
             // as long as the fixed volume is higher than the dispensed volume, go to next lowest size
-            fixed_volume = productDispensers[slot_index].getProduct()->getTargetVolume(fixed_size);
+            fixed_volume = g_machine.getSelectedDispenser().getSelectedProduct()->getVolumeFromSize(fixed_size);
 
             lowest_fixed_size = fixed_size;
             if (dispensed_volume >= fixed_volume)
@@ -233,7 +236,7 @@ DF_ERROR stateDispenseEnd::handleTransactionPayment()
     debugOutput::sendMessage("Transaction payment", MSG_INFO);
     DF_ERROR e_ret = OK;
 
-    std::string paymentMethod = productDispensers[slot_index].getProduct()->getPaymentMethod();
+    std::string paymentMethod = g_machine.getPaymentMethod();
 
     // Currently only Drinkfill used the tap method of payment, so this checks if it is a tap payment system and runs the cleaning cycle if it is...
     // TODO: Change this to just check if the system is Soapstand or Drinkfill instead of payment system!
@@ -243,18 +246,18 @@ DF_ERROR stateDispenseEnd::handleTransactionPayment()
     }
     else if (paymentMethod == "tap")
     {
+        debugOutput::sendMessage("Tap payment. No payment action in controller", MSG_INFO);
         // sleep(5);
-
         // debugOutput::sendMessage("Dispense OnEXIT", MSG_INFO);
         // debugOutput::sendMessage("------Cleaning Mode------", MSG_INFO);
         // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", MSG_INFO);
-        // debugOutput::sendMessage("Pin -> " + to_string(productDispensers[slot_index].getI2CPin(WATER)), MSG_INFO);
+        // debugOutput::sendMessage("Pin -> " + to_string(g_machine.getSelectedDispenser().getI2CPin(WATER)), MSG_INFO);
         // debugOutput::sendMessage("Activating position -> " + to_string(pos + 1) + " solenoid -> WATER", MSG_INFO);
-        // debugOutput::sendMessage("Pin -> " + to_string(productDispensers[slot_index].getI2CPin(PRODUCT)), MSG_INFO);
+        // debugOutput::sendMessage("Pin -> " + to_string(g_machine.getSelectedDispenser().getI2CPin(PRODUCT)), MSG_INFO);
     }
     else if (paymentMethod == "barcode" || paymentMethod == "barcode_EAN-13" || paymentMethod == "barcode_EAN-2" || paymentMethod == "plu")
     {
-        debugOutput::sendMessage("Printing receipt:", MSG_INFO);
+        debugOutput::sendMessage("Print receipt:", MSG_INFO);
         setup_and_print_receipt();
     }
     else
@@ -282,7 +285,7 @@ static int db_sql_callback(void *NotUsed, int argc, char **argv, char **azColNam
     //     printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
     // }
     // printf("\n");
-    // return 0;
+    return 0;
 }
 
 size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
@@ -293,104 +296,105 @@ size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp)
 
 // This function sends the transaction details to the cloud using libcurl, if it fails, it stores the data to be sent in the write_curl_to_file function
 // TODO: This will be replaced with an AWS IoT method!
-bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
-{
-    DF_ERROR e_ret = OK;
+// bool stateDispenseEnd::sendTransactionToCloud(double volume_remaining)
+// {
+//     DF_ERROR e_ret = OK;
 
-    // std::string volume_remaining = to_string(productDispensers[slot_index].getVolumeRemaining());
-    // char EndTime[50];
-    // time(&rawtime);
-    // timeinfo = localtime(&rawtime);
-    // strftime(EndTime, 50, "%F %T", timeinfo);
+//     // std::string volume_remaining = to_string(g_machine.getSelectedDispenser().getSelectedProductVolumeRemaining());
+//     // char EndTime[50];
+//     // time(&rawtime);
+//     // timeinfo = localtime(&rawtime);
+//     // strftime(EndTime, 50, "%F %T", timeinfo);
 
-    std::string start_time = productDispensers[slot_index].getDispenseStartTime();
-    std::string end_time = productDispensers[slot_index].getDispenseEndTime();
-    double price = getFinalPrice();
-    std::string price_string = to_string(price);
-    debugOutput::sendMessage("Final price" + price_string, MSG_INFO);
-    std::string target_volume = to_string(productDispensers[slot_index].getProduct()->getTargetVolume(m_pMessaging->getRequestedSize()));
-    std::string product = (productDispensers[slot_index].getProduct()->m_name);
-    std::string machine_id = getMachineID();
-    std::string pid = getProductID(slot);
-    std::string units = productDispensers[slot_index].getProduct()->getDisplayUnits();
-    std::string readBuffer;
-    std::string volume_remaining_units_converted_string;
-    std::string coupon = m_pMessaging->getCouponCode();
-    std::string button_press_duration = to_string(productDispensers[slot_index].getButtonPressedTotalMillis());
-    std::string dispense_button_count = to_string(productDispensers[slot_index].getDispenseButtonPressesDuringDispensing());
-    std::string soapstand_product_serial = (productDispensers[slot_index].getProduct()->getSoapstandProductSerial());
-    std::string payment_method = (productDispensers[slot_index].getProduct()->getPaymentMethod());
-    double volume_remaining_converted;
-    std::string dispensed_volume_units_converted;
-    double dispensed_volume = ceil(productDispensers[slot_index].getVolumeDispensed());
-    if (dispensed_volume <= productDispensers[slot_index].getProduct()->getVolumePerTick())
-    {
-        dispensed_volume_units_converted = "0";
-    }
-    else
-    {
-        double dv = productDispensers[slot_index].getProduct()->convertVolumeMetricToDisplayUnits(dispensed_volume);
-        dispensed_volume_units_converted = to_string(dv);
-    }
+//     std::string start_time = g_machine.getSelectedDispenser().getSelectedProductDispenseStartTime();
+//     std::string end_time = g_machine.getSelectedDispenser().getSelectedProductDispenseEndTime();
+//     double price = getFinalPrice();
+//     std::string price_string = to_string(price);
+//     debugOutput::sendMessage("Final price" + price_string, MSG_INFO);
+//     std::string target_volume = to_string(g_machine.getSelectedDispenser().getSelectedProduct()->getTargetVolume());
+//     std::string product = g_machine.getSelectedDispenser().getSelectedProduct()->m_name;
+//     // std::string machine_id = getMachineID();
+//     std::string machine_id = g_machine.getMachineId();
+//     // std::string pid = getProductID(m_slot);
+//     std::string pid = g_machine.getSelectedDispenser().getSelectedProduct()->m_product_id_combined_with_location_for_backend;
+//     // std::string units = g_machine.getSelectedDispenser().getSelectedProduct()->getDisplayUnits();
+//     std::string units = g_machine.getSizeUnit();
+//     std::string readBuffer;
+//     std::string volume_remaining_units_converted_string;
+//     std::string coupon = m_pMessaging->getCouponCode();
+//     std::string button_press_duration = to_string(g_machine.getSelectedDispenser().getButtonPressedTotalMillis());
+//     std::string dispense_button_count = to_string(g_machine.getSelectedDispenser().getDispenseButtonPressesDuringDispensing());
+//     std::string pnumberString = g_machine.getSelectedDispenser().getSelectedProduct()->getPNumberAsPString();
+//     double volume_remaining_converted;
+//     std::string dispensed_volume_units_converted;
+//     double dispensed_volume = ceil(g_machine.getSelectedDispenser().getSelectedProductVolumeDispensed());
+//     if (dispensed_volume <= g_machine.getSelectedDispenser().getSelectedProduct()->getVolumePerTick(false))
+//     {
+//         dispensed_volume_units_converted = "0";
+//     }
+//     else
+//     {
+//         double dv = g_machine.convertVolumeMetricToDisplayUnits(dispensed_volume);
+//         dispensed_volume_units_converted = to_string(dv);
+//     }
 
-    volume_remaining_converted = productDispensers[slot_index].getProduct()->convertVolumeMetricToDisplayUnits(volume_remaining);
-    volume_remaining_units_converted_string = to_string(volume_remaining_converted);
+//     volume_remaining_converted = g_machine.convertVolumeMetricToDisplayUnits(volume_remaining);
+//     volume_remaining_units_converted_string = to_string(volume_remaining_converted);
 
+//     std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&size_unit=" + units + "&price=" + price_string + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + end_time + "&MachineSerialNumber=" + machine_id + "&paymentMethod=Printer&volume_remaining_ml=" + to_string(volume_remaining) + "&quantity_dispensed_ml=" + to_string(g_machine.getSelectedDispenser().getSelectedProductVolumeDispensed()) + "&volume_remaining=" + volume_remaining_units_converted_string + "&coupon=" + coupon + "&buttonDuration=" + button_press_duration + "&buttonTimes=" + dispense_button_count + "&pnumber=" + pnumberString;
+//     char buffer[1080];
+//     strcpy(buffer, curl_param.c_str());
 
-    std::string curl_param = "contents=" + product + "&quantity_requested=" + target_volume + "&quantity_dispensed=" + dispensed_volume_units_converted + "&size_unit=" + units + "&price=" + price_string + "&productId=" + pid + "&start_time=" + start_time + "&end_time=" + end_time + "&MachineSerialNumber=" + machine_id + "&paymentMethod="+payment_method+"&volume_remaining_ml=" + to_string(volume_remaining) + "&quantity_dispensed_ml=" + to_string(productDispensers[slot_index].getVolumeDispensed()) + "&volume_remaining=" + volume_remaining_units_converted_string + "&coupon=" + coupon + "&buttonDuration=" + button_press_duration + "&buttonTimes=" + dispense_button_count + "&soapstand_product_serial=" + soapstand_product_serial;
-    char buffer[1080];
-    strcpy(buffer, curl_param.c_str());
+//     curl = curl_easy_init();
+//     if (!curl)
+//     {
+//         debugOutput::sendMessage("ERROR: cURL failed to init", MSG_INFO);
+//         return e_ret;
+//     }
 
-    curl = curl_easy_init();
-    if (!curl)
-    {
-        debugOutput::sendMessage("ERROR: cURL failed to init", MSG_INFO);
-        return e_ret;
-    }
+//     debugOutput::sendMessage("cURL init success. Will send: " + portal_base_url+ "/api/machine_data/pushPrinterOrder?" + curl_param, MSG_INFO);
 
-    debugOutput::sendMessage("cURL init success. Will send: https://soapstandportal.com/api/machine_data/pushPrinterOrder?" + curl_param, MSG_INFO);
+//     curl_easy_setopt(curl, CURLOPT_URL, portal_base_url + "api/machine_data/pushPrinterOrder");
+//     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, buffer);
+//     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+//     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+//     curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
 
-    curl_easy_setopt(curl, CURLOPT_URL, "https://soapstandportal.com/api/machine_data/pushPrinterOrder");
-    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, buffer);
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-    curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, SOAPSTANDPORTAL_CONNECTION_TIMEOUT_MILLISECONDS);
+//     res = curl_easy_perform(curl);
+//     if (res == CURLE_OPERATION_TIMEDOUT)
+//     {
+//         debugOutput::sendMessage("sendTransactionToCloud: CURL timed out (" + to_string(CURLOPT_TIMEOUT_MS) + "ms). err: " + to_string(res) + " Will buffer!", MSG_INFO);
+//         write_curl_to_file(curl_param);
+//     }
+//     else if (res != CURLE_OK)
+//     {
+//         debugOutput::sendMessage("sendTransactionToCloud: CURL fail. err: " + to_string(res) + " Will buffer!", MSG_INFO);
+//         write_curl_to_file(curl_param);
+//     }
+//     else
+//     {
+//         if (readBuffer == "true")
+//         {
+//             debugOutput::sendMessage("sendTransactionToCloud: CURL succes.", MSG_INFO);
 
-    res = curl_easy_perform(curl);
-    if (res == CURLE_OPERATION_TIMEDOUT)
-    {
-        debugOutput::sendMessage("sendTransactionToCloud: CURL timed out (" + to_string(CURLOPT_TIMEOUT_MS) + "ms). err: " + to_string(res) + " Will buffer!", MSG_INFO);
-        write_curl_to_file(curl_param);
-    }
-    else if (res != CURLE_OK)
-    {
-        debugOutput::sendMessage("sendTransactionToCloud: CURL fail. err: " + to_string(res) + " Will buffer!", MSG_INFO);
-        write_curl_to_file(curl_param);
-    }
-    else
-    {
-        if (readBuffer == "true")
-        {
-            debugOutput::sendMessage("sendTransactionToCloud: CURL succes.", MSG_INFO);
+//             // set transaction as processed in database.
+//             std::string sql;
+//             std::string start_time = g_machine.getSelectedDispenser().getSelectedProductDispenseStartTime();
+//             sql = ("UPDATE transactions SET processed_by_backend=1 WHERE start_time='" + start_time + "';");
+//             databaseUpdateSql(sql, USAGE_DB_PATH);
+//         }
+//         else
+//         {
+//             debugOutput::sendMessage("sendTransactionToCloud: CURL readbuffer fail.", MSG_INFO);
+//             write_curl_to_file(curl_param);
+//         }
+//         readBuffer = "";
+//     }
 
-            // set transaction as processed in database.
-            std::string sql;
-            std::string start_time = productDispensers[slot_index].getDispenseStartTime();
-            sql = ("UPDATE transactions SET processed_by_backend=1 WHERE start_time='" + start_time + "';");
-            databaseUpdateSql(sql, USAGE_DB_PATH);
-        }
-        else
-        {
-            debugOutput::sendMessage("sendTransactionToCloud: CURL readbuffer fail.", MSG_INFO);
-            write_curl_to_file(curl_param);
-        }
-        readBuffer = "";
-    }
+//     curl_easy_cleanup(curl);
 
-    curl_easy_cleanup(curl);
-
-    return e_ret;
-}
+//     return e_ret;
+// }
 
 // TODO: Figure out when/how to send all the bufferred curl data to the cloud (fixed with AWS IoT?)
 
@@ -419,64 +423,66 @@ void stateDispenseEnd::write_curl_to_file(std::string curl_params)
     }
 }
 
-std::string stateDispenseEnd::getProductID(int slot)
-{
-    rc = sqlite3_open(CONFIG_DB_PATH, &db);
+// std::string stateDispenseEnd::getProductID(int slot)
+// {
+//     rc = sqlite3_open(CONFIG_DB_PATH, &db);
 
-    sqlite3_stmt *stmt;
+//     sqlite3_stmt *stmt;
 
-    debugOutput::sendMessage("Product ID getter START", MSG_INFO);
+//     debugOutput::sendMessage("Product ID getter START", MSG_INFO);
 
-    std::string sql_string_pid = "SELECT productId FROM products WHERE slot=" + std::to_string(slot) + ";";
+//     std::string sql_string_pid = "SELECT productId FROM products WHERE slot=" + std::to_string(slot) + ";";
 
-    sqlite3_prepare(db, sql_string_pid.c_str(), -1, &stmt, NULL);
-    sqlite3_step(stmt);
-    std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
-    ;
-    sqlite3_finalize(stmt);
-    sqlite3_close(db);
-    return str;
-}
+//     sqlite3_prepare(db, sql_string_pid.c_str(), -1, &stmt, NULL);
+//     sqlite3_step(stmt);
+//     std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
+//     ;
+//     sqlite3_finalize(stmt);
+//     sqlite3_close(db);
+//     return str;
+// }
 
-std::string stateDispenseEnd::getMachineID()
-{
+// std::string stateDispenseEnd::getMachineID()
+// {
 
-    rc = sqlite3_open(CONFIG_DB_PATH, &db);
+//     rc = sqlite3_open(CONFIG_DB_PATH, &db);
 
-    sqlite3_stmt *stmt;
+//     sqlite3_stmt *stmt;
 
-    debugOutput::sendMessage("Machine ID getter START", MSG_INFO);
+//     debugOutput::sendMessage("Machine ID getter START", MSG_INFO);
 
-    if (rc)
-    {
-        //       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
-        // TODO: Error handling here...
-    }
-    else
-    {
-        //       fprintf(stderr, "Opened database successfully\n");
-    }
+//     if (rc)
+//     {
+//         //       fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+//         // TODO: Error handling here...
+//     }
+//     else
+//     {
+//         //       fprintf(stderr, "Opened database successfully\n");
+//     }
 
-    sqlite3_prepare(db, "SELECT machine_id FROM machine;", -1, &stmt, NULL);
-    sqlite3_step(stmt);
-    std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
-    ;
-    sqlite3_finalize(stmt);
-    sqlite3_close(db);
-    return str;
-}
+//     sqlite3_prepare(db, "SELECT machine_id FROM machine;", -1, &stmt, NULL);
+//     sqlite3_step(stmt);
+//     std::string str = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
+//     ;
+//     sqlite3_finalize(stmt);
+//     sqlite3_close(db);
+//     return str;
+// }
 
-DF_ERROR stateDispenseEnd::databaseUpdateSql(string sqlStatement, string dbPath)
+void stateDispenseEnd::databaseUpdateSql(string sqlStatement, string dbPath)
 {
 
     // FIXME: DB needs fully qualified link to find...obscure with XML loading.
     char *zErrMsg = 0;
     if (dbPath == USAGE_DB_PATH)
     {
+        // USAGE DB
         rc = sqlite3_open(USAGE_DB_PATH, &db);
     }
     else
     {
+        // CONFIG DB
         rc = sqlite3_open(CONFIG_DB_PATH, &db);
     }
 
@@ -511,117 +517,143 @@ DF_ERROR stateDispenseEnd::databaseUpdateSql(string sqlStatement, string dbPath)
 
 // This function updates the local SQLite3 database with the transaction data, as well as updates the total product remaining locally
 
-DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
-{
-    char *zErrMsg = 0;
-    std::string product_name = (productDispensers[slot_index].getProduct()->m_name).c_str();
-    std::string target_volume;
-    std::string button_press_duration = to_string(productDispensers[slot_index].getButtonPressedTotalMillis());
-    std::string dispense_button_count = to_string(productDispensers[slot_index].getDispenseButtonPressesDuringDispensing());
-    std::string start_time = (productDispensers[slot_index].getDispenseStartTime());
-    std::string end_time = (productDispensers[slot_index].getDispenseEndTime());
-    std::string soapstand_product_serial = (productDispensers[slot_index].getProduct()->getSoapstandProductSerial());
-    double price;
-    std::string price_string;
-    std::string product_status;
-    std::string slot_status_text;
-    price = getFinalPrice();
-    price_string = to_string(price);
+// DF_ERROR stateDispenseEnd::dispenseEndUpdateDB(bool isValidTransaction)
+// {
+//     char *zErrMsg = 0;
+//     std::string product_name = (g_machine.getSelectedDispenser().getSelectedProduct()->m_name).c_str();
+//     std::string target_volume;
+//     std::string button_press_duration = to_string(g_machine.getSelectedDispenser().getButtonPressedTotalMillis());
+//     std::string dispense_button_count = to_string(g_machine.getSelectedDispenser().getDispenseButtonPressesDuringDispensing());
+//     std::string start_time = (g_machine.getSelectedDispenser().getSelectedProductDispenseStartTime());
+//     std::string end_time = (g_machine.getSelectedDispenser().getSelectedProductDispenseEndTime());
+//     std::string pnumberPString = g_machine.getSelectedDispenser().getSelectedProduct()->getPNumberAsPString();
+//     int pnumber = g_machine.getSelectedDispenser().getSelectedProduct()->getPNumber();
+//     double price;
+//     std::string price_string;
+//     std::string product_status;
+//     std::string slot_status_text;
+//     price = getFinalPrice();
+//     price_string = to_string(price);
 
-    target_volume = to_string(ceil(productDispensers[slot_index].getProduct()->getTargetVolume(m_pMessaging->getRequestedSize())));
-    char size = m_pMessaging->getRequestedSize();
+//     target_volume = to_string(ceil(g_machine.getSelectedDispenser().getSelectedProduct()->getTargetVolume()));
+//     char size = g_machine.getSelectedDispenser().getSelectedSizeAsChar();
 
-    // everything rounded to the ml.
-    double volume_dispensed_since_restock = ceil(productDispensers[slot_index].getProduct()->getVolumeDispensedSinceLastRestock());
-    double volume_dispensed_total_ever = ceil(productDispensers[slot_index].getProduct()->getVolumeDispensedTotalEver());
-    double volume_remaining = ceil(productDispensers[slot_index].getProduct()->getVolumeRemaining());
+//     // everything rounded to the ml.
+//     double volume_dispensed_since_restock = ceil(g_machine.getSelectedDispenser().getSelectedProduct()->getProductVolumeDispensedSinceLastRestock());
+//     double volume_dispensed_total_ever = ceil(g_machine.getSelectedDispenser().getSelectedProduct()->getProductVolumeDispensedTotalEver());
+//     double volume_remaining = ceil(g_machine.getSelectedDispenser().getSelectedProductVolumeRemaining());
 
-    double dispensed_volume = ceil(productDispensers[slot_index].getVolumeDispensed());
+//     double dispensed_volume = ceil(g_machine.getSelectedDispenser().getSelectedProductVolumeDispensed());
 
-    double updated_volume_remaining;
-    double updated_volume_dispensed_since_restock;
-    double updated_volume_dispensed_total_ever;
+//     double updated_volume_remaining;
+//     double updated_volume_dispensed_since_restock;
+//     double updated_volume_dispensed_total_ever;
 
-    if (dispensed_volume <= productDispensers[slot_index].getProduct()->getVolumePerTick())
-    {
-        dispensed_volume = 0;
-    }
-    updated_volume_dispensed_total_ever = volume_dispensed_total_ever + dispensed_volume;
-    updated_volume_remaining = volume_remaining - dispensed_volume;
-    updated_volume_dispensed_since_restock = volume_dispensed_since_restock + dispensed_volume;
+//     if (dispensed_volume <= g_machine.getSelectedDispenser().getSelectedProduct()->getVolumePerTick(false))
+//     {
+//         dispensed_volume = 0;
+//     }
+//     updated_volume_dispensed_total_ever = volume_dispensed_total_ever + dispensed_volume;
+//     updated_volume_remaining = volume_remaining - dispensed_volume;
+//     updated_volume_dispensed_since_restock = volume_dispensed_since_restock + dispensed_volume;
 
-    // update slot state
-    if (productDispensers[slot_index].getSlotState() == SLOT_STATE_PROBLEM_EMPTY)
-    {
-        updated_volume_remaining = 0;
-    }
-    else if (productDispensers[slot_index].getSlotState() == SLOT_STATE_PROBLEM_NEEDS_ATTENTION)
-    {
-        // do nothing
-    }
-    else if (productDispensers[slot_index].getSlotState() == SLOT_STATE_DISABLED_COMING_SOON || productDispensers[slot_index].getSlotState() == SLOT_STATE_DISABLED)
-    {
-        // do nothing
-    }
-    else if (updated_volume_remaining < CONTAINER_EMPTY_THRESHOLD_ML)
-    {
-        // disabled states are only manually changeable.
-        if (productDispensers[slot_index].getSlotState() != SLOT_STATE_DISABLED_COMING_SOON && productDispensers[slot_index].getSlotState() != SLOT_STATE_DISABLED)
-        {
-            productDispensers[slot_index].setSlotState(SLOT_STATE_AVAILABLE_LOW_STOCK);
-        }
-        else
-        {
-            debugOutput::sendMessage("State will not be set, as it's disabled", MSG_INFO);
-        }
-        debugOutput::sendMessage("Almost empty warning: " + to_string(updated_volume_remaining), MSG_INFO);
-    }
+//     // update product state
+//     if (g_machine.getSelectedDispenser().getSelectedProduct()->getProductState() == PRODUCT_STATE_PROBLEM_EMPTY)
+//     {
+//         debugOutput::sendMessage("State of selected product is EMPTY. There are repercussions for other products. Is the base empty? Additives empty?... ", MSG_INFO);
+//         updated_volume_remaining = 0;
+//     }
+//     // else if (g_machine.getSelectedDispenser().getSlotState() == SLOT_STATE_PROBLEM_NEEDS_ATTENTION)
+//     // {
+//     //     // do nothing
+//     // }
+//     // else if (g_machine.getSelectedDispenser().getSlotState() == SLOT_STATE_DISABLED)
+//     // {
+//     //     // do nothing
+//     // }
+//     else if (updated_volume_remaining < CONTAINER_EMPTY_THRESHOLD_ML)
+//     {
+//         // disabled states are only manually changeable.
+//         // if (g_machine.getSelectedDispenser().getSlotState() != SLOT_STATE_DISABLED_COMING_SOON && g_machine.getSelectedDispenser().getSlotState() != SLOT_STATE_DISABLED)
+//         // {
+//         //     g_machine.getSelectedDispenser().setSlotState(SLOT_STATE_AVAILABLE_LOW_STOCK);
+//         // }
+//         // else
+//         // {
+//         //     debugOutput::sendMessage("State will not be set, as it's disabled", MSG_INFO);
+//         // }
+//         g_machine.getSelectedDispenser().getSelectedProduct()->setProductState(PRODUCT_STATE_AVAILABLE_LOW_STOCK);
 
-    std::string dispensed_volume_str = to_string(dispensed_volume);
-    std::string updated_volume_remaining_str = to_string(updated_volume_remaining);
-    std::string updated_volume_dispensed_total_ever_str = to_string(updated_volume_dispensed_total_ever);
-    std::string updated_volume_dispensed_since_restock_str = to_string(updated_volume_dispensed_since_restock);
-    std::string slot_state_str = productDispensers[slot_index].getSlotStateAsString();
-    std::string product_id = getProductID(slot);
+//         debugOutput::sendMessage("Almost empty warning: " + to_string(updated_volume_remaining), MSG_INFO);
+//     }
 
-    // FIXME: DB needs fully qualified link to find...obscure with XML loading.
-    debugOutput::sendMessage("Update DB at dispense end: Vol dispensed: " + dispensed_volume_str, MSG_INFO);
+//     std::string dispensed_volume_str = to_string(dispensed_volume);
+//     std::string updated_volume_remaining_str = to_string(updated_volume_remaining);
+//     std::string updated_volume_dispensed_total_ever_str = to_string(updated_volume_dispensed_total_ever);
+//     std::string updated_volume_dispensed_since_restock_str = to_string(updated_volume_dispensed_since_restock);
+//     // std::string slot_state_str = g_machine.getSelectedDispenser().getSlotStateAsString();
+//     int selectedPNumber = g_machine.getSelectedDispenser().getSelectedProduct()->getPNumber();
+//     std::string selected_product_state_str = g_machine.getSelectedDispenser().getSelectedProduct()->getProductStateAsString();
 
-    // std::string s = std::format("{:.2f}", 3.14159265359); // s == "3.14"
+//     // std::string product_id = getProductID(slot);
+//     std::string product_id = g_machine.getSelectedDispenser().getSelectedProduct()->m_product_id_combined_with_location_for_backend;
+//     // Get mix product object to be used for updating local station database
+//     std::map<std::string, std::vector<double>> mixProductDispenseObject = g_machine.getSelectedDispenser().getMixDispenseReport();
 
-    if (isValidTransaction)
-    {
-        std::string sql1;
-        sql1 = ("INSERT INTO transactions (product,quantity_requested,price,start_time,quantity_dispensed,end_time,volume_remaining,slot,button_duration,button_times,processed_by_backend,product_id, soapstand_product_serial) VALUES ('" + product_name + "'," + target_volume + "," + price_string + ",'" + start_time + "'," + dispensed_volume_str + ",'" + end_time + "'," + updated_volume_remaining_str + "," + to_string(slot) + "," + button_press_duration + "," + dispense_button_count + "," + to_string(false) + ",'" + product_id + "','" + soapstand_product_serial + "');");
-        databaseUpdateSql(sql1, USAGE_DB_PATH);
-    }
-    // update transactions table
+//     // FIXME: DB needs fully qualified link to find...obscure with XML loading.
+//     debugOutput::sendMessage("Update DB at dispense end: Vol dispensed: " + dispensed_volume_str, MSG_INFO);
 
-    // update product table
-    std::string sql2;
-    sql2 = ("UPDATE products SET volume_dispensed_total=" + updated_volume_dispensed_total_ever_str + ", volume_remaining=" + updated_volume_remaining_str + ", volume_dispensed_since_restock=" + updated_volume_dispensed_since_restock_str + " WHERE slot='" + to_string(slot) + "';");
-    databaseUpdateSql(sql2, CONFIG_DB_PATH);
+//     // std::string s = std::format("{:.2f}", 3.14159265359); // s == "3.14"
 
-    // update machine table
-    std::string slot_status_field_name = "status_text_slot_" + to_string(slot);
+//     // update transactions table
+//     // if (isValidTransaction)
+//     // {
+//     //     std::string sql1;
+//     //     sql1 = ("INSERT INTO transactions (product,quantity_requested,price,start_time,quantity_dispensed,end_time,volume_remaining,slot,button_duration,button_times,processed_by_backend,product_id, soapstand_product_serial) VALUES ('" + product_name + "'," + target_volume + "," + price_string + ",'" + start_time + "'," + dispensed_volume_str + ",'" + end_time + "'," + updated_volume_remaining_str + "," + to_string(g_machine.getSelectedDispenserNumber()) + "," + button_press_duration + "," + dispense_button_count + "," + to_string(false) + ",'" + product_id + "','" + pnumberPString + "');");
+//     //     databaseUpdateSql(sql1, USAGE_DB_PATH);
+//     // }
 
-    std::string sql3;
-    sql3 = ("UPDATE machine SET " + slot_status_field_name + "='" + slot_state_str + "';");
-    databaseUpdateSql(sql3, CONFIG_DB_PATH);
+//     // update product table with p Number
+//     // std::string sql2;
+//     // // Iterate over the mix product dispense object to get individual values for each product
+//     // for (const auto &entry : mixProductDispenseObject)
+//     // {
 
-    // reload (changed) db values
-    productDispensers[slot_index].getProduct()->reloadParametersFromDb();
-}
+//     //     volume_dispensed_total_ever = ceil(g_machine.getSelectedDispenser().getProductFromPNumber(std::stoi(entry.first))->getProductVolumeDispensedTotalEver());
+//     //     volume_dispensed_since_restock = ceil(g_machine.getSelectedDispenser().getProductFromPNumber(std::stoi(entry.first))->getProductVolumeDispensedSinceLastRestock());
+//     //     updated_volume_dispensed_total_ever_str = to_string(volume_dispensed_total_ever + entry.second[0]);
+//     //     updated_volume_dispensed_since_restock_str = to_string(volume_dispensed_since_restock + entry.second[0]);
+//     //     sql2 = ("UPDATE products SET volume_dispensed_total=" + updated_volume_dispensed_total_ever_str + ", volume_remaining=" + std::to_string(entry.second[1]) + ", volume_dispensed_since_restock=" + updated_volume_dispensed_since_restock_str + " WHERE soapstand_product_serial='" + entry.first + "';");
+//     //     databaseUpdateSql(sql2, CONFIG_DB_PATH);
+//     // }
+
+//     // // update dipenser table
+//     // // std::string sql3;
+//     // // sql3 = ("UPDATE slots SET status_text='" + slot_state_str + "' WHERE slot_id=" + to_string(g_machine.getSelectedDispenserNumber()) + ";");
+//     // // databaseUpdateSql(sql3, CONFIG_DB_PATH);
+
+//     // std::string sql4;
+//     // sql4 = ("UPDATE products SET status_text='" + selected_product_state_str + "' WHERE soapstand_product_serial=" + to_string(selectedPNumber) + ";");
+//     // databaseUpdateSql(sql4, CONFIG_DB_PATH);
+
+//     // reload (changed) db values
+//     g_machine.getSelectedDispenser().getSelectedProduct()->loadParameters(false);
+//     g_machine.getSelectedDispenser().resetMixDispenseReport();
+//     DF_ERROR dfRet = OK;
+//     return dfRet;
+// }
 
 double stateDispenseEnd::getFinalPrice()
 {
     // for fixed prices: will return fixed price
     // for custom volumes: will return price calculated from dispensed volume
-    char size = m_pMessaging->getRequestedSize();
+    char size = g_machine.getSelectedDispenser().getSelectedSizeAsChar();
     double price_per_ml;
     double volume_dispensed;
     double price;
-    bool isCustomSizeEnabled = productDispensers[slot_index].getProduct()->getIsSizeEnabled(SIZE_CUSTOM_CHAR);
+    bool isCustomSizeEnabled = g_machine.getSelectedDispenser().getSelectedProduct()->getIsSizeEnabled(SIZE_CUSTOM_CHAR);
+
+    std::cout << size;
     // If custom volume is enabled, adjust the price to actual quantity dispensed
     if (size == SIZE_CUSTOM_CHAR || isCustomSizeEnabled)
     {
@@ -629,8 +661,9 @@ double stateDispenseEnd::getFinalPrice()
         bool isDiscountEnabled;
         double discountVolume;
         double discountPrice;
-        volume_dispensed = productDispensers[slot_index].getVolumeDispensed();
-        productDispensers[slot_index].getProduct()->customDispenseDiscountData(&isDiscountEnabled, &discountVolume, &discountPrice);
+        volume_dispensed = g_machine.getSelectedDispenser().getSelectedProductVolumeDispensed();
+        g_machine.getSelectedDispenser().getSelectedProduct()->customDispenseDiscountData(&isDiscountEnabled, &discountVolume, &discountPrice);
+
         if (isDiscountEnabled && (volume_dispensed > discountVolume))
         {
             // with price reduction at larger quantities
@@ -640,12 +673,15 @@ double stateDispenseEnd::getFinalPrice()
         else
         {
             debugOutput::sendMessage("No custom volume discount will be applied.", MSG_INFO);
-            price_per_ml = productDispensers[slot_index].getProduct()->getPrice(SIZE_CUSTOM_CHAR);
+            price_per_ml = g_machine.getSelectedDispenser().getSelectedProduct()->getPrice(SIZE_CUSTOM_CHAR);
         }
 
         price = price_per_ml * volume_dispensed;
-        if(size != SIZE_CUSTOM_CHAR){
-            price = std::min(price,m_pMessaging->getRequestedPrice());
+        
+        debugOutput::sendMessage("Final price: " + std::to_string(price), MSG_INFO);
+        if (size != SIZE_CUSTOM_CHAR)
+        {
+            price = std::min(price, m_pMessaging->getRequestedPrice());
         }
     }
     else if (size == SIZE_TEST_CHAR)
@@ -656,51 +692,51 @@ double stateDispenseEnd::getFinalPrice()
     {
         price = m_pMessaging->getRequestedPrice();
     }
-
     return price;
 }
 
 // This function prints the receipts by calling a system function (could be done better)
-DF_ERROR stateDispenseEnd::setup_and_print_receipt()
+void stateDispenseEnd::setup_and_print_receipt()
 {
 
-    // printerr.connectToPrinter();
     char chars_cost[MAX_BUF];
     char chars_volume_formatted[MAX_BUF];
     char chars_price_per_ml_formatted[MAX_BUF];
 
     string cost = (chars_cost);
 
-    std::string paymentMethod = productDispensers[slot_index].getProduct()->getPaymentMethod();
-    std::string name_receipt = (productDispensers[slot_index].getProduct()->getProductName());
-
-    std::string units = (productDispensers[slot_index].getProduct()->getDisplayUnits());
+    std::string paymentMethod = g_machine.getPaymentMethod();
+    std::string name_receipt = (g_machine.getSelectedDispenser().getSelectedProduct()->getProductName());
+    debugOutput::sendMessage("P-Number:" + to_string(g_machine.getSelectedDispenser().getSelectedProduct()->getPNumber()), MSG_INFO);
+    debugOutput::sendMessage("Name on receipt:" + name_receipt, MSG_INFO);
+    std::string units = g_machine.getSizeUnit();
     double price = getFinalPrice();
     double price_per_ml;
     debugOutput::sendMessage("Price final for receipt:" + to_string(price), MSG_INFO);
 
     double volume_dispensed;
+    char size = g_machine.getSelectedDispenser().getSelectedSizeAsChar();
 
-    if (m_pMessaging->getRequestedSize() == 's')
+    if (size == 's')
     {
-        volume_dispensed = productDispensers[slot_index].getProduct()->m_nVolumeTarget_s;
+        volume_dispensed = g_machine.getSelectedDispenser().getSelectedProduct()->m_nVolumeTarget_s;
     }
-    else if (m_pMessaging->getRequestedSize() == 'm')
+    else if (size == 'm')
     {
-        volume_dispensed = productDispensers[slot_index].getProduct()->m_nVolumeTarget_m;
+        volume_dispensed = g_machine.getSelectedDispenser().getSelectedProduct()->m_nVolumeTarget_m;
     }
-    else if (m_pMessaging->getRequestedSize() == 'l')
+    else if (size == 'l')
     {
-        volume_dispensed = productDispensers[slot_index].getProduct()->m_nVolumeTarget_l;
+        volume_dispensed = g_machine.getSelectedDispenser().getSelectedProduct()->m_nVolumeTarget_l;
     }
-    else if (m_pMessaging->getRequestedSize() == 'c')
+    else if (size == 'c')
     {
         bool isDiscountEnabled;
         double discountVolume;
         double discountPrice;
-        productDispensers[slot_index].getProduct()->customDispenseDiscountData(&isDiscountEnabled, &discountVolume, &discountPrice);
+        g_machine.getSelectedDispenser().getSelectedProduct()->customDispenseDiscountData(&isDiscountEnabled, &discountVolume, &discountPrice);
 
-        volume_dispensed = productDispensers[slot_index].getVolumeDispensed();
+        volume_dispensed = g_machine.getSelectedDispenser().getSelectedProductVolumeDispensed();
         if (isDiscountEnabled && (volume_dispensed > discountVolume))
         {
             // with price reduction at larger quantities
@@ -708,29 +744,31 @@ DF_ERROR stateDispenseEnd::setup_and_print_receipt()
         }
         else
         {
-            price_per_ml = productDispensers[slot_index].getProduct()->getPrice(SIZE_CUSTOM_CHAR);
+            price_per_ml = g_machine.getSelectedDispenser().getSelectedProduct()->getPrice(SIZE_CUSTOM_CHAR);
         }
     }
-    else if (m_pMessaging->getRequestedSize() == 't')
+    else if (size == 't')
     {
-        volume_dispensed = productDispensers[slot_index].getVolumeDispensed();
+        debugOutput::sendMessage("No recreipts printed for test dispenses", MSG_INFO);
+        volume_dispensed = g_machine.getSelectedDispenser().getSelectedProductVolumeDispensed();
         // normal
-        // price_per_ml = productDispensers[slot_index].getProduct()->getPrice(m_pMessaging->getRequestedSize());
+        // price_per_ml = g_machine.getSelectedDispenser().getSelectedProduct()->getPrice(size);
         // with reduction for larger quantities
         price_per_ml = 0;
+        return; // no receipts for tests
     }
     else
     {
-        debugOutput::sendMessage("invalid size provided" + m_pMessaging->getRequestedSize(), MSG_INFO);
+        debugOutput::sendMessage("invalid size provided" + size, MSG_INFO);
     }
 
-    std::string plu = productDispensers[slot_index].getFinalPLU(m_pMessaging->getRequestedSize(), price);
+    std::string plu = g_machine.getSelectedDispenser().getSelectedProduct()->getFinalPLU(size, price, g_machine.getPaymentMethod());
 
     // convert units
     if (units == "oz")
     {
         // volume_dispensed = ceil(volume_dispensed * ML_TO_OZ);
-        volume_dispensed = ceil(productDispensers[slot_index].getProduct()->convertVolumeMetricToDisplayUnits(volume_dispensed));
+        volume_dispensed = ceil(g_machine.convertVolumeMetricToDisplayUnits(volume_dispensed));
         price_per_ml = price_per_ml / ML_TO_OZ;
     }
 
@@ -762,9 +800,13 @@ DF_ERROR stateDispenseEnd::setup_and_print_receipt()
 
     double price_per_unit;
     // add base price
-    if (m_pMessaging->getRequestedSize() == 'c' || m_pMessaging->getRequestedSize() == 't')
+    if (size == 'c' || size == 't')
     {
-        if (base_unit == "l")
+        if (base_unit == "oz")
+        {
+            price_per_unit = price_per_ml * ML_TO_OZ;
+        }
+        else if (base_unit == "l")
         {
             price_per_unit = price_per_ml * 1000;
         }
@@ -779,7 +821,7 @@ DF_ERROR stateDispenseEnd::setup_and_print_receipt()
 
         receipt_volume_formatted = receipt_volume_formatted + units + " @$" + receipt_price_per_unit + "/" + base_unit;
     }
-    // else if (m_pMessaging->getRequestedSize() == 't')
+    // else if (size == 't')
     // {
     //     receipt_volume_formatted = receipt_volume_formatted + units + " @" + receipt_price_per_ml + "$/" + base_unit;
     // }
@@ -794,11 +836,15 @@ DF_ERROR stateDispenseEnd::setup_and_print_receipt()
 
     strftime(now, 50, "%F %T", timeinfo);
 
-    machine tmp;
-    // receipt_cost = m_pMessaging->getRequestedPrice();
+    // machine tmp;
     string promoCode = m_pMessaging->getCouponCode();
     debugOutput::sendMessage("Price changed to " + receipt_cost, MSG_INFO);
-    tmp.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, now, units, paymentMethod, plu, promoCode, true);
+    g_machine.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, now, units, paymentMethod, plu, promoCode, true);
+    // for (int i = 0; i < 100; i++)
+    // {
+    //     debugOutput::sendMessage("End receipt print from end dispense.", MSG_INFO);
+    //     usleep(100000);
+    // }
 }
 
 // DF_ERROR stateDispenseEnd::print_text(string text)
@@ -807,3 +853,44 @@ DF_ERROR stateDispenseEnd::setup_and_print_receipt()
 //     string printer_command_string = "echo '\n" + printerstring + "' > /dev/ttyS4";
 //     system(printer_command_string.c_str());
 // }
+
+
+void stateDispenseEnd::sendEndTransactionMessageToUI(bool isValid)
+{
+    usleep(100000);
+    std::string status;
+    if (isValid){
+        status = "valid";
+    }else{
+        status = "invalid";
+    }
+    std::string start_time = g_machine.getSelectedDispenser().getSelectedProductDispenseStartTime();
+    std::string end_time = g_machine.getSelectedDispenser().getSelectedProductDispenseEndTime();
+    std::string button_press_duration = to_string(g_machine.getSelectedDispenser().getButtonPressedTotalMillis());
+    std::string button_press_count = to_string(g_machine.getSelectedDispenser().getDispenseButtonPressesDuringDispensing());
+    std::string volume_dispensed = to_string(g_machine.getSelectedDispenser().getSelectedProductVolumeDispensed());
+    // Get mix product object as a string to pass to UI
+    std::string pNumber_dispense_info_string = mapToString(g_machine.getSelectedDispenser().getMixDispenseReport());
+
+    std::string message = "finalTransactionMessage|status|" + status + "|start_time|" + start_time + "|end_time|" + end_time + "|button_press_duration|" + button_press_duration + "|button_press_count|" + button_press_count + "|volume_dispensed|" + volume_dispensed + "|pNumber_dispense_info|" + pNumber_dispense_info_string;
+    usleep(100000);                                 // send message delay
+    m_pMessaging->sendMessageOverIP(message, true); // send to UI
+}
+
+std::string stateDispenseEnd::mapToString(const std::map<std::string, std::vector<double>> &dictionary)
+{
+    std::stringstream ss;
+    for (const auto &entry : dictionary)
+    {
+
+        std::cout << "Product: P-" << entry.first << ", Dispensed volume: " << entry.second[0] << ", Volume remaining: " << entry.second[1] << std::endl;
+        ss << "\"P-" << entry.first << "\":[" << to_string(entry.second[0]) << "," << to_string(entry.second[1]) << "]"
+           << ",";
+    }
+    std::string result = ss.str();
+    if (!result.empty())
+    {
+        result.pop_back();
+    }
+    return result;
+}

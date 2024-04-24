@@ -6,6 +6,7 @@ echo "stop soapstand services"
 sudo systemctl stop ui_soapstand.service
 sudo systemctl stop controller_soapstand.service
 sudo systemctl stop check_connectivity.service
+sudo systemctl stop ssh_monitor.service
 
 
 #!/usr/bin/env bash
@@ -15,7 +16,7 @@ echo "Copy soapstand services from production"
 sudo scp /home/df-admin/production/admin/controller_soapstand.service /etc/systemd/system
 sudo scp /home/df-admin/production/admin/ui_soapstand.service /etc/systemd/system
 sudo scp /home/df-admin/production/admin/check_connectivity.service /etc/systemd/system
-sudo scp /home/df-admin/production/admin/enableIPForward.service /etc/systemd/system
+sudo scp /home/df-admin/production/admin/ssh_monitor.service /etc/systemd/system
 
 
  #missing Transactions 
@@ -35,6 +36,7 @@ echo "Enable services at startup"
 sudo systemctl enable ui_soapstand.service
 sudo systemctl enable controller_soapstand.service
 sudo systemctl enable check_connectivity.service
+sudo systemctl enable ssh_monitor.service
 
 
 echo "Start soapstand services"
@@ -42,7 +44,7 @@ echo "Start soapstand services"
 sudo systemctl start ui_soapstand.service
 sudo systemctl start controller_soapstand.service
 sudo systemctl start check_connectivity.service
-
+sudo systemctl start ssh_monitor.service
 # status
 sudo ./status_services.sh
 

@@ -14,7 +14,6 @@ echo 'fsm is the pcb controller program'
 echo 'soapstand_manager for more soapstand station functions'
 echo 'aws_operations for more aws backend functions'
 
-
 make_options () {
 
     if [[ $1 = "fsm" ]]; then
@@ -44,8 +43,11 @@ make_options () {
         sudo systemctl stop ui_soapstand
         sudo systemctl stop controller_soapstand
 
-        sudo scp /home/df-admin/station_computer/ui/DF_UI /home/df-admin/production/bin/DF_UI
-        sudo scp /home/df-admin/station_computer/fsm/controller /home/df-admin/production/bin/controller
+        UBUNTU_VERSION=$(lsb_release -rs)
+        CONTROLLER_VERSIONED="station_controller_ubuntu"$UBUNTU_VERSION 
+        UI_VERSIONED="station_ui_ubuntu"$UBUNTU_VERSION 
+        sudo scp /home/df-admin/station_computer/ui/$UI_VERSIONED /home/df-admin/production/bin
+        sudo scp /home/df-admin/station_computer/fsm/$CONTROLLER_VERSIONED /home/df-admin/production/bin
         
         sudo systemctl start controller_soapstand.service
         sudo systemctl start ui_soapstand.service
@@ -56,15 +58,32 @@ make_options () {
 
 }
 
+
+set_screen_touch_controller () {
+    echo "WARNING: set screen here, because it doesn't work if done in script called from script..."
+    id=$(DISPLAY=:0 xinput | grep -E "ILITEK ILITEK-TP\s+id=" | awk -F"id=" '{print $2}' | awk '{print $1}')
+
+    echo $id
+    # WARNING ERROR: if id is more than 2 digits (e.g. 13), it will only take the first char: 1
+    if [ -z "$id" ]; then
+        echo "Not an ILITEK ILITEK-TP screen"
+    else
+        echo "ILITEK ILITEK-TP screen found. --> manually adjust touch controller coordinates. "
+        DISPLAY=:0 xinput set-prop "ILITEK ILITEK-TP" "Coordinate Transformation Matrix" 0 1 0 -1 0 1 0 0 1
+        DISPLAY=:0 xinput list-props "ILITEK ILITEK-TP" | grep Matrix
+    fi
+}
+
 port_in_use=$(sudo ./rtunnel_print.sh 2>/dev/null)
 PS3="Choose option(digit + enter) (rtunnel port=$port_in_use) :"
-options=("Quit" "aws_operations" "AWS log in" "AWS run station operations" "soapstand_manager" "Station info" "Stop ui and controller" "(Re)start ui and controller" "run standalone controller" "Copy program binary files from station_software git folder to production folder and run" "Create and run production data copied from station_software git folder (without db!)" "Services: Soapstand (re)load from production (ui,controller,wificheck,transactioncheck)" "Setup aws port (rtunnel)" "make ui and fsm" "make ui and fsm and deploy binaries" "make ui" "make ui and deploy binaries" "make fsm" "make fsm and deploy binaries" "Production database operations" "check temperature" )
+options=("Quit" "aws_operations" "AWS log in" "AWS run station operations" "soapstand_manager" "Station info" "Stop ui and controller" "(Re)start ui and controller" "run standalone controller" "Copy program binary files from station_software git folder to production folder and run" "Create and run production data copied from station_software git folder (without db!)" "Services: Soapstand (re)load from production (ui,controller,wificheck,transactioncheck)" "Setup aws port (rtunnel)" "make ui and fsm" "make ui and fsm and deploy binaries" "make ui" "make ui and deploy binaries" "make fsm" "make fsm and deploy binaries" "Setup Ubuntu for Aelen UI" "Production database operations" "check temperature" "Enable IP Forwarding (TAP USA)" "Disable IP Forwarding (TAP USA)")
 select opt in "${options[@]}"
 do
     case $opt in
         "(Re)start ui and controller")
             sudo systemctl stop ui_soapstand
             sudo systemctl stop controller_soapstand
+	# sudo systemctl stop fsm_soapstand
             sudo systemctl start ui_soapstand.service
             sudo systemctl start controller_soapstand.service
             ;;
@@ -89,8 +108,11 @@ do
             sudo systemctl stop ui_soapstand
             sudo systemctl stop controller_soapstand
             
-            sudo scp /home/df-admin/station_computer/ui/DF_UI /home/df-admin/production/bin/DF_UI
-            sudo scp /home/df-admin/station_computer/fsm/controller /home/df-admin/production/bin/controller
+            UBUNTU_VERSION=$(lsb_release -rs)
+            CONTROLLER_VERSIONED="station_controller_ubuntu"$UBUNTU_VERSION 
+            UI_VERSIONED="station_ui_ubuntu"$UBUNTU_VERSION 
+            sudo scp /home/df-admin/station_computer/ui/$UI_VERSIONED /home/df-admin/production/bin
+            sudo scp /home/df-admin/station_computer/fsm/$CONTROLLER_VERSIONED /home/df-admin/production/bin
             
             sudo systemctl start ui_soapstand.service
             sudo systemctl start controller_soapstand.service
@@ -141,6 +163,12 @@ do
             echo "The most recent temperature record is: $temperature"
 
         ;;
+        "Enable IP Forwarding (TAP USA)")
+            sudo ./enableIPForward.sh
+            ;;
+        "Disable IP Forwarding (TAP USA)")
+            sudo ./disableIPForward.sh
+            ;;
         "Services: Soapstand (re)load from production (ui,controller,wificheck,transactioncheck)")
             # move files to service folder
             ./copy_and_enable_services.sh
@@ -152,6 +180,11 @@ do
         "Setup aws port (rtunnel)")
             sudo ./set_aws_port.sh
             ;;
+        "Setup Ubuntu for Aelen UI")
+           sudo ./setup_ubuntu.sh
+            set_screen_touch_controller
+        ;;
+        
         "Quit") 
             break
             ;;

@@ -19,7 +19,7 @@ pcb::pcb(void)
     i2c_bus_name = (char *)calloc(strlen(DEFAULT_I2C_BUS) + 1, sizeof(char));
     if (i2c_bus_name == NULL)
     {
-        debugOutput::sendMessage("pcbEN134: Unable to allocate memory.", MSG_ERROR);
+        debugOutput::sendMessage("pcb: Unable to allocate memory.", MSG_ERROR);
         return;
     }
     strcpy(i2c_bus_name, DEFAULT_I2C_BUS);
@@ -48,7 +48,7 @@ pcb::pcb(void)
     i2c_bus_name = (char *)calloc(strlen(path) + 5, sizeof(char));
     if (i2c_bus_name == NULL)
     {
-        debugOutput::sendMessage("pcbEN134: Unable to allocate memory.", MSG_ERROR);
+        debugOutput::sendMessage("pcb: Unable to allocate memory.", MSG_ERROR);
         return;
     }
     strcpy(i2c_bus_name, "/dev/");
@@ -56,6 +56,8 @@ pcb::pcb(void)
     i2c_bus_name[strlen(i2c_bus_name) - 1] = 0;
 
 #endif
+    pcb_version = INVALID;
+    get_pcb_version();
 }
 
 // Constructor where you can specify the name of the I2C bus
@@ -89,6 +91,10 @@ pcb::~pcb(void)
 bool pcb::SendByte(unsigned char address, unsigned char reg, unsigned char byte)
 {
 
+    // uint8_t register_value = byte;
+    std::bitset<8> binaryA(byte);
+    debugOutput::sendMessage("i2c send: address: " + to_string(address) + ", register: " + to_string(reg) + " ,value:" + binaryA.to_string(), MSG_INFO);
+
 #ifdef __USE_SMBUS_I2C_LIBRARY__
     set_i2c_address(address);
     i2c_smbus_write_byte_data(i2c_handle, reg, byte);
@@ -119,13 +125,13 @@ bool pcb::SendByte(unsigned char address, unsigned char reg, unsigned char byte)
 
 ///////////////////////////////////////////////////////////////////////////
 
-void pcb::SendByteToSlot(uint8_t slot, unsigned char reg, unsigned char byte)
+void pcb::PCA9534SendByteToSlot(uint8_t slot, unsigned char reg, unsigned char byte)
 {
 
     SendByte(get_PCA9534_address_from_slot(slot), reg, byte);
 }
 
-uint8_t pcb::readRegisterFromSlot(uint8_t slot, uint8_t reg)
+uint8_t pcb::PCA9534ReadRegisterFromSlot(uint8_t slot, uint8_t reg)
 {
     return ReadByte(get_PCA9534_address_from_slot(slot), reg);
 }
@@ -192,7 +198,7 @@ void pcb::setup_i2c_bus(void)
         i2c_handle = open(i2c_bus_name, O_RDWR);
         if (i2c_handle < 0)
         {
-            std::string message("pcbEN134: Error opening");
+            std::string message("pcb: Error opening");
             message.append(i2c_bus_name);
             debugOutput::sendMessage(message, MSG_ERROR);
             return;
@@ -246,17 +252,188 @@ uint8_t pcb::get_PCA9534_address_from_slot(uint8_t slot)
 
 ////////////////////////
 
-void pcb::pcb_refresh()
+///////////////////////////
+
+bool pcb::isOutputByteEqual(uint8_t reg, uint8_t readVal, uint8_t writeVal){
+        uint8_t readValOutputs; 
+    uint8_t writeValOutputs;
+    bool outputValuesAreEqual = false;
+        switch(reg){
+            case MCP23017_REGISTER_GPA:
+            {
+                readValOutputs = readVal & 0b00000111; // only preserve output bits, all input bit set to zero
+                writeValOutputs = writeVal & 0b00000111;
+                break;
+            }
+            case MCP23017_REGISTER_GPB:
+            {
+                readValOutputs = readVal & 0b11111110; // only preserve output bits, all input bit set to zero
+                writeValOutputs = writeVal & 0b11111110;
+                break;
+            }
+            default:
+            {
+                debugOutput::sendMessage("WARNING: no distinction between input and output for comparison. Will return ok. ", MSG_ERROR);
+                readValOutputs = 1;
+                writeValOutputs = 1;
+                break;
+            }
+        }
+
+    return readValOutputs == writeValOutputs;
+}
+
+void pcb::setMCP23017Register(uint8_t slot, uint8_t reg, uint8_t value, bool reportIfModified)
+{
+    int attempt = 10;
+    uint8_t readVal = getMCP23017Register(slot, reg);
+
+    // we'll check the value after writing. Only output values need to be checked. The input ones can change during that time. 
+    // for the ease of it, set the input bits to zero from 'read' and 'to write' value
+
+
+    
+    while (!isOutputByteEqual(reg, getMCP23017Register(slot, reg), value))
+    {
+        if (attempt < 0)
+        {
+            debugOutput::sendMessage("Too many attempts. Could not set register " + to_string(reg ) + " of MCP23017 for slot " + to_string(slot) + " value of reg: " + to_string(readVal) + "attempted to writevalue: " + to_string(value), MSG_ERROR);
+            break;
+        }
+        attempt--;
+        SendByte(get_MCP23017_address_from_slot(slot), reg, value);
+
+        if (reportIfModified)
+        {
+            debugOutput::sendMessage("MCP23017 register " + to_string(reg) + " of slot: " + to_string(slot) + ": was:" + to_string(readVal) + ". Set to: " + to_string(value), MSG_INFO);
+            debugOutput::sendMessage("WARNING: This register was changed. Was this a glitch?", MSG_WARNING);
+        }
+        readVal = getMCP23017Register(slot, reg);
+    }
+}
+
+uint8_t pcb::getMCP23017Register(uint8_t slot, uint8_t reg)
 {
 
+    return (ReadByte(get_MCP23017_address_from_slot(slot), reg));
+}
+
+bool pcb::getMCP23017Input(uint8_t slot, int posIndex, uint8_t GPIORegister)
+{
+    return getMCP23017GPIOState(slot, posIndex, GPIORegister);
+}
+
+bool pcb::getMCP23017GPIOState(uint8_t slot, int posIndex, uint8_t GPIORegister)
+{
+    return (getMCP23017Register(slot, GPIORegister) & (1 << posIndex));
+}
+
+void pcb::displayMCP23017IORegisters(uint8_t slot)
+{
+    switch (pcb_version)
+    {
+
+    case EN258_4SLOTS:
+    case EN258_8SLOTS:
+    {
+
+        uint8_t register_gpioA_value = getMCP23017Register(slot, MCP23017_REGISTER_GPA);
+        uint8_t register_gpioB_value = getMCP23017Register(slot, MCP23017_REGISTER_GPB);
+        std::bitset<8> binaryA(register_gpioA_value);
+        std::bitset<8> binaryB(register_gpioB_value);
+        debugOutput::sendMessage("Pcb: MCP23017 status for slot: " + std::to_string(slot) + " GPA : " + binaryA.to_string() + " GPB : " + binaryB.to_string(), MSG_INFO);
+    }
+    break;
+    default:;
+    }
+}
+
+void pcb::setMCP23017OutputBit(uint8_t slot, int posIndex, bool onElseOff, uint8_t GPIORegister)
+{
+    // slot starts at 1!
+
+    // GPIORegister --> gpioA or gpioB register value
+
+    // int attempts = 3;
+
+    // int attempt = attempts;
+
+    // only write if needed. While not set, try again...
+    // bool isBitDifferent = (onElseOff != getMCP23017GPIOState(slot, posIndex, GPIORegister));
+
+    // while ( isBitDifferent && attempt > 0)
+
+
+    
+    // {
+    //     if (attempt != attempts)
+    //     {
+    //         debugOutput::sendMessage("Warning: retrying to set MCP23017 to requested output. Re-Attempt: " + std::to_string(1 + attempts-attempt) + " of " + std::to_string(attempts), MSG_WARNING);
+            
+    //     }
+    //     attempt--;
+
+        unsigned char reg_value;
+        
+        reg_value = ReadByte(get_MCP23017_address_from_slot(slot), GPIORegister);
+
+        if (onElseOff)
+        {
+            reg_value = reg_value | (1UL << posIndex); // modify bit to one in the byte
+        }
+        else
+        {
+            reg_value = reg_value & ~(1UL << posIndex); // modify bit to zero in the byte
+        }
+        // debugOutput::sendMessage("value to be sent: " + to_string(reg_value) + " to address: " + to_string(get_PCA9534_address_from_slot(slot)), MSG_INFO);
+        //SendByte(get_MCP23017_address_from_slot(slot), GPIORegister, reg_value);
+        setMCP23017Register(slot,GPIORegister,reg_value,false);
+
+        //isOutputByteEqual(GPIORegister, getMCP23017Register(slot, GPIORegister), reg_value);
+    // }
+
+    // if (attempt <= 0)
+    // {
+    //     debugOutput::sendMessage("ASSERT ERROR: Failed to set output! Desired: slot: " + to_string(slot) + ", posIndex: " + to_string(posIndex) + ", register: " + to_string(GPIORegister) + ", onElseOff: " + to_string(onElseOff), MSG_ERROR);
+    //     debugOutput::sendMessage("readvalue of register is:  " + std::to_string(getMCP23017GPIOState(slot, posIndex, GPIORegister)), MSG_WARNING);
+    //     displayMCP23017IORegisters(slot);
+    // }
+}
+
+uint8_t pcb::get_MCP23017_address_from_slot(uint8_t slot)
+{
+    if (slot == 0)
+    {
+        debugOutput::sendMessage("ASSERT ERROR: slot numbers start at 1", MSG_ERROR);
+    }
+
+    uint8_t slot_index = slot - 1;
+
+    uint8_t slot_addresses[MAX_SLOT_COUNT] = {MCP23017_ADDRESS_SLOT_1, MCP23017_ADDRESS_SLOT_2, MCP23017_ADDRESS_SLOT_3, MCP23017_ADDRESS_SLOT_4, MCP23017_ADDRESS_SLOT_5, MCP23017_ADDRESS_SLOT_6, MCP23017_ADDRESS_SLOT_7, MCP23017_ADDRESS_SLOT_8};
+    return slot_addresses[slot_index];
+}
+
+////////////////////////
+void pcb::pcb_refresh()
+{
     usleep(100);
     if (get_pcb_version() != INVALID)
     {
-
         dispenseButtonRefresh();
         refreshFlowSensors();
         // independentDispensingRefresh(); // ATTENTION:  this is the state machine. involves more than just pumps....
     }
+    else
+    {
+
+        usleep(5000000);
+        debugOutput::sendMessage("ASSERT ERROR: PCB not detected. Replace pcb? i2c working correctly?", MSG_ERROR);
+    }
+}
+
+bool pcb::isPcbValid()
+{
+    return get_pcb_version() != INVALID;
 }
 void pcb::setup()
 {
@@ -279,9 +456,9 @@ void pcb::setup()
 
     if (!define_pcb_version())
     {
-        std::string message("pcbEN134: I2C bus ");
+        std::string message("pcb: I2C bus ");
         // message.append(i2c_bus_name);
-        message.append(" has a problem.");
+        message.append("has a problem.");
         debugOutput::sendMessage(message, MSG_ERROR);
         return;
     }
@@ -295,6 +472,29 @@ pcb::PcbVersion pcb::get_pcb_version(void)
     return pcb_version;
 }
 
+std::string pcb::toString(PcbVersion version)
+{
+    switch (version)
+    {
+    case INVALID:
+        return "INVALID";
+    case DSED8344_NO_PIC:
+        return "DSED8344_NO_PIC";
+    case DSED8344_PIC_MULTIBUTTON:
+        return "DSED8344_PIC_MULTIBUTTON";
+    case EN134_4SLOTS:
+        return "EN134_4SLOTS";
+    case EN134_8SLOTS:
+        return "EN134_8SLOTS";
+    case EN258_4SLOTS:
+        return "EN258_4SLOTS";
+    case EN258_8SLOTS:
+        return "EN258_8SLOTS";
+    default:
+        return "Unknown pcb Version";
+    }
+}
+
 bool pcb::define_pcb_version(void)
 {
     unsigned char i2c_probe_address;
@@ -303,12 +503,14 @@ bool pcb::define_pcb_version(void)
     for (uint8_t i = 0; i < MAX_SLOT_COUNT; i++)
     {
         slot_pca9534_found[i] = false;
+        slot_mcp23017_found[i] = false;
     }
 
+    debugOutput::sendMessage("Check I2C addresses 0x03 to 0x77", MSG_INFO);
     for (i2c_probe_address = 0x03; i2c_probe_address <= 0x77; i2c_probe_address++)
     {
         // Go through all the addresses
-        debugOutput::sendMessage("Check I2C address " + to_string(i2c_probe_address), MSG_INFO);
+        // debugOutput::sendMessage("Check I2C address " + to_string(i2c_probe_address), MSG_INFO);
 
         if (!set_i2c_address(i2c_probe_address))
         {
@@ -329,57 +531,92 @@ bool pcb::define_pcb_version(void)
         }
         else
         {
-            if (i2c_probe_address == PCA9534_ADDRESS_SLOT_1)
+            debugOutput::sendMessage("Device found at I2C address " + to_string(i2c_probe_address) + ":", MSG_INFO);
+            if (i2c_probe_address == PCA9534_ADDRESS_SLOT_1 || i2c_probe_address == MCP23017_ADDRESS_SLOT_1)
             {
-                debugOutput::sendMessage("Slot 1 PCA9534 found on I2C bus for pcb I/O", MSG_INFO);
+                debugOutput::sendMessage("Slot 1 PCA9534 OR mcp23017 found on I2C bus for pcb I/O", MSG_INFO);
                 slot_pca9534_found[0] = true;
+                slot_mcp23017_found[0] = true;
             }
-            else if (i2c_probe_address == PCA9534_ADDRESS_SLOT_2)
+            else if (i2c_probe_address == PCA9534_ADDRESS_SLOT_2 || i2c_probe_address == MCP23017_ADDRESS_SLOT_2)
             {
-                debugOutput::sendMessage("Slot 2 PCA9534 found on I2C bus for pcb I/O", MSG_INFO);
+                debugOutput::sendMessage("Slot 2 PCA9534 OR mcp23017 found on I2C bus for pcb I/O", MSG_INFO);
                 slot_pca9534_found[1] = true;
+                slot_mcp23017_found[1] = true;
             }
-            else if (i2c_probe_address == PCA9534_ADDRESS_SLOT_3)
+            else if (i2c_probe_address == PCA9534_ADDRESS_SLOT_3 || i2c_probe_address == MCP23017_ADDRESS_SLOT_3)
             {
-                debugOutput::sendMessage("Slot 3 PCA9534 found on I2C bus for pcb I/O", MSG_INFO);
+                debugOutput::sendMessage("Slot 3 PCA9534 OR mcp23017 found on I2C bus for pcb I/O", MSG_INFO);
                 slot_pca9534_found[2] = true;
+                slot_mcp23017_found[2] = true;
             }
-            else if (i2c_probe_address == PCA9534_ADDRESS_SLOT_4)
+            else if (i2c_probe_address == PCA9534_ADDRESS_SLOT_4 || i2c_probe_address == MCP23017_ADDRESS_SLOT_4)
             {
-                debugOutput::sendMessage("Slot 4 PCA9534 found on I2C bus for pcb I/O", MSG_INFO);
+                debugOutput::sendMessage("Slot 4 PCA9534 OR mcp23017 found on I2C bus for pcb I/O", MSG_INFO);
                 slot_pca9534_found[3] = true;
+                slot_mcp23017_found[3] = true;
+            }
+            else if (i2c_probe_address == MCP23017_ADDRESS_SLOT_5)
+            {
+                debugOutput::sendMessage("Slot 4 PCA9534 OR mcp23017 found on I2C bus for pcb I/O", MSG_INFO);
+                slot_pca9534_found[4] = true;
+                slot_mcp23017_found[4] = true;
+            }
+            else if (i2c_probe_address == MCP23017_ADDRESS_SLOT_6)
+            {
+                debugOutput::sendMessage("Slot 4 PCA9534 OR mcp23017 found on I2C bus for pcb I/O", MSG_INFO);
+                slot_pca9534_found[5] = true;
+                slot_mcp23017_found[5] = true;
+            }
+            else if (i2c_probe_address == MCP23017_ADDRESS_SLOT_7)
+            {
+                debugOutput::sendMessage("Slot 4 PCA9534 OR mcp23017 found on I2C bus for pcb I/O", MSG_INFO);
+                slot_pca9534_found[6] = true;
+                slot_mcp23017_found[6] = true;
+            }
+            else if (i2c_probe_address == MCP23017_ADDRESS_SLOT_8)
+            {
+                debugOutput::sendMessage("Slot 4 PCA9534 OR mcp23017 found on I2C bus for pcb I/O", MSG_INFO);
+                slot_pca9534_found[7] = true;
+                slot_mcp23017_found[7] = true;
             }
             else if (i2c_probe_address == MAX31760_ADDRESS)
             {
                 max31760_pwm_found = true;
                 debugOutput::sendMessage("MAX31760 found on I2C bus for PWM and speed feedback", MSG_INFO);
             }
-            else if (i2c_probe_address == ADC081C021_ADDRESS)
+            else if (i2c_probe_address == ADC081C021_CURRENT_SENSOR_ADDRESS)
             {
                 // ADC081C021
+                current_sensor_found = true;
 
                 debugOutput::sendMessage("ADC081C021 current sensor found. NOT IN USE YET.", MSG_INFO);
             }
-            else if (i2c_probe_address == TEMPERATURE_SENSOR_2_ADDRESS)
+            else if (i2c_probe_address == TEMPERATURE_ADC_ADS7830)
+            {
+                temperature_ads7830_found = true;
+
+                debugOutput::sendMessage("ads7830. Temperature sensor.", MSG_INFO);
+            }
+
+            else if (i2c_probe_address == TEMPERATURE_OPTIONAL_EXTERNAL_MCP9808_2_ADDRESS)
             {
                 debugOutput::sendMessage("MCP9808 Temperature Sensor 2 found.", MSG_INFO);
-                mcp9808_temperature2_sensor_found = true;
-                cTemp2 = getTemperature(TEMPERATURE_SENSOR_2_ADDRESS);
+                mcp9808_temperature_sensor_2_found = true;
+                double temp = getTemperatureFromMCP9808(TEMPERATURE_OPTIONAL_EXTERNAL_MCP9808_2_ADDRESS);
                 char temp_celcius_chars[MAX_BUF];
-                snprintf(temp_celcius_chars, sizeof(temp_celcius_chars), "%.2f", cTemp2);
+                snprintf(temp_celcius_chars, sizeof(temp_celcius_chars), "%.2f", temp);
                 string temp_celcius = (temp_celcius_chars);
-                // Output data to screen
                 debugOutput::sendMessage("Temperature at startup: " + std::string(temp_celcius), MSG_INFO);
             }
-            else if (i2c_probe_address == TEMPERATURE_SENSOR_1_ADDRESS)
+            else if (i2c_probe_address == TEMPERATURE_OPTIONAL_EXTERNAL_MCP9808_1_ADDRESS)
             {
                 debugOutput::sendMessage("MCP9808 Temperature Sensor 1 found.", MSG_INFO);
-                mcp9808_temperature_sensor_found = true;
-                cTemp = getTemperature(TEMPERATURE_SENSOR_1_ADDRESS);
+                mcp9808_temperature_sensor_1_found = true;
+                double temp = getTemperatureFromMCP9808(TEMPERATURE_OPTIONAL_EXTERNAL_MCP9808_1_ADDRESS);
                 char temp_celcius_chars[MAX_BUF];
-                snprintf(temp_celcius_chars, sizeof(temp_celcius_chars), "%.2f", cTemp);
+                snprintf(temp_celcius_chars, sizeof(temp_celcius_chars), "%.2f", temp);
                 string temp_celcius = (temp_celcius_chars);
-                // Output data to screen
                 debugOutput::sendMessage("Temperature at startup: " + std::string(temp_celcius), MSG_INFO);
             }
             else if (i2c_probe_address == PIC_ADDRESS)
@@ -390,6 +627,9 @@ bool pcb::define_pcb_version(void)
             else
             {
                 std::string message("Unknown device found on I2C bus ");
+                // int address = ADC081C021_CURRENT_SENSOR_ADDRESS;
+                // std::string addressStr = std::to_string(address);
+                // debugOutput::sendMessage(addressStr, MSG_INFO);
                 message.append(i2c_bus_name);
                 debugOutput::sendMessage(message, MSG_ERROR);
                 config_valid = false;
@@ -400,8 +640,26 @@ bool pcb::define_pcb_version(void)
     if (max31760_pwm_found)
     {
         // definitely 8344
-        debugOutput::sendMessage("max31760 found. Definitely DSED8344 board.", MSG_INFO);
+        debugOutput::sendMessage("DSED8344 board because max31760 is found.", MSG_INFO);
         pcb_version = DSED8344_NO_PIC;
+    }
+    else if (temperature_ads7830_found)
+    {
+        // only the EN258 has a temperature chip on the pcb
+        pcb_version = EN258_8SLOTS;
+        if (slot_mcp23017_found[4] || slot_mcp23017_found[5] || slot_mcp23017_found[6] || slot_mcp23017_found[7])
+        {
+            pcb_version = EN258_8SLOTS;
+        }
+        else if (slot_mcp23017_found[0] || slot_mcp23017_found[1] || slot_mcp23017_found[2] || slot_mcp23017_found[3])
+        {
+            pcb_version = EN258_4SLOTS;
+        }
+        else
+        {
+            pcb_version = INVALID;
+            debugOutput::sendMessage("No pca9534 I/O expanders found. Impossible to determine board type.", MSG_ERROR);
+        }
     }
     else if (pic_pwm_found)
     {
@@ -430,7 +688,7 @@ bool pcb::define_pcb_version(void)
     }
     else
     {
-        debugOutput::sendMessage("No pca9534 I/O expanders found. Impossible to determine board type.", MSG_INFO);
+        debugOutput::sendMessage("Board type could not be determined.", MSG_INFO);
         pcb_version = INVALID;
     }
 
@@ -438,27 +696,18 @@ bool pcb::define_pcb_version(void)
     {
     case (INVALID):
     {
-        debugOutput::sendMessage("Pcb not valid. Is it connected?", MSG_ERROR);
-
-        if (!pic_pwm_found)
-        {
-            std::string message("No PWM generator found on I2C bus ");
-            message.append(i2c_bus_name);
-            debugOutput::sendMessage(message, MSG_ERROR);
-            debugOutput::sendMessage("Pump control impossible.", MSG_ERROR);
-            config_valid = false;
-        }
+        debugOutput::sendMessage("Pcb: Pcb not valid. Is it connected? Check found i2c devices vs expected ones.", MSG_ERROR);
     };
     break;
 
     case (DSED8344_NO_PIC):
     {
-        debugOutput::sendMessage("Pcb DSED8344 without pic found. pwm generated by MAX31760", MSG_INFO);
+        debugOutput::sendMessage("Pcb: DSED8344 without pic found. pwm generated by MAX31760", MSG_INFO);
     };
     break;
     case (DSED8344_PIC_MULTIBUTTON):
     {
-        debugOutput::sendMessage("Pcb DSED8344 with pwm generating pic found", MSG_INFO);
+        debugOutput::sendMessage("Pcb: DSED8344 with pwm generating pic found", MSG_INFO);
         if (!slot_pca9534_found[0])
         {
             debugOutput::sendMessage("PCA9534 not found! ", MSG_ERROR);
@@ -468,7 +717,7 @@ bool pcb::define_pcb_version(void)
 
     case (EN134_4SLOTS):
     {
-        debugOutput::sendMessage("Pcb EN-134 4 slots found. ", MSG_INFO);
+        debugOutput::sendMessage("Pcb: EN-134 4 slots found. ", MSG_INFO);
         for (uint8_t i = 0; i < 4; i++)
         {
             if (!slot_pca9534_found[i])
@@ -480,10 +729,33 @@ bool pcb::define_pcb_version(void)
     break;
     case (EN134_8SLOTS):
     {
-        debugOutput::sendMessage("Pcb EN-134 8 slots found.", MSG_INFO);
+        debugOutput::sendMessage("Pcb: EN-134 8 slots found.", MSG_INFO);
         for (uint8_t i = 0; i < 8; i++)
         {
             if (!slot_pca9534_found[i])
+            {
+                debugOutput::sendMessage("No controller found for slot" + to_string(i + 1), MSG_ERROR);
+            }
+        }
+    };
+    case (EN258_8SLOTS):
+    {
+        debugOutput::sendMessage("Pcb: EN-258 8 slots found.", MSG_INFO);
+        for (uint8_t i = 0; i < 8; i++)
+        {
+            if (!slot_mcp23017_found[i])
+            {
+                debugOutput::sendMessage("No controller found for slot" + to_string(i + 1), MSG_ERROR);
+            }
+        }
+    };
+    break;
+    case (EN258_4SLOTS):
+    {
+        debugOutput::sendMessage("Pcb: EN-258 4 slots found.", MSG_INFO);
+        for (uint8_t i = 0; i < 4; i++)
+        {
+            if (!slot_mcp23017_found[i])
             {
                 debugOutput::sendMessage("No controller found for slot" + to_string(i + 1), MSG_ERROR);
             }
@@ -495,41 +767,50 @@ bool pcb::define_pcb_version(void)
     return config_valid;
 }
 
+void pcb::sendEN258DefaultConfigurationToMCP23017(uint8_t slot, bool reportIfModified)
+{
+    uint8_t GPIOA_value = 0x00;
+    uint8_t GPIOB_value = 0x02;
+
+    setMCP23017Register(slot, MCP23017_REGISTER_GPA, GPIOA_value,true);
+    setMCP23017Register(slot, MCP23017_REGISTER_GPB, GPIOB_value,true);
+
+    debugOutput::sendMessage("Default config sent to PCA9534 for slot: " + to_string(slot), MSG_INFO);
+}
 void pcb::sendEN134DefaultConfigurationToPCA9534(uint8_t slot, bool reportIfModified)
 {
-    debugOutput::sendMessage("Default config sent to PCA9534", MSG_INFO);
-    // sendByteIfNotSetToSlot(slot, 0x01, 0b00100000, reportIfModified); // BAAAD load  this to emulate a glitch in the chip
-    // sendByteIfNotSetToSlot(slot, 0x03, 0b11111111, reportIfModified); //BAAAD load  this to emulate a glitch in the chip
-    sendByteIfNotSetToSlot(slot, 0x01, 0b00100000, reportIfModified);
-    sendByteIfNotSetToSlot(slot, 0x03, 0b01011000, reportIfModified);
+    // sendByteToPCA9534SlotIfNotSet(slot, 0x01, 0b00100000, reportIfModified); // BAD load!!!  Use this to emulate a glitch in the chip
+    // sendByteToPCA9534SlotIfNotSet(slot, 0x03, 0b11111111, reportIfModified); // BAD load!!!  Use this to emulate a glitch in the chip
+    sendByteToPCA9534SlotIfNotSet(slot, 0x01, 0b00100000, reportIfModified);
+    sendByteToPCA9534SlotIfNotSet(slot, 0x03, 0b01011000, reportIfModified);
+    debugOutput::sendMessage("Default config sent to PCA9534 for slot: " + to_string(slot), MSG_INFO);
 }
 
-void pcb::sendByteIfNotSetToSlot(uint8_t slot, unsigned char reg, unsigned char value, bool reportIfModified)
+void pcb::sendByteToPCA9534SlotIfNotSet(uint8_t slot, unsigned char reg, unsigned char value, bool reportIfModified)
 {
-    int attempts = 10;
-    uint8_t readVal = readRegisterFromSlot(slot, reg);
+    int attempt = 10;
+    uint8_t readVal = PCA9534ReadRegisterFromSlot(slot, reg);
     while (readVal != value)
     {
-        if (attempts < 0)
+        if (attempt < 0)
         {
             debugOutput::sendMessage("Too many attempts. Could not set register 0x01 of PCA9534 for slot " + to_string(slot), MSG_ERROR);
             break;
         }
-        attempts--;
-        SendByteToSlot(slot, reg, value); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
+        attempt--;
+        PCA9534SendByteToSlot(slot, reg, value); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
         debugOutput::sendMessage("PCA9534 register " + to_string(reg) + " of slot: " + to_string(slot) + ": " + to_string(readVal) + ". Not configured right. Set to value: " + to_string(value), MSG_INFO);
         if (reportIfModified)
         {
             debugOutput::sendMessage("WARNING: This register was changed. Was this a glitch?", MSG_WARNING);
         }
-        readVal = readRegisterFromSlot(slot, reg);
+        readVal = PCA9534ReadRegisterFromSlot(slot, reg);
     }
 }
 
 void pcb::initialize_pcb()
 {
     // set initial values. depending on pcb version
-
     switch (pcb_version)
     {
 
@@ -567,7 +848,7 @@ void pcb::initialize_pcb()
         setPumpsDisableAll();
         for (uint8_t slot = 1; slot <= 4; slot++)
         {
-            setSolenoid(slot, false);
+            setSpoutSolenoid(slot, false);
             setSingleDispenseButtonLight(slot, false);
         }
     };
@@ -577,15 +858,52 @@ void pcb::initialize_pcb()
         // Initialize the PCA9534
         for (uint8_t slot = 1; slot <= 8; slot++)
         {
-            SendByte(get_PCA9534_address_from_slot(slot), 0x01, 0b00100000); // Output pin values register (has no influence on input values)
-            SendByte(get_PCA9534_address_from_slot(slot), 0x03, 0b01011000); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
+            // SendByte(get_PCA9534_address_from_slot(slot), 0x01, 0b00100000); // Output pin values register (has no influence on input values)
+            // SendByte(get_PCA9534_address_from_slot(slot), 0x03, 0b01011000); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
+            sendEN134DefaultConfigurationToPCA9534(slot, true);
         }
         setPumpsDisableAll();
         for (uint8_t slot = 1; slot <= 8; slot++)
         {
-            setSolenoid(slot, false);
+            setSpoutSolenoid(slot, false);
             setSingleDispenseButtonLight(slot, false);
         }
+    };
+    break;
+    case (EN258_4SLOTS):
+    {
+        for (uint8_t slot = 1; slot <= 4; slot++)
+        {
+            uint8_t IOCON_value;
+            // IOCON_value |= 0x02;                          // INTPOL...
+            IOCON_value |= 0x80;                          // BANK disable.
+                                                          // IOCON_value |= 0x80; // BANK enable.
+            setMCP23017Register(slot, 0x0A, IOCON_value, false); // IOCON (IOCON.bank = 0)
+            setMCP23017Register(slot, 0x00, 0xC0,false);        // IODIRA (IOCON.bank = 1)
+            setMCP23017Register(slot, 0x10, 0x01,false);        // IODIRB (IOCON.bank = 1
+
+            uint8_t GPIOA_value = 0x00;
+            uint8_t GPIOB_value = 0x00;
+
+            setMCP23017Register(slot, MCP23017_REGISTER_GPA, GPIOA_value,false); // GPIOA (IOCON.bank = 1 // button off (0 for ON)
+            setMCP23017Register(slot, MCP23017_REGISTER_GPB, GPIOB_value, false); // GPIOB (IOCON.bank = 1 // button off (0 for ON)
+        }
+
+
+        setPumpsDisableAll();
+        for (uint8_t slot = 1; slot <= 4; slot++)
+        {
+            for (uint8_t position = 1; position <= 8; position++)
+            {
+                setSolenoidFromArray(slot, position, false);
+                setSingleDispenseButtonLight(slot, false);
+            }
+        }
+    };
+    break;
+    case (EN258_8SLOTS):
+    {
+        debugOutput::sendMessage("TODO INITIALIZE PCB!!!!!!!", MSG_ERROR);
     };
     break;
     default:
@@ -594,28 +912,111 @@ void pcb::initialize_pcb()
     }
     break;
     }
+
+    setFlowSensorTypeDefaults();
+    flowSensorsDisableAll();
+    debugOutput::sendMessage("pcb initialized. version: " + toString(pcb_version), MSG_INFO);
 }
 
-bool pcb::isTemperatureSensorAvailable()
+bool pcb::isTemperatureSensorMCP9808Available_1()
 {
-    return mcp9808_temperature_sensor_found;
+    return mcp9808_temperature_sensor_1_found;
 }
-bool pcb::isTemperatureSensor2Available()
+bool pcb::isTemperatureSensorMCP9808Available_2()
 {
-    return mcp9808_temperature2_sensor_found;
+    return mcp9808_temperature_sensor_2_found;
 }
+
+bool pcb::isTemperatureSensorADS7830Available()
+{
+    return temperature_ads7830_found;
+}
+
 bool pcb::isSlotAvailable(uint8_t slot)
 {
+
     if (slot == 0)
     {
         debugOutput::sendMessage("Slot numbering starts at 1", MSG_ERROR);
     }
 
-    return slot_pca9534_found[slot - 1];
+    switch (pcb_version)
+    {
+
+    case (DSED8344_NO_PIC):
+    {
+        return true;
+    };
+    break;
+    case (DSED8344_PIC_MULTIBUTTON):
+    {
+        return true;
+    };
+    break;
+    case (EN134_4SLOTS):
+    case (EN134_8SLOTS):
+    {
+        return slot_pca9534_found[slot - 1];
+    };
+    break;
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
+    {
+        return slot_mcp23017_found[slot - 1];
+    };
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Error PCB NOT VALID!! check for slot available", MSG_ERROR);
+    }
+    break;
+    }
+    return false;
 }
 ///////////////////////////////////////////////////////////////////////////
 // BUTTON FUNCTIONS
 ///////////////////////////////////////////////////////////////////////////
+
+void pcb::setDispenseButtonLightsAllOff()
+{
+    switch (pcb_version)
+    {
+
+    case (DSED8344_NO_PIC):
+    {
+        setPCA9534Output(1, 6, true);
+    };
+    break;
+    case (DSED8344_PIC_MULTIBUTTON):
+    case (EN134_4SLOTS):
+    case (EN258_4SLOTS):
+    {
+        debugOutput::sendMessage("All 4 button lights off.", MSG_INFO);
+
+        for (int slot = 1; slot < 5; slot++)
+        {
+            setSingleDispenseButtonLight(slot, false);
+        }
+    };
+    break;
+    case (EN134_8SLOTS):
+    case (EN258_8SLOTS):
+    {
+        debugOutput::sendMessage("All 8 button lights off.", MSG_INFO);
+
+        for (int slot = 1; slot < 9; slot++)
+        {
+            setSingleDispenseButtonLight(slot, false);
+        }
+    };
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Error PCB NOT VALID!!setSingleDispenseButtonLight", MSG_ERROR);
+    }
+    break;
+    }
+}
 
 void pcb::setSingleDispenseButtonLight(uint8_t slot, bool onElseOff)
 {
@@ -686,77 +1087,89 @@ void pcb::setSingleDispenseButtonLight(uint8_t slot, bool onElseOff)
         }
     };
     break;
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
+    {
+        if (onElseOff)
+        {
+            // debugOutput::sendMessage("Pcb: slot " + to_string(slot) + ": Button light ON " , MSG_INFO);
+            setMCP23017OutputBit(slot, MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON, false, MCP23017_REGISTER_GPB);
+        }
+        else
+        {
+            // debugOutput::sendMessage("Pcb: slot " + to_string(slot) + ": Button light OFF " , MSG_INFO);
+            setMCP23017OutputBit(slot, MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON, true, MCP23017_REGISTER_GPB);
+        }
+    };
+    break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!2", MSG_ERROR);
+        debugOutput::sendMessage("Error PCB NOT VALID!!setSingleDispenseButtonLight", MSG_ERROR);
     }
     break;
     }
 
 } // End of setSingleDispenseButtonLight()
 
-void pcb::virtualButtonPressHack(uint8_t slot)
-{
+// void pcb::virtualButtonPressHack(uint8_t slot)
+// {
 
-    switch (pcb_version)
-    {
+//     switch (pcb_version)
+//     {
 
-    case (DSED8344_NO_PIC):
-    {
-    };
-    case (DSED8344_PIC_MULTIBUTTON):
-    {
-        // // WARNING: This overrides the physical dispense button. As such, there is no fail safe mechanism.
-        // // If the program crashes while the button is pressed, it might keep on dispensing *forever*.
-        // unsigned char reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x03);
-        // reg_value = reg_value & 0b01111111;
-        // SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x03, reg_value); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
+//     case (DSED8344_NO_PIC):
+//     {
+//     };
+//     case (DSED8344_PIC_MULTIBUTTON):
+//     {
+//         // // WARNING: This overrides the physical dispense button. As such, there is no fail safe mechanism.
+//         // // If the program crashes while the button is pressed, it might keep on dispensing *forever*.
+//         // unsigned char reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x03);
+//         // reg_value = reg_value & 0b01111111;
+//         // SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x03, reg_value); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
 
-        // reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01);
-        // reg_value = reg_value & 0b01111111; // virtual button press
-        // SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01, reg_value);
-    };
-    break;
-    case (EN134_4SLOTS):
-    case (EN134_8SLOTS):
-    {
-    };
-    break;
-    default:
-    {
-        debugOutput::sendMessage("Error PCB NOT VALID!!3", MSG_ERROR);
-    }
-    break;
-    }
-}
+//         // reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01);
+//         // reg_value = reg_value & 0b01111111; // virtual button press
+//         // SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x01, reg_value);
+//     };
+//     break;
+//     case (EN134_4SLOTS):
+//     case (EN134_8SLOTS):
+//     {
+//     };
+//     break;
+//     default:
+//     {
+//         debugOutput::sendMessage("Error PCB NOT VALID!!3", MSG_ERROR);
+//     }
+//     break;
+//     }
+// }
 
-void pcb::virtualButtonUnpressHack(uint8_t slot)
-{
-    switch (pcb_version)
-    {
+// void pcb::virtualButtonUnpressHack(uint8_t slot)
+// {
+//     switch (pcb_version)
+//     {
 
-    case (DSED8344_NO_PIC):
-    {
-    };
-    case (DSED8344_PIC_MULTIBUTTON):
-    {
-        // unsigned char reg_value = ReadByte(PCA9534_TMP_SLOT2_ADDRESS, 0x03);
-        // reg_value = reg_value | 0b10000000;
-        // SendByte(PCA9534_TMP_SLOT2_ADDRESS, 0x03, reg_value); // Config register 0 = output, 1 = input (https://www.nxp.com/docs/en/data-sheet/PCA9534.pdf)
-    };
-    break;
-    case (EN134_4SLOTS):
-    case (EN134_8SLOTS):
-    {
-    };
-    break;
-    default:
-    {
-        debugOutput::sendMessage("Error PCB NOT VALID!!4", MSG_ERROR);
-    }
-    break;
-    }
-}
+//     case (DSED8344_NO_PIC):
+//     {
+//     };
+//     case (DSED8344_PIC_MULTIBUTTON):
+//     {
+//     };
+//     break;
+//     case (EN134_4SLOTS):
+//     case (EN134_8SLOTS):
+//     {
+//     };
+//     break;
+//     default:
+//     {
+//         debugOutput::sendMessage("Error PCB NOT VALID!!4", MSG_ERROR);
+//     }
+//     break;
+//     }
+// }
 
 bool pcb::getDispenseButtonState(uint8_t slot)
 {
@@ -782,13 +1195,21 @@ bool pcb::getDispenseButtonState(uint8_t slot)
     case (EN134_8SLOTS):
     {
         bool val = (ReadByte(get_PCA9534_address_from_slot(slot), 0x00) & (1 << PCA9534_EN134_PIN_IN_BUTTON));
+        isPressed = !val;
+    };
+    break;
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
+    {
+
+        bool val = (ReadByte(get_MCP23017_address_from_slot(slot), MCP23017_REGISTER_GPB) & (1 << MCP23017_EN258_GPB0_PIN_IN_BUTTON));
 
         isPressed = !val;
     };
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!5", MSG_ERROR);
+        debugOutput::sendMessage("Pcb: No button available for this pcb.", MSG_ERROR);
     }
     break;
     }
@@ -868,6 +1289,8 @@ void pcb::dispenseButtonRefresh()
     break;
     case (EN134_4SLOTS):
     case (EN134_8SLOTS):
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
     {
         for (uint8_t slot_index = 0; slot_index < MAX_SLOT_COUNT; slot_index++)
         {
@@ -899,7 +1322,7 @@ void pcb::dispenseButtonRefreshPerSlot(uint8_t slot)
     {
         dispenseButtonDebounceStartEpoch[slot_index] = now_epoch_millis;
         dispenseButtonIsDebounced[slot_index] = false;
-        debugOutput::sendMessage("*****************edge detected!" + std::to_string(dispenseButtonDebounceStartEpoch[slot_index]) + "state: " + std::to_string(state), MSG_INFO);
+        debugOutput::sendMessage("Pcb: Slot: " + std::to_string(slot) + " . Button edge detected! timestamp:" + std::to_string(dispenseButtonDebounceStartEpoch[slot_index]) + "state: " + std::to_string(state), MSG_INFO);
     }
 
     positive_edge_detected[slot_index] = false;
@@ -959,15 +1382,24 @@ void pcb::flowSensorEnable(uint8_t slot)
     case (EN134_4SLOTS):
     case (EN134_8SLOTS):
     {
-        // disable all to be sure
-        flowSensorsDisableAll();
+
+        flowSensorsDisableAll(); // reset flow sensor pulse count
         // enable only the active slot flow sensor
         setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_FLOW_SENSOR_ENABLE, true);
+        flow_sensor_enabled[slot - 1] = true;
+    };
+    break;
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
+    {
+        flowSensorsDisableAll(); // reset flow sensor pulse count
+        // enable not needed for EN258 board.
+        flow_sensor_enabled[slot - 1] = true;
     };
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!5", MSG_ERROR);
+        debugOutput::sendMessage("Pcb: Flow sensor enable not available for this pcb.", MSG_ERROR);
     }
     break;
     }
@@ -975,6 +1407,33 @@ void pcb::flowSensorEnable(uint8_t slot)
     // Only one sensor can be enabled at a time to be safe (it causes the pulses to be combined from all sensors to a separate input in the Odyssey.)
 }
 
+int pcb::getSlotCountByPcbType()
+{
+    switch (get_pcb_version())
+    {
+
+    case (DSED8344_PIC_MULTIBUTTON):
+    case (DSED8344_NO_PIC):
+    case (EN258_4SLOTS):
+    case (EN134_4SLOTS):
+    {
+        return 4;
+    }
+    break;
+    case (EN258_8SLOTS):
+    case (EN134_8SLOTS):
+    {
+        return 8;
+    };
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Pcb: Unrecognized pcb.", MSG_ERROR);
+        return 1;
+    }
+    break;
+    }
+}
 void pcb::flowSensorsDisableAll()
 {
     switch (pcb_version)
@@ -989,26 +1448,31 @@ void pcb::flowSensorsDisableAll()
     };
     break;
     case (EN134_4SLOTS):
+    case (EN134_8SLOTS):
     {
-        for (uint8_t slot = 1; slot <= 4; slot++)
+        for (uint8_t slot = 1; slot <= getSlotCountByPcbType(); slot++)
         {
             setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_FLOW_SENSOR_ENABLE, false);
             flow_sensor_pulses_since_enable[slot - 1] = 0;
+            flow_sensor_enabled[slot - 1] = false;
         }
     }
     break;
-    case (EN134_8SLOTS):
+        break;
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
     {
-        for (uint8_t slot = 1; slot <= 8; slot++)
+        for (uint8_t slot = 1; slot <= getSlotCountByPcbType(); slot++)
         {
-            setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_FLOW_SENSOR_ENABLE, false);
+            // enable of pins not needed for EN258 board.
             flow_sensor_pulses_since_enable[slot - 1] = 0;
+            flow_sensor_enabled[slot - 1] = false;
         }
     };
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!6", MSG_ERROR);
+        debugOutput::sendMessage("Pcb: Flow sensor DISABLE not available for this pcb.", MSG_ERROR);
     }
     break;
     }
@@ -1016,49 +1480,32 @@ void pcb::flowSensorsDisableAll()
 
 void pcb::refreshFlowSensors()
 {
-    // this is only need if flow rates are read from the PCA9534.
-    // there is a specific line that goes the the Odyssey as an interrupt (which is how the soapstand app traditionally worked)
-    // then, the reading of the register is not needed
+    // this is: Polling: periodically read flow rates
+    // this is not: Interrupt:  there is a specific line that goes the the Odyssey as an interrupt (which is how the soapstand app traditionally worked)
+    // if the interrupt is in use then, the reading of the register is not needed
 
     switch (pcb_version)
     {
-
-    case (DSED8344_NO_PIC):
-    {
-    };
-    break;
-    case (DSED8344_PIC_MULTIBUTTON):
-    {
-    };
-    break;
+    case (EN258_4SLOTS):
     case (EN134_4SLOTS):
-    {
-        for (uint8_t slot = 1; slot <= 4; slot++)
-        {
-            refreshFlowSensor(slot);
-        }
-    };
-    break;
+    case (EN258_8SLOTS):
     case (EN134_8SLOTS):
     {
-        for (uint8_t slot = 1; slot <= 8; slot++)
+        for (uint8_t slot = 1; slot <= getSlotCountByPcbType(); slot++)
         {
-            refreshFlowSensor(slot);
+            if (flow_sensor_enabled[slot - 1])
+            {
+                pollFlowSensor(slot);
+            }
         }
     };
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!7", MSG_ERROR);
+        debugOutput::sendMessage("Pcb: No flowsensors to refresh on this pcb", MSG_ERROR);
     }
     break;
     }
-}
-
-void pcb::resetFlowSensorTotalPulses(uint8_t slot)
-{
-    uint8_t slot_index = slot - 1;
-    flow_sensor_total_pulses[slot_index] = 0;
 }
 
 uint64_t pcb::getFlowSensorPulsesSinceEnabling(uint8_t slot)
@@ -1066,33 +1513,173 @@ uint64_t pcb::getFlowSensorPulsesSinceEnabling(uint8_t slot)
     uint8_t slot_index = slot - 1;
     return flow_sensor_pulses_since_enable[slot_index];
 }
-uint64_t pcb::getFlowSensorTotalPulses(uint8_t slot)
+
+// void pcb::resetFlowSensorPulsesForDispenser(uint8_t slot)
+// {
+//     uint8_t slot_index = slot - 1;
+//     flow_sensor_pulses_for_dispenser[slot_index] = 0;
+// }
+
+// uint64_t pcb::getFlowSensorPulsesForDispenser(uint8_t slot)
+// {
+//     // warning: the flow sensor ticks also come in straight to the Odyssey IO. The controller handles the volume calculation from there not from here. The advantage: no missed pulses (interrupt per pulse),the disadvantage: every slot uses the same pin.
+//     uint8_t slot_index = slot - 1;
+//     return flow_sensor_pulses_for_dispenser[slot_index];
+// }
+
+pcb::FlowSensorType pcb::getFlowSensorType(uint8_t slot)
 {
-    // warning: the flow sensor ticks also come in straight to the Odyssey IO. The controller handles the volume calculation from there not from here. The advantage: no missed pulses (interrupt per pulse),the disadvantage: every slot uses the same pin.
-    uint8_t slot_index = slot - 1;
-    return flow_sensor_total_pulses[slot_index];
+    return flowSensorsType[slot - 1];
 }
-void pcb::refreshFlowSensor(uint8_t slot)
+
+void pcb::setFlowSensorTypeDefaults()
+{
+    switch (pcb_version)
+    {
+    case (EN134_4SLOTS):
+    {
+        for (uint8_t slot = 1; slot <= getSlotCountByPcbType(); slot++)
+        {
+            setFlowSensorType(slot, pcb::AICHI);
+        }
+    };
+    break;
+    case (EN258_4SLOTS):
+    {
+        for (uint8_t slot = 1; slot <= getSlotCountByPcbType(); slot++)
+        {
+            setFlowSensorType(slot, pcb::DIGMESA);
+        }
+    };
+    break;
+    default:
+    {
+        // pcb::FlowSensorType::AICHI
+        for (uint8_t slot = 1; slot <= getSlotCountByPcbType(); slot++)
+        {
+            setFlowSensorType(slot, pcb::NOTSET);
+        }
+        debugOutput::sendMessage("Pcb: No default flowsensors to set for this pcb", MSG_ERROR);
+    }
+    break;
+    }
+}
+
+void pcb::setFlowSensorType(uint8_t slot, FlowSensorType sensorType)
+{
+    switch (sensorType)
+    {
+    case pcb::AICHI:
+        debugOutput::sendMessage("Pcb: Slot: " + to_string(slot) + ". Flow sensor set to AICHI.", MSG_INFO);
+        break;
+    case pcb::DIGMESA:
+        debugOutput::sendMessage("Pcb: Slot: " + to_string(slot) + ". Flow sensor set to DIGMESA.", MSG_INFO);
+        break;
+    default:
+        debugOutput::sendMessage("Pcb: ASSERT ERROR. Slot: " + to_string(slot) + "Unknown flow sensor type!", MSG_ERROR);
+    }
+
+    switch (pcb_version)
+    {
+    case (EN134_4SLOTS):
+    case (EN134_8SLOTS):
+    {
+        if (sensorType == pcb::DIGMESA)
+        {
+            debugOutput::sendMessage("Pcb: WARNING: digmesa flowsensor selected for AICHI only pcb. Ensure cable pinout is configured correctly, with added resistor!", MSG_ERROR);
+        }
+        flowSensorsType[slot - 1] = sensorType;
+    };
+    break;
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
+    {
+        flowSensorsType[slot - 1] = sensorType;
+    };
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Pcb: No flowsensors to set on this pcb", MSG_ERROR);
+    }
+    break;
+    }
+}
+
+void pcb::registerFlowSensorTickCallback(int slot, std::function<void()> callback)
+{
+    debugOutput::sendMessage("pcb: Flow sensor tick callback registered!", MSG_INFO);
+    flowSensorTickCallbacks[slot - 1] = callback;
+}
+
+void pcb::pollFlowSensor(uint8_t slot)
 {
     if (slot == 0)
     {
         debugOutput::sendMessage("Slot error! Starts at 1!", MSG_ERROR);
     }
+
+    bool state = false;
+    switch (pcb_version)
+    {
+    case (EN134_4SLOTS):
+    case (EN134_8SLOTS):
+    {
+        state = getPCA9534Input(slot, PCA9534_EN134_PIN_IN_FLOW_SENSOR_TICKS);
+    };
+    break;
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
+    {
+        // debugOutput::sendMessage("wARNING: todo: set manually which flow sensor is being used! BEST to only use one pin. or it will be a hassle in the future (define which sensor is used,....)", MSG_ERROR);
+
+        switch (getFlowSensorType(slot))
+        {
+        case (pcb::DIGMESA):
+        {
+            state = getMCP23017Input(slot, MCP23017_EN258_GPA7_PIN_IN_FLOW_SENSOR_DIGMESA, MCP23017_REGISTER_GPA);
+        }
+        break;
+        case (pcb::AICHI):
+        {
+            state = getMCP23017Input(slot, MCP23017_EN258_GPA6_PIN_IN_FLOW_SENSOR_AICHI, MCP23017_REGISTER_GPA);
+        }
+        break;
+        default:
+        {
+            debugOutput::sendMessage("Pcb: ASSERT ERROR No flowsensors configured.", MSG_ERROR);
+        }
+        }
+    };
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Pcb: No flowsensors on this pcb", MSG_ERROR);
+    }
+    break;
+    }
+
     uint8_t slot_index = slot - 1;
 
     using namespace std::chrono;
     uint64_t now_epoch_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
-    bool state = getPCA9534Input(slot, PCA9534_EN134_PIN_IN_FLOW_SENSOR_TICKS);
-
     if (now_epoch_millis > (flowSensorTickReceivedEpoch[slot_index] + FLOW_SENSOR_DEBOUNCE_MILLIS))
     {
 
-        if (flowSensorStateMemory[slot_index] != state)
+        if (flowSensorStateMemory[slot_index] != state && flowSensorStateMemory[slot_index]) // only regard positive edges.
         {
-            flow_sensor_total_pulses[slot_index]++;
+            // flow_sensor_pulses_for_dispenser[slot_index]++;
+
+            if (flowSensorTickCallbacks[slot_index])
+            {
+                flowSensorTickCallbacks[slot_index]();
+            }
+
             flow_sensor_pulses_since_enable[slot_index]++;
+
             // debugOutput::sendMessage("Flow sensor pulse detected by PCA chip. Slot: " + to_string(slot) + ". Pulse total: " + to_string(flow_sensor_pulses_since_enable[slot_index]), MSG_INFO);
+            // debugOutput::sendMessage("Flow sensor pulse detected while polling", MSG_INFO);
+
             flowSensorTickReceivedEpoch[slot_index] = now_epoch_millis;
         }
         flowSensorStateMemory[slot_index] = state;
@@ -1128,7 +1715,7 @@ void pcb::independentDispensingRefresh()
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!8", MSG_ERROR);
+        debugOutput::sendMessage("Pcb: No independent dispensing refresh cycle for this pcb. ", MSG_ERROR);
     }
     break;
     }
@@ -1155,7 +1742,7 @@ void pcb::EN134_PumpCycle_refresh(uint8_t slots)
 
             case state_init:
             {
-                setSolenoid(slot, false);
+                setSpoutSolenoid(slot, false);
                 setSingleDispenseButtonLight(slot, false);
                 stopPump(slot);
                 pumpCycle_state[slot_index] = state_idle;
@@ -1203,7 +1790,7 @@ void pcb::EN134_PumpCycle_refresh(uint8_t slots)
                 {
                     pumpCycle_state[slot_index] = state_button_pressed;
                     pump_start_delay_start_epoch[slot_index] = now_epoch_millis;
-                    setSolenoid(slot, true);
+                    setSpoutSolenoid(slot, true);
                     setSingleDispenseButtonLight(slot, true);
                 }
             }
@@ -1286,7 +1873,7 @@ void pcb::EN134_PumpCycle_refresh(uint8_t slots)
                 if (now_epoch_millis > (solenoid_stop_delay_start_epoch[slot_index] + SOLENOID_STOP_DELAY_MILLIS))
                 {
                     pumpCycle_state[slot_index] = state_slot_enabled;
-                    setSolenoid(slot, false);
+                    setSpoutSolenoid(slot, false);
                     setSingleDispenseButtonLight(slot, false);
                 }
             }
@@ -1299,7 +1886,7 @@ void pcb::EN134_PumpCycle_refresh(uint8_t slots)
         break;
     default:
     {
-        debugOutput::sendMessage("Do not execute independent dispense cycle with this PCB", MSG_ERROR);
+        debugOutput::sendMessage("Pcb: DO NOT execute independent dispense cycle with this PCB", MSG_ERROR);
     }
     break;
     }
@@ -1332,7 +1919,7 @@ unsigned char pcb::getPumpPWM()
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!9", MSG_ERROR);
+        debugOutput::sendMessage("Pcb: No PWM setting available for this pcb.", MSG_ERROR);
         return 0;
     }
     break;
@@ -1340,7 +1927,7 @@ unsigned char pcb::getPumpPWM()
 
 } // End of getPumpRPM()
 
-bool pcb::setPumpPWM(uint8_t pwm_val)
+void pcb::setPumpPWM(uint8_t pwm_val)
 {
     // pump speed is set globally. Not set per slot!
     // pwm_val = byte value max = 255
@@ -1348,7 +1935,8 @@ bool pcb::setPumpPWM(uint8_t pwm_val)
     {
     case DSED8344_NO_PIC:
     {
-        return SendByte(MAX31760_ADDRESS, 0x50, pwm_val); // PWM value
+        SendByte(MAX31760_ADDRESS, 0x50, pwm_val); // PWM value
+        debugOutput::sendMessage("pwm val set. ", MSG_ERROR);
     };
     break;
     case (DSED8344_PIC_MULTIBUTTON):
@@ -1368,7 +1956,7 @@ bool pcb::setPumpPWM(uint8_t pwm_val)
         unsigned char speed_percentage = (unsigned char)f_value;
         uint8_t inverted_percentage = 100 - (uint8_t)speed_percentage;
         setPumpSpeedPercentage(speed_percentage);
-        debugOutput::sendMessage("speed percentage sent =" + std::to_string(speed_percentage), MSG_ERROR);
+        debugOutput::sendMessage("speed percentage set =" + std::to_string(speed_percentage), MSG_ERROR);
     };
     break;
     case (EN134_4SLOTS):
@@ -1387,29 +1975,49 @@ bool pcb::setPumpPWM(uint8_t pwm_val)
         f_value = floor(f_value / 2.55);
         unsigned char speed_percentage = 100 - (unsigned char)f_value; // invert speed. pwm is inverted.
         setPumpSpeedPercentage((uint8_t)speed_percentage);
+        debugOutput::sendMessage("Speed percentage set =" + std::to_string(speed_percentage), MSG_ERROR);
     };
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!10", MSG_ERROR);
+        // debugOutput::sendMessage("Pcb: Pcb has No pwm setting available", MSG_ERROR);
     }
     break;
     }
 
 } // End of setPumpPWM()
 
-bool pcb::setPumpSpeedPercentage(uint8_t speed_percentage)
+void pcb::setPumpSpeedPercentage(uint8_t speed_percentage)
 {
-    if (speed_percentage > 100)
+    bool success = false;
+    // pump speed is set globally. Not set per slot!
+    // pwm_val = byte value max = 255
+    switch (pcb_version)
     {
-        debugOutput::sendMessage("Speed invalid. Will set to max. Please provide argument in [0..100] interval. Provided: " + to_string(speed_percentage), MSG_WARNING);
-        speed_percentage = 100;
+    case DSED8344_NO_PIC:
+    case (DSED8344_PIC_MULTIBUTTON):
+    case (EN134_4SLOTS):
+    case (EN134_8SLOTS):
+    {
+
+        if (speed_percentage > 100)
+        {
+            debugOutput::sendMessage("Speed invalid. Will set to max. Please provide argument in [0..100] interval. Provided: " + to_string(speed_percentage), MSG_WARNING);
+            speed_percentage = 100;
+        }
+        debugOutput::sendMessage("Speed percentage set: " + to_string(speed_percentage), MSG_INFO);
+        success = SendByte(PIC_ADDRESS, 0x00, speed_percentage); // PWM value
+    };
+    break;
+    default:
+    {
+        // debugOutput::sendMessage("Pcb: Pcb has no setPumpSpeedPercentage available", MSG_ERROR);
     }
-    debugOutput::sendMessage("Speed percentage set: " + to_string(speed_percentage), MSG_INFO);
-    return SendByte(PIC_ADDRESS, 0x00, speed_percentage); // PWM value
+    break;
+    }
 }
 
-bool pcb::setPumpsDisableAll()
+void pcb::setPumpsDisableAll()
 {
     switch (pcb_version)
     {
@@ -1422,10 +2030,9 @@ bool pcb::setPumpsDisableAll()
         reg_value = ReadByte(get_PCA9534_address_from_slot(1), 0x01);
         reg_value = reg_value & 0b11111000;
         SendByte(get_PCA9534_address_from_slot(1), 0x01, reg_value);
-
-        return true;
     };
     break;
+    case (EN258_4SLOTS):
     case (EN134_4SLOTS):
     {
         uint8_t reg_value;
@@ -1436,6 +2043,7 @@ bool pcb::setPumpsDisableAll()
         }
     };
     break;
+    case (EN258_8SLOTS):
     case (EN134_8SLOTS):
     {
         uint8_t reg_value;
@@ -1446,16 +2054,17 @@ bool pcb::setPumpsDisableAll()
         }
     };
     break;
+
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!11", MSG_ERROR);
+        debugOutput::sendMessage("Pcb: Error PCB NOT VALID!!11", MSG_ERROR);
     }
     break;
     }
 
 } // End setPumpsDisableAll()
 
-bool pcb::setPumpEnable(uint8_t slot)
+void pcb::setPumpEnable(uint8_t slot)
 {
     // in 8344 one button: do not take into account button press, it is hardwired on the pcb
     // in 8344 multibutton:
@@ -1487,18 +2096,17 @@ bool pcb::setPumpEnable(uint8_t slot)
         case 4:
             reg_value = reg_value | 0b00000111;
             break;
-        default:
-            return false;
+        default:;
         }
         SendByte(get_PCA9534_address_from_slot(1), 0x01, reg_value); // slot 1 because there is only one PCA9534
-
-        return true;
     };
     break;
     case (EN134_4SLOTS):
     case (EN134_8SLOTS):
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
     {
-        debugOutput::sendMessage("Enable pump " + to_string(slot), MSG_INFO);
+        debugOutput::sendMessage("Pcb: Enable pump " + to_string(slot), MSG_INFO);
         slotEnabled[slot_index] = true;
     };
     break;
@@ -1510,7 +2118,7 @@ bool pcb::setPumpEnable(uint8_t slot)
     }
 }
 
-bool pcb::startPump(uint8_t slot)
+void pcb::startPump(uint8_t slot)
 {
     switch (pcb_version)
     {
@@ -1522,24 +2130,38 @@ bool pcb::startPump(uint8_t slot)
     {
         if (slotEnabled[slot - 1])
         {
-            debugOutput::sendMessage("Start pump " + to_string(slot), MSG_INFO);
+            debugOutput::sendMessage("Pcb: Start pump " + to_string(slot), MSG_INFO);
             setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_PUMP_ENABLE, true); // start pump
         }
         else
         {
-            debugOutput::sendMessage("Fail: Cannot start non enabled pump " + to_string(slot), MSG_WARNING);
+            debugOutput::sendMessage("Pcb: Cannot start pump. Not enabled for slot:" + to_string(slot), MSG_WARNING);
+        }
+    };
+    break;
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
+    {
+        if (slotEnabled[slot - 1])
+        {
+            debugOutput::sendMessage("Pcb: Start pump " + to_string(slot), MSG_INFO);
+            setMCP23017OutputBit(slot, MCP23017_EN258_GPB2_PIN_OUT_PUMP, true, MCP23017_REGISTER_GPB); // stop pump
+        }
+        else
+        {
+            debugOutput::sendMessage("Pcb: Cannot start pump. Not enabled for slot:" + to_string(slot), MSG_WARNING);
         }
     };
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!124", MSG_ERROR);
+        debugOutput::sendMessage("Pcb: no pump available for unknown pcb", MSG_ERROR);
     }
     break;
     }
 }
 
-bool pcb::stopPump(uint8_t slot)
+void pcb::stopPump(uint8_t slot)
 {
     switch (pcb_version)
     {
@@ -1549,27 +2171,46 @@ bool pcb::stopPump(uint8_t slot)
     case (EN134_4SLOTS):
     case (EN134_8SLOTS):
     {
-        debugOutput::sendMessage("Stop pump " + to_string(slot), MSG_INFO);
+        debugOutput::sendMessage("Pcb: Stop pump " + to_string(slot), MSG_INFO);
         setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_PUMP_ENABLE, false); // stop pump
+    };
+    break;
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
+    {
+        debugOutput::sendMessage("Pcb: Stop pump " + to_string(slot), MSG_INFO);
+        setMCP23017OutputBit(slot, MCP23017_EN258_GPB2_PIN_OUT_PUMP, false, MCP23017_REGISTER_GPB); // stop pump
     };
     break;
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!124", MSG_ERROR);
+        debugOutput::sendMessage("Pcb: Unknown Pcb has No pump", MSG_ERROR);
     }
     break;
     }
 }
 
-bool pcb::setPumpDirection(uint8_t slot, bool forwardElseReverse)
+void pcb::setPumpDirection(uint8_t slot, bool forwardElseReverse)
 {
-    // remember rotating or not.
-    // bool slotEnabled = slotEnabled[slot-1];
-    // setPumpsDisableAll();
-    // usleep(1000000);
-    bool reverseElseForward = !forwardElseReverse;
+    switch (pcb_version)
+    {
+    case (DSED8344_NO_PIC):
+    case (DSED8344_PIC_MULTIBUTTON):
+    case (EN134_4SLOTS):
+    case (EN134_8SLOTS):
+    {
+        bool reverseElseForward = !forwardElseReverse;
 
-    setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_PUMP_DIR, reverseElseForward);
+        setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_PUMP_DIR, reverseElseForward);
+    };
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Pcb: Pcb has No direction setting", MSG_ERROR);
+    }
+    break;
+    }
+
     // slotEnabled[slot-1] = slotEnabled;
 }
 
@@ -1577,7 +2218,202 @@ bool pcb::setPumpDirection(uint8_t slot, bool forwardElseReverse)
 // SOLENOID FUNCTIONS
 ///////////////////////////////////////////////////////////////////////////
 
-void pcb::setSolenoid(uint8_t slot, bool onElseOff)
+void pcb::setSolenoidFromArray(uint8_t slot, uint8_t position, bool onElseOff)
+{
+    // position starts from 1
+    // slot starts from 1
+    uint8_t solenoid_positions[8] = {MCP23017_EN258_GPB3_PIN_OUT_SOLENOID_1,
+                                     MCP23017_EN258_GPB4_PIN_OUT_SOLENOID_2,
+                                     MCP23017_EN258_GPB5_PIN_OUT_SOLENOID_3,
+                                     MCP23017_EN258_GPB6_PIN_OUT_SOLENOID_4,
+                                     MCP23017_EN258_GPB7_PIN_OUT_SOLENOID_5,
+                                     MCP23017_EN258_GPA0_PIN_OUT_SOLENOID_6,
+                                     MCP23017_EN258_GPA1_PIN_OUT_SOLENOID_7,
+                                     MCP23017_EN258_GPA2_PIN_OUT_SOLENOID_8};
+    uint8_t solenoid_positions_register[8] = {MCP23017_REGISTER_GPB,
+                                              MCP23017_REGISTER_GPB,
+                                              MCP23017_REGISTER_GPB,
+                                              MCP23017_REGISTER_GPB,
+                                              MCP23017_REGISTER_GPB,
+                                              MCP23017_REGISTER_GPA,
+                                              MCP23017_REGISTER_GPA,
+                                              MCP23017_REGISTER_GPA};
+    bool isValid = false;
+
+    if (position <= 0)
+    {
+        debugOutput::sendMessage("Pcb ASSERT ERROR: First Solenoid position is 1  !!!!", MSG_ERROR);
+    }
+
+    switch (pcb_version)
+    {
+
+    case (EN258_4SLOTS):
+    {
+
+        if (slot > 0 && slot <= 4)
+        {
+            isValid = true;
+        }
+    }
+    break;
+    case (EN258_8SLOTS):
+    {
+        if (slot > 0 && slot <= 8)
+        {
+            isValid = true;
+        }
+    };
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Pcb: No solenoid array function available for this pcb.", MSG_ERROR);
+    }
+    break;
+    }
+
+    if (isValid)
+    {
+        setMCP23017OutputBit(slot, solenoid_positions[position - 1], onElseOff, solenoid_positions_register[position - 1]);
+        debugOutput::sendMessage("Pcb: Array Solenoid# : " + std::to_string(position) + ". Slot: " + std::to_string(slot) + ". Enabled: " + std::to_string(onElseOff), MSG_INFO);
+    }
+}
+
+void pcb::disableAllSolenoidsOfSlot(uint8_t slot)
+{
+    switch (pcb_version)
+    {
+    case (EN134_4SLOTS):
+    case (EN134_8SLOTS):
+    {
+        setSpoutSolenoid(slot, false);
+    };
+    break;
+    case (EN258_4SLOTS):
+    {
+        for (uint8_t position = 1; position <= 4; position++)
+        {
+            setSolenoidFromArray(slot, position, false);
+        }
+    }
+    break;
+    case (EN258_8SLOTS):
+    {
+        for (uint8_t position = 1; position <= 8; position++)
+        {
+            setSolenoidFromArray(slot, position, false);
+        }
+    }
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Pcb: No solenoid function available for this pcb.", MSG_ERROR);
+    }
+    break;
+    }
+}
+
+void pcb::setAdditiveSolenoid(uint8_t slot, int additivePosition, bool onElseOff)
+{
+    switch (pcb_version)
+    {
+
+    case (DSED8344_NO_PIC):
+    case (DSED8344_PIC_MULTIBUTTON):
+    {
+        debugOutput::sendMessage("No solenoid used in pcb. ", MSG_INFO);
+    };
+    break;
+    case (EN134_4SLOTS):
+    case (EN134_8SLOTS):
+    {
+        debugOutput::sendMessage("No base solenoid used in pcb. ", MSG_INFO);
+    };
+    break;
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
+    {
+        switch (additivePosition)
+        {
+        case (1):
+        {
+            setSolenoidFromArray(slot, EN258_SOLENOID_ADDITIVE_1, onElseOff);
+        }
+        break;
+        case (2):
+        {
+            setSolenoidFromArray(slot, EN258_SOLENOID_ADDITIVE_2, onElseOff);
+        }
+        break;
+        case (3):
+        {
+            setSolenoidFromArray(slot, EN258_SOLENOID_ADDITIVE_3, onElseOff);
+        }
+        break;
+        case (4):
+        {
+            setSolenoidFromArray(slot, EN258_SOLENOID_ADDITIVE_4, onElseOff);
+        }
+        break;
+        case (5):
+        {
+            setSolenoidFromArray(slot, EN258_SOLENOID_ADDITIVE_5, onElseOff);
+        }
+        break;
+        case (6):
+        {
+            setSolenoidFromArray(slot, EN258_SOLENOID_ADDITIVE_6, onElseOff);
+        }
+        break;
+        default:
+        {
+            debugOutput::sendMessage("Pcb: Additive position not available." + std::to_string(additivePosition), MSG_ERROR);
+        }
+        break;
+        }
+    }
+    break;
+
+    default:
+    {
+        debugOutput::sendMessage("Pcb: No single solenoid function available for this pcb.", MSG_ERROR);
+    }
+    break;
+    }
+}
+void pcb::setBaseSolenoid(uint8_t slot, bool onElseOff)
+{
+    switch (pcb_version)
+    {
+
+    case (DSED8344_NO_PIC):
+    case (DSED8344_PIC_MULTIBUTTON):
+    {
+        debugOutput::sendMessage("No solenoid used in pcb. ", MSG_INFO);
+    };
+    break;
+    case (EN134_4SLOTS):
+    case (EN134_8SLOTS):
+    {
+        debugOutput::sendMessage("No base solenoid used in pcb. ", MSG_INFO);
+    };
+    break;
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
+    {
+        setSolenoidFromArray(slot, EN258_SOLENOID_BASE, onElseOff);
+    }
+    break;
+
+    default:
+    {
+        debugOutput::sendMessage("Pcb: No single solenoid function available for this pcb.", MSG_ERROR);
+    }
+    break;
+    }
+}
+
+void pcb::setSpoutSolenoid(uint8_t slot, bool onElseOff)
 {
     switch (pcb_version)
     {
@@ -1594,16 +2430,94 @@ void pcb::setSolenoid(uint8_t slot, bool onElseOff)
         setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_SOLENOID, onElseOff);
     };
     break;
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
+    {
+        setSolenoidFromArray(slot, EN258_SOLENOID_SPOUT, onElseOff);
+    }
+    break;
+
     default:
     {
-        debugOutput::sendMessage("Error PCB NOT VALID!!13", MSG_ERROR);
+        debugOutput::sendMessage("Pcb: No single solenoid function available for this pcb.", MSG_ERROR);
     }
     break;
     }
 }
 
-double pcb::getTemperature(uint8_t temperatureSensorI2CAddress)
+double pcb::getTemperature(TemperatureSensor sensor)
 {
+
+    double temperature = 666.0;
+
+    switch (sensor)
+    {
+    case (external_sensor_fridge):
+    {
+        if (mcp9808_temperature_sensor_1_found)
+        {
+            temperature = getTemperatureFromMCP9808(TEMPERATURE_OPTIONAL_EXTERNAL_MCP9808_1_ADDRESS);
+        }
+        else
+        {
+            debugOutput::sendMessage("Pcb: temperature sensor not available (external_sensor_fridge)", MSG_ERROR);
+        }
+    }
+    break;
+    case (external_sensor_cavity):
+    {
+        if (mcp9808_temperature_sensor_2_found)
+        {
+            temperature = getTemperatureFromMCP9808(TEMPERATURE_OPTIONAL_EXTERNAL_MCP9808_2_ADDRESS);
+        }
+        else
+        {
+            debugOutput::sendMessage("Pcb: temperature sensor not available (external_sensor_cavity)", MSG_ERROR);
+        }
+    }
+    break;
+    case (pcb_sensor_fridge):
+    {
+        if (isTemperatureSensorADS7830Available())
+        {
+            temperature = getTemperatureFromADS7830(TEMPERATURE_OPTIONAL_EXTERNAL_MCP9808_2_ADDRESS, 0);
+        }
+        else
+        {
+            debugOutput::sendMessage("Pcb: temperature sensor not available (pcb_sensor_fridge)", MSG_ERROR);
+        }
+    }
+    break;
+    case (pcb_sensor_cavity):
+    {
+        if (isTemperatureSensorADS7830Available())
+        {
+            temperature = getTemperatureFromADS7830(TEMPERATURE_OPTIONAL_EXTERNAL_MCP9808_2_ADDRESS, 1);
+        }
+        {
+            debugOutput::sendMessage("Pcb: temperature sensor not available (pcb_sensor_cavity)", MSG_ERROR);
+        }
+    }
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Pcb: Unknown indicated temperature sensor.)", MSG_ERROR);
+    }
+    break;
+    }
+    return temperature;
+}
+
+double pcb::getTemperatureFromADS7830(uint8_t temperatureSensorI2CAddress, uint8_t position)
+{
+    debugOutput::sendMessage("Not yet implemented for postion" + std::to_string(position), MSG_WARNING);
+    return 666.1;
+}
+
+double pcb::getTemperatureFromMCP9808(uint8_t temperatureSensorI2CAddress)
+{
+
+    double return_temperature;
     set_i2c_address(temperatureSensorI2CAddress);
     int temperature_bytes = i2c_smbus_read_word_data(i2c_handle, 0x05);
     if (temperature_bytes < 0)
@@ -1619,63 +2533,18 @@ double pcb::getTemperature(uint8_t temperatureSensorI2CAddress)
     temperature_bytes = temperature_bytes_swapped;
     uint16_t signBit = (temperature_bytes >> 12) & 0x01;   // Sign bit is at bit 12
     uint16_t temperatureData = temperature_bytes & 0x0FFF; // Temperature data is bits 11-0
+
     if ((temperatureData & 0x0800) != 0)
     {
         // Negative temperature
         temperatureData = (~temperatureData & 0x0FFF) + 1; // Two's complement conversion
-        cTemp = -1.0 * temperatureData * 0.0625;
+        return_temperature = -1.0 * temperatureData * 0.0625;
     }
     else
     {
         // Positive temperature
-        cTemp = temperatureData * 0.0625;
+        return_temperature = temperatureData * 0.0625;
     }
 
-    return cTemp;
+    return return_temperature;
 }
-// double pcb::getTemperature2()
-// {
-//     set_i2c_address(TEMPERATURE_SENSOR_ADDRESS2);
-//     int temperature_bytes = i2c_smbus_read_word_data(i2c_handle, 0x05);
-//     if (temperature_bytes < 0)
-//     {
-//         debugOutput::sendMessage("Error did not read from temperature sensor mcp9808", MSG_INFO);
-//         return 1;
-//     }
-
-//     uint16_t msbint = temperature_bytes >> 8;
-//     uint16_t lsbint = temperature_bytes & 0x00FF;
-//     uint16_t temperature_bytes_swapped = (lsbint << 8) | msbint;
-//     // create function to swap this
-//     //     uint16_t swapBytes(uint16_t temperature_bytes) {
-//     //     uint16_t msbint = temperature_bytes >> 8;
-//     //     uint16_t lsbint = temperature_bytes & 0x00FF;
-//     //     uint16_t temperature_bytes_swapped = (lsbint << 8) | msbint;
-//     //     return temperature_bytes_swapped;
-//     // }
-
-//     // std::string binarymsb = std::bitset<16>(msbint).to_string();
-//     //debugOutput::sendMessage("Temperature as bits msb: " + binarymsb, MSG_INFO);
-
-//     // std::string binarylsb = std::bitset<16>(lsbint).to_string();
-//     // debugOutput::sendMessage("Temperature as bits lsb: " + binarylsb, MSG_INFO);
-
-//     temperature_bytes = temperature_bytes_swapped;
-//     uint16_t signBit = (temperature_bytes >> 12) & 0x01;   // Sign bit is at bit 12
-//     uint16_t temperatureData = temperature_bytes & 0x0FFF; // Temperature data is bits 11-0
-//     if ((temperatureData & 0x0800) != 0)
-//     {
-//         // Negative temperature
-//         temperatureData = (~temperatureData & 0x0FFF) + 1; // Two's complement conversion
-//         cTemp = -1.0 * temperatureData * 0.0625;
-//     }
-//     else
-//     {
-//         // Positive temperature
-//         cTemp2 = temperatureData * 0.0625;
-//     }
-//     // std::string binary = std::bitset<16>(temperature_bytes).to_string();
-//     // debugOutput::sendMessage("Temperature as bits: " + binary, MSG_INFO);
-
-//     return cTemp2;
-// }

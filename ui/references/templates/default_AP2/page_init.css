@@ -1,0 +1,22 @@
+/* no css file for init */
+QPushButton { 
+    border-radius: 25px;
+    background: #FFF7ED;
+    color: #895E25;
+    text-align: center;
+    qproperty-alignment: AlignCenter;
+    font-size: 40px;
+    font-weight: 700;
+    font-style: normal;
+    font-family: 'El Messiri';
+}
+
+#label_init_message{
+    color: #895E25;
+    text-align: center;
+    qproperty-alignment: AlignCenter;
+    font-family: 'El Messiri';
+    font-size: 40px;
+    font-weight: 700;
+    font-style: normal;
+}

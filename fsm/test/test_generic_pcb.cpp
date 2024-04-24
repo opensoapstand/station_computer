@@ -1,7 +1,22 @@
 
 #include "../objects/debugOutput.h"
 #include "../components/pcb.h"
+#include "../components/gpio_odyssey.h"
 #include <chrono>
+
+#include <bitset>
+#include <string>
+#include <iomanip>
+
+#define IO_PIN_ENABLE_3point3V_BEFORE_SYSFS_DEPRECATED 389 // connector pin 28 for EN258 pcb
+#define IO_PIN_ENABLE_5V_BEFORE_SYSFS_DEPRECATED 338       // connector pin 12 for EN258 pcb
+#define IO_PIN_ENABLE_24V_BEFORE_SYSFS_DEPRECATED 410      // connector pin 36 for EN-134 pcb
+
+// sysfs deprecated --> still works if all pins have 512 added to it...
+// https://forum.seeedstudio.com/t/gpio-pins-not-responding-in-code/252187/2
+#define IO_PIN_ENABLE_3point3V_AFTER_SYSFS_DEPRECATED 901 // connector pin 28 for EN258 pcb
+#define IO_PIN_ENABLE_5V_AFTER_SYSFS_DEPRECATED 850       // connector pin 12 for EN258 pcb
+#define IO_PIN_ENABLE_24V_AFTER_SYSFS_DEPRECATED 922      // connector pin 36 for EN-134 pcb
 
 enum Dispense_state
 {
@@ -20,58 +35,124 @@ enum Dispense_state
 };
 Dispense_state dispense_state;
 
+#ifndef PUMP_START_DELAY_MILLIS
 #define PUMP_START_DELAY_MILLIS 50
+#endif
+#ifndef PUMP_BACKTRACK_TIME_MILLIS
 #define PUMP_BACKTRACK_TIME_MILLIS 50
+#endif
+
+#ifndef SOLENOID_STOP_DELAY_MILLIS
 #define SOLENOID_STOP_DELAY_MILLIS 50
+#endif
 
 #define AUTO_DISPENSE_ENABLED false
 #define AUTO_DISPENSE_SLOT 2
 #define AUTO_DISPENSE_DELAY_BETWEEN_CYCLES_MS 3000
 #define AUTO_DISPENSE_CYCLE_LENGTH_MS 3000
 
-void pwm_test()
+// void pwm_test()
+// {
+//     pcb *connected_pcb;
+//     connected_pcb = new pcb();
+//     bool edge = true;
+//     connected_pcb->setup();
+//     while (true)
+//     {
+
+//         using namespace std::chrono;
+//         uint64_t now_epoch_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+
+//         uint64_t pulse_2s_period = now_epoch_millis % 2000;
+
+//         if (pulse_2s_period > 1000)
+//         {
+//             if (edge)
+//             {
+//                 debugOutput::sendMessage("255", MSG_INFO);
+//                 edge = false;
+//                 connected_pcb->setPumpPWM(255);
+//             }
+//         }
+//         else
+//         {
+//             if (!edge)
+//             {
+//                 debugOutput::sendMessage("0", MSG_INFO);
+//                 edge = true;
+//                 connected_pcb->setPumpPWM(0);
+//             }
+//         }
+//         connected_pcb->pcb_refresh();
+//     }
+// }
+
+std::string executeCommmandLineCommand(const char *cmd)
 {
-    pcb *connected_pcb;
-    connected_pcb = new pcb();
-    bool edge = true;
-    connected_pcb->setup();
-    while (true)
+    std::array<char, 128> buffer;
+    std::string result;
+    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
+    if (!pipe)
+    {
+        throw std::runtime_error("popen() failed!");
+    }
+    while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr)
+    {
+        result += buffer.data();
+    }
+    return result;
+}
+void board_test(pcb *connected_pcb)
+{
+    int active_solenoid_position = 0; // first solenoid at position 1, but at first run, will do +1
+
+    std::string kernelVersion = executeCommmandLineCommand("uname -r");
+    int major, minor, patch;
+    sscanf(kernelVersion.c_str(), "%d.%d.%d", &major, &minor, &patch);
+
+    debugOutput::sendMessage("Linux kernel version installed: " + kernelVersion, MSG_INFO);
+    // Compare to versions 5.4.0 --> Linux kernel from ubuntu 18
+    // Compare to versions 5.15.0 --> Linux kernel from ubuntu 22
+
+    int pin_enable_3point3V;
+    int pin_enable_24V;
+    int pin_enable_5V;
+
+    if (major <= 5 && minor <= 4)
     {
 
-        using namespace std::chrono;
-        uint64_t now_epoch_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-
-        uint64_t pulse_2s_period = now_epoch_millis % 2000;
-
-        if (pulse_2s_period > 1000)
-        {
-            if (edge)
-            {
-                debugOutput::sendMessage("255", MSG_INFO);
-                edge = false;
-                connected_pcb->setPumpPWM(255);
-            }
-        }
-        else
-        {
-            if (!edge)
-            {
-                debugOutput::sendMessage("0", MSG_INFO);
-                edge = true;
-                connected_pcb->setPumpPWM(0);
-            }
-        }
-        connected_pcb->pcb_refresh();
+        debugOutput::sendMessage("Ubuntu 18.04. Update the computer to Ubuntu 22.04 when possible.", MSG_INFO);
+        pin_enable_3point3V = IO_PIN_ENABLE_3point3V_BEFORE_SYSFS_DEPRECATED;
+        pin_enable_5V = IO_PIN_ENABLE_5V_BEFORE_SYSFS_DEPRECATED;
+        pin_enable_24V = IO_PIN_ENABLE_24V_BEFORE_SYSFS_DEPRECATED;
     }
-}
+    else if (major >= 5 && minor >= 15)
+    {
+        debugOutput::sendMessage("Ubuntu 22.04. --> sysfs used, which is deprecated. Transform to character based gpio interface.", MSG_INFO);
+        // std::cout << "new" << std::endl;
+        pin_enable_3point3V = IO_PIN_ENABLE_3point3V_AFTER_SYSFS_DEPRECATED;
+        pin_enable_5V = IO_PIN_ENABLE_5V_AFTER_SYSFS_DEPRECATED;
+        pin_enable_24V = IO_PIN_ENABLE_24V_AFTER_SYSFS_DEPRECATED;
+    }
+    else
+    {
+        debugOutput::sendMessage("between 5.4.0 and 5.15.0. Check functionality and choose between the pin numbers needed...... Ubuntu 22.04 functionality chosen for now.  ", MSG_ERROR);
+        pin_enable_3point3V = IO_PIN_ENABLE_3point3V_AFTER_SYSFS_DEPRECATED;
+        pin_enable_5V = IO_PIN_ENABLE_5V_AFTER_SYSFS_DEPRECATED;
+        pin_enable_24V = IO_PIN_ENABLE_24V_AFTER_SYSFS_DEPRECATED;
+    }
 
-void board_test()
-{
+    gpio_odyssey controlPower3point3V(pin_enable_3point3V);
+    controlPower3point3V.setPinAsInputElseOutput(true);
+    controlPower3point3V.writePin(false);
 
-    pcb *connected_pcb;
-    connected_pcb = new pcb();
+    gpio_odyssey controlPower24V(pin_enable_24V);
+    controlPower24V.setPinAsInputElseOutput(true);
+    controlPower24V.writePin(false);
+    // int pin = IO_PIN_ENABLE_24V;
+    // gpio_odyssey controlPower24V(pin);
+    // controlPower24V.setPinAsInputElseOutput(false);
 
-    connected_pcb->setup();
     connected_pcb->setPumpPWM(255); // 255 is max speed
 
     bool dispenseCycleStarted = false;
@@ -89,9 +170,12 @@ void board_test()
 
     while (true)
     {
+        //  usleep(500000);
         using namespace std::chrono;
         uint64_t now_epoch_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+
         connected_pcb->pcb_refresh();
+
         // connected_pcb->independentDispensingRefresh();
 
         switch (dispense_state)
@@ -107,7 +191,12 @@ void board_test()
                 {
                     connected_pcb->setPumpDirection(slot, true);
                     connected_pcb->setSingleDispenseButtonLight(slot, false);
-                    connected_pcb->setSolenoid(slot, false);
+                    // connected_pcb->setSpoutSolenoid(slot, false);
+                    connected_pcb->disableAllSolenoidsOfSlot(slot);
+                }
+                else
+                {
+                    usleep(1000000);
                 }
             };
 
@@ -172,28 +261,55 @@ void board_test()
                             active_slot = slot;
                         }
                     }
+                    else
+                    {
+                        usleep(1000000);
+                        debugOutput::sendMessage("slot not there.", MSG_INFO);
+                    }
                 }
             }
 
             if (next_step)
             {
                 dispense_state = dispense_activate_solenoid;
-                total_flow_pulses_count = connected_pcb->getFlowSensorTotalPulses(active_slot);
+                total_flow_pulses_count = connected_pcb->getFlowSensorPulsesSinceEnabling(active_slot);
 
                 debugOutput::sendMessage("---- Start of dispense cycle " + to_string(dispense_cycle_count) + "---- . Total number of flow sensor pulses since program start: " + to_string(total_flow_pulses_count), MSG_INFO);
-                // connected_pcb->resetFlowSensorTotalPulses(active_slot);
+                // connected_pcb->resetFlowSensorPulsesForDispenser(active_slot);
                 dispense_cycle_count++;
             }
         };
         break;
         case (dispense_activate_solenoid):
         {
+            controlPower24V.writePin(true);
+
             pump_start_delay_start_epoch = now_epoch_millis;
-            connected_pcb->setSolenoid(active_slot, true);
+            if (connected_pcb->get_pcb_version() == pcb::EN134_4SLOTS || connected_pcb->get_pcb_version() == pcb::EN134_8SLOTS)
+            {
+
+                connected_pcb->setSpoutSolenoid(active_slot, true);
+                debugOutput::sendMessage("Activate solenoid", MSG_INFO);
+            }
+            else if (connected_pcb->get_pcb_version() == pcb::EN258_4SLOTS || connected_pcb->get_pcb_version() == pcb::EN258_8SLOTS)
+            {
+                active_solenoid_position++;
+
+                if (active_solenoid_position > 8)
+                {
+                    active_solenoid_position = 1;
+                }
+                connected_pcb->setSolenoidFromArray(active_slot, active_solenoid_position, true);
+                debugOutput::sendMessage("Activate solenoid at position : " + std::to_string(active_solenoid_position), MSG_INFO);
+            }
+            else
+            {
+                debugOutput::sendMessage("Invalid pcb ", MSG_INFO);
+            }
+
             connected_pcb->flowSensorEnable(active_slot);
             connected_pcb->setSingleDispenseButtonLight(active_slot, true);
             dispense_state = dispense_pump_delay;
-            debugOutput::sendMessage("Activate solenoid", MSG_INFO);
         };
         break;
         case (dispense_pump_delay):
@@ -258,6 +374,10 @@ void board_test()
                 {
                     connected_pcb->setPumpDirection(active_slot, false);
                     connected_pcb->setPumpEnable(active_slot);
+
+                    // connected_pcb->setPumpSpeedPercentage(0);
+                    // connected_pcb->setPumpDirection(active_slot, true);
+
                     connected_pcb->startPump(active_slot);
 
                     dispense_state = dispense_end_backtrack_delay;
@@ -292,6 +412,7 @@ void board_test()
         break;
         case (dispense_end_solenoid_delay):
         {
+            controlPower24V.writePin(false);
 
             if (!AUTO_DISPENSE_ENABLED && connected_pcb->getDispenseButtonStateDebounced(active_slot))
             {
@@ -306,7 +427,9 @@ void board_test()
             if (now_epoch_millis > (solenoid_stop_delay_start_epoch + SOLENOID_STOP_DELAY_MILLIS))
             {
 
-                connected_pcb->setSolenoid(active_slot, false);
+                // connected_pcb->setSpoutSolenoid(active_slot, false);
+                connected_pcb->disableAllSolenoidsOfSlot(active_slot);
+
                 uint64_t cycle_pulses;
                 cycle_pulses = connected_pcb->getFlowSensorPulsesSinceEnabling(active_slot);
 
@@ -347,149 +470,472 @@ void board_test()
     }
 }
 
-void motor_test()
-// void motor_test(int slot, int speedpwm)
-{
-    pcb *connected_pcb;
-    connected_pcb = new pcb();
+// void setIOPin(int pinNumber, bool inputElseOutput)
+// {
 
-#define SLOT 2
-    connected_pcb->setup();
-    connected_pcb->setPumpPWM(255);
-    connected_pcb->setPumpDirection(SLOT, true);
-    // connected_pcb->setPumpDirection(SLOT, false);
-    connected_pcb->setPumpEnable(SLOT);
-    // connected_pcb->setSolenoid(SLOT, true);
-    // connected_pcb->setSingleDispenseButtonLight(SLOT, true);
-    //     debugOutput::sendMessage("started. press button to stop", MSG_INFO);
-    using namespace std::chrono;
-    uint64_t start_millis_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    uint64_t now = start_millis_epoch;
+// #ifndef INPUT
+// #define INPUT 1
+// #endif
 
-    connected_pcb->startPump(SLOT);
+// #ifndef OUTPUT
+// #define OUTPUT 0
+// #endif
+// #define SYSFS_GPIO_DIR "/sys/class/gpio"
 
-    while (now < start_millis_epoch + 2000)
-    {
-        now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-        connected_pcb->pcb_refresh();
-        // if (connected_pcb->getDispenseButtonEdgePositive(SLOT))
-        // {
-        //     connected_pcb->setPumpsDisableAll();
-        //     connected_pcb->setSolenoid(SLOT, false);
-        //     debugOutput::sendMessage("button pressed. finish up", MSG_INFO);
-        //     connected_pcb->setSingleDispenseButtonLight(SLOT, false);
-        //     return;
-        // }
-    }
-    connected_pcb->stopPump(SLOT);
-    debugOutput::sendMessage("end", MSG_INFO);
-}
+//     std::string msg = "------gpio_odyssey------ pin:" + std::to_string(pinNumber);
+//     debugOutput::sendMessage(msg, MSG_INFO);
 
-void motor_test_ramp_up()
-// void motor_test(int slot, int speedpwm)
-{
-    pcb *connected_pcb;
-    connected_pcb = new pcb();
+//     // debugOutput::sendMessage("------gpio_odyssey------", MSG_INFO);
+//     int fd, len;
+//     char buf[MAX_BUF];
+//     fd = open(SYSFS_GPIO_DIR "/export", O_WRONLY);
+//     if (fd < 0)
+//     {
+//         debugOutput::sendMessage("~gpio_odyssey could not open the gpio", MSG_ERROR);
+//         return;
+//     }
 
-#define SLOT 2
-    connected_pcb->setup();
+//     len = snprintf(buf, sizeof(buf), "%d", pinNumber);
+//     write(fd, buf, len);
+//     close(fd);
 
-    connected_pcb->setPumpDirection(SLOT, true);
-    connected_pcb->setPumpEnable(SLOT);
+//     /* ------------------------- TODO: THIS NEEDS TO BE DONE BETTER ------------------------ */
 
-    connected_pcb->startPump(SLOT);
-    using namespace std::chrono;
+//     string GPIO = std::to_string(pinNumber);
+//     string command("echo 'D@nkF1ll$' | sudo -S chmod a+w /sys/class/gpio/gpio");
+//     command += GPIO;
+//     string command_dir = command + "/direction";
+//     string command_edg = command + "/edge";
+//     string command_val = command + "/value";
 
-    uint64_t start_millis_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    uint64_t now = start_millis_epoch;
+//     system(command_dir.c_str());
+//     system(command_edg.c_str());
+//     system(command_val.c_str());
 
-    // for (int i = 0;i<255;i++){
-    for (int i = 255; i > 0; i-=10)
-    {
-        connected_pcb->pcb_refresh();
-        start_millis_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+//     using namespace std::chrono;
+//     uint64_t now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
-        connected_pcb->setPumpPWM(i);
+//     std::string msg = "gpio_odyssey::setPinAsInputElseOutput " + std::to_string(pinNumber);
+//     debugOutput::sendMessage(msg, MSG_INFO);
 
-        if (connected_pcb->getDispenseButtonState(SLOT))
-        {
-            while (now < start_millis_epoch + 300)
-            {
-                now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-            }
-            connected_pcb->pcb_refresh();
-        }
-        else
-        {
-            while (!connected_pcb->getDispenseButtonEdgePositive(SLOT))
-            {
-                connected_pcb->pcb_refresh();
-            };
-        }
-    }
+//     // debugOutput::sendMessage("gpio_odyssey::setPinAsInputElseOutput ", MSG_INFO);
+//     DF_ERROR df_ret = ERROR_MECH_FS_FAULT;
+//     int fd, len;
+//     char syscode;
+//     char buf[MAX_BUF];
+//     // char buf2[MAX_BUF];
 
-    start_millis_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    now = start_millis_epoch;
-    while (now < start_millis_epoch + 2000)
-    {
-        connected_pcb->pcb_refresh();
-        now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+//     // Composes a string with the same text that would be printed if format was used on printf, but instead of being printed,
+//     // the content is stored as a C string in the buffer pointed by s
+//     len = snprintf(buf, sizeof(buf), SYSFS_GPIO_DIR "/gpio%d/direction", pinNumber);
+//     // len2 = snprintf(buf2, sizeof(buf2), SYSFS_GPIO_DIR "/gpio%d/edge", m_nPin);
 
-        // if (connected_pcb->getDispenseButtonEdgePositive(SLOT))
-        // {
-        //     connected_pcb->setPumpsDisableAll();
-        //     connected_pcb->setSolenoid(SLOT, false);
-        //     debugOutput::sendMessage("button pressed. finish up", MSG_INFO);
-        //     connected_pcb->setSingleDispenseButtonLight(SLOT, false);
-        //     return;
-        // }
-    }
-    connected_pcb->stopPump(SLOT);
-    debugOutput::sendMessage("end", MSG_INFO);
-}
+//     fd = open(buf, O_WRONLY);
+//     // fd2 = open(buf2, O_WRONLY);
+//     if (fd >= 0)
+//     {
+//         if (INPUT == inputElseOutput)
+//         {
+//             // cout << "direction input set" << endl;
+//             write(fd, "in", 3);
+//             // cout << "edge set" << endl;
+//             // write(fd2, "rising", 7);
+//         }
+//         else
+//             write(fd, "out", 4);
 
-void init_test()
-{
-    pcb *connected_pcb;
-    connected_pcb = new pcb();
+//         close(fd);
+//         //      close(fd2);
+//         df_ret = OK;
+//     }
+// }
 
-    connected_pcb->setup();
+// void motor_test()
+// // void motor_test(int slot, int speedpwm)
+// {
+//     pcb *connected_pcb;
+//     connected_pcb = new pcb();
 
-    using namespace std::chrono;
-    uint64_t start_millis_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    uint64_t now = start_millis_epoch;
+// #define SLOT 2
+//     connected_pcb->setup();
+//     connected_pcb->setPumpPWM(255);
+//     connected_pcb->setPumpDirection(SLOT, true);
+//     // connected_pcb->setPumpDirection(SLOT, false);
+//     connected_pcb->setPumpEnable(SLOT);
+//     // connected_pcb->setSpoutSolenoid(SLOT, true);
+//     // connected_pcb->setSingleDispenseButtonLight(SLOT, true);
+//     //     debugOutput::sendMessage("started. press button to stop", MSG_INFO);
+//     using namespace std::chrono;
+//     uint64_t start_millis_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+//     uint64_t now = start_millis_epoch;
 
-    while (now < start_millis_epoch + 5000)
-    {
-        now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-        connected_pcb->pcb_refresh();
-    }
-    debugOutput::sendMessage("end", MSG_INFO);
-}
+//     connected_pcb->startPump(SLOT);
 
-void test_button_lights(bool onElseOff)
-{
-    pcb *connected_pcb;
-    connected_pcb = new pcb();
+//     while (now < start_millis_epoch + 2000)
+//     {
+//         now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+//         connected_pcb->pcb_refresh();
+//         // if (connected_pcb->getDispenseButtonEdgePositive(SLOT))
+//         // {
+//         //     connected_pcb->setPumpsDisableAll();
+//         //     connected_pcb->setSpoutSolenoid(SLOT, false);
+//         //     debugOutput::sendMessage("button pressed. finish up", MSG_INFO);
+//         //     connected_pcb->setSingleDispenseButtonLight(SLOT, false);
+//         //     return;
+//         // }
+//     }
+//     connected_pcb->stopPump(SLOT);
+//     debugOutput::sendMessage("end", MSG_INFO);
+// }
 
-    connected_pcb->setup();
-    for (int slot = 1; slot <= 4; slot++)
-    {
-        debugOutput::sendMessage("Slot light " + to_string(slot) + " Setting:" + to_string(onElseOff), MSG_INFO);
-        connected_pcb->setSingleDispenseButtonLight(slot, onElseOff);
-    }
-    connected_pcb->pcb_refresh();
-}
+// void motor_test_ramp_up()
+// // void motor_test(int slot, int speedpwm)
+// {
+//     pcb *connected_pcb;
+//     connected_pcb = new pcb();
 
-int main(int argc, char *argv[])
+// #define SLOT 2
+//     connected_pcb->setup();
+
+//     connected_pcb->setPumpDirection(SLOT, true);
+//     connected_pcb->setPumpEnable(SLOT);
+
+//     connected_pcb->startPump(SLOT);
+//     using namespace std::chrono;
+
+//     uint64_t start_millis_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+//     uint64_t now = start_millis_epoch;
+
+//     // for (int i = 0;i<255;i++){
+//     for (int i = 255; i > 0; i -= 10)
+//     {
+//         connected_pcb->pcb_refresh();
+//         start_millis_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+
+//         connected_pcb->setPumpPWM(i);
+
+//         if (connected_pcb->getDispenseButtonState(SLOT))
+//         {
+//             while (now < start_millis_epoch + 300)
+//             {
+//                 now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+//             }
+//             connected_pcb->pcb_refresh();
+//         }
+//         else
+//         {
+//             while (!connected_pcb->getDispenseButtonEdgePositive(SLOT))
+//             {
+//                 connected_pcb->pcb_refresh();
+//             };
+//         }
+//     }
+
+//     start_millis_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+//     now = start_millis_epoch;
+//     while (now < start_millis_epoch + 2000)
+//     {
+//         connected_pcb->pcb_refresh();
+//         now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+
+//         // if (connected_pcb->getDispenseButtonEdgePositive(SLOT))
+//         // {
+//         //     connected_pcb->setPumpsDisableAll();
+//         //     connected_pcb->setSpoutSolenoid(SLOT, false);
+//         //     debugOutput::sendMessage("button pressed. finish up", MSG_INFO);
+//         //     connected_pcb->setSingleDispenseButtonLight(SLOT, false);
+//         //     return;
+//         // }
+//     }
+//     connected_pcb->stopPump(SLOT);
+//     debugOutput::sendMessage("end", MSG_INFO);
+// }
+
+// void init_test()
+// {
+//     pcb *connected_pcb;
+//     connected_pcb = new pcb();
+
+//     connected_pcb->setup();
+
+//     using namespace std::chrono;
+//     uint64_t start_millis_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+//     uint64_t now = start_millis_epoch;
+
+//     while (now < start_millis_epoch + 5000)
+//     {
+//         now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+//         connected_pcb->pcb_refresh();
+//     }
+//     debugOutput::sendMessage("end", MSG_INFO);
+// }
+
+// void test_button_lights(bool onElseOff)
+// {
+//     pcb *connected_pcb;
+//     connected_pcb = new pcb();
+
+//     connected_pcb->setup();
+//     for (int slot = 1; slot <= 4; slot++)
+//     {
+//         debugOutput::sendMessage("Slot light " + to_string(slot) + " Setting:" + to_string(onElseOff), MSG_INFO);
+//         connected_pcb->setSingleDispenseButtonLight(slot, onElseOff);
+//     }
+//     connected_pcb->pcb_refresh();
+// }
+
+void runMainTest()
 {
     // pwm_test();
-    board_test();
-    debugOutput::sendMessage(to_string(argc), MSG_INFO);
+
+    pcb *pcb_to_test;
+    pcb_to_test = new pcb();
+
+    std::string kernelVersion = executeCommmandLineCommand("uname -r");
+    int major, minor, patch;
+    sscanf(kernelVersion.c_str(), "%d.%d.%d", &major, &minor, &patch);
+
+    debugOutput::sendMessage("Linux kernel version installed: " + kernelVersion, MSG_INFO);
+    // Compare to versions 5.4.0 --> Linux kernel from ubuntu 18
+    // Compare to versions 5.15.0 --> Linux kernel from ubuntu 22
+
+    int pin_enable_3point3V;
+    int pin_enable_24V;
+    int pin_enable_5V;
+
+    if (major <= 5 && minor <= 4)
+    {
+
+        debugOutput::sendMessage("Ubuntu 18.04. Update the computer to Ubuntu 22.04 when possible.", MSG_INFO);
+        pin_enable_3point3V = IO_PIN_ENABLE_3point3V_BEFORE_SYSFS_DEPRECATED;
+        pin_enable_5V = IO_PIN_ENABLE_5V_BEFORE_SYSFS_DEPRECATED;
+        pin_enable_24V = IO_PIN_ENABLE_24V_BEFORE_SYSFS_DEPRECATED;
+    }
+    else if (major >= 5 && minor >= 15)
+    {
+        debugOutput::sendMessage("Ubuntu 22.04. --> sysfs used, which is deprecated. Transform to character based gpio interface.", MSG_INFO);
+        // std::cout << "new" << std::endl;
+        pin_enable_3point3V = IO_PIN_ENABLE_3point3V_AFTER_SYSFS_DEPRECATED;
+        pin_enable_5V = IO_PIN_ENABLE_5V_AFTER_SYSFS_DEPRECATED;
+        pin_enable_24V = IO_PIN_ENABLE_24V_AFTER_SYSFS_DEPRECATED;
+    }
+    else
+    {
+        debugOutput::sendMessage("between 5.4.0 and 5.15.0. Check functionality and choose between the pin numbers needed...... Ubuntu 22.04 functionality chosen for now.  ", MSG_ERROR);
+        pin_enable_3point3V = IO_PIN_ENABLE_3point3V_AFTER_SYSFS_DEPRECATED;
+        pin_enable_5V = IO_PIN_ENABLE_5V_AFTER_SYSFS_DEPRECATED;
+        pin_enable_24V = IO_PIN_ENABLE_24V_AFTER_SYSFS_DEPRECATED;
+    }
+
+    gpio_odyssey controlPower3point3V(pin_enable_3point3V);
+    controlPower3point3V.setPinAsInputElseOutput(true);
+    controlPower3point3V.writePin(true);
+
+    gpio_odyssey controlPower24V(pin_enable_24V);
+    controlPower24V.setPinAsInputElseOutput(true);
+    controlPower24V.writePin(true);
+
+    // gpio_odyssey controlPower5V(IO_PIN_ENABLE_5V);
+    // controlPower5V.setPinAsInputElseOutput(false);
+    // controlPower5V.writePin(true);
+
+    pcb_to_test->setup();
+
+    bool pcbValid = false;
+
+    debugOutput::sendMessage("***********************", MSG_INFO);
+    switch (pcb_to_test->get_pcb_version())
+    {
+    case pcb::EN134_4SLOTS:
+    {
+        debugOutput::sendMessage("Test EN-134 4 slots", MSG_INFO);
+        pcbValid = true;
+    }
+    break;
+    case pcb::EN134_8SLOTS:
+    {
+        debugOutput::sendMessage("Test EN-134 8 slots", MSG_INFO);
+        pcbValid = true;
+    }
+    break;
+    case pcb::EN258_4SLOTS:
+    {
+        debugOutput::sendMessage("Test EN-258 4 slots", MSG_INFO);
+        pcbValid = true;
+
+        uint8_t register_gpioB_value;
+        uint8_t register_gpioA_value;
+
+        uint8_t GPIOA_value = 0x00;
+        uint8_t GPIOB_value = 0x00;
+
+        bool active = true;
+
+        // if (active)
+        // {
+        //     GPIOB_value &= ~(1 << MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON);
+        // }
+        // else
+        // {
+        //     GPIOB_value |= (1 << MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON);
+        // }
+
+        // pcb_to_test->setMCP23017Register(1, 0x0A, IOCON_value); // IOCON (IOCON.bank = 0)
+
+        // pcb_to_test->setMCP23017Register(1, 0x00, 0xC0);        // IODIRA (IOCON.bank = 1)
+        // pcb_to_test->setMCP23017Register(1, 0x10, 0x01);        // IODIRB (IOCON.bank = 1
+        // pcb_to_test->setMCP23017Register(1, MCP23017_REGISTER_GPB, GPIOB_value);       // GPIOB (IOCON.bank = 1 // button off (0 for ON)
+        // pcb_to_test->setMCP23017Register(1, MCP23017_REGISTER_GPA, GPIOA_value);       // GPIOA (IOCON.bank = 1 // button off (0 for ON)
+
+        // pcb_to_test->setMCP23017Register(1, 0x0A, IOCON_value); // IOCON (IOCON.bank = 0)
+        // pcb_to_test->setMCP23017Register(1, 0x00, 0xC0);        // IODIRA (IOCON.bank = 0)
+        // pcb_to_test->setMCP23017Register(1, 0x01, 0x01);        // IODIRA (IOCON.bank = 0
+        // pcb_to_test->setMCP23017Register(1, 0x1xxxxxxxxxxxxxx9, GPIOB_value);       // GPIOB (IOCON.bank = 0 // button off (0 for ON)
+
+        // pcb_to_test->setMCP23017Register(1, 0x19, 0x02);  // GPIOB (IOCON.bank = 1 // button off (0 for ON)
+        // pcb_to_test->setMCP23017Register(1, 0x19, 0x00);  // GPIOB (IOCON.bank = 1 // button on (0 for ON)
+        // pcb_to_test->setMCP23017Register(1, 0x05, 0x3E);
+        // pcb_to_test->setMCP23017Register(1, 0x05, 0x3E);
+
+        // pcb_to_test->setMCP23017Register(1, MCP23017_REGISTER_GPB, GPIOB_value); // GPIOB (IOCON.bank = 1 // button off (0 for ON)
+        // pcb_to_test->setMCP23017OutputBit(1, MCP23017_EN258_GPB4_PIN_OUT_SOLENOID_2, false, MCP23017_REGISTER_GPB);
+        // pcb_to_test->setMCP23017OutputBit(1, MCP23017_EN258_GPB2_PIN_OUT_PUMP, false, MCP23017_REGISTER_GPB);
+        // pcb_to_test->setMCP23017OutputBit(1, MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON, true, MCP23017_REGISTER_GPB);
+
+        // for (uint8_t i = 0; i < 1000; i++)
+        // {
+        //     debugOutput::sendMessage("----------------------", MSG_INFO);
+        //         // std::stringstream ssA;
+
+        //         // register_gpioA_value = pcb_to_test->getMCP23017Register(1, MCP23017_REGISTER_GPA);
+        //         // std::string binaryString_gpioA = std::bitset<8>(register_gpioA_value).to_string();
+        //         // ssA << "register GPIOA (0x"
+        //         //    << std::setfill('0') << std::setw(2) << std::hex << static_cast<unsigned int>(MCP23017_REGISTER_GPA) << ") value: "
+        //         //    << std::to_string(register_gpioA_value) << ". \tAs bits: " << binaryString_gpioA;
+        //         // debugOutput::sendMessage(ssA.str(), MSG_INFO);
+
+        //         // std::stringstream ssB;
+        //         // register_gpioB_value = pcb_to_test->getMCP23017Register(1, MCP23017_REGISTER_GPB);
+        //         // std::string binaryString_gpioB = std::bitset<8>(register_gpioB_value).to_string();
+        //         // ssB << "register GPIOB (0x"
+        //         //    << std::setfill('0') << std::setw(2) << std::hex << static_cast<unsigned int>(MCP23017_REGISTER_GPB) << ") value: "
+        //         //    << std::to_string(register_gpioB_value) << ". \tAs bits: " << binaryString_gpioB;
+        //         // debugOutput::sendMessage(ssB.str(), MSG_INFO);
+
+        //     // for (uint8_t i = 0; i < 36; i++)
+        //     // {
+        //     //     std::stringstream ss;
+        //     //     register_gpioB_value = pcb_to_test->getMCP23017Register(1, i);
+        //     //     std::string binaryString = std::bitset<8>(register_gpioB_value).to_string();
+
+        //     //     ss << "register: " << std::to_string(i) << " (0x"
+        //     //        << std::setfill('0') << std::setw(2) << std::hex << static_cast<unsigned int>(i) << ") value: "
+        //     //        << std::to_string(register_gpioB_value) << ". As bits: " << binaryString;
+
+        //     //     debugOutput::sendMessage(ss.str(), MSG_INFO);
+        //     // }
+
+        //     usleep(1000000);
+
+        //     active = !active;
+        //     if (active)
+        //     {
+        //         pcb_to_test->setPumpEnable(1);
+        //         pcb_to_test->startPump(1);
+        //         pcb_to_test->setSolenoidFromArray(1, 6,true);
+        //         pcb_to_test->setSolenoidFromArray(2, 6,true);
+        //         pcb_to_test->setSolenoidFromArray(3, 6,true);
+        //         pcb_to_test->setSolenoidFromArray(4, 6,true);
+
+        //     }
+        //     else
+        //     {
+        //         pcb_to_test->setPumpsDisableAll();
+        //         pcb_to_test->setSolenoidFromArray(1, 6,false);
+        //         pcb_to_test->setSolenoidFromArray(2, 6,false);
+        //         pcb_to_test->setSolenoidFromArray(3, 6,false);
+        //         pcb_to_test->setSolenoidFromArray(4, 6,false);
+        //     }
+
+        //     // pcb_to_test->setMCP23017Register(1, MCP23017_REGISTER_GPB, GPIOB_value); // GPIOB (IOCON.bank = 1 // button off (0 for ON)
+        //     // pcb_to_test->setMCP23017OutputBit(1, MCP23017_EN258_GPB4_PIN_OUT_SOLENOID_2, light, MCP23017_REGISTER_GPB);
+        //     // pcb_to_test->setMCP23017OutputBit(1, MCP23017_EN258_GPB2_PIN_OUT_PUMP, light, MCP23017_REGISTER_GPB);
+        //     // pcb_to_test->setMCP23017OutputBit(1, MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON, !light, MCP23017_REGISTER_GPB);
+        // }
+
+        pcb_to_test->flowSensorsDisableAll();
+        for (uint8_t slot = 1; slot <= 4; slot++)
+        {
+            // pcb_to_test->setFlowSensorType(slot, pcb::AICHI);
+            pcb_to_test->setFlowSensorType(slot, pcb::FlowSensorType::DIGMESA);
+            // pcb_to_test->resetFlowSensorPulsesForDispenser(slot);
+        }
+
+        while (true)
+        {
+            pcb_to_test->pcb_refresh();
+            for (uint8_t slot = 1; slot <= 4; slot++)
+            {
+
+                if (pcb_to_test->getDispenseButtonEdgePositive(slot))
+                {
+                    debugOutput::sendMessage("+++++++++++++ positive button edge ++++++++++++++++++++++++++++", MSG_INFO);
+
+                    pcb_to_test->setSingleDispenseButtonLight(slot, true);
+                    pcb_to_test->setPumpEnable(slot);
+                    pcb_to_test->startPump(slot);
+                    pcb_to_test->setSolenoidFromArray(slot, 8, true);
+                    pcb_to_test->getFlowSensorPulsesSinceEnabling(slot);
+                    pcb_to_test->displayMCP23017IORegisters(slot);
+                }
+
+                if (pcb_to_test->getDispenseButtonEdgeNegative(slot))
+                {
+                    debugOutput::sendMessage("--------------- negative button edge ----------------------", MSG_INFO);
+                    pcb_to_test->setSingleDispenseButtonLight(slot, false);
+                    pcb_to_test->setPumpsDisableAll();
+                    pcb_to_test->setSolenoidFromArray(slot, 8, false);
+                    pcb_to_test->displayMCP23017IORegisters(slot);
+                    // debugOutput::sendMessage("Flow sensor pulses during button press: " + std::to_string(pcb_to_test->getFlowSensorPulsesSinceEnabling(slot)), MSG_INFO);
+                    // pcb_to_test->resetFlowSensorPulsesForDispenser(slot);
+                }
+            }
+        }
+    }
+    break;
+    case pcb::EN258_8SLOTS:
+    {
+        pcbValid = true;
+
+        debugOutput::sendMessage("Test EN-258 8 slots", MSG_INFO);
+    }
+    break;
+    default:
+    {
+
+        debugOutput::sendMessage("Invalid pcb pcb_to_test", MSG_INFO);
+    }
+    break;
+    }
+
+    if (pcbValid)
+    {
+    }
+
+    // if (pcbValid){
+    //  board_test(pcb_to_test);
+    //  }
 
     // motor_test(argv[1], argv[2]);
     // motor_test();
     // motor_test_ramp_up();
     // init_test();
     // test_button_lights(false);
+}
+
+
+int main(int argc, char *argv[])
+{
+    runMainTest();
+    debugOutput::sendMessage(to_string(argc), MSG_INFO);
 }

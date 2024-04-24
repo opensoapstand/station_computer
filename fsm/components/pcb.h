@@ -27,24 +27,42 @@
 #include <string.h>
 #include <errno.h>
 #include "../dftypes.h"
+#include <functional>
 
 #include "../objects/debugOutput.h"
-
-// #include "pcbEN134.h"
 
 #define MAX_BUF 64
 
 #define MAX_SLOT_COUNT 8
-#define PCA9534_ADDRESS_SLOT_1 0b0100000
-#define PCA9534_ADDRESS_SLOT_2 0b0100001
-#define PCA9534_ADDRESS_SLOT_3 0b0100010
-#define PCA9534_ADDRESS_SLOT_4 0b0100011
+#define PCA9534_ADDRESS_SLOT_1 0b0100000 // EN134
+#define PCA9534_ADDRESS_SLOT_2 0b0100001 // EN134
+#define PCA9534_ADDRESS_SLOT_3 0b0100010 // EN134
+#define PCA9534_ADDRESS_SLOT_4 0b0100011 // EN134
+
+#define MCP23017_ADDRESS_SLOT_1 0b0100000 // EN258
+#define MCP23017_ADDRESS_SLOT_2 0b0100001 // EN258
+#define MCP23017_ADDRESS_SLOT_3 0b0100010 // EN258
+#define MCP23017_ADDRESS_SLOT_4 0b0100011 // EN258
+#define MCP23017_ADDRESS_SLOT_5 0b0100100 // EN258
+#define MCP23017_ADDRESS_SLOT_6 0b0100101 // EN258
+#define MCP23017_ADDRESS_SLOT_7 0b0100110 // EN258
+#define MCP23017_ADDRESS_SLOT_8 0b0100111 // EN258
+
+#define PIC_ADDRESS 0b0110000      // EN134 and DSED8344
+#define MAX31760_ADDRESS 0b1010000 // DSED8344
+// #define DS2485Q_ADDRESS 0b1000000
+// #define MCP3424T_ADDRESS 0b1101000
+#define ADC081C021_CURRENT_SENSOR_ADDRESS 0b1010100 // EN134 EN258
+
+#define TEMPERATURE_OPTIONAL_EXTERNAL_MCP9808_1_ADDRESS 0b0011000 // EN134 EN258
+#define TEMPERATURE_OPTIONAL_EXTERNAL_MCP9808_2_ADDRESS 0b0011001 // EN134 EN258
+#define TEMPERATURE_ADC_ADS7830 0b1001000                         // EN258
+
 #define DUMMY_ADDRESS 0b0100011
 
 #define PCA9534_TMP_SLOT2_ADDRESS PCA9534_ADDRESS_SLOT_2
 
 #define PCA9534_DSED8344_PIN_IN_BUTTON 7
-
 
 #define PCA9534_EN134_PIN_OUT_SOLENOID 0
 #define PCA9534_EN134_PIN_OUT_PUMP_ENABLE 1
@@ -55,13 +73,55 @@
 #define PCA9534_EN134_PIN_IN_FLOW_SENSOR_TICKS 6
 #define PCA9534_EN134_PIN_OUT_FLOW_SENSOR_ENABLE 7
 
-#define PIC_ADDRESS 0b0110000
-#define MAX31760_ADDRESS 0b1010000
-#define DS2485Q_ADDRESS 0b1000000
-#define MCP3424T_ADDRESS 0b1101000
-#define ADC081C021_ADDRESS 0b01010100
-#define TEMPERATURE_SENSOR_1_ADDRESS 0b00011000 
-#define TEMPERATURE_SENSOR_2_ADDRESS 0b00011001 
+#define MCP23017_REGISTER_GPA 0x09
+#define MCP23017_REGISTER_GPB 0x19
+
+ // MCP23017 slot layout
+// xxxx xxxx  xxxx xxxx  (GPA, GPB)
+//                    x IN: button
+//                   x  OUT: button light (0 is ON!) 
+//                  x   OUT: pump
+//       876  5432 1    OUT: solenoids
+//   xx x               NOT USED
+// x                    Flow sensor Digmesa
+//  x                   Flow sensor Aichi
+
+// SendByte(get_PCA9534_address_from_slot(1), 0x01, 0b11100000); // Output pin values
+
+#define MCP23017_EN258_GPA0_PIN_OUT_SOLENOID_6 0
+#define MCP23017_EN258_GPA1_PIN_OUT_SOLENOID_7 1 // e.g. base
+#define MCP23017_EN258_GPA2_PIN_OUT_SOLENOID_8 2 // e.g. spout
+#define MCP23017_EN258_GPA3_NOT_USED 3
+#define MCP23017_EN258_GPA4_NOT_USED 4
+#define MCP23017_EN258_GPA5_NOT_USED 5
+#define MCP23017_EN258_GPA6_PIN_IN_FLOW_SENSOR_AICHI 6
+#define MCP23017_EN258_GPA7_PIN_IN_FLOW_SENSOR_DIGMESA 7
+
+#define MCP23017_EN258_GPB0_PIN_IN_BUTTON 0
+#define MCP23017_EN258_GPB1_PIN_OUT_BUTTON_LED_LOW_IS_ON 1
+#define MCP23017_EN258_GPB2_PIN_OUT_PUMP 2
+#define MCP23017_EN258_GPB3_PIN_OUT_SOLENOID_1 3
+#define MCP23017_EN258_GPB4_PIN_OUT_SOLENOID_2 4
+#define MCP23017_EN258_GPB5_PIN_OUT_SOLENOID_3 5
+#define MCP23017_EN258_GPB6_PIN_OUT_SOLENOID_4 6
+#define MCP23017_EN258_GPB7_PIN_OUT_SOLENOID_5 7
+
+#define EN258_SOLENOID_SPOUT 8   // dispense solenoid position (corresponds with printed solenoid number on pcb)
+#define EN258_SOLENOID_BASE 7   // base product
+#define EN258_SOLENOID_ADDITIVE_1 6
+#define EN258_SOLENOID_ADDITIVE_2 5
+#define EN258_SOLENOID_ADDITIVE_3 4
+#define EN258_SOLENOID_ADDITIVE_4 3
+#define EN258_SOLENOID_ADDITIVE_5 2
+#define EN258_SOLENOID_ADDITIVE_6 1
+
+// #define EN258_SOLENOID_BASE 2
+// #define EN258_SOLENOID_ADDITIVE_1 3
+// #define EN258_SOLENOID_ADDITIVE_2 4
+// #define EN258_SOLENOID_ADDITIVE_3 5
+// #define EN258_SOLENOID_ADDITIVE_4 6
+// #define EN258_SOLENOID_ADDITIVE_5 7
+// #define EN258_SOLENOID_SPOUT 8
 
 #define PUMP_START_DELAY_MILLIS 100
 #define PUMP_STOP_BEFORE_BACKTRACK_TIME_MILLIS 0
@@ -70,7 +130,6 @@
 
 #define SLOT_ENABLED_BLINK_BUTTON_ON_MILLIS 200
 #define SLOT_ENABLED_BLINK_BUTTON_OFF_MILLIS 500
-
 
 class pcb
 {
@@ -88,14 +147,30 @@ public:
         state_stop_pump,
         state_wait_solenoid_delay
     };
+    enum TemperatureSensor
+    {
+        external_sensor_fridge,
+        external_sensor_cavity,
+        pcb_sensor_fridge,
+        pcb_sensor_cavity
+    };
 
     enum PcbVersion
     {
         INVALID,
-        DSED8344_NO_PIC, // pre v3 board for 4 slots, with 1 button
-        DSED8344_PIC_MULTIBUTTON,    // modified v3 version for 4 buttons. It has never been deployed without the modification!!
+        DSED8344_NO_PIC,          // pre v3 board for 4 slots, with 1 button
+        DSED8344_PIC_MULTIBUTTON, // modified v3 version for 4 buttons. It has never been deployed without the modification!!
         EN134_4SLOTS,
-        EN134_8SLOTS
+        EN134_8SLOTS,
+        EN258_4SLOTS,
+        EN258_8SLOTS
+    };
+
+    enum FlowSensorType
+    {
+        NOTSET,
+        AICHI,
+        DIGMESA
     };
 
     pcb(void);
@@ -104,63 +179,93 @@ public:
     void setup();
     void pcb_refresh();
     void initialize_pcb(void);
+    bool isPcbValid();
     bool define_pcb_version(void);
     PcbVersion get_pcb_version();
     bool isSlotAvailable(uint8_t slot);
-    bool isTemperatureSensorAvailable();
-    bool isTemperatureSensor2Available();           //2nd sensor
+    bool isTemperatureSensorMCP9808Available_1();
+    bool isTemperatureSensorMCP9808Available_2(); // 2nd sensor
+    bool isTemperatureSensorADS7830Available();   // 2nd sensor
+    std::string toString(PcbVersion version);
+
 
     unsigned char getPumpPWM();
-    bool setPumpPWM(uint8_t pwm_val);
-    bool setPumpSpeedPercentage(uint8_t speed_percentage);
-    bool setPumpsDisableAll();
-    bool setPumpEnable(uint8_t slot);
+    void setPumpPWM(uint8_t pwm_val);
+    void setPumpSpeedPercentage(uint8_t speed_percentage);
+    int getSlotCountByPcbType();
+    void setDispenseButtonLightsAllOff();
+    void setPumpsDisableAll();
+    void setPumpEnable(uint8_t slot);
     void independentDispensingRefresh();
-    bool setPumpDirection(uint8_t slot, bool forwardElseReverse);
-    bool startPump(uint8_t slot);
-    bool stopPump(uint8_t slot);
+    void setPumpDirection(uint8_t slot, bool forwardElseReverse);
+    void startPump(uint8_t slot);
+    void stopPump(uint8_t slot);
 
-    double getTemperature(uint8_t temperatureSensorI2CAddress); 
-    double cTemp;
-    double cTemp2;
+    double getTemperature(TemperatureSensor sensor);
+
+    double getTemperatureFromADS7830(uint8_t temperatureSensorI2CAddress, uint8_t position);
+    double getTemperatureFromMCP9808(uint8_t temperatureSensorI2CAddress);
 
     void setSingleDispenseButtonLight(uint8_t slot, bool onElseOff);
     bool getDispenseButtonStateDebounced(uint8_t slot);
     bool getDispenseButtonEdge(uint8_t slot);
     bool getDispenseButtonEdgePositive(uint8_t slot);
     bool getDispenseButtonEdgeNegative(uint8_t slot);
-    void virtualButtonPressHack(uint8_t slot);
-    void virtualButtonUnpressHack(uint8_t slot);
+    // void virtualButtonPressHack(uint8_t slot);
+    // void virtualButtonUnpressHack(uint8_t slot);
     void dispenseButtonRefresh();
     void dispenseButtonRefreshPerSlot(uint8_t slot);
     bool getDispenseButtonState(uint8_t slot);
 
-    void setSolenoid(uint8_t slot, bool onElseOff);
-    uint64_t getFlowSensorTotalPulses(uint8_t slot);
-    uint64_t getFlowSensorPulsesSinceEnabling(uint8_t slot);
-    void resetFlowSensorTotalPulses(uint8_t slot);
+    void disableAllSolenoidsOfSlot(uint8_t slot);
+    void setSolenoidFromArray(uint8_t slot, uint8_t position, bool onElseOff);
+    void setSpoutSolenoid(uint8_t slot, bool onElseOff);
+    void setAdditiveSolenoid(uint8_t slot, int additivePosition, bool onElseOff);
+    void setBaseSolenoid(uint8_t slot, bool onElseOff);
+
+    void setFlowSensorTypeDefaults();
+    void setFlowSensorType(uint8_t slot, FlowSensorType sensorType);
+    FlowSensorType getFlowSensorType(uint8_t slot);
     void refreshFlowSensors();
     void flowSensorEnable(uint8_t slot);
     void flowSensorsDisableAll();
-    // PcbVersion enum PcbVersion;
-    enum PcbVersion pcb_version;
-    uint8_t readRegisterFromSlot(uint8_t slot, uint8_t reg);
-    void SendByteToSlot(uint8_t slot, unsigned char reg, unsigned char byte);
-    void sendEN134DefaultConfigurationToPCA9534(uint8_t slot, bool reportIfModified);
-    void sendByteIfNotSetToSlot(uint8_t slot, unsigned char reg, unsigned char value, bool reportIfModified);
+    // uint64_t getFlowSensorPulsesForDispenser(uint8_t slot);
+    uint64_t getFlowSensorPulsesSinceEnabling(uint8_t slot);
+    // void resetFlowSensorPulsesForDispenser(uint8_t slot);
 
-private:
+    uint8_t PCA9534ReadRegisterFromSlot(uint8_t slot, uint8_t reg);
+
+    void PCA9534SendByteToSlot(uint8_t slot, unsigned char reg, unsigned char byte);
+    void sendEN134DefaultConfigurationToPCA9534(uint8_t slot, bool reportIfModified);
+    void sendByteToPCA9534SlotIfNotSet(uint8_t slot, unsigned char reg, unsigned char value, bool reportIfModified);
     void EN134_PumpCycle_refresh(uint8_t slots);
-    bool slot_pca9534_found[MAX_SLOT_COUNT];
 
     bool set_i2c_address(unsigned char address);
     void setup_i2c_bus(void);
     unsigned char ReadByte(unsigned char address, unsigned char reg);
     bool SendByte(unsigned char address, unsigned char reg, unsigned char byte);
+
     bool getPCA9534Input(uint8_t slot, int posIndex);
     void setPCA9534Output(uint8_t slot, int posIndex, bool onElseOff);
     uint8_t get_PCA9534_address_from_slot(uint8_t slot);
+    
+    void sendEN258DefaultConfigurationToMCP23017(uint8_t slot, bool reportIfModified);
+    bool getMCP23017GPIOState(uint8_t slot, int posIndex, uint8_t GPIORegister);
+    uint8_t getMCP23017Register(uint8_t slot, uint8_t reg);
+    void setMCP23017Register(uint8_t slot, uint8_t reg, uint8_t value, bool reportIfModified);
+    bool getMCP23017Input(uint8_t slot, int posIndex, uint8_t GPIORegister);
+    void setMCP23017OutputBit(uint8_t slot, int posIndex, bool onElseOff, uint8_t GPIORegister);
+    uint8_t get_MCP23017_address_from_slot(uint8_t slot);
+    void displayMCP23017IORegisters(uint8_t slot);
 
+    void registerFlowSensorTickCallback(int slot, std::function<void()> callback);
+    PcbVersion pcb_version;
+
+private:
+
+    std::function<void()> flowSensorTickCallbacks[MAX_SLOT_COUNT];
+
+    FlowSensorType flowSensorsType[MAX_SLOT_COUNT];
     bool dispenseButtonStateMemory[MAX_SLOT_COUNT];
     bool dispenseButtonIsDebounced[MAX_SLOT_COUNT];
     bool dispenseButtonStateDebounced[MAX_SLOT_COUNT];
@@ -170,13 +275,15 @@ private:
 
     bool slotEnabled[MAX_SLOT_COUNT]; // in SED8433 this is not needed(pump ON =  pump enable  with button hardwired on pcb ). in EN-134: this enable high AND button press -> pump ON
     // bool slotEnabledMemory[MAX_SLOT_COUNT];
-    void refreshFlowSensor(uint8_t slot);
+    void pollFlowSensor(uint8_t slot);
 
     uint64_t flowSensorTickReceivedEpoch[MAX_SLOT_COUNT];
     bool flowSensorStateMemory[MAX_SLOT_COUNT];
 
-    uint64_t flow_sensor_total_pulses[MAX_SLOT_COUNT];
+
+    // uint64_t flow_sensor_pulses_for_dispenser[MAX_SLOT_COUNT];
     uint64_t flow_sensor_pulses_since_enable[MAX_SLOT_COUNT];
+    bool flow_sensor_enabled[MAX_SLOT_COUNT];
 
     uint64_t button_[MAX_SLOT_COUNT];
 
@@ -186,8 +293,14 @@ private:
 
     bool pic_pwm_found = false;
     bool max31760_pwm_found = false;
-    bool mcp9808_temperature_sensor_found = false;
-    bool mcp9808_temperature2_sensor_found = false;
+    bool current_sensor_found = false;
+    bool temperature_ads7830_found = false;
+    bool mcp9808_temperature_sensor_1_found = false;
+    bool mcp9808_temperature_sensor_2_found = false;
+    bool slot_pca9534_found[MAX_SLOT_COUNT];
+    bool slot_mcp23017_found[MAX_SLOT_COUNT];
+
+    bool isOutputByteEqual(uint8_t reg, uint8_t readVal, uint8_t writeVal);
 
     uint64_t pump_start_delay_start_epoch[MAX_SLOT_COUNT];
     uint64_t pump_stop_before_backtrack_delay_start_epoch[MAX_SLOT_COUNT];

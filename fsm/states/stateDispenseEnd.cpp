@@ -707,7 +707,8 @@ void stateDispenseEnd::setup_and_print_receipt()
 
     std::string paymentMethod = g_machine.getPaymentMethod();
     std::string name_receipt = (g_machine.getSelectedDispenser().getSelectedProduct()->getProductName());
-
+    debugOutput::sendMessage("P-Number:" + to_string(g_machine.getSelectedDispenser().getSelectedProduct()->getPNumber()), MSG_INFO);
+    debugOutput::sendMessage("Name on receipt:" + name_receipt, MSG_INFO);
     std::string units = g_machine.getSizeUnit();
     double price = getFinalPrice();
     double price_per_ml;

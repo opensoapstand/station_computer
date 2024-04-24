@@ -1085,7 +1085,7 @@ void product::loadProductPropertiesFromCsv()
 
     std::string line;
 
-    while (std::getline(products_file, line))
+    while (std::getline(products_file, line) && !success)
     {
         std::string delimiter = "\t";
         size_t pos = 0;
@@ -1101,11 +1101,14 @@ void product::loadProductPropertiesFromCsv()
 
         bool stringsAreDifferent;
         stringsAreDifferent = m_product_properties[CSV_PRODUCT_COL_ID].compare(getPNumberAsPString());
+            // debugOutput::sendMessage("Pnumber comparison:  on file:"+ m_product_properties[CSV_PRODUCT_COL_ID] +"    pnumber product: " + getPNumberAsPString(), MSG_INFO);
 
         if (!(stringsAreDifferent))
         {
-            debugOutput::sendMessage("Product found in products file and loaded: " + m_product_properties[CSV_PRODUCT_COL_ID] + " " + m_product_properties[CSV_PRODUCT_COL_NAME], MSG_INFO);
+            debugOutput::sendMessage("Product found in products file and loaded: " + m_product_properties[CSV_PRODUCT_COL_ID] + " "  + m_product_properties[CSV_PRODUCT_COL_NAME], MSG_INFO);
             success = true;
+        }else{
+
         }
     }
 

@@ -288,36 +288,43 @@ bool pcb::isOutputByteEqualMCP23017(uint8_t reg, uint8_t readVal, uint8_t writeV
 void pcb::setMCP23017Register(uint8_t slot, uint8_t reg, uint8_t value, bool reportIfModified)
 {
     int attempt = 10;
+    usleep(10000);
     uint8_t readVal = getMCP23017Register(slot, reg);
+
+    // WARNING: at enabling the multiple write attempts, i2c stopped reacting. Even with a sleep between read and write commands. 
+    // no clue why. 
+    
 
     // we'll check the value after writing. Only output values need to be checked. The input ones can change during that time.
     // for the ease of it, set the input bits to zero from 'read' and 'to write' value
 
     // debugOutput::sendMessage("register read before writing. " + to_string(reg ) + " of MCP23017 for slot " + to_string(slot) + " value of reg: " + to_string(readVal) + "attempted to writevalue: " + to_string(value), MSG_ERROR);
-    while (!isOutputByteEqualMCP23017(reg, getMCP23017Register(slot, reg), value))
-    {
-        if (attempt < 0)
-        {
-            debugOutput::sendMessage("Too many attempts. Could not set register " + to_string(reg) + " of MCP23017 for slot " + to_string(slot) + " value of reg: " + to_string(readVal) + "attempted to writevalue: " + to_string(value), MSG_ERROR);
-            break;
-        }
-        attempt--;
-        // debugOutput::sendMessage("register reaD befororoeoroe writing.fesfsefsefsefsefsef " + to_string(isOutputByteEqualMCP23017(reg, 0xff, 0x00) ), MSG_ERROR);
-        // debugOutput::sendMessage("register reaD befororoeoroe writing.fesfsefsefsefsefsef " + to_string(isOutputByteEqualMCP23017(reg, getMCP23017Register(slot, reg), value) ), MSG_ERROR);
-
+    // while (!isOutputByteEqualMCP23017(reg, readVal, value))
+    // {
+    //     if (attempt < 0)
+    //     {
+    //         debugOutput::sendMessage("Too many attempts. Could not set register " + to_string(reg) + " of MCP23017 for slot " + to_string(slot) + " value of reg: " + to_string(readVal) + "attempted to writevalue: " + to_string(value), MSG_ERROR);
+    //         break;
+    //     }
+    //     attempt--;
+    //     // debugOutput::sendMessage("register reaD befororoeoroe writing.fesfsefsefsefsefsef " + to_string(isOutputByteEqualMCP23017(reg, 0xff, 0x00) ), MSG_ERROR);
+    //     // debugOutput::sendMessage("register reaD befororoeoroe writing.fesfsefsefsefsefsef " + to_string(isOutputByteEqualMCP23017(reg, getMCP23017Register(slot, reg), value) ), MSG_ERROR);
+    //     usleep(10000);
         SendByte(get_MCP23017_address_from_slot(slot), reg, value);
-        // readVal = getMCP23017Register(slot, reg);
+    //     usleep(10000);
 
-        // debugOutput::sendMessage("register read after writing. " + to_string(reg ) + " of MCP23017 for slot " + to_string(slot) + " value of reg: " + to_string(readVal) + "attempted to writevalue: " + to_string(value), MSG_ERROR);
-        // debugOutput::sendMessage("register read after writing.fesfsefsefsefsefsef " + to_string(isOutputByteEqualMCP23017(reg, getMCP23017Register(slot, reg), value) ), MSG_ERROR);
+    //     readVal = getMCP23017Register(slot, reg);
 
-        if (reportIfModified)
-        {
-            debugOutput::sendMessage("MCP23017 register " + to_string(reg) + " of slot: " + to_string(slot) + ": was:" + to_string(readVal) + ". Set to: " + to_string(value), MSG_INFO);
-            debugOutput::sendMessage("WARNING: This register was changed. Was this a glitch?", MSG_WARNING);
-        }
-        //     readVal = getMCP23017Register(slot, reg);
-    }
+    //     // debugOutput::sendMessage("register read after writing. " + to_string(reg ) + " of MCP23017 for slot " + to_string(slot) + " value of reg: " + to_string(readVal) + "attempted to writevalue: " + to_string(value), MSG_ERROR);
+    //     // debugOutput::sendMessage("register read after writing.fesfsefsefsefsefsef " + to_string(isOutputByteEqualMCP23017(reg, getMCP23017Register(slot, reg), value) ), MSG_ERROR);
+
+    //     if (reportIfModified)
+    //     {
+    //         debugOutput::sendMessage("MCP23017 register " + to_string(reg) + " of slot: " + to_string(slot) + ": was:" + to_string(readVal) + ". Set to: " + to_string(value), MSG_INFO);
+    //         debugOutput::sendMessage("WARNING: This register was changed. Was this a glitch?", MSG_WARNING);
+    //     }
+    //     //     readVal = getMCP23017Register(slot, reg);
+    // }
 
     //     if (attempt >= 9){
     // debugOutput::sendMessage("donedoeofneoinfeif", MSG_ERROR);

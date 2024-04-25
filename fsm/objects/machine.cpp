@@ -31,39 +31,136 @@ machine::machine()
     // m_button_lights_behaviour = Button_lights_behaviour::IDLE_OFF;
     m_button_animation_program = 0;
 }
+machine::~machine()
+{
+    debugOutput::sendMessage("Machine: destructor.", MSG_INFO);
+}
 
+std::string machine::executeCommmandLineCommand(const char *cmd)
+{
+    std::array<char, 128> buffer;
+    std::string result;
+    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
+    if (!pipe)
+    {
+        throw std::runtime_error("popen() failed!");
+    }
+    while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr)
+    {
+        result += buffer.data();
+    }
+    return result;
+}
 void machine::setup(product *pnumbers)
 {
-    control_pcb = new pcb();
-    m_pnumbers = pnumbers;
-    receipt_printer = new Adafruit_Thermal();
-    control_pcb->setup();
-    control_pcb->setPumpPWM(DEFAULT_PUMP_PWM);
-    // the 24V power has a master on/off switch
-    switch_24V = new FSModdyseyx86GPIO(IO_PIN_ENABLE_24V);
-    power24VEnabled = false;
-    switch_24V->setPinAsInputElseOutput(false); // set as output
 
-    // gpio_odyssey controlPower3point3V(IO_PIN_ENABLE_3point3V);
-    // controlPower3point3V.setPinAsInputElseOutput(false);
-    // controlPower3point3V.writePin(true);
+    std::string kernelVersion = executeCommmandLineCommand("uname -r");
+    int major, minor, patch;
+    sscanf(kernelVersion.c_str(), "%d.%d.%d", &major, &minor, &patch);
+
+    debugOutput::sendMessage(kernelVersion, MSG_INFO);
+    // Compare to versions 5.4.0 --> Linux kernel from ubuntu 18
+    // Compare to versions 5.15.0 --> Linux kernel from ubuntu 22
+
+    int pin_enable_3point3V;
+    int pin_enable_24V;
+    int pin_enable_5V;
+    int pin_global_flow_sensor;
+
+    if (major <= 5 && minor <= 4)
+    {
+        debugOutput::sendMessage("Ubuntu 18.04. Update the computer to Ubuntu 22.04 when possible.", MSG_INFO);
+        pin_enable_3point3V = IO_PIN_ENABLE_3point3V_BEFORE_SYSFS_DEPRECATED;
+        pin_enable_5V = IO_PIN_ENABLE_5V_BEFORE_SYSFS_DEPRECATED;
+        pin_enable_24V = IO_PIN_ENABLE_24V_BEFORE_SYSFS_DEPRECATED;
+    }
+    else if (major >= 5 && minor >= 15)
+    {
+        debugOutput::sendMessage("Ubuntu 22.04. --> sysfs used, which is deprecated. Transform to character based gpio interface.", MSG_INFO);
+        // std::cout << "new" << std::endl;
+        pin_enable_3point3V = IO_PIN_ENABLE_3point3V_AFTER_SYSFS_DEPRECATED;
+        pin_enable_5V = IO_PIN_ENABLE_5V_AFTER_SYSFS_DEPRECATED;
+        pin_enable_24V = IO_PIN_ENABLE_24V_AFTER_SYSFS_DEPRECATED;
+    }
+    else
+    {
+        debugOutput::sendMessage("between 5.4.0 and 5.15.0. Check functionality and choose between the pin numbers needed...... Ubuntu 22.04 functionality chosen for now.  ", MSG_ERROR);
+        pin_enable_3point3V = IO_PIN_ENABLE_3point3V_AFTER_SYSFS_DEPRECATED;
+        pin_enable_5V = IO_PIN_ENABLE_5V_AFTER_SYSFS_DEPRECATED;
+        pin_enable_24V = IO_PIN_ENABLE_24V_AFTER_SYSFS_DEPRECATED;
+    }
 
     // 3.3V control power to the pcb.
-    switch_3point3V = new FSModdyseyx86GPIO(IO_PIN_ENABLE_3point3V);
+    switch_3point3V = new FSModdyseyx86GPIO(pin_enable_3point3V);
     signal3point3VEnabled = false;
     switch_3point3V->setPinAsInputElseOutput(false); // set as output
     pcb3point3VPowerSwitch(true);
-    // switch_3point3V->writePin(true);
+
+    // the 24V power has a master on/off switch
+    switch_24V = new FSModdyseyx86GPIO(pin_enable_24V);
+    power24VEnabled = false;
+    switch_24V->setPinAsInputElseOutput(false); // set as output
+
+    control_pcb = new pcb();
+    control_pcb->setup();
+
+    int8_t power_cycle_attempt = power_cycle_attempt_AT_INVALID_PCB;
+    while (power_cycle_attempt > 0 && !control_pcb->isPcbValid())
+    {
+        debugOutput::sendMessage("Machine: Pcb version could not be determined. Probably an i2c bus fault or a faulty component. Power cycle pcb control voltage. Attempt: " + std::to_string(power_cycle_attempt) + "/" + std::to_string(power_cycle_attempt_AT_INVALID_PCB), MSG_INFO);
+        pcb3point3VPowerSwitch(false);
+        power_cycle_attempt--;
+        usleep(1000000 * (power_cycle_attempt_AT_INVALID_PCB - power_cycle_attempt));
+        control_pcb->setup(); // reattempt setup of pcb
+    }
+
+    m_pnumbers = pnumbers;
+
+    receipt_printer = new Adafruit_Thermal();
+    control_pcb->setPumpPWM(DEFAULT_PUMP_PWM);
 
     syncSoftwareVersionWithDb();
+
+    debugOutput::sendMessage("Machine: set up product dispensers. ", MSG_INFO);
+
     initProductDispensers();
-    loadGeneralProperties(true);
+    loadGeneralMachineProperties(true);
 }
 
-int machine::getDispensersCount()
+void machine::setSelectedDispenser(int slotNumber)
 {
-    // slots, dispensers, lines,... it's all the same
-    return 4;
+    m_selected_dispenser_number = slotNumber;
+    if (m_selected_dispenser_number == PRODUCT_SLOT_DUMMY)
+    {
+        debugOutput::sendMessage("machine: Selected Dispenser set to dummy", MSG_INFO);
+        return;
+    }
+
+    if (slotNumber > getPcb()->getSlotCountByPcbType() || slotNumber < 0)
+    {
+        debugOutput::sendMessage("machine: ASSERT ERROR: dispenser number must be >0 and < than: " + std::to_string(getPcb()->getSlotCountByPcbType()) + "provided: " + std::to_string(slotNumber), MSG_ERROR);
+    }
+    getSelectedDispenser().resetDispenser();
+}
+
+int machine::getSelectedDispenserNumber()
+{
+    if (m_selected_dispenser_number == PRODUCT_SLOT_DUMMY)
+    {
+        debugOutput::sendMessage("ASSERT ERROR: machine: Selected Dispenser is set to dummy", MSG_INFO);
+    }
+    return m_selected_dispenser_number;
+}
+
+dispenser &machine::getSelectedDispenser()
+{
+    // provides a reference to the dispenser object! similar to pointer. but simpler to use.
+    return getDispenser(getSelectedDispenserNumber());
+}
+dispenser &machine::getDispenser(int slot)
+{
+    // provides a reference to the dispenser object! similar to pointer. but simpler to use.
+    return m_productDispensers[slot - 1];
 }
 
 double machine::convertVolumeMetricToDisplayUnits(double volume)
@@ -89,30 +186,28 @@ double machine::convertVolumeMetricToDisplayUnits(double volume)
 
 void machine::initProductDispensers()
 {
-    for (int slot_index = 0; slot_index < getDispensersCount(); slot_index++)
+    for (int slot_index = 0; slot_index < getPcb()->getSlotCountByPcbType(); slot_index++)
     {
         debugOutput::sendMessage("Init dispenser " + to_string(slot_index + 1), MSG_INFO);
-        // m_g_machine.m_productDispensers[slot_index].setup(&this, g_pnumbers);
-        m_productDispensers[slot_index].setup(control_pcb, m_pnumbers);
-        m_productDispensers[slot_index].setSlot(slot_index + 1);
+        getDispenser(slot_index + 1).setup(slot_index + 1, control_pcb, m_pnumbers);
 
 #ifdef INTERRUPT_DRIVE_FLOW_SENSOR_TICKS
-        m_productDispensers[slot_index].initGlobalFlowsensorIO(IO_PIN_FLOW_SENSOR);
+        getDispenser(slot_index + 1).initGlobalFlowsensorIO(IO_PIN_FLOW_SENSOR);
 #endif
         setFlowSensorCallBack(slot_index + 1);
     }
 }
 
-void machine::loadGeneralProperties(bool loadDispenserParameters)
+void machine::loadGeneralMachineProperties(bool loadDispenserParameters)
 {
     loadMachineParametersFromDb();
     usleep(20000);
     if (loadDispenserParameters)
     {
-        for (int slot_index = 0; slot_index < getDispensersCount(); slot_index++)
+        for (int slot_index = 0; slot_index < getPcb()->getSlotCountByPcbType(); slot_index++)
         {
-            m_productDispensers[slot_index].loadGeneralProperties();
-            m_productDispensers[slot_index].setEmptyContainerDetectionEnabled(getEmptyContainerDetectionEnabled());
+            debugOutput::sendMessage("machine. load properties for slot:  " + std::to_string(slot_index + 1), MSG_INFO);
+            getDispenser(slot_index + 1).loadGeneralProperties();
         }
     }
 }
@@ -147,10 +242,6 @@ pcb *machine::getPcb()
 {
     return control_pcb;
 }
-// void machine::testtest(){
-// // nothing here.
-//     debugOutput::sendMessage("*** global machine test message", MSG_INFO);
-// }
 
 void machine::refresh()
 {
@@ -159,18 +250,13 @@ void machine::refresh()
     // the pcb inputs are not interrupt driven. So, periodical updates are required
     for (uint8_t slot_index = 0; slot_index < PRODUCT_DISPENSERS_MAX; slot_index++)
     {
-        m_productDispensers[slot_index].refresh();
+        getDispenser(slot_index + 1).refresh();
     }
 }
 
 void machine::setFlowSensorCallBack(int slot)
 {
-
-    int slot_index = slot - 1;
-    // control_pcb->registerFlowSensorTickCallback(std::bind(&dispenser::registerFlowSensorTickCallback, &m_productDispensers[slot_index]));
-    // m_productDispensers[slot_index].linkActiveProductVolumeUpdate(); // CALL THIS FOR EVERY ACTIVE PRODUCT CHANGE during a mixing dispense.
-
-    m_productDispensers[slot_index].linkDispenserFlowSensorTick();
+    getDispenser(slot).linkDispenserFlowSensorTick();
 }
 
 void machine::syncSoftwareVersionWithDb()

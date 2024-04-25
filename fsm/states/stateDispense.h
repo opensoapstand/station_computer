@@ -28,20 +28,22 @@ public:
 
     string toString();
 
-    void startPumping();
-    void stopPumping();
-    DF_ERROR rectractProductBlocking();
+    // void startActiveDispensing();
+    // void stopActiveDispensing();
+    // DF_ERROR rectractProductBlocking();
 
     DF_ERROR onEntry();
     DF_ERROR onAction();
     DF_ERROR onExit();
 
+    DF_ERROR statusUpdateLoggingAndOverIP(bool onlyIfAllowed);
+
 private:
-    int slot;
-    int slot_index;
+    // int slot;
+    // int slot_index;
 
     // dispenser *productDispensers;
-    bool flushCommand;
+    // bool flushCommand;
     char size;
 };
 #endif

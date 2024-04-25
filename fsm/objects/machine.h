@@ -42,9 +42,10 @@ public:
         AP2,
         UNKNOWN
     };
-
     machine();
+    ~machine();
     void refresh();
+    std::string executeCommmandLineCommand(const char *cmd);
     void pcb24VPowerSwitch(bool enableElseDisable);
     bool getPcb24VPowerSwitchStatus();
 
@@ -86,7 +87,7 @@ public:
     // void loadButtonPropertiesFromDb();
     bool getMultiDispenseButtonEnabled();
 
-    void loadGeneralProperties(bool loadDispenserParameters);
+    void loadGeneralMachineProperties(bool loadDispenserParameters);
     void loadMachineParametersFromDb();
     string getMachineId();
     string getSizeUnit();
@@ -97,7 +98,11 @@ public:
     bool getPumpReversalEnabled();
     bool getEmptyContainerDetectionEnabled();
     bool getPumpSlowStartStopEnabled();
-    int getDispensersCount();
+    // int getDispensersCount();
+    void setSelectedDispenser(int slotNumber);
+    int getSelectedDispenserNumber();
+    dispenser& getSelectedDispenser();
+    dispenser& getDispenser(int slot);
 
 private:
     product *m_pnumbers;
@@ -106,6 +111,8 @@ private:
     int m_button_animation_program;
     sqlite3 *db;
     int rc;
+
+    int m_selected_dispenser_number;
 
     machine::HardwareVersion m_hardware_version;
 
@@ -152,6 +159,7 @@ private:
     string m_status_text;
     string m_payment;
     string m_size_unit;
+    // string m_portal_base_url;
 };
 
 #endif

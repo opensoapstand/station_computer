@@ -1,0 +1,2207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>page_maintenance_dispenser</class>
+ <widget class="QWidget" name="page_maintenance_dispenser">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1080</width>
+    <height>1920</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QPushButton" name="pushButton_to_previous_page">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>40</y>
+     <width>251</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Back</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_product_name">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>510</y>
+     <width>311</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Product Name</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_volume_per_tick">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>1370</y>
+     <width>121</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Product Volume Per Tick: </string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_price_medium">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>890</y>
+     <width>181</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>Medium Price</string>
+   </property>
+   <property name="text">
+    <string>Medium Price</string>
+   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_edit_product</string>
+   </attribute>
+  </widget>
+  <widget class="QPushButton" name="pushButton_volume_per_tick">
+   <property name="geometry">
+    <rect>
+     <x>820</x>
+     <y>1360</y>
+     <width>201</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>Volume per flow sensor tick</string>
+   </property>
+   <property name="text">
+    <string>Edit</string>
+   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_edit_product</string>
+   </attribute>
+  </widget>
+  <widget class="QPushButton" name="pushButton_price_small">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>850</y>
+     <width>181</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>price small</string>
+   </property>
+   <property name="text">
+    <string>Small Price</string>
+   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_edit_product</string>
+   </attribute>
+  </widget>
+  <widget class="QPushButton" name="pushButton_restock">
+   <property name="geometry">
+    <rect>
+     <x>570</x>
+     <y>360</y>
+     <width>231</width>
+     <height>141</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>Restock</string>
+   </property>
+   <property name="text">
+    <string>Restock</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_action_feedback">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1780</y>
+     <width>691</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>20</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>feedback</string>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_set_status_slot">
+   <property name="geometry">
+    <rect>
+     <x>820</x>
+     <y>1120</y>
+     <width>201</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Set slot status</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_set_restock_volume">
+   <property name="geometry">
+    <rect>
+     <x>820</x>
+     <y>760</y>
+     <width>200</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>Set full volume</string>
+   </property>
+   <property name="text">
+    <string>Adjust</string>
+   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_edit_product</string>
+   </attribute>
+  </widget>
+  <widget class="QLabel" name="label_restock_volume">
+   <property name="geometry">
+    <rect>
+     <x>619</x>
+     <y>770</y>
+     <width>191</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Restock Volume:</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_set_volume_remaining">
+   <property name="geometry">
+    <rect>
+     <x>820</x>
+     <y>600</y>
+     <width>201</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>Modify Remaining Stock</string>
+   </property>
+   <property name="text">
+    <string>Set Manually</string>
+   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_edit_product</string>
+   </attribute>
+  </widget>
+  <widget class="QLabel" name="label_volume_dispensed_total">
+   <property name="geometry">
+    <rect>
+     <x>619</x>
+     <y>690</y>
+     <width>401</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Total Dispensed:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_volume_remaining">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>600</y>
+     <width>191</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Remaining</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_restock_timestamp">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>730</y>
+     <width>421</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Last Refill</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_setting_temperature">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1570</y>
+     <width>361</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Temperature</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_set_max_temperature">
+   <property name="geometry">
+    <rect>
+     <x>820</x>
+     <y>1560</y>
+     <width>200</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Temperature:</string>
+   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_edit_product</string>
+   </attribute>
+  </widget>
+  <widget class="QLabel" name="label_setting_speed_pwm">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1531</y>
+     <width>300</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Pump Speed</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_setting_speed_pwm">
+   <property name="geometry">
+    <rect>
+     <x>820</x>
+     <y>1520</y>
+     <width>200</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>Pump Speed Percentage</string>
+   </property>
+   <property name="text">
+    <string> Pump Speed</string>
+   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_edit_product</string>
+   </attribute>
+  </widget>
+  <widget class="QWidget" name="numberEntry" native="true">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>790</y>
+     <width>331</width>
+     <height>631</height>
+    </rect>
+   </property>
+   <widget class="QLineEdit" name="textEntry">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>60</y>
+      <width>311</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="button1">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>200</y>
+      <width>89</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>1</string>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup_keypad</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="button2">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>200</y>
+      <width>89</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>2</string>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup_keypad</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="button3">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>200</y>
+      <width>89</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>3</string>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup_keypad</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="button6">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>280</y>
+      <width>89</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>6</string>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup_keypad</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="button5">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>280</y>
+      <width>89</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>5</string>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup_keypad</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="button4">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>280</y>
+      <width>89</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>4</string>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup_keypad</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="button9">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>360</y>
+      <width>89</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>9</string>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup_keypad</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="button8">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>360</y>
+      <width>89</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>8</string>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup_keypad</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="button7">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>360</y>
+      <width>89</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>7</string>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup_keypad</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="button0">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>440</y>
+      <width>89</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">buttonGroup_keypad</string>
+    </attribute>
+   </widget>
+   <widget class="QPushButton" name="buttonBack">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>440</y>
+      <width>89</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&lt;-</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="buttonPeriod">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>440</y>
+      <width>89</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>.</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_cancel">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>550</y>
+      <width>141</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Cancel</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_title">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>321</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>New Price:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="errorLabel">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>150</y>
+      <width>321</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_done">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>550</y>
+      <width>141</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>DONE</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QPushButton" name="pushButton_enable_pump">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>1640</y>
+     <width>281</width>
+     <height>161</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Dispense selected quantity Manually</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_pump_enabled_status">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1750</y>
+     <width>501</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="text">
+    <string>Pump ON/OFF</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_status_volume_dispensed">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>1210</y>
+     <width>351</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>ticks and volume </string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_target_volume_small">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>850</y>
+     <width>181</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>Small target volume</string>
+   </property>
+   <property name="text">
+    <string>Small
+ Target Volume</string>
+   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_edit_product</string>
+   </attribute>
+  </widget>
+  <widget class="QPushButton" name="pushButton_target_volume_medium">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>890</y>
+     <width>181</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>Medium Target volume</string>
+   </property>
+   <property name="text">
+    <string>Medium
+ Target Volume</string>
+   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_edit_product</string>
+   </attribute>
+  </widget>
+  <widget class="QLabel" name="label_volume_dispensed_since_restock">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>640</y>
+     <width>341</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_auto_dispense_selected_quantity">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>1810</y>
+     <width>281</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Auto Dispense Selected Quantity</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_auto_dispense_medium">
+   <property name="geometry">
+    <rect>
+     <x>890</x>
+     <y>1860</y>
+     <width>31</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Auto Dispense Medium</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_auto_dispense_large">
+   <property name="geometry">
+    <rect>
+     <x>940</x>
+     <y>1870</y>
+     <width>31</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Auto Dispense Large </string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_status_dispense_button_press_count">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>1290</y>
+     <width>371</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Button presses:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_status_button_press_time">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>1330</y>
+     <width>371</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Pump Time / Enable Time</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_status_flow_rate">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>1250</y>
+     <width>391</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Flow rate (2s)</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_calibration_instructions">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>1440</y>
+     <width>581</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>calibration instructions</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_price_large">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>930</y>
+     <width>181</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>Large Price</string>
+   </property>
+   <property name="text">
+    <string>Large Price</string>
+   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_edit_product</string>
+   </attribute>
+  </widget>
+  <widget class="QPushButton" name="pushButton_target_volume_large">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>930</y>
+     <width>181</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>Large target volume</string>
+   </property>
+   <property name="text">
+    <string>Large
+ Target Volume</string>
+   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_edit_product</string>
+   </attribute>
+  </widget>
+  <widget class="QPushButton" name="pushButton_price_custom">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>970</y>
+     <width>181</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>price custom per ml</string>
+   </property>
+   <property name="text">
+    <string>Custom Price (per ml)</string>
+   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_edit_product</string>
+   </attribute>
+  </widget>
+  <widget class="QPushButton" name="pushButton_plu_medium">
+   <property name="geometry">
+    <rect>
+     <x>840</x>
+     <y>890</y>
+     <width>181</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>Medium PLU</string>
+   </property>
+   <property name="text">
+    <string>Medium PLU</string>
+   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_edit_product</string>
+   </attribute>
+  </widget>
+  <widget class="QPushButton" name="pushButton_plu_large">
+   <property name="geometry">
+    <rect>
+     <x>840</x>
+     <y>930</y>
+     <width>181</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>Large PLU</string>
+   </property>
+   <property name="text">
+    <string>Large PLU</string>
+   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_edit_product</string>
+   </attribute>
+  </widget>
+  <widget class="QPushButton" name="pushButton_plu_small">
+   <property name="geometry">
+    <rect>
+     <x>840</x>
+     <y>850</y>
+     <width>181</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>Small PLU</string>
+   </property>
+   <property name="text">
+    <string>Small PLU</string>
+   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_edit_product</string>
+   </attribute>
+  </widget>
+  <widget class="QPushButton" name="pushButton_plu_custom">
+   <property name="geometry">
+    <rect>
+     <x>840</x>
+     <y>970</y>
+     <width>181</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>Custom PLU</string>
+   </property>
+   <property name="text">
+    <string>Custom PLU</string>
+   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_edit_product</string>
+   </attribute>
+  </widget>
+  <widget class="QLabel" name="label_calibration_result">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>1410</y>
+     <width>591</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Calibraton value (ml/tick if exactly 1000ml dispensed):</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_status_dispenser">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>1120</y>
+     <width>191</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Dispense Status</string>
+   </property>
+  </widget>
+  <widget class="Line" name="line">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>670</y>
+     <width>691</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_2">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>710</y>
+     <width>691</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_3">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>630</y>
+     <width>691</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_4">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>750</y>
+     <width>691</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_5">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>790</y>
+     <width>691</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_6">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>590</y>
+     <width>691</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_product_picture">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>530</y>
+     <width>300</width>
+     <height>300</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_column_price">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>820</y>
+     <width>67</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Price</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_column_target_volume">
+   <property name="geometry">
+    <rect>
+     <x>700</x>
+     <y>820</y>
+     <width>131</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Target Volume</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_column_plu">
+   <property name="geometry">
+    <rect>
+     <x>880</x>
+     <y>820</y>
+     <width>131</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PLU/barcode</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_row_small">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>860</y>
+     <width>67</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Small</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_row_medium">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>900</y>
+     <width>67</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Medium</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_row_large">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>940</y>
+     <width>67</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Large</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_row_custom">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>980</y>
+     <width>67</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Custom</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_target_volume_custom">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>970</y>
+     <width>181</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>Custom maximum volume</string>
+   </property>
+   <property name="text">
+    <string>Custom
+ Target Volume</string>
+   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_edit_product</string>
+   </attribute>
+  </widget>
+  <widget class="QLabel" name="label_column_size">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>820</y>
+     <width>67</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Size</string>
+   </property>
+  </widget>
+  <widget class="Line" name="line_7">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>840</y>
+     <width>691</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_8">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>880</y>
+     <width>691</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_9">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>920</y>
+     <width>691</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>price medium</string>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_10">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>960</y>
+     <width>691</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_12">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>810</y>
+     <width>20</width>
+     <height>241</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_13">
+   <property name="geometry">
+    <rect>
+     <x>650</x>
+     <y>810</y>
+     <width>20</width>
+     <height>241</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_14">
+   <property name="geometry">
+    <rect>
+     <x>830</x>
+     <y>810</y>
+     <width>20</width>
+     <height>241</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_17">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1270</y>
+     <width>691</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_18">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1310</y>
+     <width>691</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_19">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1230</y>
+     <width>691</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_20">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1390</y>
+     <width>691</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_21">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1350</y>
+     <width>691</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_22">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1190</y>
+     <width>691</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_24">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1510</y>
+     <width>691</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_26">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1550</y>
+     <width>691</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_27">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1590</y>
+     <width>691</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1290</y>
+     <width>161</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Button Press Count</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1210</y>
+     <width>161</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Volume Dispensed</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1330</y>
+     <width>201</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Pump Time / Enable Time</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1250</y>
+     <width>171</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Flow Rate (2s avg)</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1370</y>
+     <width>261</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Calibration Volume Per Tick</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelText_title_volume_remaining">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>610</y>
+     <width>241</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Volume Remaining (Estimated)</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelText_title_volume_dispensed_since_restock">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>650</y>
+     <width>241</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Volume Dispensed Since Restock</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelText_title_volume_dispensed_grand_total">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>690</y>
+     <width>241</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Volume Dispensed Grand Total</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelText_title_restock_time">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>730</y>
+     <width>241</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Restock Time</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelText_title_restock_volume">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>770</y>
+     <width>241</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Restock Volume</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_11">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1410</y>
+     <width>291</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Calibration value if exactly 1L dispensed</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_clear_problem">
+   <property name="geometry">
+    <rect>
+     <x>810</x>
+     <y>360</y>
+     <width>211</width>
+     <height>141</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Clear problem</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_status_dispense_flow">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>1160</y>
+     <width>381</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Dispense Status</string>
+   </property>
+  </widget>
+  <widget class="Line" name="line_23">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>810</y>
+     <width>20</width>
+     <height>241</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_column_enabled">
+   <property name="geometry">
+    <rect>
+     <x>420</x>
+     <y>820</y>
+     <width>67</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Enabled</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_enable_small">
+   <property name="geometry">
+    <rect>
+     <x>430</x>
+     <y>860</y>
+     <width>16</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_enable_medium">
+   <property name="geometry">
+    <rect>
+     <x>430</x>
+     <y>900</y>
+     <width>16</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_enable_large">
+   <property name="geometry">
+    <rect>
+     <x>430</x>
+     <y>940</y>
+     <width>16</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_enable_custom">
+   <property name="geometry">
+    <rect>
+     <x>430</x>
+     <y>980</y>
+     <width>16</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_setting_temperature_2">
+   <property name="geometry">
+    <rect>
+     <x>680</x>
+     <y>1570</y>
+     <width>361</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Temperature2</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_active_pnumber_base">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>210</y>
+     <width>101</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_active_pnumber_additive_1">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>210</y>
+     <width>101</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_active_pnumber_additive_2">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>210</y>
+     <width>101</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_active_pnumber_additive_3">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>210</y>
+     <width>101</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_active_pnumber_additive_4">
+   <property name="geometry">
+    <rect>
+     <x>770</x>
+     <y>210</y>
+     <width>101</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_active_pnumber_additive_5">
+   <property name="geometry">
+    <rect>
+     <x>880</x>
+     <y>210</y>
+     <width>101</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_dispense_pnumber_1">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>90</y>
+     <width>101</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_dispense_pnumber_2">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>90</y>
+     <width>101</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_dispense_pnumber_3">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>90</y>
+     <width>101</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_dispense_pnumber_4">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>90</y>
+     <width>101</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_dispense_pnumber_5">
+   <property name="geometry">
+    <rect>
+     <x>770</x>
+     <y>90</y>
+     <width>101</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_dispense_pnumber_6">
+   <property name="geometry">
+    <rect>
+     <x>880</x>
+     <y>90</y>
+     <width>101</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>PushButton</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>190</y>
+     <width>571</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Available single products (pure product containers available in this dispenser):</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_7">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>70</y>
+     <width>581</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Available user selectable products for this dispenser: (mixes or single products):</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_activate_slot_1">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>90</y>
+     <width>71</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>to slot 1</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_activate_slot_2">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>90</y>
+     <width>71</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>to slot 2</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_activate_slot_3">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>90</y>
+     <width>71</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>to slot 3</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_activate_slot_4">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>90</y>
+     <width>71</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>to slot 4</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_activate_slot_5">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>170</y>
+     <width>71</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>to slot 5</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_set_quantity_small">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1640</y>
+     <width>81</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>small</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_set_quantity_medium">
+   <property name="geometry">
+    <rect>
+     <x>420</x>
+     <y>1640</y>
+     <width>81</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>medium</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_set_quantity_large">
+   <property name="geometry">
+    <rect>
+     <x>510</x>
+     <y>1640</y>
+     <width>81</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>large</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_set_quantity_custom">
+   <property name="geometry">
+    <rect>
+     <x>600</x>
+     <y>1640</y>
+     <width>81</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>custom</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_set_quantity_test">
+   <property name="geometry">
+    <rect>
+     <x>690</x>
+     <y>1640</y>
+     <width>81</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>test</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_set_quantity_sample">
+   <property name="geometry">
+    <rect>
+     <x>780</x>
+     <y>1640</y>
+     <width>81</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>sample</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_8">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1620</y>
+     <width>251</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Select dispense quantity:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_row_sample">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>1020</y>
+     <width>67</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Sample</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkBox_enable_sample">
+   <property name="geometry">
+    <rect>
+     <x>430</x>
+     <y>1020</y>
+     <width>16</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_price_sample">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>1010</y>
+     <width>181</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>price custom per ml</string>
+   </property>
+   <property name="text">
+    <string>Sample Price</string>
+   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_edit_product</string>
+   </attribute>
+  </widget>
+  <widget class="QPushButton" name="pushButton_target_volume_sample">
+   <property name="geometry">
+    <rect>
+     <x>660</x>
+     <y>1010</y>
+     <width>181</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>Custom maximum volume</string>
+   </property>
+   <property name="text">
+    <string>Sample
+ Target Volume</string>
+   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_edit_product</string>
+   </attribute>
+  </widget>
+  <widget class="QPushButton" name="pushButton_plu_sample">
+   <property name="geometry">
+    <rect>
+     <x>840</x>
+     <y>1010</y>
+     <width>181</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="accessibleName">
+    <string>Custom PLU</string>
+   </property>
+   <property name="text">
+    <string>Sample PLU</string>
+   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">buttonGroup_edit_product</string>
+   </attribute>
+  </widget>
+  <widget class="Line" name="line_25">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1040</y>
+     <width>691</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_29">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1150</y>
+     <width>691</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_status_selected_product">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>560</y>
+     <width>411</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Product Status</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelText_title_dispense_status">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1170</y>
+     <width>241</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Dispense Status</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelText_title_dispenser_status">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>570</y>
+     <width>241</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Active Product Status</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_set_status_product">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>360</y>
+     <width>231</width>
+     <height>141</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Set Product Status</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelText_title_slot_status">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1130</y>
+     <width>241</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Slot Status</string>
+   </property>
+  </widget>
+  <widget class="Line" name="line_16">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>550</y>
+     <width>691</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelText_title_product_name">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>530</y>
+     <width>241</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Product Name</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_action_feedback_2">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>1070</y>
+     <width>691</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>20</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Dispenser</string>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_action_feedback_3">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>310</y>
+     <width>691</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>20</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Selected Product</string>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+ <buttongroups>
+  <buttongroup name="buttonGroup_edit_product"/>
+  <buttongroup name="buttonGroup_keypad"/>
+ </buttongroups>
+</ui>

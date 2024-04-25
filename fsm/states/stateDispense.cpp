@@ -32,7 +32,7 @@ stateDispense::stateDispense(messageMediator *message)
 // DTOR
 stateDispense::~stateDispense()
 {
-    debugOutput::sendMessage("stateDispense: ~stateDispense", MSG_INFO);
+   debugOutput::sendMessage("stateDispense: ~stateDispense", MSG_INFO);
 }
 
 // Overload for Debugger output
@@ -48,14 +48,11 @@ string stateDispense::toString()
 DF_ERROR stateDispense::onEntry()
 {
    m_state_requested = STATE_DISPENSE;
-   // productDispensers = g_productDispensers;
    DF_ERROR e_ret = OK;
-   slot = m_pMessaging->getRequestedSlot();
-   slot_index = slot - 1;
 
-   if (m_pMessaging->getAction() == ACTION_AUTOFILL)
+   if (g_machine.getSelectedDispenser().getAutoDispense())
    {
-      startPumping(); // make part of dispenser.
+      g_machine.getSelectedDispenser().startActiveDispensing(); // make part of dispenser.
    }
 
    return e_ret;
@@ -63,78 +60,124 @@ DF_ERROR stateDispense::onEntry()
 
 DF_ERROR stateDispense::onAction()
 {
-   // productDispensers = g_productDispensers;
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
+   // button press behaviour
+   if (!g_machine.getSelectedDispenser().getAutoDispense())
+   {
+      if (g_machine.getSelectedDispenser().getDispenseButtonEdgePositive())
+      {
+         debugOutput::sendMessage("Dispense button pressed edge", MSG_INFO);
+         m_pMessaging->sendMessageOverIP("Dispense Button Pos Edge", true); // send to UI
+
+         g_machine.getSelectedDispenser().startActiveDispensing();
+         g_machine.getSelectedDispenser().addDispenseButtonPress();
+#ifdef ENABLE_PARALLEL_MIX
+         g_machine.getSelectedDispenser().startParallelMixDispensing();
+#endif
+      }
+
+      if (g_machine.getSelectedDispenser().getDispenseButtonEdgeNegative())
+      {
+         debugOutput::sendMessage("Dispense button released edge", MSG_INFO);
+         m_pMessaging->sendMessageOverIP("Dispense Button Neg Edge", true); // send to UI
+
+         g_machine.getSelectedDispenser().stopActiveDispensing();
+
+#ifdef ENABLE_PARALLEL_MIX
+         g_machine.getSelectedDispenser().stopParallelMixDispensing();
+#endif
+      }
+   }
+
+   // Send amount dispensed to UI (to show in Maintenance Mode, and/or animate filling)
+   g_machine.getSelectedDispenser().updateActiveProductFlowRateRunningAverageWindow();
+   g_machine.getSelectedDispenser().updateDispenseStatus();
+   // g_machine.getSelectedDispenser().updateActiveProductState();
+
+   // do logging
+   statusUpdateLoggingAndOverIP(true);
+#ifdef ENABLE_PARALLEL_MIX
+
+   // parallel mixing, we only look at the base and mix in additives as we go.
+   if (g_machine.getSelectedDispenser().getIsStatusUpdateAllowed() && g_machine.getSelectedDispenser().getDispenseButtonValue())
+   {
+      g_machine.getSelectedDispenser().setParallelSolenoids();
+   }
+
+   // Is target volume reached?
+   if (g_machine.getSelectedDispenser().isSelectedProductVolumeTargetReached())
+   {
+      g_machine.getSelectedDispenser().finishActivePNumberDispense();
+      g_machine.getSelectedDispenser().finishSelectedProductDispense();
+      m_state_requested = STATE_DISPENSE_END;
+      debugOutput::sendMessage("Stop dispensing selected product. Requested volume reached. Dispensed: " + to_string(g_machine.getSelectedDispenser().getSelectedProductVolumeDispensed()), MSG_INFO);
+   }
+
+#else
+   // sequential mixing: first additives than base
+
+   // Is target volume reached?
+   if (g_machine.getSelectedDispenser().isActiveProductVolumeTargetReached())
+   {
+      std::string activePNumber = to_string(g_machine.getSelectedDispenser().getActivePNumber());
+      double activeProductVolumeDispensed = g_machine.getSelectedDispenser().getActiveProductVolumeDispensed();
+      double volume_remaining = g_machine.getSelectedDispenser().getActiveProduct()->getVolumeRemaining() - activeProductVolumeDispensed;
+      g_machine.getSelectedDispenser().setMixDispenseReport(activePNumber, activeProductVolumeDispensed, volume_remaining);
+
+      debugOutput::sendMessage("Active product. Requested volume reached. Stop and next.   P-" + activePNumber + ":  " +
+                                   to_string(activeProductVolumeDispensed) + "/" +
+                                   to_string(g_machine.getSelectedDispenser().getActiveProduct()->getTargetVolume()) + "ml",
+                               MSG_INFO);
+
+      bool isAllPartsOfDispenseProductDispensed = g_machine.getSelectedDispenser().handleMixComponentTargetVolumeReached();
+      if (isAllPartsOfDispenseProductDispensed)
+      {
+         // check for next mixing product to activate to dispense.   additive n -> .... ->  additive 1 -> base. (end with base)
+         m_state_requested = STATE_DISPENSE_END;
+         debugOutput::sendMessage("Stop dispensing selected product. Requested volume reached. Dispensed: " + to_string(g_machine.getSelectedDispenser().getSelectedProductVolumeDispensed()), MSG_INFO);
+      }
+      else
+      {
+         if (g_machine.getSelectedDispenser().getDispenseButtonValue())
+         {
+            debugOutput::sendMessage("Dispense button is pressed, so restart next phase automatically. ", MSG_INFO);
+            g_machine.getSelectedDispenser().startActiveDispensing();
+         }
+      }
+   }
+
+#endif
+
+   // Check received commands from UI
    if (m_pMessaging->isCommandStringReadyToBeParsed())
    {
       m_pMessaging->parseCommandString();
    }
 
-   if (m_pMessaging->getAction() != ACTION_AUTOFILL)
-   {
-      if (g_machine.m_productDispensers[slot_index].getDispenseButtonEdgePositive())
-      {
-         debugOutput::sendMessage("Dispense button pressed edge", MSG_INFO);
-         m_pMessaging->sendMessageOverIP("Dispense Button Pos Edge", true); // send to UI
-
-         startPumping();
-         g_machine.m_productDispensers[slot_index].addDispenseButtonPress();
-      }
-
-      if (g_machine.m_productDispensers[slot_index].getDispenseButtonEdgeNegative())
-      {
-         debugOutput::sendMessage("Dispense button released edge", MSG_INFO);
-         m_pMessaging->sendMessageOverIP("Dispense Button Neg Edge", true); // send to UI
-
-         stopPumping();
-      }
-   }
-
-   // Send amount dispensed to UI (to show in Maintenance Mode, and/or animate filling)
-
-   g_machine.m_productDispensers[slot_index].updateActiveProductFlowRateRunningAverageWindow();
-   g_machine.m_productDispensers[slot_index].updateDispenseStatus();
-   g_machine.m_productDispensers[slot_index].updateSlotState();
-
-   if (g_machine.m_productDispensers[slot_index].getIsStatusUpdateAllowed())
-   {
-      double volume = g_machine.m_productDispensers[slot_index].getActiveProductVolumeDispensed();
-
-      Time_val avg_02s = g_machine.m_productDispensers[slot_index].getAveragedProductFlowRate(1000);
-      double flowrate = avg_02s.value;
-      const char *statusStringChar = g_machine.m_productDispensers[slot_index].getSlotStateAsString();
-      std::string statusString(statusStringChar);
-
-#define PRINT_STATUS
-
-#ifdef PRINT_STATUS
-      std::string message = "dispenseupdate|" + std::to_string(volume) + "|" + std::to_string(flowrate) + "|" + statusString;
-      m_pMessaging->sendMessageOverIP(message, true); // send to UI
-
-      // update of the actual dispense
-      const char *dispenseStatusStr = g_machine.m_productDispensers[slot_index].getDispenseStatusAsString();
-      debugOutput::sendMessage(g_machine.m_productDispensers[slot_index].getDispenseUpdateString(), MSG_INFO);
-      debugOutput::sendMessage(dispenseStatusStr, MSG_INFO);
-      debugOutput::sendMessage(to_string(g_machine.getPcb()->getFlowSensorPulsesSinceEnabling(slot)), MSG_INFO);
-      g_machine.getPcb()->outputMCP23017IORegisters(slot);
-#endif
-   }
-
    if (m_pMessaging->getAction() == ACTION_RESET)
    {
+      debugOutput::sendMessage("Stop dispensing (stop command received)", MSG_INFO);
       m_state_requested = STATE_IDLE;
-      stopPumping();
+      g_machine.getSelectedDispenser().finishActivePNumberDispense();
+      g_machine.getSelectedDispenser().finishSelectedProductDispense();
+
       m_pMessaging->sendMessageOverIP("Init Ready", true); // send to UI
       return e_ret = OK;
    }
 
-   // Check if UI has sent a ACTION_DISPENSE_END to finish the transaction, or, if dispensing is complete
    if (m_pMessaging->getAction() == ACTION_DISPENSE_END)
    {
       debugOutput::sendMessage("Stop dispensing (stop command received)", MSG_INFO);
       m_state_requested = STATE_DISPENSE_END;
-      stopPumping();
+
+      g_machine.getSelectedDispenser().finishActivePNumberDispense();
+      g_machine.getSelectedDispenser().finishSelectedProductDispense();
+
+      std::string activePNumber = to_string(g_machine.getSelectedDispenser().getActivePNumber());
+      double activeProductVolumeDispensed = g_machine.getSelectedDispenser().getActiveProductVolumeDispensed();
+      double volume_remaining = g_machine.getSelectedDispenser().getActiveProduct()->getVolumeRemaining() - activeProductVolumeDispensed;
+      g_machine.getSelectedDispenser().setMixDispenseReport(activePNumber, activeProductVolumeDispensed, volume_remaining);
 
       return e_ret = OK;
    }
@@ -143,139 +186,59 @@ DF_ERROR stateDispense::onAction()
    {
       if (g_machine.getPcb()->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS || g_machine.getPcb()->get_pcb_version() == pcb::PcbVersion::EN134_8SLOTS)
       {
-         g_machine.getPcb()->sendEN134DefaultConfigurationToPCA9534(slot, true);
+         g_machine.getPcb()->sendEN134DefaultConfigurationToPCA9534(g_machine.getSelectedDispenserNumber(), true);
          m_pMessaging->resetAction();
-         g_machine.control_pcb->setSingleDispenseButtonLight(slot, true);
+         g_machine.control_pcb->setSingleDispenseButtonLight(g_machine.getSelectedDispenserNumber(), true);
 
-         g_machine.getPcb()->flowSensorEnable(slot);
+         g_machine.getPcb()->flowSensorEnable(g_machine.getSelectedDispenserNumber());
       }
    }
-
-   if (g_machine.m_productDispensers[slot_index].isActiveProductVolumeTargetReached())
-   {
-
-      debugOutput::sendMessage("Active product. Requested volume reached. Stop and next.   P-" + to_string(g_machine.m_productDispensers[slot_index].getActivePNumber()) + " / " + to_string(g_machine.m_productDispensers[slot_index].getActiveProductVolumeDispensed()) + "ml", MSG_INFO);
-      stopPumping();
-
-      if (g_machine.m_productDispensers[slot_index].setNextActiveProductAsPartOfSelectedProduct())
-      {
-         // check for next mixing product to activate to dispense.   additive n -> .... ->  additive 1 -> base. (end with base)
-         m_state_requested = STATE_DISPENSE_END;
-         debugOutput::sendMessage("Stop dispensing selected product. Requested volume reached. " + to_string(g_machine.m_productDispensers[slot_index].getSelectedProductVolumeDispensed()), MSG_INFO);
-      }
-      else
-      {
-         if (g_machine.m_productDispensers[slot_index].getDispenseButtonValue())
-         {
-            debugOutput::sendMessage("Dispense button is pressed, so restart next phase automatically. ", MSG_INFO);
-            startPumping();
-         }
-      }
-   }
-
    e_ret = OK;
-
    return e_ret;
 }
 
-void stateDispense::startPumping()
-{
-
-   switch (g_machine.getHardwareVersion())
-   {
-   case (machine::HardwareVersion::AP1):
-   case (machine::HardwareVersion::SS1):
-   case (machine::HardwareVersion::SS2):
-   {
-      debugOutput::sendMessage("start pumping SS2.", MSG_INFO);
-      g_machine.getPcb()->setPumpSpeedPercentage(0); // pump speed is inverted!
-      g_machine.getPcb()->setPumpDirection(slot, true);
-
-      g_machine.getPcb()->startPump(slot);
-      g_machine.getPcb()->setSpoutSolenoid(slot, true);
-   }
-   break;
-   case (machine::HardwareVersion::SS09):
-   {
-      debugOutput::sendMessage("start pumping SS09.", MSG_INFO);
-      g_machine.m_productDispensers[slot_index].pumpSlowStart(true);
-   }
-   break;
-   case (machine::HardwareVersion::AP2):
-   {
-      debugOutput::sendMessage("start pumping AP2.", MSG_INFO);
-      g_machine.getPcb()->startPump(slot);
-      g_machine.getPcb()->setSpoutSolenoid(slot, true);
-   }
-   break;
-   default:
-   {
-      debugOutput::sendMessage("UNKNOWN HARDWARE version", MSG_ERROR);
-   }
-   break;
-   }
-}
-
-void stateDispense::stopPumping()
-{
-
-   switch (g_machine.getHardwareVersion())
-   {
-   case (machine::HardwareVersion::AP1):
-   case (machine::HardwareVersion::SS1):
-   case (machine::HardwareVersion::SS2):
-   {
-      if (g_machine.getPcb()->get_pcb_version() == pcb::PcbVersion::EN134_4SLOTS)
-      {
-         g_machine.getPcb()->stopPump(slot);
-         g_machine.getPcb()->setSpoutSolenoid(slot, false);
-      }
-      else
-      {
-         debugOutput::sendMessage("pcb not compatible", MSG_ERROR);
-      }
-   }
-   break;
-   case (machine::HardwareVersion::SS09):
-   {
-      g_machine.m_productDispensers[slot_index].pumpSlowStopBlocking();
-      rectractProductBlocking();
-   }
-   break;
-   case (machine::HardwareVersion::AP2):
-   {
-      if (g_machine.getPcb()->get_pcb_version() == pcb::PcbVersion::EN258_4SLOTS)
-      {
-         g_machine.getPcb()->stopPump(slot);
-         g_machine.getPcb()->setSpoutSolenoid(slot, false);
-      }
-      else
-      {
-         debugOutput::sendMessage("pcb not compatiblevnot en258 4 slots", MSG_ERROR);
-      }
-   }
-   break;
-   default:
-   {
-      debugOutput::sendMessage("UNKNOWN HARDWARE version", MSG_ERROR);
-   }
-   break;
-   }
-}
-
-DF_ERROR stateDispense::rectractProductBlocking()
+DF_ERROR stateDispense::statusUpdateLoggingAndOverIP(bool onlyIfAllowed)
 {
    DF_ERROR e_ret = OK;
-   g_machine.m_productDispensers[slot_index].reversePumpForSetTimeMillis(g_machine.m_productDispensers[slot_index].getSelectedProduct()->getRetractionTimeMillis());
+   if (g_machine.getSelectedDispenser().getIsStatusUpdateAllowed() || !onlyIfAllowed)
+   {
+      double volume = g_machine.getSelectedDispenser().getActiveProductVolumeDispensed();
+
+      Time_val avg_01s = g_machine.getSelectedDispenser().getAveragedProductFlowRate(1000);
+      double flowrate = avg_01s.value;
+      const char *statusStringChar = g_machine.getSelectedDispenser().getDispenseStatusAsString();
+      std::string statusString(statusStringChar);
+
+      std::string message = "dispenseupdate|" + std::to_string(volume) + "|" + std::to_string(flowrate) + "|" + statusString;
+      m_pMessaging->sendMessageOverIP(message, true); // send to UI
+
+#define PRINT_STATUS
+#ifdef PRINT_STATUS
+
+      // update of the actual dispense
+      debugOutput::sendMessage("-----------Dispense update. State: " + std::string(g_machine.getSelectedDispenser().getDispenseStatusAsString()), MSG_INFO);
+      debugOutput::sendMessage(g_machine.getSelectedDispenser().getDispenseUpdateString(), MSG_INFO);
+      const char *dispenseStatusStr = g_machine.getSelectedDispenser().getDispenseStatusAsString();
+      debugOutput::sendMessage("Flow Pulses since enabled: " + to_string(g_machine.getPcb()->getFlowSensorPulsesSinceEnabling(g_machine.getSelectedDispenserNumber())), MSG_INFO);
+      g_machine.getPcb()->displayMCP23017IORegisters(g_machine.getSelectedDispenserNumber());
+#endif
+   }
    return e_ret;
 }
+
+// DF_ERROR stateDispense::rectractProductBlocking()
+// {
+//    DF_ERROR e_ret = OK;
+//    g_machine.getSelectedDispenser().reversePumpForSetTimeMillis(g_machine.getSelectedDispenser().getSelectedProduct()->getRetractionTimeMillis());
+//    return e_ret;
+// }
 
 // Actions on leaving Dispense state
 DF_ERROR stateDispense::onExit()
 {
-   g_machine.m_productDispensers[slot_index].setPumpsDisableAll();
-   // g_machine.getPcb()->virtualButtonUnpressHack(this->slot);
-   g_machine.getPcb()->setSingleDispenseButtonLight(this->slot, false);
+   g_machine.getSelectedDispenser().setPumpsDisableAll();
+   g_machine.getPcb()->setSingleDispenseButtonLight(g_machine.getSelectedDispenserNumber(), false);
+   statusUpdateLoggingAndOverIP(false); // final status update of dispensing
 
    DF_ERROR e_ret = OK;
    return e_ret;

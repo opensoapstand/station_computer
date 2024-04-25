@@ -76,9 +76,21 @@
 #define MCP23017_REGISTER_GPA 0x09
 #define MCP23017_REGISTER_GPB 0x19
 
+ // MCP23017 slot layout
+// xxxx xxxx  xxxx xxxx  (GPA, GPB)
+//                    x IN: button
+//                   x  OUT: button light (0 is ON!) 
+//                  x   OUT: pump
+//       876  5432 1    OUT: solenoids
+//   xx x               NOT USED
+// x                    Flow sensor Digmesa
+//  x                   Flow sensor Aichi
+
+// SendByte(get_PCA9534_address_from_slot(1), 0x01, 0b11100000); // Output pin values
+
 #define MCP23017_EN258_GPA0_PIN_OUT_SOLENOID_6 0
-#define MCP23017_EN258_GPA1_PIN_OUT_SOLENOID_7 1
-#define MCP23017_EN258_GPA2_PIN_OUT_SOLENOID_8 2
+#define MCP23017_EN258_GPA1_PIN_OUT_SOLENOID_7 1 // e.g. base
+#define MCP23017_EN258_GPA2_PIN_OUT_SOLENOID_8 2 // e.g. spout
 #define MCP23017_EN258_GPA3_NOT_USED 3
 #define MCP23017_EN258_GPA4_NOT_USED 4
 #define MCP23017_EN258_GPA5_NOT_USED 5
@@ -167,6 +179,7 @@ public:
     void setup();
     void pcb_refresh();
     void initialize_pcb(void);
+    bool isPcbValid();
     bool define_pcb_version(void);
     PcbVersion get_pcb_version();
     bool isSlotAvailable(uint8_t slot);
@@ -175,17 +188,18 @@ public:
     bool isTemperatureSensorADS7830Available();   // 2nd sensor
     std::string toString(PcbVersion version);
 
+
     unsigned char getPumpPWM();
-    bool setPumpPWM(uint8_t pwm_val);
-    bool setPumpSpeedPercentage(uint8_t speed_percentage);
+    void setPumpPWM(uint8_t pwm_val);
+    void setPumpSpeedPercentage(uint8_t speed_percentage);
     int getSlotCountByPcbType();
     void setDispenseButtonLightsAllOff();
-    bool setPumpsDisableAll();
-    bool setPumpEnable(uint8_t slot);
+    void setPumpsDisableAll();
+    void setPumpEnable(uint8_t slot);
     void independentDispensingRefresh();
-    bool setPumpDirection(uint8_t slot, bool forwardElseReverse);
-    bool startPump(uint8_t slot);
-    bool stopPump(uint8_t slot);
+    void setPumpDirection(uint8_t slot, bool forwardElseReverse);
+    void startPump(uint8_t slot);
+    void stopPump(uint8_t slot);
 
     double getTemperature(TemperatureSensor sensor);
 
@@ -223,24 +237,26 @@ public:
 
     void PCA9534SendByteToSlot(uint8_t slot, unsigned char reg, unsigned char byte);
     void sendEN134DefaultConfigurationToPCA9534(uint8_t slot, bool reportIfModified);
-    void sendByteIfNotSetToSlot(uint8_t slot, unsigned char reg, unsigned char value, bool reportIfModified);
-
+    void sendByteToPCA9534SlotIfNotSet(uint8_t slot, unsigned char reg, unsigned char value, bool reportIfModified);
     void EN134_PumpCycle_refresh(uint8_t slots);
 
     bool set_i2c_address(unsigned char address);
     void setup_i2c_bus(void);
     unsigned char ReadByte(unsigned char address, unsigned char reg);
     bool SendByte(unsigned char address, unsigned char reg, unsigned char byte);
+
     bool getPCA9534Input(uint8_t slot, int posIndex);
     void setPCA9534Output(uint8_t slot, int posIndex, bool onElseOff);
     uint8_t get_PCA9534_address_from_slot(uint8_t slot);
-    bool getMCP23017Input(uint8_t slot, int posIndex, uint8_t GPIORegister);
-    void setMCP23017Output(uint8_t slot, int posIndex, bool onElseOff, uint8_t GPIORegister);
-    uint8_t get_MCP23017_address_from_slot(uint8_t slot);
+    
+    void sendEN258DefaultConfigurationToMCP23017(uint8_t slot, bool reportIfModified);
+    bool getMCP23017GPIOState(uint8_t slot, int posIndex, uint8_t GPIORegister);
     uint8_t getMCP23017Register(uint8_t slot, uint8_t reg);
-    void setMCP23017Register(uint8_t slot, uint8_t reg, uint8_t value);
-
-    void outputMCP23017IORegisters(uint8_t slot);
+    void setMCP23017Register(uint8_t slot, uint8_t reg, uint8_t value, bool reportIfModified);
+    bool getMCP23017Input(uint8_t slot, int posIndex, uint8_t GPIORegister);
+    void setMCP23017OutputBit(uint8_t slot, int posIndex, bool onElseOff, uint8_t GPIORegister);
+    uint8_t get_MCP23017_address_from_slot(uint8_t slot);
+    void displayMCP23017IORegisters(uint8_t slot);
 
     void registerFlowSensorTickCallback(int slot, std::function<void()> callback);
     PcbVersion pcb_version;
@@ -263,10 +279,13 @@ private:
 
     uint64_t flowSensorTickReceivedEpoch[MAX_SLOT_COUNT];
     bool flowSensorStateMemory[MAX_SLOT_COUNT];
+    bool flowSensorDebouncedStateMemory[MAX_SLOT_COUNT];
+    bool flowSensorDebouncedState[MAX_SLOT_COUNT];
 
 
     // uint64_t flow_sensor_pulses_for_dispenser[MAX_SLOT_COUNT];
     uint64_t flow_sensor_pulses_since_enable[MAX_SLOT_COUNT];
+    bool flow_sensor_enabled[MAX_SLOT_COUNT];
 
     uint64_t button_[MAX_SLOT_COUNT];
 
@@ -282,6 +301,8 @@ private:
     bool mcp9808_temperature_sensor_2_found = false;
     bool slot_pca9534_found[MAX_SLOT_COUNT];
     bool slot_mcp23017_found[MAX_SLOT_COUNT];
+
+    bool isOutputByteEqualMCP23017(uint8_t reg, uint8_t readVal, uint8_t writeVal);
 
     uint64_t pump_start_delay_start_epoch[MAX_SLOT_COUNT];
     uint64_t pump_stop_before_backtrack_delay_start_epoch[MAX_SLOT_COUNT];

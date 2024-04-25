@@ -22,7 +22,8 @@
 // #include "machine.h"
 #include "product.h"
 #include <sqlite3.h>
-
+#include <map>
+#include <vector>
 // #include <stdint.h>
 // Total Number of Devices
 #define NUM_SOLENOID 3 // 12v for drink,water, and air
@@ -60,15 +61,18 @@ public:
       ~dispenser();
 
       // DF_ERROR setup(machine *machine, product *pnumber);
-      DF_ERROR setup(pcb *pcb, product *pnumbers);
+      DF_ERROR setup(int slot_number, pcb *pcb, product *pnumbers);
       // DF_ERROR setup(pcb* pcb, machine* machine);
       void refresh();
+      void resetDispenser();
       DF_ERROR loadGeneralProperties();
       bool loadDispenserParametersFromDb();
       void sendToUiIfAllowed(string message);
       void logUpdateIfAllowed(string message);
       bool getIsStatusUpdateAllowed();
       bool isSlotEnabled();
+      bool getAutoDispense();
+      void setAutoDispense();
 
       // product setting
       // selected product
@@ -100,8 +104,13 @@ public:
       void registerFlowSensorTickFromPcb();
 
       // DF_ERROR initButtonsShutdownAndMaintenance();
-      DF_ERROR setSlot(int slot);
+
       int getSlot();
+
+      void setMixDispenseReport(std::string pNumber, double volumeDispensed, double volume_remaining);
+      std::map<std::string, std::vector<double>> getMixDispenseReport();
+      void resetMixDispenseReport();
+
 #ifdef INTERRUPT_DRIVE_FLOW_SENSOR_TICKS
       DF_ERROR initGlobalFlowsensorIO(int pinint);
 #endif
@@ -122,22 +131,32 @@ public:
 
       const char *getDispenseStatusAsString();
       void updateDispenseStatus();
-      const char *getSlotStateAsString();
+      // const char *getSlotStateAsString();
       Dispense_behaviour getDispenseStatus();
-      Slot_state getSlotState();
-      void setSlotState(Slot_state state);
-      void setSlotStateToEmpty();
-      void updateSlotState();
-      void analyseSlotState();
 
-      // DF_ERROR initActivePNumberDispense(double volume);
-      DF_ERROR startActivePNumberDispense();
-      DF_ERROR stopActivePNumberDispense();
+      void setParallelSolenoids();
+      void startParallelMixDispensing();
+      void stopParallelMixDispensing();
 
-      bool setNextActiveProductAsPartOfSelectedProduct();
-      DF_ERROR startSelectedProductDispense(char size, double nPrice);
-      // DF_ERROR startSelectedProductDispense();
-      DF_ERROR stopSelectedProductDispense();
+      // bool isAdditiveNeeded(int additive);
+
+      // Slot_state getSlotState();
+      // void setSlotState(Slot_state state);
+      // void setSlotStateToEmpty();
+      // void updateActiveProductState();
+      // void analyseSlotState();
+      void setSlotStateFromString(string slotStateText);
+
+      DF_ERROR initActivePNumberDispense();
+      DF_ERROR finishActivePNumberDispense();
+      void startActiveDispensing();
+      void stopActiveDispensing();
+
+      bool handleMixComponentTargetVolumeReached();
+
+      DF_ERROR initSelectedProductDispense(char size);
+      // DF_ERROR initSelectedProductDispense();
+      DF_ERROR finishSelectedProductDispense();
       string getSelectedProductDispenseStartTime();
       string getSelectedProductDispenseEndTime();
 
@@ -219,10 +238,10 @@ private:
       int m_active_pnumber;
       int m_dispense_pnumbers[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
       int m_additive_pnumbers[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
-      int m_custom_mix_pnumbers[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
-      int m_custom_mix_pnumbers_count = 0;
-      double m_custom_mix_ratios[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
-      int m_custom_mix_ratios_count;
+      // int m_custom_mix_pnumbers[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
+      // int m_custom_mix_pnumbers_count = 0;
+      // double m_custom_mix_ratios[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
+      // int m_custom_mix_ratios_count;
 
       int m_mix_active_index; // index --> starts from 0
 
@@ -231,14 +250,14 @@ private:
       string dispense_numbers_str;
       string m_additive_pnumbers_str;
       bool m_is_slot_enabled;
-      string m_status_text;
+      bool m_auto_dispense; // will not wait for user to press button to dispense
 
       double m_dispenser_volume_dispensed;
 
       char m_nStartTime[50];
       char m_nEndTime[50];
 
-      double m_price;
+      // double m_price;
 
       time_t rawtime;
       struct tm *timeinfo;
@@ -254,9 +273,9 @@ private:
 
       uint64_t previous_status_update_allowed_epoch;
       bool isStatusUpdateSendAndPrintAllowed;
-      Dispense_behaviour previous_dispense_state;
-      Dispense_behaviour dispense_state;
-      Slot_state slot_state;
+      Dispense_behaviour m_previous_dispense_state;
+      Dispense_behaviour m_dispense_state;
+      Slot_state m_slot_state;
 
       Time_val flowRateBuffer[RUNNING_AVERAGE_WINDOW_LENGTH];
       int flowRateBufferIndex;
@@ -269,6 +288,7 @@ private:
       int rc;
 
       gpio *m_pFlowsensor;
+      std::map<std::string, std::vector<double>> m_mixDispenseReport;
 
       // gpio *m_pButtonPowerOff[1];
       // gpio *m_pButtonDisplayMaintenanceMode[1];

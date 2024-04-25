@@ -296,7 +296,8 @@ void FSModdyseyx86GPIO::monitorGPIO_Flowsensor(bool *abortLoop)
                 }
                 else
                 {
-                        debugOutput::sendMessage("gpio PROBLEM (timeout?!)", MSG_ERROR);
+                        debugOutput::sendMessage("gpio PROBLEM (timeout?!)" + std::to_string(fd), MSG_ERROR);
+                        usleep(1000000);
                 }
 
                 using namespace std::chrono;
@@ -332,7 +333,6 @@ void FSModdyseyx86GPIO::monitorGPIO_Flowsensor(bool *abortLoop)
                         {
                                 // pos edge
                                 m_pDispenser->registerFlowSensorTickFromInterrupt(); // trigger the callback
-                                // debugOutput::sendMessage("Flow tick received interrupt!", MSG_INFO);
                         }
                         else
                         {
@@ -435,6 +435,7 @@ bool FSModdyseyx86GPIO::readButtonPin(int pin)
                         return false;
                 }
         }
+        return false;
 }
 
 // Utility

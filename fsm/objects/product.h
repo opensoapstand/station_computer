@@ -37,12 +37,11 @@ public:
         ~product();
         // void init(int pnumber, string size_unit, string paymentMethod);
         void init(int pnumber);
-
         int getPNumber();
         string getPNumberAsPString();
 
         bool isMixingProduct();
-        void getMixRatios(double *&mixRatios, int &count);
+        void getMixRatiosDefault(double *&mixRatios, int &count);
         void getMixPNumbers(int *&pnumbers, int &count);
 
         int getMixProductsCount();
@@ -51,16 +50,24 @@ public:
         int getAdditivesCount();
         int getAdditivePNumber(int position);
         int getMixPNumber(int position);
-        double getAdditiveMixRatio(int position);
-        double getBaseMixRatio();
+        // double getAdditiveMixRatio(int position);
+        // double getBaseMixRatio();
         double getMixRatio(int position);
+        // double getMixRatio(int position, int lowDefaultHigh);
 
         bool getIsEnabled();
         void setIsEnabled(bool isEnabled);
-        string getStatusText();
-        void setStatusText(string statusText);
+        string getProductStatusText();
+        void updateProductState(Dispense_behaviour dispenseState, bool isEmptyContainerDetectionEnabled);
+        void setProductStateToEmpty(bool isEmptyContainerDetectionEnabled);
+        // void setProductStatusText(string statusText);
+        void setProductStateFromString(string productStateText);
+        void setProductState(Product_state state);
+        const char *getProductStateAsString();
+        Product_state getProductState();
 
-        int getPWM();
+        int getPWM(); // deprecated...
+
         int getRetractionTimeMillis();
         double getPrice(char size);
         // string getDisplayUnits();
@@ -74,7 +81,7 @@ public:
 
         void registerFlowSensorTickFromPcb();
         void registerFlowSensorTickFromInterrupt();
-        double getVolumePerTick();
+        double getVolumePerTick(bool accountForConcentrationMultiplier);
 
         double getVolumeDispensed();
         void setVolumeDispensed(double volume);
@@ -96,18 +103,23 @@ public:
         char sizeIndexToSizeChar(int sizeIndex);
         bool getIsSizeEnabled(char size);
 
-        bool loadParameters();
+        bool loadParameters(bool alsoLoadCsv);
         bool loadProductParametersFromDb();
-        bool isColumnInTable(string table, string column_name);
-        void executeSQLStatement(string sql_string);
+        // bool isColumnInTable(string table, string column_name);
+        // void executeSQLStatement(string sql_string);
         bool isDbValid();
         bool testParametersFromDb();
         static std::string dbFieldAsValidString(sqlite3_stmt *stmt, int column_index);
         void loadProductPropertiesFromCsv();
 
-        void parseMixPNumbersAndRatiosCsv(const std::string &mixPNumbersCsvString, const std::string &mixRatiosCsvString);
-        static void parseIntCsvString(const std::string &csvString, int* intArray, int &size);
-        static void parseDoubleCsvString(const std::string &csvString, double * doubleArray, int &size);
+        void parseMixPNumbersAndRatiosCsv(const std::string &mixPNumbersCsvString,
+                                          const std::string &mixRatiosLowCsvString,
+                                          const std::string &mixRatiosDefaultCsvString,
+                                          const std::string &mixRatiosHighCsvString);
+        void parseAndSetCustomMixRatios(const std::string &mixPNumbersCsvString, const std::string &mixRatiosCsvString);
+
+        static void parseIntCsvString(const std::string &csvString, int *intArray, int &size);
+        static void parseDoubleCsvString(const std::string &csvString, double *doubleArray, int &size);
 
         string m_name;
         string m_product_id_combined_with_location_for_backend;
@@ -118,7 +130,7 @@ public:
         double m_nVolumeTarget_custom_discount; // custom volume from which a discount is applied.
         double m_nVolumeTarget_c_max;           // custom volume dispensing: max
         double m_nVolumeTarget_f;               // how much to dispense (free sample)
-        double m_nVolumeTarget_t = 10000000; // test dispense (infinite)
+        double m_nVolumeTarget_t = 10000000;    // test dispense (infinite)
 
 private:
         double m_volumePerTick;
@@ -127,6 +139,7 @@ private:
         int m_nRetractionTimeMillis;
 
         double m_nVolumeTarget;
+        char m_nVolumeTargetAsChar;
 
         double m_price_small;
         double m_price_medium;
@@ -138,16 +151,27 @@ private:
 
         char sizeIndexToChar[4] = SIZE_INDEX_TO_CHAR_ARRAY;
 
-        string m_product_properties[100];
+        string m_product_properties[PRODUCT_DETAILS_FIELD_COUNT];
 
         // string m_display_unit;
         string m_mix_pnumbers_str;
 
         int m_mix_pnumbers[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
         int m_mix_pnumbers_count;
-        string m_mix_ratios_str;
-        double m_mix_ratios[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
-        int m_mix_ratios_count;
+        string m_mix_ratios_low_str;
+        string m_mix_ratios_default_str;
+        string m_mix_ratios_high_str;
+        double m_mix_ratios_low[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
+        double m_mix_ratios_default[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
+        double m_mix_ratios_high[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
+
+        int m_mix_pnumbers_custom[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
+        int m_mix_pnumbers_custom_count;
+        double m_mix_ratios_custom[DISPENSABLE_PRODUCTS_PER_SLOT_COUNT_MAX];
+
+        // int *m_mix_pnumbers_used; // only adjust ratios!! this is not the place to create new products.
+        double *m_mix_ratios_used;
+        // int* m_mix_pnumbers_used_count; // only adjust ratios!! this is not the place to create new products.
 
         string m_nPLU_small;
         string m_nPLU_medium;
@@ -169,8 +193,10 @@ private:
         int m_pnumber;
         bool m_pnumber_loaded_from_db;
         bool m_is_enabled;
+        bool m_is_empty_or_has_problem;
         string m_status_text;
 
+        Product_state m_product_state;
         double m_nThresholdFlow_maximum_allowed;
 
         sqlite3 *db;

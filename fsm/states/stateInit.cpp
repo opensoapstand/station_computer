@@ -111,7 +111,7 @@ DF_ERROR stateInit::dispenserSetup()
     // is ever active at a time.  The flow sensors are all connected
     // to the same pin in the hardware.
 
-    g_machine.loadGeneralProperties(true);
+    g_machine.loadGeneralMachineProperties(true);
 
     // g_machine.m_productDispensers[0].initButtonsShutdownAndMaintenance(); // todo: this is a hack for the maintenance and power button. It should not be part of the dispenser class
 
@@ -142,7 +142,7 @@ DF_ERROR stateInit::dispenserSetup()
         for (int slot = 1; slot <= g_machine.getPcb()->getSlotCountByPcbType(); slot++)
         {
             g_machine.getPcb()->setFlowSensorType(slot, pcb::FlowSensorType::DIGMESA);
-            //g_machine.getPcb()->setFlowSensorType(slot, pcb::FlowSensorType::AICHI);
+            // g_machine.getPcb()->setFlowSensorType(slot, pcb::FlowSensorType::AICHI);
         }
     }
     break;

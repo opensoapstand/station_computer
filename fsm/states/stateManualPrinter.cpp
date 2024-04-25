@@ -89,10 +89,9 @@ DF_ERROR stateManualPrinter::onAction()
       // ACTION_TRANSACTION_ID
       int id = m_pMessaging->getCommandValue();
       debugOutput::sendMessage("Print test print. ", MSG_INFO);
-       printTest();
+      printTest();
       m_state_requested = STATE_IDLE;
    }
-
 
    // Check if Command String is ready
    if (m_pMessaging->isCommandStringReadyToBeParsed())
@@ -321,6 +320,8 @@ DF_ERROR stateManualPrinter::sendPrinterStatus()
    // }
 
    m_pMessaging->sendMessageOverIP(statusString, true); // send to UI // if commented out: Let's communicate by setting the db fields only
+   DF_ERROR dfRet = OK;
+   return dfRet;
 }
 
 DF_ERROR stateManualPrinter::getPrinterStatus(bool *r_isOnline, bool *r_hasPaper)
@@ -347,6 +348,8 @@ DF_ERROR stateManualPrinter::getPrinterStatus(bool *r_isOnline, bool *r_hasPaper
    }
    *r_isOnline = r_isOnline;
    *r_hasPaper = hasPaper;
+   DF_ERROR dfRet = OK;
+   return dfRet;
 }
 
 DF_ERROR stateManualPrinter::displayPrinterStatus()
@@ -372,6 +375,8 @@ DF_ERROR stateManualPrinter::displayPrinterStatus()
    {
       debugOutput::sendMessage("Printer not online.", MSG_INFO);
    }
+   DF_ERROR dfRet = OK;
+   return dfRet;
 }
 
 DF_ERROR stateManualPrinter::displayPrinterReachable()
@@ -384,6 +389,8 @@ DF_ERROR stateManualPrinter::displayPrinterReachable()
    {
       debugOutput::sendMessage("printer not reachable", MSG_INFO);
    }
+   DF_ERROR dfRet = OK;
+   return dfRet;
 }
 
 DF_ERROR stateManualPrinter::printTest()
@@ -405,7 +412,9 @@ DF_ERROR stateManualPrinter::printTest()
    //  system(printer_command_string.c_str());
 
    //  printerr->setBarcodeHeight(100);
-    usleep(3000000);                   // wait for printer to come online.
+   usleep(3000000); // wait for printer to come online.
+   DF_ERROR dfRet = OK;
+   return dfRet;
 }
 
 // Advances to Dispense Idle
@@ -427,10 +436,14 @@ DF_ERROR stateManualPrinter::setup_receipt_from_pnumber_and_dispense_data(int pn
    std::string name_receipt = g_pnumbers[pnumber].getProductName();
    //  std::string plu = g_machine.m_productDispensers[slot-1].getSelectedProduct()->getBasePLU( SIZE_CUSTOM_CHAR  );
 
-   char size = g_pnumbers[pnumber].getSizeCharFromTargetVolume(volume_requested);
+
+   // why do we need the requested volume as char for the receipt?! --> only to differentiate from custom volume?
+   // char size = g_pnumbers[pnumber].getTargetVolumeAsChar(); // do we even need the size as char? 
+   char size = g_pnumbers[pnumber].getSizeCharFromTargetVolume(volume_requested); // // this is a necessary evil as in transactions, the requested volume is not stored as char
+    
    string plu = g_pnumbers[pnumber].getFinalPLU(size, price, g_machine.getPaymentMethod());
 
-   std::string units =  g_machine.getSizeUnit();
+   std::string units = g_machine.getSizeUnit();
    std::string paymentMethod = g_machine.getPaymentMethod();
    volume_dispensed = g_machine.convertVolumeMetricToDisplayUnits(volume_dispensed);
 
@@ -438,7 +451,6 @@ DF_ERROR stateManualPrinter::setup_receipt_from_pnumber_and_dispense_data(int pn
    char chars_volume_formatted[MAX_BUF];
 
    std::string char_units_formatted = g_machine.getSizeUnit();
-
 
    snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.0f", volume_dispensed);
 
@@ -448,4 +460,6 @@ DF_ERROR stateManualPrinter::setup_receipt_from_pnumber_and_dispense_data(int pn
    string receipt_cost = chars_cost;
 
    g_machine.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, time_stamp, units, paymentMethod, plu, "", true);
+   DF_ERROR dfRet = OK;
+   return dfRet;
 }

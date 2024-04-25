@@ -69,7 +69,7 @@ private:
     double volume_dispensed;
     double volume_target_l;
     double volume_target_s;
-    double calibration_const;
+    double threshold_flow_maximum;
     double price_l;
     double price_s;
     int is_still;

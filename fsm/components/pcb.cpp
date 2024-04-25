@@ -306,16 +306,16 @@ void pcb::setMCP23017Register(uint8_t slot, uint8_t reg, uint8_t value, bool rep
         // debugOutput::sendMessage("register reaD befororoeoroe writing.fesfsefsefsefsefsef " + to_string(isOutputByteEqualMCP23017(reg, getMCP23017Register(slot, reg), value) ), MSG_ERROR);
 
         SendByte(get_MCP23017_address_from_slot(slot), reg, value);
-        readVal = getMCP23017Register(slot, reg);
+        // readVal = getMCP23017Register(slot, reg);
 
         // debugOutput::sendMessage("register read after writing. " + to_string(reg ) + " of MCP23017 for slot " + to_string(slot) + " value of reg: " + to_string(readVal) + "attempted to writevalue: " + to_string(value), MSG_ERROR);
         // debugOutput::sendMessage("register read after writing.fesfsefsefsefsefsef " + to_string(isOutputByteEqualMCP23017(reg, getMCP23017Register(slot, reg), value) ), MSG_ERROR);
 
-        //     if (reportIfModified)
-        //     {
-        //         debugOutput::sendMessage("MCP23017 register " + to_string(reg) + " of slot: " + to_string(slot) + ": was:" + to_string(readVal) + ". Set to: " + to_string(value), MSG_INFO);
-        //         debugOutput::sendMessage("WARNING: This register was changed. Was this a glitch?", MSG_WARNING);
-        //     }
+        if (reportIfModified)
+        {
+            debugOutput::sendMessage("MCP23017 register " + to_string(reg) + " of slot: " + to_string(slot) + ": was:" + to_string(readVal) + ". Set to: " + to_string(value), MSG_INFO);
+            debugOutput::sendMessage("WARNING: This register was changed. Was this a glitch?", MSG_WARNING);
+        }
         //     readVal = getMCP23017Register(slot, reg);
     }
 
@@ -1672,27 +1672,54 @@ void pcb::pollFlowSensor(uint8_t slot)
     using namespace std::chrono;
     uint64_t now_epoch_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
+    // if (now_epoch_millis > (flowSensorTickReceivedEpoch[slot_index] + FLOW_SENSOR_DEBOUNCE_MILLIS))
+    // {
+    //     debugOutput::sendMessage("Flow sensdfdsfsdfsdfsor pulse detected while polling" + std::to_string(state) , MSG_INFO);
+    //     if (flowSensorStateMemory[slot_index] != state && flowSensorStateMemory[slot_index]) // only regard positive edges.
+    //     {
+    //         // flow_sensor_pulses_for_dispenser[slot_index]++;
+
+    //         if (flowSensorTickCallbacks[slot_index])
+    //         {
+    //             flowSensorTickCallbacks[slot_index]();
+    //         }
+
+    //         flow_sensor_pulses_since_enable[slot_index]++;
+
+    //         debugOutput::sendMessage("Flow sensor pulse detected by PCA chip. Slot: " + to_string(slot) + ". Pulse total: " + to_string(flow_sensor_pulses_since_enable[slot_index]), MSG_INFO);
+    //         debugOutput::sendMessage("Flow sensor pulse detected while polling", MSG_INFO);
+
+    //         flowSensorTickReceivedEpoch[slot_index] = now_epoch_millis;
+    //     }
+    //     flowSensorStateMemory[slot_index] = state;
+    // }
+
+    // at state change reset debounce timer
+    if (flowSensorStateMemory[slot_index] != state)
+    {
+        flowSensorTickReceivedEpoch[slot_index] = now_epoch_millis;
+    }
+    flowSensorStateMemory[slot_index] = state;
+
+    // check if signal is debounced. 
     if (now_epoch_millis > (flowSensorTickReceivedEpoch[slot_index] + FLOW_SENSOR_DEBOUNCE_MILLIS))
     {
+        flowSensorDebouncedState[slot_index] = state;
+    }
 
-        if (flowSensorStateMemory[slot_index] != state && flowSensorStateMemory[slot_index]) // only regard positive edges.
-        {
-            // flow_sensor_pulses_for_dispenser[slot_index]++;
-
+    if (flowSensorDebouncedState[slot_index] != flowSensorDebouncedStateMemory[slot_index])
+    {
+        if (flowSensorDebouncedState[slot_index])
+        { 
+            // only consider positive edges
             if (flowSensorTickCallbacks[slot_index])
             {
                 flowSensorTickCallbacks[slot_index]();
             }
-
             flow_sensor_pulses_since_enable[slot_index]++;
-
-            // debugOutput::sendMessage("Flow sensor pulse detected by PCA chip. Slot: " + to_string(slot) + ". Pulse total: " + to_string(flow_sensor_pulses_since_enable[slot_index]), MSG_INFO);
-            // debugOutput::sendMessage("Flow sensor pulse detected while polling", MSG_INFO);
-
-            flowSensorTickReceivedEpoch[slot_index] = now_epoch_millis;
         }
-        flowSensorStateMemory[slot_index] = state;
     }
+    flowSensorDebouncedStateMemory[slot_index] = flowSensorDebouncedState[slot_index];
 }
 
 ///////////////////////////////////////////////////////////////////////////

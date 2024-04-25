@@ -279,6 +279,8 @@ private:
 
     uint64_t flowSensorTickReceivedEpoch[MAX_SLOT_COUNT];
     bool flowSensorStateMemory[MAX_SLOT_COUNT];
+    bool flowSensorDebouncedStateMemory[MAX_SLOT_COUNT];
+    bool flowSensorDebouncedState[MAX_SLOT_COUNT];
 
 
     // uint64_t flow_sensor_pulses_for_dispenser[MAX_SLOT_COUNT];

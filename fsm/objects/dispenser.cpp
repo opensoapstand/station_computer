@@ -707,6 +707,7 @@ DF_ERROR dispenser::finishSelectedProductDispense()
 
     debugOutput::sendMessage("Dispenser: registers after disablingall solenoids. ", MSG_INFO);
     m_pcb->displayMCP23017IORegisters(getSlot());
+    m_pcb->flowSensorsDisableAll();
     DF_ERROR dfRet = OK;
     return dfRet;
 }

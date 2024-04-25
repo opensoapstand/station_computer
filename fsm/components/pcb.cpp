@@ -254,31 +254,33 @@ uint8_t pcb::get_PCA9534_address_from_slot(uint8_t slot)
 
 ///////////////////////////
 
-bool pcb::isOutputByteEqual(uint8_t reg, uint8_t readVal, uint8_t writeVal){
-        uint8_t readValOutputs; 
+bool pcb::isOutputByteEqualMCP23017(uint8_t reg, uint8_t readVal, uint8_t writeVal)
+{
+    uint8_t readValOutputs;
     uint8_t writeValOutputs;
     bool outputValuesAreEqual = false;
-        switch(reg){
-            case MCP23017_REGISTER_GPA:
-            {
-                readValOutputs = readVal & 0b00000111; // only preserve output bits, all input bit set to zero
-                writeValOutputs = writeVal & 0b00000111;
-                break;
-            }
-            case MCP23017_REGISTER_GPB:
-            {
-                readValOutputs = readVal & 0b11111110; // only preserve output bits, all input bit set to zero
-                writeValOutputs = writeVal & 0b11111110;
-                break;
-            }
-            default:
-            {
-                debugOutput::sendMessage("WARNING: no distinction between input and output for comparison. Will return ok. ", MSG_ERROR);
-                readValOutputs = 1;
-                writeValOutputs = 1;
-                break;
-            }
-        }
+    switch (reg)
+    {
+    case MCP23017_REGISTER_GPA:
+    {
+        readValOutputs = readVal & 0b00000111; // only preserve output bits, all input bit set to zero
+        writeValOutputs = writeVal & 0b00000111;
+        break;
+    }
+    case MCP23017_REGISTER_GPB:
+    {
+        readValOutputs = readVal & 0b11111110; // only preserve output bits, all input bit set to zero
+        writeValOutputs = writeVal & 0b11111110;
+        break;
+    }
+    default:
+    {
+        debugOutput::sendMessage("WARNING: no distinction between input and output for comparison. Will return ok. ", MSG_ERROR);
+        readValOutputs = 1;
+        writeValOutputs = 1;
+        break;
+    }
+    }
 
     return readValOutputs == writeValOutputs;
 }
@@ -288,28 +290,38 @@ void pcb::setMCP23017Register(uint8_t slot, uint8_t reg, uint8_t value, bool rep
     int attempt = 10;
     uint8_t readVal = getMCP23017Register(slot, reg);
 
-    // we'll check the value after writing. Only output values need to be checked. The input ones can change during that time. 
+    // we'll check the value after writing. Only output values need to be checked. The input ones can change during that time.
     // for the ease of it, set the input bits to zero from 'read' and 'to write' value
 
-
-    
-    while (!isOutputByteEqual(reg, getMCP23017Register(slot, reg), value))
+    // debugOutput::sendMessage("register read before writing. " + to_string(reg ) + " of MCP23017 for slot " + to_string(slot) + " value of reg: " + to_string(readVal) + "attempted to writevalue: " + to_string(value), MSG_ERROR);
+    while (!isOutputByteEqualMCP23017(reg, getMCP23017Register(slot, reg), value))
     {
         if (attempt < 0)
         {
-            debugOutput::sendMessage("Too many attempts. Could not set register " + to_string(reg ) + " of MCP23017 for slot " + to_string(slot) + " value of reg: " + to_string(readVal) + "attempted to writevalue: " + to_string(value), MSG_ERROR);
+            debugOutput::sendMessage("Too many attempts. Could not set register " + to_string(reg) + " of MCP23017 for slot " + to_string(slot) + " value of reg: " + to_string(readVal) + "attempted to writevalue: " + to_string(value), MSG_ERROR);
             break;
         }
         attempt--;
+        // debugOutput::sendMessage("register reaD befororoeoroe writing.fesfsefsefsefsefsef " + to_string(isOutputByteEqualMCP23017(reg, 0xff, 0x00) ), MSG_ERROR);
+        // debugOutput::sendMessage("register reaD befororoeoroe writing.fesfsefsefsefsefsef " + to_string(isOutputByteEqualMCP23017(reg, getMCP23017Register(slot, reg), value) ), MSG_ERROR);
+
         SendByte(get_MCP23017_address_from_slot(slot), reg, value);
+        // readVal = getMCP23017Register(slot, reg);
+
+        // debugOutput::sendMessage("register read after writing. " + to_string(reg ) + " of MCP23017 for slot " + to_string(slot) + " value of reg: " + to_string(readVal) + "attempted to writevalue: " + to_string(value), MSG_ERROR);
+        // debugOutput::sendMessage("register read after writing.fesfsefsefsefsefsef " + to_string(isOutputByteEqualMCP23017(reg, getMCP23017Register(slot, reg), value) ), MSG_ERROR);
 
         if (reportIfModified)
         {
             debugOutput::sendMessage("MCP23017 register " + to_string(reg) + " of slot: " + to_string(slot) + ": was:" + to_string(readVal) + ". Set to: " + to_string(value), MSG_INFO);
             debugOutput::sendMessage("WARNING: This register was changed. Was this a glitch?", MSG_WARNING);
         }
-        readVal = getMCP23017Register(slot, reg);
+        //     readVal = getMCP23017Register(slot, reg);
     }
+
+    //     if (attempt >= 9){
+    // debugOutput::sendMessage("donedoeofneoinfeif", MSG_ERROR);
+    //     }
 }
 
 uint8_t pcb::getMCP23017Register(uint8_t slot, uint8_t reg)
@@ -363,33 +375,31 @@ void pcb::setMCP23017OutputBit(uint8_t slot, int posIndex, bool onElseOff, uint8
 
     // while ( isBitDifferent && attempt > 0)
 
-
-    
     // {
     //     if (attempt != attempts)
     //     {
     //         debugOutput::sendMessage("Warning: retrying to set MCP23017 to requested output. Re-Attempt: " + std::to_string(1 + attempts-attempt) + " of " + std::to_string(attempts), MSG_WARNING);
-            
+
     //     }
     //     attempt--;
 
-        unsigned char reg_value;
-        
-        reg_value = ReadByte(get_MCP23017_address_from_slot(slot), GPIORegister);
+    unsigned char reg_value;
 
-        if (onElseOff)
-        {
-            reg_value = reg_value | (1UL << posIndex); // modify bit to one in the byte
-        }
-        else
-        {
-            reg_value = reg_value & ~(1UL << posIndex); // modify bit to zero in the byte
-        }
-        // debugOutput::sendMessage("value to be sent: " + to_string(reg_value) + " to address: " + to_string(get_PCA9534_address_from_slot(slot)), MSG_INFO);
-        //SendByte(get_MCP23017_address_from_slot(slot), GPIORegister, reg_value);
-        setMCP23017Register(slot,GPIORegister,reg_value,false);
+    reg_value = ReadByte(get_MCP23017_address_from_slot(slot), GPIORegister);
 
-        //isOutputByteEqual(GPIORegister, getMCP23017Register(slot, GPIORegister), reg_value);
+    if (onElseOff)
+    {
+        reg_value = reg_value | (1UL << posIndex); // modify bit to one in the byte
+    }
+    else
+    {
+        reg_value = reg_value & ~(1UL << posIndex); // modify bit to zero in the byte
+    }
+    // debugOutput::sendMessage("value to be sent: " + to_string(reg_value) + " to address: " + to_string(get_PCA9534_address_from_slot(slot)), MSG_INFO);
+    // SendByte(get_MCP23017_address_from_slot(slot), GPIORegister, reg_value);
+    setMCP23017Register(slot, GPIORegister, reg_value, false);
+
+    // isOutputByteEqualMCP23017(GPIORegister, getMCP23017Register(slot, GPIORegister), reg_value);
     // }
 
     // if (attempt <= 0)
@@ -772,8 +782,8 @@ void pcb::sendEN258DefaultConfigurationToMCP23017(uint8_t slot, bool reportIfMod
     uint8_t GPIOA_value = 0x00;
     uint8_t GPIOB_value = 0x02;
 
-    setMCP23017Register(slot, MCP23017_REGISTER_GPA, GPIOA_value,true);
-    setMCP23017Register(slot, MCP23017_REGISTER_GPB, GPIOB_value,true);
+    setMCP23017Register(slot, MCP23017_REGISTER_GPA, GPIOA_value, true);
+    setMCP23017Register(slot, MCP23017_REGISTER_GPB, GPIOB_value, true);
 
     debugOutput::sendMessage("Default config sent to PCA9534 for slot: " + to_string(slot), MSG_INFO);
 }
@@ -876,19 +886,18 @@ void pcb::initialize_pcb()
         {
             uint8_t IOCON_value;
             // IOCON_value |= 0x02;                          // INTPOL...
-            IOCON_value |= 0x80;                          // BANK disable.
-                                                          // IOCON_value |= 0x80; // BANK enable.
+            IOCON_value |= 0x80;                                 // BANK disable.
+                                                                 // IOCON_value |= 0x80; // BANK enable.
             setMCP23017Register(slot, 0x0A, IOCON_value, false); // IOCON (IOCON.bank = 0)
-            setMCP23017Register(slot, 0x00, 0xC0,false);        // IODIRA (IOCON.bank = 1)
-            setMCP23017Register(slot, 0x10, 0x01,false);        // IODIRB (IOCON.bank = 1
+            setMCP23017Register(slot, 0x00, 0xC0, false);        // IODIRA (IOCON.bank = 1)
+            setMCP23017Register(slot, 0x10, 0x01, false);        // IODIRB (IOCON.bank = 1
 
             uint8_t GPIOA_value = 0x00;
             uint8_t GPIOB_value = 0x00;
 
-            setMCP23017Register(slot, MCP23017_REGISTER_GPA, GPIOA_value,false); // GPIOA (IOCON.bank = 1 // button off (0 for ON)
+            setMCP23017Register(slot, MCP23017_REGISTER_GPA, GPIOA_value, false); // GPIOA (IOCON.bank = 1 // button off (0 for ON)
             setMCP23017Register(slot, MCP23017_REGISTER_GPB, GPIOB_value, false); // GPIOB (IOCON.bank = 1 // button off (0 for ON)
         }
-
 
         setPumpsDisableAll();
         for (uint8_t slot = 1; slot <= 4; slot++)
@@ -1663,27 +1672,54 @@ void pcb::pollFlowSensor(uint8_t slot)
     using namespace std::chrono;
     uint64_t now_epoch_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
+    // if (now_epoch_millis > (flowSensorTickReceivedEpoch[slot_index] + FLOW_SENSOR_DEBOUNCE_MILLIS))
+    // {
+    //     debugOutput::sendMessage("Flow sensdfdsfsdfsdfsor pulse detected while polling" + std::to_string(state) , MSG_INFO);
+    //     if (flowSensorStateMemory[slot_index] != state && flowSensorStateMemory[slot_index]) // only regard positive edges.
+    //     {
+    //         // flow_sensor_pulses_for_dispenser[slot_index]++;
+
+    //         if (flowSensorTickCallbacks[slot_index])
+    //         {
+    //             flowSensorTickCallbacks[slot_index]();
+    //         }
+
+    //         flow_sensor_pulses_since_enable[slot_index]++;
+
+    //         debugOutput::sendMessage("Flow sensor pulse detected by PCA chip. Slot: " + to_string(slot) + ". Pulse total: " + to_string(flow_sensor_pulses_since_enable[slot_index]), MSG_INFO);
+    //         debugOutput::sendMessage("Flow sensor pulse detected while polling", MSG_INFO);
+
+    //         flowSensorTickReceivedEpoch[slot_index] = now_epoch_millis;
+    //     }
+    //     flowSensorStateMemory[slot_index] = state;
+    // }
+
+    // at state change reset debounce timer
+    if (flowSensorStateMemory[slot_index] != state)
+    {
+        flowSensorTickReceivedEpoch[slot_index] = now_epoch_millis;
+    }
+    flowSensorStateMemory[slot_index] = state;
+
+    // check if signal is debounced. 
     if (now_epoch_millis > (flowSensorTickReceivedEpoch[slot_index] + FLOW_SENSOR_DEBOUNCE_MILLIS))
     {
+        flowSensorDebouncedState[slot_index] = state;
+    }
 
-        if (flowSensorStateMemory[slot_index] != state && flowSensorStateMemory[slot_index]) // only regard positive edges.
-        {
-            // flow_sensor_pulses_for_dispenser[slot_index]++;
-
+    if (flowSensorDebouncedState[slot_index] != flowSensorDebouncedStateMemory[slot_index])
+    {
+        if (flowSensorDebouncedState[slot_index])
+        { 
+            // only consider positive edges
             if (flowSensorTickCallbacks[slot_index])
             {
                 flowSensorTickCallbacks[slot_index]();
             }
-
             flow_sensor_pulses_since_enable[slot_index]++;
-
-            // debugOutput::sendMessage("Flow sensor pulse detected by PCA chip. Slot: " + to_string(slot) + ". Pulse total: " + to_string(flow_sensor_pulses_since_enable[slot_index]), MSG_INFO);
-            // debugOutput::sendMessage("Flow sensor pulse detected while polling", MSG_INFO);
-
-            flowSensorTickReceivedEpoch[slot_index] = now_epoch_millis;
         }
-        flowSensorStateMemory[slot_index] = state;
     }
+    flowSensorDebouncedStateMemory[slot_index] = flowSensorDebouncedState[slot_index];
 }
 
 ///////////////////////////////////////////////////////////////////////////

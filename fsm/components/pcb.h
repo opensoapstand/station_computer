@@ -279,6 +279,8 @@ private:
 
     uint64_t flowSensorTickReceivedEpoch[MAX_SLOT_COUNT];
     bool flowSensorStateMemory[MAX_SLOT_COUNT];
+    bool flowSensorDebouncedStateMemory[MAX_SLOT_COUNT];
+    bool flowSensorDebouncedState[MAX_SLOT_COUNT];
 
 
     // uint64_t flow_sensor_pulses_for_dispenser[MAX_SLOT_COUNT];
@@ -300,7 +302,7 @@ private:
     bool slot_pca9534_found[MAX_SLOT_COUNT];
     bool slot_mcp23017_found[MAX_SLOT_COUNT];
 
-    bool isOutputByteEqual(uint8_t reg, uint8_t readVal, uint8_t writeVal);
+    bool isOutputByteEqualMCP23017(uint8_t reg, uint8_t readVal, uint8_t writeVal);
 
     uint64_t pump_start_delay_start_epoch[MAX_SLOT_COUNT];
     uint64_t pump_stop_before_backtrack_delay_start_epoch[MAX_SLOT_COUNT];

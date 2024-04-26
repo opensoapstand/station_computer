@@ -1905,6 +1905,9 @@ void machine::updateTransactionInDb(bool processed_by_backend, QString volume_di
     QString endTime = this->getSelectedSlot()->getDispenseEndTime();
     QString button_press_duration = QString::number(this->getSelectedSlot()->getButtonPressDuration());
     QString button_press_count = QString::number(this->getSelectedSlot()->getButtonPressCount());
+
+
+    
     int slot = getSelectedSlot()->getSlotId();
     QString sqlQuery = QString("INSERT INTO transactions (product,quantity_requested,price,start_time,quantity_dispensed,end_time,volume_remaining,button_duration,button_times,processed_by_backend,product_id, soapstand_product_serial,slot) VALUES ('%1', %2, %3, '%4', %5, '%6', %7, %8, %9, %10, '%11', '%12', %13)")
                 .arg(contents)

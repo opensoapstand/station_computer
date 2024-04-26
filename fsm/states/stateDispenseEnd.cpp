@@ -143,6 +143,7 @@ DF_ERROR stateDispenseEnd::onAction()
     m_state_requested = STATE_IDLE;
     usleep(1000000);                                          // give UI the chance to catch up (and display page end)
     m_pMessaging->sendMessageOverIP("Transaction End", true); // send to UI
+    
 
     return e_ret;
 }

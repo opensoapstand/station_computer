@@ -64,14 +64,14 @@ DF_ERROR stateDispenseInit::onEntry()
 
     debugOutput::sendMessage("Dispense init: ", MSG_INFO);
 
-    //debugOutput::sendMessage("Dispense init: (re)load relevant parameters from database.", MSG_INFO);
-    //g_machine.loadGeneralMachineProperties(false);
-    //g_machine.getSelectedDispenser().loadGeneralProperties();
+    // debugOutput::sendMessage("Dispense init: (re)load relevant parameters from database.", MSG_INFO);
+    // g_machine.loadGeneralMachineProperties(false);
+    // g_machine.getSelectedDispenser().loadGeneralProperties();
 
     debugOutput::sendMessage("Dispense init: Load selected product parameters. Slot: " + to_string(g_machine.getSelectedDispenserNumber()) + " Product: " + to_string(g_machine.getSelectedDispenser().getSelectedPNumber()), MSG_INFO);
     // debugOutput::sendMessage("Dispense init: Load selected product parameters66666. Slot: " + to_string(g_machine.getSelectedDispenserNumber()) + " Product: " + to_string(g_machine.getSelectedDispenser().getSelectedProduct()->getPNumber()), MSG_INFO);
     bool success = g_machine.getSelectedDispenser().getSelectedProduct()->loadParameters(false);
-
+    g_machine.getSelectedDispenser().resetMixDispenseReport();
     if (!success)
     {
         debugOutput::sendMessage("Did not reload parameters from database", MSG_INFO);
@@ -88,6 +88,7 @@ DF_ERROR stateDispenseInit::onAction()
     DF_ERROR e_ret = OK;
 
     // g_machine.getSelectedDispenser().getSelectedProduct()->setTargetVolumeFromSize(size);
+
     g_machine.getSelectedDispenser().initSelectedProductDispense(size);
 
     debugOutput::sendMessage("Chosen dispenser slot: " + std::to_string(g_machine.getSelectedDispenserNumber()) +

@@ -778,6 +778,13 @@ DF_ERROR dispenser::initActivePNumberDispense()
 DF_ERROR dispenser::finishActivePNumberDispense()
 {
     debugOutput::sendMessage("Dispenser: Stop Active PNumber dispense " + to_string(getActivePNumber()), MSG_INFO);
+   
+    std::string activePNumber = to_string(getActivePNumber());
+   double activeProductVolumeDispensed = getActiveProductVolumeDispensed();
+   debugOutput::sendMessage("Active product " + activePNumber + ". volume dispensed: " + std::to_string(activeProductVolumeDispensed), MSG_INFO);
+   double volume_remaining = getActiveProduct()->getVolumeRemaining();
+   setMixDispenseReport(activePNumber, activeProductVolumeDispensed, volume_remaining);
+
 
     stopActiveDispensing();
 #ifndef ENABLE_PARALLEL_MIX
@@ -785,6 +792,11 @@ DF_ERROR dispenser::finishActivePNumberDispense()
 #endif
     m_pcb->flowSensorsDisableAll();
     DF_ERROR dfRet = OK;
+
+
+
+   
+
 
     return dfRet;
 }

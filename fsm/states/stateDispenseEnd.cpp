@@ -143,6 +143,7 @@ DF_ERROR stateDispenseEnd::onAction()
     m_state_requested = STATE_IDLE;
     usleep(1000000);                                          // give UI the chance to catch up (and display page end)
     m_pMessaging->sendMessageOverIP("Transaction End", true); // send to UI
+    
 
     return e_ret;
 }
@@ -869,10 +870,11 @@ void stateDispenseEnd::sendEndTransactionMessageToUI(bool isValid)
     std::string button_press_duration = to_string(g_machine.getSelectedDispenser().getButtonPressedTotalMillis());
     std::string button_press_count = to_string(g_machine.getSelectedDispenser().getDispenseButtonPressesDuringDispensing());
     std::string volume_dispensed = to_string(g_machine.getSelectedDispenser().getSelectedProductVolumeDispensed());
+    std::string volume_remaining = to_string(g_machine.getSelectedDispenser().getSelectedProductVolumeRemaining());
     // Get mix product object as a string to pass to UI
     std::string pNumber_dispense_info_string = mapToString(g_machine.getSelectedDispenser().getMixDispenseReport());
 
-    std::string message = "finalTransactionMessage|status|" + status + "|start_time|" + start_time + "|end_time|" + end_time + "|button_press_duration|" + button_press_duration + "|button_press_count|" + button_press_count + "|volume_dispensed|" + volume_dispensed + "|pNumber_dispense_info|" + pNumber_dispense_info_string;
+    std::string message = "finalTransactionMessage|status|" + status + "|start_time|" + start_time + "|end_time|" + end_time + "|button_press_duration|" + button_press_duration + "|button_press_count|" + button_press_count + "|volume_dispensed|" + volume_dispensed + "|volume_remaining|"+ volume_remaining+"|pNumber_dispense_info|" + pNumber_dispense_info_string;
     usleep(100000);                                 // send message delay
     m_pMessaging->sendMessageOverIP(message, true); // send to UI
 }

@@ -35,6 +35,7 @@ public:
     DF_ERROR onEntry();
     DF_ERROR onAction();
     DF_ERROR onExit();
+    void finalize();
 
     DF_ERROR statusUpdateLoggingAndOverIP(bool onlyIfAllowed);
 

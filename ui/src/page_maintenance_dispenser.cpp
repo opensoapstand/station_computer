@@ -1034,7 +1034,7 @@ void page_maintenance_dispenser::on_pushButton_done_clicked()
             }
             else if (activeEditField == "pushButton_set_volume_remaining")
             {
-                bool success = p_page_idle->thisMachine->getSelectedProduct()->setVolumeRemainingUserInput(text_entered);
+                bool success = p_page_idle->thisMachine->getSelectedProduct()->resetVolumeRemainingUserInput(text_entered);
 
                 if (success)
                 {

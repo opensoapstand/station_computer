@@ -108,10 +108,19 @@ DF_ERROR stateDispense::onAction()
    // Is target volume reached?
    if (g_machine.getSelectedDispenser().isSelectedProductVolumeTargetReached())
    {
-      g_machine.getSelectedDispenser().finishActivePNumberDispense();
-      g_machine.getSelectedDispenser().finishSelectedProductDispense();
       m_state_requested = STATE_DISPENSE_END;
       debugOutput::sendMessage("Stop dispensing selected product. Requested volume reached. Dispensed: " + to_string(g_machine.getSelectedDispenser().getSelectedProductVolumeDispensed()), MSG_INFO);
+
+      std::string activePNumber = to_string(g_machine.getSelectedDispenser().getActivePNumber());
+      double activeProductVolumeDispensed = g_machine.getSelectedDispenser().getActiveProductVolumeDispensed();
+      debugOutput::sendMessage("Active product " + activePNumber + ". volume dispensed: " + std::to_string(activeProductVolumeDispensed), MSG_INFO);
+      double volume_remaining = g_machine.getSelectedDispenser().getActiveProduct()->getVolumeRemaining();
+      g_machine.getSelectedDispenser().setMixDispenseReport(activePNumber, activeProductVolumeDispensed, volume_remaining);
+
+
+      g_machine.getSelectedDispenser().finishActivePNumberDispense();
+      g_machine.getSelectedDispenser().finishSelectedProductDispense();
+
    }
 
 #else
@@ -122,7 +131,7 @@ DF_ERROR stateDispense::onAction()
    {
       std::string activePNumber = to_string(g_machine.getSelectedDispenser().getActivePNumber());
       double activeProductVolumeDispensed = g_machine.getSelectedDispenser().getActiveProductVolumeDispensed();
-      double volume_remaining = g_machine.getSelectedDispenser().getActiveProduct()->getVolumeRemaining() - activeProductVolumeDispensed;
+      double volume_remaining = g_machine.getSelectedDispenser().getActiveProduct()->getVolumeRemaining();
       g_machine.getSelectedDispenser().setMixDispenseReport(activePNumber, activeProductVolumeDispensed, volume_remaining);
 
       debugOutput::sendMessage("Active product. Requested volume reached. Stop and next.   P-" + activePNumber + ":  " +
@@ -171,14 +180,14 @@ DF_ERROR stateDispense::onAction()
       debugOutput::sendMessage("Stop dispensing (stop command received)", MSG_INFO);
       m_state_requested = STATE_DISPENSE_END;
 
-      g_machine.getSelectedDispenser().finishActivePNumberDispense();
-      g_machine.getSelectedDispenser().finishSelectedProductDispense();
-
       std::string activePNumber = to_string(g_machine.getSelectedDispenser().getActivePNumber());
       double activeProductVolumeDispensed = g_machine.getSelectedDispenser().getActiveProductVolumeDispensed();
-      double volume_remaining = g_machine.getSelectedDispenser().getActiveProduct()->getVolumeRemaining() - activeProductVolumeDispensed;
+      debugOutput::sendMessage("Active product " + activePNumber + ". volume dispensed: " + std::to_string(activeProductVolumeDispensed), MSG_INFO);
+      double volume_remaining = g_machine.getSelectedDispenser().getActiveProduct()->getVolumeRemaining();
       g_machine.getSelectedDispenser().setMixDispenseReport(activePNumber, activeProductVolumeDispensed, volume_remaining);
 
+      g_machine.getSelectedDispenser().finishActivePNumberDispense();
+      g_machine.getSelectedDispenser().finishSelectedProductDispense();
       return e_ret = OK;
    }
 

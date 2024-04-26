@@ -38,8 +38,9 @@ public:
     QString getAwsProductId();
     QString getFullVolumeCorrectUnits(bool addUnits);
 
-    bool setVolumeRemainingUserInput(QString volumeRemainingAsUserText);
-    bool setVolumeRemaining(double volume_as_ml);
+    bool resetVolumeRemainingUserInput(QString volumeRemainingAsUserText);
+    bool resetVolumeRemaining(double volume_as_ml);
+    void setVolumeRemaining(double volume_as_ml);
     bool restock();
 
     QString getVolumeRemainingCorrectUnits(bool addUnits);

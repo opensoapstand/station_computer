@@ -545,6 +545,7 @@ void page_dispenser::force_finish_dispensing()
 void page_dispenser::fsmSendStartDispensing()
 {
     QString dispenseCommand = QString::number(p_page_idle->thisMachine->getSelectedSlot()->getSlotId());
+    
     dispenseCommand.append(p_page_idle->thisMachine->getSelectedProduct()->getSelectedSizeAsChar());
     dispenseCommand.append(SEND_DISPENSE_START);
 

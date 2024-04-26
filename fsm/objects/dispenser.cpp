@@ -944,16 +944,25 @@ void dispenser::linkDispenserFlowSensorTick()
 
 void dispenser::registerFlowSensorTickFromPcb()
 {
-    // the actual dispensed produce gets always registered
-    getActiveProduct()->registerFlowSensorTickFromPcb();
+    
+    // from observation: customers keep the button pressed, even when empty is detected.
+    // the flowsensor splutters, and 'fake ticks' keep on being added. 
+    // so, at least, the customer should restart pressing the button (it'll go to 'ramp up' state then, out of the empty state, and providing the opportunity for flow to restart if it was a fluke empty detection.)
+    if (getDispenseStatus() != FLOW_STATE_PRIME_FAIL_OR_EMPTY ){ 
 
-    // debugOutput::sendMessage("Dispenser: active flow tick : " + std::to_string(getSlot()) + " Active pnumber: " + getActiveProduct()->getPNumberAsPString() , MSG_INFO);
+        // the actual dispensed produce gets always registered
+        getActiveProduct()->registerFlowSensorTickFromPcb();
 
-    if (getActivePNumber() != getSelectedPNumber())
-    {
-        // debugOutput::sendMessage("Dispenser: selected flow tick : " + std::to_string(getSlot()) + " Selected pnumber: " + getSelectedProduct()->getPNumberAsPString() , MSG_INFO);
-        // if this is part of a mix, register the tick also for the mix volume (total volume)
-        getSelectedProduct()->setVolumeDispensed(getActiveProduct()->getVolumePerTick(true) + getSelectedProduct()->getVolumeDispensed());
+        // debugOutput::sendMessage("Dispenser: active flow tick : " + std::to_string(getSlot()) + " Active pnumber: " + getActiveProduct()->getPNumberAsPString() , MSG_INFO);
+
+        if (getActivePNumber() != getSelectedPNumber())
+        {
+            // debugOutput::sendMessage("Dispenser: selected flow tick : " + std::to_string(getSlot()) + " Selected pnumber: " + getSelectedProduct()->getPNumberAsPString() , MSG_INFO);
+            // if this is part of a mix, register the tick also for the mix volume (total volume)
+            getSelectedProduct()->setVolumeDispensed(getActiveProduct()->getVolumePerTick(true) + getSelectedProduct()->getVolumeDispensed());
+        }
+    }else{
+        debugOutput::sendMessage("Will not register tick in this flow state. Experimental . ", MSG_INFO);
     }
 }
 

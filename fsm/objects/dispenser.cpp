@@ -858,12 +858,12 @@ void dispenser::stopActiveDispensing()
     if (getSelectedProduct()->isMixingProduct())
     {
         // if SELECTED product is a mix, we open the active product solenoid. 
-        debugOutput::sendMessage("Dispenser: MIXING PRODUCT SET ACTIVE SOLENOID", MSG_INFO);
+        // debugOutput::sendMessage("Dispenser: MIXING PRODUCT SET ACTIVE SOLENOID", MSG_INFO);
         setActiveProductSolenoid(false);
     }
     else
     {
-        debugOutput::sendMessage("Dispenser: NOT MIXING PRODUCT SET SPOUT", MSG_INFO);
+        // debugOutput::sendMessage("Dispenser: NOT MIXING PRODUCT SET SPOUT", MSG_INFO);
 #endif
 
         m_pcb->setSpoutSolenoid(getSlot(), false);

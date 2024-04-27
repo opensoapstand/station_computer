@@ -819,16 +819,26 @@ void dispenser::startActiveDispensing()
     }
     m_pcb->startPump(getSlot());
 
-#ifndef ENABLE_PARALLEL_MIX
+#ifdef ENABLE_PARALLEL_MIX
     m_pcb->setSpoutSolenoid(getSlot(), true);
-#else
-    if (!getSelectedProduct()->isMixingProduct())
+
+    if (getSelectedProduct()->isMixingProduct())
     {
-        m_pcb->setSpoutSolenoid(getSlot(), true);
+        // if SELECTED product is a mix, we open the active product solenoid. 
+        debugOutput::sendMessage("Dispenser: MIXING PRODUCT SET ACTIVE SOLENOID", MSG_INFO);
+        setActiveProductSolenoid(true);
     }
     else
     {
-        setActiveProductSolenoid(true);
+        debugOutput::sendMessage("Dispenser: NOT MIXING PRODUCT SET SPOUT", MSG_INFO);
+#endif
+
+        m_pcb->setSpoutSolenoid(getSlot(), true);
+        if (m_pcb->get_pcb_version() == pcb::PcbVersion::EN258_4SLOTS || m_pcb->get_pcb_version() == pcb::PcbVersion::EN258_8SLOTS ){
+            setActiveProductSolenoid(true);
+        }
+
+#ifdef ENABLE_PARALLEL_MIX
     }
 #endif
 }
@@ -838,19 +848,35 @@ void dispenser::stopActiveDispensing()
     // actual pumping stop
     debugOutput::sendMessage("Dispenser: stop active product dispensing.", MSG_INFO);
     m_pcb->stopPump(getSlot());
-#ifndef ENABLE_PARALLEL_MIX
+
+
+
+    
+#ifdef ENABLE_PARALLEL_MIX
     m_pcb->setSpoutSolenoid(getSlot(), false);
-#else
-    if (!getSelectedProduct()->isMixingProduct())
+
+    if (getSelectedProduct()->isMixingProduct())
     {
-        m_pcb->setSpoutSolenoid(getSlot(), false);
+        // if SELECTED product is a mix, we open the active product solenoid. 
+        debugOutput::sendMessage("Dispenser: MIXING PRODUCT SET ACTIVE SOLENOID", MSG_INFO);
+        setActiveProductSolenoid(false);
     }
     else
     {
-        setActiveProductSolenoid(false);
-    }
-
+        debugOutput::sendMessage("Dispenser: NOT MIXING PRODUCT SET SPOUT", MSG_INFO);
 #endif
+
+        m_pcb->setSpoutSolenoid(getSlot(), false);
+        if (m_pcb->get_pcb_version() == pcb::PcbVersion::EN258_4SLOTS || m_pcb->get_pcb_version() == pcb::PcbVersion::EN258_8SLOTS ){
+            setActiveProductSolenoid(false);
+        }
+
+#ifdef ENABLE_PARALLEL_MIX
+    }
+#endif
+
+
+
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -888,7 +914,8 @@ void dispenser::setParallelSolenoids()
         int mixPnumber = getSelectedProduct()->getMixPNumber(mix_position);
 
         if (mixPnumber != getBasePNumber())
-        { // basePNumber is dealt with separately
+        { 
+            // basePNumber is dealt with separately
             double mix_position_targetVolume = getSelectedProduct()->getTargetVolume() * getSelectedProduct()->getMixRatio(mix_position);
 
             // getProductFromPNumber(mixPnumber)->setTargetVolume(mix_position_targetVolume);

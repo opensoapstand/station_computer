@@ -121,15 +121,16 @@ int pnumberproduct::getPNumber()
 int pnumberproduct::getFirstMixPNumberOrPNumberAsBasePNumber()
 {
     // base p-number return the pnumber if no mixing set, or else returns the first mixpnumber of the list.
-    qDebug() << " mix pnumbers length: " << QString::number(m_mixPNumbers.size());
-    if (m_mixPNumbers.size() > 0)
-    {
-        return m_mixPNumbers[0];
-    }
-    else
-    {
-        return m_PNumber;
-    }
+
+    // if (m_mixPNumbers.size() > 0)
+    // {
+    //     return m_mixPNumbers[0];
+    // }
+    // else
+    // {
+    //     return getPNumber();
+    // }
+    return getMixPNumbersAlwaysIncludingBase()[0];
 }
 
 QString pnumberproduct::getMixPNumbersAsCsv()
@@ -146,7 +147,7 @@ QString pnumberproduct::getMixPNumbersAsCsv()
     }
     else
     {
-        csvString += QString::number(m_PNumber);
+        csvString += QString::number(getPNumber());
     }
     return csvString;
 }
@@ -171,9 +172,20 @@ QString pnumberproduct::getMixRatiosAsCsv(QVector<double> ratios)
     return csvString;
 }
 
+QVector<int> pnumberproduct::getMixPNumbersAlwaysIncludingBase(){
+qDebug() << " mix pnumbers length: " << QString::number(m_mixPNumbers.size());
+    if (m_mixPNumbers.isEmpty())
+    {
+        return QVector<int>() << getPNumber();
+    }
+    else
+    {
+        return getMixPNumbers();
+    }
+}
 QVector<int> pnumberproduct::getMixPNumbers()
 {
-    return m_mixPNumbers;
+    return m_mixPNumbers; 
 }
 QVector<double> pnumberproduct::getMixRatiosLow()
 {
@@ -181,6 +193,14 @@ QVector<double> pnumberproduct::getMixRatiosLow()
 }
 QVector<double> pnumberproduct::getMixRatiosDefault()
 {
+    // if (m_mixRatiosDefault.isEmpty())
+    // {
+    //     return QVector<double>() << 1.0;
+    // }
+    // else
+    // {
+    //     return m_mixRatiosDefault;
+    // }
     return m_mixRatiosDefault;
 }
 QVector<double> pnumberproduct::getMixRatiosHigh()
@@ -595,7 +615,7 @@ bool pnumberproduct::restock()
 
 bool pnumberproduct::resetVolumeRemaining(double volume_as_ml)
 {
-    // this is only for restocking. 
+    // this is only for restocking.
     bool success = true;
     success &= m_db->updateTableProductsWithDouble(getPNumber(), "volume_remaining", volume_as_ml, 0);
     success &= m_db->updateTableProductsWithDouble(getPNumber(), "volume_dispensed_since_restock", 0, 0);

@@ -874,9 +874,6 @@ void dispenser::stopActiveDispensing()
 #ifdef ENABLE_PARALLEL_MIX
     }
 #endif
-
-
-
 }
 
 /////////////////////////////////////////////////////////////////////////

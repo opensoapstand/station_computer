@@ -71,6 +71,9 @@ int dispenser_slot::getAdditivePNumber(int position)
 
 int dispenser_slot::getAdditiveCount()
 {
+    if (m_additivePNumbers.size() > ADDITIVES_PER_SLOT_COUNT_MAX){
+        qDebug() << "ASSERT ERROR: Too many additives!!!!";
+    }
     return m_additivePNumbers.size();
 }
 

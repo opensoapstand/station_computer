@@ -17,6 +17,7 @@ public:
 
     int getFirstMixPNumberOrPNumberAsBasePNumber();
     QVector<int> getMixPNumbers();
+    QVector<int> getMixPNumbersAlwaysIncludingBase();
     QString getMixPNumbersAsCsv();
     QString getMixRatiosAsCsv(QVector<double> ratios);
     QVector<double> getMixRatiosLow();

@@ -18,7 +18,7 @@
 #include <sqlite3.h>
 #include <stdint.h>
 
-#define CONTROLLER_VERSION "3.8"
+#define CONTROLLER_VERSION "3.9"
 
 #define PRODUCT_DETAILS_TSV_PATH "/home/df-admin/production/references/products/product_details.tsv" // https://docs.google.com/spreadsheets/d/17WR2gRyPIDIlGKBy1YKFAqN-Hyw_3VOJ6JCmfcAtjVk/edit#gid=169583479 download as .tsv file
 #define PRODUCT_DETAILS_FIELD_COUNT 100  // take some extra

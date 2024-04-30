@@ -41,6 +41,13 @@ page_maintenance_dispenser::page_maintenance_dispenser(QWidget *parent) : QWidge
     buttons_select_additive[3] = ui->pushButton_active_pnumber_additive_4;
     buttons_select_additive[4] = ui->pushButton_active_pnumber_additive_5;
 
+    labels_mix_ratio[0] = ui->label_mix_ratio_0;
+    labels_mix_ratio[1] = ui->label_mix_ratio_1;
+    labels_mix_ratio[2] = ui->label_mix_ratio_2;
+    labels_mix_ratio[3] = ui->label_mix_ratio_3;
+    labels_mix_ratio[4] = ui->label_mix_ratio_4;
+    labels_mix_ratio[5] = ui->label_mix_ratio_5;
+
     buttons_select_mix[0] = ui->pushButton_dispense_pnumber_1;
     buttons_select_mix[1] = ui->pushButton_dispense_pnumber_2;
     buttons_select_mix[2] = ui->pushButton_dispense_pnumber_3;
@@ -172,8 +179,13 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
         buttons_select_mix[dispense_product_position - 1]->setStyleSheet(styleSheet);
         buttons_select_mix[dispense_product_position - 1]->setText("Position " + QString::number(dispense_product_position) + "\nN/A");
         buttons_select_mix[dispense_product_position - 1]->setEnabled(false);
+       
         // buttons_select_mix[dispense_product_position - 1]->hide();
     }
+
+
+     
+
     // set up for all available dispense products
     int dispense_product_position = 1;
     while (dispense_product_position <= this->p_page_idle->thisMachine->getSelectedSlot()->getDispenseProductsCount())
@@ -182,6 +194,7 @@ void page_maintenance_dispenser::showEvent(QShowEvent *event)
         int pnumber = this->p_page_idle->thisMachine->getSelectedSlot()->getDispensePNumber(dispense_product_position);
         buttons_select_mix[dispense_product_position - 1]->setText("Position " + QString::number(dispense_product_position) + "\nP-" + QString::number(pnumber));
         buttons_select_mix[dispense_product_position - 1]->show();
+        // labels_mix_ratio[dispense_product_position]->setText("");
         dispense_product_position++;
     }
 
@@ -263,28 +276,58 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
     }
 
     // BASE PNUMBER
-    if (this->p_page_idle->thisMachine->getSelectedSlot()->getBasePNumber() == this->p_page_idle->thisMachine->getSelectedProduct()->getPNumber())
+
+    int additiveValidAtPosition = this->p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbersAlwaysIncludingBase().indexOf(this->p_page_idle->thisMachine->getSelectedSlot()->getBasePNumber());
+    // if (this->p_page_idle->thisMachine->getSelectedSlot()->getBasePNumber() == this->p_page_idle->thisMachine->getSelectedProduct()->getPNumber())
+    if (additiveValidAtPosition == -1)
     {
-        p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_active_pnumber_base, "product_active", PAGE_MAINTENANCE_DISPENSER_CSS);
+        p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_active_pnumber_base, "product_not_active", PAGE_MAINTENANCE_DISPENSER_CSS);
+        labels_mix_ratio[0]->setText("0%");
     }
     else
     {
-        p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_active_pnumber_base, "product_not_active", PAGE_MAINTENANCE_DISPENSER_CSS);
+        p_page_idle->thisMachine->addCssClassToObject(ui->pushButton_active_pnumber_base, "product_active", PAGE_MAINTENANCE_DISPENSER_CSS);
+        QVector<double> ratios = this->p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosDefault();
+        if (this->p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosDefault().isEmpty())
+        {
+            labels_mix_ratio[0]->setText("100%");
+        }
+        else
+        {
+            labels_mix_ratio[0]->setText(QString::number(100 * ratios[0], 'f', 0) + "%");
+        }
     }
 
     // available additives
     int additive_position = 1;
-    while (additive_position <= this->p_page_idle->thisMachine->getSelectedSlot()->getAdditiveCount())
-    {
-        int pnumber = this->p_page_idle->thisMachine->getSelectedSlot()->getAdditivePNumber(additive_position);
 
-        if (pnumber == this->p_page_idle->thisMachine->getSelectedProduct()->getPNumber())
+    while (additive_position <= this->p_page_idle->thisMachine->getSelectedSlot()->getAdditiveCount() && additive_position <= ADDITIVES_PER_SLOT_COUNT_MAX)
+    {
+
+        int pnumber = this->p_page_idle->thisMachine->getSelectedSlot()->getAdditivePNumber(additive_position);
+        int additiveValidAtPosition = this->p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbersAlwaysIncludingBase().indexOf(pnumber);
+
+        if (additiveValidAtPosition == -1)
         {
-            p_page_idle->thisMachine->addCssClassToObject(buttons_select_additive[additive_position - 1], "product_active", PAGE_MAINTENANCE_DISPENSER_CSS);
+            p_page_idle->thisMachine->addCssClassToObject(buttons_select_additive[additive_position - 1], "product_not_active", PAGE_MAINTENANCE_DISPENSER_CSS);
+
+            labels_mix_ratio[additive_position]->setText("0%");
         }
         else
         {
-            p_page_idle->thisMachine->addCssClassToObject(buttons_select_additive[additive_position - 1], "product_not_active", PAGE_MAINTENANCE_DISPENSER_CSS);
+
+            p_page_idle->thisMachine->addCssClassToObject(buttons_select_additive[additive_position - 1], "product_active", PAGE_MAINTENANCE_DISPENSER_CSS);
+
+            QVector<double> ratios = this->p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosDefault();
+
+            if (this->p_page_idle->thisMachine->getSelectedProduct()->getMixRatiosDefault().isEmpty())
+            {
+                labels_mix_ratio[additive_position]->setText("100%");
+            }
+            else
+            {
+                labels_mix_ratio[additive_position]->setText(QString::number(100 * ratios[additiveValidAtPosition], 'f', 0) + "%");
+            }
         }
         additive_position++;
     }
@@ -377,13 +420,12 @@ void page_maintenance_dispenser::updateProductLabelValues(bool reloadFromDb)
     // if (slot_status == SLOT_STATE_PROBLEM_NEEDS_ATTENTION)
     if (this->p_page_idle->thisMachine->getSelectedProduct()->getIsProductEmptyOrHasProblem())
     {
-        qDebug() << "Product has a problem. faejfiawejfijasiejf" << this->p_page_idle->thisMachine->getSelectedProduct()->getPNumberAsPString();
+        qDebug() << "Product has a problem. " << this->p_page_idle->thisMachine->getSelectedProduct()->getPNumberAsPString();
         // only show button if there is an issue.
         ui->pushButton_clear_problem->show();
     }
     else
     {
-        qDebug() << "Product has no problem. faejfiawejfijasiejf product: " << this->p_page_idle->thisMachine->getSelectedProduct()->getPNumberAsPString();
         ui->pushButton_clear_problem->hide();
     }
 }

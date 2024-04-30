@@ -819,16 +819,26 @@ void dispenser::startActiveDispensing()
     }
     m_pcb->startPump(getSlot());
 
-#ifndef ENABLE_PARALLEL_MIX
+#ifdef ENABLE_PARALLEL_MIX
     m_pcb->setSpoutSolenoid(getSlot(), true);
-#else
-    if (!getSelectedProduct()->isMixingProduct())
+
+    if (getSelectedProduct()->isMixingProduct())
     {
-        m_pcb->setSpoutSolenoid(getSlot(), true);
+        // if SELECTED product is a mix, we open the active product solenoid. 
+        debugOutput::sendMessage("Dispenser: MIXING PRODUCT SET ACTIVE SOLENOID", MSG_INFO);
+        setActiveProductSolenoid(true);
     }
     else
     {
-        setActiveProductSolenoid(true);
+        debugOutput::sendMessage("Dispenser: NOT MIXING PRODUCT SET SPOUT", MSG_INFO);
+#endif
+
+        m_pcb->setSpoutSolenoid(getSlot(), true);
+        if (m_pcb->get_pcb_version() == pcb::PcbVersion::EN258_4SLOTS || m_pcb->get_pcb_version() == pcb::PcbVersion::EN258_8SLOTS ){
+            setActiveProductSolenoid(true);
+        }
+
+#ifdef ENABLE_PARALLEL_MIX
     }
 #endif
 }
@@ -838,18 +848,31 @@ void dispenser::stopActiveDispensing()
     // actual pumping stop
     debugOutput::sendMessage("Dispenser: stop active product dispensing.", MSG_INFO);
     m_pcb->stopPump(getSlot());
-#ifndef ENABLE_PARALLEL_MIX
+
+
+
+    
+#ifdef ENABLE_PARALLEL_MIX
     m_pcb->setSpoutSolenoid(getSlot(), false);
-#else
-    if (!getSelectedProduct()->isMixingProduct())
+
+    if (getSelectedProduct()->isMixingProduct())
     {
-        m_pcb->setSpoutSolenoid(getSlot(), false);
+        // if SELECTED product is a mix, we open the active product solenoid. 
+        // debugOutput::sendMessage("Dispenser: MIXING PRODUCT SET ACTIVE SOLENOID", MSG_INFO);
+        setActiveProductSolenoid(false);
     }
     else
     {
-        setActiveProductSolenoid(false);
-    }
+        // debugOutput::sendMessage("Dispenser: NOT MIXING PRODUCT SET SPOUT", MSG_INFO);
+#endif
 
+        m_pcb->setSpoutSolenoid(getSlot(), false);
+        if (m_pcb->get_pcb_version() == pcb::PcbVersion::EN258_4SLOTS || m_pcb->get_pcb_version() == pcb::PcbVersion::EN258_8SLOTS ){
+            setActiveProductSolenoid(false);
+        }
+
+#ifdef ENABLE_PARALLEL_MIX
+    }
 #endif
 }
 
@@ -888,7 +911,8 @@ void dispenser::setParallelSolenoids()
         int mixPnumber = getSelectedProduct()->getMixPNumber(mix_position);
 
         if (mixPnumber != getBasePNumber())
-        { // basePNumber is dealt with separately
+        { 
+            // basePNumber is dealt with separately
             double mix_position_targetVolume = getSelectedProduct()->getTargetVolume() * getSelectedProduct()->getMixRatio(mix_position);
 
             // getProductFromPNumber(mixPnumber)->setTargetVolume(mix_position_targetVolume);
@@ -944,16 +968,25 @@ void dispenser::linkDispenserFlowSensorTick()
 
 void dispenser::registerFlowSensorTickFromPcb()
 {
-    // the actual dispensed produce gets always registered
-    getActiveProduct()->registerFlowSensorTickFromPcb();
+    
+    // from observation: customers keep the button pressed, even when empty is detected.
+    // the flowsensor splutters, and 'fake ticks' keep on being added. 
+    // so, at least, the customer should restart pressing the button (it'll go to 'ramp up' state then, out of the empty state, and providing the opportunity for flow to restart if it was a fluke empty detection.)
+    if (getDispenseStatus() != FLOW_STATE_PRIME_FAIL_OR_EMPTY ){ 
 
-    // debugOutput::sendMessage("Dispenser: active flow tick : " + std::to_string(getSlot()) + " Active pnumber: " + getActiveProduct()->getPNumberAsPString() , MSG_INFO);
+        // the actual dispensed produce gets always registered
+        getActiveProduct()->registerFlowSensorTickFromPcb();
 
-    if (getActivePNumber() != getSelectedPNumber())
-    {
-        // debugOutput::sendMessage("Dispenser: selected flow tick : " + std::to_string(getSlot()) + " Selected pnumber: " + getSelectedProduct()->getPNumberAsPString() , MSG_INFO);
-        // if this is part of a mix, register the tick also for the mix volume (total volume)
-        getSelectedProduct()->setVolumeDispensed(getActiveProduct()->getVolumePerTick(true) + getSelectedProduct()->getVolumeDispensed());
+        // debugOutput::sendMessage("Dispenser: active flow tick : " + std::to_string(getSlot()) + " Active pnumber: " + getActiveProduct()->getPNumberAsPString() , MSG_INFO);
+
+        if (getActivePNumber() != getSelectedPNumber())
+        {
+            // debugOutput::sendMessage("Dispenser: selected flow tick : " + std::to_string(getSlot()) + " Selected pnumber: " + getSelectedProduct()->getPNumberAsPString() , MSG_INFO);
+            // if this is part of a mix, register the tick also for the mix volume (total volume)
+            getSelectedProduct()->setVolumeDispensed(getActiveProduct()->getVolumePerTick(true) + getSelectedProduct()->getVolumeDispensed());
+        }
+    }else{
+        debugOutput::sendMessage("Will not register tick in this flow state. Experimental . ", MSG_INFO);
     }
 }
 

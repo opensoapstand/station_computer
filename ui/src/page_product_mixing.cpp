@@ -212,11 +212,9 @@ void page_product_mixing::showEvent(QShowEvent *event)
         orderSizeBackgroundLabels[i]->setStyleSheet(styleSheet);
         orderSizeButtons[i]->setStyleSheet(styleSheet);
     }
-    qDebug() << "endndfnef333333";
     hasAdditives = false;
     if (p_page_idle->thisMachine->getSelectedProduct()->getMixPNumbers().size() > 1)
     {
-        qDebug() << "endndfnef99999999999999";
         ui->pushButton_recommended->show();
         ui->label_additives_background->setText("");
         ui->label_additives_background->hide();
@@ -242,14 +240,11 @@ void page_product_mixing::showEvent(QShowEvent *event)
             additiveBarsDefault[j]->setStyleSheet(styleSheet);
             additiveBarsHigh[j]->setStyleSheet(styleSheet);
         }
-        qDebug() << "endndfnef9999999999999000999999999999999999999999999";
         ui->label_customize_drink->show();
         ui->label_select_quantity->move(495, 1250);
         p_page_idle->thisMachine->setTemplateTextWithIdentifierToObject(ui->label_select_quantity, "2");
         checkMixRatiosLevel();
-        qDebug() << "endndfnef9999999999999000999";
         updateMixRatiosLevel();
-        qDebug() << "endndfnef9222229999999999999";
     }
     else
     {
@@ -277,12 +272,9 @@ void page_product_mixing::showEvent(QShowEvent *event)
         ui->pushButton_order_custom->move(775, 697);
         ui->pushButton_order_sample->move(851, 936);
     }
-    qDebug() << "222endndfnef";
     toggleResetButton();
     p_page_idle->thisMachine->resetTransactionLogging();
-    // transactionLogging = "";
     reset_and_show_page_elements();
-    qDebug() << "endndfnef";
 }
 
 void page_product_mixing::resizeEvent(QResizeEvent *event)

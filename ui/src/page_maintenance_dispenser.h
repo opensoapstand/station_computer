@@ -148,6 +148,7 @@ private:
     QPushButton *buttons_select_additive[ADDITIVES_PER_SLOT_COUNT_MAX];
     QPushButton *buttons_slot_shortcuts[BASE_LINE_COUNT_MAX];
 
+    QLabel *labels_mix_ratio[ADDITIVES_PER_SLOT_COUNT_MAX + 1 ];
     QPushButton *buttons_select_mix[DISPENSE_PRODUCTS_PER_BASE_LINE_MAX];
     QPushButton *buttons_select_size[SIZES_COUNT];
 

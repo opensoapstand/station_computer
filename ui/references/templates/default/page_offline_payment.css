@@ -1,0 +1,179 @@
+/* QPushButton {
+   background-color: transparent;
+   border: 0px;
+} */
+
+#label_product_price {
+    text-align: right;
+    font-weight: 600;
+    /* font-style: normal; */
+    /* background-color: red; */
+ }
+ 
+ #pushButton_previous_page {
+    text-align: left;
+ }
+ 
+ QPushButton {
+    font-family: 'Brevia';
+    font-style: normal;
+    font-weight: 50;
+    font-size: 32px;
+    color: #003840;
+    background-color: #FFFFFF;
+    border: 0px;
+    text-align: center;
+    border-radius: 20px;
+    border: none;
+ 
+ }
+ 
+ 
+ .invisible_button {
+    background-color: transparent;
+    border: 0px;
+ }
+ 
+ #label_title {
+    font-family: 'Brevia';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 64px;
+    line-height: 86px;
+    text-align: center;
+    color: #003840;
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    word-wrap: break-word;
+ 
+ }
+ 
+ #label_scan {
+    text-align: center;
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 48px;
+    color: #5E8580;
+    /* background-color: red; */
+    /* } .tab { */
+    display: inline-block;
+    
+ }
+ 
+ #label_steps {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 51px;
+    color: #003840;
+}
+ 
+ #label_processing {
+    position: absolute;
+    width: 777px;
+    height: 306px;
+    left: 143px;
+    top: 1029px;
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 36px;
+    line-height: 51px;
+    color: #003840;
+    word-wrap:break-word;
+ }
+ 
+ #label_qr_background{
+    background: transparent;
+ }
+
+ #label_promo_code_title{
+   color: #5E8580;
+   font-family: 'Montserrat';
+   font-size: 30px;
+   font-style: normal;
+   font-weight: 700;
+   text-align: left;
+   qproperty-alignment: AlignLeft;
+}
+#label_promo_code_background{
+   border-radius: 25px;
+   background-color: #dfe7e6;
+}
+#pushButton_promo_input{ 
+   background-color: transparent; 
+   border: none;
+}
+.promoCode{
+   font-family: "Montserrat"; 
+   font-style: normal; 
+   font-weight: 600; 
+   font-size: 24px; 
+   color: #908981;
+   padding: 10px;
+   border: 2px solid black;
+   border-radius: 10px;
+}
+.promoCode_invalid{
+   font-family: "Montserrat"; 
+   font-style: normal; 
+   font-weight: 600; 
+   font-size: 24px; 
+   padding: 10px;
+   color: #f44336;
+   border: 2px solid #58595B;
+   border-radius: 10px;
+}
+ 
+ #pushButton_previous_page{ 
+    background-color: transparent; 
+    font-family: 'Brevia';
+    font-style: normal;
+    font-weight: 75;
+    font-size: 32px;
+    line-height: 99px;
+    color: #003840;
+    text-align: left;
+    /* qproperty-alignment: AlignLeft; */
+    border: none;
+ }
+ 
+ QMessageBox {
+    min-width: 7000px;
+    font-size: 24px;
+    font-weight: bold;
+    font-style: normal;
+    font-family: 'Montserrat';
+ }
+ 
+ QMessageBox.msgBoxbutton QPushButton {
+    font-size: 24px;
+    min-width: 300px;
+    min-height: 300px;
+ }
+ 
+ QLabel {
+    /*this label controls the color of the checkbox */
+    color: black;
+    font-family:'Montserrat';
+    font-size:24px;
+    color: #58595b;
+    font-style:light;
+ 
+ }
+ 
+ #label_gif{
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 36px;
+    line-height: 40px;
+    color: #58595B;
+    padding: 3px;
+    text-align: center;
+    /* border:8px solid #248C8C; */
+    qproperty-alignment: 'AlignVCenter | AlignCenter';
+ }
+ 
+ 

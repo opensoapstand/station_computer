@@ -1,0 +1,345 @@
+QPushButton {
+    background-color: transparent;
+    border: 0px;
+}
+
+QLabel {
+    font-family: 'EuropaNuova';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 64px;
+    line-height: 99px;
+    color: #003840;
+    text-align: center;
+    /* qproperty-alignment: AlignCenter; */
+    border: none;
+}
+
+#label_product_menu_title {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 64px;
+    color: #001810;
+    text-align: center;
+    qproperty-alignment: AlignCenter;
+    font-family: 'El Messiri';
+}
+
+#label_base_products_section_bg{
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 rgba(226, 185, 133, 0.20), stop:0.9 rgba(226, 185, 133, 0.00));
+}
+
+#label_base_products_section_title{
+    color:#001810;
+    font-family: 'El Messiri';
+    font-weight: 700;
+    font-style: normal;
+    font-size: 30px;
+    text-align: center;
+    qproperty-alignment: AlignCenter;
+}
+
+.active{
+    background: #F9EBD8;
+    border-top-left-radius: 35px;
+    border-bottom-left-radius: 35px;
+}
+
+.inactive{
+    background: transparent;
+}
+
+.pushButton_base_product{
+    background-color: transparent;
+    border: 0px;
+}
+
+/* .label_base_product_picture{
+    border: 1px solid purple;
+    border-radius: 50%;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-clip: content;
+} */
+
+.label_base_product_name{
+    color: #003840;
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    text-transform: capitalize;
+    text-align: center;
+    qproperty-alignment: AlignCenter;
+}
+
+#label_dispense_products_section_bg{
+    background: #F9EBD8;
+    border-top-right-radius: 35px;
+}
+
+#label_dispense_products_section_title{
+    color:#001810;
+    font-family: 'El Messiri';
+    font-weight: 700;
+    font-style: normal;
+    font-size: 30px;
+    text-align: left;
+    qproperty-alignment: AlignLeft;
+}
+
+.label_dispense_product_name{
+    color: #003840;
+    font-family: 'Lato';
+    font-style: normal;
+    text-align: center;
+    font-size: 24px;
+    qproperty-alignment: AlignCenter;
+}
+
+#pushButton_to_idle {
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    color: #001810;
+    text-align: left;
+    qproperty-alignment: AlignCenter;
+    border: none;
+}
+
+.PushButton_selection {
+    background-color: transparent;
+    border: 0px;
+}
+
+.label_product_type {
+    /* font-family: 'Lora'; */
+    /* font-family: 'Vollkorn'; */
+    font-family: 'EuropaNuova-ExtraBold';
+    font-weight: 700;
+    font-style: normal;
+    font-size: 37px;
+    line-height: 49px;
+    text-align: center;
+    qproperty-alignment: AlignCenter;
+    color: #221F20;
+}
+
+.label_product_name {
+    line-height: 36px;
+    text-align: center;
+    qproperty-alignment: AlignCenter;
+    font-family: 'EuropaNuova-Regular';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    color: #221F20;
+}
+
+.label_product_photo {
+    /* border: 1px solid black;  */
+}
+
+.label_base_product_picture{
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-clip: content;
+}
+
+.label_product_overlay_available {
+    background-color: transparent;
+    font-family: 'Lato';
+    color: white;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.label_product_overlay_available_with_status0{
+    border-top-left-radius: 0px;
+    border-top-right-radius: 100px;
+    border-bottom-right-radius: 100px;
+    border-bottom-left-radius: 100px;
+    font-family: 'Lato';
+    color: white;
+    font-size: 30px;
+    font-weight: 700;
+    background-color: rgba(137, 94, 37, 0.6);
+}
+
+.label_product_overlay_available_with_status1{
+    border-radius: 100px;
+    font-family: 'Lato';
+    color: white;
+    font-size: 30px;
+    font-weight: 700;
+    background-color: rgba(137, 94, 37, 0.6);
+}
+.label_product_overlay_available_with_status2{
+    border-top-left-radius: 100px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 100px;
+    border-bottom-left-radius: 100px;
+    font-family: 'Lato';
+    color: white;
+    font-size: 30px;
+    font-weight: 700;
+    background-color: rgba(137, 94, 37, 0.6);
+}
+.label_product_overlay_available_with_status3{
+    border-top-left-radius: 0px;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+    border-bottom-left-radius: 0px;
+    font-family: 'Lato';
+    color: white;
+    font-size: 30px;
+    font-weight: 700;
+    background-color: rgba(137, 94, 37, 0.6);
+}
+.label_product_overlay_available_with_status4{
+    border-top-left-radius: 0px;
+    border-top-right-radius: 100px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 100px;
+    font-family: 'Lato';
+    color: white;
+    font-size: 30px;
+    font-weight: 700;
+    background-color: rgba(137, 94, 37, 0.6);
+}
+.label_product_overlay_available_with_status5{
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 50px;
+    font-family: 'Lato';
+    color: white;
+    font-size: 30px;
+    font-weight: 700;
+    background-color: rgba(137, 94, 37, 0.6);
+}
+
+.label_product_overlay_unavailable {
+    font-size: 75px;
+    color: #ffffff;
+    background-color: rgba(33, 19, 0, 0.7);
+    border-radius: 20px; 
+    font-family: 'Lato';
+}
+.label_overlay_unavailable_increment0{
+    font-family: 'Lato';
+    border-top-left-radius: 0px;
+    border-top-right-radius: 100px;
+    border-bottom-right-radius: 100px;
+    border-bottom-left-radius: 100px;
+    background: rgba(33, 19, 0, 0.7);
+    color: #FFFFFF;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 700;
+}
+.label_overlay_unavailable_increment1{
+    font-family: 'Lato';
+    border-radius: 100px;
+    background: rgba(33, 19, 0, 0.7);
+    color: #FFFFFF;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 700;
+}
+.label_overlay_unavailable_increment2{
+    font-family: 'Lato';
+    border-top-left-radius: 100px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 100px;
+    border-bottom-left-radius: 100px;
+    background: rgba(33, 19, 0, 0.7);
+    color: #FFFFFF;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 700;
+}
+.label_overlay_unavailable_increment3{
+    font-family: 'Lato';
+    border-top-left-radius: 0px;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+    border-bottom-left-radius: 0px;
+    background: rgba(33, 19, 0, 0.7);
+    color: #FFFFFF;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 700;
+}
+.label_overlay_unavailable_increment4{
+    font-family: 'Lato';
+    border-top-left-radius: 0px;
+    border-top-right-radius: 100px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 100px;
+    background: rgba(33, 19, 0, 0.7);
+    color: #FFFFFF;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 700;
+}
+.label_overlay_unavailable_increment5{
+    font-family: 'Lato';
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 50px;
+    background: rgba(33, 19, 0, 0.7);
+    color: #FFFFFF;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 700;
+}
+
+#label_dispense_product_picture_1{
+    border-top-left-radius: 0px;
+    border-top-right-radius: 100px;
+    border-bottom-right-radius: 100px;
+    border-bottom-left-radius: 100px;
+    background-image: url(%IMAGE_PATH0%);
+}
+
+#label_dispense_product_picture_2{
+    border-radius: 100px;
+    background-image: url(%IMAGE_PATH1%);
+}
+
+#label_dispense_product_picture_3{
+    border-top-left-radius: 100px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 100px;
+    border-bottom-left-radius: 100px;
+    background-image: url(%IMAGE_PATH2%);
+}
+
+#label_dispense_product_picture_4{
+    border-top-left-radius: 0px;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+    border-bottom-left-radius: 0px;
+    background-image: url(%IMAGE_PATH3%);
+}
+
+#label_dispense_product_picture_5{
+    border-top-left-radius: 0px;
+    border-top-right-radius: 100px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 100px;
+    background-image: url(%IMAGE_PATH4%);
+}
+
+#label_dispense_product_picture_6{
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 50px;
+    background-image: url(%IMAGE_PATH5%);
+}

@@ -1,0 +1,77 @@
+<RCC>
+    <qresource prefix="/">
+      
+        <file>page_maintenance.ui</file>
+        <file>page_maintenance.h</file>
+        <file>page_maintenance.cpp</file>
+        <file>page_maintenance_dispenser.ui</file>
+        <file>page_maintenance_dispenser.h</file>
+        <file>page_maintenance_dispenser.cpp</file>
+        <file>page_idle.cpp</file>
+        <file>page_idle.ui</file>
+
+        <!-- <file>ui_page_init.h</file> -->
+        <file>page_init.ui</file>
+        <file>page_init.h</file>
+        <file>page_init.cpp</file>
+       
+        <file>payment/commands.h</file>
+        <file>payment/commands.cpp</file>
+        <file>payment/setup_Tap.h</file>
+        <file>payment/setup_Tap.cpp</file>
+
+
+        <file>posm/enums.h</file>
+        <file>posm/lrcgenerator.cpp</file>
+        <file>posm/lrcgenerator.h</file>
+        <file>posm/mcommunication.cpp</file>
+        <file>posm/mcommunication.h</file>
+        <file>posm/packetfromecr.cpp</file>
+        <file>posm/packetfromecr.h</file>
+        <file>posm/packetfromux410.cpp</file>
+        <file>posm/packetfromux410.h</file>
+        <file>posm/packetreadsort.cpp</file>
+        <file>posm/packetreadsort.h</file>
+        <file>posm/transactioninfo.cpp</file>
+        <file>posm/transactioninfo.h</file>
+        <file>posm/transactionPackets.cpp</file>
+        <file>posm/transactionPackets.h</file>
+        <file>dbmanager.cpp</file>
+        <file>dbmanager.h</file>
+        <file>df_util.cpp</file>
+        <file>df_util.h</file>
+        <file>dfuicommthread.cpp</file>
+        <file>dfuicommthread.h</file>
+        <file>dfuiserver.cpp</file>
+        <file>dfuiserver.h</file>
+        <file>page_dispenser.cpp</file>
+        <file>page_dispenser.h</file>
+        <file>page_help.cpp</file>
+        <file>page_help.h</file>
+        <file>page_idle.h</file>
+        <file>includefiles.h</file>
+        <file>main.cpp</file>
+        <file>page_qr_payment.cpp</file>
+        <file>page_qr_payment.h</file>
+        <file>page_product.cpp</file>
+        <file>page_product_mixing.cpp</file>
+        <file>page_product.h</file>
+        <file>page_product_mixing.h</file>
+        <file>page_select_product.cpp</file>
+        <file>page_select_product.h</file>
+        <file>page_end.cpp</file>
+        <file>page_end.h</file>
+
+        <!-- <file>ui_page_dispenser.h</file> -->
+        <!-- <file>ui_page_help.h</file> -->
+        <!-- <file>ui_page_idle.h</file> -->
+        <!-- <file>ui_page_maintenance_dispenser.h</file> -->
+        <!-- <file>ui_page_maintenance.h</file> -->
+        <!-- <file>ui_page_qr_payment.h</file> -->
+        <!-- <file>ui_page_product.h</file> -->
+        <!-- <file>ui_page_product_mixing.h</file> -->
+        <!-- <file>ui_page_select_product.h</file> -->
+        <!-- <file>ui_page_end.h</file> -->
+
+    </qresource>
+</RCC>

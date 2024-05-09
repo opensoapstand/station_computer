@@ -51,11 +51,13 @@
  .label_product_overlay_available {
     background-color: rgba(0, 0, 0, 0);
     font-size: 80px;
- }
-
- .label_product_overlay_unavailable {
-    background-color: rgba(0, 0, 0, 80);
-    font-size: 80px;
+    color: #FFFFFF;
+   }
+   
+   .label_product_overlay_unavailable {
+      background-color: rgba(0, 0, 0, 120);
+      font-size: 80px;
+      color: #FFFFFF;
  }
 
  .label_product_type {

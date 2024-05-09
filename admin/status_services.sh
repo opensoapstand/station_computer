@@ -12,6 +12,9 @@ echo -e "periodical network check| $active  \t| $enabled"
 active=$(systemctl is-active rtunnel.service)
 enabled=$(systemctl is-enabled rtunnel.service)
 echo -e "reversed ssh tunnel \t| $active  \t| $enabled"
+active=$(systemctl is-active ssh_monitor.service)
+enabled=$(systemctl is-enabled ssh_monitor.service)
+echo -e "SSH monitoring service \t| $active  \t| $enabled"
 
 CONFIG_DB_PATH=/home/df-admin/production/db/configuration.db
 if [[ -f "$CONFIG_DB_PATH" ]]; then

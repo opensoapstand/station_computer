@@ -20,10 +20,16 @@ page_idle->label_printer_status->nopaper,Assistance needed<br>Receipt Printer em
 page_idle->label_show_temperature->temperature,Temperature is..
 #page_idle->label_show_temperature,Temperature: %1
 page_idle->label_show_temperature,%1°C
+page_idle->msgBox_reboot->default,<p align=center>System will be rebooted in<br></p>
 page_idle->label_reboot_nightly_title,NIGHTLY REBOOT
 page_idle->label_reboot_nightly_text,System will be rebooted in<br>%1 second(s)
 page_idle->pushButton_reboot_nightly,Cancel
 page_idle->label_reboot_nightly_text->count_down,System will be rebooted in<br>%1 second(s)
+
+#page_product_menu
+page_product_menu->label_pick_soap,Discover our Beverages
+page_product_menu->pushButton_to_idle,←back
+page_product_menu->no_text,
 
 #page_select_product
 page_select_product->label_pick_soap,Discover our Beverages
@@ -39,7 +45,10 @@ page_product_overview->pushButton_select_product_page,←back
 page_product_overview->label_total,Total Amount
 page_product_overview->pushButton_continue->proceed_free,Proceed
 page_product_overview->pushButton_continue->proceed_pay,Proceed to Pay
-
+page_product_overview->pushButton_continue,Continue
+page_product_overview->pushButton_continue->proceed_pay_tap,Pay with TAP
+page_product_overview->pushButton_continue->proceed_pay_qr,Pay with QR
+page_product_overview->pushButton_continue_additional->proceed_pay_qr,Pay with QR
 
 # page_dispenser
 page_dispenser->label_to_refill,To Refill
@@ -55,7 +64,7 @@ page_help->pushButton_to_transactions,transactions→
 
 # page_sendFeedback
 page_sendFeedback->pushButton_previous_page,←back
-page_sendFeedback->checkBox_1_Label,I love this, keep me in the loop.
+page_sendFeedback->checkBox_1_Label,I love this, keep me in the loop
 page_sendFeedback->checkBox_2_Label,User interface problem
 page_sendFeedback->checkBox_3_Label,Drink dispensing problem
 page_sendFeedback->checkBox_4_Label,Payment problem
@@ -77,7 +86,7 @@ page_payment_tap_serial->pushButton_previous_page,←back
 
 # page_email
 page_email->pushButton_to_product_overview,←back
-page_email->label_email_title,To dispense free sample<br>Please kindly enter your email address
+page_email->label_email_title,To dispense free sample<br>Please enter your email address
 page_email->keyboardTextEntry->email_placeholder,Please enter your email address
 page_email->keyboardTextEntry->invalid,Incorrect email address, please enter valid email address
 page_email->pushButton_continue, Submit email for free dispense!

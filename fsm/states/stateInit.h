@@ -43,16 +43,16 @@ public:
     DF_ERROR dispenserSetup();
 
 private:
-    TiXmlDocument *m_pXMLSettings;
-    TiXmlElement *m_pRoot, *m_pHardware, *m_pDispenser;
+    // TiXmlDocument *m_pXMLSettings;
+    // TiXmlElement *m_pRoot, *m_pHardware, *m_pDispenser;
 
-    const char *dispenserId[PRODUCT_DISPENSERS_MAX];
+    // const char *dispenserId[PRODUCT_DISPENSERS_MAX];
 
-    DF_ERROR setDispenserId();
-    DF_ERROR setDispenserSolenoid(TiXmlElement *dispenserEle, int dispenserIdx, dispenser *productDispensers);
-    DF_ERROR setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispenserIdx, dispenser *productDispensers);
-    DF_ERROR setDispenserPump(TiXmlElement *dispenserEle, int dispenserIdx, dispenser *productDispensers);
-    DF_ERROR setButton(TiXmlElement *hardwareEle, int dispenserIdx);
+    // DF_ERROR setDispenserId();
+    // DF_ERROR setDispenserSolenoid(TiXmlElement *dispenserEle, int dispenserIdx, dispenser *productDispensers);
+    // DF_ERROR setDispenserFlowSensor(TiXmlElement *dispenserEle, int dispenserIdx, dispenser *productDispensers);
+    // DF_ERROR setDispenserPump(TiXmlElement *dispenserEle, int dispenserIdx, dispenser *productDispensers);
+    // DF_ERROR setButton(TiXmlElement *hardwareEle, int dispenserIdx);
     DF_ERROR setProducts();
 
     const char *getXML(const char *subHeader, TiXmlElement *childEle);
@@ -69,7 +69,7 @@ private:
     double volume_dispensed;
     double volume_target_l;
     double volume_target_s;
-    double calibration_const;
+    double threshold_flow_maximum;
     double price_l;
     double price_s;
     int is_still;

@@ -16,14 +16,14 @@ def convertStringToDictionary(stringObj):
     return json.loads(newString)
 
 #Declare file name
-filename = 'logging/transactions/missingTransactions.txt'
+filename = '/home/df-admin/production/logging/transactions/missingTransactions.txt'
 url = 'https://soapstandportal.com/api/order/addMissingTransactions'
 pingUrl = 'https://soapstandportal.com/api/machine_data/ping'
 
 def pushTransaction():
     #Open the file and read the file line by line
-    with open(filename,'r') as file1:
-        transactions = file1.readlines()
+    with open(filename,'r') as file:
+        transactions = file.readlines()
         while transactions:
             transaction = convertStringToDictionary(transactions[0].strip().replace(" & ", " and "))
             if transaction:

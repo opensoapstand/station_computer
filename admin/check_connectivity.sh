@@ -5,6 +5,9 @@ database_path="/home/df-admin/production/db/configuration.db"
 query="Select machine_id from machine"
 machineId=$(sqlite3 "$database_path" "$query")
 
+getPortalUrl="Select portal_base_url from machine"
+portalBaseUrl=$(sqlite3 "$database_path" "$getPortalUrl")
+
 database_temperature="/home/df-admin/production/db/usage.db"
 getTemperature="Select temperature_1 from temperature ORDER BY time DESC LIMIT 1"
 temperatureValue1=$(sqlite3 "$database_temperature" "$getTemperature")
@@ -14,13 +17,13 @@ getTemperature2="Select temperature_2 from temperature ORDER BY time DESC LIMIT 
 temperatureValue2=$(sqlite3 "$database_temperature2" "$getTemperature2")
 
 # Check Wi-Fi connectivity strength
-wifi_strength=$(nmcli -t dev wifi|grep '*')
+wifi_strength=$(nmcli -t -f ssid,mode,freq,rate,signal,security dev wifi | grep '*')
 #Check if folder exists or create folder and file if it doesn't exist
 folder="/home/df-admin/production/logging/wifi"
 mkdir -p "$folder" && touch "$folder"/logging.txt
 
 #initialize soapstandportal POST request variables
-url="https://soapstandportal.com/api/stationStatus/add"
+url="${portalBaseUrl}api/stationStatus/add"
 payload="{\"MachineSerialNumber\" : \"$machineId\",\"wifiStrength\": \"$wifi_strength\",\"temperature_1\": \"$temperatureValue1\",\"temperature_2\": \"$temperatureValue2\"}"
 response=$(curl -X POST -H "Content-Type: application/json" -d "$payload" "$url")
 

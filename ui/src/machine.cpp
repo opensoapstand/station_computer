@@ -387,6 +387,7 @@ bool machine::hasSelectedBottle()
     }
 }
 
+
 bool machine::hasBuyBottleOption()
 {
     if ((m_pNumber_bottle_1 != DUMMY_PNUMBER) || (m_pNumber_bottle_2 != DUMMY_PNUMBER))
@@ -397,6 +398,12 @@ bool machine::hasBuyBottleOption()
     {
         return false;
     }
+}
+
+pnumberproduct *machine::bottleNotSelectedDiscount()
+{
+    m_bottleNotSelectedDiscount = getProductByPNumber(m_pNumber_bottle_1);
+    return m_bottleNotSelectedDiscount;
 }
 
 QString machine::getSelectedProductAwsProductId()

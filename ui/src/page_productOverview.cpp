@@ -199,7 +199,8 @@ void page_product_overview::showEvent(QShowEvent *event)
     else{
         ui->label_invoice_bottle->show();
         ui->label_invoice_bottle_price->show();
-
+        // New target requirement - Include the price of bottle in the product itself. If they are not opting for bottle, then show it as a discount
+        // Set the price for bottle as negative amount 
         ui->label_invoice_bottle->setText("Bring your own bottle discount");
         ui->label_invoice_bottle_price->setText("$" + QString::number(p_page_idle->thisMachine->bottleNotSelectedDiscount()->getPriceOfSelectedBottle(), 'f', 2));
 

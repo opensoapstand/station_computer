@@ -400,6 +400,7 @@ bool machine::hasBuyBottleOption()
     }
 }
 
+//If user does not select the bottle, automatically select the default size bottle for dynamic pricing
 pnumberproduct *machine::bottleNotSelectedDiscount()
 {
     m_bottleNotSelectedDiscount = getProductByPNumber(m_pNumber_bottle_1);

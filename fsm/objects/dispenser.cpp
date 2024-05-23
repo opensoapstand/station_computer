@@ -1785,29 +1785,29 @@ void dispenser::updateDispenseStatus()
         m_dispense_state = FLOW_STATE_DISPENSING;
     }
 
-    else if (m_previous_dispense_state == FLOW_STATE_DISPENSING)
-    {
-        // button pressed (aka pumping)
-        // init time long enough for valid data
-        // no flow detected
-        if (avg.value < getSelectedProduct()->getThresholdFlow())
-        {
-            debugOutput::sendMessage("Dispenser: Below threshold of minimum flow rate. minimum flow rate: " + to_string(getSelectedProduct()->getThresholdFlow()), MSG_INFO);
-        }
-        else if (avg.value >= getSelectedProduct()->getThresholdFlow_max_allowed())
-        {
-            debugOutput::sendMessage("Dispenser: Exceeds threshold of maximum flow rate. maximum flow rate: " + to_string(getSelectedProduct()->getThresholdFlow_max_allowed()), MSG_INFO);
-        }
-        else
-        {
-            debugOutput::sendMessage("Dispenser: Erroneous dispenser state: " + to_string(m_slot_state), MSG_INFO);
-        }
+    // else if (m_previous_dispense_state == FLOW_STATE_DISPENSING)
+    // {
+    //     // button pressed (aka pumping)
+    //     // init time long enough for valid data
+    //     // no flow detected
+    //     if (avg.value < getSelectedProduct()->getThresholdFlow())
+    //     {
+    //         debugOutput::sendMessage("Dispenser: Below threshold of minimum flow rate. minimum flow rate: " + to_string(getSelectedProduct()->getThresholdFlow()), MSG_INFO);
+    //     }
+    //     else if (avg.value >= getSelectedProduct()->getThresholdFlow_max_allowed())
+    //     {
+    //         debugOutput::sendMessage("Dispenser: Exceeds threshold of maximum flow rate. maximum flow rate: " + to_string(getSelectedProduct()->getThresholdFlow_max_allowed()), MSG_INFO);
+    //     }
+    //     else
+    //     {
+    //         debugOutput::sendMessage("Dispenser: Erroneous dispenser state: " + to_string(m_slot_state), MSG_INFO);
+    //     }
 
-        // once it was dispensing, empty dispenser is detected immediatly if no product flows.
-        // bugfix: if the button was release and repressed, the average was not correct at restart
-        //          --> take into account. at top level (FLOW_STATE_UNAVAILABLE)
-        m_dispense_state = FLOW_STATE_EMPTY;
-    }
+    //     // once it was dispensing, empty dispenser is detected immediatly if no product flows.
+    //     // bugfix: if the button was release and repressed, the average was not correct at restart
+    //     //          --> take into account. at top level (FLOW_STATE_UNAVAILABLE)
+    //     m_dispense_state = FLOW_STATE_EMPTY;
+    // }
     else if (getButtonPressedTotalMillis() > EMPTY_CONTAINER_DETECTION_MAXIMUM_PRIME_TIME_MILLIS)
     {
         // button pressed (aka pumping)

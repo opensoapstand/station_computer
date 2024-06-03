@@ -107,7 +107,7 @@ dispenser::dispenser()
     //     m_pcb = new pcb();
     // }
     m_dispense_state = FLOW_STATE_UNAVAILABLE;
-    m_previous_dispense_state = FLOW_STATE_UNAVAILABLE;
+    // m_previous_dispense_state = FLOW_STATE_UNAVAILABLE;
     using namespace std::chrono;
     previous_status_update_allowed_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }
@@ -767,7 +767,7 @@ DF_ERROR dispenser::initActivePNumberDispense()
 
     // init state
     m_dispense_state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
-    m_previous_dispense_state = FLOW_STATE_UNAVAILABLE; // hack needed to create edge
+    // m_previous_dispense_state = FLOW_STATE_UNAVAILABLE; // hack needed to create edge
 
     initProductFlowRateCalculation();
 
@@ -1527,15 +1527,15 @@ DF_ERROR dispenser::initGlobalFlowsensorIO(int pin)
 ////////////////////////////////////////////////////////////
 // Flow
 
-double dispenser::getProductVolumeDeltaAndReset()
-{
-    // will get volumeDelta since last call of this function
+// double dispenser::getProductVolumeDeltaAndReset()
+// {
+//     // will get volumeDelta since last call of this function
 
-    double currentVolume = getActiveProductVolumeDispensed();
-    double deltaVolume = currentVolume - previousDispensedVolume;
-    previousDispensedVolume = currentVolume;
-    return deltaVolume;
-}
+//     double currentVolume = getActiveProductVolumeDispensed();
+//     double deltaVolume = currentVolume - previousDispensedVolume;
+//     previousDispensedVolume = currentVolume;
+//     return deltaVolume;
+// }
 
 void dispenser::initProductFlowRateCalculation()
 {
@@ -1546,27 +1546,27 @@ void dispenser::initProductFlowRateCalculation()
         flowRateBuffer[i].value = 0;
     }
 }
-double dispenser::getProductFlowRateInstantaneous()
-{
-    using namespace std::chrono;
-    uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    double volumeDelta = getProductVolumeDeltaAndReset();
-    double flowRate = 0;
-    if (millisAtLastCheck != MILLIS_INIT_DUMMY)
-    {
-        uint64_t millisDelta = millis_since_epoch - millisAtLastCheck;
-        // debugOutput::sendMessage("Avg flow rate: millisdelta: " + to_string(millisDelta), MSG_INFO);
-        // debugOutput::sendMessage("Avg flow rate: volume delta: " + to_string(volumeDelta), MSG_INFO);
-        flowRate = (volumeDelta / millisDelta) * 1000.0; // volume per second.
-    }
-    else
-    {
-        flowRate = 0;
-    }
+// double dispenser::getProductFlowRateInstantaneous()
+// {
+//     using namespace std::chrono;
+//     uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+//     double volumeDelta = getProductVolumeDeltaAndReset();
+//     double flowRate = 0;
+//     if (millisAtLastCheck != MILLIS_INIT_DUMMY)
+//     {
+//         uint64_t millisDelta = millis_since_epoch - millisAtLastCheck;
+//         // debugOutput::sendMessage("Avg flow rate: millisdelta: " + to_string(millisDelta), MSG_INFO);
+//         // debugOutput::sendMessage("Avg flow rate: volume delta: " + to_string(volumeDelta), MSG_INFO);
+//         flowRate = (volumeDelta / millisDelta) * 1000.0; // volume per second.
+//     }
+//     else
+//     {
+//         flowRate = 0;
+//     }
 
-    millisAtLastCheck = millis_since_epoch;
-    return flowRate;
-}
+//     millisAtLastCheck = millis_since_epoch;
+//     return flowRate;
+// }
 
 Time_val dispenser::createAndGetActiveProductVolumeDispensedDatapoint()
 {
@@ -1769,19 +1769,29 @@ void dispenser::updateDispenseStatus()
 
     if (!getDispenseButtonValue())
     {
+        // button not pressed --> not pumping
+
         m_dispense_state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
     }
+
     else if ((getButtonPressedCurrentPressMillis() < EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS) &&
              (avg.value < getSelectedProduct()->getThresholdFlow() || avg.value >= getSelectedProduct()->getThresholdFlow_max_allowed()))
     {
         // flow rate needs to be ramped up until stable.  (or ramped down in situations I can't imagine)
+
+
+        // during init time for ramp up
+        // no valid flow rate detected
+        
         m_dispense_state = FLOW_STATE_RAMP_UP;
     }
-    // else if (avg.value >= getSelectedProduct()->getThresholdFlow() )
+    
     else if (avg.value >= getSelectedProduct()->getThresholdFlow() && avg.value < getSelectedProduct()->getThresholdFlow_max_allowed())
     {
         // button pressed (aka pumping)
+        // valid flow rate detected
         // init time long enough for valid data
+
         m_dispense_state = FLOW_STATE_DISPENSING;
     }
 
@@ -1813,9 +1823,7 @@ void dispenser::updateDispenseStatus()
         // button pressed (aka pumping)
         // init time long enough for valid data
         // no flow detected
-        // previous state was not dispensing
-
-        // pump
+        
         m_dispense_state = FLOW_STATE_PRIME_FAIL_OR_EMPTY;
     }
     else
@@ -1823,13 +1831,12 @@ void dispenser::updateDispenseStatus()
         // button pressed (aka pumping)
         // init time long enough for valid data
         // no flow detected
-        // previous state was not dispensing
-        // pumping time has exceeded set value
+        // not timed out
 
         m_dispense_state = FLOW_STATE_PRIMING_OR_EMPTY;
     }
 
-    m_previous_dispense_state = m_dispense_state;
+    // m_previous_dispense_state = m_dispense_state;
 }
 
 // void dispenser::updateActiveProductState()

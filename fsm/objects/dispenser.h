@@ -192,8 +192,8 @@ public:
 
       void initProductFlowRateCalculation();
       Time_val createAndGetActiveProductVolumeDispensedDatapoint();
-      double getProductVolumeDeltaAndReset();
-      double getProductFlowRateInstantaneous();
+    //   double getProductVolumeDeltaAndReset();
+    //   double getProductFlowRateInstantaneous();
       DF_ERROR updateActiveProductFlowRateRunningAverageWindow();
       Time_val getAveragedProductFlowRate(uint64_t window_length_millis);
 

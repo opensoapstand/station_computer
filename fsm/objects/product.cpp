@@ -417,6 +417,7 @@ double product::getVolumePerTick(bool accountForConcentrationMultiplier)
         return m_nVolumePerTick;
     }
 }
+
 void product::registerFlowSensorTickFromPcb()
 {
     // tick from flowsensor interrupt will increase dispensed volume.
@@ -442,6 +443,7 @@ double product::getVolumeFull()
 {
     return m_nVolumeFull;
 }
+
 double product::getVolumeRemaining()
 {
     return m_nVolumeRemaining;
@@ -1107,14 +1109,15 @@ void product::loadProductPropertiesFromCsv()
 
         bool stringsAreDifferent;
         stringsAreDifferent = m_product_properties[CSV_PRODUCT_COL_ID].compare(getPNumberAsPString());
-            // debugOutput::sendMessage("Pnumber comparison:  on file:"+ m_product_properties[CSV_PRODUCT_COL_ID] +"    pnumber product: " + getPNumberAsPString(), MSG_INFO);
+        // debugOutput::sendMessage("Pnumber comparison:  on file:"+ m_product_properties[CSV_PRODUCT_COL_ID] +"    pnumber product: " + getPNumberAsPString(), MSG_INFO);
 
         if (!(stringsAreDifferent))
         {
-            debugOutput::sendMessage("Product found in products file and loaded: " + m_product_properties[CSV_PRODUCT_COL_ID] + " "  + m_product_properties[CSV_PRODUCT_COL_NAME], MSG_INFO);
+            debugOutput::sendMessage("Product found in products file and loaded: " + m_product_properties[CSV_PRODUCT_COL_ID] + " " + m_product_properties[CSV_PRODUCT_COL_NAME], MSG_INFO);
             success = true;
-        }else{
-
+        }
+        else
+        {
         }
     }
 
@@ -1265,7 +1268,7 @@ bool product::loadProductParametersFromDb()
     }
 
     debugOutput::sendMessage("WARNING: normally, mix ratios are taken from the csv file. For now, use the db for easy of editing. ", MSG_INFO);
-    parseMixPNumbersAndRatiosCsv(m_mix_pnumbers_str, m_mix_ratios_low_str, m_mix_ratios_default_str,m_mix_ratios_high_str);
+    parseMixPNumbersAndRatiosCsv(m_mix_pnumbers_str, m_mix_ratios_low_str, m_mix_ratios_default_str, m_mix_ratios_high_str);
 
     m_pnumber_loaded_from_db = false;
 

@@ -304,7 +304,7 @@ DF_ERROR stateManualPump::onAction()
          double volume = g_machine.m_productDispensers[m_active_pump_index].getSelectedProductVolumeDispensed();
 
          // instant flow rate
-         double flowRate = g_machine.m_productDispensers[m_active_pump_index].getProductFlowRateInstantaneous();
+        //  double flowRate = g_machine.m_productDispensers[m_active_pump_index].getProductFlowRateInstantaneous();
 
          // flow rate windowed avg
          g_machine.m_productDispensers[m_active_pump_index].updateActiveProductFlowRateRunningAverageWindow();
@@ -314,7 +314,7 @@ DF_ERROR stateManualPump::onAction()
          {
             debugOutput::sendMessage("----------------Dispense button pressed.----------", MSG_INFO);
             debugOutput::sendMessage("Dispensed volume [total]: " + to_string(volume), MSG_INFO);
-            debugOutput::sendMessage("Dispense flowRate [V/s]: " + to_string(flowRate), MSG_INFO);
+            // debugOutput::sendMessage("Dispense flowRate [V/s]: " + to_string(flowRate), MSG_INFO);
             debugOutput::sendMessage("Dispense flowRate 1s avg [V/s]: " + to_string(avg_1s.value), MSG_INFO);
 
             // usleep(500000);
@@ -417,7 +417,7 @@ void stateManualPump::customVolumeDispenseTest()
 void stateManualPump::pumpFlowTest()
 {
    // instant flow rate
-   double flowRate = g_machine.m_productDispensers[m_active_pump_index].getProductFlowRateInstantaneous();
+//    double flowRate = g_machine.m_productDispensers[m_active_pump_index].getProductFlowRateInstantaneous();
 
    // flow rate windowed avg
    g_machine.m_productDispensers[m_active_pump_index].updateActiveProductFlowRateRunningAverageWindow();

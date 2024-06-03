@@ -432,7 +432,7 @@ void stateManualPump::pumpFlowTest()
       debugOutput::sendMessage("millis/totalvol/avgSinceLastcall/avg1s/avg2s/avg5s, " +
                                    to_string(avg_1s.time_millis - startFlowTestMillis) + "," +
                                    to_string(totalVolume) + "," +
-                                   to_string(flowRate) + "," +
+                                //    to_string(flowRate) + "," +
                                    to_string(avg_1s.value) + "," +
                                    to_string(avg_02s.value) + "," +
                                    to_string(avg_05s.value),

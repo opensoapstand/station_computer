@@ -110,6 +110,7 @@ dispenser::dispenser()
     // m_previous_dispense_state = FLOW_STATE_UNAVAILABLE;
     using namespace std::chrono;
     previous_status_update_allowed_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    m_dispenserTicks = 0;
 }
 
 dispenser::~dispenser()
@@ -972,6 +973,8 @@ void dispenser::registerFlowSensorTickFromPcb()
     // from observation: customers keep the button pressed, even when empty is detected.
     // the flowsensor splutters, and 'fake ticks' keep on being added. 
     // so, at least, the customer should restart pressing the button (it'll go to 'ramp up' state then, out of the empty state, and providing the opportunity for flow to restart if it was a fluke empty detection.)
+
+    m_dispenserTicks++;
     if (getDispenseStatus() != FLOW_STATE_PRIME_FAIL_OR_EMPTY ){ 
 
         // the actual dispensed produce gets always registered
@@ -986,7 +989,7 @@ void dispenser::registerFlowSensorTickFromPcb()
             getSelectedProduct()->setVolumeDispensed(getActiveProduct()->getVolumePerTick(true) + getSelectedProduct()->getVolumeDispensed());
         }
     }else{
-        debugOutput::sendMessage("Will not register tick in this flow state. Experimental . ", MSG_INFO);
+        debugOutput::sendMessage("Product volume will not be recorded in this flow state(FLOW_STATE_PRIME_FAIL_OR_EMPTY) Experimental. dispenser ticks: " +  std::to_string(m_dispenserTicks), MSG_INFO);
     }
 }
 
@@ -1571,7 +1574,9 @@ void dispenser::initProductFlowRateCalculation()
 Time_val dispenser::createAndGetActiveProductVolumeDispensedDatapoint()
 {
     Time_val tv;
-    tv.value = getActiveProductVolumeDispensed();
+    // tv.value =  getActiveProductVolumeDispensed();
+    tv.value = m_dispenserTicks * getActiveProduct()->getVolumePerTick(true);
+    
     using namespace std::chrono;
     uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 

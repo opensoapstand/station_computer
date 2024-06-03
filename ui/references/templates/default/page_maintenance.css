@@ -60,6 +60,7 @@
    /* font-family: 'Montserrat'; */
    /* background-color: red; */
    text-align: left;
+   word-wrap: break-word;
    /* qproperty-alignment: AlignLeft; */
    
 }
@@ -88,6 +89,17 @@
    color: #400000;
    
 }
+.label_product_name {
+   line-height: 36px;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   font-family: 'EuropaNuova-Regular';
+   font-style: normal;
+   font-weight: 400;
+   font-size: 22px;
+   color: #221F20;
+}
+
 .label_product_position {
    font-family: 'Brevia';
    font-style: normal;

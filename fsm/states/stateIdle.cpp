@@ -22,7 +22,7 @@
 // Default CTOR
 stateIdle::stateIdle()
 {
-   productDispensers = g_productDispensers;
+   // productDispensers = g_productDispensers;
 }
 
 // CTOR Linked to IP Thread Socket Listener
@@ -35,6 +35,7 @@ stateIdle::stateIdle(messageMediator *message)
 stateIdle::~stateIdle()
 {
    // delete stuff
+   debugOutput::sendMessage("stateIdle: ~stateIdle", MSG_INFO);
 }
 
 // Overload for Debugger output
@@ -88,39 +89,18 @@ DF_ERROR stateIdle::onAction()
 
    DF_ERROR e_ret = ERROR_BAD_PARAMS;
 
-   // if (nullptr != &m_state_requested)
-   // {
-
-   // Check if Command String is ready
-
-   // if (temperatureRefresh==1) {
-   //   double temperature = this->productDispensers[0].the_pcb->getTemperature();
-   //   debugOutput::sendMessage("Temperature in Celsius: " + std::to_string(temperature), MSG_INFO);
-   //   printf("Temperature polling from MCP9808: %.3f Celcius \n", temperature);
-   //   m_pMessaging->sendMessageOverIP("temperature|" + std::to_string(temperature), true); // send to UI
-
-   //   std::this_thread::sleep_for(std::chrono::seconds(5));  // Wait for 5 seconds
-   // temperatureRefresh==0;
-   // }
-
    if (m_pMessaging->isCommandStringReadyToBeParsed())
    {
       DF_ERROR ret_msg;
       ret_msg = m_pMessaging->parseCommandString();
 
-      if (ACTION_DISPENSE == m_pMessaging->getAction() || ACTION_AUTOFILL == m_pMessaging->getAction())
+      if (ACTION_DISPENSE == m_pMessaging->getAction()) // || ACTION_AUTOFILL == m_pMessaging->getAction()
       {
-         if (m_pMessaging->getRequestedSlot() == PRODUCT_SLOT_DUMMY || m_pMessaging->getRequestedSize() == SIZE_DUMMY)
-         {
-            debugOutput::sendMessage("Invalid dispenser command received. ", MSG_INFO);
-         }
-         else
-         {
-            m_state_requested = STATE_DISPENSE_INIT;
-         }
+         m_state_requested = STATE_DISPENSE_INIT;
+         
       }
-      else if (m_pMessaging->getAction() == ACTION_NO_ACTION){
-
+      else if (m_pMessaging->getAction() == ACTION_NO_ACTION)
+      {
       }
       else if (m_pMessaging->getAction() == ACTION_RESET)
       {
@@ -131,6 +111,10 @@ DF_ERROR stateIdle::onAction()
       {
          debugOutput::sendMessage("Request application exit.", MSG_INFO);
          m_state_requested = STATE_END;
+      }
+      else if (m_pMessaging->getAction() == ACTION_UI_COMMAND_PRINTER_SEND_STATUS || m_pMessaging->getAction() == ACTION_UI_COMMAND_PRINT_TRANSACTION || m_pMessaging->getAction() == ACTION_UI_COMMAND_TEST_PRINT)
+      {
+         m_state_requested = STATE_MANUAL_PRINTER;
       }
       else if ('1' == m_pMessaging->getAction() || ACTION_UI_COMMAND_PRINTER_MENU == m_pMessaging->getAction())
       {
@@ -147,17 +131,17 @@ DF_ERROR stateIdle::onAction()
       }
       else if ('4' == m_pMessaging->getAction())
       {
-         
+
          debugOutput::sendMessage("Before reload parameters from product", MSG_INFO);
-         bool success = this->productDispensers[0].getProduct()->reloadParametersFromDb();
-         this->productDispensers[0].loadGeneralProperties();
-         g_machine.loadGeneralProperties();
+         bool success = g_machine.m_productDispensers[0].getSelectedProduct()->loadParameters(true);
+         g_machine.loadGeneralMachineProperties(false);
+         g_machine.m_productDispensers[0].loadGeneralProperties();
 
          debugOutput::sendMessage("After" + to_string(success), MSG_INFO);
       }
       else if ('5' == m_pMessaging->getAction())
       {
-        m_pMessaging->sendTemperatureData();
+         m_pMessaging->sendTemperatureData();
       }
       else
       {
@@ -182,7 +166,8 @@ DF_ERROR stateIdle::onAction()
    }
    e_ret = OK;
    // }
-   // usleep(1000000);
+
+   // usleep(1000000); // super delay for debugging. 
    return e_ret;
 }
 

@@ -4,10 +4,26 @@
 } */
 
 #label_product_price {
+   qproperty-alignment: 'AlignVCenter | AlignRight';
    text-align: right;
-   font-weight: 600;
-   /* font-style: normal; */
-   /* background-color: red; */
+   font-weight: 700;
+   font-size: 30px;
+   font-family: 'Lato';
+   color: #211403;
+   font-style: normal;
+}
+
+#label_product_information{
+   font-weight: 700;
+   font-size: 30px;
+   font-family: 'Lato';
+   color: #211403;
+   font-style: normal;
+}
+
+#label_qr_background{
+   border-radius: 25px;
+   background: #FFF7ED;
 }
 
 QPushButton {
@@ -24,17 +40,16 @@ QPushButton {
 }
 
 #pushButton_previous_page{
-   font-family: 'EuropaNuova-Regular';
+   font-family: 'Lato';
    font-style: normal;
-   font-weight: 700;
-   font-size: 35px;
-   color: #221F20;
-   text-align: left;
-   /* qproperty-alignment: AlignCenter; */
-   border: none;
-   background: transparent;
+   font-weight: 400;
+   font-size: 48px;
+   color: #895E25;
+   text-align: center;
+   border: 5px solid #895E25;
+   border-radius: 25px;
+   background: #FFFFFF;
 }
-
 
 .invisible_button{
    background-color: transparent;
@@ -42,53 +57,58 @@ QPushButton {
 }
  
 #label_title {
-   /* font-family: 'Lora'; */
-   /* font-family: 'Vollkorn'; */
-   font-family: 'EuropaNuova-ExtraBold';
+   font-family: 'El Messiri';
    font-style: normal;
    font-weight: 400;
    font-size: 64px;
-   line-height: 86px;
    text-align: center;
    color: #221F20;
-   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-   word-wrap: break-word;
+   qproperty-alignment: AlignCenter;
+}
+
+#label_refresh_page{
+   color: white;
+   font-family: 'El Messiri';
+   font-size: 24px;
+   font-style: normal;
+   font-weight: 400;
+   text-align: left;
+   qproperty-alignment: AlignLeft;
+}
+
+#label_refresh_page_background{
+   background: #BC8439;
+   border-radius: 15px;
 }
 
 #label_scan {
-   text-align: center;
-   font-family: 'EuropaNuova-Regular';
+   font-family: 'El Messiri';
+   color: #895E25;
+   font-size: 40px;
    font-style: normal;
-   font-weight: 400;
-   font-size: 48px;
-   color: #58595B;
-   /* } .tab { */
-   display: inline-block;
-   margin-left: 40px;
+   font-weight: 700;
+   qproperty-alignment: 'AlignVCenter | AlignCenter';
 }
 
 #label_steps {
-   position: absolute;
-   font-family: 'EuropaNuova-ExtraBold';
+   color: #895E25;
+   font-family: 'El Messiri';
+   font-size: 30px;
    font-style: normal;
-   font-weight: 400;
-   font-size: 36px;
-   line-height: 51px;
-   color: #58595B;
+   font-weight: 700;
 }
 
 #label_processing {
-   position: absolute;
-   width: 777px;
-   height: 306px;
-   left: 143px;
-   top: 1029px;
-   font-family: 'EuropaNuova-ExtraBold';
+   color: #895E25;
+   qproperty-alignment: AlignCenter;
+   font-family: 'El Messiri';
+   font-size: 48px;
    font-style: normal;
-   font-weight: 400;
-   font-size: 36px;
-   line-height: 51px;
-   color: #221F20;
+   font-weight: 700;
+}
+
+#label_gif{
+   qproperty-alignment: 'AlignVCenter | AlignCenter';
 }
 
 QMessageBox {
@@ -101,8 +121,8 @@ QMessageBox {
 
 QMessageBox.msgBoxbutton QPushButton{
    font-size: 24px;
-   min-width: 300px;
-   min-height: 300px;
+   min-width: 280px;
+   min-height: 200px;
 }
 
 QLabel {

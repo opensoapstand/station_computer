@@ -29,22 +29,25 @@ public:
 	virtual DF_ERROR setPinAsInputElseOutput(bool input) = 0;
 	virtual DF_ERROR readPin(bool *level) = 0;
 	virtual DF_ERROR writePin(bool level) = 0;
+	virtual void setPinNumber(int pinNumber) = 0;
 	// virtual void test()=0;
 
 	// Getters
 	// TODO these chouldn't be here, MCP does not exist at this level
-	virtual int getMCPAddress(){};
-	virtual int getMCPPin(){};
+	// virtual int getMCPAddress(){};
+	// virtual int getMCPPin(){};
 
 	// Functions for Threaded GPIO Interrupts
 	void registerProduct(product *pDispenser) { m_pDispenser = pDispenser; } 
 
+	#ifdef INTERRUPT_DRIVE_FLOW_SENSOR_TICKS
 	void startListener_flowsensor();
 	// void startListener_buttons_powerAndMaintenance();
 	// void startButtonListener();
 	void listener_flowsensor();
 	// void listener_buttons_powerAndMaintenance();
 	void stopListener_flowsensor() { m_stop = true; }
+	#endif
 
 protected:
 	int m_nPin;

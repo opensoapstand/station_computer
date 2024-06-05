@@ -157,6 +157,8 @@ public:
     void setSelectedBottle(int pnumber);
     void resetSelectedBottle();
     pnumberproduct *getSelectedBottle();
+    pnumberproduct *bottleNotSelectedDiscount();
+
     bool hasSelectedBottle();
     bool hasBuyBottleOption();
     void setSelectedProduct(int pnumber);
@@ -331,6 +333,7 @@ private:
     dispenser_slot *m_selectedSlot; // used for maintenance mode!!  , or derived from selectedProduct.
     pnumberproduct *m_selectedProduct;
     pnumberproduct *m_selectedBottle;
+    pnumberproduct *m_bottleNotSelectedDiscount;
     QVector<int> dispenseProductsMenuOptions;
     dispenser_slot *m_slots;
     pnumberproduct m_pnumberproducts[HIGHEST_PNUMBER_COUNT];

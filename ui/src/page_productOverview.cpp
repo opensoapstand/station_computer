@@ -178,23 +178,32 @@ void page_product_overview::showEvent(QShowEvent *event)
     if (p_page_idle->thisMachine->hasSelectedBottle())
     {
         // if customer seleted bottle, update bottle price and label for invoice
+        // ui->label_invoice_bottle->show();
+        // ui->label_invoice_bottle_price->show();
+
+        // QString productName = p_page_idle->thisMachine->getSelectedBottle()->getProductName();
+        // ////////////// for displaying multiple bottle product with bottle size /////////////////////////
+        // // QString volume;
+        // // QString unit = p_page_idle->thisMachine->getSizeUnit();
+        // // if(unit == "oz"){
+        // //     volume = p_page_idle->thisMachine->getSelectedBottle()->getSizeAsVolumeWithCorrectUnits(1, true, true);
+        // // }else{
+        // //     volume = QString::number(p_page_idle->thisMachine->getSelectedBottle()->getVolumeOfSelectedBottle()) + unit;
+        // // }
+        // // ui->label_invoice_bottle->setText(productName + " " + volume);
+        // ////////////////////////////////////////////////////////////////////////////////////////////////
+        // // only display selected bottle name and not the bottle size
+        // ui->label_invoice_bottle->setText(productName);
+        // ui->label_invoice_bottle_price->setText("$" + QString::number(p_page_idle->thisMachine->getSelectedBottle()->getPriceOfSelectedBottle(), 'f', 2));
+    }
+    else{
         ui->label_invoice_bottle->show();
         ui->label_invoice_bottle_price->show();
+        // New target requirement - Include the price of bottle in the product itself. If they are not opting for bottle, then show it as a discount
+        // Set the price for bottle as negative amount 
+        ui->label_invoice_bottle->setText("Bring your own bottle discount");
+        ui->label_invoice_bottle_price->setText("$" + QString::number(p_page_idle->thisMachine->bottleNotSelectedDiscount()->getPriceOfSelectedBottle(), 'f', 2));
 
-        QString productName = p_page_idle->thisMachine->getSelectedBottle()->getProductName();
-        ////////////// for displaying multiple bottle product with bottle size /////////////////////////
-        // QString volume;
-        // QString unit = p_page_idle->thisMachine->getSizeUnit();
-        // if(unit == "oz"){
-        //     volume = p_page_idle->thisMachine->getSelectedBottle()->getSizeAsVolumeWithCorrectUnits(1, true, true);
-        // }else{
-        //     volume = QString::number(p_page_idle->thisMachine->getSelectedBottle()->getVolumeOfSelectedBottle()) + unit;
-        // }
-        // ui->label_invoice_bottle->setText(productName + " " + volume);
-        ////////////////////////////////////////////////////////////////////////////////////////////////
-        // only display selected bottle name and not the bottle size
-        ui->label_invoice_bottle->setText(productName);
-        ui->label_invoice_bottle_price->setText("$" + QString::number(p_page_idle->thisMachine->getSelectedBottle()->getPriceOfSelectedBottle(), 'f', 2));
     }
 
     ui->label_invoice_discount_name->setProperty("class", "labelDiscountName");
@@ -568,16 +577,23 @@ void page_product_overview::updatePriceLabel()
             // check if customer has selected a bottle to purchase
             if (p_page_idle->thisMachine->hasSelectedBottle())
             {
-                selectedBottlePrice = p_page_idle->thisMachine->getSelectedBottle()->getPriceOfSelectedBottle();
-                selectedPriceCorrected = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice) + selectedBottlePrice;
-                qDebug() << "Price (bottle selected): " << selectedPriceCorrected;
-                discountAmount = selectedPrice - (selectedPriceCorrected - selectedBottlePrice);
+                // selectedBottlePrice = p_page_idle->thisMachine->getSelectedBottle()->getPriceOfSelectedBottle();
+                // selectedPriceCorrected = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice) + selectedBottlePrice;
+                // qDebug() << "Price (bottle selected): " << selectedPriceCorrected;
+                // discountAmount = selectedPrice - (selectedPriceCorrected - selectedBottlePrice);
+                selectedPriceCorrected = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
+                qDebug() << "Price (bottle selected price included): " << selectedPriceCorrected;
+                discountAmount = selectedPrice - selectedPriceCorrected;
             }
             else
             {
-                selectedPriceCorrected = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
+                selectedBottlePrice = p_page_idle->thisMachine->bottleNotSelectedDiscount()->getPriceOfSelectedBottle();
+                selectedPriceCorrected = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice) + selectedBottlePrice;
                 qDebug() << "Price (no bottle selected): " << selectedPriceCorrected;
-                discountAmount = selectedPrice - selectedPriceCorrected;
+                discountAmount = selectedPrice - (selectedPriceCorrected - selectedBottlePrice);
+                // selectedPriceCorrected = p_page_idle->thisMachine->getPriceWithDiscount(selectedPrice);
+                // qDebug() << "Price (no bottle selected): " << selectedPriceCorrected;
+                // discountAmount = selectedPrice - selectedPriceCorrected;
                 // do hide labels for bottle
             }
         }

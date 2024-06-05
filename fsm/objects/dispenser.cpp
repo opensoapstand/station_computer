@@ -794,7 +794,7 @@ DF_ERROR dispenser::finishActivePNumberDispense()
     DF_ERROR dfRet = OK;
 
     m_dispense_state = FLOW_STATE_UNAVAILABLE;
-    
+
     return dfRet;
 }
 
@@ -970,7 +970,9 @@ void dispenser::registerFlowSensorTickFromPcb()
     // so, at least, the customer should restart pressing the button (it'll go to 'ramp up' state then, out of the empty state, and providing the opportunity for flow to restart if it was a fluke empty detection.)
 
     m_dispenserTicks++;
-    if (getDispenseStatus() != FLOW_STATE_PRIME_FAIL_OR_EMPTY && getDispenseStatus() !=  FLOW_STATE_UNAVAILABLE )
+    if (getDispenseStatus() != FLOW_STATE_PRIME_FAIL_OR_EMPTY &&
+        getDispenseStatus() != FLOW_STATE_UNAVAILABLE &&
+        getDispenseStatus() != FLOW_STATE_PRIMING_OR_EMPTY)
     {
 
         // the actual dispensed produce gets always registered
@@ -1819,12 +1821,15 @@ void dispenser::updateDispenseStatus()
     //     //          --> take into account. at top level (FLOW_STATE_UNAVAILABLE)
     //     m_dispense_state = FLOW_STATE_EMPTY;
     // }
-    else if (getButtonPressedTotalMillis() > EMPTY_CONTAINER_DETECTION_MAXIMUM_PRIME_TIME_MILLIS)
+    else if (getButtonPressedTotalMillis() > EMPTY_CONTAINER_DETECTION_MAXIMUM_PRIME_TIME_MILLIS
+        // || m_previous_dispense_state == FLOW_STATE_DISPENSING
+        )
     {
+
         // button pressed (aka pumping)
         // init time long enough for valid data
         // no flow detected
-
+        // if the previous state was dispensing, skip the timeout step 
         m_dispense_state = FLOW_STATE_PRIME_FAIL_OR_EMPTY;
     }
     else
@@ -1839,8 +1844,8 @@ void dispenser::updateDispenseStatus()
 
     if (m_previous_dispense_state != m_dispense_state)
     {
-        const char * s_previous_state = DISPENSE_BEHAVIOUR_STRINGS[m_previous_dispense_state];
-        const char * s_state_now = DISPENSE_BEHAVIOUR_STRINGS[m_dispense_state];
+        const char *s_previous_state = DISPENSE_BEHAVIOUR_STRINGS[m_previous_dispense_state];
+        const char *s_state_now = DISPENSE_BEHAVIOUR_STRINGS[m_dispense_state];
         debugOutput::sendMessage("Flow state change (from " + std::string(s_previous_state) + " to " + std::string(s_state_now) + ") . Flow rate at change: " + std::to_string(avg.value), MSG_INFO);
     }
 

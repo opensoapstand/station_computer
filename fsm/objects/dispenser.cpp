@@ -793,6 +793,8 @@ DF_ERROR dispenser::finishActivePNumberDispense()
     m_pcb->flowSensorsDisableAll();
     DF_ERROR dfRet = OK;
 
+    m_dispense_state = FLOW_STATE_UNAVAILABLE;
+    
     return dfRet;
 }
 
@@ -968,7 +970,7 @@ void dispenser::registerFlowSensorTickFromPcb()
     // so, at least, the customer should restart pressing the button (it'll go to 'ramp up' state then, out of the empty state, and providing the opportunity for flow to restart if it was a fluke empty detection.)
 
     m_dispenserTicks++;
-    if (getDispenseStatus() != FLOW_STATE_PRIME_FAIL_OR_EMPTY)
+    if (getDispenseStatus() != FLOW_STATE_PRIME_FAIL_OR_EMPTY && getDispenseStatus() !=  FLOW_STATE_UNAVAILABLE )
     {
 
         // the actual dispensed produce gets always registered
@@ -1774,7 +1776,7 @@ void dispenser::updateDispenseStatus()
         m_dispense_state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
     }
 
-    else if ((getButtonPressedCurrentPressMillis() < EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS) &&
+    else if ((getButtonPressedCurrentPressMillis() <= (2 * EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS)) &&
              (avg.value < getSelectedProduct()->getThresholdFlow() || avg.value >= getSelectedProduct()->getThresholdFlow_max_allowed()))
     {
         // flow rate needs to be ramped up for the first moving average window to be large enough
@@ -1839,7 +1841,7 @@ void dispenser::updateDispenseStatus()
     {
         const char * s_previous_state = DISPENSE_BEHAVIOUR_STRINGS[m_previous_dispense_state];
         const char * s_state_now = DISPENSE_BEHAVIOUR_STRINGS[m_dispense_state];
-        debugOutput::sendMessage("Flow state change (from " + std::string(s_state_now) + " to " + std::string(s_previous_state) + ") . Flow rate at change: " + std::to_string(avg.value), MSG_INFO);
+        debugOutput::sendMessage("Flow state change (from " + std::string(s_previous_state) + " to " + std::string(s_state_now) + ") . Flow rate at change: " + std::to_string(avg.value), MSG_INFO);
     }
 
     m_previous_dispense_state = m_dispense_state;

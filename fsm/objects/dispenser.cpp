@@ -107,7 +107,7 @@ dispenser::dispenser()
     //     m_pcb = new pcb();
     // }
     m_dispense_state = FLOW_STATE_UNAVAILABLE;
-    // m_previous_dispense_state = FLOW_STATE_UNAVAILABLE;
+    m_previous_dispense_state = FLOW_STATE_UNAVAILABLE;
     using namespace std::chrono;
     previous_status_update_allowed_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
     m_dispenserTicks = 0;
@@ -605,7 +605,7 @@ DF_ERROR dispenser::initSelectedProductDispense(char size)
     dispense_start_timestamp_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
     DF_ERROR dfRet = OK;
-    m_pcb->sendEN258DefaultConfigurationToMCP23017(getSlot(),true);
+    m_pcb->sendEN258DefaultConfigurationToMCP23017(getSlot(), true);
     getSelectedProduct()->setTargetVolumeFromSize(size);
     resetSelectedProductVolumeDispensed();
     switch (m_pcb->get_pcb_version())
@@ -768,7 +768,7 @@ DF_ERROR dispenser::initActivePNumberDispense()
 
     // init state
     m_dispense_state = FLOW_STATE_NOT_PUMPING_NOT_DISPENSING;
-    // m_previous_dispense_state = FLOW_STATE_UNAVAILABLE; // hack needed to create edge
+    m_previous_dispense_state = FLOW_STATE_UNAVAILABLE; // hack needed to create edge
 
     initProductFlowRateCalculation();
 
@@ -779,13 +779,12 @@ DF_ERROR dispenser::initActivePNumberDispense()
 DF_ERROR dispenser::finishActivePNumberDispense()
 {
     debugOutput::sendMessage("Dispenser: Stop Active PNumber dispense " + to_string(getActivePNumber()), MSG_INFO);
-   
-    std::string activePNumber = to_string(getActivePNumber());
-   double activeProductVolumeDispensed = getActiveProductVolumeDispensed();
-   debugOutput::sendMessage("Active product " + activePNumber + ". volume dispensed: " + std::to_string(activeProductVolumeDispensed), MSG_INFO);
-   double volume_remaining = getActiveProduct()->getVolumeRemaining();
-   setMixDispenseReport(activePNumber, activeProductVolumeDispensed, volume_remaining);
 
+    std::string activePNumber = to_string(getActivePNumber());
+    double activeProductVolumeDispensed = getActiveProductVolumeDispensed();
+    debugOutput::sendMessage("Active product " + activePNumber + ". volume dispensed: " + std::to_string(activeProductVolumeDispensed), MSG_INFO);
+    double volume_remaining = getActiveProduct()->getVolumeRemaining();
+    setMixDispenseReport(activePNumber, activeProductVolumeDispensed, volume_remaining);
 
     stopActiveDispensing();
 #ifndef ENABLE_PARALLEL_MIX
@@ -793,11 +792,6 @@ DF_ERROR dispenser::finishActivePNumberDispense()
 #endif
     m_pcb->flowSensorsDisableAll();
     DF_ERROR dfRet = OK;
-
-
-
-   
-
 
     return dfRet;
 }
@@ -825,7 +819,7 @@ void dispenser::startActiveDispensing()
 
     if (getSelectedProduct()->isMixingProduct())
     {
-        // if SELECTED product is a mix, we open the active product solenoid. 
+        // if SELECTED product is a mix, we open the active product solenoid.
         debugOutput::sendMessage("Dispenser: MIXING PRODUCT SET ACTIVE SOLENOID", MSG_INFO);
         setActiveProductSolenoid(true);
     }
@@ -835,7 +829,8 @@ void dispenser::startActiveDispensing()
 #endif
 
         m_pcb->setSpoutSolenoid(getSlot(), true);
-        if (m_pcb->get_pcb_version() == pcb::PcbVersion::EN258_4SLOTS || m_pcb->get_pcb_version() == pcb::PcbVersion::EN258_8SLOTS ){
+        if (m_pcb->get_pcb_version() == pcb::PcbVersion::EN258_4SLOTS || m_pcb->get_pcb_version() == pcb::PcbVersion::EN258_8SLOTS)
+        {
             setActiveProductSolenoid(true);
         }
 
@@ -850,15 +845,12 @@ void dispenser::stopActiveDispensing()
     debugOutput::sendMessage("Dispenser: stop active product dispensing.", MSG_INFO);
     m_pcb->stopPump(getSlot());
 
-
-
-    
 #ifdef ENABLE_PARALLEL_MIX
     m_pcb->setSpoutSolenoid(getSlot(), false);
 
     if (getSelectedProduct()->isMixingProduct())
     {
-        // if SELECTED product is a mix, we open the active product solenoid. 
+        // if SELECTED product is a mix, we open the active product solenoid.
         // debugOutput::sendMessage("Dispenser: MIXING PRODUCT SET ACTIVE SOLENOID", MSG_INFO);
         setActiveProductSolenoid(false);
     }
@@ -868,7 +860,8 @@ void dispenser::stopActiveDispensing()
 #endif
 
         m_pcb->setSpoutSolenoid(getSlot(), false);
-        if (m_pcb->get_pcb_version() == pcb::PcbVersion::EN258_4SLOTS || m_pcb->get_pcb_version() == pcb::PcbVersion::EN258_8SLOTS ){
+        if (m_pcb->get_pcb_version() == pcb::PcbVersion::EN258_4SLOTS || m_pcb->get_pcb_version() == pcb::PcbVersion::EN258_8SLOTS)
+        {
             setActiveProductSolenoid(false);
         }
 
@@ -912,7 +905,7 @@ void dispenser::setParallelSolenoids()
         int mixPnumber = getSelectedProduct()->getMixPNumber(mix_position);
 
         if (mixPnumber != getBasePNumber())
-        { 
+        {
             // basePNumber is dealt with separately
             double mix_position_targetVolume = getSelectedProduct()->getTargetVolume() * getSelectedProduct()->getMixRatio(mix_position);
 
@@ -969,13 +962,14 @@ void dispenser::linkDispenserFlowSensorTick()
 
 void dispenser::registerFlowSensorTickFromPcb()
 {
-    
+
     // from observation: customers keep the button pressed, even when empty is detected.
-    // the flowsensor splutters, and 'fake ticks' keep on being added. 
+    // the flowsensor splutters, and 'fake ticks' keep on being added.
     // so, at least, the customer should restart pressing the button (it'll go to 'ramp up' state then, out of the empty state, and providing the opportunity for flow to restart if it was a fluke empty detection.)
 
     m_dispenserTicks++;
-    if (getDispenseStatus() != FLOW_STATE_PRIME_FAIL_OR_EMPTY ){ 
+    if (getDispenseStatus() != FLOW_STATE_PRIME_FAIL_OR_EMPTY)
+    {
 
         // the actual dispensed produce gets always registered
         getActiveProduct()->registerFlowSensorTickFromPcb();
@@ -988,8 +982,10 @@ void dispenser::registerFlowSensorTickFromPcb()
             // if this is part of a mix, register the tick also for the mix volume (total volume)
             getSelectedProduct()->setVolumeDispensed(getActiveProduct()->getVolumePerTick(true) + getSelectedProduct()->getVolumeDispensed());
         }
-    }else{
-        debugOutput::sendMessage("Product volume will not be recorded in this flow state(FLOW_STATE_PRIME_FAIL_OR_EMPTY) Experimental. dispenser ticks: " +  std::to_string(m_dispenserTicks), MSG_INFO);
+    }
+    else
+    {
+        debugOutput::sendMessage("Product volume will not be recorded in this flow state(FLOW_STATE_PRIME_FAIL_OR_EMPTY) Experimental. dispenser ticks: " + std::to_string(m_dispenserTicks), MSG_INFO);
     }
 }
 
@@ -1502,7 +1498,6 @@ unsigned short dispenser::getPumpSpeed()
 ////////////////////////////////////////////////////////////
 // I/O Flow Sensor
 
-
 // ------->Also, in case the terminal window is flooded: did you reload all services (developer tools 11)??
 #ifdef INTERRUPT_DRIVE_FLOW_SENSOR_TICKS
 // TODO: Call this function on Dispense onEntry()
@@ -1576,7 +1571,7 @@ Time_val dispenser::createAndGetActiveProductVolumeDispensedDatapoint()
     Time_val tv;
     // tv.value =  getActiveProductVolumeDispensed();
     tv.value = m_dispenserTicks * getActiveProduct()->getVolumePerTick(true);
-    
+
     using namespace std::chrono;
     uint64_t millis_since_epoch = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
@@ -1782,16 +1777,15 @@ void dispenser::updateDispenseStatus()
     else if ((getButtonPressedCurrentPressMillis() < EMPTY_CONTAINER_DETECTION_FLOW_AVERAGE_WINDOW_MILLIS) &&
              (avg.value < getSelectedProduct()->getThresholdFlow() || avg.value >= getSelectedProduct()->getThresholdFlow_max_allowed()))
     {
-        // flow rate needs to be ramped up until stable.  (or ramped down in situations I can't imagine)
-
+        // flow rate needs to be ramped up for the first moving average window to be large enough
 
         // during init time for ramp up
         // no valid flow rate detected
-        
+
         m_dispense_state = FLOW_STATE_RAMP_UP;
     }
-    
-    else if (avg.value >= getSelectedProduct()->getThresholdFlow() && avg.value < getSelectedProduct()->getThresholdFlow_max_allowed())
+
+    else if (avg.value >= getSelectedProduct()->getThresholdFlow() && avg.value <= getSelectedProduct()->getThresholdFlow_max_allowed())
     {
         // button pressed (aka pumping)
         // valid flow rate detected
@@ -1828,7 +1822,7 @@ void dispenser::updateDispenseStatus()
         // button pressed (aka pumping)
         // init time long enough for valid data
         // no flow detected
-        
+
         m_dispense_state = FLOW_STATE_PRIME_FAIL_OR_EMPTY;
     }
     else
@@ -1841,7 +1835,14 @@ void dispenser::updateDispenseStatus()
         m_dispense_state = FLOW_STATE_PRIMING_OR_EMPTY;
     }
 
-    // m_previous_dispense_state = m_dispense_state;
+    if (m_previous_dispense_state != m_dispense_state)
+    {
+        const char * s_previous_state = DISPENSE_BEHAVIOUR_STRINGS[m_previous_dispense_state];
+        const char * s_state_now = DISPENSE_BEHAVIOUR_STRINGS[m_dispense_state];
+        debugOutput::sendMessage("Flow state change (from " + std::string(s_state_now) + " to " + std::string(s_previous_state) + ") . Flow rate at change: " + std::to_string(avg.value), MSG_INFO);
+    }
+
+    m_previous_dispense_state = m_dispense_state;
 }
 
 // void dispenser::updateActiveProductState()

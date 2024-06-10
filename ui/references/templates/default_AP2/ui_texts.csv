@@ -14,71 +14,188 @@
 # empty lines are also permitted
 
 # page_idle
-page_idle->label_welcome_message,Fancy a free<br>beverage sample?
-page_idle->label_printer_status->offline,Assistance needed<br>Receipt Printer offline.
-page_idle->label_printer_status->nopaper,Assistance needed<br>Receipt Printer empty or improperly loaded.
-page_idle->label_show_temperature->temperature,Temperature is..
-#page_idle->label_show_temperature,Temperature: %1
-page_idle->label_show_temperature,%1°C
-page_idle->msgBox_reboot->default,<p align=center>System will be rebooted in<br></p>
+page_idle->label_welcome_message_small_top,The Ultimate Beverage
+page_idle->label_welcome_message_small_bottom,Enriching Your Entire Day
+page_idle->label_welcome_message,Enjoy It Today
+page_idle->label_printer_status->offline,Assistance Needed<br>Receipt Printer offline.
+page_idle->label_printer_status->nopaper,Assistance Needed<br>Receipt Printer empty or improperly loaded.
+page_idle->label_temperature_warning->temperature_too_high,Temperature Alert<br>Max %1 °C
 page_idle->label_reboot_nightly_title,NIGHTLY REBOOT
 page_idle->label_reboot_nightly_text,System will be rebooted in<br>%1 second(s)
 page_idle->pushButton_reboot_nightly,Cancel
 page_idle->label_reboot_nightly_text->count_down,System will be rebooted in<br>%1 second(s)
 
+#page_product_menu
+page_product_menu->label_product_menu_title,Discover Your Beverage
+page_product_menu->pushButton_to_idle,←BACK
+page_product_menu->label_base_products_section_title,1. Select Base
+page_product_menu->label_dispense_products_section_title,2. Choose Flavour
+page_product_menu->status_text->not_enabled,Sold Out
+page_product_menu->status_text->empty,Sold Out
+page_product_menu->status_text->almost_empty,
+page_product_menu->status_text->sold_out,Sold Out
+page_product_menu->status_text->assistance,Temporary Unavailable
+page_product_menu->status_text->coming_soon,Coming soon
+page_product_menu->status_text->default,. . .
+page_product_menu->status_text->available,
+
 #page_select_product
 page_select_product->label_pick_soap,Discover our Beverages
-page_select_product->pushButton_to_idle,←back
+page_select_product->pushButton_to_idle,←BACK
 page_select_product->no_text,
 
-
 # Page_product 
-page_product->pushButton_back,←back
+page_product->pushButton_back,←BACK
+
+#page_product_mixing
+page_product_mixing->pushButton_back,←BACK
+page_product_mixing->label_customize_drink,1. Personalize Your Beverage
+page_product_mixing->label_select_quantity->1,1. Select Quantity
+page_product_mixing->label_select_quantity->2,2. Select Quantity
+# page_product_mixing->label_additives_background,Non-customizable product
+page_product_mixing->label_product_ingredients_title,Curated Ingredients
+page_product_mixing->pushButton_continue,Continue
+page_product_mixing->custom_volume,Custom Volume
+page_product_mixing->pushButton_recommended,Reset
+page_product_mixing->label_select_quantity_warning,*Please Select a Quantity
+page_product_mixing->pushButton_order_sample,Try a \n sample
 
 # page_product_overview
-page_product_overview->pushButton_select_product_page,←back
+page_product_overview->label_page_title,Checkout
+page_product_overview->label_checkout_title,
+page_product_overview->label_invoice_size_title,Size: 
+page_product_overview->label_invoice_coupon_title,Coupon Code
+page_product_overview->pushButton_select_product_page,←BACK
 page_product_overview->label_total,Total Amount
-page_product_overview->pushButton_continue->proceed_free,Proceed
-page_product_overview->pushButton_continue->proceed_pay,Proceed to Pay
-
+page_product_overview->pushButton_continue->proceed_free,Continue
+page_product_overview->pushButton_continue->proceed_pay,Continue
+page_product_overview->pushButton_continue,Continue
+page_product_overview->lineEdit_promo_code->valid,Coupon Code Valid
+page_product_overview->lineEdit_promo_code->invalid,Coupon Code Invalid
+page_product_overview->lineEdit_promo_code->ineligible,Coupon Code Not Eligible At This Station
+page_product_overview->lineEdit_promo_code->invite,Tap here to enter your Coupon Code
+page_product_overview->lineEdit_promo_code->offline,Network Error: Coupon Code Temporary Unavailable
+page_product_overview->pushButton_continue->proceed_pay_tap,Pay with TAP
+page_product_overview->pushButton_continue->proceed_pay_qr,Pay with QR
+page_product_overview->pushButton_continue_additional->proceed_pay_qr,Pay with QR
+page_product_overview->label_selected_volume->custom_volume,Custom Volume (maximum: %1)
 
 # page_dispenser
 page_dispenser->label_to_refill,To Refill
-page_dispenser->label_instructions_container,bring container to nozzle
-page_dispenser->label_press,press and hold the<br>button
+page_dispenser->label_instructions_container,01. The selected spout is indicated with a light<br><br>02. Bring your bottle up to the spout<br><br>03. Press and hold button to refill
+page_dispenser->label_volume_dispensed,Volume Dispensed
+page_dispenser->pushButton_problems,Report Issue
+page_dispenser->label_product_selected->custom_volume,Custom (max: %1)
+page_dispenser->label_dispense_message->priming,Please press the button for up<br>to 15 seconds before the<br>product starts dispensing.
+page_dispenser->label_dispense_message->out_of_stock,It appears we're out of stock.
+page_dispenser->label_dispense_message->needs_attention,Station technical issue, Please<br>tap the Report Issue button.
+page_dispenser->msgBox_problems->qr_tap,<p align=center><br><br>Oops! Something went wrong.<br> <br> The station does not automatically dispense. Please ensure to press and hold the indicated button to refill your bottle.<br> <br> Still not working?<br>By selecting Help, the refilling process will end and you will only be charged for the dispensed amount. <br></p>
+page_dispenser->msgBox_problems->default,<p align=center><br><br>Oops! Something went wrong.<br> <br> The station does not automatically dispense. Please ensure to press and hold the indicated button to refill your bottle.<br> <br> Still not working?<br>By selecting Help, the refilling process will end and you will only be charged for the dispensed amount. <br></p>
+page_dispenser->msgBox_problems->shopify,<p align=center><br><br>Oops! Something went wrong.<br> <br> The station does not automatically dispense. Please ensure to press and hold the indicated button to refill your bottle.<br> <br> Still not working?<br></p>
+page_dispenser->msgBox_abort->qr_tap,<p align=center><br><br>Are you sure, you want to cancel?<br><br>To refill, please press the lit button on the station. <br><br> If you press Yes, you will not be charged for the order.<br></p>
+page_dispenser->msgBox_abort->default,<p align=center><br><br>Are you sure, you want to cancel?<br><br>To refill, please press the lit button on the station.<br></p>
 
 # page_end
 page_end->pushButton_contact,Feedback
+page_end->label_message->hasReceiptPrinter,Please take your receipt!
+page_end->label_message_2->hasReceiptPrinter2,Enjoy your beverage while knowing that<br>you've helped keep a plastic bottle out of<br>our landfills. Thank you!
+page_end->label_message->qr,Cheers to Sustainability!
+page_end->label_message_2->qr2,Enjoy your beverage while knowing that<br>you've helped keep a plastic bottle out of<br>our landfills. Thank you!
+page_end->label_message->any_pay,Cheers to Sustainability!
+page_end->label_message_2->any_pay2,Enjoy your beverage while knowing that<br>you've helped keep a plastic bottle out of<br>our landfills. Thank you!
+page_end->label_message->finish_transaction,Finishing Transaction
+page_end->label_volume_dispensed,Volume Dispensed:
 
 # page_help
-page_help->pushButton_to_idle,←back
-page_help->pushButton_to_transactions,transactions→
+page_help->pushButton_to_idle,←BACK
+page_help->pushButton_to_transactions,TRANSACTIONS→
+page_help->pushButton_to_howTo,How It Works
+page_help->pushButton_to_maintenance,Settings
+page_help->pushButton_to_feedback,Contact Us
+
+#page_transactions
+page_transactions->pushButton_back,←BACK
+
+#page_how_to
+page_how_to->label_page_title,How It Works
+page_how_to->label_step01_heading,01. Select
+page_how_to->label_step01_instruction,Select the base and choose a flavour to enjoy a crafted beverage or experiment by personalizing to your taste.
+page_how_to->label_step02_heading,02. Pay
+page_how_to->label_step02_instruction,Pay with Tap or QR.
+page_how_to->label_step03_heading,03. Refill
+page_how_to->label_step03_instruction,Bring bottle up to indicated spout, then press and hold to refill.
+page_how_to->pushButton_to_feedback,Contact us 
+page_how_to->pushButton_to_help,←BACK
+page_how_to->pushButton_to_menu,Beverages
 
 # page_sendFeedback
-page_sendFeedback->pushButton_previous_page,←back
-page_sendFeedback->checkBox_1_Label,I love this, keep me in the loop.
+page_sendFeedback->pushButton_previous_page,←BACK
+page_sendFeedback->label_select_problem,We Value Your Feedback
+page_sendFeedback->label_feedback_title,Let us know your feedback:
+page_sendFeedback->checkBox_1_Label,I love this, keep me in the loop
 page_sendFeedback->checkBox_2_Label,User interface problem
 page_sendFeedback->checkBox_3_Label,Drink dispensing problem
 page_sendFeedback->checkBox_4_Label,Payment problem
 page_sendFeedback->checkBox_5_Label,Other
-page_sendFeedback->label_enter_feedback,Please enter details or comments below.<br>Provide email for feedback.
-page_sendFeedback->label_thanks_for_feedback,Thank you for <br> your feedback
+page_sendFeedback->label_enter_email,Please update me via this email:
+page_sendFeedback->label_enter_feedback,Please enter details or comments below
+page_sendFeedback->label_thanks_for_feedback,Thanks for your feedback!
+page_sendFeedback->label_thanks_for_feedback_2,Your feedback is invaluable to us
 page_sendFeedback->pushButton_send,Send
+page_sendFeedback->label_contact_info,Contact Information<br>Phone: (+1) 604-283-5311<br>Email: hello@aelen.com
 
 # page_qr_payment
-page_qr_payment->pushButton_previous_page,←back
-page_qr_payment->label_title->pay_by_phone,Pay by Phone
-page_qr_payment->label_steps,<style>        li:{margin-top:10px; margin-left: 5px;}        </style>        <ol>        <li><span class='tab'></span>Scan QR code with phone camera<br></li>        <li><span class='tab'></span>Click to open the link that appears<br></li>        <li><span class='tab'></span>Follow payment instructions on phone<br></li>        <li><span class='tab'></span>The station will proceed after payment<br></li>        <li><span class='tab'></span>Refill your beverage!</li>        </ol>        <style>        li:{margin-top:10px;}        </style>        <ol>       
+page_qr_payment->pushButton_previous_page,Cancel
+page_qr_payment->label_title->pay_by_phone,Scan to Pay
+page_qr_payment->label_title->almost_there,Processing Payment
+page_qr_payment->label_scan->label_scan_1,QR Pay
+page_qr_payment->label_scan->finalize_transaction,\n Please follow the instructions in <br>your phone browser
+page_qr_payment->label_steps,<ol><li><span class='tab'></span>Scan QR code with phone camera</li>        <li><span class='tab'></span>Click to open the link that appears</li>        <li><span class='tab'></span>Follow payment instructions on phone</li>        <li><span class='tab'></span>The station will proceed after payment</li>        <li><span class='tab'></span>Refill your beverage!</li>        </ol>  
+
+# page_offline_payment
+page_offline_payment->pushButton_previous_page,Cancel
+page_offline_payment->label_title->pay_by_phone,Scan to Pay
+page_offline_payment->label_scan->label_scan_1,QR Pay
+page_offline_payment->label_promo_code_title, Enter Confirmation Code
+page_offline_payment->lineEdit_promo_code->initial,Tap to Enter Confirmation Code
+page_offline_payment->lineEdit_promo_code->invalid,Confirmation Code Invalid
+page_offline_payment->label_steps,<ol><li><span class='tab'></span>Scan QR code with phone camera</li>        <li><span class='tab'></span>Click to open the link that appears</li>        <li><span class='tab'></span>Follow payment instructions on phone</li>        <li><span class='tab'></span>Enter the code received after the payment</li>        <li><span class='tab'></span>Refill your beverage!</li>        </ol>  
 
 # page_payment_tap_tcp
-page_payment_tap_tcp->pushButton_previous_page,←back
+page_payment_tap_tcp->pushButton_previous_page,Cancel
 
 # page_payment_tap_serial
-page_payment_tap_serial->pushButton_previous_page,←back
+page_payment_tap_serial->pushButton_previous_page,Cancel
+page_payment_tap_serial->animated_Label->cancel,Please wait a moment to choose another product
 
 # page_email
-page_email->pushButton_to_product_overview,←back
+page_email->pushButton_to_product_overview,←BACK
 page_email->label_email_title,To dispense free sample<br>Please kindly enter your email address
 page_email->keyboardTextEntry->email_placeholder,Please enter your email address
 page_email->keyboardTextEntry->invalid,Incorrect email address, please enter valid email address
 page_email->pushButton_continue, Submit email for free dispense!
+
+# page_product_freeSample
+page_product_freeSample->lineEdit_promo_code->valid,Coupon Code Valid
+page_product_freeSample->lineEdit_promo_code->invalid,Coupon Code Invalid
+page_product_freeSample->lineEdit_promo_code->ineligible,Coupon Code Not Eligible At This Station
+page_product_freeSample->lineEdit_promo_code->network_error,Network error, could not verify. Try again.
+page_product_freeSample->lineEdit_promo_code->invite,Tap here to enter your Coupon Code
+page_product_freeSample->lineEdit_promo_code->offline,Network Error: Coupon Code Temporary Unavailable
+page_product_freeSample->label_page_title,Scan QR
+page_product_freeSample->label_invoice_size_title,Size: 
+page_product_freeSample->label_invoice_coupon_title,Coupon Code
+page_product_freeSample->pushButton_select_product_page,←BACK
+page_product_freeSample->pushButton_continue->proceed_free,Proceed
+page_product_freeSample->pushButton_continue->proceed_pay,Proceed to Pay
+page_product_freeSample->pushButton_continue,Continue
+page_product_freeSample->pushButton_continue->proceed_pay_tap,Pay with TAP
+page_product_freeSample->pushButton_continue->proceed_pay_qr,Pay with QR
+page_product_freeSample->pushButton_continue_additional->proceed_pay_qr,Pay with QR
+page_product_freeSample->label_selected_volume->custom_volume,Custom Volume (maximum: %1)
+page_product_freeSample->label_steps,<ol><li><span class='tab'></span>Scan QR to get your coupon code.</li>        <li><span class='tab'></span>Enter your coupon code below.</li>        <li><span class='tab'></span>Enjoy your Sip!</li></ol>  
+
+
+# input_widget
+input_widget->label_input_info->page_help,Enter password followed by the "Return" key to enter maintenance mode
+input_widget->label_input_info->page_maintenance_general,Please enter wifi password followed by the "Return" key

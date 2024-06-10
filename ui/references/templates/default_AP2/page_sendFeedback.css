@@ -1,76 +1,115 @@
-.buttonTransparent{
-   background-color: transparent;
-   border: 0px;
-}
-
-.labelMailFeedback, .labelThankyouFeedback{
-   font-family: 'EuropaNuova-ExtraBold';
-   font-style: normal;
-   font-weight: 75;
-   font-size: 43px;
-   line-height: 99px;
-   /* letter-spacing: 1.5px; */
-   color: #58595B;
-   text-align: center;
-   qproperty-alignment: AlignCenter;
-   border: none;
-}
-.labelThankyouFeedback{
-   color: #FFFFFF;
-}
-.checkBoxLabelStyling{
-   font-family: 'EuropaNuova-ExtraBold';
-   font-style: normal;
-   font-weight: 400;
-   font-size: 32px;
-   line-height: 99px;
-   /* letter-spacing: 1.5px; */
-   color: #FFFFFF;
-   text-align: left;
-   /* qproperty-alignment: AlignCenter; */
-   border: none;
-   wordWrap:true;
-   background-color: #221F20;
-   padding: 10px;
-}
-
-#textEdit_custom_message{
-   font-family: 'EuropaNuova-ExtraBold';
-   font-style: normal;
-   font-weight: 400;
-   font-size: 28px;
-   line-height: 44px;
-   color: #58595B;
-   /* border-color:#58595B; */
-}
-
-#pushButton_help_page{
-   background-color: transparent; 
-   border: 0px ;
-}
-
 #label_select_problem{      /*selector not to make a class*/
-   font-family: 'EuropaNuova-ExtraBold';
-   font-style: normal;
-   font-weight: 400;
-   font-size: 58px;
-   line-height: 99px;
-   /* letter-spacing: 1.5px; */
-   color: #221F20;
+   font-family: 'El Messiri';
+   font-size: 64px;
    text-align: center;
-   border: none;
    qproperty-alignment: AlignCenter;
-}
-
-#pushButton_to_idle{
-   background-color: transparent; 
-   border: 0px;
+   color: #211403;
+   font-weight: 400;
+   font-style: normal;
 }
 
 #label_problem_options{
-   background-color: #221F20;
-   border-radius: 30px;
+   background-color: #FFF7ED;
+   border-radius: 25px;
 }
+
+#label_feedback_title{
+   font-family: 'El Messiri';
+   font-style: normal;
+   font-weight: 700;
+   font-size: 30px;
+   text-align: left;
+   qproperty-alignment: AlignLeft;
+   color: #211403;
+}
+
+#label_enter_feedback, #label_enter_email{
+   font-family: 'El Messiri';
+   font-style: normal;
+   font-weight: 700;
+   font-size: 30px;
+   color: #211403;
+   background-color: transparent;
+   text-align: left;
+}
+
+.textEdit_custom_message{
+   font-family: 'Lato';
+   font-style: normal;
+   font-weight: 400;
+   font-size: 24px;
+   color: #211403;
+   background: #FFF;
+   border-radius: 25px;
+   padding: 25px;
+}
+
+.textEdit_custom_message_alert{
+   font-family: 'Lato';
+   font-style: normal;
+   font-weight: 700;
+   font-size: 24px;
+   color: #895e25;
+   background: #FFF;
+   border-radius: 25px;
+   padding: 25px;
+}
+
+.lineEdit_enter_email{
+   font-family: 'Lato';
+   font-style: normal;
+   font-weight: 400;
+   font-size: 24px;
+   color: #211403;
+   background: #FFF;
+   border-radius: 25px;
+   padding: 25px;
+}
+
+.lineEdit_enter_email_alert{
+   font-family: 'Lato';
+   font-style: normal;
+   font-weight: 700;
+   font-size: 24px;
+   color: #895e25;
+   background: #FFF;
+   border-radius: 25px;
+   padding: 25px;
+}
+
+#label_contact_info{
+   font-family: 'Lato';
+   font-size: 30px;
+   font-style: normal;
+   font-weight: 400;
+   color: #211403; 
+   background-color: transparent;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+}
+
+#label_thanks_for_feedback{
+   font-family: 'El Messiri';
+   font-size: 64px;
+   color: #211403;
+   font-style: normal;
+   font-weight: 400;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   background-color: transparent;
+}
+
+#label_thanks_for_feedback_2{
+   font-family: 'Lato';
+   font-size: 30px;
+   color: #211403;
+   font-style: normal;
+   font-weight: 400;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+   background-color: transparent;
+}
+
 
 #label_still_cant_find{
    font-family: 'EuropaNuova-ExtraBold';
@@ -85,18 +124,7 @@
    border: none
 }
 
-#label_enter_feedback{
-   font-family: 'EuropaNuova-Regular';
-   font-style: normal;
-   font-weight: 400;
-   font-size: 20px;
-   line-height: 99px;
-   /* letter-spacing: 1.5px; */
-   background-color: #221F20;
-   color: #FFFFFF;
-   text-align: left;
-   border-radius: none;
-}
+
 
 QLabel { 
    color:#555555; 
@@ -104,19 +132,43 @@ QLabel {
    border: 1px; 
 }
 
-QPushButton {
-   font-family: 'EuropaNuova-Regular';
+.buttonTransparent{
+   background-color: transparent;
+   border: 0px;
+}
+
+#pushButton_help_page{
+   background-color: transparent; 
+   border: 0px ;
+}
+
+#pushButton_to_idle{
+   background-color: transparent; 
+   border: 0px;
+}
+
+.buttonPreviousPage{
+   font-family: 'Lato';
    font-style: normal;
    font-weight: 400;
-   font-size: 35px;
-   line-height: 99px;
-   /* letter-spacing: 1.5px; */
-   background-color: #221F20;
-   color: #FFFFFF;
+   font-size: 24px;
+   color: #001810;
+   text-align: left;
+   qproperty-alignment: AlignCenter;
+   border: none;
+   background: transparent;
+}
+
+#pushButton_send{
+   border-radius: 25px;
+   background-color: #895e25;
+   font-family: 'Lato';
+   font-size: 48px;
+   font-style: nromal;
+   font-weight: 400;
    text-align: center;
-   border-radius: 30px;
-   padding: 10px;
-   border: 5px inset #58595B;
+   qproperty-alignment: AlignCenter;
+   color: #fefbfa;
 }
 
 QString {
@@ -134,26 +186,32 @@ QString {
    border: 5px inset #58595B;
 }
 
-QLineEdit {
-   font-family: 'EuropaNuova-Regular', sans-serif;
-   font-style: normal;
-   font-weight: 400;
-   font-size: 32px;
-   line-height: 99px;
-   /* letter-spacing: 1.5px; */
-   color: #221F20;
-   border: none;
+QCheckBox::indicator {
+   width: 65px;
+   height: 65px;
 }
 
-.buttonPreviousPage{
-   font-family: 'EuropaNuova-Regular';
-   font-style: normal;
-   font-weight: 700;
-   font-size: 35px;
-   color: #221F20;
-   text-align: left;
-   /* qproperty-alignment: AlignCenter;  */
+QCheckBox::indicator:checked {
+   image: url(%1);
+}
+
+QCheckBox::indicator:unchecked {
+   image: url(%2);
+}
+
+QCheckBox{
    border: none;
    background: transparent;
-   padding: 0px !important;
+}
+
+.checkBoxLabelStyling{
+   font-family: 'Lato';
+   font-style: normal;
+   font-weight: 400;
+   font-size: 30px;
+   color: #211403;
+   text-align: left;
+   border: none;
+   wordWrap:true;
+   background-color: transparent;
 }

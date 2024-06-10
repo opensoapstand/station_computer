@@ -14,6 +14,7 @@
 
 #include "../dftypes.h"
 #include "../objects/messageMediator.h"
+#include "../objects/machine.h"
 #include "../fsm.h"
 
 #include "stateVirtual.h"
@@ -27,20 +28,23 @@ public:
 
     string toString();
 
-    void startPumping();
-    void stopPumping();
-    DF_ERROR rectractProductBlocking();
+    // void startActiveDispensing();
+    // void stopActiveDispensing();
+    // DF_ERROR rectractProductBlocking();
 
     DF_ERROR onEntry();
     DF_ERROR onAction();
     DF_ERROR onExit();
+    void finalize();
+
+    DF_ERROR statusUpdateLoggingAndOverIP(bool onlyIfAllowed);
 
 private:
-    int slot;
-    int slot_index;
+    // int slot;
+    // int slot_index;
 
-    dispenser *productDispensers;
-    bool flushCommand;
+    // dispenser *productDispensers;
+    // bool flushCommand;
     char size;
 };
 #endif

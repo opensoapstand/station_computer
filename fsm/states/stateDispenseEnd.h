@@ -44,7 +44,7 @@ public:
 
     string toString();
 
-    dispenser *productDispensers;
+    // dispenser *productDispensers;
 
     DF_ERROR onEntry();
     DF_ERROR onAction();
@@ -53,9 +53,9 @@ public:
 private:
     char dispensedVolumeToSmallestFixedSize();
     void adjustSizeToDispensedVolume();
-    int slot_index;
-    int slot;
-    char command;
+    // int m_slot_index;
+    // int m_slot;
+    // char command;
 
     sqlite3 *db;
     int rc;
@@ -67,16 +67,17 @@ private:
 
     DF_ERROR dispenseEndUpdateDB(bool isValidTransaction);
     bool sendTransactionToCloud(double volume_remaining);
-    DF_ERROR setup_and_print_receipt();
+    void setup_and_print_receipt();
+    void sendEndTransactionMessageToUI(bool isValid);
     
-    std::string getMachineID();
-    std::string getProductID(int slot);
-
+    // std::string getMachineID();
+    // std::string getProductID(int slot);
+    std::string mapToString(const std::map<std::string, std::vector<double>>& dictionary);
     double getFinalPrice();
 
     DF_ERROR handleTransactionPayment();
     DF_ERROR dispenseEndUpdateTransactionDB();
-    DF_ERROR databaseUpdateSql(string sqlStatement, string dbPath);
+    void databaseUpdateSql(string sqlStatement, string dbPath);
 
     // DF_ERROR print_text(std::string text);
 

@@ -93,6 +93,19 @@ QPushButton {
     border: 1px solid #221F20;
 }
 
+#pushButton_continue_additional{
+    font-family: 'EuropaNuova-Regular';
+    font-style: normal;
+    font-weight: 400;
+    background-color: #221F20;
+    font-size: 47px;
+    text-align: center;
+    line-height: auto;
+    qproperty-alignment: AlignCenter;
+    border-radius: 25px;
+    color: #FFFFFF;
+    border: 1px solid #221F20;
+}
 
 QLabel {
     position: absolute;
@@ -109,6 +122,11 @@ QLabel {
     color: #438080;
 }
 
+#label_page_title, #label_checkout_title, #label_invoice_size_title, #label_invoice_coupon_title{
+    color: transparent;
+    background: transparent;
+}
+
 .labelOrderOverview{
     font-family: 'EuropaNuova-Regular';
     font-style: normal;
@@ -116,6 +134,11 @@ QLabel {
     font-size: 34px;
     line-height: 20px;
     color: #221F20;
+}
+
+#label_invoice_additives_overview{
+    color: transparent;
+    background: transparent;
 }
 
 #label_invoice_price{
@@ -127,7 +150,6 @@ QLabel {
     color: #221F20;
 }
 #label_invoice_box{
-    /* border: 2px solid #221F20; */
     background: transparent;
     border-radius: 0px;
     box-shadow: 0px -5px 4px rgba(0, 0, 0, 0.25);
@@ -175,9 +197,6 @@ QLabel {
     border:8px solid #248C8C;
     border-radius: 20px;
 }
-#label_product_photo {
-    /* border: 2px solid #5E8580; */
-}
 #label_selected_volume{
     font-family: 'EuropaNuova-Regular';
     font-style: normal;
@@ -186,16 +205,21 @@ QLabel {
     line-height: 99px;
     color: #221F20;
     text-align: center;
-    /* qproperty-alignment: AlignCenter; */
-    /* border: 3px solid #221F20; */
     border-radius: 20px;
     margin-left: 5px;
     margin-bottom: 8px;
-    /* background: #CCC9C7; */
     background: #FFFFFF;
-
 }
 
 #line_invoice{
-    background: #221F20;
+    border: 3px solid black;
 }
+/* #label_product_photo {
+    background-image: url(%IMAGE_PATH%);
+    background-repeat: no-repeat;
+    background-size: contain;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+    border-bottom-left-radius: 25px;
+} */

@@ -36,8 +36,8 @@ public:
 private:
     int pos;
     char size;
-    dispenser *productDispensers;
-    bool flushCommand;
+    // dispenser *productDispensers;
+    // bool flushCommand;
 };
 
 #endif

@@ -58,9 +58,26 @@
 }
 
 .pump_enable {
-   background-color: #AAAAAA;
+   background-color: #a8a8a8;
    font-size: 20px;
 }
+.active_slot {
+   background-color: #00ff11;
+   font-size: 20px;
+}
+.inactive_slot {
+   background-color: #aeaaaa;
+   font-size: 20px;
+}
+.product_active {
+   background-color: #00ff11;
+ }
+.product_not_active {
+   background-color: #aeaaaa;
+ }
+.product_not_available {
+   background-color: #272424;
+ }
 
 QMessageBox {
 

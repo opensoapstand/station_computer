@@ -35,7 +35,7 @@ public:
 
 private:
     int pos;
-    dispenser *productDispensers;
+    // dispenser *productDispensers;
 };
 
 #endif

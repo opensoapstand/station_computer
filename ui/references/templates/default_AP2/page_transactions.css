@@ -1,0 +1,48 @@
+#pushButton_back {
+   font-family: 'Lato';
+   font-style: normal;
+   font-weight: 400;
+   font-size: 24px;
+   color: #001810;
+   text-align: left;
+   qproperty-alignment: AlignCenter;
+   border: none;
+}
+
+
+#pushButton_print {
+   font-family: 'Lato';
+   font-style: normal;
+   font-weight: 400;
+   font-size: 32px;
+   qproperty-alignment: AlignCenter;
+   text-align: center;
+
+   color: #FFFFFF;
+   background-color: #895E25;
+   border: 1px solid #895E25;
+   border-radius: 25px;
+}
+
+QListWidget {
+   background: transparent;
+}
+
+QListWidget::item {
+   background-color: #F9EBD8;
+}
+
+QListWidget::item:alternate {
+   background-color: white;
+}
+
+#label_title {
+   color: #211403;
+   text-align: center;
+   font-family: 'El Messiri';
+   font-size: 64px;
+   font-style: normal;
+   font-weight: 400;
+   text-align: center;
+   qproperty-alignment: AlignCenter;
+}

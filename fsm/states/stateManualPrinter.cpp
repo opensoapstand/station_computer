@@ -33,6 +33,7 @@ stateManualPrinter::stateManualPrinter(messageMediator *message)
 stateManualPrinter::~stateManualPrinter()
 {
    // delete stuff
+   debugOutput::sendMessage("stateManualPrinter: ~stateManualPrinter", MSG_INFO);
 }
 
 // Overload for Debugger output
@@ -46,18 +47,18 @@ DF_ERROR stateManualPrinter::onEntry()
 {
    m_state_requested = STATE_MANUAL_PRINTER;
    DF_ERROR e_ret = OK;
-   debugOutput::sendMessage("Test printer manually.", MSG_INFO);
+   debugOutput::sendMessage("Enter Printer commmands state.", MSG_INFO);
 
    printerr = g_machine.receipt_printer;
 
    printerr->connectToPrinter();
    b_isContinuouslyChecking = false;
-   productDispensers = g_productDispensers;
+   // productDispensers = g_productDispensers;
 
    if (!g_machine.getPcb24VPowerSwitchStatus())
    {
       g_machine.pcb24VPowerSwitch(true); // printers take their power from the 24V converted to 5V (because of the high current)
-      // usleep(1200000);                   // wait for printer to come online.
+      usleep(1200000);                   // wait for printer to come online.
       printerr->resetPollCount();
    }
 
@@ -67,6 +68,30 @@ DF_ERROR stateManualPrinter::onEntry()
 DF_ERROR stateManualPrinter::onAction()
 {
    DF_ERROR e_ret = OK;
+
+   // not a new command, reuse when coming from idle.
+   if (m_pMessaging->getAction() == ACTION_UI_COMMAND_PRINTER_SEND_STATUS)
+   {
+      debugOutput::sendMessage("Multi command. Send printer status and exit.", MSG_INFO);
+      sendPrinterStatus();
+      m_state_requested = STATE_IDLE;
+   }
+   else if (ACTION_UI_COMMAND_PRINT_TRANSACTION == m_pMessaging->getAction())
+   {
+      // ACTION_TRANSACTION_ID
+      int id = m_pMessaging->getCommandValue();
+      debugOutput::sendMessage("Print transaction id : " + to_string(id), MSG_INFO);
+      printTransaction(id);
+      m_state_requested = STATE_IDLE;
+   }
+   else if (ACTION_UI_COMMAND_TEST_PRINT == m_pMessaging->getAction())
+   {
+      // ACTION_TRANSACTION_ID
+      int id = m_pMessaging->getCommandValue();
+      debugOutput::sendMessage("Print test print. ", MSG_INFO);
+      printTest();
+      m_state_requested = STATE_IDLE;
+   }
 
    // Check if Command String is ready
    if (m_pMessaging->isCommandStringReadyToBeParsed())
@@ -172,20 +197,20 @@ void stateManualPrinter::printTransaction(int transactionNumber)
    std::string sql_string;
 
    //-------------------------------------------------
-   sql_string = ("SELECT product,price,quantity_dispensed,quantity_requested,end_time FROM transactions WHERE id=" + to_string(transactionNumber));
+   sql_string = ("SELECT soapstand_product_serial,price,quantity_dispensed,quantity_requested,end_time FROM transactions WHERE id=" + to_string(transactionNumber));
    sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
 
    int status;
    status = sqlite3_step(stmt);
 
-   string product;
+   string pNumberString;
    double price;
    double quantity_dispensed;
    double quantity_requested;
    string end_time;
    if (status == SQLITE_ROW)
    {
-      product = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
+      pNumberString = std::string(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
       price = sqlite3_column_double(stmt, 1);
       quantity_dispensed = sqlite3_column_double(stmt, 2);
       quantity_requested = sqlite3_column_double(stmt, 3);
@@ -217,7 +242,7 @@ void stateManualPrinter::printTransaction(int transactionNumber)
       debugOutput::sendMessage("SUCCESS: SQL transaction retrieval : (" + to_string(rc) + ") " + sql_string, MSG_INFO);
    }
 
-   debugOutput::sendMessage("----------------: " + product, MSG_INFO);
+   debugOutput::sendMessage("----------------: " + pNumberString, MSG_INFO);
    debugOutput::sendMessage("----------------: " + to_string(price), MSG_INFO);
    debugOutput::sendMessage("----------------: " + to_string(quantity_dispensed), MSG_INFO);
    debugOutput::sendMessage("----------------: " + to_string(quantity_requested), MSG_INFO);
@@ -225,34 +250,8 @@ void stateManualPrinter::printTransaction(int transactionNumber)
    sqlite3_finalize(stmt);
    sqlite3_close(db);
 
-   //-------------------------------------------------
-   rc = sqlite3_open(CONFIG_DB_PATH, &db);
-   sql_string = ("SELECT slot FROM products WHERE name='" + product + "';");
-
-   sqlite3_prepare(db, sql_string.c_str(), -1, &stmt, NULL);
-
-   status = sqlite3_step(stmt);
-
-   int slot;
-   if (status == SQLITE_ROW)
-   {
-      slot = sqlite3_column_int(stmt, 0);
-   }
-   if (rc != SQLITE_OK)
-   {
-      debugOutput::sendMessage("ERROR: SQL transaction retrieval : (" + to_string(rc) + "):" + sql_string, MSG_INFO);
-
-      sqlite3_free(zErrMsg);
-   }
-   else
-   {
-      debugOutput::sendMessage("SUCCESS: SQL transaction retrieval : (" + to_string(rc) + ") " + sql_string, MSG_INFO);
-   }
-
-   debugOutput::sendMessage("slot ----------------: " + to_string(slot), MSG_INFO);
-   sqlite3_finalize(stmt);
-   sqlite3_close(db);
-   setup_receipt_from_data_and_slot(slot, quantity_dispensed, quantity_requested, price, end_time);
+   int pnumber = machine::convertPStringToPNumber(pNumberString);
+   setup_receipt_from_pnumber_and_dispense_data(pnumber, quantity_dispensed, quantity_requested, price, end_time);
 }
 
 DF_ERROR stateManualPrinter::sendPrinterStatus()
@@ -321,6 +320,8 @@ DF_ERROR stateManualPrinter::sendPrinterStatus()
    // }
 
    m_pMessaging->sendMessageOverIP(statusString, true); // send to UI // if commented out: Let's communicate by setting the db fields only
+   DF_ERROR dfRet = OK;
+   return dfRet;
 }
 
 DF_ERROR stateManualPrinter::getPrinterStatus(bool *r_isOnline, bool *r_hasPaper)
@@ -347,6 +348,8 @@ DF_ERROR stateManualPrinter::getPrinterStatus(bool *r_isOnline, bool *r_hasPaper
    }
    *r_isOnline = r_isOnline;
    *r_hasPaper = hasPaper;
+   DF_ERROR dfRet = OK;
+   return dfRet;
 }
 
 DF_ERROR stateManualPrinter::displayPrinterStatus()
@@ -372,6 +375,8 @@ DF_ERROR stateManualPrinter::displayPrinterStatus()
    {
       debugOutput::sendMessage("Printer not online.", MSG_INFO);
    }
+   DF_ERROR dfRet = OK;
+   return dfRet;
 }
 
 DF_ERROR stateManualPrinter::displayPrinterReachable()
@@ -384,6 +389,8 @@ DF_ERROR stateManualPrinter::displayPrinterReachable()
    {
       debugOutput::sendMessage("printer not reachable", MSG_INFO);
    }
+   DF_ERROR dfRet = OK;
+   return dfRet;
 }
 
 DF_ERROR stateManualPrinter::printTest()
@@ -405,6 +412,9 @@ DF_ERROR stateManualPrinter::printTest()
    //  system(printer_command_string.c_str());
 
    //  printerr->setBarcodeHeight(100);
+   usleep(3000000); // wait for printer to come online.
+   DF_ERROR dfRet = OK;
+   return dfRet;
 }
 
 // Advances to Dispense Idle
@@ -421,21 +431,26 @@ DF_ERROR stateManualPrinter::onExit()
    return e_ret;
 }
 
-DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double volume_dispensed, double volume_requested, double price, string time_stamp)
+DF_ERROR stateManualPrinter::setup_receipt_from_pnumber_and_dispense_data(int pnumber, double volume_dispensed, double volume_requested, double price, string time_stamp)
 {
-   std::string name_receipt = productDispensers[slot - 1].getProduct()->getProductName();
-   //  std::string plu = productDispensers[slot-1].getProduct()->getBasePLU( SIZE_CUSTOM_CHAR  );
+   std::string name_receipt = g_pnumbers[pnumber].getProductName();
+   //  std::string plu = g_machine.m_productDispensers[slot-1].getSelectedProduct()->getBasePLU( SIZE_CUSTOM_CHAR  );
 
-   char size = productDispensers[slot - 1].getProduct()->getSizeCharFromTargetVolume(volume_requested);
-   string plu = productDispensers[slot - 1].getFinalPLU(size, price);
 
-   std::string units = productDispensers[slot - 1].getProduct()->getDisplayUnits();
-   std::string paymentMethod = productDispensers[slot - 1].getProduct()->getPaymentMethod();
+   // why do we need the requested volume as char for the receipt?! --> only to differentiate from custom volume?
+   // char size = g_pnumbers[pnumber].getTargetVolumeAsChar(); // do we even need the size as char? 
+   char size = g_pnumbers[pnumber].getSizeCharFromTargetVolume(volume_requested); // // this is a necessary evil as in transactions, the requested volume is not stored as char
+    
+   string plu = g_pnumbers[pnumber].getFinalPLU(size, price, g_machine.getPaymentMethod());
+
+   std::string units = g_machine.getSizeUnit();
+   std::string paymentMethod = g_machine.getPaymentMethod();
+   volume_dispensed = g_machine.convertVolumeMetricToDisplayUnits(volume_dispensed);
 
    char chars_cost[MAX_BUF];
    char chars_volume_formatted[MAX_BUF];
 
-   std::string char_units_formatted = productDispensers[slot - 1].getProduct()->getDisplayUnits();
+   std::string char_units_formatted = g_machine.getSizeUnit();
 
    snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.0f", volume_dispensed);
 
@@ -445,32 +460,6 @@ DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double v
    string receipt_cost = chars_cost;
 
    g_machine.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, time_stamp, units, paymentMethod, plu, "", true);
+   DF_ERROR dfRet = OK;
+   return dfRet;
 }
-
-// DF_ERROR stateManualPrinter::setup_receipt_from_data_and_slot(int slot, double volume_dispensed, double volume_requested, double price, string time_stamp)
-// {
-//    std::string name_receipt = (productDispensers[slot - 1].getProduct()->getProductName());
-//    //  std::string plu = productDispensers[slot-1].getProduct()->getBasePLU( SIZE_CUSTOM_CHAR  );
-
-//    char size = productDispensers[slot - 1].getProduct()->getSizeCharFromTargetVolume(volume_requested);
-//    string plu = productDispensers[slot - 1].getFinalPLU(size, price);
-
-//    std::string units = (productDispensers[slot - 1].getProduct()->getDisplayUnits());
-//    std::string paymentMethod = productDispensers[slot - 1].getProduct()->getPaymentMethod();
-
-//    char chars_cost[MAX_BUF];
-//    char chars_volume_formatted[MAX_BUF];
-
-//    snprintf(chars_volume_formatted, sizeof(chars_volume_formatted), "%.2f", productDispensers[slot - 1].getProduct()->getTargetVolume(size));
-//    string vol = (chars_volume_formatted);
-//    string receipt_volume_formatted = vol + "ml";
-//    //  string receipt_volume_formatted = to_string(chars_volume_formatted) + "ml";
-
-//    snprintf(chars_cost, sizeof(chars_cost), "%.2f", price);
-//    string receipt_cost = (chars_cost);
-
-//    // machine tmp;
-//    receipt_cost = m_pMessaging->getRequestedPrice();
-
-//    g_machine.print_receipt(name_receipt, receipt_cost, receipt_volume_formatted, time_stamp, units, paymentMethod, plu, "");
-// }

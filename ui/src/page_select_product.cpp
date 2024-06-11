@@ -376,10 +376,12 @@ void page_select_product::displayProducts()
 
 void page_select_product::select_product(int option)
 {
-    if (p_page_idle->thisMachine->getSlotFromOption(option)->getIsSlotEnabled())
+    dispenser_slot* p_slot = p_page_idle->thisMachine->getSlotFromOption(option);
+    if (p_slot ->getIsSlotEnabled())
     {
         p_page_idle->thisMachine->setSelectedProductByOption(option);
-        p_page_idle->thisMachine->setSelectedSlotFromSelectedProduct();
+        // p_page_idle->thisMachine->setSelectedSlotFromSelectedProduct();
+        p_page_idle->thisMachine->setSelectedSlot(p_slot->getSlotId());
         hideCurrentPageAndShowProvided(p_page_product);
     }
     else

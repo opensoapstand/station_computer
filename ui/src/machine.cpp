@@ -338,6 +338,7 @@ int machine::getSlotFromBasePNumber(int base_pnumber)
             occurences_of_base_pnumber++;
             slot_with_base_pnumber = slot_index + 1;
         }
+        // m_slots[slot_index].getIsSlotEnabled();
     }
 
     if (occurences_of_base_pnumber == 0)

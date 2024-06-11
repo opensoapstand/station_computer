@@ -1015,6 +1015,7 @@ void page_dispenser::on_pushButton_problems_clicked()
         QString searchString = this->objectName() + "->" + msgBox_problems->objectName() + "->" + "shopify";
         p_page_idle->thisMachine->setTextToObject(msgBox_problems, p_page_idle->thisMachine->getTemplateText(searchString));
     }
+    
     switch (paymentMethod)
     {
     case qr:

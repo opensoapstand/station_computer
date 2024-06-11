@@ -9,7 +9,7 @@
 
 
 // TODO: Refactor to fit with dfuicommthread
-#define UI_VERSION "3.9"
+#define UI_VERSION "3.10"
 
 #define GET_MIX_INFO_FROM_DB_INSTEAD_OF_TSV // normally, all pnumber info comes from the tsv file. However, for quick testing and changing, the db is easier. 
 

@@ -1847,6 +1847,8 @@ void dispenser::updateDispenseStatus()
         const char *s_previous_state = DISPENSE_BEHAVIOUR_STRINGS[m_previous_dispense_state];
         const char *s_state_now = DISPENSE_BEHAVIOUR_STRINGS[m_dispense_state];
         debugOutput::sendMessage("Flow state change (from " + std::string(s_previous_state) + " to " + std::string(s_state_now) + ") . Flow rate at change: " + std::to_string(avg.value), MSG_INFO);
+        debugOutput::sendMessage("Flow rate limits [ml/s] : min " + std::to_string(getSelectedProduct()->getThresholdFlow()) + " max: " + std::to_string(getSelectedProduct()->getThresholdFlow_max_allowed()) , MSG_INFO);
+        debugOutput::sendMessage("button pressed time: current " + std::to_string(getButtonPressedCurrentPressMillis()) + " total (during this dispense): " + std::to_string(getButtonPressedTotalMillis()) , MSG_INFO);
     }
 
     m_previous_dispense_state = m_dispense_state;

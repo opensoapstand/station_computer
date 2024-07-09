@@ -31,6 +31,8 @@
 
 #include "../objects/debugOutput.h"
 
+
+
 #define MAX_BUF 64
 
 #define MAX_SLOT_COUNT 8
@@ -76,10 +78,10 @@
 #define MCP23017_REGISTER_GPA 0x09
 #define MCP23017_REGISTER_GPB 0x19
 
- // MCP23017 slot layout
+// MCP23017 slot layout
 // xxxx xxxx  xxxx xxxx  (GPA, GPB)
 //                    x IN: button
-//                   x  OUT: button light (0 is ON!) 
+//                   x  OUT: button light (0 is ON!)
 //                  x   OUT: pump
 //       876  5432 1    OUT: solenoids
 //   xx x               NOT USED
@@ -106,8 +108,8 @@
 #define MCP23017_EN258_GPB6_PIN_OUT_SOLENOID_4 6
 #define MCP23017_EN258_GPB7_PIN_OUT_SOLENOID_5 7
 
-#define EN258_SOLENOID_SPOUT 8   // dispense solenoid position (corresponds with printed solenoid number on pcb)
-#define EN258_SOLENOID_BASE 7   // base product
+#define EN258_SOLENOID_SPOUT 8 // dispense solenoid position (corresponds with printed solenoid number on pcb)
+#define EN258_SOLENOID_BASE 7  // base product
 #define EN258_SOLENOID_ADDITIVE_1 6
 #define EN258_SOLENOID_ADDITIVE_2 5
 #define EN258_SOLENOID_ADDITIVE_3 4
@@ -188,7 +190,6 @@ public:
     bool isTemperatureSensorADS7830Available();   // 2nd sensor
     std::string toString(PcbVersion version);
 
-
     unsigned char getPumpPWM();
     void setPumpPWM(uint8_t pwm_val);
     void setPumpSpeedPercentage(uint8_t speed_percentage);
@@ -248,7 +249,7 @@ public:
     bool getPCA9534Input(uint8_t slot, int posIndex);
     void setPCA9534Output(uint8_t slot, int posIndex, bool onElseOff);
     uint8_t get_PCA9534_address_from_slot(uint8_t slot);
-    
+
     void sendEN258DefaultConfigurationToMCP23017(uint8_t slot, bool reportIfModified);
     bool getMCP23017GPIOState(uint8_t slot, int posIndex, uint8_t GPIORegister);
     uint8_t getMCP23017Register(uint8_t slot, uint8_t reg);
@@ -261,8 +262,8 @@ public:
     void registerFlowSensorTickCallback(int slot, std::function<void()> callback);
     PcbVersion pcb_version;
 
-private:
 
+private:
     std::function<void()> flowSensorTickCallbacks[MAX_SLOT_COUNT];
 
     FlowSensorType flowSensorsType[MAX_SLOT_COUNT];
@@ -281,7 +282,6 @@ private:
     bool flowSensorStateMemory[MAX_SLOT_COUNT];
     bool flowSensorDebouncedStateMemory[MAX_SLOT_COUNT];
     bool flowSensorDebouncedState[MAX_SLOT_COUNT];
-
 
     // uint64_t flow_sensor_pulses_for_dispenser[MAX_SLOT_COUNT];
     uint64_t flow_sensor_pulses_since_enable[MAX_SLOT_COUNT];

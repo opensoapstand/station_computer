@@ -10,6 +10,8 @@
 
 #define __USE_SMBUS_I2C_LIBRARY__ 1
 
+// #define ENABLE_I2C_PRINT_DEBUG
+
 // Constructor that works out the name of the I2C bus
 pcb::pcb(void)
 {
@@ -93,7 +95,10 @@ bool pcb::SendByte(unsigned char address, unsigned char reg, unsigned char byte)
 
     // uint8_t register_value = byte;
     std::bitset<8> binaryA(byte);
+
+    #ifdef ENABLE_I2C_PRINT_DEBUG
     debugOutput::sendMessage("i2c send: address: " + to_string(address) + ", register: " + to_string(reg) + " ,value:" + binaryA.to_string(), MSG_INFO);
+    #endif
 
 #ifdef __USE_SMBUS_I2C_LIBRARY__
     set_i2c_address(address);
@@ -2333,16 +2338,9 @@ void pcb::disableAllSolenoidsOfSlot(uint8_t slot)
     };
     break;
     case (EN258_4SLOTS):
-    {
-        for (uint8_t position = 1; position <= 4; position++)
-        {
-            setSolenoidFromArray(slot, position, false);
-        }
-    }
-    break;
     case (EN258_8SLOTS):
     {
-        for (uint8_t position = 1; position <= 8; position++)
+        for (uint8_t position = 1; position <= 8; position++) // warning:  solenoid positions, not slots!
         {
             setSolenoidFromArray(slot, position, false);
         }

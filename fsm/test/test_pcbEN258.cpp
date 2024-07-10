@@ -235,26 +235,33 @@ void flow_sensor_tick_count(int slot)
     debugOutput::sendMessage("Before flow sensor poll start", MSG_INFO);
 
     using namespace std::chrono;
-    uint64_t start_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    uint64_t i = 0;
-    while (i < 50000)
+
+    for (uint16_t j = 0; j < 50000; j++)
     {
-        // debugOutput::sendMessage("-----------------------------------", MSG_INFO);
-        i++;
-        connected_pcb->refreshFlowSensors();
-        ticks = connected_pcb->getFlowSensorPulsesSinceEnabling(slot);
-        if (ticks != ticks_memory)
+        uint64_t start_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+
+        uint64_t i = 0;
+
+        debugOutput::sendMessage("iteration: " + to_string(j), MSG_INFO);
+        while (i < 50000)
         {
+            // debugOutput::sendMessage("-----------------------------------", MSG_INFO);
+            i++;
+            connected_pcb->refreshFlowSensors();
+            ticks = connected_pcb->getFlowSensorPulsesSinceEnabling(slot);
+            if (ticks != ticks_memory)
+            {
 
-            debugOutput::sendMessage("Ticks at flow sensor at slot " + to_string(slot) + ": " + to_string(ticks), MSG_INFO);
+                debugOutput::sendMessage("Ticks at flow sensor at slot " + to_string(slot) + ": " + to_string(ticks), MSG_INFO);
+            }
+            ticks_memory = ticks;
+
+            // debugOutput::sendMessage("check", MSG_INFO);
         }
-        ticks_memory = ticks;
+        uint64_t end_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
-        // debugOutput::sendMessage("check", MSG_INFO);
+        debugOutput::sendMessage("Elapsed time millis " + to_string(end_millis - start_millis), MSG_INFO);
     }
-    uint64_t end_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-
-    debugOutput::sendMessage("Elapsed time millis " + to_string(end_millis - start_millis), MSG_INFO);
 }
 
 void motor_period_test(int slot)

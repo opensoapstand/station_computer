@@ -10,7 +10,7 @@
 
 #define __USE_SMBUS_I2C_LIBRARY__ 1
 
-// #define ENABLE_I2C_PRINT_DEBUG
+#define ENABLE_I2C_PRINT_DEBUG
 
 // Constructor that works out the name of the I2C bus
 pcb::pcb(void)
@@ -292,9 +292,9 @@ bool pcb::isOutputByteEqualMCP23017(uint8_t reg, uint8_t readVal, uint8_t writeV
 
 void pcb::setMCP23017Register(uint8_t slot, uint8_t reg, uint8_t value, bool reportIfModified)
 {
-    int attempt = 10;
-    usleep(10000);
-    uint8_t readVal = getMCP23017Register(slot, reg);
+    // int attempt = 10;
+    // usleep(10000);
+    // uint8_t readVal = getMCP23017Register(slot, reg);
 
     // WARNING: at enabling the multiple write attempts, i2c stopped reacting. Even with a sleep between read and write commands. 
     // no clue why. 
@@ -789,6 +789,33 @@ bool pcb::define_pcb_version(void)
     return config_valid;
 }
 
+int pcb::getSlotCountByPcbType()
+{
+    switch (get_pcb_version())
+    {
+
+    case (DSED8344_PIC_MULTIBUTTON):
+    case (DSED8344_NO_PIC):
+    case (EN258_4SLOTS):
+    case (EN134_4SLOTS):
+    {
+        return 4;
+    }
+    break;
+    case (EN258_8SLOTS):
+    case (EN134_8SLOTS):
+    {
+        return 8;
+    };
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Pcb: Unrecognized pcb.", MSG_ERROR);
+        return 1;
+    }
+    break;
+    }
+}
 void pcb::sendEN258DefaultConfigurationToMCP23017(uint8_t slot, bool reportIfModified)
 {
     uint8_t GPIOA_value = 0x00;
@@ -1387,7 +1414,6 @@ bool pcb::getDispenseButtonStateDebounced(uint8_t slot)
 
 void pcb::flowSensorEnable(uint8_t slot)
 {
-
     switch (pcb_version)
     {
 
@@ -1404,7 +1430,7 @@ void pcb::flowSensorEnable(uint8_t slot)
     case (EN134_8SLOTS):
     {
 
-        flowSensorsDisableAll(); // reset flow sensor pulse count
+        flowSensorResetAndDisable(slot);
         // enable only the active slot flow sensor
         setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_FLOW_SENSOR_ENABLE, true);
         flow_sensor_enabled[slot - 1] = true;
@@ -1413,7 +1439,7 @@ void pcb::flowSensorEnable(uint8_t slot)
     case (EN258_4SLOTS):
     case (EN258_8SLOTS):
     {
-        flowSensorsDisableAll(); // reset flow sensor pulse count
+        flowSensorResetAndDisable(slot);
         // enable not needed for EN258 board.
         flow_sensor_enabled[slot - 1] = true;
     };
@@ -1428,33 +1454,6 @@ void pcb::flowSensorEnable(uint8_t slot)
     // Only one sensor can be enabled at a time to be safe (it causes the pulses to be combined from all sensors to a separate input in the Odyssey.)
 }
 
-int pcb::getSlotCountByPcbType()
-{
-    switch (get_pcb_version())
-    {
-
-    case (DSED8344_PIC_MULTIBUTTON):
-    case (DSED8344_NO_PIC):
-    case (EN258_4SLOTS):
-    case (EN134_4SLOTS):
-    {
-        return 4;
-    }
-    break;
-    case (EN258_8SLOTS):
-    case (EN134_8SLOTS):
-    {
-        return 8;
-    };
-    break;
-    default:
-    {
-        debugOutput::sendMessage("Pcb: Unrecognized pcb.", MSG_ERROR);
-        return 1;
-    }
-    break;
-    }
-}
 void pcb::flowSensorsDisableAll()
 {
     switch (pcb_version)
@@ -1473,9 +1472,7 @@ void pcb::flowSensorsDisableAll()
     {
         for (uint8_t slot = 1; slot <= getSlotCountByPcbType(); slot++)
         {
-            setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_FLOW_SENSOR_ENABLE, false);
-            flow_sensor_pulses_since_enable[slot - 1] = 0;
-            flow_sensor_enabled[slot - 1] = false;
+           flowSensorResetAndDisable(slot);
         }
     }
     break;
@@ -1485,10 +1482,46 @@ void pcb::flowSensorsDisableAll()
     {
         for (uint8_t slot = 1; slot <= getSlotCountByPcbType(); slot++)
         {
+           flowSensorResetAndDisable(slot);
+        }
+    };
+    break;
+    default:
+    {
+        debugOutput::sendMessage("Pcb: Flow sensor DISABLE not available for this pcb.", MSG_ERROR);
+    }
+    break;
+    }
+}
+
+void pcb::flowSensorResetAndDisable(uint8_t slot)
+{
+    switch (pcb_version)
+    {
+
+    case (DSED8344_NO_PIC):
+    {
+    };
+    break;
+    case (DSED8344_PIC_MULTIBUTTON):
+    {
+    };
+    break;
+    case (EN134_4SLOTS):
+    case (EN134_8SLOTS):
+    {
+            setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_FLOW_SENSOR_ENABLE, false);
+            flow_sensor_pulses_since_enable[slot - 1] = 0;
+            flow_sensor_enabled[slot - 1] = false;
+    }
+    break;
+        break;
+    case (EN258_4SLOTS):
+    case (EN258_8SLOTS):
+    {
             // enable of pins not needed for EN258 board.
             flow_sensor_pulses_since_enable[slot - 1] = 0;
             flow_sensor_enabled[slot - 1] = false;
-        }
     };
     break;
     default:
@@ -1512,10 +1545,11 @@ void pcb::refreshFlowSensors()
     case (EN258_8SLOTS):
     case (EN134_8SLOTS):
     {
-        for (uint8_t slot = 1; slot <= getSlotCountByPcbType(); slot++)
+        for (uint8_t slot = 1; slot <= getSlotCountByPcbType();slot++) 
         {
             if (flow_sensor_enabled[slot - 1])
             {
+                // debugOutput::sendMessage("POLLL flow sensor at  slot" + to_string(slot), MSG_ERROR);
                 pollFlowSensor(slot);
             }
         }

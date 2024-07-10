@@ -177,7 +177,7 @@ std::string executeCommmandLineCommand(const char *cmd)
     return result;
 }
 
-void enable_24V()
+void switch_24V(bool enable)
 {
     int pin_enable_3point3V;
     int pin_enable_24V;
@@ -213,7 +213,49 @@ void enable_24V()
 
     gpio_odyssey *switch_24V;
     switch_24V = new gpio_odyssey(pin_enable_24V);
-    switch_24V->writePin(true);
+    switch_24V->writePin(enable);
+}
+
+void flow_sensor_tick_count(int slot)
+{
+    pcb *connected_pcb;
+    uint64_t ticks;
+    uint64_t ticks_memory;
+    connected_pcb = new pcb();
+
+    connected_pcb->setup();
+    connected_pcb->setFlowSensorType(slot, pcb::DIGMESA);
+
+    connected_pcb->flowSensorsDisableAll();
+    connected_pcb->flowSensorEnable(slot);
+    // connected_pcb->flowSensorEnable(2);
+    // connected_pcb->flowSensorEnable(3);
+    // connected_pcb->flowSensorEnable(4);
+    
+    debugOutput::sendMessage("Before flow sensor poll start", MSG_INFO);
+
+    using namespace std::chrono;
+    uint64_t start_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    uint64_t i=0;
+    while (i< 50000)
+    {
+        // debugOutput::sendMessage("-----------------------------------", MSG_INFO);
+        i++;
+        connected_pcb->refreshFlowSensors();
+        ticks = connected_pcb->getFlowSensorPulsesSinceEnabling(slot);
+        if (ticks != ticks_memory)
+        {
+
+            debugOutput::sendMessage("Ticks at flow sensor at slot " + to_string(slot) + ": " + to_string(ticks), MSG_INFO);
+        }
+        ticks_memory = ticks;
+       
+        // debugOutput::sendMessage("check", MSG_INFO);
+    }
+    uint64_t end_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+
+    debugOutput::sendMessage("Elapsed time millis " + to_string(end_millis - start_millis) , MSG_INFO);
+
 }
 
 void motor_period_test(int slot)
@@ -227,29 +269,39 @@ void motor_period_test(int slot)
     pcb *connected_pcb;
     connected_pcb = new pcb();
 
-    enable_24V();
+    switch_24V(true);
+
+#define HALF_PERIOD_MILLIS 1000
 
     connected_pcb->setup();
     // connected_pcb->setPumpEnable(slot);
     while (true)
     {
-        if (now_epoch_millis > start_half_period_millis + 500)
+        if (now_epoch_millis > start_half_period_millis + HALF_PERIOD_MILLIS)
         {
             toggle_state = !toggle_state;
 
             if (toggle_state)
             {
-
-                connected_pcb->setSingleDispenseButtonLight(slot, true);
                 connected_pcb->setPumpEnable(slot);
                 connected_pcb->startPump(slot);
+                // usleep(10000);
+                connected_pcb->setSingleDispenseButtonLight(slot, true);
+                // usleep(10000);
                 connected_pcb->setSolenoidFromArray(slot, 1, true);
+                // usleep(10000);
                 connected_pcb->setSolenoidFromArray(slot, 2, true);
+                // usleep(10000);
                 connected_pcb->setSolenoidFromArray(slot, 3, true);
+                // usleep(10000);
                 connected_pcb->setSolenoidFromArray(slot, 4, true);
+                // usleep(10000);
                 connected_pcb->setSolenoidFromArray(slot, 5, true);
+                // usleep(10000);
                 connected_pcb->setSolenoidFromArray(slot, 6, true);
+                // usleep(10000);
                 connected_pcb->setSolenoidFromArray(slot, 7, true);
+                // usleep(10000);
                 connected_pcb->setSolenoidFromArray(slot, 8, true);
             }
             else
@@ -327,13 +379,18 @@ void test_button_to_light()
 
 int main(int argc, char *argv[])
 {
+
+    // switch_24V(false);
+
     // pwm_test();
     // board_test();
     // test_button_to_light();
     // debugOutput::sendMessage(to_string(argc), MSG_INFO);
 
     // button_light_blink(1);
-    motor_period_test(1);
+    // motor_period_test(1);
+
+    flow_sensor_tick_count(1);
 
     // motor_test(argv[1], argv[2]);
     // motor_test();

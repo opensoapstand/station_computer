@@ -708,7 +708,7 @@ DF_ERROR dispenser::finishSelectedProductDispense()
 
     debugOutput::sendMessage("Dispenser: registers after disablingall solenoids. ", MSG_INFO);
     m_pcb->displayMCP23017IORegisters(getSlot());
-    m_pcb->flowSensorsDisableAll();
+    m_pcb->flowSensorsDisableAll(); // todo check: is this a better altnerative: m_pcb->flowSensorResetAndDisable(getSlot());
     DF_ERROR dfRet = OK;
     return dfRet;
 }
@@ -790,7 +790,7 @@ DF_ERROR dispenser::finishActivePNumberDispense()
 #ifndef ENABLE_PARALLEL_MIX
     setActiveProductSolenoid(false);
 #endif
-    m_pcb->flowSensorsDisableAll();
+    m_pcb->flowSensorsDisableAll(); // todo: is this a better altnerative: m_pcb->flowSensorResetAndDisable(getSlot());
     DF_ERROR dfRet = OK;
 
     m_dispense_state = FLOW_STATE_UNAVAILABLE;

@@ -230,6 +230,7 @@ public:
     void refreshFlowSensors();
     void flowSensorEnable(uint8_t slot);
     void flowSensorsDisableAll();
+    void flowSensorResetAndDisable(uint8_t slot);
     // uint64_t getFlowSensorPulsesForDispenser(uint8_t slot);
     uint64_t getFlowSensorPulsesSinceEnabling(uint8_t slot);
     // void resetFlowSensorPulsesForDispenser(uint8_t slot);

@@ -96,9 +96,9 @@ bool pcb::SendByte(unsigned char address, unsigned char reg, unsigned char byte)
     // uint8_t register_value = byte;
     std::bitset<8> binaryA(byte);
 
-    #ifdef ENABLE_I2C_PRINT_DEBUG
+#ifdef ENABLE_I2C_PRINT_DEBUG
     debugOutput::sendMessage("i2c send: address: " + to_string(address) + ", register: " + to_string(reg) + " ,value:" + binaryA.to_string(), MSG_INFO);
-    #endif
+#endif
 
 #ifdef __USE_SMBUS_I2C_LIBRARY__
     set_i2c_address(address);
@@ -296,9 +296,8 @@ void pcb::setMCP23017Register(uint8_t slot, uint8_t reg, uint8_t value, bool rep
     // usleep(10000);
     // uint8_t readVal = getMCP23017Register(slot, reg);
 
-    // WARNING: at enabling the multiple write attempts, i2c stopped reacting. Even with a sleep between read and write commands. 
-    // no clue why. 
-    
+    // WARNING: at enabling the multiple write attempts, i2c stopped reacting. Even with a sleep between read and write commands.
+    // no clue why.
 
     // we'll check the value after writing. Only output values need to be checked. The input ones can change during that time.
     // for the ease of it, set the input bits to zero from 'read' and 'to write' value
@@ -315,7 +314,7 @@ void pcb::setMCP23017Register(uint8_t slot, uint8_t reg, uint8_t value, bool rep
     //     // debugOutput::sendMessage("register reaD befororoeoroe writing.fesfsefsefsefsefsef " + to_string(isOutputByteEqualMCP23017(reg, 0xff, 0x00) ), MSG_ERROR);
     //     // debugOutput::sendMessage("register reaD befororoeoroe writing.fesfsefsefsefsefsef " + to_string(isOutputByteEqualMCP23017(reg, getMCP23017Register(slot, reg), value) ), MSG_ERROR);
     //     usleep(10000);
-        SendByte(get_MCP23017_address_from_slot(slot), reg, value);
+    SendByte(get_MCP23017_address_from_slot(slot), reg, value);
     //     usleep(10000);
 
     //     readVal = getMCP23017Register(slot, reg);
@@ -1472,7 +1471,7 @@ void pcb::flowSensorsDisableAll()
     {
         for (uint8_t slot = 1; slot <= getSlotCountByPcbType(); slot++)
         {
-           flowSensorResetAndDisable(slot);
+            flowSensorResetAndDisable(slot);
         }
     }
     break;
@@ -1482,7 +1481,7 @@ void pcb::flowSensorsDisableAll()
     {
         for (uint8_t slot = 1; slot <= getSlotCountByPcbType(); slot++)
         {
-           flowSensorResetAndDisable(slot);
+            flowSensorResetAndDisable(slot);
         }
     };
     break;
@@ -1510,18 +1509,18 @@ void pcb::flowSensorResetAndDisable(uint8_t slot)
     case (EN134_4SLOTS):
     case (EN134_8SLOTS):
     {
-            setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_FLOW_SENSOR_ENABLE, false);
-            flow_sensor_pulses_since_enable[slot - 1] = 0;
-            flow_sensor_enabled[slot - 1] = false;
+        setPCA9534Output(slot, PCA9534_EN134_PIN_OUT_FLOW_SENSOR_ENABLE, false);
+        flow_sensor_pulses_since_enable[slot - 1] = 0;
+        flow_sensor_enabled[slot - 1] = false;
     }
     break;
         break;
     case (EN258_4SLOTS):
     case (EN258_8SLOTS):
     {
-            // enable of pins not needed for EN258 board.
-            flow_sensor_pulses_since_enable[slot - 1] = 0;
-            flow_sensor_enabled[slot - 1] = false;
+        // enable of pins not needed for EN258 board.
+        flow_sensor_pulses_since_enable[slot - 1] = 0;
+        flow_sensor_enabled[slot - 1] = false;
     };
     break;
     default:
@@ -1545,7 +1544,7 @@ void pcb::refreshFlowSensors()
     case (EN258_8SLOTS):
     case (EN134_8SLOTS):
     {
-        for (uint8_t slot = 1; slot <= getSlotCountByPcbType();slot++) 
+        for (uint8_t slot = 1; slot <= getSlotCountByPcbType(); slot++)
         {
             if (flow_sensor_enabled[slot - 1])
             {
@@ -1747,7 +1746,7 @@ void pcb::pollFlowSensor(uint8_t slot)
     }
     flowSensorStateMemory[slot_index] = state;
 
-    // check if signal is debounced. 
+    // check if signal is debounced.
     if (now_epoch_millis > (flowSensorTickReceivedEpoch[slot_index] + FLOW_SENSOR_DEBOUNCE_MILLIS))
     {
         flowSensorDebouncedState[slot_index] = state;
@@ -1756,7 +1755,7 @@ void pcb::pollFlowSensor(uint8_t slot)
     if (flowSensorDebouncedState[slot_index] != flowSensorDebouncedStateMemory[slot_index])
     {
         if (flowSensorDebouncedState[slot_index])
-        { 
+        {
             // only consider positive edges
             if (flowSensorTickCallbacks[slot_index])
             {

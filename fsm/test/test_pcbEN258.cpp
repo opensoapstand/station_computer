@@ -231,13 +231,13 @@ void flow_sensor_tick_count(int slot)
     // connected_pcb->flowSensorEnable(2);
     // connected_pcb->flowSensorEnable(3);
     // connected_pcb->flowSensorEnable(4);
-    
+
     debugOutput::sendMessage("Before flow sensor poll start", MSG_INFO);
 
     using namespace std::chrono;
     uint64_t start_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    uint64_t i=0;
-    while (i< 50000)
+    uint64_t i = 0;
+    while (i < 50000)
     {
         // debugOutput::sendMessage("-----------------------------------", MSG_INFO);
         i++;
@@ -249,13 +249,12 @@ void flow_sensor_tick_count(int slot)
             debugOutput::sendMessage("Ticks at flow sensor at slot " + to_string(slot) + ": " + to_string(ticks), MSG_INFO);
         }
         ticks_memory = ticks;
-       
+
         // debugOutput::sendMessage("check", MSG_INFO);
     }
     uint64_t end_millis = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
-    debugOutput::sendMessage("Elapsed time millis " + to_string(end_millis - start_millis) , MSG_INFO);
-
+    debugOutput::sendMessage("Elapsed time millis " + to_string(end_millis - start_millis), MSG_INFO);
 }
 
 void motor_period_test(int slot)
